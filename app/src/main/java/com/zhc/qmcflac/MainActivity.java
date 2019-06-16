@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     ExecutorService es = Executors.newCachedThreadPool();
                     es.submit(() -> {
+                        isDecoding = true;
                         int i = 1;
                         int length = files.length;
                         for (File file : files) {
@@ -151,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                     runOnUiThread(() -> makeText(this, e.toString(), LENGTH_SHORT).show());
+                    isDecoding = false;
+                    isFolder = false;
                 }
             } else {
                 File dF = null;
