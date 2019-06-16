@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent">
-    <TextView
+    <EditText
             android:text="@string/a"
+            android:textSize="15sp"
             android:layout_width="310dp"
             android:layout_height="584dp"
             android:id="@+id/pathTV"
@@ -13,7 +15,8 @@
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="52dp"
             android:layout_marginStart="52dp" android:layout_marginEnd="52dp" android:layout_marginRight="52dp"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintBottom_toBottomOf="@+id/cdB"/>
+            app:layout_constraintBottom_toBottomOf="@+id/cdB" android:inputType="" android:autofillHints=""
+            tools:ignore="LabelFor,UnusedAttribute"/>
     <View android:layout_width="0dp" android:layout_height="0dp"
           android:background="#FFC"
           android:id="@+id/view" android:layout_marginBottom="150dp"
