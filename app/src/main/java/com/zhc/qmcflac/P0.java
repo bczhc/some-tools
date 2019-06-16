@@ -46,8 +46,8 @@ public class P0 extends AppCompatActivity {
         Button btn2 = findViewById(R.id.lF);
         try {
             tv = findViewById(R.id.pathTV);
-//            File p = Environment.getExternalStorageDirectory();
-            File p = new File("/storage");
+            File p = Environment.getExternalStorageDirectory();
+//            File p = new File("/storage");
             tv.setText(String.format(getResources().getString(R.string.tv), p.toString()));
             spinner = findViewById(R.id.select);
             btn = findViewById(R.id.cdB);
@@ -62,6 +62,7 @@ public class P0 extends AppCompatActivity {
                 intent.putExtra("f", tv.getText());
                 setResult(2, intent);
             });
+
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -104,9 +105,6 @@ public class P0 extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     pickD = new File(data_P.get(position));
-                    Intent intent = new Intent();
-                    intent.putExtra("f", tv.getText());
-                    setResult(2, intent);
                 }
 
                 @Override
@@ -130,5 +128,13 @@ public class P0 extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("f", tv.getText().toString());
+        setResult(1, intent);
+        super.onBackPressed();
     }
 }
