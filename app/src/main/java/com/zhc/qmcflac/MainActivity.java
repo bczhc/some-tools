@@ -133,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
                                     runOnUiThread(() -> et.setText(String.format(getResources().getString(R.string.tv), finalI + " of " + length + ": " + file.getName())));
                                     File x = x(file);
                                     if (x != null) {
-                                        new Main().Do_Decode(file, x);
+//                                        new Main().Do_Decode(file, x);
+                                        new Main().JNI_Decode(file.getCanonicalPath(), x.getCanonicalPath());
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -179,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             isDecoding = true;
                             try {
-                                new Main().Do_Decode(new File(f), Objects.requireNonNull(finalDF));
+//                                new Main().Do_Decode(new File(f), Objects.requireNonNull(finalDF));
+                                new Main().JNI_Decode(f, finalDF.getCanonicalPath());
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 makeText(this, e.toString(), LENGTH_SHORT).show();
