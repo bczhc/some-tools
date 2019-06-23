@@ -124,16 +124,26 @@ void Scanf(char **Dest) {
     }
 }
 
-void strcat_auto(char **DestOrSource, const char *str) {
-    usi strL = strlen(str);
-    usi S_L = strlen(*DestOrSource);
-    char a1[strL + 1], a2[S_L + 1];
-    strcpy(a1, str);
-    strcpy(a2, *DestOrSource);
-    *DestOrSource = NULL;
-    *DestOrSource = (char *) malloc((size_t) (strL + S_L + 1));
-    strcpy(*DestOrSource, a1);
-    strcat(*DestOrSource, a2);
+void strcpyAndCat_auto(char **Dest, const char *cpy_s, const char *cat_s) {
+    *Dest = NULL;
+    int cpy_s_len = strlen(cpy_s);
+    int cat_s_len = strlen(cat_s);
+    size_t size = cpy_s_len + cat_s_len + 1;
+    *Dest = (char *) malloc(size);
+    strcpy(*Dest, cpy_s);
+    strcat(*Dest, cat_s);
+    (*Dest)[size - 1] = '\0';
+}
+
+void strcat_auto(char **sourceDest, const char *cat_s) {
+    int sourceLen = strlen(*sourceDest);
+    char cloneSource[sourceLen + 1];
+    strcpy(cloneSource, *sourceDest);
+    size_t size = sourceLen + strlen(cat_s) + 1;
+    *sourceDest = (char *) malloc(size);
+    strcpy(*sourceDest, cloneSource);
+    strcat(*sourceDest, cat_s);
+    (*sourceDest)[size - 1] = '\0';
 }
 
 void charToCharPtr(char **Dest, const char c) {

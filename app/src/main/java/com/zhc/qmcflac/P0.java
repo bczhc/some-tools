@@ -133,8 +133,13 @@ public class P0 extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra("f", tv.getText().toString());
-        setResult(1, intent);
-        super.onBackPressed();
+        String intentS = tv.getText().toString();
+        intent.putExtra("f", intentS);
+        if (new File(intentS).exists()) {
+            setResult(1, intent);
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, "文件（夹）不存在或无法读取", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -6,6 +6,7 @@ public class JNI {
     static {
         System.loadLibrary("QMC");
     }
+
     public native int decode(String f, String dF);
 
     public static void d(String s, double b) {
