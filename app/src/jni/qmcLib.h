@@ -13,9 +13,18 @@
 //
 // Created by zhc-2 on 2019/6/18.
 //
+void Log(JNIEnv *env, const char *s) {
+    JNIEnv e = *env;
+    jstring str = e->NewStringUTF(env, s);
+    jstring tagS = e->NewStringUTF(env, "JNILog");
+    jclass mClass = e->FindClass(env, "android/util/Log");
+    jmethodID mid = e->GetStaticMethodID(env, mClass, "d", "(Ljava/lang/String;Ljava/lang/String;)I");
+    e->CallStaticIntMethod(env, mClass, mid, tagS, str);
+}
+
 void callMethod(JNIEnv *env, jclass c, jmethodID id, char *s, double d) {
     jstring str = (*env)->NewStringUTF(env, s);
-    (*env)->CallStaticVoidMethod(env, c, id, str, d);
+    (*env)->CallStaticVoidMethod(env, c, id, str, (jdouble) d);
 }
 
 char seedMap[8][7] = {
@@ -81,11 +90,15 @@ char nextMask_() {
 }
 
 int decode(const char *fileName, const char *destFileName, JNIEnv *env, jclass mClass, jmethodID id) {
+    callMethod(env, mClass, id, "", (double) 0);
     FILE *fp, *fpO;
     if ((fp = fopen(fileName, "rb")) == NULL) return -1;
     if ((fpO = fopen(destFileName, "wb")) == NULL) return -1;
     char c[1024] = {0};
     dl fL = getFileSize(fp), a = fL / 1024;
+    if (!fL)
+        return 0;
+    usi p = fL / 20480;
     int b = (int) (fL % 1024);
     for (int j = 0; j < a; ++j) {
         fread(c, 1024, 1, fp);
@@ -93,6 +106,7 @@ int decode(const char *fileName, const char *destFileName, JNIEnv *env, jclass m
             c[k] ^= nextMask_();
         }
         fwrite(c, 1024, 1, fpO);
+        if (!(j % p)) callMethod(env, mClass, id, "", ((double) j) / (double) a * 100);
     }
     if (b) {
         fread(c, b, 1, fp);

@@ -22,7 +22,7 @@
             android:layout_marginBottom="164dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/pF" app:layout_constraintEnd_toEndOf="@+id/pF"/>
-    <EditText
+    <TextView
             android:background="#D8FAFF"
             android:layout_width="286dp"
             android:layout_height="162dp"
@@ -30,7 +30,9 @@
             app:layout_constraintTop_toBottomOf="@+id/pF" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/dB" app:layout_constraintEnd_toEndOf="@+id/pF"
             app:layout_constraintStart_toStartOf="@+id/pF" android:importantForAutofill="no" android:inputType=""
-            tools:ignore="LabelFor,UnusedAttribute"/>
+            tools:ignore="LabelFor,UnusedAttribute"
+            android:gravity="center"
+    />
     <TextView android:layout_width="266dp" android:layout_height="67dp"
               android:id="@+id/tv" android:layout_marginTop="24dp"
               app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="@+id/pF"

@@ -14,28 +14,28 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import com.zhc.qmcflac.qmcflac_Decode.Main;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
-    private EditText et;
+    private TextView mainTv;
     private String f = null;
     private File folder = null;
     private boolean isFolder = false;
     @SuppressLint("StaticFieldLeak")
     public static TextView tv;
     private boolean isDecoding = false;
+    private Button dB = null;
 
     @TargetApi(Build.VERSION_CODES.DONUT)
     @Override
@@ -88,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                         makeText(this, e.toString(), LENGTH_SHORT).show();
-                        this.isDecoding = false;
+                        reset();
+                        runOnUiThread(() -> dB.setVisibility(VISIBLE));
                     }
                 }
         }
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tv = findViewById(R.id.tv);
         Button pF = findViewById(R.id.pF);
-        this.et = findViewById(R.id.textView);
+        this.mainTv = findViewById(R.id.textView);
         pF.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.setClass(this, P0.class);
@@ -112,8 +113,9 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 2);
             return true;
         });
-        Button dB = findViewById(R.id.dB);
+        this.dB = findViewById(R.id.dB);
         dB.setOnClickListener(v -> {
+            dB.setVisibility(INVISIBLE);
             if (isDecoding) {
                 makeText(this, "正在进行任务", LENGTH_SHORT).show();
                 return;
@@ -121,40 +123,55 @@ public class MainActivity extends AppCompatActivity {
             if (isFolder) {
                 File[] files = folder.listFiles();
                 try {
-                    ExecutorService es = Executors.newCachedThreadPool();
-                    es.submit(() -> {
-                        isDecoding = true;
-                        int i = 1;
-                        int length = files.length;
-                        for (File file : files) {
-                            if (file.isFile()) {
-                                try {
-                                    int finalI = i;
-                                    runOnUiThread(() -> et.setText(String.format(getResources().getString(R.string.tv), finalI + " of " + length + ": " + file.getName())));
-                                    File x = x(file);
-                                    if (x != null) {
+                    new Thread(() -> {
+                        try {
+                            isDecoding = true;
+                            int i = 1;
+                            int length = files.length;
+                            for (File file : files) {
+                                if (file.isFile()) {
+                                    try {
+                                        int finalI = i;
+                                        runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), finalI + " of " + length + ": " + file.getName())));
+                                        File x = x(file);
+                                        if (x != null) {
 //                                        new Main().Do_Decode(file, x);
-                                        new Main().JNI_Decode(file.getCanonicalPath(), x.getCanonicalPath());
+                                            if (file.length() != 0L)
+                                                if (new Main().JNI_Decode(file.getCanonicalPath(), x.getCanonicalPath()) == -1)
+                                                    runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        reset();
+                                        runOnUiThread(() -> dB.setVisibility(VISIBLE));
                                     }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
                                 }
+                                ++i;
                             }
-                            ++i;
+                            runOnUiThread(() -> {
+                                tv.setText(String.format(getResources().getString(R.string.tv), "100%"));
+                                makeText(this, "所有文件解码完成！", LENGTH_SHORT).show();
+                                this.folder = null;
+                                this.f = null;
+                                runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                                mainTv.setText("");
+                                reset();
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> {
+                                makeText(this, e.toString(), LENGTH_SHORT).show();
+                                dB.setVisibility(VISIBLE);
+                                reset();
+                            });
                         }
-                        runOnUiThread(() -> {
-                            tv.setText(String.format(getResources().getString(R.string.tv), "100%"));
-                            makeText(this, "所有文件解码完成！", LENGTH_SHORT).show();
-                        });
-                    });
-                    es.shutdown();
-                    isDecoding = false;
-                    isFolder = false;
+                    }).start();
+                    reset();
                 } catch (Exception e) {
                     e.printStackTrace();
                     runOnUiThread(() -> makeText(this, e.toString(), LENGTH_SHORT).show());
-                    isDecoding = false;
-                    isFolder = false;
+                    reset();
+                    runOnUiThread(() -> dB.setVisibility(VISIBLE));
                 }
             } else {
                 File dF = null;
@@ -166,46 +183,57 @@ public class MainActivity extends AppCompatActivity {
 //                }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    makeText(this, e.toString(), LENGTH_SHORT).show();
-                    this.isDecoding = false;
+                    if (!(e instanceof NullPointerException)) makeText(this, e.toString(), LENGTH_SHORT).show();
+                    reset();
+                    runOnUiThread(() -> dB.setVisibility(VISIBLE));
                 }
                 try {
                     if (dF == null) {
-                        runOnUiThread(() -> makeText(this, "不是qmcflac或qmc0", LENGTH_SHORT).show());
+                        runOnUiThread(() -> {
+                            makeText(this, "不是qmcflac或qmc0", LENGTH_SHORT).show();
+                            runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                        });
                         return;
                     }
                     File finalDF = dF;
-                    File finalDF1 = dF;
                     new Thread(() -> {
+                        boolean size0 = false;
                         try {
                             isDecoding = true;
                             try {
 //                                new Main().Do_Decode(new File(f), Objects.requireNonNull(finalDF));
-                                new Main().JNI_Decode(f, finalDF.getCanonicalPath());
+                                size0 = new File(f).length() == 0L;
+                                if (!size0 && new Main().JNI_Decode(f, finalDF.getCanonicalPath()) == -1) {
+                                    runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
+                                }
                             } catch (IOException e) {
                                 e.printStackTrace();
                                 makeText(this, e.toString(), LENGTH_SHORT).show();
-                                this.isDecoding = false;
+                                reset();
+                                runOnUiThread(() -> dB.setVisibility(VISIBLE));
                             }
                             isDecoding = false;
-                            if (Objects.requireNonNull(finalDF1).exists() && finalDF1.length() > 0) {
+                            if (!size0 && Objects.requireNonNull(finalDF).exists() && finalDF.length() > 0) {
                                 runOnUiThread(() -> {
                                     tv.setText(String.format(getResources().getString(R.string.tv), "100%"));
                                     makeText(this, "解码完成", LENGTH_SHORT).show();
+                                    reset();
                                 });
                             }
+                            if (size0) runOnUiThread(() -> makeText(this, "为空文件", LENGTH_SHORT).show());
+                            runOnUiThread(() -> dB.setVisibility(VISIBLE));
                         } catch (Exception e) {
                             e.printStackTrace();
                             makeText(this, e.toString(), LENGTH_SHORT).show();
-                            this.isDecoding = false;
-                            this.isFolder = false;
+                            reset();
+                            runOnUiThread(() -> dB.setVisibility(VISIBLE));
                         }
                     }).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                     makeText(this, e.toString(), LENGTH_SHORT).show();
-                    this.isDecoding = false;
-                    this.isFolder = false;
+                    reset();
+                    runOnUiThread(() -> dB.setVisibility(VISIBLE));
                 }
             }
         });
@@ -214,33 +242,43 @@ public class MainActivity extends AppCompatActivity {
     private void setF(String s) {
         File u = new File(s);
         if (u.isFile()) {
+            reset();
             try {
                 this.f = u.getCanonicalPath();
-                runOnUiThread(() -> this.et.setText(String.format(getResources().getString(R.string.tv), this.f)));
+                runOnUiThread(() -> this.mainTv.setText(String.format(getResources().getString(R.string.tv), this.f)));
             } catch (IOException e) {
                 e.printStackTrace();
                 makeText(this, e.toString(), LENGTH_SHORT).show();
-                this.isDecoding = false;
+                reset();
+                runOnUiThread(() -> dB.setVisibility(VISIBLE));
             }
         } else {
             isFolder = true;
             this.folder = new File(s);
-            runOnUiThread(() -> et.setText(String.format(getResources().getString(R.string.tv), s)));
+            runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), s)));
         }
     }
 
     private File x(File file) {
-        String name = file.getName();
-        String p = file.getParent();
-        int index = name.lastIndexOf('.');
-        String name_no_x = name.substring(0, index);
-        String x = name.substring(index + 1);
-        switch (x.toLowerCase()) {
-            case "qmc0":
-                return new File(p + "/" + name_no_x + ".mp3");
-            case "qmcflac":
-                return new File(p + "/" + name_no_x + ".flac");
+        try {
+            String name = file.getName();
+            String p = file.getParent();
+            int index = name.lastIndexOf('.');
+            String name_no_x = name.substring(0, index);
+            String x = name.substring(index + 1);
+            switch (x.toLowerCase()) {
+                case "qmc0":
+                    return new File(p + "/" + name_no_x + ".mp3");
+                case "qmcflac":
+                    return new File(p + "/" + name_no_x + ".flac");
+            }
+        } catch (StringIndexOutOfBoundsException ignored) {
         }
         return null;
+    }
+
+    private void reset() {
+        this.isDecoding = false;
+        this.isFolder = false;
     }
 }
