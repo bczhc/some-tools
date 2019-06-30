@@ -7,7 +7,9 @@
 
 #endif //C99_QMCLIB_H
 
-#include "./zhc.h"
+
+#include <jni.h>
+#include "zhc.h"
 
 
 //
@@ -22,9 +24,10 @@ void Log(JNIEnv *env, const char *s) {
     e->CallStaticIntMethod(env, mClass, mid, tagS, str);
 }
 
-void callMethod(JNIEnv *env, jclass c, jmethodID id, char *s, double d) {
+void callMethod(JNIEnv *env, jclass c, jmethodID id, char *s, double d, jobject obj) {
     jstring str = (*env)->NewStringUTF(env, s);
-    (*env)->CallStaticVoidMethod(env, c, id, str, (jdouble) d);
+    (*env)->CallVoidMethod(env, obj, id, str, (jdouble) d);
+//    (*env)->CallStaticVoidMethod(env, c, id, str, (jdouble) d);
 }
 
 char seedMap[8][7] = {
@@ -89,8 +92,8 @@ char nextMask_() {
     return ret;
 }
 
-int decode(const char *fileName, const char *destFileName, JNIEnv *env, jclass mClass, jmethodID id) {
-    callMethod(env, mClass, id, "", (double) 0);
+int decode(const char *fileName, const char *destFileName, JNIEnv *env, jclass mClass, jmethodID id, jobject obj) {
+    callMethod(env, mClass, id, "", (double) 0, obj);
     FILE *fp, *fpO;
     if ((fp = fopen(fileName, "rb")) == NULL) return -1;
     if ((fpO = fopen(destFileName, "wb")) == NULL) return -1;
@@ -106,7 +109,7 @@ int decode(const char *fileName, const char *destFileName, JNIEnv *env, jclass m
             c[k] ^= nextMask_();
         }
         fwrite(c, 1024, 1, fpO);
-        if (!(j % p)) callMethod(env, mClass, id, "", ((double) j) / (double) a * 100);
+        if (!(j % p)) callMethod(env, mClass, id, "", ((double) j) / (double) a * 100, obj);
     }
     if (b) {
         fread(c, b, 1, fp);

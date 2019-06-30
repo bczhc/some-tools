@@ -7,4 +7,6 @@
     <string name="pick_file">选择文件/目录</string>
     <string name="decode">解码</string>
     <string name="eF">上一级</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
 </resources>

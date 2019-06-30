@@ -1,21 +1,18 @@
-package com.zhc.qmcflac;
+package com.zhc.codec;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
-import android.widget.TextView;
-import com.zhc.qmcflac.qmcflac_Decode.Main;
+import android.view.View;
+import android.widget.*;
+import com.zhc.qmcflac.R;
+import filepicker.Picker;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,17 +24,15 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
 public class MainActivity extends AppCompatActivity {
-    @SuppressLint("StaticFieldLeak")
     private TextView mainTv;
     private String f = null;
     private File folder = null;
     private boolean isFolder = false;
-    @SuppressLint("StaticFieldLeak")
-    public static TextView tv;
+    private TextView tv;
     private boolean isDecoding = false;
     private Button dB = null;
+    private int dT = 0;//qmc
 
-    @TargetApi(Build.VERSION_CODES.DONUT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1:
                 if (data != null) {
-                    String folder = data.getStringExtra("f");
+                    String folder = data.getStringExtra("result");
                     System.out.println("folder = " + folder);
                     setF(folder);
                 }
@@ -78,12 +73,13 @@ public class MainActivity extends AppCompatActivity {
                     try {
 //                        String s = Objects.requireNonNull(data.getData()).getPath();
 //                        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-                        Uri uri;
-                        if ((uri = data.getData()) != null) {
-                            String path = new GetPath().getPathFromUriOnKitKat(this, uri);
-                            System.out.println("path = " + path);
+//                        Uri uri;
+//                        if ((uri = data.getData()) != null) {
+//                            String path = new GetPath().getPathFromUriOnKitKat(this, uri);
+                        String path = data.getStringExtra("result");
+                        System.out.println("path = " + path);
                             setF(path);
-                        }
+//                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -102,14 +98,14 @@ public class MainActivity extends AppCompatActivity {
         this.mainTv = findViewById(R.id.textView);
         pF.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.setClass(this, P0.class);
+            intent.putExtra("option", Picker.PICK_FILE);
+            intent.setClass(this, Picker.class);
             startActivityForResult(intent, 1);
         });
         pF.setOnLongClickListener(v -> {
             Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("*/*");
+            intent.putExtra("option", Picker.PICK_FOLDER);
+            intent.setClass(this, Picker.class);
             startActivityForResult(intent, 2);
             return true;
         });
@@ -133,11 +129,10 @@ public class MainActivity extends AppCompatActivity {
                                     try {
                                         int finalI = i;
                                         runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), finalI + " of " + length + ": " + file.getName())));
-                                        File x = x(file);
+                                        File x = x(file, this.dT);
                                         if (x != null) {
-//                                        new Main().Do_Decode(file, x);
                                             if (file.length() != 0L)
-                                                if (new Main().JNI_Decode(file.getCanonicalPath(), x.getCanonicalPath()) == -1)
+                                                if (new Main().JNI_Decode(file.getCanonicalPath(), x.getCanonicalPath(), this.dT, tv) == -1)
                                                     runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
                                         }
                                     } catch (IOException e) {
@@ -179,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 //                for (int i = f.length() - 1; i > 0; --i) {
                     /*int i1 = f.lastIndexOf('.');
                     dF = new File(f.substring(0, i1 == -1 ? f.length() : i1) + ".flac");*/
-                    dF = x(new File(f));
+                    dF = x(new File(f), this.dT);
 //                }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -190,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     if (dF == null) {
                         runOnUiThread(() -> {
-                            makeText(this, "不是qmcflac或qmc0", LENGTH_SHORT).show();
+                            makeText(this, "格式不正确", LENGTH_SHORT).show();
                             runOnUiThread(() -> dB.setVisibility(VISIBLE));
                         });
                         return;
@@ -201,10 +196,13 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             isDecoding = true;
                             try {
-//                                new Main().Do_Decode(new File(f), Objects.requireNonNull(finalDF));
                                 size0 = new File(f).length() == 0L;
-                                if (!size0 && new Main().JNI_Decode(f, finalDF.getCanonicalPath()) == -1) {
+                                int status = new Main().JNI_Decode(f, finalDF.getCanonicalPath(), this.dT, tv);
+                                if (!size0 && (status == -1 || status == 255)) {
                                     runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
+                                }
+                                if (status == 1) {
+                                    runOnUiThread(() -> makeText(this, "内部错误：如寻找key失败。。。", LENGTH_SHORT).show());
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -237,6 +235,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        setTSpinner(new String[]{
+                "QQMusic-qmc",
+                "KwMusic-kwm"
+        });
     }
 
     private void setF(String s) {
@@ -259,20 +261,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private File x(File file) {
-        try {
-            String name = file.getName();
-            String p = file.getParent();
-            int index = name.lastIndexOf('.');
-            String name_no_x = name.substring(0, index);
-            String x = name.substring(index + 1);
-            switch (x.toLowerCase()) {
-                case "qmc0":
-                    return new File(p + "/" + name_no_x + ".mp3");
-                case "qmcflac":
-                    return new File(p + "/" + name_no_x + ".flac");
-            }
-        } catch (StringIndexOutOfBoundsException ignored) {
+    private File x(File file, int dT) {
+        String name = file.getName();
+        int index = name.lastIndexOf('.');
+        String name_no_x = name.substring(0, index);
+        String p = file.getParent();
+        String x = name.substring(index + 1).toLowerCase();
+        switch (dT) {
+            case 0:
+                try {
+                    switch (x) {
+                        case "qmc0":
+                            return new File(p + "/" + name_no_x + ".mp3");
+                        case "qmcflac":
+                            return new File(p + "/" + name_no_x + ".flac");
+                    }
+                } catch (StringIndexOutOfBoundsException ignored) {
+                }
+                break;
+            case 1:
+                if (!(x.equals("kwm") | x.equals("kwd"))) return null;
+                String r;
+                if (name.matches(".*\\..*")) {
+                    r = p + "/" + name_no_x + ".flac";
+                } else {
+                    r = p + "/" + name + ".flac";
+                }
+                return new File(r);
         }
         return null;
     }
@@ -280,5 +295,23 @@ public class MainActivity extends AppCompatActivity {
     private void reset() {
         this.isDecoding = false;
         this.isFolder = false;
+    }
+
+    private void setTSpinner(String[] stringList) {
+        Spinner dT = findViewById(R.id.dT);
+        SpinnerAdapter adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item
+                , stringList);
+        dT.setAdapter(adapter);
+        dT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity.this.dT = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 }

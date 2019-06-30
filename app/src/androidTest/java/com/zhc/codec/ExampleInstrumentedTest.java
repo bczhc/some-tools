@@ -1,4 +1,4 @@
-package com.zhc.qmcflac;
+package com.zhc.codec;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
