@@ -1,4 +1,4 @@
-package com.zhc.qmcflac;
+package com.zhc.codec;
 
 import org.junit.Test;
 

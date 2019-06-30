@@ -136,6 +136,10 @@ void strcpyAndCat_auto(char **Dest, const char *cpy_s, const char *cat_s) {
 }
 
 void strcat_auto(char **sourceDest, const char *cat_s) {
+    if (*sourceDest == NULL) {
+        *sourceDest = (char *) malloc(1);
+        (*sourceDest)[0] = 0;
+    }
     int sourceLen = strlen(*sourceDest);
     char cloneSource[sourceLen + 1];
     strcpy(cloneSource, *sourceDest);
@@ -157,12 +161,16 @@ void charToCharPtr(char **Dest, const char c) {
  * @param string s
  * @param s s
  * @return r
- * @example this("123abc123", "23) = 2  this("12342312452312i23ab", "23") = 4
+ * @example this("123abc123", "23) = 2 this("12342312452312i23ab", "23") = 4
+ * usage:
+ * int *p = NULL;
+ * int t = this(&p, "a1b1c1", "1"); => p[0] = 1, p[1] = 3, p[2] = 5; t = 3;
  */
-usi strInStrCount(const char *string, const char *s) {
+usi strInStrCount(int **Dest, const char *string, const char *s) {
     usi c = 0;
     usi stringL = strlen(string), sL = strlen(s);
     usi forI = stringL - sL + 1;
+    *Dest = NULL;
     if (stringL < sL) {
 //        free((void *) forI);
         return 0;
@@ -172,7 +180,10 @@ usi strInStrCount(const char *string, const char *s) {
             for (int j = 0; j < sL; ++j) {
                 b &= (string[i + j] == s[j]);
             }
-            if (b) ++c;
+            if (b) {
+                *Dest = (int *) realloc(*Dest, (size_t) (4 * (++c)));
+                (*Dest)[c - 1] = i;
+            }
         }
     }
     return c;
@@ -191,7 +202,7 @@ usi strInStrCount(const char *string, const char *s) {
  * for (int j = 0; j < i; ++j) {
         printf("%s\n", R[j]);
     }
- */
+ *//*
 void split(void ****Dest, char *str, const char *splitChar) {
     *Dest = (void ***) malloc((size_t) (sizeof(char **) * 2));
     ((*Dest)[0]) = (void **) malloc((size_t) (sizeof(int *) * 1));
@@ -229,7 +240,7 @@ void split(void ****Dest, char *str, const char *splitChar) {
         r = strtok(NULL, splitChar_charArr);
         ++a_i;
     }
-}
+}*/
 
 int Str_Cmp_nMatchCase(const char *a, const char *b) {
     char t1[strlen(a) + 1];
@@ -248,4 +259,47 @@ void m_itoa(char **Dest, const int i) {
         ++d_i;
     }
     (*Dest)[d_i] = 0;
+}
+
+/*void m_lltoa(char **Dest, const dl int ll) {
+
+}*/
+
+int split(char ***Dest, const char *SourceString, const char *SplitStr) {
+    int *pos = NULL;
+    int posL = strInStrCount(&pos, SourceString, SplitStr);
+    usi srcLen = strlen(SourceString), splitStrLen = strlen(SplitStr), toP = srcLen - splitStrLen;
+    int lastIndex = 0;
+    *Dest = (char **) malloc((size_t) (sizeof(char *) * (posL + 1)));
+    for (int i = 0; i < posL; ++i) {
+        int sL = 0;
+        for (int j = lastIndex; j < pos[i]; ++j) {
+            sL = pos[i] - lastIndex + 2;
+            (*Dest)[i] = (char *) malloc((size_t) (sL));
+            (*Dest)[i][j - lastIndex] = SourceString[j];
+        }
+        (*Dest)[i][pos[i]] = 0;
+        lastIndex = pos[i];
+    }
+    return posL;
+}
+
+int cmpIntArray(const int *a1, const int a1Len, const int *a2, const int a2Len) {
+    if (a1Len != a2Len) return 0;
+    else {
+        for (int i = 0; i < a1Len; ++i) {
+            if (a1[i] != a2[i]) return 0;
+        }
+    }
+    return 1;
+}
+
+int cmpCharArray(const char *a1, const int a1Len, const char *a2, const int a2Len) {
+    if (a1Len != a2Len) return 0;
+    else {
+        for (int i = 0; i < a1Len; ++i) {
+            if (a1[i] != a2[i]) return 0;
+        }
+    }
+    return 1;
 }
