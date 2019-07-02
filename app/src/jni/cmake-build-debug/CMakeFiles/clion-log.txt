@@ -1,0 +1,4 @@
+/home/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug

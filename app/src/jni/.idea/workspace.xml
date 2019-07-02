@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="Project" targetName="doJNI" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../../.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/zhc_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Application.mk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/com/zhc/codec/JNI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/com/zhc/codec/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/dictionaries/zhc_2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/dictionaries/zhc_2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/../../proguard-rules.pro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../androidTest/java/com/zhc/qmcflac/ExampleInstrumentedTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../androidTest/java/com/zhc/codec/ExampleInstrumentedTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QMC.c" beforeDir="false" afterPath="$PROJECT_DIR$/doJNI.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/com_zhc_qmcflac_qmcflac_Decode_JNI.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/qmcLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/qmcLib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/zhc.h" beforeDir="false" afterPath="$PROJECT_DIR$/zhc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/qmcflac/GetPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/codec/GetPath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/qmcflac/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/codec/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/qmcflac/P0.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/codec/P0.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/qmcflac/qmcflac_Decode/Decode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/qmcflac/qmcflac_Decode/JNI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/qmcflac/qmcflac_Decode/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/drawable-v24/ic_launcher_foreground.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/drawable/ic_launcher_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/drawable/ic_launcher_background.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/layout/p2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/layout/p2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../test/java/com/zhc/qmcflac/ExampleUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../test/java/com/zhc/codec/ExampleUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../../build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../../../gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../../../gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/../../../gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../../settings.gradle" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileEditorManager">
+    <leaf />
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>GetStaticM</find>
+      <find>&quot;d&quot;</find>
+      <find>newS</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/kwm.c" />
+        <option value="$PROJECT_DIR$/QMC.c" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="/usr/include/jni.h" />
+        <option value="$PROJECT_DIR$/zhc.h" />
+        <option value="$PROJECT_DIR$/qmcLib.h" />
+        <option value="$PROJECT_DIR$/doJNI.c" />
+      </list>
+    </option>
+  </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-10" />
+    <option name="y" value="-10" />
+    <option name="width" value="820" />
+    <option name="height" value="520" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="jni" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jni" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../C99" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\code\code\Android\QMCFLAC\app\src\jni" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="doJNI" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="doJNI" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="doJNI">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="" />
+      <created>1560937214876</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1560937214876</updated>
+      <workItem from="1560937216118" duration="1066000" />
+      <workItem from="1560957481593" duration="6385000" />
+      <workItem from="1561020832432" duration="57000" />
+      <workItem from="1561351658852" duration="220000" />
+      <workItem from="1561353635644" duration="700000" />
+      <workItem from="1561358374993" duration="409000" />
+      <workItem from="1561359459022" duration="1517000" />
+      <workItem from="1561418126524" duration="1203000" />
+      <workItem from="1561425231473" duration="7857000" />
+      <workItem from="1561435266539" duration="1452000" />
+      <workItem from="1561517990473" duration="730000" />
+      <workItem from="1561685043661" duration="758000" />
+      <workItem from="1561686283720" duration="33000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="22167000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28952992" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Database Changes" order="7" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32969433" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="bottom" id="CMake" order="11" weight="0.32897604" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.3297587" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://D:/Sdk/includes/stdint.h" />
+    <entry file="file://D:/Sdk/includes/jni.h" />
+    <entry file="file://D:/Sdk/includes/stdio.h" />
+    <entry file="file://$PROJECT_DIR$/kwm.c" />
+    <entry file="file://$PROJECT_DIR$/QMC.c" />
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/stdio.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/com_zhc_codec_JNI.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="13" column="3" lean-forward="true" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
+          <folding>
+            <element signature="e#204#216#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zhc.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="505">
+          <caret line="304" column="1" selection-start-line="304" selection-start-column="1" selection-end-line="304" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/include/jni.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="139" column="6" lean-forward="true" selection-start-line="139" selection-start-column="6" selection-end-line="139" selection-end-column="6" />
+          <folding>
+            <element signature="e#828#847#0" expanded="true" />
+            <element signature="e#1396#2486#0" expanded="true" />
+            <element signature="e#23173#48991#0" expanded="true" />
+            <element signature="e#49570#50095#0" expanded="true" />
+            <element signature="e#50848#50860#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/qmcLib.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="353">
+          <caret line="116" column="3" lean-forward="true" selection-start-line="116" selection-start-column="3" selection-end-line="116" selection-end-column="3" />
+          <folding>
+            <element signature="e#108#124#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doJNI.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="771">
+          <caret line="95" column="34" lean-forward="true" selection-start-line="95" selection-start-column="34" selection-end-line="95" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
