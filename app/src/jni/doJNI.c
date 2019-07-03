@@ -4,17 +4,16 @@
 
 #include <stdio.h>
 #include "qmcLib.h"
-#include "com_zhc_codec_JNI.h"
+#include "com_zhc_JNI.h"
+#include "Base128Lib.h"
 
-JNIEXPORT jint JNICALL Java_com_zhc_codec_JNI_qmcDecode
+JNIEXPORT jint JNICALL Java_com_zhc_JNI_qmcDecode
         (JNIEnv *env, jobject obj, jstring f, jstring dF) {
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
     jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
     const char *f1 = e->GetStringUTFChars(env, f, (jboolean *) 0);
     const char *f2 = e->GetStringUTFChars(env, dF, (jboolean *) 0);
-//    Log(env, f1);
-//    Log(env, f2);
     char *sQ = NULL;
     strcat_auto(&sQ, f1);
     strcat_auto(&sQ, " => ");
@@ -29,7 +28,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_codec_JNI_qmcDecode
 #define MAX_FIND_KEY_TIME 468
 
 
-JNIEXPORT jint JNICALL Java_com_zhc_codec_JNI_kwmDecode
+JNIEXPORT jint JNICALL Java_com_zhc_JNI_kwmDecode
         (JNIEnv *env, jobject obj, jstring f, jstring dF) {
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
@@ -96,7 +95,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_codec_JNI_kwmDecode
             buf[i] ^= key[i & 31];
         }
         fwrite(buf, 1024, 1, fpO);
-        if (!(l % p)) callMethod(env, mClass, mid, "", ((double) l) / (double) a * 100, obj);
+        if (!(l % p)) callMethod(env, mid, "", ((double) l) / (double) a * 100, obj);
     }
     if (b) {
         fread(buf, b, 1, fp);
@@ -106,4 +105,24 @@ JNIEXPORT jint JNICALL Java_com_zhc_codec_JNI_kwmDecode
         fwrite(buf, b, 1, fpO);
     }
     return 0;
+}
+
+JNIEXPORT void JNICALL Java_com_zhc_JNI_Base128_1encode
+        (JNIEnv *env, jobject obj, jstring f1, jstring f2) {
+    JNIEnv e = *env;
+    jclass mClass = e->GetObjectClass(env, obj);
+    jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
+    const char *FileName = (*env)->GetStringUTFChars(env, f1, (jboolean *) NULL);
+    const char *DestFileName = (*env)->GetStringUTFChars(env, f2, (jboolean *) NULL);
+    eD(FileName, DestFileName, env, obj, mid);
+}
+
+JNIEXPORT void JNICALL Java_com_zhc_JNI_Base128_1decode
+        (JNIEnv *env, jobject obj, jstring f1, jstring f2) {
+    JNIEnv e = *env;
+    jclass mClass = e->GetObjectClass(env, obj);
+    jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
+    const char *FileName = (*env)->GetStringUTFChars(env, f1, (jboolean *) NULL);
+    const char *DestFileName = (*env)->GetStringUTFChars(env, f2, (jboolean *) NULL);
+    dD(FileName, DestFileName, env, obj, mid);
 }

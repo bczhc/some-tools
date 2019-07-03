@@ -1,2 +1,5 @@
 cmake_minimum_required(VERSION 3.00)
 add_executable(doJNI doJNI.c)
+add_executable(zhc zhc.c)
+add_executable(qmcLib qmcLib.c)
+add_executable(Base128Lib Base128Lib.c)
