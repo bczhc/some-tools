@@ -12,7 +12,7 @@ extern "C" {
  * Method:    decode
  * Signature: (Ljava/lang/String;Ljava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_com_zhc_codec_JNI_qmcDecode
+JNIEXPORT jint JNICALL Java_com_zhc_JNI_qmcDecode
   (JNIEnv *, jobject, jstring, jstring);
 
 /*
@@ -20,8 +20,25 @@ JNIEXPORT jint JNICALL Java_com_zhc_codec_JNI_qmcDecode
  * Method:    kwmDecode
  * Signature: (Ljava/lang/String;Ljava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_com_zhc_codec_JNI_kwmDecode
+JNIEXPORT jint JNICALL Java_com_zhc_JNI_kwmDecode
   (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     com_zhc_base128_JNI
+ * Method:    Base128_encode
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_zhc_JNI_Base128_1encode
+        (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     com_zhc_base128_JNI
+ * Method:    Base128_decode
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_zhc_JNI_Base128_1decode
+        (JNIEnv *, jobject, jstring, jstring);
+
 
 #ifdef __cplusplus
 }

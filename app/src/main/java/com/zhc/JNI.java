@@ -1,11 +1,11 @@
-package com.zhc.codec;
+package com.zhc;
 
 import android.widget.TextView;
 
 public class JNI {
     private TextView tv;
 
-    JNI(TextView tv) {
+    public JNI(TextView tv) {
         this.tv = tv;
     }
 
@@ -13,7 +13,7 @@ public class JNI {
         System.loadLibrary("doJNI");
     }
 
-    native int qmcDecode(String f, String dF);
+    public native int qmcDecode(String f, String dF);
 
     @SuppressWarnings("unused")
     //jni method
@@ -27,5 +27,9 @@ public class JNI {
         }
     }
 
-    native int kwmDecode(String f, String dF);
+    public native int kwmDecode(String f, String dF);
+
+    public native int Base128_encode(String f, String dF);
+
+    public native int Base128_decode(String f, String dF);
 }
