@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.*;
 import filepicker.Picker;
@@ -22,7 +21,7 @@ import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private TextView mainTv;
     private String f = null;
     private File folder = null;
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isDecoding = false;
     private Button dB = null;
     private int dT = 0;//qmc
-    private Main main_o = new Main();
+    private Picker picker_o = new Picker();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 //                        }
 
                     } catch (Exception e) {
-                        main_o.showException(e, MainActivity.this);
+                        picker_o.showException(e, MainActivity.this);
                         reset();
                         runOnUiThread(() -> dB.setVisibility(VISIBLE));
                     }
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                                                     runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
                                         }
                                     } catch (IOException e) {
-                                        main_o.showException(e, MainActivity.this);
+                                        picker_o.showException(e, MainActivity.this);
                                         reset();
                                         runOnUiThread(() -> dB.setVisibility(VISIBLE));
                                     }
@@ -152,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                                 reset();
                             });
                         } catch (Exception e) {
-                            main_o.showException(e, MainActivity.this);
+                            picker_o.showException(e, MainActivity.this);
                             runOnUiThread(() -> {
                                 makeText(this, e.toString(), LENGTH_SHORT).show();
                                 dB.setVisibility(VISIBLE);
@@ -162,16 +161,13 @@ public class MainActivity extends AppCompatActivity {
                     }).start();
                     reset();
                 } catch (Exception e) {
-                    main_o.showException(e, MainActivity.this);
+                    picker_o.showException(e, MainActivity.this);
                     reset();
                     runOnUiThread(() -> dB.setVisibility(VISIBLE));
                 }
             } else {
                 File dF = null;
                 try {
-//                for (int i = f.length() - 1; i > 0; --i) {
-                    /*int i1 = f.lastIndexOf('.');
-                    dF = new File(f.substring(0, i1 == -1 ? f.length() : i1) + ".flac");*/
                     dF = x(new File(f), this.dT);
 //                }
                 } catch (Exception e) {
@@ -203,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                                     runOnUiThread(() -> makeText(this, "内部错误：如寻找key失败。。。", LENGTH_SHORT).show());
                                 }
                             } catch (IOException e) {
-                                main_o.showException(e, MainActivity.this);
+                                picker_o.showException(e, MainActivity.this);
                                 reset();
                                 runOnUiThread(() -> dB.setVisibility(VISIBLE));
                             }
@@ -218,13 +214,13 @@ public class MainActivity extends AppCompatActivity {
                             if (size0) runOnUiThread(() -> makeText(this, "为空文件", LENGTH_SHORT).show());
                             runOnUiThread(() -> dB.setVisibility(VISIBLE));
                         } catch (Exception e) {
-                            main_o.showException(e, MainActivity.this);
+                            picker_o.showException(e, MainActivity.this);
                             reset();
                             runOnUiThread(() -> dB.setVisibility(VISIBLE));
                         }
                     }).start();
                 } catch (Exception e) {
-                    main_o.showException(e, MainActivity.this);
+                    picker_o.showException(e, MainActivity.this);
                     reset();
                     runOnUiThread(() -> dB.setVisibility(VISIBLE));
                 }
@@ -244,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 this.f = u.getCanonicalPath();
                 runOnUiThread(() -> this.mainTv.setText(String.format(getResources().getString(R.string.tv), this.f)));
             } catch (IOException e) {
-                main_o.showException(e, MainActivity.this);
+                picker_o.showException(e, MainActivity.this);
                 reset();
                 runOnUiThread(() -> dB.setVisibility(VISIBLE));
             }
@@ -255,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private File x(File file, int dT) {
         String name = file.getName();
         int index = name.lastIndexOf('.');
