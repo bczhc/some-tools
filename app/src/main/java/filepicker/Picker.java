@@ -1,7 +1,9 @@
 package filepicker;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,7 +16,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.*;
-import com.zhc.codec.Main;
 import com.zhc.codec.R;
 
 import java.io.File;
@@ -35,11 +36,11 @@ public class Picker extends AppCompatActivity {
     private int white = Color.WHITE;
     private final int[] justPicked = new int[]{-1};
     private int option = 1;
-    private Main main_o = new Main();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{
@@ -89,7 +90,7 @@ public class Picker extends AppCompatActivity {
                     try {
                         dir = currentPath.getCanonicalPath();
                     } catch (IOException e) {
-                        main_o.showException(e, this);
+                        showException(e, this);
                     }
                     r.putExtra("result", dir);
                     break;
@@ -101,7 +102,7 @@ public class Picker extends AppCompatActivity {
         this.pathView.setOnClickListener((v) -> {
             AlertDialog.Builder ad = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
-            et.setText(String.format(getResources().getString(R.string.tv), pathView.getText().toString()));
+            et.setText(String.format("%s", pathView.getText().toString()));
             et.setLayoutParams(lp);
             ad.setTitle("输入路径")
                     .setPositiveButton("确定", (dialog, which) -> {
@@ -111,7 +112,7 @@ public class Picker extends AppCompatActivity {
                             try {
                                 r.putExtra("result", f.getCanonicalFile());
                             } catch (IOException e) {
-                                main_o.showException(e, this);
+                                showException(e, this);
                             }
                             this.setResult(3, r);
                             finish();
@@ -134,9 +135,11 @@ public class Picker extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        previous();
+        if (currentPath.equals(new File("/"))) finish();
+        else previous();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void fillViews(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor, int[] justPicked, LinearLayout ll) {
         new Thread(() -> {
             runOnUiThread(() -> {
@@ -144,7 +147,7 @@ public class Picker extends AppCompatActivity {
                 try {
                     pathView.setText(String.format("%s", currentPath.getCanonicalFile()));
                 } catch (IOException e) {
-                    main_o.showException(e, this);
+                    showException(e, this);
                 }
             });
             TextView[] textViews;
@@ -172,10 +175,10 @@ public class Picker extends AppCompatActivity {
                                 ColorDrawable colorDrawable = (ColorDrawable) background;
                                 runOnUiThread(() -> {
                                     if (colorDrawable.getColor() == Color.GREEN) {
-                                        textViews[finalI].setBackgroundColor(Color.WHITE);
+                                        textViews[finalI].setBackgroundColor(white);
                                     } else {
                                         if (justPicked[0] != -1)
-                                            textViews[justPicked[0]].setBackgroundColor(Color.WHITE);
+                                            textViews[justPicked[0]].setBackgroundColor(white);
                                         textViews[finalI].setBackgroundColor(Color.GREEN);
                                         justPicked[0] = finalI;
                                     }
@@ -183,7 +186,7 @@ public class Picker extends AppCompatActivity {
                                 try {
                                     resultString = listFiles[justPicked[0]].getCanonicalPath();
                                 } catch (IOException e) {
-                                    main_o.showException(e, Picker.this);
+                                    showException(e, Picker.this);
                                 }
                             } else {
                                 runOnUiThread(() -> {
@@ -234,16 +237,28 @@ public class Picker extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (listFiles[i].isFile()) {
                         textViews[i].setBackgroundColor(unselectedColor);
-                    } else textViews[i].setBackgroundColor(white);
+                    } else {
+                        textViews[i].setBackgroundColor(white);
+                    }
                 });
                 break;
         }
     }
 
     private void previous() {
-        File parentFile = this.currentPath.getParentFile();
-        File[] listFiles = parentFile.listFiles();
-        fillViews(listFiles, lp, grey, justPicked, ll);
-        this.currentPath = parentFile;
+        try {
+            File parentFile = this.currentPath.getParentFile();
+            File[] listFiles = parentFile.listFiles();
+            fillViews(listFiles, lp, grey, justPicked, ll);
+            this.currentPath = parentFile;
+        } catch (Exception e) {
+            this.showException(e, this);
+            finish();
+        }
+    }
+
+    public void showException(Exception e, AppCompatActivity activity) {
+        e.printStackTrace();
+        activity.runOnUiThread(() -> Toast.makeText(activity, e.toString(), Toast.LENGTH_SHORT).show());
     }
 }
