@@ -84,12 +84,12 @@ int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
     if ((fp = fopen(fN, "rb")) == NULL) {
         printf("fopen error. \n");
         callMethod(env, mid, "fopen error. ", -1, obj);
-        return EOF;
+        return (jint) EOF;
     }
     if ((fpO = fopen(D_fN, "wb")) == NULL) {
         printf("fopen error. \n");
         callMethod(env, mid, "fopen error. ", -1, obj);
-        return EOF;
+        return (jint) EOF;
     }
     dl fS = getFileSize(fp), a = fS / ERS;
     printf("size: %lld\n", fS);

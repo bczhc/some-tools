@@ -180,6 +180,7 @@ public class MainActivity extends BaseActivity {
                     };
                     Button[] base128_btn = new Button[2];
                     fl.removeAllViews();
+                    setDBOnClickEvent(null, 2, base128_btn);
                     for (int i = 0; i < base128_btn.length; i++) {
                         base128_btn[i] = new Button(MainActivity.this);
                         if (i == 0) {
@@ -221,8 +222,48 @@ public class MainActivity extends BaseActivity {
         return (int) (dipValue * m + 0.5f);
     }
 
-    private void setDBOnClickEvent(Button do_button) {
-        do_button.setOnClickListener(v -> {
+    /**
+     * setOnClickListener
+     *
+     * @param do_button btn
+     * @param o         decode 1
+     *                  encode and decode 2
+     */
+    private void setDBOnClickEvent(@Nullable Button do_button, int o, @Nullable Button[] buttons) {
+        View.OnClickListener v = getV(o, 0);
+        if (o == 2 && buttons != null) {
+            for (int i = 0; i < buttons.length; i++) {
+                buttons[i].setOnClickListener(getV(o, 21 + i));
+            }
+        }
+        Objects.requireNonNull(do_button).setOnClickListener(v);
+    }
+
+    private void resetBtn() {
+        Button btn = new Button(MainActivity.this);
+        btn.setLayoutParams(new FrameLayout.LayoutParams(dip2px(210F), dip2px(70)));
+        btn.setText(R.string.decode);
+        btn.setId(R.id.dB);
+        this.dB = btn;
+        MainActivity.this.setDBOnClickEvent(btn, 1, null);
+        FrameLayout fl = findViewById(R.id.fl);
+        fl.removeAllViews();
+        fl.addView(btn);
+    }
+
+    /**
+     * getV
+     *
+     * @param o  decode 1
+     *           encode and decode 2
+     * @param dT o:1 be ignored
+     *           o:2 base128:
+     *           21: encode
+     *           22:decode
+     * @return v
+     */
+    private View.OnClickListener getV(int o, int dT) {
+        return v -> {
             dB.setVisibility(INVISIBLE);
             if (isDecoding) {
                 makeText(this, "正在进行任务", LENGTH_SHORT).show();
@@ -244,7 +285,7 @@ public class MainActivity extends BaseActivity {
                                         File x = x(file, this.dT);
                                         if (x != null) {
                                             if (file.length() != 0L)
-                                                if (new Main().JNI_Decode(file.getCanonicalPath(), x.getCanonicalPath(), this.dT, tv) == -1)
+                                                if (new Main().JNI_Decode(file.getCanonicalPath(), x.getCanonicalPath(), o == 1 ? this.dT : dT, tv) == -1)
                                                     runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
                                         }
                                     } catch (IOException e) {
@@ -310,7 +351,7 @@ public class MainActivity extends BaseActivity {
                             isDecoding = true;
                             try {
                                 size0 = new File(f).length() == 0L;
-                                int status = new Main().JNI_Decode(f, finalDF.getCanonicalPath(), this.dT, tv);
+                                int status = new Main().JNI_Decode(f, finalDF.getCanonicalPath(), o == 1 ? this.dT : dT, tv);
                                 if (!size0 && (status == -1 || status == 255)) {
                                     runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
                                 }
@@ -344,18 +385,6 @@ public class MainActivity extends BaseActivity {
                     runOnUiThread(() -> dB.setVisibility(VISIBLE));
                 }
             }
-        });
-    }
-
-    private void resetBtn() {
-        Button btn = new Button(MainActivity.this);
-        btn.setLayoutParams(new FrameLayout.LayoutParams(dip2px(210F), dip2px(70)));
-        btn.setText(R.string.decode);
-        btn.setId(R.id.dB);
-        this.dB = btn;
-        MainActivity.this.setDBOnClickEvent(btn);
-        FrameLayout fl = findViewById(R.id.fl);
-        fl.removeAllViews();
-        fl.addView(btn);
+        };
     }
 }
