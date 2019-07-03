@@ -1,6 +1,7 @@
 package com.zhc.codec;
 
 import android.widget.TextView;
+import com.zhc.JNI;
 
 class Main {
     @SuppressWarnings("Duplicates")

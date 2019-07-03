@@ -1,6 +1,11 @@
 //
-// Created by zhc on 2019/5/7.
+// Created by zhc on 2018/5/7
+// Created by root on 19-7-3.
 //
+
+#ifndef C99_ZHC_H
+#define C99_ZHC_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,153 +14,39 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 #ifndef ARR_len
-#define ARR_len(x) sizeof(x) / sizeof(x)[0]
+#define ARR_len(x) (sizeof(x) / sizeof(x)[0])
 #endif
 #define dl long long
 #define usi unsigned int
 
-char *ToUpperCase(char *Dest, const char *string) {
-    char *p = Dest;
-    int len = strlen(string);
-    char r[len + 1];
-    int i = 0;
-    while (1) {
-        r[i] = (char) toupper((int) string[i]);
-        if (string[i] == '\0') break;
-        i++;
-    }
-    strcpy(p, r);
-    return Dest;
-}
+char *ToUpperCase(char *Dest, const char *string);
 
-void PrintArr(const char arr[], int len) {
-    int l_ = len - 1;
-    printf("[");
-    for (int i = 0; i < l_; ++i) {
-        printf("%i%c", (int) arr[i], 44);
-    }
-    printf("%i]___%u", (int) arr[l_ - 1], (l_ + 1));
-}
+void PrintArr(const char arr[], int len);
 
-dl m_pow(const dl base, const dl exponent) {
-    dl r = 1LL;
-    for (int i = 0; i < exponent; ++i) {
-        r *= base;
-    }
-    return r;
-}
+dl m_pow(dl base, dl exponent);
 
-int BinToDec(const char *NumStr) {
-    int r = 0;
-    int j = 0;
-    for (int i = strlen(NumStr) - 1; i >= 0; --i) {
-        r += (NumStr[i] == '0' ? 0 : 1) * m_pow(2, j);
-        j++;
-    }
-    return r;
-}
+int BinToDec(const char *NumStr);
 
-void printArr(const char *a, const int length) {
-    int l = length;
-    printf("[");
-    for (int i = 0; i < l; ++i) {
-        printf("%i", (int) a[i]);
-        if (i != l - 1) {
-            printf(",");
-        }
-    }
-    printf("]\n");
-}
+void printArr(const char *a, int length);
 
-char *substring(char *Dest, const char *source, const int beginIndex, const int endIndex) {
-    char *r = Dest;
-    strncpy(r, source + beginIndex, (size_t) (endIndex - beginIndex));
-    return Dest;
-}
+char *substring(char *Dest, const char *source, int beginIndex, int endIndex);
 
-void substr(char **Dest, const char *source, const int from, int length) {
-    *Dest = (char *) malloc((size_t) length + 1);
-    strncpy(*Dest, source + from, (size_t) length);
-}
+void substr(char **Dest, const char *source, int from, int length);
 
-char *substr2(char *Dest, const char *source, const int from, int length) {
-    char *r = Dest;
-    strncpy(r, source + from, (size_t) length);
-    return Dest;
-}
+char *substr2(char *Dest, const char *source, int from, int length);
 
 
-long long getFileSize(FILE *fp) {
-    long long sz;
-    fseek(fp, 0L, SEEK_END);
-    sz = (long long) ftell(fp);
-    if (sz == -1) {
-//        sz = _ftelli64(fp);
-        printf("Get file size error.\n");
-    }
-    fseek(fp, 0L, SEEK_SET);
-    return sz;
-}
+long long getFileSize(FILE *fp);
 
-int getIntegerLen(const int x) {
-    int n = x;
-    int r = 0;
-    while (1) {
-        int b = n / 10;
-        r++;
-        n = b;
-        if (!b) break;
-    }
-    return r;
-}
+int getIntegerLen(int x);
 
-void Scanf(char **Dest) {
-    char c;
-    int i = 1;
-    while (1) {
-        scanf("%c", &c);
-        *Dest = (char *) realloc(*Dest, (size_t) i);
-        if (c == 0x0A) {
-            (*Dest)[i - 1] = 0x0;
-            break;
-        }
-        (*Dest)[i - 1] = c;
-        ++i;
-    }
-}
+void Scanf(char **Dest);
 
-void strcpyAndCat_auto(char **Dest, const char *cpy_s, const char *cat_s) {
-    *Dest = NULL;
-    int cpy_s_len = strlen(cpy_s);
-    int cat_s_len = strlen(cat_s);
-    size_t size = cpy_s_len + cat_s_len + 1;
-    *Dest = (char *) malloc(size);
-    strcpy(*Dest, cpy_s);
-    strcat(*Dest, cat_s);
-    (*Dest)[size - 1] = '\0';
-}
+void strcpyAndCat_auto(char **Dest, const char *cpy_s, const char *cat_s);
 
-void strcat_auto(char **sourceDest, const char *cat_s) {
-    if (*sourceDest == NULL) {
-        *sourceDest = (char *) malloc(1);
-        (*sourceDest)[0] = 0;
-    }
-    int sourceLen = strlen(*sourceDest);
-    char cloneSource[sourceLen + 1];
-    strcpy(cloneSource, *sourceDest);
-    size_t size = sourceLen + strlen(cat_s) + 1;
-    *sourceDest = (char *) malloc(size);
-    strcpy(*sourceDest, cloneSource);
-    strcat(*sourceDest, cat_s);
-    (*sourceDest)[size - 1] = '\0';
-}
+void strcat_auto(char **sourceDest, const char *cat_s);
 
-void charToCharPtr(char **Dest, const char c) {
-    *Dest = NULL;
-    *Dest = (char *) malloc((size_t) 2);
-    (*Dest)[0] = c;
-}
-
+void charToCharPtr(char **Dest, char c);
 /**
  *
  * @param string s
@@ -166,28 +57,7 @@ void charToCharPtr(char **Dest, const char c) {
  * int *p = NULL;
  * int t = this(&p, "a1b1c1", "1"); => p[0] = 1, p[1] = 3, p[2] = 5; t = 3;
  */
-usi strInStrCount(int **Dest, const char *string, const char *s) {
-    usi c = 0;
-    usi stringL = strlen(string), sL = strlen(s);
-    usi forI = stringL - sL + 1;
-    *Dest = NULL;
-    if (stringL < sL) {
-//        free((void *) forI);
-        return 0;
-    } else {
-        for (int i = 0; i < forI; ++i) {
-            int b = 1;
-            for (int j = 0; j < sL; ++j) {
-                b &= (string[i + j] == s[j]);
-            }
-            if (b) {
-                *Dest = (int *) realloc(*Dest, (size_t) (4 * (++c)));
-                (*Dest)[c - 1] = i;
-            }
-        }
-    }
-    return c;
-}
+usi strInStrCount(int **Dest, const char *string, const char *s);
 
 /**
  * String split
@@ -242,64 +112,18 @@ void split(void ****Dest, char *str, const char *splitChar) {
     }
 }*/
 
-int Str_Cmp_nMatchCase(const char *a, const char *b) {
-    char t1[strlen(a) + 1];
-    char t2[strlen(a) + 1];
-    ToUpperCase(t1, a);
-    ToUpperCase(t2, b);
-    return strcmp(t1, t2) ? 0 : 1;
-}
+int Str_Cmp_nMatchCase(const char *a, const char *b);
 
-void m_itoa(char **Dest, const int i) {
-    int I_L = getIntegerLen(i);
-    *Dest = (char *) malloc((size_t) (I_L + 1));
-    int d_i = 0;
-    for (int j = I_L - 1; j >= 0; --j) {
-        (*Dest)[d_i] = (int) (((long) i) / ((long) m_pow(10LL, j)) % 10) + 48;
-        ++d_i;
-    }
-    (*Dest)[d_i] = 0;
-}
+void m_itoa(char **Dest, int i);
 
 /*void m_lltoa(char **Dest, const dl int ll) {
 
 }*/
 
-int split(char ***Dest, const char *SourceString, const char *SplitStr) {
-    int *pos = NULL;
-    int posL = strInStrCount(&pos, SourceString, SplitStr);
-    usi srcLen = strlen(SourceString), splitStrLen = strlen(SplitStr), toP = srcLen - splitStrLen;
-    int lastIndex = 0;
-    *Dest = (char **) malloc((size_t) (sizeof(char *) * (posL + 1)));
-    for (int i = 0; i < posL; ++i) {
-        int sL = 0;
-        for (int j = lastIndex; j < pos[i]; ++j) {
-            sL = pos[i] - lastIndex + 2;
-            (*Dest)[i] = (char *) malloc((size_t) (sL));
-            (*Dest)[i][j - lastIndex] = SourceString[j];
-        }
-        (*Dest)[i][pos[i]] = 0;
-        lastIndex = pos[i];
-    }
-    return posL;
-}
+int split(char ***Dest, const char *SourceString, const char *SplitStr);
 
-int cmpIntArray(const int *a1, const int a1Len, const int *a2, const int a2Len) {
-    if (a1Len != a2Len) return 0;
-    else {
-        for (int i = 0; i < a1Len; ++i) {
-            if (a1[i] != a2[i]) return 0;
-        }
-    }
-    return 1;
-}
+int cmpIntArray(const int *a1, int a1Len, const int *a2, int a2Len);
 
-int cmpCharArray(const char *a1, const int a1Len, const char *a2, const int a2Len) {
-    if (a1Len != a2Len) return 0;
-    else {
-        for (int i = 0; i < a1Len; ++i) {
-            if (a1[i] != a2[i]) return 0;
-        }
-    }
-    return 1;
-}
+int cmpCharArray(const char *a1, int a1Len, const char *a2, int a2Len);
+
+#endif //C99_ZHC_H

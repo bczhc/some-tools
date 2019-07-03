@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/home/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,6 +111,32 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named Base128Lib
+
+# Build rule for target.
+Base128Lib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Base128Lib
+.PHONY : Base128Lib
+
+# fast build rule for target.
+Base128Lib/fast:
+	$(MAKE) -f CMakeFiles/Base128Lib.dir/build.make CMakeFiles/Base128Lib.dir/build
+.PHONY : Base128Lib/fast
+
+#=============================================================================
+# Target rules for targets named qmcLib
+
+# Build rule for target.
+qmcLib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 qmcLib
+.PHONY : qmcLib
+
+# fast build rule for target.
+qmcLib/fast:
+	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/build
+.PHONY : qmcLib/fast
+
+#=============================================================================
 # Target rules for targets named doJNI
 
 # Build rule for target.
@@ -122,6 +148,46 @@ doJNI: cmake_check_build_system
 doJNI/fast:
 	$(MAKE) -f CMakeFiles/doJNI.dir/build.make CMakeFiles/doJNI.dir/build
 .PHONY : doJNI/fast
+
+#=============================================================================
+# Target rules for targets named zhc
+
+# Build rule for target.
+zhc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 zhc
+.PHONY : zhc
+
+# fast build rule for target.
+zhc/fast:
+	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/build
+.PHONY : zhc/fast
+
+Base128Lib.o: Base128Lib.c.o
+
+.PHONY : Base128Lib.o
+
+# target to build an object file
+Base128Lib.c.o:
+	$(MAKE) -f CMakeFiles/Base128Lib.dir/build.make CMakeFiles/Base128Lib.dir/Base128Lib.c.o
+.PHONY : Base128Lib.c.o
+
+Base128Lib.i: Base128Lib.c.i
+
+.PHONY : Base128Lib.i
+
+# target to preprocess a source file
+Base128Lib.c.i:
+	$(MAKE) -f CMakeFiles/Base128Lib.dir/build.make CMakeFiles/Base128Lib.dir/Base128Lib.c.i
+.PHONY : Base128Lib.c.i
+
+Base128Lib.s: Base128Lib.c.s
+
+.PHONY : Base128Lib.s
+
+# target to generate assembly for a file
+Base128Lib.c.s:
+	$(MAKE) -f CMakeFiles/Base128Lib.dir/build.make CMakeFiles/Base128Lib.dir/Base128Lib.c.s
+.PHONY : Base128Lib.c.s
 
 doJNI.o: doJNI.c.o
 
@@ -150,18 +216,84 @@ doJNI.c.s:
 	$(MAKE) -f CMakeFiles/doJNI.dir/build.make CMakeFiles/doJNI.dir/doJNI.c.s
 .PHONY : doJNI.c.s
 
+qmcLib.o: qmcLib.c.o
+
+.PHONY : qmcLib.o
+
+# target to build an object file
+qmcLib.c.o:
+	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/qmcLib.c.o
+.PHONY : qmcLib.c.o
+
+qmcLib.i: qmcLib.c.i
+
+.PHONY : qmcLib.i
+
+# target to preprocess a source file
+qmcLib.c.i:
+	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/qmcLib.c.i
+.PHONY : qmcLib.c.i
+
+qmcLib.s: qmcLib.c.s
+
+.PHONY : qmcLib.s
+
+# target to generate assembly for a file
+qmcLib.c.s:
+	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/qmcLib.c.s
+.PHONY : qmcLib.c.s
+
+zhc.o: zhc.c.o
+
+.PHONY : zhc.o
+
+# target to build an object file
+zhc.c.o:
+	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/zhc.c.o
+.PHONY : zhc.c.o
+
+zhc.i: zhc.c.i
+
+.PHONY : zhc.i
+
+# target to preprocess a source file
+zhc.c.i:
+	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/zhc.c.i
+.PHONY : zhc.c.i
+
+zhc.s: zhc.c.s
+
+.PHONY : zhc.s
+
+# target to generate assembly for a file
+zhc.c.s:
+	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/zhc.c.s
+.PHONY : zhc.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
-	@echo "... doJNI"
 	@echo "... edit_cache"
+	@echo "... Base128Lib"
+	@echo "... qmcLib"
+	@echo "... doJNI"
+	@echo "... rebuild_cache"
+	@echo "... zhc"
+	@echo "... Base128Lib.o"
+	@echo "... Base128Lib.i"
+	@echo "... Base128Lib.s"
 	@echo "... doJNI.o"
 	@echo "... doJNI.i"
 	@echo "... doJNI.s"
+	@echo "... qmcLib.o"
+	@echo "... qmcLib.i"
+	@echo "... qmcLib.s"
+	@echo "... zhc.o"
+	@echo "... zhc.i"
+	@echo "... zhc.s"
 .PHONY : help
 
 

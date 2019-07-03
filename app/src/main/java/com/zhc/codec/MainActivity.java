@@ -31,19 +31,12 @@ public class MainActivity extends BaseActivity {
     private Button dB = null;
     private int dT = 0;//qmc
     private Picker picker_o = new Picker();
+    private Toast toasting = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            }, 0);
-        } else {
-            D();
-        }
+        creat();
     }
 
     @Override
@@ -70,11 +63,6 @@ public class MainActivity extends BaseActivity {
             case 2:
                 if (data != null) {
                     try {
-//                        String s = Objects.requireNonNull(data.getData()).getPath();
-//                        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-//                        Uri uri;
-//                        if ((uri = data.getData()) != null) {
-//                            String path = new GetPath().getPathFromUriOnKitKat(this, uri);
                         String path = data.getStringExtra("result");
                         System.out.println("path = " + path);
                         setF(path);
@@ -90,6 +78,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void D() {
+        resetBtn();
         setContentView(R.layout.activity_main);
         tv = findViewById(R.id.tv);
         Button pF = findViewById(R.id.pF);
@@ -107,8 +96,133 @@ public class MainActivity extends BaseActivity {
             startActivityForResult(intent, 2);
             return true;
         });
-        this.dB = findViewById(R.id.dB);
-        dB.setOnClickListener(v -> {
+//        this.dB = findViewById(R.id.dB);
+//        setDBOnClickEvent(this.dB);
+        setTSpinner(new String[]{
+                "QQMusic-qmc",
+                "KwMusic-kwm",
+                "Base128"
+        });
+    }
+
+    private void setF(String s) {
+        File u = new File(s);
+        if (u.isFile()) {
+            reset();
+            try {
+                this.f = u.getCanonicalPath();
+                runOnUiThread(() -> this.mainTv.setText(String.format(getResources().getString(R.string.tv), this.f)));
+            } catch (IOException e) {
+                picker_o.showException(e, MainActivity.this);
+                reset();
+                runOnUiThread(() -> dB.setVisibility(VISIBLE));
+            }
+        } else {
+            isFolder = true;
+            this.folder = new File(s);
+            runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), s)));
+        }
+    }
+
+    @SuppressWarnings("SpellCheckingInspection")
+    private File x(File file, int dT) {
+        String name = file.getName();
+        int index = name.lastIndexOf('.');
+        String name_no_x = name.substring(0, index);
+        String p = file.getParent();
+        String x = name.substring(index + 1).toLowerCase();
+        switch (dT) {
+            case 0:
+                try {
+                    switch (x) {
+                        case "qmc0":
+                            return new File(p + "/" + name_no_x + ".mp3");
+                        case "qmcflac":
+                            return new File(p + "/" + name_no_x + ".flac");
+                    }
+                } catch (StringIndexOutOfBoundsException ignored) {
+                }
+                break;
+            case 1:
+                if (!(x.equals("kwm") | x.equals("kwd"))) return null;
+                String r;
+                if (name.matches(".*\\..*")) {
+                    r = p + "/" + name_no_x + ".flac";
+                } else {
+                    r = p + "/" + name + ".flac";
+                }
+                return new File(r);
+        }
+        return null;
+    }
+
+    private void reset() {
+        this.isDecoding = false;
+        this.isFolder = false;
+    }
+
+    private void setTSpinner(String[] data) {
+        Spinner dT = findViewById(R.id.dT);
+        SpinnerAdapter adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item
+                , data);
+        dT.setAdapter(adapter);
+        dT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity.this.dT = position;
+                if (data[position].equals("Base128")) {
+                    FrameLayout fl = findViewById(R.id.fl);
+                    int width = dip2px(100);
+                    int height = dip2px(60);
+                    FrameLayout.LayoutParams[] lp = {
+                            new FrameLayout.LayoutParams(width, height),
+                            new FrameLayout.LayoutParams(width, height)
+                    };
+                    Button[] base128_btn = new Button[2];
+                    fl.removeAllViews();
+                    for (int i = 0; i < base128_btn.length; i++) {
+                        base128_btn[i] = new Button(MainActivity.this);
+                        if (i == 0) {
+                            base128_btn[i].setText(R.string.encode);
+                            lp[i].setMargins(dip2px(10F), 0, 0, 0);
+                        } else {
+                            lp[i].setMargins(dip2px(120F), 0, 0, 0);
+                            base128_btn[i].setText(R.string.decode);
+                        }
+                        base128_btn[i].setLayoutParams(lp[i]);
+                        fl.addView(base128_btn[i]);
+                    }
+                } else {
+                    resetBtn();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void creat() {
+        setContentView(R.layout.activity_main);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            }, 0);
+        } else {
+            D();
+        }
+    }
+
+    private int dip2px(float dipValue) {
+        float m = this.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * m + 0.5f);
+    }
+
+    private void setDBOnClickEvent(Button do_button) {
+        do_button.setOnClickListener(v -> {
             dB.setVisibility(INVISIBLE);
             if (isDecoding) {
                 makeText(this, "正在进行任务", LENGTH_SHORT).show();
@@ -147,7 +261,8 @@ public class MainActivity extends BaseActivity {
                                 this.folder = null;
                                 this.f = null;
                                 runOnUiThread(() -> dB.setVisibility(VISIBLE));
-                                mainTv.setText("");
+                                mainTv.setText(R.string.nul);
+                                tv.setText(R.string.nul);
                                 reset();
                             });
                         } catch (Exception e) {
@@ -179,7 +294,11 @@ public class MainActivity extends BaseActivity {
                 try {
                     if (dF == null) {
                         runOnUiThread(() -> {
-                            makeText(this, "格式不正确", LENGTH_SHORT).show();
+                            if (toasting != null) {
+                                toasting.cancel();
+                            }
+                            toasting = makeText(this, "格式不正确", LENGTH_SHORT);
+                            toasting.show();
                             runOnUiThread(() -> dB.setVisibility(VISIBLE));
                         });
                         return;
@@ -226,83 +345,17 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-        setTSpinner(new String[]{
-                "QQMusic-qmc",
-                "KwMusic-kwm"
-        });
     }
 
-    private void setF(String s) {
-        File u = new File(s);
-        if (u.isFile()) {
-            reset();
-            try {
-                this.f = u.getCanonicalPath();
-                runOnUiThread(() -> this.mainTv.setText(String.format(getResources().getString(R.string.tv), this.f)));
-            } catch (IOException e) {
-                picker_o.showException(e, MainActivity.this);
-                reset();
-                runOnUiThread(() -> dB.setVisibility(VISIBLE));
-            }
-        } else {
-            isFolder = true;
-            this.folder = new File(s);
-            runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), s)));
-        }
-    }
-
-    @SuppressWarnings("SpellCheckingInspection")
-    private File x(File file, int dT) {
-        String name = file.getName();
-        int index = name.lastIndexOf('.');
-        String name_no_x = name.substring(0, index);
-        String p = file.getParent();
-        String x = name.substring(index + 1).toLowerCase();
-        switch (dT) {
-            case 0:
-                try {
-                    switch (x) {
-                        case "qmc0":
-                            return new File(p + "/" + name_no_x + ".mp3");
-                        case "codec":
-                            return new File(p + "/" + name_no_x + ".flac");
-                    }
-                } catch (StringIndexOutOfBoundsException ignored) {
-                }
-                break;
-            case 1:
-                if (!(x.equals("kwm") | x.equals("kwd"))) return null;
-                String r;
-                if (name.matches(".*\\..*")) {
-                    r = p + "/" + name_no_x + ".flac";
-                } else {
-                    r = p + "/" + name + ".flac";
-                }
-                return new File(r);
-        }
-        return null;
-    }
-
-    private void reset() {
-        this.isDecoding = false;
-        this.isFolder = false;
-    }
-
-    private void setTSpinner(String[] stringList) {
-        Spinner dT = findViewById(R.id.dT);
-        SpinnerAdapter adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item
-                , stringList);
-        dT.setAdapter(adapter);
-        dT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                MainActivity.this.dT = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+    private void resetBtn() {
+        Button btn = new Button(MainActivity.this);
+        btn.setLayoutParams(new FrameLayout.LayoutParams(dip2px(210F), dip2px(70)));
+        btn.setText(R.string.decode);
+        btn.setId(R.id.dB);
+        this.dB = btn;
+        MainActivity.this.setDBOnClickEvent(btn);
+        FrameLayout fl = findViewById(R.id.fl);
+        fl.removeAllViews();
+        fl.addView(btn);
     }
 }
