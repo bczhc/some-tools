@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name="filepicker.Picker"/>
+        <activity android:name=".BaseActivity"/>
     </application>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ManifestOrder"/>
 </manifest>
