@@ -124,6 +124,18 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * get dest file name
+     *
+     * @param file source file
+     * @param dT   0: qmc0/qmcflac
+     *             1: kwm
+     *             2[0-9]{1} : Base128 {
+     *             21: Base128 encode
+     *             22: Base128 decode
+     *             }
+     * @return dest file
+     */
     @SuppressWarnings("SpellCheckingInspection")
     private File x(File file, int dT) {
         String name = file.getName();
@@ -178,11 +190,12 @@ public class MainActivity extends BaseActivity {
                             new FrameLayout.LayoutParams(width, height),
                             new FrameLayout.LayoutParams(width, height)
                     };
-                    Button[] base128_btn = new Button[2];
+                    Button[] base128_btn = new Button[]{
+                            new Button(MainActivity.this), new Button(MainActivity.this)
+                    };
                     fl.removeAllViews();
                     setDBOnClickEvent(null, 2, base128_btn);
                     for (int i = 0; i < base128_btn.length; i++) {
-                        base128_btn[i] = new Button(MainActivity.this);
                         if (i == 0) {
                             base128_btn[i].setText(R.string.encode);
                             lp[i].setMargins(dip2px(10F), 0, 0, 0);
@@ -235,6 +248,7 @@ public class MainActivity extends BaseActivity {
             for (int i = 0; i < buttons.length; i++) {
                 buttons[i].setOnClickListener(getV(o, 21 + i));
             }
+            return;
         }
         Objects.requireNonNull(do_button).setOnClickListener(v);
     }
@@ -284,8 +298,9 @@ public class MainActivity extends BaseActivity {
                                         runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), finalI + " of " + length + ": " + file.getName())));
                                         File x = x(file, this.dT);
                                         if (x != null) {
+                                            String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L)
-                                                if (new Main().JNI_Decode(file.getCanonicalPath(), x.getCanonicalPath(), o == 1 ? this.dT : dT, tv) == -1)
+                                                if (new Main().JNI_Decode(fPath, x.getCanonicalPath(), o == 1 ? this.dT : dT, tv) == -1)
                                                     runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
                                         }
                                     } catch (IOException e) {
