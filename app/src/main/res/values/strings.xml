@@ -1,14 +1,22 @@
 <resources>
     <string name="app_name">codec</string>
     <string name="tv">%1$s</string>
-    <string name="cd">进入目录</string>
-    <string name="a">.ssss/s/s/s/s</string>
-    <string name="decoding">解码</string>
     <string name="pick_file">选择文件/目录</string>
-    <string name="decode">解码</string>
-    <string name="eF">上一级</string>
-    <string name="cancel">取消</string>
-    <string name="ok">确定</string>
     <string name="encode">编码</string>
+    <string name="decode">解码</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="encode_done">编码完成</string>
+    <string name="decode_done">解码完成</string>
+    <string name="percent_100">100%</string>
+    <string name="null_file">为空文件</string>
+    <string name="native_error">内部错误：如寻找key失败。。。</string>
+    <string name="fopen_error">打开文件错误</string>
+    <string name="incorrect_file_extension">格式不正确</string>
+    <string name="all_file_encoded_done">所有文件编码完成！</string>
+    <string name="all_file_decoded_done">所有文件解码完成！</string>
+    <string name="have_task">正在进行任务</string>
+    <string name="type_path">输入路径</string>
+    <string name="no_access">此处无权访问</string>
     <string name="nul"/>
 </resources>

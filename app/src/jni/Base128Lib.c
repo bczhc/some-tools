@@ -92,6 +92,7 @@ int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
         return (jint) EOF;
     }
     dl fS = getFileSize(fp), a = fS / ERS;
+    dl per = fS / 10290;
     printf("size: %lld\n", fS);
     int b = (int) (fS % ERS);
     char r[ERS] = {0};
@@ -105,7 +106,7 @@ int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
         e_1029P(R, r, 1029);
         fwrite(R, DRS, 1, fpO);
         d = (double) i / (double) a * 100;
-        if (!(i % 20000)) {
+        if (!(i % per)) {
 //            printf("progress: %f%%\n", d);
             callMethod(env, mid, "", d, obj);
         }
@@ -131,6 +132,7 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
         return EOF;
     }
     dl fS = getFileSize(fp) - 8, a = fS / DRS;
+    dl per = fS / 11760;
     printf("size: %lld\n", fS + 8);
     int b = fS % DRS;
     char r[DRS] = {0};
@@ -144,7 +146,7 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
     }
     if (f_ck > 0) {
         printf("not Base128 encoded\n");
-        callMethod(env, mid, "not Base128 encoded", -1, obj);
+        callMethod(env, mid, "不是由Base128编码得到的文件， 防止误解码损坏文件", -1, obj);
         return -2;
     }
     if ((fpO = fopen(D_fN, "wb")) == NULL) {
@@ -156,8 +158,7 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
     double d = 0;
     for (int i = 0; i < a; ++i) {
         d = (double) i / (double) a * 100;
-        if (!(i % 20000)) {
-//            printf("progress: %f%%\n", d);
+        if (!(i % per)) {
             callMethod(env, mid, "", d, obj);
         }
         fread(r, DRS, 1, fp);

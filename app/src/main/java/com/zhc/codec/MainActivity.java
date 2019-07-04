@@ -137,7 +137,7 @@ public class MainActivity extends BaseActivity {
      * @return dest file
      */
     @SuppressWarnings("SpellCheckingInspection")
-    private File x(File file, int dT) {
+    private String x(File file, int dT) {
         String name = file.getName();
         int index = name.lastIndexOf('.');
         String name_no_x = name.substring(0, index);
@@ -148,9 +148,9 @@ public class MainActivity extends BaseActivity {
                 try {
                     switch (x) {
                         case "qmc0":
-                            return new File(p + "/" + name_no_x + ".mp3");
+                            return p + "/" + name_no_x + ".mp3";
                         case "qmcflac":
-                            return new File(p + "/" + name_no_x + ".flac");
+                            return p + "/" + name_no_x + ".flac";
                     }
                 } catch (StringIndexOutOfBoundsException ignored) {
                 }
@@ -163,7 +163,11 @@ public class MainActivity extends BaseActivity {
                 } else {
                     r = p + "/" + name + ".flac";
                 }
-                return new File(r);
+                return r;
+            case 21:
+                return p + "/" + name + ".base128e";
+            case 22:
+                return p + "/" + name + ".base128d";
         }
         return null;
     }
@@ -243,10 +247,10 @@ public class MainActivity extends BaseActivity {
      *                  encode and decode 2
      */
     private void setDBOnClickEvent(@Nullable Button do_button, int o, @Nullable Button[] buttons) {
-        View.OnClickListener v = getV(o, 0);
+        View.OnClickListener v = getV(o, 0, null);
         if (o == 2 && buttons != null) {
             for (int i = 0; i < buttons.length; i++) {
-                buttons[i].setOnClickListener(getV(o, 21 + i));
+                buttons[i].setOnClickListener(getV(o, 21 + i, buttons));
             }
             return;
         }
@@ -274,13 +278,14 @@ public class MainActivity extends BaseActivity {
      *           o:2 base128:
      *           21: encode
      *           22:decode
+     * @param buttons o == 21 || o == 22: Base128 buttons
      * @return v
      */
-    private View.OnClickListener getV(int o, int dT) {
+    private View.OnClickListener getV(int o, int dT, @Nullable Button[] buttons) {
         return v -> {
             dB.setVisibility(INVISIBLE);
             if (isDecoding) {
-                makeText(this, "正在进行任务", LENGTH_SHORT).show();
+                makeText(this, R.string.have_task, LENGTH_SHORT).show();
                 return;
             }
             if (isFolder) {
@@ -296,12 +301,12 @@ public class MainActivity extends BaseActivity {
                                     try {
                                         int finalI = i;
                                         runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), finalI + " of " + length + ": " + file.getName())));
-                                        File x = x(file, this.dT);
+                                        String x = x(file, o == 1 ? this.dT : dT);
                                         if (x != null) {
                                             String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L)
-                                                if (new Main().JNI_Decode(fPath, x.getCanonicalPath(), o == 1 ? this.dT : dT, tv) == -1)
-                                                    runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
+                                                if (new Main().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv) == -1)
+                                                    runOnUiThread(() -> makeText(this, R.string.fopen_error, LENGTH_SHORT).show());
                                         }
                                     } catch (IOException e) {
                                         picker_o.showException(e, MainActivity.this);
@@ -312,8 +317,8 @@ public class MainActivity extends BaseActivity {
                                 ++i;
                             }
                             runOnUiThread(() -> {
-                                tv.setText(String.format(getResources().getString(R.string.tv), "100%"));
-                                makeText(this, "所有文件解码完成！", LENGTH_SHORT).show();
+                                tv.setText(R.string.percent_100);
+                                makeText(this, o == 1 ? R.string.all_file_decoded_done : (dT == 21 ? R.string.all_file_encoded_done : R.string.all_file_decoded_done), LENGTH_SHORT).show();
                                 this.folder = null;
                                 this.f = null;
                                 runOnUiThread(() -> dB.setVisibility(VISIBLE));
@@ -337,9 +342,9 @@ public class MainActivity extends BaseActivity {
                     runOnUiThread(() -> dB.setVisibility(VISIBLE));
                 }
             } else {
-                File dF = null;
+                String dF = null;
                 try {
-                    dF = x(new File(f), this.dT);
+                    dF = x(new File(f), o == 1 ? this.dT : dT);
 //                }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -353,40 +358,40 @@ public class MainActivity extends BaseActivity {
                             if (toasting != null) {
                                 toasting.cancel();
                             }
-                            toasting = makeText(this, "格式不正确", LENGTH_SHORT);
+                            toasting = makeText(this, R.string.incorrect_file_extension, LENGTH_SHORT);
                             toasting.show();
                             runOnUiThread(() -> dB.setVisibility(VISIBLE));
                         });
                         return;
                     }
-                    File finalDF = dF;
+                    String finalDF = dF;
                     new Thread(() -> {
                         boolean size0 = false;
                         try {
                             isDecoding = true;
                             try {
                                 size0 = new File(f).length() == 0L;
-                                int status = new Main().JNI_Decode(f, finalDF.getCanonicalPath(), o == 1 ? this.dT : dT, tv);
+                                int status = new Main().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv);
                                 if (!size0 && (status == -1 || status == 255)) {
-                                    runOnUiThread(() -> makeText(this, "打开文件错误", LENGTH_SHORT).show());
+                                    runOnUiThread(() -> makeText(this, R.string.fopen_error, LENGTH_SHORT).show());
                                 }
                                 if (status == 1) {
-                                    runOnUiThread(() -> makeText(this, "内部错误：如寻找key失败。。。", LENGTH_SHORT).show());
+                                    runOnUiThread(() -> makeText(this, R.string.native_error, LENGTH_SHORT).show());
                                 }
-                            } catch (IOException e) {
+                            } catch (Exception e) {
                                 picker_o.showException(e, MainActivity.this);
                                 reset();
                                 runOnUiThread(() -> dB.setVisibility(VISIBLE));
                             }
                             isDecoding = false;
-                            if (!size0 && Objects.requireNonNull(finalDF).exists() && finalDF.length() > 0) {
+                            if (!size0 && new File(finalDF).exists() && finalDF.length() > 0) {
                                 runOnUiThread(() -> {
-                                    tv.setText(String.format(getResources().getString(R.string.tv), "100%"));
-                                    makeText(this, "解码完成", LENGTH_SHORT).show();
+                                    tv.setText(R.string.percent_100);
+                                    makeText(this, o == 1 ? R.string.decode_done : (dT == 21 ? R.string.encode_done : R.string.decode_done), LENGTH_SHORT).show();
                                     reset();
                                 });
                             }
-                            if (size0) runOnUiThread(() -> makeText(this, "为空文件", LENGTH_SHORT).show());
+                            if (size0) runOnUiThread(() -> makeText(this, R.string.null_file, LENGTH_SHORT).show());
                             runOnUiThread(() -> dB.setVisibility(VISIBLE));
                         } catch (Exception e) {
                             picker_o.showException(e, MainActivity.this);
