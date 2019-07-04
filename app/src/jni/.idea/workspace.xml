@@ -128,10 +128,9 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2093" />
-    <option name="y" value="141" />
-    <option name="width" value="820" />
-    <option name="height" value="520" />
+    <option name="y" value="27" />
+    <option name="width" value="1920" />
+    <option name="height" value="1053" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -232,15 +231,15 @@
       <workItem from="1561517990473" duration="730000" />
       <workItem from="1561685043661" duration="758000" />
       <workItem from="1561686283720" duration="33000" />
-      <workItem from="1562158305220" duration="10328000" />
+      <workItem from="1562158305220" duration="10926000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32495000" />
+    <option name="totallyTimeSpent" value="33093000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
+    <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23397435" />

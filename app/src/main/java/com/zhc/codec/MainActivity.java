@@ -272,18 +272,18 @@ public class MainActivity extends BaseActivity {
     /**
      * getV
      *
-     * @param o  decode 1
-     *           encode and decode 2
-     * @param dT o:1 be ignored
-     *           o:2 base128:
-     *           21: encode
-     *           22:decode
-     * @param buttons o == 21 || o == 22: Base128 buttons
+     * @param o       decode 1
+     *                encode and decode 2
+     * @param dT      o:1 be ignored
+     *                o:2 base128:
+     *                21: encode
+     *                22:decode
+     * @param buttons o == 2: Base128 buttons
      * @return v
      */
     private View.OnClickListener getV(int o, int dT, @Nullable Button[] buttons) {
         return v -> {
-            dB.setVisibility(INVISIBLE);
+            (o == 1 ? dB : (Objects.requireNonNull(buttons)[dT - 21])).setVisibility(INVISIBLE);
             if (isDecoding) {
                 makeText(this, R.string.have_task, LENGTH_SHORT).show();
                 return;
@@ -311,7 +311,7 @@ public class MainActivity extends BaseActivity {
                                     } catch (IOException e) {
                                         picker_o.showException(e, MainActivity.this);
                                         reset();
-                                        runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                                        catch_resetBtn(o, buttons);
                                     }
                                 }
                                 ++i;
@@ -321,7 +321,7 @@ public class MainActivity extends BaseActivity {
                                 makeText(this, o == 1 ? R.string.all_file_decoded_done : (dT == 21 ? R.string.all_file_encoded_done : R.string.all_file_decoded_done), LENGTH_SHORT).show();
                                 this.folder = null;
                                 this.f = null;
-                                runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                                runOnUiThread(() -> (o == 1 ? dB : buttons[dT - 21]).setVisibility(VISIBLE));
                                 mainTv.setText(R.string.nul);
                                 tv.setText(R.string.nul);
                                 reset();
@@ -330,7 +330,7 @@ public class MainActivity extends BaseActivity {
                             picker_o.showException(e, MainActivity.this);
                             runOnUiThread(() -> {
                                 makeText(this, e.toString(), LENGTH_SHORT).show();
-                                dB.setVisibility(VISIBLE);
+                                catch_resetBtn(o, buttons);
                                 reset();
                             });
                         }
@@ -339,7 +339,7 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception e) {
                     picker_o.showException(e, MainActivity.this);
                     reset();
-                    runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                    catch_resetBtn(o, buttons);
                 }
             } else {
                 String dF = null;
@@ -350,7 +350,7 @@ public class MainActivity extends BaseActivity {
                     e.printStackTrace();
                     if (!(e instanceof NullPointerException)) makeText(this, e.toString(), LENGTH_SHORT).show();
                     reset();
-                    runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                    catch_resetBtn(o, buttons);
                 }
                 try {
                     if (dF == null) {
@@ -381,7 +381,7 @@ public class MainActivity extends BaseActivity {
                             } catch (Exception e) {
                                 picker_o.showException(e, MainActivity.this);
                                 reset();
-                                runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                                catch_resetBtn(o, buttons);
                             }
                             isDecoding = false;
                             if (!size0 && new File(finalDF).exists() && finalDF.length() > 0) {
@@ -392,19 +392,28 @@ public class MainActivity extends BaseActivity {
                                 });
                             }
                             if (size0) runOnUiThread(() -> makeText(this, R.string.null_file, LENGTH_SHORT).show());
-                            runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                            catch_resetBtn(o, buttons);
                         } catch (Exception e) {
                             picker_o.showException(e, MainActivity.this);
                             reset();
-                            runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                            catch_resetBtn(o, buttons);
                         }
                     }).start();
                 } catch (Exception e) {
                     picker_o.showException(e, MainActivity.this);
                     reset();
-                    runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                    catch_resetBtn(o, buttons);
                 }
             }
         };
+    }
+
+    private void catch_resetBtn(int o, @Nullable Button[] buttons) {
+        if (o == 1) runOnUiThread(() -> dB.setVisibility(VISIBLE));
+        else if (buttons != null) runOnUiThread(() -> {
+            for (Button button : buttons) {
+                button.setVisibility(VISIBLE);
+            }
+        });
     }
 }
