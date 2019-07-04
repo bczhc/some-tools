@@ -104,8 +104,8 @@ public class Picker extends AppCompatActivity {
             EditText et = new EditText(this);
             et.setText(String.format("%s", pathView.getText().toString()));
             et.setLayoutParams(lp);
-            ad.setTitle("输入路径")
-                    .setPositiveButton("确定", (dialog, which) -> {
+            ad.setTitle(R.string.type_path)
+                    .setPositiveButton(R.string.ok, (dialog, which) -> {
                         File f = new File(et.getText().toString());
                         if (f.isFile() && option == 1) {
                             Intent r = new Intent();
@@ -122,7 +122,7 @@ public class Picker extends AppCompatActivity {
                             fillViews(listFiles, lp, grey, justPicked, ll);
                         }
                     })
-                    .setNegativeButton("取消", (dialog, which) -> {
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     })
                     .setView(et).show();
         });
@@ -157,7 +157,7 @@ public class Picker extends AppCompatActivity {
             } catch (Exception e) {
                 runOnUiThread(() -> {
                     if (notHavePermissionAccessToast != null) notHavePermissionAccessToast.cancel();
-                    notHavePermissionAccessToast = Toast.makeText(this, "此处无权访问", Toast.LENGTH_SHORT);
+                    notHavePermissionAccessToast = Toast.makeText(this, R.string.no_access, Toast.LENGTH_SHORT);
                     notHavePermissionAccessToast.show();
                 });
                 e.printStackTrace();

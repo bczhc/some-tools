@@ -8,7 +8,6 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/CMakeCInformation.cmake"
-  "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/CMakeCXXInformation.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/CMakeCommonLanguageInclude.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/CMakeExtraGeneratorDetermineCompilerMacrosAndIncludeDirs.cmake"
@@ -20,18 +19,15 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/CMakeSystemSpecificInitialize.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Compiler/GNU-C.cmake"
-  "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Compiler/GNU-CXX.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Compiler/GNU.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Internal/CMakeCheckCompilerFlag.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Platform/Linux-GNU-C.cmake"
-  "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Platform/Linux-GNU-CXX.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Platform/Linux-GNU.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Platform/Linux.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/Platform/UnixPaths.cmake"
   "/root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/share/cmake-3.14/Modules/ProcessorCount.cmake"
   "../CMakeLists.txt"
   "CMakeFiles/3.14.3/CMakeCCompiler.cmake"
-  "CMakeFiles/3.14.3/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.14.3/CMakeSystem.cmake"
   )
 

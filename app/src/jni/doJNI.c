@@ -7,6 +7,9 @@
 #include "com_zhc_JNI.h"
 #include "Base128Lib.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 JNIEXPORT jint JNICALL Java_com_zhc_JNI_qmcDecode
         (JNIEnv *env, jobject obj, jstring f, jstring dF) {
     JNIEnv e = *env;
@@ -126,3 +129,4 @@ JNIEXPORT void JNICALL Java_com_zhc_JNI_Base128_1decode
     const char *DestFileName = (*env)->GetStringUTFChars(env, f2, (jboolean *) NULL);
     dD(FileName, DestFileName, env, obj, mid);
 }
+#pragma clang diagnostic pop
