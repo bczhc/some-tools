@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -21,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Picker extends AppCompatActivity {
-    private Toast notHavePermissionAccessToast = null;
+    //    private Toast notHavePermissionAccessToast = null;
     @SuppressWarnings("unused")
     public static int PICK_FILE = 1;
     @SuppressWarnings("unused")
@@ -100,7 +101,8 @@ public class Picker extends AppCompatActivity {
         this.pathView.setOnClickListener((v) -> {
             AlertDialog.Builder ad = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
-            et.setText(String.format("%s", pathView.getText().toString()));
+            String s = pathView.getText().toString();
+            et.setText(String.format("%s", s.equals("/storage/emulated") ? s + "/0" : s));
             et.setLayoutParams(lp);
             ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
@@ -154,9 +156,11 @@ public class Picker extends AppCompatActivity {
                 length = listFiles.length;
             } catch (Exception e) {
                 runOnUiThread(() -> {
-                    if (notHavePermissionAccessToast != null) notHavePermissionAccessToast.cancel();
+                    /*if (notHavePermissionAccessToast != null) notHavePermissionAccessToast.cancel();
                     notHavePermissionAccessToast = Toast.makeText(this, R.string.no_access, Toast.LENGTH_SHORT);
-                    notHavePermissionAccessToast.show();
+                    notHavePermissionAccessToast.show();*/
+                    Snackbar snackbar = Snackbar.make(this.ll, R.string.no_access, Snackbar.LENGTH_SHORT);
+                    snackbar.setAction("×", v -> snackbar.dismiss()).show();
                 });
                 e.printStackTrace();
             }
@@ -175,10 +179,14 @@ public class Picker extends AppCompatActivity {
                                     if (colorDrawable.getColor() == Color.GREEN) {
                                         textViews[finalI].setBackgroundColor(white);
                                     } else {
-                                        if (justPicked[0] != -1)
-                                            textViews[justPicked[0]].setBackgroundColor(white);
-                                        textViews[finalI].setBackgroundColor(Color.GREEN);
-                                        justPicked[0] = finalI;
+                                        try {
+                                            if (justPicked[0] != -1)
+                                                textViews[justPicked[0]].setBackgroundColor(white);
+                                            textViews[finalI].setBackgroundColor(Color.GREEN);
+                                            justPicked[0] = finalI;
+                                        } catch (ArrayIndexOutOfBoundsException e) {
+                                            Snackbar.make(this.ll, e.toString(), Snackbar.LENGTH_SHORT).show();
+                                        }
                                     }
                                 });
                                 try {
