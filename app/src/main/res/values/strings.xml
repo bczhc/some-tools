@@ -17,6 +17,6 @@
     <string name="all_file_decoded_done">所有文件解码完成！</string>
     <string name="have_task">正在进行任务</string>
     <string name="type_path">输入路径</string>
-    <string name="no_access">此处无权访问</string>
+    <string name="no_access">无此路径或无权访问</string>
     <string name="nul"/>
 </resources>
