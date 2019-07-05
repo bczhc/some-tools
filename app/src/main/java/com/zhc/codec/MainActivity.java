@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
                     } catch (Exception e) {
                         picker_o.showException(e, MainActivity.this);
                         reset();
-                        runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                        allButtonsAction(1, null, VISIBLE);
                     }
                 }
         }
@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity {
             } catch (IOException e) {
                 picker_o.showException(e, MainActivity.this);
                 reset();
-                runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                allButtonsAction(1, null, VISIBLE);
             }
         } else {
             isFolder = true;
@@ -278,12 +278,12 @@ public class MainActivity extends BaseActivity {
      *                o:2 base128:
      *                21: encode
      *                22:decode
-     * @param buttons o == 2: Base128 buttons
+     * @param buttons o == 21 || o == 22: Base128 buttons
      * @return v
      */
     private View.OnClickListener getV(int o, int dT, @Nullable Button[] buttons) {
         return v -> {
-            (o == 1 ? dB : (Objects.requireNonNull(buttons)[dT - 21])).setVisibility(INVISIBLE);
+            allButtonsAction(o, buttons, INVISIBLE);
             if (isDecoding) {
                 makeText(this, R.string.have_task, LENGTH_SHORT).show();
                 return;
@@ -311,7 +311,7 @@ public class MainActivity extends BaseActivity {
                                     } catch (IOException e) {
                                         picker_o.showException(e, MainActivity.this);
                                         reset();
-                                        catch_resetBtn(o, buttons);
+                                        allButtonsAction(o, buttons, VISIBLE);
                                     }
                                 }
                                 ++i;
@@ -321,7 +321,7 @@ public class MainActivity extends BaseActivity {
                                 makeText(this, o == 1 ? R.string.all_file_decoded_done : (dT == 21 ? R.string.all_file_encoded_done : R.string.all_file_decoded_done), LENGTH_SHORT).show();
                                 this.folder = null;
                                 this.f = null;
-                                runOnUiThread(() -> (o == 1 ? dB : buttons[dT - 21]).setVisibility(VISIBLE));
+                                allButtonsAction(o, buttons, VISIBLE);
                                 mainTv.setText(R.string.nul);
                                 tv.setText(R.string.nul);
                                 reset();
@@ -330,7 +330,7 @@ public class MainActivity extends BaseActivity {
                             picker_o.showException(e, MainActivity.this);
                             runOnUiThread(() -> {
                                 makeText(this, e.toString(), LENGTH_SHORT).show();
-                                catch_resetBtn(o, buttons);
+                                dB.setVisibility(VISIBLE);
                                 reset();
                             });
                         }
@@ -339,7 +339,7 @@ public class MainActivity extends BaseActivity {
                 } catch (Exception e) {
                     picker_o.showException(e, MainActivity.this);
                     reset();
-                    catch_resetBtn(o, buttons);
+                    allButtonsAction(o, buttons, VISIBLE);
                 }
             } else {
                 String dF = null;
@@ -350,7 +350,7 @@ public class MainActivity extends BaseActivity {
                     e.printStackTrace();
                     if (!(e instanceof NullPointerException)) makeText(this, e.toString(), LENGTH_SHORT).show();
                     reset();
-                    catch_resetBtn(o, buttons);
+                    allButtonsAction(o, buttons, VISIBLE);
                 }
                 try {
                     if (dF == null) {
@@ -360,7 +360,7 @@ public class MainActivity extends BaseActivity {
                             }
                             toasting = makeText(this, R.string.incorrect_file_extension, LENGTH_SHORT);
                             toasting.show();
-                            runOnUiThread(() -> dB.setVisibility(VISIBLE));
+                            allButtonsAction(o, buttons, VISIBLE);
                         });
                         return;
                     }
@@ -381,7 +381,7 @@ public class MainActivity extends BaseActivity {
                             } catch (Exception e) {
                                 picker_o.showException(e, MainActivity.this);
                                 reset();
-                                catch_resetBtn(o, buttons);
+                                allButtonsAction(o, buttons, VISIBLE);
                             }
                             isDecoding = false;
                             if (!size0 && new File(finalDF).exists() && finalDF.length() > 0) {
@@ -392,27 +392,33 @@ public class MainActivity extends BaseActivity {
                                 });
                             }
                             if (size0) runOnUiThread(() -> makeText(this, R.string.null_file, LENGTH_SHORT).show());
-                            catch_resetBtn(o, buttons);
+                            allButtonsAction(o, buttons, VISIBLE);
                         } catch (Exception e) {
                             picker_o.showException(e, MainActivity.this);
                             reset();
-                            catch_resetBtn(o, buttons);
+                            allButtonsAction(o, buttons, VISIBLE);
                         }
                     }).start();
                 } catch (Exception e) {
                     picker_o.showException(e, MainActivity.this);
                     reset();
-                    catch_resetBtn(o, buttons);
+                    allButtonsAction(o, buttons, VISIBLE);
                 }
             }
         };
     }
 
-    private void catch_resetBtn(int o, @Nullable Button[] buttons) {
-        if (o == 1) runOnUiThread(() -> dB.setVisibility(VISIBLE));
+    /**
+     * @param o       1 2
+     * @param buttons buttons
+     * @param t       appear: 0x0
+     *                disappear: 0x4
+     */
+    private void allButtonsAction(int o, @Nullable Button[] buttons, int t) {
+        if (o == 1) runOnUiThread(() -> dB.setVisibility(t));
         else if (buttons != null) runOnUiThread(() -> {
             for (Button button : buttons) {
-                button.setVisibility(VISIBLE);
+                button.setVisibility(t);
             }
         });
     }
