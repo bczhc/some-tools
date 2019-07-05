@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.zhc.codec">
-
+          package="com.zhc.codec">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -18,5 +18,4 @@
         </activity>
         <activity android:name="filepicker.Picker"/>
     </application>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ManifestOrder"/>
 </manifest>

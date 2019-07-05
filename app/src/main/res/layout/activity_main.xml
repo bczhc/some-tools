@@ -14,7 +14,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.497"/>
-    <FrameLayout
+    <LinearLayout
             android:layout_width="220dp"
             android:layout_height="69dp"
             android:layout_marginBottom="164dp"
@@ -30,7 +30,7 @@
                 android:layout_marginBottom="164dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/pF" app:layout_constraintEnd_toEndOf="@+id/pF"/>
-    </FrameLayout>
+    </LinearLayout>
     <TextView
             android:background="#D8FAFF"
             android:layout_width="286dp"
