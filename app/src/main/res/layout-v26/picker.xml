@@ -14,6 +14,9 @@
                   android:id="@+id/textView"
                   app:layout_constraintEnd_toEndOf="parent"
                   app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                  android:autoSizeMinTextSize="1dp"
+                  android:autoSizeStepGranularity="@dimen/autoSizeStep"
+                  android:autoSizeMaxTextSize="16dp"
         />
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
@@ -61,6 +64,9 @@
                                 android:id="@+id/cancel"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"
+                                android:autoSizeMinTextSize="1dp"
+                                android:autoSizeStepGranularity="@dimen/autoSizeStep"
+                                android:autoSizeMaxTextSize="16dp"
                         />
                     </LinearLayout>
                     <LinearLayout android:layout_width="0dp"
@@ -91,6 +97,9 @@
                                 android:id="@+id/pick"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"
+                                android:autoSizeMinTextSize="1dp"
+                                android:autoSizeStepGranularity="@dimen/autoSizeStep"
+                                android:autoSizeMaxTextSize="16dp"
                         />
                     </LinearLayout>
                     <LinearLayout android:layout_width="0dp"

@@ -9,7 +9,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import filepicker.Picker;
 
@@ -79,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void D() {
+        setContentView(R.layout.main_ll);
         resetBtn();
-        setContentView(R.layout.activity_main);
         tv = findViewById(R.id.tv);
         Button pF = findViewById(R.id.pF);
         this.mainTv = findViewById(R.id.textView);
@@ -188,28 +190,28 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 MainActivity.this.dT = position;
                 if (data[position].equals("Base128")) {
-                    FrameLayout fl = findViewById(R.id.fl);
-                    int width = dip2px(100);
-                    int height = dip2px(60);
-                    FrameLayout.LayoutParams[] lp = {
-                            new FrameLayout.LayoutParams(width, height),
-                            new FrameLayout.LayoutParams(width, height)
-                    };
+                    LinearLayout ll = findViewById(R.id.fl);
                     Button[] base128_btn = new Button[]{
                             new Button(MainActivity.this), new Button(MainActivity.this)
                     };
-                    fl.removeAllViews();
+                    LinearLayout.LayoutParams[] ll_lp = new LinearLayout.LayoutParams[]{
+                            new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1),
+                            new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1)
+                    };
+                    ll.removeAllViews();
                     setDBOnClickEvent(null, 2, base128_btn);
-                    for (int i = 0; i < base128_btn.length; i++) {
-                        if (i == 0) {
-                            base128_btn[i].setText(R.string.encode);
-                            lp[i].setMargins(dip2px(10F), 0, 0, 0);
-                        } else {
-                            lp[i].setMargins(dip2px(120F), 0, 0, 0);
-                            base128_btn[i].setText(R.string.decode);
-                        }
-                        base128_btn[i].setLayoutParams(lp[i]);
-                        fl.addView(base128_btn[i]);
+                    base128_btn[0].setText(R.string.encode);
+                    base128_btn[1].setText(R.string.decode);
+                    LinearLayout[] linearLayouts = new LinearLayout[]{
+                            new LinearLayout(MainActivity.this),
+                            new LinearLayout(MainActivity.this)
+                    };
+                    for (int i = 0; i < 2; i++) {
+                        base128_btn[i].setLayoutParams(ll_lp[i]);
+                        ll_lp[i].gravity = Gravity.CENTER;
+                        linearLayouts[i].setLayoutParams(ll_lp[i]);
+                        linearLayouts[i].addView(base128_btn[i]);
+                        ll.addView(linearLayouts[i]);
                     }
                 } else {
                     resetBtn();
@@ -224,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void creat() {
-        setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
@@ -233,11 +234,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             D();
         }
-    }
-
-    private int dip2px(float dipValue) {
-        float m = this.getResources().getDisplayMetrics().density;
-        return (int) (dipValue * m + 0.5f);
     }
 
     /**
@@ -260,14 +256,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void resetBtn() {
         Button btn = new Button(MainActivity.this);
-        btn.setLayoutParams(new FrameLayout.LayoutParams(dip2px(210F), dip2px(70)));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        btn.setLayoutParams(lp);
         btn.setText(R.string.decode);
         btn.setId(R.id.dB);
         this.dB = btn;
         MainActivity.this.setDBOnClickEvent(btn, 1, null);
-        FrameLayout fl = findViewById(R.id.fl);
-        fl.removeAllViews();
-        fl.addView(btn);
+        LinearLayout ll = findViewById(R.id.fl);
+        ll.removeAllViews();
+        ll.addView(btn);
     }
 
     /**
