@@ -1,12 +1,15 @@
 package com.zhc;
 
+import android.app.Activity;
 import android.widget.TextView;
 
 public class JNI {
     private TextView tv;
+    private Activity activity;
 
-    public JNI(TextView tv) {
+    public JNI(TextView tv, Activity activity) {
         this.tv = tv;
+        this.activity = activity;
     }
 
     static {
@@ -19,11 +22,11 @@ public class JNI {
     //jni method
     public void d(String s, double b) {
         if (b == -1D) {
-            tv.setText(s);
+            activity.runOnUiThread(() -> tv.setText(s));
         } else {
             System.out.println("s = " + s);
             System.out.println("b = " + b);
-            tv.setText(String.format("%s", b + "%"));
+            activity.runOnUiThread(() -> tv.setText(String.format("%s", b + "%")));
         }
     }
 
