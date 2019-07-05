@@ -1,5 +1,6 @@
 package com.zhc.codec;
 
+import android.app.Activity;
 import android.widget.TextView;
 import com.zhc.JNI;
 
@@ -18,16 +19,16 @@ class Main {
      * @return -2
      */
     @SuppressWarnings("Duplicates")
-    int JNI_Decode(String f, String dF, int dT, TextView tv) {
+    int JNI_Decode(String f, String dF, int dT, TextView tv, Activity activity) {
         switch (dT) {
             case 0:
-                return new JNI(tv).qmcDecode(f, dF);
+                return new JNI(tv, activity).qmcDecode(f, dF);
             case 1:
-                return new JNI(tv).kwmDecode(f, dF);
+                return new JNI(tv, activity).kwmDecode(f, dF);
             case 21:
-                return new JNI(tv).Base128_encode(f, dF);
+                return new JNI(tv, activity).Base128_encode(f, dF);
             case 22:
-                return new JNI(tv).Base128_decode(f, dF);
+                return new JNI(tv, activity).Base128_decode(f, dF);
         }
         return -2;
     }

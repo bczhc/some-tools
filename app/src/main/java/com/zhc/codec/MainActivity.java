@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
                                         if (x != null) {
                                             String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L)
-                                                if (new Main().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv) == -1)
+                                                if (new Main().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, MainActivity.this) == -1)
                                                     runOnUiThread(() -> makeText(this, R.string.fopen_error, LENGTH_SHORT).show());
                                         }
                                     } catch (IOException e) {
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                             isDecoding = true;
                             try {
                                 size0 = new File(f).length() == 0L;
-                                int status = new Main().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv);
+                                int status = new Main().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, MainActivity.this);
                                 if (!size0 && (status == -1 || status == 255)) {
                                     runOnUiThread(() -> makeText(this, R.string.fopen_error, LENGTH_SHORT).show());
                                 }
