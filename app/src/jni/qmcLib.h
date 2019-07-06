@@ -48,4 +48,4 @@ void callMethod(JNIEnv *env, jmethodID id, char *s, double d, jobject obj);
 
 char nextMask_();
 
-int decode(const char *fileName, const char *destFileName, JNIEnv *env, jclass mClass, jmethodID id, jobject obj);
+int decode(const char *fileName, const char *destFileName, JNIEnv *env, jmethodID id, jobject obj);

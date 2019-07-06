@@ -23,7 +23,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_JNI_qmcDecode
     strcat_auto(&sQ, f2);
     Log(env, sQ);
     Log(env, "JNI————解码……");
-    int rC = decode(f1, f2, env, mClass, mid, obj);
+    int rC = decode(f1, f2, env, mid, obj);
     return (jint) rC;
 }
 
@@ -107,6 +107,8 @@ JNIEXPORT jint JNICALL Java_com_zhc_JNI_kwmDecode
         }
         fwrite(buf, b, 1, fpO);
     }
+    fclose(fp);
+    fclose(fpO);
     return 0;
 }
 
