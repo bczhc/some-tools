@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/home/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -111,30 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Base128Lib
+# Target rules for targets named zhc
 
 # Build rule for target.
-Base128Lib: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Base128Lib
-.PHONY : Base128Lib
+zhc: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 zhc
+.PHONY : zhc
 
 # fast build rule for target.
-Base128Lib/fast:
-	$(MAKE) -f CMakeFiles/Base128Lib.dir/build.make CMakeFiles/Base128Lib.dir/build
-.PHONY : Base128Lib/fast
-
-#=============================================================================
-# Target rules for targets named qmcLib
-
-# Build rule for target.
-qmcLib: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 qmcLib
-.PHONY : qmcLib
-
-# fast build rule for target.
-qmcLib/fast:
-	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/build
-.PHONY : qmcLib/fast
+zhc/fast:
+	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/build
+.PHONY : zhc/fast
 
 #=============================================================================
 # Target rules for targets named doJNI
@@ -150,17 +137,43 @@ doJNI/fast:
 .PHONY : doJNI/fast
 
 #=============================================================================
-# Target rules for targets named zhc
+# Target rules for targets named qmcLib
 
 # Build rule for target.
-zhc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 zhc
-.PHONY : zhc
+qmcLib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 qmcLib
+.PHONY : qmcLib
 
 # fast build rule for target.
-zhc/fast:
-	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/build
-.PHONY : zhc/fast
+qmcLib/fast:
+	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/build
+.PHONY : qmcLib/fast
+
+#=============================================================================
+# Target rules for targets named qmc_test
+
+# Build rule for target.
+qmc_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 qmc_test
+.PHONY : qmc_test
+
+# fast build rule for target.
+qmc_test/fast:
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/build
+.PHONY : qmc_test/fast
+
+#=============================================================================
+# Target rules for targets named Base128Lib
+
+# Build rule for target.
+Base128Lib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Base128Lib
+.PHONY : Base128Lib
+
+# fast build rule for target.
+Base128Lib/fast:
+	$(MAKE) -f CMakeFiles/Base128Lib.dir/build.make CMakeFiles/Base128Lib.dir/build
+.PHONY : Base128Lib/fast
 
 Base128Lib.o: Base128Lib.c.o
 
@@ -223,6 +236,7 @@ qmcLib.o: qmcLib.c.o
 # target to build an object file
 qmcLib.c.o:
 	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/qmcLib.c.o
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/qmcLib.c.o
 .PHONY : qmcLib.c.o
 
 qmcLib.i: qmcLib.c.i
@@ -232,6 +246,7 @@ qmcLib.i: qmcLib.c.i
 # target to preprocess a source file
 qmcLib.c.i:
 	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/qmcLib.c.i
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/qmcLib.c.i
 .PHONY : qmcLib.c.i
 
 qmcLib.s: qmcLib.c.s
@@ -241,7 +256,35 @@ qmcLib.s: qmcLib.c.s
 # target to generate assembly for a file
 qmcLib.c.s:
 	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/qmcLib.c.s
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/qmcLib.c.s
 .PHONY : qmcLib.c.s
+
+test/qmc_test.o: test/qmc_test.c.o
+
+.PHONY : test/qmc_test.o
+
+# target to build an object file
+test/qmc_test.c.o:
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/test/qmc_test.c.o
+.PHONY : test/qmc_test.c.o
+
+test/qmc_test.i: test/qmc_test.c.i
+
+.PHONY : test/qmc_test.i
+
+# target to preprocess a source file
+test/qmc_test.c.i:
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/test/qmc_test.c.i
+.PHONY : test/qmc_test.c.i
+
+test/qmc_test.s: test/qmc_test.c.s
+
+.PHONY : test/qmc_test.s
+
+# target to generate assembly for a file
+test/qmc_test.c.s:
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/test/qmc_test.c.s
+.PHONY : test/qmc_test.c.s
 
 zhc.o: zhc.c.o
 
@@ -250,6 +293,7 @@ zhc.o: zhc.c.o
 # target to build an object file
 zhc.c.o:
 	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/zhc.c.o
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/zhc.c.o
 .PHONY : zhc.c.o
 
 zhc.i: zhc.c.i
@@ -259,6 +303,7 @@ zhc.i: zhc.c.i
 # target to preprocess a source file
 zhc.c.i:
 	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/zhc.c.i
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/zhc.c.i
 .PHONY : zhc.c.i
 
 zhc.s: zhc.c.s
@@ -268,6 +313,7 @@ zhc.s: zhc.c.s
 # target to generate assembly for a file
 zhc.c.s:
 	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/zhc.c.s
+	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/zhc.c.s
 .PHONY : zhc.c.s
 
 # Help Target
@@ -276,12 +322,13 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... edit_cache"
-	@echo "... Base128Lib"
-	@echo "... qmcLib"
-	@echo "... doJNI"
-	@echo "... rebuild_cache"
 	@echo "... zhc"
+	@echo "... rebuild_cache"
+	@echo "... doJNI"
+	@echo "... qmcLib"
+	@echo "... qmc_test"
+	@echo "... Base128Lib"
+	@echo "... edit_cache"
 	@echo "... Base128Lib.o"
 	@echo "... Base128Lib.i"
 	@echo "... Base128Lib.s"
@@ -291,6 +338,9 @@ help:
 	@echo "... qmcLib.o"
 	@echo "... qmcLib.i"
 	@echo "... qmcLib.s"
+	@echo "... test/qmc_test.o"
+	@echo "... test/qmc_test.i"
+	@echo "... test/qmc_test.s"
 	@echo "... zhc.o"
 	@echo "... zhc.i"
 	@echo "... zhc.s"

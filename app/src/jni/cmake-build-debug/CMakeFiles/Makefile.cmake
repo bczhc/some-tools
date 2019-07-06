@@ -44,8 +44,9 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/Base128Lib.dir/DependInfo.cmake"
-  "CMakeFiles/qmcLib.dir/DependInfo.cmake"
-  "CMakeFiles/doJNI.dir/DependInfo.cmake"
   "CMakeFiles/zhc.dir/DependInfo.cmake"
+  "CMakeFiles/doJNI.dir/DependInfo.cmake"
+  "CMakeFiles/qmcLib.dir/DependInfo.cmake"
+  "CMakeFiles/qmc_test.dir/DependInfo.cmake"
+  "CMakeFiles/Base128Lib.dir/DependInfo.cmake"
   )
