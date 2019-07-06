@@ -57,6 +57,10 @@ char nextMask_() {
 }
 
 int decode(const char *fileName, const char *destFileName, JNIEnv *env, jmethodID id, jobject obj) {
+    x = -1;
+    y = 8;
+    dx = 1;
+    i = -1;
     callMethod(env, id, "", (double) 0, obj);
     FILE *fp, *fpO;
     if ((fp = fopen(fileName, "rb")) == NULL) return -1;
@@ -84,5 +88,6 @@ int decode(const char *fileName, const char *destFileName, JNIEnv *env, jmethodI
     }
     fclose(fp);
     fclose(fpO);
+    callMethod(env, id, "", (double) 100.000000000, obj);
     return 0;
 }

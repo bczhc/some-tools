@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.zhc.MD5Class;
 import filepicker.Picker;
 
 import java.io.File;
@@ -307,9 +308,13 @@ public class MainActivity extends AppCompatActivity {
                                         String x = x(file, o == 1 ? this.dT : dT);
                                         if (x != null) {
                                             String fPath = file.getCanonicalPath();
-                                            if (file.length() != 0L)
-                                                if (new Main().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, MainActivity.this) == -1)
+                                            if (file.length() != 0L) {
+                                                int status = new Main().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, MainActivity.this);
+                                                if (status == -1)
                                                     runOnUiThread(() -> makeText(this, R.string.fopen_error, LENGTH_SHORT).show());
+                                                String md5 = MD5Class.conVertFileToMD5(x);
+                                                runOnUiThread(() -> makeText(this, md5, LENGTH_SHORT).show());
+                                            }
                                         }
                                     } catch (IOException e) {
                                         picker_o.showException(e, MainActivity.this);
@@ -351,7 +356,8 @@ public class MainActivity extends AppCompatActivity {
 //                }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (!(e instanceof NullPointerException)) makeText(this, e.toString(), LENGTH_SHORT).show();
+                    if (!(e instanceof NullPointerException))
+                        makeText(this, e.toString(), LENGTH_SHORT).show();
                     reset();
                     allButtonsAction(o, buttons, VISIBLE);
                 }
@@ -381,6 +387,8 @@ public class MainActivity extends AppCompatActivity {
                                 if (status == 1) {
                                     runOnUiThread(() -> makeText(this, R.string.native_error, LENGTH_SHORT).show());
                                 }
+                                String md5 = MD5Class.conVertFileToMD5(finalDF);
+                                runOnUiThread(() -> makeText(this, md5, LENGTH_SHORT).show());
                             } catch (Exception e) {
                                 picker_o.showException(e, MainActivity.this);
                                 reset();
@@ -394,7 +402,8 @@ public class MainActivity extends AppCompatActivity {
                                     reset();
                                 });
                             }
-                            if (size0) runOnUiThread(() -> makeText(this, R.string.null_file, LENGTH_SHORT).show());
+                            if (size0)
+                                runOnUiThread(() -> makeText(this, R.string.null_file, LENGTH_SHORT).show());
                             allButtonsAction(o, buttons, VISIBLE);
                         } catch (Exception e) {
                             picker_o.showException(e, MainActivity.this);
