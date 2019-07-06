@@ -142,10 +142,15 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("SpellCheckingInspection")
     private String x(File file, int dT) {
         String name = file.getName();
-        int index = name.lastIndexOf('.');
-        String name_no_x = name.substring(0, index);
+        String name_no_x, x = "";
+        if (name.matches(".*\\..*")) {
+            int index = name.lastIndexOf('.');
+            name_no_x = name.substring(0, index);
+            x = name.substring(index + 1).toLowerCase();
+        } else {
+            name_no_x = name;
+        }
         String p = file.getParent();
-        String x = name.substring(index + 1).toLowerCase();
         switch (dT) {
             case 0:
                 try {
