@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-              android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:id="@+id/linearLayout" app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintBottom_toTopOf="parent" app:layout_constraintTop_toTopOf="parent"
-              app:layout_constraintStart_toStartOf="parent" xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout android:layout_width="match_parent"
+                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:id="@+id/linearLayout" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="parent" app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:orientation="vertical"
-                  android:layout_weight="12">
-        <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/ll_top"
+    >
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/textView"
                   app:layout_constraintEnd_toEndOf="parent"
                   app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
         />
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:orientation="vertical"
-                  android:layout_weight="120">
+                  android:layout_height="match_parent"
+                  android:layout_below="@id/ll_top"
+                  android:layout_above="@id/ll_bottom"
+    >
         <ScrollView android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/scrollView2"
@@ -32,8 +34,9 @@
         </ScrollView>
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:layout_weight="10"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:id="@+id/ll_bottom"
     >
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="match_parent"
@@ -45,7 +48,6 @@
                           android:layout_weight="1"
                           android:gravity="center"
             >
-                <!--button-->
                 <LinearLayout android:layout_width="match_parent"
                               android:layout_height="match_parent"
                               android:orientation="horizontal"
@@ -68,14 +70,12 @@
                                   android:layout_weight="1" tools:ignore="UselessLeaf"/>
 
                 </LinearLayout>
-                <!--button-->
             </LinearLayout>
             <LinearLayout android:layout_width="0dp"
                           android:layout_height="match_parent"
                           android:layout_weight="1"
                           android:gravity="center"
             >
-                <!--button-->
                 <LinearLayout android:layout_width="match_parent"
                               android:layout_height="match_parent"
                               android:orientation="horizontal"
@@ -98,9 +98,8 @@
                                   android:layout_weight="1" tools:ignore="UselessLeaf"/>
 
                 </LinearLayout>
-                <!--button-->
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
