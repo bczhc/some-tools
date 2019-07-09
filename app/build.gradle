@@ -7,7 +7,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 4
-        versionName "2.3.5.8_20190709_gamma"
+        versionName "2.3.6.0_20190709_快不行了。。"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

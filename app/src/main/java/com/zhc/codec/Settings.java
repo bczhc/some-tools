@@ -29,6 +29,7 @@ public class Settings extends AppCompatActivity {
     private LinearLayout ll;
     private File file;
     private boolean haveChange = false;
+    private MainActivity o = new MainActivity();
     private String[][] jsonText = new String[][]{
             {
                     "sourceExtension",
@@ -47,7 +48,12 @@ public class Settings extends AppCompatActivity {
     private List<List<EditText>> lists;
     private JSONObject json;
     private CountDownLatch latch;
+    private CountDownLatch latch1;
     private List<List<String>> saved;
+    private String savedJSONText;
+
+    public Settings() {
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,11 +63,19 @@ public class Settings extends AppCompatActivity {
         ExecutorService es = Executors.newCachedThreadPool();
         this.latch = new CountDownLatch(1);
         es.execute(() -> {
+            try {
+                this.file = this.o.getFile();
+                if (!file.exists()) System.out.println("file.createNewFile() = " + file.createNewFile());
+            } catch (IOException e) {
+                new Picker().showException(e, Settings.this);
+            }
             this.lists = new ArrayList<>();
             this.json = new JSONObject();
             Intent intent = this.getIntent();
             ArrayList<String> optionsList = intent.getStringArrayListExtra("options");
+            this.savedJSONText = intent.getStringExtra("jsonText");
             this.dT = optionsList.toArray(new String[0]);
+            this.latch1.countDown();
             int length = this.dT.length;
             LinearLayout[] linearLayouts = new LinearLayout[length];
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -148,7 +162,21 @@ public class Settings extends AppCompatActivity {
         });
 
         es.execute(() -> {
-
+            try {
+                latch1.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Thread.currentThread() = " + Thread.currentThread());
+            try {
+//                this.o.spinnerData.addAll(Arrays.asList(this.dT));
+                for (String s : this.dT) {
+                    this.o.spinnerData.add(s);
+                }
+                this.saved = this.o.solveJSON(this.savedJSONText);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             this.latch.countDown();
         });
         es.shutdown();
