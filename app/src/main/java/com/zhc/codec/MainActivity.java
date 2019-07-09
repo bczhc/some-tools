@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import filepicker.Picker;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -43,8 +46,10 @@ public class MainActivity extends AppCompatActivity {
     private int dT = 0;//qmc
     private Picker picker_o = new Picker();
     private Toast toasting = null;
-    private List<String> spinnerData;
+    List<String> spinnerData;
     private CountDownLatch latch;
+    private File file;
+    private String jsonText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,19 +105,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void D() {
         this.latch = new CountDownLatch(1);
-        spinnerData = new ArrayList<>();
-        spinnerData.add("QQMusic-qmc");
-        spinnerData.add("KwMusic-kwm");
-        spinnerData.add("Base128");
         setContentView(R.layout.activity_main);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.putStringArrayListExtra("options", (ArrayList<String>) this.spinnerData);
+            intent.putExtra("jsonText", this.jsonText);
             intent.setClass(this, Settings.class);
             startActivityForResult(intent, 3);
         });
-        resetBtn();
         tv = findViewById(R.id.tv);
         Button pF = findViewById(R.id.pF);
         this.mainTv = findViewById(R.id.textView);
@@ -129,9 +130,27 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 2);
             return true;
         });
+        ExecutorService es = Executors.newCachedThreadPool();
+        es.execute(() -> {
+            spinnerData = new ArrayList<>();
+            spinnerData.add("QQMusic-qmc");
+            spinnerData.add("KwMusic-kwm");
+            spinnerData.add("Base128");
+            runOnUiThread(this::resetBtn);
 //        this.dB = findViewById(R.id.dB);
 //        setDBOnClickEvent(this.dB);
-        setTSpinner(this.spinnerData);
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            runOnUiThread(() -> setTSpinner(this.spinnerData));
+        });
+
+        es.execute(() -> {
+            List<List<String>> savedConfig = this.loadSavedConfig();
+            latch.countDown();
+        });
     }
 
     private void setF(String s) {
@@ -498,15 +517,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private List<List<String>> reloadSavedConfig() {
+    private List<List<String>> loadSavedConfig() {
         List<List<String>> saved = new ArrayList<>();
-        File storageDirectory = Environment.getExternalStorageDirectory();
-        File file;
         try {
-            File canonicalFile = storageDirectory.getCanonicalFile();
-            File d = new File(canonicalFile + "/codecsApp");
-            if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
-            file = new File(canonicalFile + "/codecsApp/config");
+            this.file = getFile();
             if (!file.exists()) System.out.println("file.createNewFile() = " + file.createNewFile());
             InputStream is = new FileInputStream(file);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -519,28 +533,55 @@ public class MainActivity extends AppCompatActivity {
             br.close();
             is.close();
             System.out.println("sb.toString() = " + sb.toString());
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(sb.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                OutputStream os = new FileOutputStream(file, false);
-                os.close();
-            }
-            if (jsonObject != null) {
-                saved = new ArrayList<>();
-                List<String> childStr;
-                for (String s : this.spinnerData) {
-                    childStr = new ArrayList<>();
-                    JSONObject child = (JSONObject) jsonObject.get(s);
-                    childStr.add(child.getString("sourceExtension"));
-                    childStr.add(child.getString("destExtension"));
-                    saved.add(childStr);
-                }
-            }
+            saved = this.solveJSON(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return saved;
+    }
+
+    List<List<String>> solveJSON(String jsonString) throws JSONException {
+        List<List<String>> saved = new ArrayList<>();
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(jsonString);
+        } catch (Exception e) {
+            e.printStackTrace();
+            OutputStream os;
+            try {
+                this.file = getFile();
+                os = new FileOutputStream(file, false);
+                os.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (jsonObject != null) {
+            saved = new ArrayList<>();
+            List<String> childStr;
+            for (String s : this.spinnerData) {
+                childStr = new ArrayList<>();
+                JSONObject child = (JSONObject) jsonObject.get(s);
+                childStr.add(child.getString("sourceExtension"));
+                childStr.add(child.getString("destExtension"));
+                saved.add(childStr);
+            }
+            this.jsonText = jsonObject.toString();
+        }
+        return saved;
+    }
+
+    public File getFile() {
+        File f = null;
+        try {
+            File storageDirectory = Environment.getExternalStorageDirectory();
+            File canonicalFile = storageDirectory.getCanonicalFile();
+            File d = new File(canonicalFile + "/codecsApp");
+            if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
+            f = new File(canonicalFile + "/codecsApp/config");
+        } catch (IOException e) {
+            new Picker().showException(e, this);
+        }
+        return f;
     }
 }
