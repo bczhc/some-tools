@@ -66,9 +66,10 @@ public class Picker extends AppCompatActivity {
     private void D() {
         Intent intent = getIntent();
         this.option = intent.getIntExtra("option", 0);
+        String path = intent.getStringExtra("path");
         setContentView(R.layout.picker);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        this.currentPath = Environment.getExternalStorageDirectory();
+        this.currentPath = path == null ? Environment.getExternalStorageDirectory() : new File(path);
 //        this.currentPath = new File("/storage/emulated/0");
         lp.setMargins(2, 10, 10, 0);
         Button cancel = findViewById(R.id.cancel);
