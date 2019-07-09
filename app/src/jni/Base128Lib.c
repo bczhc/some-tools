@@ -146,7 +146,7 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
     }
     if (f_ck > 0) {
         printf("not Base128 encoded\n");
-        callMethod(env, mid, "不是由Base128编码得到的文件， 防止误解码损坏文件", -1, obj);
+        callMethod(env, mid, "不是由Base128编码得到的文件", -1, obj);
         return -2;
     }
     if ((fpO = fopen(D_fN, "wb")) == NULL) {

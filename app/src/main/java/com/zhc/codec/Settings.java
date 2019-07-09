@@ -1,0 +1,332 @@
+package com.zhc.codec;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import filepicker.Picker;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Settings extends AppCompatActivity {
+    private Intent r_intent = new Intent();
+    private LinearLayout ll;
+    private File file;
+    private boolean haveChange = false;
+    private String[][] jsonText = new String[][]{
+            {
+                    "sourceExtension",
+                    "destExtension"
+            },
+            {
+                    "sourceExtension",
+                    "destExtension"
+            },
+            {
+                    "sourceExtension",
+                    "destExtension"
+            }
+    };
+    private String[] dT;
+    private List<List<EditText>> lists;
+    private JSONObject json;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.settings);
+        ll = findViewById(R.id.ll);
+        new Thread(() -> {
+            this.lists = new ArrayList<>();
+            this.json = new JSONObject();
+            File storageDirectory = Environment.getExternalStorageDirectory();
+            Intent intent = this.getIntent();
+            ArrayList<String> optionsList = intent.getStringArrayListExtra("options");
+            this.dT = optionsList.toArray(new String[0]);
+            int length = this.dT.length;
+            try {
+                File canonicalFile = storageDirectory.getCanonicalFile();
+                File d = new File(canonicalFile + "/codecsApp");
+                if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
+                this.file = new File(canonicalFile + "/codecsApp/config");
+                if (!file.exists()) System.out.println("file.createNewFile() = " + file.createNewFile());
+                InputStream is = new FileInputStream(file);
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sb = new StringBuilder();
+                String r = br.readLine();
+                while (r != null) {
+                    sb.append(r);
+                    r = br.readLine();
+                }
+                br.close();
+                is.close();
+                System.out.println("sb.toString() = " + sb.toString());
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(sb.toString());
+                    String s = jsonObject.toString();
+                    Snackbar make = Snackbar.make(this.ll, s, Snackbar.LENGTH_SHORT);
+                    make.setAction("×", v -> make.dismiss()).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    OutputStream os = new FileOutputStream(this.file, false);
+                    os.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            LinearLayout[] linearLayouts = new LinearLayout[length];
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            int[] color = new int[]{
+                    ContextCompat.getColor(this, R.color.s1),
+                    ContextCompat.getColor(this, R.color.s2),
+            };
+            int[] textViewsText = new int[]{
+                    R.string.filter,
+                    R.string.iFileExtension,
+                    R.string.oFileExtension
+            };
+            for (int i = 0; i < length; i++) {
+                int finalI = i;
+                linearLayouts[i] = new LinearLayout(this);
+                linearLayouts[i].setOrientation(LinearLayout.VERTICAL);
+                linearLayouts[i].setLayoutParams(lp);
+                linearLayouts[i].setBackgroundColor(color[i & 1]);
+                TextView option_tv = new TextView(this);
+                option_tv.setGravity(Gravity.CENTER);
+                option_tv.setText(this.dT[i]);
+                option_tv.setTextSize(25F);
+//                EditText path_et = new EditText(this);
+                EditText[] editTexts = new EditText[2];
+                TextView[] textViews = new TextView[3];
+                for (int j = 0; j < textViews.length; j++) {
+                    textViews[j] = new TextView(this);
+                    textViews[j].setText(textViewsText[j]);
+                }
+                List<EditText> editTextList = new ArrayList<>();
+                for (int j = 0; j < editTexts.length; j++) {
+                    editTexts[j] = new EditText(this);
+                    editTexts[j].setOnFocusChangeListener((v, hasFocus) -> this.haveChange = true);
+                    editTextList.add(editTexts[j]);
+                }
+                this.lists.add(editTextList);
+                float textSize = px2sp(Settings.this, textViews[1].getTextSize());
+                textViews[0].setTextSize(textSize + 5);
+                runOnUiThread(() -> {
+                    linearLayouts[finalI].addView(option_tv);
+                    linearLayouts[finalI].addView(textViews[0]);
+                    for (int j = 0; j < 2; j++) {
+                        linearLayouts[finalI].addView(textViews[j + 1]);
+                        linearLayouts[finalI].addView(editTexts[j]);
+                    }
+                    ll.addView(linearLayouts[finalI]);
+                });
+            }
+            RelativeLayout rl = new RelativeLayout(this);
+            rl.setGravity(Gravity.CENTER);
+            RelativeLayout.LayoutParams rl_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            rl.setLayoutParams(rl_lp);
+            FloatingActionButton fab = new FloatingActionButton(this);
+            fab.setOnClickListener(v -> {
+                saveAll();
+                String s = null;
+                try {
+                    s = this.json.toString();
+                    saveJSONText(s);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                this.r_intent.putExtra("result", s);
+                returnIntent(this.r_intent);
+            });
+            runOnUiThread(() -> {
+                rl.addView(fab);
+                ll.addView(rl);
+            });
+        }).start();
+    }
+
+    private void returnIntent(Intent intent) {
+        this.setResult(4, intent);
+        this.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.haveChange) {
+            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+            adb.setTitle("是否保存")
+                    .setNegativeButton("否", (dialog, which) -> this.finish())
+                    .setPositiveButton("是", (dialog, which) -> {
+                        /*List<IIOObject> list = this.iio.list;
+                        for (IIOObject iioObject : list) {
+                            String s = ((EditText) iioObject.o).getText().toString();
+                            String name = this.jsonText[iioObject.key1][iioObject.key2];
+                            boolean isNull = units[iioObject.key1].isNull(name);
+                            try {
+                                if (isNull || units[iioObject.key1].get(name).equals(""))
+                                    units[iioObject.key1].put(name, s);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                if (isNull) {
+                                    try {
+                                        units[iioObject.key1].put(name, s);
+                                    } catch (JSONException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                }
+                                Snackbar snackbar = Snackbar.make(ll, e.toString(), Snackbar.LENGTH_SHORT);
+                                snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                            }
+                        }*/
+                        /*for (IIOObject iioObject : list) {
+                            units[iioObject.key1][iioObject.key2] = new JSONObject();
+                            try {
+                                if ((iioObject.key2 & 1) == 0) {
+                                    units[iioObject.key1][iioObject.key2].put(jsonText[iioObject.key1][iioObject.key2], ((EditText) iioObject.o).getText().toString());
+                                } else {
+                                    units[iioObject.key1][iioObject.key2].put(jsonText[iioObject.key1][iioObject.key2], ((EditText) iioObject.o).getText().toString());
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Snackbar snackbar = Snackbar.make(ll, e.toString(), Snackbar.LENGTH_SHORT);
+                                snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                            }
+                        }*/
+                        /*try {
+                            OutputStream os = new FileOutputStream(this.file);
+                            OutputStreamWriter osw = new OutputStreamWriter(os);
+                            BufferedWriter bw = new BufferedWriter(osw);
+
+                            bw.close();
+                            osw.close();
+                            os.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }*/
+                        saveAll();
+                        String r = this.json.toString();
+                        this.r_intent.putExtra("result", r);
+                        try {
+                            saveJSONText(r);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        this.returnIntent(r_intent);
+                    })
+                    .show();
+        } else super.onBackPressed();
+    }
+
+    /**
+     * 将px值转换为sp值，保证文字大小不变
+     *
+     * @param context c
+     * @param pxValue v
+     * @return r
+     */
+    private static int px2sp(Context context, float pxValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
+
+//    /**
+//     * Generate a value suitable for use in .
+//     * This value will not collide with ID values generated at build time by aapt for R.id.
+//     *
+//     * @return a generated ID value
+//     */
+    /*private int generateViewId() {
+        final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+        for (; ; ) {
+            final int result = sNextGeneratedId.get();
+            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+            int newValue = result + 1;
+            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+            if (sNextGeneratedId.compareAndSet(result, newValue)) {
+                return result;
+            }
+        }
+    }*/
+
+    private void saveAll() {
+        try {
+            for (int i = 0; i < this.lists.size(); i++) {
+                JSONObject o = new JSONObject();
+                for (int j = 0; j < this.lists.get(i).size(); j++) {
+                    o.put(this.jsonText[i][j], this.lists.get(i).get(j).getText().toString());
+                }
+                this.json.put(this.dT[i], o);
+            }
+        } catch (JSONException e) {
+            new Picker().showException(e, this);
+        }
+    }
+
+    private void saveJSONText(String content) throws IOException {
+        OutputStream os = new FileOutputStream(this.file);
+        OutputStreamWriter osw = new OutputStreamWriter(os);
+        BufferedWriter bw = new BufferedWriter(osw);
+        bw.write(content);
+        bw.flush();
+        bw.close();
+        osw.close();
+        os.close();
+    }
+}
+
+/*
+class IIO {
+    private List<IIOObject> list;
+
+    IIO() {
+        list = new ArrayList<>();
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    IIO put(int key1, int key2, Object o) {
+        list.add(new IIOObject(key1, key2, o));
+        return this;
+    }
+
+    */
+/*Object get(int key1, int key2) {
+        for (IIOObject iisObject : list) {
+            if (iisObject.key1 == key1 && iisObject.key2 == key2) {
+                return iisObject.o;
+            }
+        }
+        return null;
+    }*//*
+
+
+    int length() {
+        return list.size();
+    }
+}
+
+class IIOObject {
+    private int key1, key2;
+    private Object o;
+
+    IIOObject(int key1, int key2, Object o) {
+        this.key1 = key1;
+        this.key2 = key2;
+        this.o = o;
+    }
+}*/
