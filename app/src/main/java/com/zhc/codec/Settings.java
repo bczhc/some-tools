@@ -3,10 +3,8 @@ package com.zhc.codec;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +20,9 @@ import org.json.JSONObject;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Settings extends AppCompatActivity {
     private Intent r_intent = new Intent();
@@ -45,51 +46,23 @@ public class Settings extends AppCompatActivity {
     private String[] dT;
     private List<List<EditText>> lists;
     private JSONObject json;
+    private CountDownLatch latch;
+    private List<List<String>> saved;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
         ll = findViewById(R.id.ll);
-        new Thread(() -> {
+        ExecutorService es = Executors.newCachedThreadPool();
+        this.latch = new CountDownLatch(1);
+        es.execute(() -> {
             this.lists = new ArrayList<>();
             this.json = new JSONObject();
-            File storageDirectory = Environment.getExternalStorageDirectory();
             Intent intent = this.getIntent();
             ArrayList<String> optionsList = intent.getStringArrayListExtra("options");
             this.dT = optionsList.toArray(new String[0]);
             int length = this.dT.length;
-            try {
-                File canonicalFile = storageDirectory.getCanonicalFile();
-                File d = new File(canonicalFile + "/codecsApp");
-                if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
-                this.file = new File(canonicalFile + "/codecsApp/config");
-                if (!file.exists()) System.out.println("file.createNewFile() = " + file.createNewFile());
-                InputStream is = new FileInputStream(file);
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                StringBuilder sb = new StringBuilder();
-                String r = br.readLine();
-                while (r != null) {
-                    sb.append(r);
-                    r = br.readLine();
-                }
-                br.close();
-                is.close();
-                System.out.println("sb.toString() = " + sb.toString());
-                JSONObject jsonObject;
-                try {
-                    jsonObject = new JSONObject(sb.toString());
-                    String s = jsonObject.toString();
-                    Snackbar make = Snackbar.make(this.ll, s, Snackbar.LENGTH_SHORT);
-                    make.setAction("×", v -> make.dismiss()).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    OutputStream os = new FileOutputStream(this.file, false);
-                    os.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             LinearLayout[] linearLayouts = new LinearLayout[length];
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             int[] color = new int[]{
@@ -119,8 +92,22 @@ public class Settings extends AppCompatActivity {
                     textViews[j].setText(textViewsText[j]);
                 }
                 List<EditText> editTextList = new ArrayList<>();
+                try {
+                    this.latch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 for (int j = 0; j < editTexts.length; j++) {
                     editTexts[j] = new EditText(this);
+                    int finalJ = j;
+                    runOnUiThread(() -> {
+                        String s = null;
+                        try {
+                            s = this.saved.get(finalI).get(finalJ);
+                        } catch (IndexOutOfBoundsException ignored) {
+                        }
+                        editTexts[finalJ].setText(s == null ? "" : s);
+                    });
                     editTexts[j].setOnFocusChangeListener((v, hasFocus) -> this.haveChange = true);
                     editTextList.add(editTexts[j]);
                 }
@@ -158,7 +145,13 @@ public class Settings extends AppCompatActivity {
                 rl.addView(fab);
                 ll.addView(rl);
             });
-        }).start();
+        });
+
+        es.execute(() -> {
+
+            this.latch.countDown();
+        });
+        es.shutdown();
     }
 
     private void returnIntent(Intent intent) {
