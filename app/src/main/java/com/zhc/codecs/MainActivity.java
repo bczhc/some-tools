@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private File folder = null;
     private boolean isFolder = false;
     private TextView tv;
-    private boolean isDecoding = false;
+    private boolean isRunning = false;
     private Button dB = null;
     private int dT = 0;//qmc
     private Picker picker_o = new Picker();
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private CountDownLatch latch;
     private File file;
     private String jsonText;
+    private List<List<String>> savedConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,12 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.putStringArrayListExtra("options", (ArrayList<String>) this.spinnerData);
+            ArrayList<String> list = new ArrayList<>();
+            list.add("QQMusic-qmc");
+            list.add("KwMusic-kwm");
+            list.add("Base128编码");
+            list.add("Base128解码");
+            intent.putStringArrayListExtra("options", list);
             intent.putExtra("jsonText", this.jsonText);
             intent.setClass(this, Settings.class);
             startActivityForResult(intent, 3);
@@ -148,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         es.execute(() -> {
-            List<List<String>> savedConfig = this.loadSavedConfig();
+            this.savedConfig = this.loadSavedConfig();
             latch.countDown();
         });
     }
@@ -185,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
      * @return dest file
      */
     @SuppressWarnings("SpellCheckingInspection")
-    private String x(File file, int dT) {
+    private String x(File file, int dT, List<List<String>> conf) {
         String name = file.getName();
         String name_no_x, x = "";
         if (name.matches(".*\\..*")) {
@@ -196,37 +202,67 @@ public class MainActivity extends AppCompatActivity {
             name_no_x = name;
         }
         String p = file.getParent();
-        switch (dT) {
-            case 0:
-                try {
-                    switch (x) {
-                        case "qmc0":
-                            return p + "/" + name_no_x + ".mp3";
-                        case "qmcflac":
-                            return p + "/" + name_no_x + ".flac";
+        String[] srcExtension;
+        String[] dstExtension;
+        try {
+            switch (dT) {
+                case 0:
+                    srcExtension = conf.get(0).get(0).split("\\|");
+                    dstExtension = conf.get(0).get(1).split("\\|");
+                    if (srcExtension.length != dstExtension.length) {
+                        Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                        try {
+                            switch (x) {
+                                case "qmc0":
+                                    return p + "/" + name_no_x + ".mp3";
+                                case "qmcflac":
+                                    return p + "/" + name_no_x + ".flac";
+                            }
+
+                        } catch (StringIndexOutOfBoundsException ignored) {
+                        }
                     }
-                } catch (StringIndexOutOfBoundsException ignored) {
-                }
-                break;
-            case 1:
-                if (!(x.equals("kwm") | x.equals("kwd"))) return null;
-                String r;
-                if (name.matches(".*\\..*")) {
-                    r = p + "/" + name_no_x + ".flac";
-                } else {
-                    r = p + "/" + name + ".flac";
-                }
-                return r;
-            case 21:
-                return p + "/" + name + ".base128e";
-            case 22:
-                return p + "/" + name + ".base128d";
+                    for (int i = 0; i < srcExtension.length; i++) {
+                        if (srcExtension[i].equalsIgnoreCase(x)) {
+                            return p + "/" + name_no_x + "." + dstExtension[i];
+                        }
+                    }
+                    break;
+                case 1:
+                    srcExtension = conf.get(1).get(0).split("\\|");
+                    dstExtension = conf.get(1).get(1).split("\\|");
+                    if (srcExtension.length != dstExtension.length) {
+                        Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                        if (!(x.equals("kwm") | x.equals("kwd"))) return null;
+                        String r;
+                        if (name.matches(".*\\..*")) {
+                            r = p + "/" + name_no_x + ".flac";
+                        } else {
+                            r = p + "/" + name + ".flac";
+                        }
+                        return r;
+                    }
+                    for (int i = 0; i < srcExtension.length; i++) {
+                        if (srcExtension[i].equalsIgnoreCase(x)) {
+                            return p + "/" + name_no_x + "." + dstExtension[i];
+                        }
+                    }
+                case 21:
+                    return p + "/" + name + "." + conf.get(2).get(0);
+                case 22:
+                    return p + "/" + name + "." + conf.get(2).get(1);
+            }
+        } catch (Exception e) {
+            makeText(this, e.toString(), LENGTH_SHORT).show();
+            e.printStackTrace();
         }
         return null;
     }
 
     private void reset() {
-        this.isDecoding = false;
+        this.isRunning = false;
         this.isFolder = false;
     }
 
@@ -332,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener getV(int o, int dT, @Nullable Button[] buttons) {
         return v -> {
             allButtonsAction(o, buttons, INVISIBLE);
-            if (isDecoding) {
+            if (isRunning) {
                 makeText(this, R.string.have_task, LENGTH_SHORT).show();
                 return;
             }
@@ -341,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     new Thread(() -> {
                         try {
-                            isDecoding = true;
+                            isRunning = true;
                             int i = 1;
                             int length = files.length;
                             for (File file : files) {
@@ -349,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
                                     try {
                                         int finalI = i;
                                         runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), finalI + " of " + length + ": " + file.getName())));
-                                        String x = x(file, o == 1 ? this.dT : dT);
+                                        String x = x(file, o == 1 ? this.dT : dT, this.savedConfig);
                                         if (x != null) {
                                             String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L) {
@@ -394,7 +430,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 String dF = null;
                 try {
-                    dF = x(new File(f), o == 1 ? this.dT : dT);
+                    dF = x(new File(f), o == 1 ? this.dT : dT, this.savedConfig);
 //                }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -419,7 +455,7 @@ public class MainActivity extends AppCompatActivity {
                     new Thread(() -> {
                         boolean size0 = false;
                         try {
-                            isDecoding = true;
+                            isRunning = true;
                             try {
                                 size0 = new File(f).length() == 0L;
                                 int status = 2;
@@ -441,7 +477,7 @@ public class MainActivity extends AppCompatActivity {
                                 reset();
                                 allButtonsAction(o, buttons, VISIBLE);
                             }
-                            isDecoding = false;
+                            isRunning = false;
                             if (!size0 && new File(finalDF).exists() && finalDF.length() > 0) {
                                 runOnUiThread(() -> {
                                     tv.setText(R.string.percent_100);
@@ -578,10 +614,17 @@ public class MainActivity extends AppCompatActivity {
             File canonicalFile = storageDirectory.getCanonicalFile();
             File d = new File(canonicalFile + "/codecsApp");
             if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
-            f = new File(canonicalFile + "/codecsApp/config");
+            f = new File(canonicalFile + "/codecsApp/config.json");
         } catch (IOException e) {
             new Picker().showException(e, this);
         }
         return f;
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        if (this.isRunning) this.moveTaskToBack(false);
+        else finish();
     }
 }
