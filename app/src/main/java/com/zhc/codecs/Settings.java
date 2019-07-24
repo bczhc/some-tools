@@ -43,6 +43,10 @@ public class Settings extends AppCompatActivity {
             {
                     "sourceExtension",
                     "destExtension"
+            },
+            {
+                    "sourceExtension",
+                    "destExtension"
             }
     };
     private String[] dT;
@@ -177,6 +181,12 @@ public class Settings extends AppCompatActivity {
                 this.saved = this.o.solveJSON(this.savedJSONText);
             } catch (JSONException e) {
                 e.printStackTrace();
+                try {
+                    OutputStream os = new FileOutputStream(file, false);
+                    os.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
             this.latch.countDown();
         });
