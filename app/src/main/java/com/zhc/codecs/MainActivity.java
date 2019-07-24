@@ -1,4 +1,4 @@
-package com.zhc.codec;
+package com.zhc.codecs;
 
 import android.Manifest;
 import android.content.Intent;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        creat();
+        this.creat();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 if (data != null) {
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.saving_success, Snackbar.LENGTH_SHORT);
                     snackbar.setAction("×", v -> snackbar.dismiss()).show();
-                    makeText(this, data.getStringExtra("result"), LENGTH_SHORT).show();
+                    this.creat();
                 }
                 break;
         }
