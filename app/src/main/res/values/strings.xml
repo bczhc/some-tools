@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">codec</string>
+    <string name="app_name">codecs</string>
     <string name="tv">%1$s</string>
     <string name="pick_file">选择文件/目录</string>
     <string name="encode">编码</string>

@@ -1,4 +1,4 @@
-package com.zhc.codec;
+package com.zhc.codecs;
 
 import android.app.Activity;
 import android.widget.TextView;

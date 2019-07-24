@@ -1,4 +1,4 @@
-package com.zhc.codec;
+package com.zhc.codecs;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -62,6 +63,7 @@ public class Settings extends AppCompatActivity {
         ll = findViewById(R.id.ll);
         ExecutorService es = Executors.newCachedThreadPool();
         this.latch = new CountDownLatch(1);
+        this.latch1 = new CountDownLatch(1);
         es.execute(() -> {
             try {
                 this.file = this.o.getFile();
@@ -170,9 +172,8 @@ public class Settings extends AppCompatActivity {
             System.out.println("Thread.currentThread() = " + Thread.currentThread());
             try {
 //                this.o.spinnerData.addAll(Arrays.asList(this.dT));
-                for (String s : this.dT) {
-                    this.o.spinnerData.add(s);
-                }
+                this.o.spinnerData = new ArrayList<>();
+                Collections.addAll(this.o.spinnerData, this.dT);
                 this.saved = this.o.solveJSON(this.savedJSONText);
             } catch (JSONException e) {
                 e.printStackTrace();
