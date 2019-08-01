@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
         this.creat();
     }
 
-    MainActivity() {
+    @SuppressWarnings("WeakerAccess")
+    public MainActivity() {
         System.out.println("new MainActivity");
         this.picker_o = new Picker();
         this.dataList = new ArrayList<>();
@@ -110,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 3:
                 if (data != null) {
+                    this.creat();
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.saving_success, Snackbar.LENGTH_SHORT);
                     snackbar.setAction("×", v -> snackbar.dismiss()).show();
-                    this.creat();
                 }
                 break;
         }
