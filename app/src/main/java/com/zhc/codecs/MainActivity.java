@@ -44,18 +44,32 @@ public class MainActivity extends AppCompatActivity {
     private boolean isRunning = false;
     private Button dB = null;
     private int dT = 0;//qmc
-    private Picker picker_o = new Picker();
+    private Picker picker_o;
     private Toast toasting = null;
     List<String> spinnerData;
     private CountDownLatch latch;
     private File file;
     private String jsonText;
     private List<List<String>> savedConfig;
+    private List<String> dataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.creat();
+    }
+
+    MainActivity() {
+        System.out.println("new MainActivity");
+        this.picker_o = new Picker();
+        this.dataList = new ArrayList<>();
+        {
+            this.dataList.add("QQMusic-qmc");
+            this.dataList.add("KwMusic-kwm");
+            this.dataList.add("Base128编码");
+            this.dataList.add("Base128解码");
+        }
+        this.latch = new CountDownLatch(1);
     }
 
     @Override
@@ -105,17 +119,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void D() {
-        this.latch = new CountDownLatch(1);
         setContentView(R.layout.activity_main);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
             Intent intent = new Intent();
-            ArrayList<String> list = new ArrayList<>();
-            list.add("QQMusic-qmc");
-            list.add("KwMusic-kwm");
-            list.add("Base128编码");
-            list.add("Base128解码");
-            intent.putStringArrayListExtra("options", list);
+            intent.putStringArrayListExtra("options", (ArrayList<String>) this.dataList);
             intent.putExtra("jsonText", this.jsonText);
             intent.setClass(this, Settings.class);
             startActivityForResult(intent, 3);
@@ -595,7 +603,7 @@ public class MainActivity extends AppCompatActivity {
         if (jsonObject != null) {
             saved = new ArrayList<>();
             List<String> childStr;
-            for (String s : this.spinnerData) {
+            for (String s : this.dataList) {
                 childStr = new ArrayList<>();
                 JSONObject child = (JSONObject) jsonObject.get(s);
                 childStr.add(child.getString("sourceExtension"));
