@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/qmcLib.c
+qmcLib.h
+/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/qmcLib.h
+
+/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/qmcLib.h
+jni.h
+-
+zhc.h
+/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.h
+
+/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+ctype.h
+-
+
