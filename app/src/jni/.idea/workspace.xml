@@ -13,8 +13,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doJNI.c" beforeDir="false" afterPath="$PROJECT_DIR$/doJNI.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/qmcLib.c" beforeDir="false" afterPath="$PROJECT_DIR$/qmcLib.c" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -214,12 +212,12 @@
       <workItem from="1562406752856" duration="2985000" />
       <workItem from="1562416282088" duration="1712000" />
       <workItem from="1562662988301" duration="39000" />
-      <workItem from="1564627780134" duration="5544000" />
+      <workItem from="1564627780134" duration="6555000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43972000" />
+    <option name="totallyTimeSpent" value="44983000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />

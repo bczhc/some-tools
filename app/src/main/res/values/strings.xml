@@ -27,4 +27,5 @@
     <string name="expression_error">json表达错误</string>
     <string name="json_solve_error">json解析失败：</string>
     <!--    <string name="pathEdit">输入路径</string>-->
+    <string name="delete_old_file">完成后是否删除原文件</string>
 </resources>

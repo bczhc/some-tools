@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.*;
 import filepicker.Picker;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,34 +33,19 @@ public class Settings extends AppCompatActivity {
     private File file;
     private boolean haveChange = false;
     private MainActivity o = new MainActivity();
-    private String[][] jsonText = new String[][]{
-            {
-                    "sourceExtension",
-                    "destExtension"
-            },
-            {
-                    "sourceExtension",
-                    "destExtension"
-            },
-            {
-                    "sourceExtension",
-                    "destExtension"
-            },
-            {
-                    "sourceExtension",
-                    "destExtension"
-            }
+    private String[] jsonText = new String[]{
+            "sourceExtension",
+            "destExtension",
+            "deleteOldFile"
+
     };
     private String[] dT;
-    private List<List<EditText>> lists;
+    private List<List<View>> lists;
     private JSONObject json;
     private CountDownLatch latch;
     private CountDownLatch latch1;
     private List<List<String>> saved;
     private String savedJSONText;
-
-    public Settings() {
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,7 +98,7 @@ public class Settings extends AppCompatActivity {
                     textViews[j] = new TextView(this);
                     textViews[j].setText(textViewsText[j]);
                 }
-                List<EditText> editTextList = new ArrayList<>();
+                List<View> viewList = new ArrayList<>();
                 try {
                     this.latch.await();
                 } catch (InterruptedException e) {
@@ -132,11 +116,12 @@ public class Settings extends AppCompatActivity {
                         editTexts[finalJ].setText(s == null ? "" : s);
                     });
                     editTexts[j].setOnFocusChangeListener((v, hasFocus) -> this.haveChange = true);
-                    editTextList.add(editTexts[j]);
+                    viewList.add(editTexts[j]);
                 }
-                this.lists.add(editTextList);
                 float textSize = px2sp(Settings.this, textViews[1].getTextSize());
                 textViews[0].setTextSize(textSize + 5);
+                CheckBox[] checkBoxes = new CheckBox[length];
+                CountDownLatch latch = new CountDownLatch(1);
                 runOnUiThread(() -> {
                     linearLayouts[finalI].addView(option_tv);
                     linearLayouts[finalI].addView(textViews[0]);
@@ -144,8 +129,20 @@ public class Settings extends AppCompatActivity {
                         linearLayouts[finalI].addView(textViews[j + 1]);
                         linearLayouts[finalI].addView(editTexts[j]);
                     }
+                    checkBoxes[finalI] = new CheckBox(this);
+                    checkBoxes[finalI].setText(R.string.delete_old_file);
+                    checkBoxes[finalI].setOnClickListener(v -> Snackbar.make(ll, String.valueOf(checkBoxes[finalI].isChecked()), Snackbar.LENGTH_SHORT).show());
+                    linearLayouts[finalI].addView(checkBoxes[finalI]);
                     ll.addView(linearLayouts[finalI]);
+                    latch.countDown();
                 });
+                try {
+                    latch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                viewList.add(checkBoxes[i]);
+                this.lists.add(viewList);
             }
             RelativeLayout rl = new RelativeLayout(this);
             rl.setGravity(Gravity.CENTER);
@@ -304,9 +301,10 @@ public class Settings extends AppCompatActivity {
         try {
             for (int i = 0; i < this.lists.size(); i++) {
                 JSONObject o = new JSONObject();
-                for (int j = 0; j < this.lists.get(i).size(); j++) {
-                    o.put(this.jsonText[i][j], this.lists.get(i).get(j).getText().toString());
+                for (int j = 0; j < /*this.lists.get(i).size() - 1*/ 2; j++) {
+                    o.put(this.jsonText[j], ((EditText) this.lists.get(i).get(j)).getText().toString());
                 }
+                o.put(this.jsonText[2], ((CheckBox) this.lists.get(i).get(2)).isChecked());
                 this.json.put(this.dT[i], o);
             }
         } catch (JSONException e) {
