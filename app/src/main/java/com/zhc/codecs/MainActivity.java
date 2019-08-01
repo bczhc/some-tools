@@ -111,7 +111,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case 3:
                 if (data != null) {
-                    this.creat();
+                    try {
+                        this.savedConfig = this.solveJSON(data.getStringExtra("result"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+//                    this.creat();
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.saving_success, Snackbar.LENGTH_SHORT);
                     snackbar.setAction("×", v -> snackbar.dismiss()).show();
                 }
@@ -381,6 +386,8 @@ public class MainActivity extends AppCompatActivity {
                 makeText(this, R.string.have_task, LENGTH_SHORT).show();
                 return;
             }
+            //noinspection SpellCheckingInspection
+            Toast fopenErrorToast = makeText(this, R.string.fopen_error, LENGTH_SHORT);
             if (isFolder) {
                 File[] files = folder.listFiles();
                 try {
@@ -400,7 +407,10 @@ public class MainActivity extends AppCompatActivity {
                                             if (file.length() != 0L) {
                                                 int status = new Main().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, MainActivity.this);
                                                 if (status == -1)
-                                                    runOnUiThread(() -> makeText(this, R.string.fopen_error, LENGTH_SHORT).show());
+                                                    runOnUiThread(() -> {
+                                                        fopenErrorToast.cancel();
+                                                        fopenErrorToast.show();
+                                                    });
                                             }
                                         }
                                     } catch (IOException e) {
@@ -476,7 +486,10 @@ public class MainActivity extends AppCompatActivity {
                                 else
                                     status = new Main().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, MainActivity.this);
                                 if (status == -1 || status == 255) {
-                                    runOnUiThread(() -> makeText(this, R.string.fopen_error, LENGTH_SHORT).show());
+                                    runOnUiThread(() -> {
+                                        fopenErrorToast.cancel();
+                                        fopenErrorToast.show();
+                                    });
                                 }
                                 if (status == 1) {
                                     runOnUiThread(() -> makeText(this, R.string.native_error, LENGTH_SHORT).show());
@@ -591,6 +604,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             jsonObject = new JSONObject(jsonString);
         } catch (Exception e) {
+            this.runOnUiThread(() -> makeText(picker_o, this.getString(R.string.json_solve_error) + e.toString(), LENGTH_SHORT).show());
             e.printStackTrace();
             OutputStream os;
             try {
