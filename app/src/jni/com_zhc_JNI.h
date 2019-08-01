@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL Java_com_zhc_JNI_qmcDecode
-  (JNIEnv *, jobject, jstring, jstring);
+  (JNIEnv *, jobject, jstring, jstring, jint);
 
 /*
  * Class:     com_zhc_codec_JNI
@@ -21,7 +21,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_JNI_qmcDecode
  * Signature: (Ljava/lang/String;Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL Java_com_zhc_JNI_kwmDecode
-  (JNIEnv *, jobject, jstring, jstring);
+  (JNIEnv *, jobject, jstring, jstring, jint);
 
 /*
  * Class:     com_zhc_base128_JNI

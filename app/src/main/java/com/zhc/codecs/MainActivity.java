@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                         this.savedConfig = this.solveJSON(data.getStringExtra("result"));
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        this.runOnUiThread(() -> makeText(this, this.getString(R.string.json_solve_error) + e.toString(), LENGTH_SHORT).show());
                     }
 //                    this.creat();
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.saving_success, Snackbar.LENGTH_SHORT);
@@ -264,9 +265,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 case 21:
-                    return p + "/" + name + "." + conf.get(2).get(0);
+                    return p + "/" + name_no_x + "." + conf.get(2).get(1);
                 case 22:
-                    return p + "/" + name + "." + conf.get(2).get(1);
+                    return p + "/" + name_no_x + "." + conf.get(3).get(1);
             }
         } catch (Exception e) {
             makeText(this, e.toString(), LENGTH_SHORT).show();
@@ -405,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                                         if (x != null) {
                                             String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L) {
-                                                int status = new Main().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, MainActivity.this);
+                                                int status = new Main().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, MainActivity.this, 0);
                                                 if (status == -1)
                                                     runOnUiThread(() -> {
                                                         fopenErrorToast.cancel();
@@ -484,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
                                         allButtonsAction(o, buttons, VISIBLE);
                                     });
                                 else
-                                    status = new Main().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, MainActivity.this);
+                                    status = new Main().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, MainActivity.this, 0);
                                 if (status == -1 || status == 255) {
                                     runOnUiThread(() -> {
                                         fopenErrorToast.cancel();
@@ -594,6 +595,7 @@ public class MainActivity extends AppCompatActivity {
             saved = this.solveJSON(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
+            this.runOnUiThread(() -> makeText(this, this.getString(R.string.json_solve_error) + e.toString(), LENGTH_SHORT).show());
         }
         return saved;
     }
@@ -604,14 +606,13 @@ public class MainActivity extends AppCompatActivity {
         try {
             jsonObject = new JSONObject(jsonString);
         } catch (Exception e) {
-            this.runOnUiThread(() -> makeText(picker_o, this.getString(R.string.json_solve_error) + e.toString(), LENGTH_SHORT).show());
             e.printStackTrace();
             OutputStream os;
             try {
                 this.file = getFile();
                 os = new FileOutputStream(file, false);
                 os.close();
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }

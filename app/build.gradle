@@ -6,9 +6,9 @@ android {
         applicationId "com.zhc.codecs"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 6
-        versionName "2.4.0.0_20190801"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 7
+        versionName "2.4.0.0_20190801_测试中。。"
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
