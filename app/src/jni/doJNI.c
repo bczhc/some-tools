@@ -119,6 +119,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_JNI_kwmDecode
         remove(fN);
         rename(dFN, fN);
     }
+    callMethod(env, mid, "", (double) 100, obj);
     return 0;
 }
 
