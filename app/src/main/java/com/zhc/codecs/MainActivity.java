@@ -217,14 +217,14 @@ public class MainActivity extends AppCompatActivity {
             name_no_x = name;
         }
         String p = file.getParent();
-        String[] srcExtension;
-        String[] dstExtension;
+        String[] srcExtensions;
+        String[] dstExtensions;
         try {
             switch (dT) {
                 case 0:
-                    srcExtension = conf.get(0).get(0).split("\\|");
-                    dstExtension = conf.get(0).get(1).split("\\|");
-                    if (srcExtension.length != dstExtension.length) {
+                    srcExtensions = conf.get(0).get(0).split("\\|");
+                    dstExtensions = conf.get(0).get(1).split("\\|");
+                    if (srcExtensions.length != dstExtensions.length) {
                         Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
                         snackbar.setAction("×", v -> snackbar.dismiss()).show();
                         try {
@@ -238,16 +238,11 @@ public class MainActivity extends AppCompatActivity {
                         } catch (StringIndexOutOfBoundsException ignored) {
                         }
                     }
-                    for (int i = 0; i < srcExtension.length; i++) {
-                        if (srcExtension[i].equalsIgnoreCase(x)) {
-                            return p + "/" + name_no_x + "." + dstExtension[i];
-                        }
-                    }
-                    break;
+                    return conf_getX(srcExtensions, dstExtensions, p, name_no_x);
                 case 1:
-                    srcExtension = conf.get(1).get(0).split("\\|");
-                    dstExtension = conf.get(1).get(1).split("\\|");
-                    if (srcExtension.length != dstExtension.length) {
+                    srcExtensions = conf.get(1).get(0).split("\\|");
+                    dstExtensions = conf.get(1).get(1).split("\\|");
+                    if (srcExtensions.length != dstExtensions.length) {
                         Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
                         snackbar.setAction("×", v -> snackbar.dismiss()).show();
                         if (!(x.equals("kwm") | x.equals("kwd"))) return null;
@@ -259,13 +254,16 @@ public class MainActivity extends AppCompatActivity {
                         }
                         return r;
                     }
-                    for (int i = 0; i < srcExtension.length; i++) {
-                        if (srcExtension[i].equalsIgnoreCase(x)) {
-                            return p + "/" + name_no_x + "." + dstExtension[i];
-                        }
-                    }
+                    return conf_getX(srcExtensions, dstExtensions, p, name_no_x);
                 case 21:
-                    return p + "/" + name_no_x + "." + conf.get(2).get(1);
+                    srcExtensions = conf.get(1).get(0).split("\\|");
+                    dstExtensions = conf.get(1).get(1).split("\\|");
+                    if (srcExtensions.length != dstExtensions.length) {
+                        Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                        return p + "/" + name_no_x + "." + "base128e";
+                    }
+                    return conf_getX(srcExtensions, dstExtensions, p, name_no_x);
                 case 22:
                     return p + "/" + name_no_x + "." + conf.get(3).get(1);
             }
@@ -423,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
                                 ++i;
                             }
                             runOnUiThread(() -> {
-                                tv.setText(R.string.percent_100);
+//                                tv.setText(R.string.percent_100);
                                 makeText(this, o == 1 ? R.string.all_file_decoded_done : (dT == 21 ? R.string.all_file_encoded_done : R.string.all_file_decoded_done), LENGTH_SHORT).show();
                                 this.folder = null;
                                 this.f = null;
@@ -503,7 +501,7 @@ public class MainActivity extends AppCompatActivity {
                             isRunning = false;
                             if (!size0 && new File(finalDF).exists() && finalDF.length() > 0) {
                                 runOnUiThread(() -> {
-                                    tv.setText(R.string.percent_100);
+//                                    tv.setText(R.string.percent_100);
                                     makeText(this, o == 1 ? R.string.decode_done : (dT == 21 ? R.string.encode_done : R.string.decode_done), LENGTH_SHORT).show();
                                     reset();
                                 });
@@ -650,5 +648,14 @@ public class MainActivity extends AppCompatActivity {
 //        super.onBackPressed();
         if (this.isRunning) this.moveTaskToBack(false);
         else finish();
+    }
+
+    private String conf_getX(String[] srcExtensions, String[] dstExtensions, String p, String name_no_x) {
+        for (int i = 0; i < srcExtensions.length; i++) {
+            if (srcExtensions[i].equalsIgnoreCase(dstExtensions[i])) {
+                return p + "/" + name_no_x + "." + dstExtensions[i];
+            }
+        }
+        return null;
     }
 }

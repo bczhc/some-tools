@@ -88,6 +88,6 @@ int decode(const char *fileName, const char *destFileName, JNIEnv *env, jmethodI
     }
     fclose(fp);
     fclose(fpO);
-    callMethod(env, id, "", (double) 100.000000000, obj);
+    callMethod(env, id, "", (double) 100, obj);
     return 0;
 }
