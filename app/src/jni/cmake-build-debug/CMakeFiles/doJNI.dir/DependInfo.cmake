@@ -4,7 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/doJNI.c" "/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/doJNI.c.o"
+  "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/Base128Lib.c" "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/Base128Lib.c.o"
+  "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/doJNI.c" "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/doJNI.c.o"
+  "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/qmcLib.c" "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/qmcLib.c.o"
+  "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.c" "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/zhc.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
