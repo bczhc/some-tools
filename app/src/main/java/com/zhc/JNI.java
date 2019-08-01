@@ -16,7 +16,13 @@ public class JNI {
         System.loadLibrary("doJNI");
     }
 
-    public native int qmcDecode(String f, String dF);
+    /**
+     * @param f    f
+     * @param dF   dF
+     * @param mode delete srcFile: 1
+     * @return status
+     */
+    public native int qmcDecode(String f, String dF, int mode);
 
     @SuppressWarnings("unused")
     //jni method
@@ -30,7 +36,13 @@ public class JNI {
         }
     }
 
-    public native int kwmDecode(String f, String dF);
+    /**
+     * @param f    f
+     * @param dF   dF
+     * @param mode delete srcFile: 1
+     * @return status
+     */
+    public native int kwmDecode(String f, String dF, int mode);
 
     public native int Base128_encode(String f, String dF);
 

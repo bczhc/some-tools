@@ -1,5 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/doJNI.dir/doJNI.c.o"
+  "CMakeFiles/doJNI.dir/zhc.c.o"
+  "CMakeFiles/doJNI.dir/qmcLib.c.o"
+  "CMakeFiles/doJNI.dir/Base128Lib.c.o"
   "doJNI.pdb"
   "doJNI"
 )

@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/qmc_test.dir/test/qmc_test.c.o CMakeFiles/qmc_test.dir/zhc.c.o CMakeFiles/qmc_test.dir/qmcLib.c.o  -o qmc_test 

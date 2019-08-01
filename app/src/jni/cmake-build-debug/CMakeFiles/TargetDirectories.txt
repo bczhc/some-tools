@@ -1,7 +1,3 @@
-/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/zhc.dir
-/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir
-/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/qmcLib.dir
-/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/qmc_test.dir
-/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/Base128Lib.dir
-/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir
+/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/edit_cache.dir

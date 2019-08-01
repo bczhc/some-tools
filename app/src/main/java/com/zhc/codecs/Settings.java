@@ -25,6 +25,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
+
 public class Settings extends AppCompatActivity {
     private Intent r_intent = new Intent();
     private LinearLayout ll;
@@ -181,10 +184,11 @@ public class Settings extends AppCompatActivity {
                 this.saved = this.o.solveJSON(this.savedJSONText);
             } catch (JSONException e) {
                 e.printStackTrace();
+                this.runOnUiThread(() -> makeText(this, this.getString(R.string.json_solve_error) + e.toString(), LENGTH_SHORT).show());
                 try {
                     OutputStream os = new FileOutputStream(file, false);
                     os.close();
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }

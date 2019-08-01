@@ -176,22 +176,18 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
     return 0;
 }
 
-/*char *NewFileName(char *Dest, const char *filePath) {
-    char *r = Dest;
-    char newFN[strlen(filePath) + 5];
+void NewFileName(char **Dest, const char *filePath) {
     int x = 2;
     while (1) {
         char *xS = NULL;
 //        itoa(x, xS, 10);
         m_itoa(&xS, x);
-        strcpy(newFN, filePath);
-        strcat(newFN, " (");
-        strcat(newFN, xS);
-        strcat(newFN, ")");
-        if (access(newFN, F_OK) == EOF) break;
-        x++;
+        strcpyAndCat_auto(Dest, filePath, "");
+        strcpyAndCat_auto(Dest, *Dest, " (");
+        strcpyAndCat_auto(Dest, *Dest, xS);
+        strcpyAndCat_auto(Dest, *Dest, ")");
+        if (access(*Dest, F_OK) == EOF) break;
+        ++x;
         free(xS);
     }
-    strcpy(r, newFN);
-    return Dest;
-}*/
+}

@@ -34,19 +34,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /home/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake -E remove -f
+RM = /home/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni
+CMAKE_SOURCE_DIR = /home/zhc/code/code/Android/QMCFLAC/app/src/jni
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug
+CMAKE_BINARY_DIR = /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/doJNI.dir/depend.make
@@ -59,28 +59,73 @@ include CMakeFiles/doJNI.dir/flags.make
 
 CMakeFiles/doJNI.dir/doJNI.c.o: CMakeFiles/doJNI.dir/flags.make
 CMakeFiles/doJNI.dir/doJNI.c.o: ../doJNI.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/doJNI.dir/doJNI.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/doJNI.dir/doJNI.c.o   -c /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/doJNI.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/doJNI.dir/doJNI.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/doJNI.dir/doJNI.c.o   -c /home/zhc/code/code/Android/QMCFLAC/app/src/jni/doJNI.c
 
 CMakeFiles/doJNI.dir/doJNI.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/doJNI.dir/doJNI.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/doJNI.c > CMakeFiles/doJNI.dir/doJNI.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/zhc/code/code/Android/QMCFLAC/app/src/jni/doJNI.c > CMakeFiles/doJNI.dir/doJNI.c.i
 
 CMakeFiles/doJNI.dir/doJNI.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/doJNI.dir/doJNI.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/doJNI.c -o CMakeFiles/doJNI.dir/doJNI.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/zhc/code/code/Android/QMCFLAC/app/src/jni/doJNI.c -o CMakeFiles/doJNI.dir/doJNI.c.s
+
+CMakeFiles/doJNI.dir/zhc.c.o: CMakeFiles/doJNI.dir/flags.make
+CMakeFiles/doJNI.dir/zhc.c.o: ../zhc.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/doJNI.dir/zhc.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/doJNI.dir/zhc.c.o   -c /home/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.c
+
+CMakeFiles/doJNI.dir/zhc.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/doJNI.dir/zhc.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.c > CMakeFiles/doJNI.dir/zhc.c.i
+
+CMakeFiles/doJNI.dir/zhc.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/doJNI.dir/zhc.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.c -o CMakeFiles/doJNI.dir/zhc.c.s
+
+CMakeFiles/doJNI.dir/qmcLib.c.o: CMakeFiles/doJNI.dir/flags.make
+CMakeFiles/doJNI.dir/qmcLib.c.o: ../qmcLib.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/doJNI.dir/qmcLib.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/doJNI.dir/qmcLib.c.o   -c /home/zhc/code/code/Android/QMCFLAC/app/src/jni/qmcLib.c
+
+CMakeFiles/doJNI.dir/qmcLib.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/doJNI.dir/qmcLib.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/zhc/code/code/Android/QMCFLAC/app/src/jni/qmcLib.c > CMakeFiles/doJNI.dir/qmcLib.c.i
+
+CMakeFiles/doJNI.dir/qmcLib.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/doJNI.dir/qmcLib.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/zhc/code/code/Android/QMCFLAC/app/src/jni/qmcLib.c -o CMakeFiles/doJNI.dir/qmcLib.c.s
+
+CMakeFiles/doJNI.dir/Base128Lib.c.o: CMakeFiles/doJNI.dir/flags.make
+CMakeFiles/doJNI.dir/Base128Lib.c.o: ../Base128Lib.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/doJNI.dir/Base128Lib.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/doJNI.dir/Base128Lib.c.o   -c /home/zhc/code/code/Android/QMCFLAC/app/src/jni/Base128Lib.c
+
+CMakeFiles/doJNI.dir/Base128Lib.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/doJNI.dir/Base128Lib.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/zhc/code/code/Android/QMCFLAC/app/src/jni/Base128Lib.c > CMakeFiles/doJNI.dir/Base128Lib.c.i
+
+CMakeFiles/doJNI.dir/Base128Lib.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/doJNI.dir/Base128Lib.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/zhc/code/code/Android/QMCFLAC/app/src/jni/Base128Lib.c -o CMakeFiles/doJNI.dir/Base128Lib.c.s
 
 # Object files for target doJNI
 doJNI_OBJECTS = \
-"CMakeFiles/doJNI.dir/doJNI.c.o"
+"CMakeFiles/doJNI.dir/doJNI.c.o" \
+"CMakeFiles/doJNI.dir/zhc.c.o" \
+"CMakeFiles/doJNI.dir/qmcLib.c.o" \
+"CMakeFiles/doJNI.dir/Base128Lib.c.o"
 
 # External object files for target doJNI
 doJNI_EXTERNAL_OBJECTS =
 
 doJNI: CMakeFiles/doJNI.dir/doJNI.c.o
+doJNI: CMakeFiles/doJNI.dir/zhc.c.o
+doJNI: CMakeFiles/doJNI.dir/qmcLib.c.o
+doJNI: CMakeFiles/doJNI.dir/Base128Lib.c.o
 doJNI: CMakeFiles/doJNI.dir/build.make
 doJNI: CMakeFiles/doJNI.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable doJNI"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable doJNI"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/doJNI.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -93,6 +138,6 @@ CMakeFiles/doJNI.dir/clean:
 .PHONY : CMakeFiles/doJNI.dir/clean
 
 CMakeFiles/doJNI.dir/depend:
-	cd /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/zhc/code/code/Android/QMCFLAC/app/src/jni /home/zhc/code/code/Android/QMCFLAC/app/src/jni /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/doJNI.dir/depend
 

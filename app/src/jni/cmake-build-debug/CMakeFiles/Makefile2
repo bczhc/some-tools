@@ -50,56 +50,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /home/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /root/myHome/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake -E remove -f
+RM = /home/zhc/bin/clion-2019.1.3/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni
+CMAKE_SOURCE_DIR = /home/zhc/code/code/Android/QMCFLAC/app/src/jni
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug
-
-#=============================================================================
-# Target rules for target CMakeFiles/zhc.dir
-
-# All Build rule for target.
-CMakeFiles/zhc.dir/all:
-	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/depend
-	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=11,12 "Built target zhc"
-.PHONY : CMakeFiles/zhc.dir/all
-
-# Include target in all.
-all: CMakeFiles/zhc.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/zhc.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/zhc.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/zhc.dir/rule
-
-# Convenience name for target.
-zhc: CMakeFiles/zhc.dir/rule
-
-.PHONY : zhc
-
-# clean rule for target.
-CMakeFiles/zhc.dir/clean:
-	$(MAKE) -f CMakeFiles/zhc.dir/build.make CMakeFiles/zhc.dir/clean
-.PHONY : CMakeFiles/zhc.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/zhc.dir/clean
-
-.PHONY : clean
+CMAKE_BINARY_DIR = /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug
 
 #=============================================================================
 # Target rules for target CMakeFiles/doJNI.dir
@@ -108,7 +71,7 @@ clean: CMakeFiles/zhc.dir/clean
 CMakeFiles/doJNI.dir/all:
 	$(MAKE) -f CMakeFiles/doJNI.dir/build.make CMakeFiles/doJNI.dir/depend
 	$(MAKE) -f CMakeFiles/doJNI.dir/build.make CMakeFiles/doJNI.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=3,4 "Built target doJNI"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5 "Built target doJNI"
 .PHONY : CMakeFiles/doJNI.dir/all
 
 # Include target in all.
@@ -118,9 +81,9 @@ all: CMakeFiles/doJNI.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/doJNI.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 5
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/doJNI.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/doJNI.dir/rule
 
 # Convenience name for target.
@@ -135,117 +98,6 @@ CMakeFiles/doJNI.dir/clean:
 
 # clean rule for target.
 clean: CMakeFiles/doJNI.dir/clean
-
-.PHONY : clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/qmcLib.dir
-
-# All Build rule for target.
-CMakeFiles/qmcLib.dir/all:
-	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/depend
-	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=5,6 "Built target qmcLib"
-.PHONY : CMakeFiles/qmcLib.dir/all
-
-# Include target in all.
-all: CMakeFiles/qmcLib.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/qmcLib.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/qmcLib.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/qmcLib.dir/rule
-
-# Convenience name for target.
-qmcLib: CMakeFiles/qmcLib.dir/rule
-
-.PHONY : qmcLib
-
-# clean rule for target.
-CMakeFiles/qmcLib.dir/clean:
-	$(MAKE) -f CMakeFiles/qmcLib.dir/build.make CMakeFiles/qmcLib.dir/clean
-.PHONY : CMakeFiles/qmcLib.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/qmcLib.dir/clean
-
-.PHONY : clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/qmc_test.dir
-
-# All Build rule for target.
-CMakeFiles/qmc_test.dir/all:
-	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/depend
-	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=7,8,9,10 "Built target qmc_test"
-.PHONY : CMakeFiles/qmc_test.dir/all
-
-# Include target in all.
-all: CMakeFiles/qmc_test.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/qmc_test.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 4
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/qmc_test.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/qmc_test.dir/rule
-
-# Convenience name for target.
-qmc_test: CMakeFiles/qmc_test.dir/rule
-
-.PHONY : qmc_test
-
-# clean rule for target.
-CMakeFiles/qmc_test.dir/clean:
-	$(MAKE) -f CMakeFiles/qmc_test.dir/build.make CMakeFiles/qmc_test.dir/clean
-.PHONY : CMakeFiles/qmc_test.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/qmc_test.dir/clean
-
-.PHONY : clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/Base128Lib.dir
-
-# All Build rule for target.
-CMakeFiles/Base128Lib.dir/all:
-	$(MAKE) -f CMakeFiles/Base128Lib.dir/build.make CMakeFiles/Base128Lib.dir/depend
-	$(MAKE) -f CMakeFiles/Base128Lib.dir/build.make CMakeFiles/Base128Lib.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target Base128Lib"
-.PHONY : CMakeFiles/Base128Lib.dir/all
-
-# Include target in all.
-all: CMakeFiles/Base128Lib.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/Base128Lib.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/Base128Lib.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/myHome/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/Base128Lib.dir/rule
-
-# Convenience name for target.
-Base128Lib: CMakeFiles/Base128Lib.dir/rule
-
-.PHONY : Base128Lib
-
-# clean rule for target.
-CMakeFiles/Base128Lib.dir/clean:
-	$(MAKE) -f CMakeFiles/Base128Lib.dir/build.make CMakeFiles/Base128Lib.dir/clean
-.PHONY : CMakeFiles/Base128Lib.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/Base128Lib.dir/clean
 
 .PHONY : clean
 
