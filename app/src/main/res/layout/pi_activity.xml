@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="@string/pi______type"
+              android:textSize="20sp"
+              android:id="@+id/tv"
+              android:layout_margin="25sp"
+    />
+    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:inputType="numberDecimal" tools:ignore="Autofill,LabelFor"
+              android:id="@+id/pi_et"
+              android:layout_below="@id/tv"
+              android:layout_marginLeft="40sp"
+              android:layout_marginRight="40sp"
+              android:layout_marginTop="-20sp"
+    />
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_below="@id/pi_et"
+                    android:id="@+id/rl1"
+                    android:gravity="center"
+    >
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:baselineAligned="false" tools:ignore="UselessParent">
+            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+                          android:layout_weight="1" tools:ignore="UselessLeaf"/>
+            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+                          android:layout_weight="1"
+                          android:gravity="center"
+            >
+                <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="@string/calc"
+                        android:layout_margin="5sp"
+                        android:id="@+id/gen_pi"
+                        android:textSize="25sp"
+                />
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+                          android:layout_weight="1"
+            >
+                <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:textSize="20sp"
+                          android:id="@+id/waitTV"
+                />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    <EditText android:layout_width="match_parent" android:layout_height="match_parent"
+              android:layout_margin="20sp"
+              android:layout_below="@id/rl1"
+              android:id="@+id/pi_out_et"
+              tools:ignore="Autofill,LabelFor,TextFields"
+              android:cursorVisible="false"
+              android:focusable="false"
+    />
+</RelativeLayout>
