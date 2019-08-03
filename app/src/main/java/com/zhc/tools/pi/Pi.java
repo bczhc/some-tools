@@ -24,6 +24,7 @@ public class Pi extends AppCompatActivity {
         PiJNI piJNI = new PiJNI();
         Button btn = findViewById(R.id.gen_pi);
         EditText et = findViewById(R.id.pi_et);
+        TextView timeTV = findViewById(R.id.time_tv);
         piJNI.o = findViewById(R.id.pi_out_et);
         final ExecutorService[] es = {Executors.newFixedThreadPool(1)};
         TextView tv = findViewById(R.id.waitTV);
@@ -31,17 +32,21 @@ public class Pi extends AppCompatActivity {
             try {
                 String s = et.getText().toString();
                 int i = Integer.parseInt(s.equals("") ? "0" : s);
-                if (!es[0].isShutdown()) {
+                try {
                     es[0].shutdownNow();
+                } catch (Exception ignored) {
                 }
                 es[0] = Executors.newFixedThreadPool(1);
                 es[0].execute(() -> {
                     piJNI.sb = new StringBuilder();
                     runOnUiThread(() -> tv.setText(R.string.wait));
+                    long sM = System.currentTimeMillis();
                     piJNI.gen(i);
+                    long eM = System.currentTimeMillis();
                     runOnUiThread(() -> {
                         tv.setText(R.string.nul);
                         piJNI.o.setText(piJNI.sb.toString());
+                        timeTV.setText(String.format(getResources().getString(R.string.tv_millis), String.valueOf(eM - sM)));
                     });
                 });
                 es[0].shutdown();
