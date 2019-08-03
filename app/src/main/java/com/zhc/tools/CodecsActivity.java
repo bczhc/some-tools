@@ -1,4 +1,4 @@
-package com.zhc.codecs;
+package com.zhc.tools;
 
 import android.Manifest;
 import android.content.Intent;
@@ -35,7 +35,7 @@ import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
-public class MainActivity extends AppCompatActivity {
+public class CodecsActivity extends AppCompatActivity {
     private TextView mainTv;
     private String f = null;
     private File folder = null;
@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public MainActivity() {
-        System.out.println("new MainActivity");
+    public CodecsActivity() {
+        System.out.println("new CodecsActivity");
         this.picker_o = new Picker();
         this.dataList = new ArrayList<>();
         {
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 //                        }
 
                     } catch (Exception e) {
-                        picker_o.showException(e, MainActivity.this);
+                        picker_o.showException(e, CodecsActivity.this);
                         reset();
                         allButtonsAction(1, null, VISIBLE);
                     }
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         });
         fab.setOnLongClickListener(v -> {
             Intent intent = new Intent();
-            intent.setClass(this, com.zhc.tools.MainActivity.class);
+            intent.setClass(this, MainActivity.class);
             startActivity(intent);
             return true;
         });
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 this.f = u.getCanonicalPath();
                 runOnUiThread(() -> this.mainTv.setText(String.format(getResources().getString(R.string.tv), this.f)));
             } catch (IOException e) {
-                picker_o.showException(e, MainActivity.this);
+                picker_o.showException(e, CodecsActivity.this);
                 reset();
                 allButtonsAction(1, null, VISIBLE);
             }
@@ -293,11 +293,11 @@ public class MainActivity extends AppCompatActivity {
         dT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                MainActivity.this.dT = position;
+                CodecsActivity.this.dT = position;
                 if (data.get(position).equals("Base128")) {
                     LinearLayout ll = findViewById(R.id.fl);
                     Button[] base128_btn = new Button[]{
-                            new Button(MainActivity.this), new Button(MainActivity.this)
+                            new Button(CodecsActivity.this), new Button(CodecsActivity.this)
                     };
                     LinearLayout.LayoutParams[] ll_lp = new LinearLayout.LayoutParams[]{
                             new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1),
@@ -308,8 +308,8 @@ public class MainActivity extends AppCompatActivity {
                     base128_btn[0].setText(R.string.encode);
                     base128_btn[1].setText(R.string.decode);
                     LinearLayout[] linearLayouts = new LinearLayout[]{
-                            new LinearLayout(MainActivity.this),
-                            new LinearLayout(MainActivity.this)
+                            new LinearLayout(CodecsActivity.this),
+                            new LinearLayout(CodecsActivity.this)
                     };
                     for (int i = 0; i < 2; i++) {
                         base128_btn[i].setLayoutParams(ll_lp[i]);
@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
     private void creat() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+            ActivityCompat.requestPermissions(CodecsActivity.this, new String[]{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 0);
         } else {
@@ -360,13 +360,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetBtn() {
-        Button btn = new Button(MainActivity.this);
+        Button btn = new Button(CodecsActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         btn.setLayoutParams(lp);
         btn.setText(R.string.decode);
         btn.setId(R.id.dB);
         this.dB = btn;
-        MainActivity.this.setDBOnClickEvent(btn, 1, null);
+        CodecsActivity.this.setDBOnClickEvent(btn, 1, null);
         LinearLayout ll = findViewById(R.id.fl);
         ll.removeAllViews();
         ll.addView(btn);
@@ -410,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
                                         if (x != null) {
                                             String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L) {
-                                                int status = new Main().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, MainActivity.this, 0);
+                                                int status = new JNIMain().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, CodecsActivity.this, 0);
                                                 if (status == -1)
                                                     runOnUiThread(() -> {
                                                         fopenErrorToast.cancel();
@@ -419,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         }
                                     } catch (IOException e) {
-                                        picker_o.showException(e, MainActivity.this);
+                                        picker_o.showException(e, CodecsActivity.this);
                                         reset();
                                         allButtonsAction(o, buttons, VISIBLE);
                                     }
@@ -437,7 +437,7 @@ public class MainActivity extends AppCompatActivity {
                                 reset();
                             });
                         } catch (Exception e) {
-                            picker_o.showException(e, MainActivity.this);
+                            picker_o.showException(e, CodecsActivity.this);
                             runOnUiThread(() -> {
                                 makeText(this, e.toString(), LENGTH_SHORT).show();
                                 dB.setVisibility(VISIBLE);
@@ -447,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
                     }).start();
                     reset();
                 } catch (Exception e) {
-                    picker_o.showException(e, MainActivity.this);
+                    picker_o.showException(e, CodecsActivity.this);
                     reset();
                     allButtonsAction(o, buttons, VISIBLE);
                 }
@@ -489,7 +489,7 @@ public class MainActivity extends AppCompatActivity {
                                         allButtonsAction(o, buttons, VISIBLE);
                                     });
                                 else
-                                    status = new Main().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, MainActivity.this, 0);
+                                    status = new JNIMain().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, CodecsActivity.this, 0);
                                 if (status == -1 || status == 255) {
                                     runOnUiThread(() -> {
                                         fopenErrorToast.cancel();
@@ -500,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
                                     runOnUiThread(() -> makeText(this, R.string.native_error, LENGTH_SHORT).show());
                                 }
                             } catch (Exception e) {
-                                picker_o.showException(e, MainActivity.this);
+                                picker_o.showException(e, CodecsActivity.this);
                                 reset();
                                 allButtonsAction(o, buttons, VISIBLE);
                             }
@@ -514,13 +514,13 @@ public class MainActivity extends AppCompatActivity {
                             }
                             allButtonsAction(o, buttons, VISIBLE);
                         } catch (Exception e) {
-                            picker_o.showException(e, MainActivity.this);
+                            picker_o.showException(e, CodecsActivity.this);
                             reset();
                             allButtonsAction(o, buttons, VISIBLE);
                         }
                     }).start();
                 } catch (Exception e) {
-                    picker_o.showException(e, MainActivity.this);
+                    picker_o.showException(e, CodecsActivity.this);
                     reset();
                     allButtonsAction(o, buttons, VISIBLE);
                 }

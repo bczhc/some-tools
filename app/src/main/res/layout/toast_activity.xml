@@ -6,7 +6,9 @@
               android:layout_above="@id/toast"
               android:id="@+id/toast_et"
               android:layout_margin="10sp"
-              tools:ignore="Autofill,LabelFor,TextFields"/>
+              tools:ignore="Autofill,LabelFor,TextFields"
+              android:gravity="top"
+    />
     <Button android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="@string/toast"
             android:textAllCaps="false"
