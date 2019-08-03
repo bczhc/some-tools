@@ -38,4 +38,5 @@
     <string name="copying_success">复制成功</string>
     <string name="html_content">html内容</string>
     <string name="put_in_clipboard">放入剪切板</string>
+    <string name="tv_millis">%1$sms</string>
 </resources>
