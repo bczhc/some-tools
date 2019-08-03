@@ -14,7 +14,7 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 #ifndef ARR_len
-#define ARR_len(x) (sizeof(x) / sizeof(x)[0])
+#define ARR_len(x) sizeof(x) / sizeof(x)[0]
 #endif
 #define dl long long
 #define usi unsigned int
@@ -23,22 +23,24 @@ char *ToUpperCase(char *Dest, const char *string);
 
 void PrintArr(const char arr[], int len);
 
-dl m_pow(dl base, dl exponent);
+dl m_pow(const dl base, const dl exponent);
 
 int BinToDec(const char *NumStr);
 
-void printArr(const char *a, int length);
+void printArr(const char *a, const int length);
 
-char *substring(char *Dest, const char *source, int beginIndex, int endIndex);
+char *substring(char *Dest, const char *source, const int beginIndex, const int endIndex);
 
-void substr(char **Dest, const char *source, int from, int length);
+void substr(char **Dest, const char *source, const int from, int length);
 
-char *substr2(char *Dest, const char *source, int from, int length);
+char *substr2(char *Dest, const char *source, const int from, int length);
 
 
 long long getFileSize(FILE *fp);
 
-int getIntegerLen(int x);
+int getIntegerLen(const int x);
+
+int getLongLen(const long x);
 
 void Scanf(char **Dest);
 
@@ -46,7 +48,7 @@ void strcpyAndCat_auto(char **Dest, const char *cpy_s, const char *cat_s);
 
 void strcat_auto(char **sourceDest, const char *cat_s);
 
-void charToCharPtr(char **Dest, char c);
+void charToCharPtr(char **Dest, const char c);
 /**
  *
  * @param string s
@@ -114,16 +116,18 @@ void split(void ****Dest, char *str, const char *splitChar) {
 
 int Str_Cmp_nMatchCase(const char *a, const char *b);
 
-void m_itoa(char **Dest, int i);
+void m_itoa(char **Dest, const int i);
 
 /*void m_lltoa(char **Dest, const dl int ll) {
 
 }*/
 
+void m_ltoa(char **Dest, const long l);
+
 int split(char ***Dest, const char *SourceString, const char *SplitStr);
 
-int cmpIntArray(const int *a1, int a1Len, const int *a2, int a2Len);
+int cmpIntArray(const int *a1, const int a1Len, const int *a2, const int a2Len);
 
-int cmpCharArray(const char *a1, int a1Len, const char *a2, int a2Len);
+int cmpCharArray(const char *a1, const int a1Len, const char *a2, const int a2Len);
 
 #endif //C99_ZHC_H

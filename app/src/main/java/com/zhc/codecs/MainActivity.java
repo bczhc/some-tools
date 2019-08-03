@@ -135,6 +135,12 @@ public class MainActivity extends AppCompatActivity {
             intent.setClass(this, Settings.class);
             startActivityForResult(intent, 3);
         });
+        fab.setOnLongClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClass(this, com.zhc.tools.MainActivity.class);
+            startActivity(intent);
+            return true;
+        });
         tv = findViewById(R.id.tv);
         Button pF = findViewById(R.id.pF);
         this.mainTv = findViewById(R.id.textView);

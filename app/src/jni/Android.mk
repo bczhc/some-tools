@@ -8,3 +8,9 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
+
+LOCAL_MODULE    := pi
+LOCAL_SRC_FILES := ./jni_c++/pi.cpp zhc.cpp
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
