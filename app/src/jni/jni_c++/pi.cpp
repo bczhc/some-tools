@@ -50,7 +50,7 @@ void pi(int bN, JNIEnv *env, jobject obj) {
         m_itoa(&re, (int) pi[i]);
         o(env, obj, re);
     }
-    delete[]pi, delete[]e;/* cin.ignore(), cin.ignore();*/
+    delete[]pi, delete[]e;
 }
 
 JNIEXPORT void JNICALL Java_com_zhc_tools_pi_PiJNI_gen

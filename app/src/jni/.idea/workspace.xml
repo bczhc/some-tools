@@ -12,63 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/jni_c++/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jni_c++/com_zhc_tools_pi_PiJNI.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jni_c++/pi.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/zhc.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/MainActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/pi/Pi.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/pi/PiJNI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/res/layout/pi_activity.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/res/layout/tools_activity.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zhc.c" beforeDir="false" afterPath="$PROJECT_DIR$/zhc.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zhc.h" beforeDir="false" afterPath="$PROJECT_DIR$/zhc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/codecs/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/codecs/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/Base128Lib.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/Base128Lib.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/doJNI.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/doJNI.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/qmcLib.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/qmcLib.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/zhc.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/zhc.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/Base128Lib.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/Base128Lib.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/doJNI.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/doJNI.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/qmcLib.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/qmcLib.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/zhc.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/Base128Lib.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/Base128Lib.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/doJNI.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/doJNI.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/qmcLib.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/qmcLib.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/zhc.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/zhc.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/Base128Lib.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/Base128Lib.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/doJNI.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/doJNI.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/qmcLib.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/qmcLib.o.d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/zhc.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/jni_c++/pi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/jni_c++/pi.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake2/cmake-build-debug/" />
@@ -88,8 +33,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jni_c++/pi.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="790">
-              <caret line="55" column="23" selection-start-line="55" selection-start-column="23" selection-end-line="55" selection-end-column="23" />
+            <state relative-caret-position="87">
+              <caret line="18" column="11" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
               <folding>
                 <element signature="e#37#72#0" expanded="true" />
               </folding>
@@ -263,12 +208,12 @@
       <workItem from="1562416282088" duration="1712000" />
       <workItem from="1562662988301" duration="39000" />
       <workItem from="1564627780134" duration="6555000" />
-      <workItem from="1564789745160" duration="13111000" />
+      <workItem from="1564789745160" duration="15800000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58094000" />
+    <option name="totallyTimeSpent" value="60783000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -475,8 +420,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jni_c++/pi.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="790">
-          <caret line="55" column="23" selection-start-line="55" selection-start-column="23" selection-end-line="55" selection-end-column="23" />
+        <state relative-caret-position="87">
+          <caret line="18" column="11" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
           <folding>
             <element signature="e#37#72#0" expanded="true" />
           </folding>
