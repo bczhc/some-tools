@@ -33,4 +33,9 @@
     <string name="pi______type">输入小数点后位数：</string>
     <string name="wait">请等待..</string>
     <string name="toast">Toast</string>
+    <string name="copy">复制</string>
+    <string name="html_clipboard_unsupported">android版本不支持HTML放入剪切板</string>
+    <string name="copying_success">复制成功</string>
+    <string name="html_content">html内容</string>
+    <string name="put_in_clipboard">放入剪切板</string>
 </resources>

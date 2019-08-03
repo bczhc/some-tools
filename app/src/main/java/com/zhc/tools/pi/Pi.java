@@ -80,12 +80,10 @@ public class Pi extends AppCompatActivity {
 //            piJNI.o.setText(piJNI.sb.toString());*/
         });
         btn.setOnLongClickListener(v -> {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                ClipData c = ClipData.newHtmlText("", "text", "<p style='color: red;'>ha3</p>");
-                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(c);
-                Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
-            }
+            ClipboardManager cm = ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE));
+            ClipData cd = ClipData.newPlainText("Pi", piJNI.sb.toString());
+            cm.setPrimaryClip(cd);
+            Toast.makeText(this, R.string.copying_success, Toast.LENGTH_SHORT).show();
             return true;
         });
     }

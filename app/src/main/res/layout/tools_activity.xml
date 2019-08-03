@@ -17,5 +17,11 @@
                 android:id="@+id/toast"
                 android:textAllCaps="true"
         />
+        <Button android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/put_in_clipboard"
+                android:textSize="25sp"
+                android:id="@+id/clipboard"
+                android:textAllCaps="true"
+        />
     </LinearLayout>
 </ScrollView>

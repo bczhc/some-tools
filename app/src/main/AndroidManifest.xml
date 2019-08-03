@@ -39,5 +39,13 @@
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         />
+        <activity android:name="com.zhc.tools.toast.AToast"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
+        />
+        <activity android:name="com.zhc.tools.clipboard.Clip"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
+        />
     </application>
 </manifest>
