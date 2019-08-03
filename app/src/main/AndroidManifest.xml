@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.zhc.codecs">
+          package="com.zhc.tools">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
             android:testOnly="false"
@@ -10,7 +10,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
     >
-        <activity android:name="com.zhc.codecs.MainActivity"
+        <activity android:name=".MainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         >
@@ -26,24 +26,24 @@
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         />
-        <activity android:name="com.zhc.codecs.Settings"
+        <activity android:name="com.zhc.tools.Settings"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/settings"
                   android:label="@string/settings"
         />
-        <activity android:name="com.zhc.tools.MainActivity"
+        <activity android:name=".pi.Pi"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         />
-        <activity android:name="com.zhc.tools.pi.Pi"
+        <activity android:name=".toast.AToast"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         />
-        <activity android:name="com.zhc.tools.toast.AToast"
+        <activity android:name=".clipboard.Clip"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         />
-        <activity android:name="com.zhc.tools.clipboard.Clip"
+        <activity android:name="com.zhc.tools.CodecsActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         />

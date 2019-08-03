@@ -5,7 +5,10 @@
     <EditText android:layout_width="match_parent" android:layout_height="match_parent"
               android:layout_above="@id/copy"
               android:id="@+id/copy_et"
-              tools:ignore="Autofill,LabelFor,TextFields"/>
+              tools:ignore="Autofill,LabelFor,TextFields"
+              android:hint="@string/type_html_code"
+              android:gravity="top"
+    />
     <Button android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="@string/copy"
             android:textSize="25sp"

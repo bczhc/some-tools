@@ -1,10 +1,10 @@
-package com.zhc.codecs;
+package com.zhc.tools;
 
 import android.app.Activity;
 import android.widget.TextView;
 import com.zhc.JNI;
 
-class Main {
+class JNIMain {
     /**
      * JNIMethodCall
      *
@@ -21,7 +21,7 @@ class Main {
      * @return status -2
      */
     @SuppressWarnings("Duplicates")
-    int JNI_Decode(String f, String dF, int dT, TextView tv, Activity activity, int mode) {
+    int JNI_Decode(String f, String dF, int dT, TextView tv, Activity activity, @SuppressWarnings("SameParameterValue") int mode) {
         switch (dT) {
             case 0:
                 return new JNI(tv, activity).qmcDecode(f, dF, mode);

@@ -3,11 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.zhc.codecs"
+        applicationId "com.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 7
-        versionName "2.4.0.0_20190801_测试中。。"
+        versionCode 9
+        versionName "2.8.0.0_20190803_alpha"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

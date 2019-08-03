@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.zhc.codecs.R;
+import com.zhc.tools.R;
 
 public class Clip extends AppCompatActivity {
     @Override
