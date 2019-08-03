@@ -15,7 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.*;
-import com.zhc.codecs.R;
+import com.zhc.tools.R;
 
 import java.io.File;
 import java.io.IOException;

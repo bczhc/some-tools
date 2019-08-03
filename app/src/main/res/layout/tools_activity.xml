@@ -5,23 +5,6 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="vertical"
                   android:layout_margin="10sp"
-    >
-        <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="@string/generate_pi"
-                android:textSize="25sp"
-                android:id="@+id/gen_pi"
-        />
-        <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="@string/toast"
-                android:textSize="25sp"
-                android:id="@+id/toast"
-                android:textAllCaps="true"
-        />
-        <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="@string/put_in_clipboard"
-                android:textSize="25sp"
-                android:id="@+id/clipboard"
-                android:textAllCaps="true"
-        />
-    </LinearLayout>
+                  android:id="@+id/ll"
+    />
 </ScrollView>

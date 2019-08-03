@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.zhc.codecs.R;
+import com.zhc.tools.R;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

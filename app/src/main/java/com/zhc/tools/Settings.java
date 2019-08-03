@@ -1,6 +1,5 @@
-package com.zhc.codecs;
+package com.zhc.tools;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,13 +25,14 @@ import java.util.concurrent.Executors;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
+import static com.zhc.utils.DisplayUtil.px2sp;
 
 public class Settings extends AppCompatActivity {
     private Intent r_intent = new Intent();
     private LinearLayout ll;
     private File file;
     private boolean haveChange = false;
-    private MainActivity o = new MainActivity();
+    private CodecsActivity o = new CodecsActivity();
     private String[] jsonText = new String[]{
             "sourceExtension",
             "destExtension",
@@ -264,18 +264,6 @@ public class Settings extends AppCompatActivity {
                     })
                     .show();
         } else super.onBackPressed();
-    }
-
-    /**
-     * 将px值转换为sp值，保证文字大小不变
-     *
-     * @param context c
-     * @param pxValue v
-     * @return r
-     */
-    private static int px2sp(Context context, float pxValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (pxValue / fontScale + 0.5f);
     }
 
 //    /**

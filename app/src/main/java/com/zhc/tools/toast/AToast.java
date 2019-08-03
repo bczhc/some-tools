@@ -7,7 +7,7 @@ import android.text.Editable;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.zhc.codecs.R;
+import com.zhc.tools.R;
 
 public class AToast extends AppCompatActivity {
     @Override
