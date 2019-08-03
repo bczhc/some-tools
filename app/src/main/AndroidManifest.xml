@@ -31,5 +31,13 @@
                   android:theme="@style/settings"
                   android:label="@string/settings"
         />
+        <activity android:name="com.zhc.tools.MainActivity"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
+        />
+        <activity android:name="com.zhc.tools.pi.Pi"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
+        />
     </application>
 </manifest>

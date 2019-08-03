@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <EditText android:layout_width="match_parent" android:layout_height="match_parent"
+              android:layout_above="@id/toast"
+              android:id="@+id/toast_et"
+              tools:ignore="Autofill,LabelFor,TextFields"/>
+    <Button android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/toast"
+            android:textAllCaps="false"
+            android:textSize="25sp"
+            android:id="@+id/toast"
+            android:layout_margin="10sp"
+            android:layout_alignParentBottom="true"
+    />
+</RelativeLayout>

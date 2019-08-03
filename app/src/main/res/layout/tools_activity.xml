@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_margin="10sp"
+    >
+        <Button android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/generate_pi"
+                android:textSize="25sp"
+                android:id="@+id/gen_pi"
+        />
+        <Button android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="@string/toast"
+                android:textSize="25sp"
+                android:id="@+id/toast"
+                android:textAllCaps="true"
+        />
+    </LinearLayout>
+</ScrollView>

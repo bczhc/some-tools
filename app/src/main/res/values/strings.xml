@@ -28,4 +28,9 @@
     <string name="json_solve_error">json解析失败：</string>
     <!--    <string name="pathEdit">输入路径</string>-->
     <string name="delete_old_file">完成后是否删除原文件</string>
+    <string name="generate_pi">计算Pi</string>
+    <string name="calc">计算</string>
+    <string name="pi______type">输入小数点后位数：</string>
+    <string name="wait">请等待..</string>
+    <string name="toast">Toast</string>
 </resources>
