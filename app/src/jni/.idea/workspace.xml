@@ -13,44 +13,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/jni_c++/s.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/com_zhc_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/com_zhc_JNI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doJNI.c" beforeDir="false" afterPath="$PROJECT_DIR$/doJNI.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/jni_c++/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/pi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/jni_c++/pi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zhc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/jni_c++/zhc.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/JNI.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/JNI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/tools/CodecsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/CodecsActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/tools/JNIMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/JNIMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/tools/pi/Pi.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/pi/Pi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/tools/pi/PiJNI.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/pi/PiJNI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/doJNI.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/doJNI.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_c++/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_c++/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/doJNI.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/doJNI.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_c++/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_c++/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/doJNI.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/doJNI.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_c++/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_c++/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/doJNI.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/doJNI.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_c++/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_c++/pi.o" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake2/cmake-build-debug/" />
@@ -70,8 +34,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jni_c++/pi.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="49" column="55" lean-forward="true" selection-start-line="49" selection-start-column="55" selection-end-line="49" selection-end-column="55" />
+            <state relative-caret-position="308">
+              <caret line="34" column="86" selection-start-line="34" selection-start-column="86" selection-end-line="34" selection-end-column="86" />
               <folding>
                 <element signature="e#37#72#0" expanded="true" />
               </folding>
@@ -129,6 +93,7 @@
       <find>strcp</find>
       <find>strcpyAndCat_auto</find>
       <find>m_l</find>
+      <find>N</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/</dir>
@@ -269,12 +234,12 @@
       <workItem from="1562662988301" duration="39000" />
       <workItem from="1564627780134" duration="6555000" />
       <workItem from="1564789745160" duration="21489000" />
-      <workItem from="1564896291905" duration="1174000" />
+      <workItem from="1564896291905" duration="1947000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67646000" />
+    <option name="totallyTimeSpent" value="68419000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -514,8 +479,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jni_c++/pi.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="49" column="55" lean-forward="true" selection-start-line="49" selection-start-column="55" selection-end-line="49" selection-end-column="55" />
+        <state relative-caret-position="308">
+          <caret line="34" column="86" selection-start-line="34" selection-start-column="86" selection-end-line="34" selection-end-column="86" />
           <folding>
             <element signature="e#37#72#0" expanded="true" />
           </folding>
