@@ -31,7 +31,7 @@ public class JNI {
             activity.runOnUiThread(() -> tv.setText(s));
         } else {
             System.out.println("s = " + s);
-            System.out.println("b = " + b);
+            System.out.println("codecs_activity_b = " + b);
             activity.runOnUiThread(() -> tv.setText(String.format("%s", b + "%")));
         }
     }

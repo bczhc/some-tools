@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tools_activity);
+        setContentView(R.layout.tools_activity_main);
         LinearLayout ll = findViewById(R.id.ll);
         final int[] texts = new int[]{
                 R.string.some_codecs,

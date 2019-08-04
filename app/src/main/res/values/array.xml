@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="settings_d_t">
+        <item>QQMusic-qmc</item>
+        <item>KwMusic-kwm</item>
+        <item>Base128编码</item>
+        <item>Base128解码</item>
+    </array>
+    <array name="json">
+        <item>qmc</item>
+        <item>kwm</item>
+        <item>base128_e</item>
+        <item>base128_d</item>
+    </array>
+    <array name="spinner_data">
+        <item>QQMusic-qmc</item>
+        <item>KwMusic-kwm</item>
+        <item>Base128</item>
+    </array>
+</resources>

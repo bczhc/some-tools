@@ -4,20 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
-import filepicker.Picker;
+import com.zhc.utils.BaseActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -25,12 +22,12 @@ import java.util.concurrent.Executors;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
+import static com.zhc.utils.Common.showException;
 import static com.zhc.utils.DisplayUtil.px2sp;
 
-public class Settings extends AppCompatActivity {
+public class Settings extends BaseActivity {
     private Intent r_intent = new Intent();
     private LinearLayout ll;
-    private File file;
     private boolean haveChange = false;
     private CodecsActivity o = new CodecsActivity();
     private String[] jsonText = new String[]{
@@ -39,37 +36,49 @@ public class Settings extends AppCompatActivity {
             "deleteOldFile"
 
     };
-    private String[] dT;
     private List<List<View>> lists;
     private JSONObject json;
     private CountDownLatch latch;
     private CountDownLatch latch1;
     private List<List<String>> saved;
     private String savedJSONText;
+    private File file;
+    private String[] dataList = null;
+    private String[] jsonData = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CountDownLatch latch2 = new CountDownLatch(1);
+        final Intent[] intent = new Intent[1];
+        new Thread(() -> {
+            this.dataList = this.getResources().getStringArray(R.array.settings_d_t);
+            intent[0] = this.getIntent();
+            this.file = (File) intent[0].getSerializableExtra("file");
+            this.jsonData = this.getResources().getStringArray(R.array.json);
+            latch2.countDown();
+        }).start();
         setContentView(R.layout.settings);
         ll = findViewById(R.id.ll);
         ExecutorService es = Executors.newCachedThreadPool();
         this.latch = new CountDownLatch(1);
         this.latch1 = new CountDownLatch(1);
+        try {
+            latch2.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         es.execute(() -> {
             try {
-                this.file = this.o.getFile();
                 if (!file.exists()) System.out.println("file.createNewFile() = " + file.createNewFile());
             } catch (IOException e) {
-                new Picker().showException(e, Settings.this);
+                showException(e, Settings.this);
             }
             this.lists = new ArrayList<>();
             this.json = new JSONObject();
-            Intent intent = this.getIntent();
-            ArrayList<String> optionsList = intent.getStringArrayListExtra("options");
-            this.savedJSONText = intent.getStringExtra("jsonText");
-            this.dT = optionsList.toArray(new String[0]);
+            this.savedJSONText = intent[0].getStringExtra("jsonText");
             this.latch1.countDown();
-            int length = this.dT.length;
+            int length = dataList.length;
             LinearLayout[] linearLayouts = new LinearLayout[length];
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             int[] color = new int[]{
@@ -89,7 +98,7 @@ public class Settings extends AppCompatActivity {
                 linearLayouts[i].setBackgroundColor(color[i & 1]);
                 TextView option_tv = new TextView(this);
                 option_tv.setGravity(Gravity.CENTER);
-                option_tv.setText(this.dT[i]);
+                option_tv.setText(dataList[i]);
                 option_tv.setTextSize(25F);
 //                EditText path_et = new EditText(this);
                 EditText[] editTexts = new EditText[2];
@@ -118,6 +127,7 @@ public class Settings extends AppCompatActivity {
                     editTexts[j].setOnFocusChangeListener((v, hasFocus) -> this.haveChange = true);
                     viewList.add(editTexts[j]);
                 }
+
                 float textSize = px2sp(Settings.this, textViews[1].getTextSize());
                 textViews[0].setTextSize(textSize + 5);
                 CheckBox[] checkBoxes = new CheckBox[length];
@@ -131,7 +141,8 @@ public class Settings extends AppCompatActivity {
                     }
                     checkBoxes[finalI] = new CheckBox(this);
                     checkBoxes[finalI].setText(R.string.delete_old_file);
-                    checkBoxes[finalI].setOnClickListener(v -> Snackbar.make(ll, String.valueOf(checkBoxes[finalI].isChecked()), Snackbar.LENGTH_SHORT).show());
+//                    checkBoxes[finalI].setOnClickListener(v -> Snackbar.make(ll, String.valueOf(checkBoxes[finalI].isChecked()), Snackbar.LENGTH_SHORT).show());
+                    checkBoxes[finalI].setChecked(Boolean.parseBoolean(this.saved.get(finalI).get(2)));
                     linearLayouts[finalI].addView(checkBoxes[finalI]);
                     ll.addView(linearLayouts[finalI]);
                     latch.countDown();
@@ -176,8 +187,7 @@ public class Settings extends AppCompatActivity {
             System.out.println("Thread.currentThread() = " + Thread.currentThread());
             try {
 //                this.o.spinnerData.addAll(Arrays.asList(this.dT));
-                this.o.spinnerData = new ArrayList<>();
-                Collections.addAll(this.o.spinnerData, this.dT);
+                o.jsonData = this.jsonData;
                 this.saved = this.o.solveJSON(this.savedJSONText);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -267,10 +277,10 @@ public class Settings extends AppCompatActivity {
     }
 
 //    /**
-//     * Generate a value suitable for use in .
+//     * Generate codecs_activity_a value suitable for use in .
 //     * This value will not collide with ID values generated at build time by aapt for R.id.
 //     *
-//     * @return a generated ID value
+//     * @return codecs_activity_a generated ID value
 //     */
     /*private int generateViewId() {
         final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
@@ -293,10 +303,10 @@ public class Settings extends AppCompatActivity {
                     o.put(this.jsonText[j], ((EditText) this.lists.get(i).get(j)).getText().toString());
                 }
                 o.put(this.jsonText[2], ((CheckBox) this.lists.get(i).get(2)).isChecked());
-                this.json.put(this.dT[i], o);
+                this.json.put(jsonData[i], o);
             }
         } catch (JSONException e) {
-            new Picker().showException(e, this);
+            showException(e, this);
         }
     }
 
