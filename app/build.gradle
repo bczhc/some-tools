@@ -6,8 +6,8 @@ android {
         applicationId "com.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 9
-        versionName "2.8.0.0_20190803_alpha"
+        versionCode 10
+        versionName "2.8.5.0_20190803_beta"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
