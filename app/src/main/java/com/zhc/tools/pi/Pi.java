@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Pi extends AppCompatActivity {
+    private boolean isGenerating = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,11 +41,13 @@ public class Pi extends AppCompatActivity {
                 es[0].execute(() -> {
                     piJNI.sb = new StringBuilder();
                     runOnUiThread(() -> tv.setText(R.string.wait));
+                    this.isGenerating = true;
                     long sM = System.currentTimeMillis();
                     piJNI.gen(i);
                     long eM = System.currentTimeMillis();
                     runOnUiThread(() -> {
                         tv.setText(R.string.nul);
+                        this.isGenerating = false;
                         piJNI.o.setText(piJNI.sb.toString());
                         timeTV.setText(String.format(getResources().getString(R.string.tv_millis), String.valueOf(eM - sM)));
                     });
@@ -91,5 +94,11 @@ public class Pi extends AppCompatActivity {
             Toast.makeText(this, R.string.copying_success, Toast.LENGTH_SHORT).show();
             return true;
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.isGenerating) this.moveTaskToBack(true);
+        else super.onBackPressed();
     }
 }
