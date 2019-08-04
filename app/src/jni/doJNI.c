@@ -124,7 +124,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_JNI_kwmDecode
 }
 
 JNIEXPORT void JNICALL Java_com_zhc_JNI_Base128_1encode
-        (JNIEnv *env, jobject obj, jstring f1, jstring f2) {
+        (JNIEnv *env, jobject obj, jstring f1, jstring f2, jint mode) {
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
     jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
@@ -146,7 +146,7 @@ JNIEXPORT void JNICALL Java_com_zhc_JNI_Base128_1encode
 }
 
 JNIEXPORT void JNICALL Java_com_zhc_JNI_Base128_1decode
-        (JNIEnv *env, jobject obj, jstring f1, jstring f2) {
+        (JNIEnv *env, jobject obj, jstring f1, jstring f2, jint mode) {
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
     jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
