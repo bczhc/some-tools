@@ -20,6 +20,8 @@ import com.zhc.tools.R;
 import java.io.File;
 import java.io.IOException;
 
+import static com.zhc.utils.Common.showException;
+
 public class Picker extends AppCompatActivity {
     private Toast notHavePermissionAccessToast = null;
     @SuppressWarnings("unused")
@@ -260,13 +262,8 @@ public class Picker extends AppCompatActivity {
             fillViews(listFiles, lp, grey, justPicked, ll);
             this.currentPath = parentFile;
         } catch (Exception e) {
-            this.showException(e, this);
+            showException(e, this);
             finish();
         }
-    }
-
-    public void showException(Exception e, AppCompatActivity activity) {
-        e.printStackTrace();
-        activity.runOnUiThread(() -> Toast.makeText(activity, e.toString(), Toast.LENGTH_SHORT).show());
     }
 }
