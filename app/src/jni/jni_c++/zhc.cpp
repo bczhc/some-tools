@@ -2,7 +2,7 @@
 // Created by root on 19-7-3.
 //
 
-#include "zhc.h"
+#include "../zhc.h"
 
 char *ToUpperCase(char *Dest, const char *string) {
     char *p = Dest;
