@@ -415,7 +415,7 @@ public class CodecsActivity extends BaseActivity {
                                         if (x != null) {
                                             String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L) {
-                                                int status = new JNIMain().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, CodecsActivity.this, 0);
+                                                int status = new JNIMain().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, CodecsActivity.this, this.savedConfig);
                                                 if (status == -1)
                                                     runOnUiThread(() -> {
                                                         fopenErrorToast.cancel();
@@ -494,7 +494,7 @@ public class CodecsActivity extends BaseActivity {
                                         allButtonsAction(o, buttons, VISIBLE);
                                     });
                                 else
-                                    status = new JNIMain().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, CodecsActivity.this, 0);
+                                    status = new JNIMain().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, CodecsActivity.this, savedConfig);
                                 if (status == -1 || status == 255) {
                                     runOnUiThread(() -> {
                                         fopenErrorToast.cancel();

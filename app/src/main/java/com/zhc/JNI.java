@@ -44,7 +44,7 @@ public class JNI {
      */
     public native int kwmDecode(String f, String dF, int mode);
 
-    public native int Base128_encode(String f, String dF);
+    public native int Base128_encode(String f, String dF, int mode);
 
-    public native int Base128_decode(String f, String dF);
+    public native int Base128_decode(String f, String dF, int mode);
 }

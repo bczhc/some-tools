@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.zhc.tools.R;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,6 +38,7 @@ public class Pi extends AppCompatActivity {
                     es[0].shutdownNow();
                 } catch (Exception ignored) {
                 }
+                new PiJNI(i);
                 es[0] = Executors.newFixedThreadPool(1);
                 es[0].execute(() -> {
                     piJNI.sb = new StringBuilder();
@@ -48,7 +50,8 @@ public class Pi extends AppCompatActivity {
                     runOnUiThread(() -> {
                         tv.setText(R.string.nul);
                         this.isGenerating = false;
-                        piJNI.o.setText(piJNI.sb.toString());
+//                        piJNI.o.setText(piJNI.sb.toString());
+                        System.out.println("PiJNI.ints = " + Arrays.toString(PiJNI.ints));
                         timeTV.setText(String.format(getResources().getString(R.string.tv_millis), String.valueOf(eM - sM)));
                     });
                 });
