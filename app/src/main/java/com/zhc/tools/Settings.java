@@ -142,7 +142,10 @@ public class Settings extends BaseActivity {
                     checkBoxes[finalI] = new CheckBox(this);
                     checkBoxes[finalI].setText(R.string.delete_old_file);
 //                    checkBoxes[finalI].setOnClickListener(v -> Snackbar.make(ll, String.valueOf(checkBoxes[finalI].isChecked()), Snackbar.LENGTH_SHORT).show());
-                    checkBoxes[finalI].setChecked(Boolean.parseBoolean(this.saved.get(finalI).get(2)));
+                    try {
+                        checkBoxes[finalI].setChecked(Boolean.parseBoolean(this.saved.get(finalI).get(2)));
+                    } catch (IndexOutOfBoundsException ignored) {
+                    }
                     linearLayouts[finalI].addView(checkBoxes[finalI]);
                     ll.addView(linearLayouts[finalI]);
                     latch.countDown();
