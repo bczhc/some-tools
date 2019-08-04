@@ -33,7 +33,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name="com.zhc.tools.Settings"
+        <activity android:name="com.zhc.tools.codecs.Settings"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/settings"
                   android:label="@string/settings"
@@ -71,7 +71,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name="com.zhc.tools.CodecsActivity"
+        <activity android:name="com.zhc.tools.codecs.CodecsActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         >
@@ -82,6 +82,6 @@
 
             </intent-filter>
         </activity>
-        <activity android:name="com.zhc.utils.BaseActivity"/>
+        <activity android:name=".BaseActivity"/>
     </application>
 </manifest>

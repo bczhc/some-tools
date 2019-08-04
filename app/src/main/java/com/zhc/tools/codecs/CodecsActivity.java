@@ -1,6 +1,7 @@
-package com.zhc.tools;
+package com.zhc.tools.codecs;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,7 +16,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.zhc.utils.BaseActivity;
+import com.zhc.tools.R;
+import com.zhc.tools.BaseActivity;
+import com.zhc.tools.MainActivity;
 import filepicker.Picker;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,7 +46,7 @@ public class CodecsActivity extends BaseActivity {
     private boolean isRunning = false;
     private Button dB = null;
     private int dT = 0;//qmc
-    private Toast toasting = null;
+    private Toast[] toasts;
     private CountDownLatch latch;
     private String jsonText;
     private List<List<String>> savedConfig;
@@ -104,7 +107,7 @@ public class CodecsActivity extends BaseActivity {
                         this.savedConfig = this.solveJSON(data.getStringExtra("result"));
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        this.runOnUiThread(() -> makeText(this, this.getString(R.string.json_solve_error) + e.toString(), LENGTH_SHORT).show());
+                        this.runOnUiThread(() -> toast(4, this.getString(R.string.json_solve_error) + e.toString()));
                     }
 //                    this.creat();
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.saving_success, Snackbar.LENGTH_SHORT);
@@ -114,6 +117,7 @@ public class CodecsActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("ShowToast")
     private void D() {
         CountDownLatch latch1 = new CountDownLatch(1);
         setContentView(R.layout.codecs_activity);
@@ -122,6 +126,7 @@ public class CodecsActivity extends BaseActivity {
             this.jsonData = this.getResources().getStringArray(R.array.json);
             this.file = getFile(this);
             latch1.countDown();
+            this.toasts = new Toast[13];
         }).start();
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
@@ -279,7 +284,7 @@ public class CodecsActivity extends BaseActivity {
                     return conf_getX(srcExtensions, dstExtensions, p, name_no_x, x);
             }
         } catch (Exception e) {
-            makeText(this, e.toString(), LENGTH_SHORT).show();
+            toast(5, e);
             e.printStackTrace();
         }
         return null;
@@ -393,11 +398,9 @@ public class CodecsActivity extends BaseActivity {
         return v -> {
             allButtonsAction(o, buttons, INVISIBLE);
             if (isRunning) {
-                makeText(this, R.string.have_task, LENGTH_SHORT).show();
+                toast(3, R.string.have_task);
                 return;
             }
-            //noinspection SpellCheckingInspection
-            Toast fopenErrorToast = makeText(this, R.string.fopen_error, LENGTH_SHORT);
             if (isFolder) {
                 File[] files = folder.listFiles();
                 try {
@@ -417,10 +420,7 @@ public class CodecsActivity extends BaseActivity {
                                             if (file.length() != 0L) {
                                                 int status = new JNIMain().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, CodecsActivity.this, this.savedConfig);
                                                 if (status == -1)
-                                                    runOnUiThread(() -> {
-                                                        fopenErrorToast.cancel();
-                                                        fopenErrorToast.show();
-                                                    });
+                                                    runOnUiThread(() -> toast(0, R.string.fopen_error));
                                             }
                                         }
                                     } catch (IOException e) {
@@ -433,18 +433,20 @@ public class CodecsActivity extends BaseActivity {
                             }
                             runOnUiThread(() -> {
 //                                tv.setText(R.string.percent_100);
-                                makeText(this, o == 1 ? R.string.all_file_decoded_done : (dT == 21 ? R.string.all_file_encoded_done : R.string.all_file_decoded_done), LENGTH_SHORT).show();
+                                toast(2, o == 1 ? R.string.all_file_decoded_done : (dT == 21 ? R.string.all_file_encoded_done : R.string.all_file_decoded_done));
+                                allButtonsAction(o, buttons, VISIBLE);
+                                String folder = this.folder.toString();
+                                this.mainTv.setText(String.format(getString(R.string.tv), folder));
                                 this.folder = null;
                                 this.f = null;
-                                allButtonsAction(o, buttons, VISIBLE);
-                                this.mainTv.setText(String.format(getString(R.string.tv), this.folder));
                                 tv.setText(R.string.nul);
                                 reset();
+                                setF(folder);
                             });
                         } catch (Exception e) {
                             showException(e, CodecsActivity.this);
                             runOnUiThread(() -> {
-                                makeText(this, e.toString(), LENGTH_SHORT).show();
+                                toast(6, e);
                                 dB.setVisibility(VISIBLE);
                                 reset();
                             });
@@ -464,18 +466,14 @@ public class CodecsActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (!(e instanceof NullPointerException))
-                        makeText(this, e.toString(), LENGTH_SHORT).show();
+                        toast(7, e);
                     reset();
                     allButtonsAction(o, buttons, VISIBLE);
                 }
                 try {
                     if (dF == null) {
                         runOnUiThread(() -> {
-                            if (toasting != null) {
-                                toasting.cancel();
-                            }
-                            toasting = makeText(this, R.string.incorrect_file_extension, LENGTH_SHORT);
-                            toasting.show();
+                            toast(1, R.string.incorrect_file_extension);
                             allButtonsAction(o, buttons, VISIBLE);
                         });
                         return;
@@ -490,19 +488,16 @@ public class CodecsActivity extends BaseActivity {
                                 int status = 2;
                                 if (size0)
                                     runOnUiThread(() -> {
-                                        makeText(this, R.string.null_file, LENGTH_SHORT).show();
+                                        toast(10, R.string.null_file);
                                         allButtonsAction(o, buttons, VISIBLE);
                                     });
                                 else
                                     status = new JNIMain().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, CodecsActivity.this, savedConfig);
                                 if (status == -1 || status == 255) {
-                                    runOnUiThread(() -> {
-                                        fopenErrorToast.cancel();
-                                        fopenErrorToast.show();
-                                    });
+                                    runOnUiThread(() -> toast(0, R.string.fopen_error));
                                 }
                                 if (status == 1) {
-                                    runOnUiThread(() -> makeText(this, R.string.native_error, LENGTH_SHORT).show());
+                                    runOnUiThread(() -> toast(11, R.string.native_error));
                                 }
                             } catch (Exception e) {
                                 showException(e, CodecsActivity.this);
@@ -513,7 +508,7 @@ public class CodecsActivity extends BaseActivity {
                             if (!size0 && new File(finalDF).exists() && finalDF.length() > 0) {
                                 runOnUiThread(() -> {
 //                                    tv.setText(R.string.percent_100);
-                                    makeText(this, o == 1 ? R.string.decode_done : (dT == 21 ? R.string.encode_done : R.string.decode_done), LENGTH_SHORT).show();
+                                    toast(12, o == 1 ? R.string.decode_done : (dT == 21 ? R.string.encode_done : R.string.decode_done));
                                     reset();
                                 });
                             }
@@ -566,7 +561,7 @@ public class CodecsActivity extends BaseActivity {
             saved = this.solveJSON(sb.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            this.runOnUiThread(() -> makeText(this, this.getString(R.string.json_solve_error) + e.toString(), LENGTH_SHORT).show());
+            this.runOnUiThread(() -> toast(8, new Exception(this.getString(R.string.json_solve_error) + e.toString())));
         }
         return saved;
     }
@@ -615,7 +610,7 @@ public class CodecsActivity extends BaseActivity {
             showException(e, ctx);
         }
         if (f == null) {
-            makeText(ctx, "get file failed", LENGTH_SHORT).show();
+            toast(9, R.string.get_config_file_failed);
         }
         return f;
     }
@@ -634,5 +629,27 @@ public class CodecsActivity extends BaseActivity {
             }
         }
         return null;
+    }
+
+    private void toast(@SuppressWarnings("SameParameterValue") int index, String s) {
+        if (this.toasts[index] != null) {
+            this.toasts[index].cancel();
+        }
+        (this.toasts[index] = makeText(this, s, LENGTH_SHORT)).show();
+    }
+
+    private void toast(int index, int stringId) {
+        if (this.toasts[index] != null) {
+            this.toasts[index].cancel();
+        }
+        (this.toasts[index] = makeText(this, stringId, LENGTH_SHORT)).show();
+    }
+
+    private void toast(int index, Exception e) {
+        e.printStackTrace();
+        if (this.toasts[index] != null) {
+            this.toasts[index].cancel();
+        }
+        (this.toasts[index] = makeText(this, e.toString(), LENGTH_SHORT)).show();
     }
 }
