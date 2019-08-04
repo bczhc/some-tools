@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/s.dir/s.cpp.o CMakeFiles/s.dir/zhc.cpp.o  -o s 
