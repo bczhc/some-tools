@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import com.zhc.tools.R;
 import com.zhc.tools.clipboard.Clip;
+import com.zhc.tools.codecs.CodecsActivity;
 import com.zhc.tools.pi.Pi;
 import com.zhc.tools.toast.AToast;
 
