@@ -1,4 +1,4 @@
-package com.zhc.utils;
+package com.zhc.tools;
 
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;

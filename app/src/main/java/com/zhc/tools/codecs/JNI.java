@@ -1,4 +1,4 @@
-package com.zhc;
+package com.zhc.tools.codecs;
 
 import android.app.Activity;
 import android.widget.TextView;
@@ -7,7 +7,7 @@ public class JNI {
     private TextView tv;
     private Activity activity;
 
-    public JNI(TextView tv, Activity activity) {
+    JNI(TextView tv, Activity activity) {
         this.tv = tv;
         this.activity = activity;
     }

@@ -1,4 +1,4 @@
-package com.zhc.tools;
+package com.zhc.tools.codecs;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
-import com.zhc.utils.BaseActivity;
+import com.zhc.tools.R;
+import com.zhc.tools.BaseActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,7 +29,7 @@ import static com.zhc.utils.DisplayUtil.px2sp;
 public class Settings extends BaseActivity {
     private Intent r_intent = new Intent();
     private LinearLayout ll;
-    private boolean haveChange = false;
+    private boolean haveChanged = false;
     private CodecsActivity o = new CodecsActivity();
     private String[] jsonText = new String[]{
             "sourceExtension",
@@ -124,7 +125,7 @@ public class Settings extends BaseActivity {
                         }
                         editTexts[finalJ].setText(s == null ? "" : s);
                     });
-                    editTexts[j].setOnFocusChangeListener((v, hasFocus) -> this.haveChange = true);
+                    editTexts[j].setOnFocusChangeListener((v, hasFocus) -> this.haveChanged = true);
                     viewList.add(editTexts[j]);
                 }
 
@@ -155,6 +156,7 @@ public class Settings extends BaseActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                checkBoxes[i].setOnCheckedChangeListener((buttonView, isChecked) -> this.haveChanged = true);
                 viewList.add(checkBoxes[i]);
                 this.lists.add(viewList);
             }
@@ -214,11 +216,11 @@ public class Settings extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (this.haveChange) {
+        if (this.haveChanged) {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
-            adb.setTitle("是否保存")
-                    .setNegativeButton("否", (dialog, which) -> this.finish())
-                    .setPositiveButton("是", (dialog, which) -> {
+            adb.setTitle(R.string.whether_to_save)
+                    .setNegativeButton(R.string.no, (dialog, which) -> this.finish())
+                    .setPositiveButton(R.string.yes, (dialog, which) -> {
                         /*List<IIOObject> list = this.iio.list;
                         for (IIOObject iioObject : list) {
                             String s = ((EditText) iioObject.o).getText().toString();

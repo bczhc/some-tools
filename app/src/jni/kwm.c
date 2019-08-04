@@ -62,7 +62,7 @@ int kwm(JNIEnv *env, jmethodID mid, jobject obj, const char *fN, const char *dFN
             break;
         }
     }
-    if (allZero) return 2;
+    if (allZero) return 1;
     char buf[1024] = {0};
     for (int l = 1; l < a; ++l) {
         fread(buf, 1024, 1, fp);

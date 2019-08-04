@@ -42,4 +42,8 @@
     <string name="some_codecs">some-codecs</string>
     <string name="type_html_code">输入HTML代码</string>
     <string name="piTV">3.%1$s</string>
+    <string name="get_config_file_failed">获取配置文件路径失败</string>
+    <string name="whether_to_save">是否保存</string>
+    <string name="no">否</string>
+    <string name="yes">是</string>
 </resources>
