@@ -47,7 +47,7 @@ void pi(JNIEnv *env, jobject obj, int bN, jmethodID mid) {
     }
     while (--i)(pi[i] = (t = pi[i] + s) % M) < 0 ? pi[i] += M, s = t / M - 1 : s = t / M;
     for (; ++i < N - 2;) {
-        o(env, obj, mid, (jint) pi[i], (jint) (i - 1));
+        o(env, obj, mid, (jint) pi[i], (jint) i);
     }
     delete[]pi, delete[]e;
 }
@@ -58,7 +58,7 @@ void pi(JNIEnv *env, jobject obj, int bN, jmethodID mid) {
 JNIEXPORT void JNICALL Java_com_zhc_tools_pi_PiJNI_gen
         (JNIEnv *env, jobject obj, jint i) {
     jclass clz = env->GetObjectClass(obj);
-    jmethodID mid = env->GetMethodID(clz, "O", "(II)V");
+    jmethodID mid = env->GetMethodID(clz, "O", "(I)V");
     pi(env, obj, (int) i, mid);
 }
 
