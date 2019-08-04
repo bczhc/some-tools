@@ -25,7 +25,14 @@
         <activity android:name="filepicker.Picker"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
-        />
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+            </intent-filter>
+        </activity>
         <activity android:name="com.zhc.tools.Settings"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/settings"
@@ -34,18 +41,47 @@
         <activity android:name=".pi.Pi"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
-        />
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+            </intent-filter>
+        </activity>
         <activity android:name=".toast.AToast"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
-        />
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+            </intent-filter>
+        </activity>
         <activity android:name=".clipboard.Clip"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
-        />
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+            </intent-filter>
+        </activity>
         <activity android:name="com.zhc.tools.CodecsActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
-        />
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+            </intent-filter>
+        </activity>
+        <activity android:name="com.zhc.utils.BaseActivity"/>
     </application>
 </manifest>
