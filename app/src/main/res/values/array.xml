@@ -17,4 +17,9 @@
         <item>KwMusic-kwm</item>
         <item>Base128</item>
     </array>
+    <array name="btn_string">
+        <item>返回</item>
+        <item>切换触摸</item>
+        <item>退出</item>
+    </array>
 </resources>
