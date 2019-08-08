@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.zhc.tools.R;
 import com.zhc.tools.clipboard.Clip;
 import com.zhc.tools.codecs.CodecsActivity;
 import com.zhc.tools.pi.Pi;
@@ -25,14 +24,16 @@ public class MainActivity extends AppCompatActivity {
                 R.string.some_codecs,
                 R.string.generate_pi,
                 R.string.toast,
-                R.string.put_in_clipboard
+                R.string.put_in_clipboard,
+                R.string.overlaid_drawing_board
 
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
                 Pi.class,
                 AToast.class,
-                Clip.class
+                Clip.class,
+                com.zhc.tools.floatingboard.MainActivity.class
         };
         new Thread(() -> {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
