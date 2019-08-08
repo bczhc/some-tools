@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="match_parent"
-                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_height="match_parent"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:orientation="vertical"
-                android:id="@+id/linearLayout" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="parent" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/linearLayout"
                 xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -13,8 +11,6 @@
     >
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/textView"
-                  app:layout_constraintEnd_toEndOf="parent"
-                  app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
         />
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
@@ -25,7 +21,6 @@
         <ScrollView android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/scrollView2"
-                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
                     tools:ignore="UselessParent">
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                           android:id="@+id/ll"
@@ -61,8 +56,6 @@
                         <Button android:layout_width="match_parent" android:layout_height="match_parent"
                                 android:text="@string/cancel"
                                 android:id="@+id/cancel"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
                         />
                     </LinearLayout>
                     <LinearLayout android:layout_width="0dp"
@@ -89,8 +82,6 @@
                         <Button android:layout_width="match_parent" android:layout_height="match_parent"
                                 android:text="@string/ok"
                                 android:id="@+id/pick"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
                         />
                     </LinearLayout>
                     <LinearLayout android:layout_width="0dp"
