@@ -3,7 +3,6 @@ package com.zhc.tools.floatingboard;
 import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.ColorInt;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -25,31 +24,29 @@ public class PaintView extends View {
     //使用LinkedList 模拟栈，来保存 Path
     private LinkedList<PathBean> undoList;
     private LinkedList<PathBean> redoList;
-    private boolean isEraserModel;
-    int color = Color.BLACK;
+    boolean isEraserModel;
 
 
-    public PaintView(Context context, AttributeSet attrs) {
+    /*public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-    }
+    }*/
 
-    public PaintView(Context context) {
+    public PaintView(Context context, int width, int height) {
         super(context);
-        init();
+        init(width, height);
     }
 
     /***
      * 初始化
      */
-    private void init() {
+    private void init(int width, int height) {
         //关闭硬件加速
         //否则橡皮擦模式下，设置的 PorterDuff.Mode.CLEAR ，实时绘制的轨迹是黑色
 //        setBackgroundColor(Color.WHITE);//设置白色背景
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         //画笔
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        mPaint.setStrokeWidth(4f);
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);//使画笔更加圆润
@@ -61,7 +58,7 @@ public class PaintView extends View {
             public void run() {
                 //获取PaintView的宽和高
                 //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
-                mBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_4444);
+                mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
                 mCanvas = new Canvas(mBitmap);
                 //抗锯齿
                 mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
@@ -79,19 +76,32 @@ public class PaintView extends View {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+//        super.onDraw(canvas);
         if (mBitmap != null) {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-            if (!isEraserModel) {
-                if (null != mPath) {//显示实时正在绘制的path轨迹
-                    canvas.drawPath(mPath, mPaint);
-                }
-            } else {
+            if (isEraserModel) {
                 if (null != eraserPath) {
                     canvas.drawPath(eraserPath, eraserPaint);
                 }
+            } else {
+                if (null != mPath) {//显示实时正在绘制的path轨迹
+                    canvas.drawPath(mPath, mPaint);
+                }
             }
         }
+    }
+
+    void setStrokeWidth(float width) {
+        mPaint.setStrokeWidth(width);
+        if (eraserPaint != null) eraserPaint.setStrokeWidth(width);
+    }
+
+    float getStrokeWidth() {
+        return this.mPaint.getStrokeWidth();
+    }
+
+    int getColor() {
+        return this.mPaint.getColor();
     }
 
     /**
@@ -109,7 +119,6 @@ public class PaintView extends View {
             invalidate();
         }
     }
-
 
     /**
      * 恢复操作
@@ -149,7 +158,6 @@ public class PaintView extends View {
         this.isEraserModel = isEraserModel;
         if (eraserPaint == null) {
             eraserPaint = new Paint(mPaint);
-            eraserPaint.setStrokeWidth(15f);
             eraserPaint.setColor(Color.TRANSPARENT);
             eraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         }
@@ -198,7 +206,7 @@ public class PaintView extends View {
      * 直接绘制白色背景
      */
     private void clearPaint() {
-//        mCanvas.drawColor(Color.WHITE);
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         invalidate();
     }
 
@@ -208,11 +216,10 @@ public class PaintView extends View {
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mPaint.setColor(this.color);
-        if (!isEraserModel) {
-            commonTouchEvent(event);
-        } else {
+        if (isEraserModel) {
             eraserTouchEvent(event);
+        } else {
+            commonTouchEvent(event);
         }
         invalidate();
         return true;
@@ -236,7 +243,7 @@ public class PaintView extends View {
             case MotionEvent.ACTION_MOVE:
                 float dx = Math.abs(x - mLastX);
                 float dy = Math.abs(y - mLastY);
-                if (dx >= 3 || dy >= 3) {//绘制的最小距离 3px
+                if (dx >= 0 || dy >= 0) {//绘制的最小距离 3px
                     eraserPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
                 }
                 mLastX = x;
@@ -270,7 +277,10 @@ public class PaintView extends View {
                 float dy = Math.abs(y - mLastY);
                 if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
                     //利用二阶贝塞尔曲线，使绘制路径更加圆滑
-                    mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
+                    try {
+                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
+                    } catch (NullPointerException ignored) {
+                    }
                 }
                 mLastX = x;
                 mLastY = y;
