@@ -18,8 +18,15 @@
         <item>Base128</item>
     </array>
     <array name="btn_string">
-        <item>返回</item>
-        <item>切换触摸</item>
-        <item>退出</item>
+        <item>返\n回</item>
+        <item>操\n控</item>
+        <item>颜\n色</item>
+        <item>粗\n细</item>
+        <item>撤\n销</item>
+        <item>恢\n复</item>
+        <item>绘\n画</item>
+        <item>清\n空</item>
+        <item>隐\n藏</item>
+        <item>退\n出</item>
     </array>
 </resources>

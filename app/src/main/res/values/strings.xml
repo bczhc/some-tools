@@ -50,4 +50,10 @@
     <string name="pick_color">选择颜色</string>
     <string name="start_floating_window">开启悬浮窗</string>
     <string name="stop_floating_window">关闭悬浮窗</string>
+    <string name="drawing">绘\n画</string>
+    <string name="controlling">操\n控</string>
+    <string name="drawing_mode">绘\n画</string>
+    <string name="eraser_mode">擦\n除</string>
+    <string name="alpha">alpha</string>
+    <string name="done">完成</string>
 </resources>
