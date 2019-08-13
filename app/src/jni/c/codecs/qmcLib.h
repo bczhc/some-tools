@@ -9,7 +9,7 @@
 
 
 #include <jni.h>
-#include "zhc.h"
+#include "../../zhc.h"
 
 
 //

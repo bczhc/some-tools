@@ -3,7 +3,7 @@
 //
 
 #include "com_zhc_tools_pi_PiJNI.h"
-#include "../zhc.h"
+#include "../../zhc.h"
 
 
 

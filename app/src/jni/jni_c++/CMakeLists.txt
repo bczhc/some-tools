@@ -1,2 +1,1 @@
-add_executable(pi pi.cpp)
-add_executable(s zhc.cpp)
+add_executable(verify ../c/verification/verify.cpp)

@@ -3,7 +3,7 @@
 #pragma ide diagnostic ignored "hicpp-signed-bitwise"
 
 #include <unistd.h>
-#include "./zhc.h"
+#include "../../zhc.h"
 #include <jni.h>
 
 #define ERS 1029

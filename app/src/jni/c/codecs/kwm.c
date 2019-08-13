@@ -4,7 +4,7 @@
 
 #include <jni.h>
 #include "kwm.h"
-#include "zhc.h"
+#include "../../zhc.h"
 #include "qmcLib.h"
 
 
