@@ -6,38 +6,158 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="jnil" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bf0853d-1662-447f-a820-7530ab28c2cd" name="Default Changelist" comment="叠加画板">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/root.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/HSVColorPickerRL.java" afterDir="false" />
+    <list default="true" id="3bf0853d-1662-447f-a820-7530ab28c2cd" name="Default Changelist" comment="vertification">
+      <change afterPath="$PROJECT_DIR$/app/src/jni/.idea/jni.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/verification/com_zhc_tools_floatingboard_JNI.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/verification/verify.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/zhc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/jni_c++/pi/zhc.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/zhc.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/libs/x86/liba.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/JNI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/outputs/apk/debug/output.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/outputs/apk/debug/output.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/ColorPickerDialog.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/ColorPickerRL.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/GradientUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/ColorUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/Android.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/Base128Lib.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/Base128Lib.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/Base128Lib.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/Base128Lib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/feature_tests.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/Project.cbp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/cmake_install.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/jni.cbp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/qmc_test" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/com_zhc_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/com_zhc_JNI.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/doJNI.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/doJNI.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/jni_c++/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeCXXCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.cxx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/CXX.includecache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/depend.internal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/s.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/zhc.cpp.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/Project.cbp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/cmake_install.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/s" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/com_zhc_tools_pi_PiJNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/jni_c++/pi/com_zhc_tools_pi_PiJNI.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/pi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/jni_c++/pi/pi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/zhc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/zhc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/kwm.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/kwm.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/kwm.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/kwm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/qmcLib.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/qmcLib.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/qmcLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/qmcLib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/PaintView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/toast/AToast.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/toast/AToast.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/floating_board_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/floating_board_activity.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/array.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/array.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o.d" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,6 +167,20 @@
   </component>
   <component name="CodeInsightWorkspaceSettings">
     <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
   </component>
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
@@ -74,17 +208,34 @@
       </state>
     </system>
   </component>
+  <component name="FavoritesManager">
+    <favorites_list name="QMCFLAC" />
+  </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="169">
-              <caret line="74" column="41" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
+            <state relative-caret-position="272">
+              <caret line="46" column="19" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#1022#1058#0" expanded="true" />
+                <element signature="e#2447#2477#0" expanded="true" />
+                <element signature="e#2917#2946#0" expanded="true" />
+                <element signature="e#8950#8966#0" expanded="true" />
+                <element signature="e#9014#9041#0" expanded="true" />
+                <element signature="e#9336#9356#0" expanded="true" />
+                <element signature="e#9404#9435#0" expanded="true" />
                 <element signature="e#10678#10679#0" expanded="true" />
                 <element signature="e#10773#10774#0" expanded="true" />
+                <element signature="e#12083#12104#0" expanded="true" />
+                <element signature="e#12152#12184#0" expanded="true" />
+                <element signature="e#12336#12356#0" expanded="true" />
+                <element signature="e#12404#12435#0" expanded="true" />
+                <element signature="e#14412#14440#0" expanded="true" />
+                <element signature="e#18303#18322#0" expanded="true" />
+                <element signature="e#19085#19124#0" expanded="true" />
                 <element signature="e#27154#27155#0" expanded="true" />
                 <element signature="e#27191#27192#0" expanded="true" />
               </folding>
@@ -92,7 +243,31 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="303">
+              <caret line="23" column="33" lean-forward="true" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#798#818#0" expanded="true" />
+                <element signature="e#836#856#0" expanded="true" />
+                <element signature="e#874#888#0" expanded="true" />
+                <element signature="e#906#931#0" expanded="true" />
+                <element signature="e#949#980#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -101,6 +276,8 @@
       <find>flo</find>
       <find>onback</find>
       <find>start</find>
+      <find>oncreate</find>
+      <find>oncrea</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -114,7 +291,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/picker.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/filepicker/Picker.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/BaseActivity.java" />
@@ -131,11 +307,14 @@
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/JNI.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
+    <option name="x" value="278" />
+    <option name="y" value="27" />
     <option name="width" value="980" />
     <option name="height" value="1040" />
   </component>
@@ -161,7 +340,119 @@
               <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
               <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="intermediates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="intermediates" type="462c0819:PsiDirectoryNode" />
+              <item name="javac" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="intermediates" type="462c0819:PsiDirectoryNode" />
+              <item name="javac" type="462c0819:PsiDirectoryNode" />
+              <item name="debug" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="intermediates" type="462c0819:PsiDirectoryNode" />
+              <item name="javac" type="462c0819:PsiDirectoryNode" />
+              <item name="debug" type="462c0819:PsiDirectoryNode" />
+              <item name="compileDebugJavaWithJavac" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="intermediates" type="462c0819:PsiDirectoryNode" />
+              <item name="javac" type="462c0819:PsiDirectoryNode" />
+              <item name="debug" type="462c0819:PsiDirectoryNode" />
+              <item name="compileDebugJavaWithJavac" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="intermediates" type="462c0819:PsiDirectoryNode" />
+              <item name="javac" type="462c0819:PsiDirectoryNode" />
+              <item name="debug" type="462c0819:PsiDirectoryNode" />
+              <item name="compileDebugJavaWithJavac" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="intermediates" type="462c0819:PsiDirectoryNode" />
+              <item name="javac" type="462c0819:PsiDirectoryNode" />
+              <item name="debug" type="462c0819:PsiDirectoryNode" />
+              <item name="compileDebugJavaWithJavac" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="zhc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="intermediates" type="462c0819:PsiDirectoryNode" />
+              <item name="javac" type="462c0819:PsiDirectoryNode" />
+              <item name="debug" type="462c0819:PsiDirectoryNode" />
+              <item name="compileDebugJavaWithJavac" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="zhc" type="462c0819:PsiDirectoryNode" />
+              <item name="tools" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="intermediates" type="462c0819:PsiDirectoryNode" />
+              <item name="javac" type="462c0819:PsiDirectoryNode" />
+              <item name="debug" type="462c0819:PsiDirectoryNode" />
+              <item name="compileDebugJavaWithJavac" type="462c0819:PsiDirectoryNode" />
+              <item name="classes" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="zhc" type="462c0819:PsiDirectoryNode" />
+              <item name="tools" type="462c0819:PsiDirectoryNode" />
+              <item name="floatingboard" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
@@ -278,7 +569,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Android App.app">
     <configuration default="true" type="AndroidJUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -316,6 +607,24 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="JNI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.zhc.tools.floatingboard.JNI" />
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.zhc.tools.floatingboard.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.JNI" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -339,36 +648,53 @@
       <option name="project" value="LOCAL" />
       <updated>1565252856009</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="集成 叠加画板项目&#10;改AToast直接输入Editable，不进行toString()，否则会失去HTML格式">
+      <created>1565707128040</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1565707128040</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10247000" />
+    <option name="totallyTimeSpent" value="20544000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49795082" visible="true" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Build Variants" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
       <window_info id="Capture Tool" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info id="Favorites" order="6" sideWeight="0.5020492" side_tool="true" weight="0.25" />
       <window_info id="Captures" order="7" side_tool="true" />
       <window_info id="UI Designer" order="8" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32969433" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.46724892" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Android Profiler" order="7" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32969433" />
+      <window_info anchor="bottom" id="Android Profiler" order="7" weight="0.32969433" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Build" order="10" visible="true" weight="0.32969433" />
-      <window_info anchor="bottom" id="Logcat" order="11" weight="0.36135373" />
+      <window_info anchor="bottom" id="Build" order="10" weight="0.32969433" />
+      <window_info anchor="bottom" id="Logcat" order="11" weight="0.37554586" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="bottom" id="Version Control" order="13" />
       <window_info anchor="bottom" id="Terminal" order="14" weight="0.32969433" />
@@ -380,7 +706,7 @@
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="right" id="Database" order="5" />
       <window_info anchor="right" id="Preview" order="6" weight="0.32959402" />
-      <window_info anchor="right" id="Device File Explorer" order="7" side_tool="true" />
+      <window_info anchor="right" id="Device File Explorer" order="7" side_tool="true" weight="0.32959402" />
       <window_info anchor="right" id="Gradle" order="8" weight="0.32959402" />
       <window_info anchor="right" id="SciView" order="9" />
       <window_info anchor="right" id="Palette&#9;" order="10" />
@@ -419,7 +745,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="叠加画板" />
-    <option name="LAST_COMMIT_MESSAGE" value="叠加画板" />
+    <MESSAGE value="集成 叠加画板项目&#10;改AToast直接输入Editable，不进行toString()，否则会失去HTML格式" />
+    <option name="LAST_COMMIT_MESSAGE" value="集成 叠加画板项目&#10;改AToast直接输入Editable，不进行toString()，否则会失去HTML格式" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/picker.xml">
@@ -518,21 +845,6 @@
       </provider>
       <provider editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="27" column="47" selection-start-line="27" selection-start-column="25" selection-end-line="27" selection-end-column="47" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#798#818#0" expanded="true" />
-            <element signature="e#836#856#0" expanded="true" />
-            <element signature="e#874#888#0" expanded="true" />
-            <element signature="e#906#931#0" expanded="true" />
-            <element signature="e#949#980#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/PaintView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="736">
@@ -572,16 +884,75 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/com/zhc/tools/floatingboard/JNI.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="18" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#266#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/util/Date.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="163" column="12" selection-start-line="163" selection-start-column="12" selection-end-line="163" selection-end-column="12" />
+          <folding>
+            <element signature="e#7406#7407#0" expanded="true" />
+            <element signature="e#7454#7455#0" expanded="true" />
+            <element signature="e#7860#7861#0" expanded="true" />
+            <element signature="e#7891#7892#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="74" column="41" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
+        <state relative-caret-position="272">
+          <caret line="46" column="19" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#1022#1058#0" expanded="true" />
+            <element signature="e#2447#2477#0" expanded="true" />
+            <element signature="e#2917#2946#0" expanded="true" />
+            <element signature="e#8950#8966#0" expanded="true" />
+            <element signature="e#9014#9041#0" expanded="true" />
+            <element signature="e#9336#9356#0" expanded="true" />
+            <element signature="e#9404#9435#0" expanded="true" />
             <element signature="e#10678#10679#0" expanded="true" />
             <element signature="e#10773#10774#0" expanded="true" />
+            <element signature="e#12083#12104#0" expanded="true" />
+            <element signature="e#12152#12184#0" expanded="true" />
+            <element signature="e#12336#12356#0" expanded="true" />
+            <element signature="e#12404#12435#0" expanded="true" />
+            <element signature="e#14412#14440#0" expanded="true" />
+            <element signature="e#18303#18322#0" expanded="true" />
+            <element signature="e#19085#19124#0" expanded="true" />
             <element signature="e#27154#27155#0" expanded="true" />
             <element signature="e#27191#27192#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/JNI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="303">
+          <caret line="23" column="33" lean-forward="true" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#798#818#0" expanded="true" />
+            <element signature="e#836#856#0" expanded="true" />
+            <element signature="e#874#888#0" expanded="true" />
+            <element signature="e#906#931#0" expanded="true" />
+            <element signature="e#949#980#0" expanded="true" />
           </folding>
         </state>
       </provider>
