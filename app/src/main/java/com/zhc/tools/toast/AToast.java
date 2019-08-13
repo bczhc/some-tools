@@ -18,7 +18,7 @@ public class AToast extends AppCompatActivity {
         EditText et = findViewById(R.id.toast_et);
         btn.setOnClickListener(v -> {
             Editable text = et.getText();
-            Toast.makeText(this, text.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
         });
     }
 }

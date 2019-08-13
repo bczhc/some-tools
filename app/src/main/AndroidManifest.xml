@@ -79,8 +79,8 @@
         <activity android:name=".BaseActivity"/>
         <activity android:name=".floatingboard.MainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/settings"
-                  android:label="@string/overlaid_drawing_board">
+                  android:label="@string/overlaid_drawing_board"
+                  android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
