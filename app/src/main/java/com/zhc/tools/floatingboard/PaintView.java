@@ -15,7 +15,6 @@ import java.util.LinkedList;
 public class PaintView extends View {
     private Paint mPaint;
     private Path mPath;
-    private Path eraserPath;
     private Paint eraserPaint;
     private Canvas mCanvas;
     private Bitmap mBitmap;
@@ -24,7 +23,7 @@ public class PaintView extends View {
     //使用LinkedList 模拟栈，来保存 Path
     private LinkedList<PathBean> undoList;
     private LinkedList<PathBean> redoList;
-    boolean isEraserModel;
+    boolean isEraserMode;
 
 
     /*public PaintView(Context context, AttributeSet attrs) {
@@ -79,14 +78,9 @@ public class PaintView extends View {
 //        super.onDraw(canvas);
         if (mBitmap != null) {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-            if (isEraserModel) {
-                if (null != eraserPath) {
-                    canvas.drawPath(eraserPath, eraserPaint);
-                }
-            } else {
-                if (null != mPath) {//显示实时正在绘制的path轨迹
-                    canvas.drawPath(mPath, mPaint);
-                }
+            if (null != mPath) {//显示实时正在绘制的path轨迹
+                if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
+                else canvas.drawPath(mPath, mPaint);
             }
         }
     }
@@ -154,8 +148,8 @@ public class PaintView extends View {
     /**
      * 设置橡皮擦模式
      */
-    public void setEraserModel(boolean isEraserModel) {
-        this.isEraserModel = isEraserModel;
+    public void setEraserMode(boolean isEraserMode) {
+        this.isEraserMode = isEraserMode;
         if (eraserPaint == null) {
             eraserPaint = new Paint(mPaint);
             eraserPaint.setColor(Color.TRANSPARENT);
@@ -216,7 +210,7 @@ public class PaintView extends View {
      */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (isEraserModel) {
+        if (isEraserMode) {
             eraserTouchEvent(event);
         } else {
             commonTouchEvent(event);
@@ -235,24 +229,32 @@ public class PaintView extends View {
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 //路径
-                eraserPath = new Path();
+                mPath = new Path();
                 mLastX = x;
                 mLastY = y;
-                eraserPath.moveTo(mLastX, mLastY);
+                mPath.moveTo(mLastX, mLastY);
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = Math.abs(x - mLastX);
                 float dy = Math.abs(y - mLastY);
-                if (dx >= 0 || dy >= 0) {//绘制的最小距离 3px
-                    eraserPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
+                if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
+                    //利用二阶贝塞尔曲线，使绘制路径更加圆滑
+                    try {
+                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
+                    } catch (NullPointerException ignored) {
+                    }
                 }
                 mLastX = x;
                 mLastY = y;
                 break;
             case MotionEvent.ACTION_UP:
-                mCanvas.drawPath(eraserPath, eraserPaint);//将路径绘制在mBitmap上
-                eraserPath.reset();
-                eraserPath = null;
+                mCanvas.drawPath(mPath, eraserPaint);//将路径绘制在mBitmap上
+                Path path = new Path(mPath);//复制出一份mPath
+                Paint paint = new Paint(eraserPaint);
+                PathBean pb = new PathBean(path, paint);
+                undoList.add(pb);//将路径对象存入集合
+                mPath.reset();
+                mPath = null;
                 break;
         }
     }

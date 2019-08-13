@@ -10,4 +10,13 @@
             android:id="@+id/start_f_w"
             android:layout_centerHorizontal="true"
     />
+    <Switch android:layout_width="0sp" android:layout_height="wrap_content"
+            android:layout_below="@id/start_f_w"
+            android:layout_alignLeft="@id/start_f_w"
+            android:layout_alignStart="@id/start_f_w"
+            android:layout_alignRight="@id/start_f_w"
+            android:layout_alignEnd="@id/start_f_w"
+            android:text="@string/not_be_killed"
+            android:id="@+id/not_be_killed"
+    />
 </RelativeLayout>

@@ -1,10 +1,11 @@
 package com.zhc.tools.floatingboard;
 
-class GradientUtil {
+@SuppressWarnings({"unused", "WeakerAccess"})
+class ColorUtils {
     private int[] colors;
     private float startPos, endPos;
 
-    GradientUtil(int[] colors, float startPosition, float endPosition) {
+    ColorUtils(int[] colors, float startPosition, float endPosition) {
         this.colors = colors;
         this.startPos = startPosition;
         this.endPos = endPosition;
@@ -42,7 +43,7 @@ class GradientUtil {
         }
     }
 
-    static RGB parseRGB(int color) {
+    public static RGB parseRGB(int color) {
         int red = (color & 0xff0000) >> 16;
         int green = (color & 0x00ff00) >> 8;
         int blue = (color & 0x0000ff);
