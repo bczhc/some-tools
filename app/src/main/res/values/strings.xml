@@ -56,4 +56,10 @@
     <string name="eraser_mode">擦\n除</string>
     <string name="alpha">alpha</string>
     <string name="done">完成</string>
+    <string name="h_s_v_a_color_picker">HSVA调色板</string>
+    <string name="control_panel_color">面板颜色</string>
+    <string name="text_color">文字颜色</string>
+    <string name="whether_text_color_is_inverted">是否文字颜色反相</string>
+    <string name="not_be_killed">防杀进程</string>
+    <string name="floating_board">悬浮画板</string>
 </resources>
