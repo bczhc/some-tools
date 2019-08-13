@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import com.zhc.tools.clipboard.Clip;
 import com.zhc.tools.codecs.CodecsActivity;
+import com.zhc.tools.floatingboard.JNI;
 import com.zhc.tools.pi.Pi;
 import com.zhc.tools.toast.AToast;
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tools_activity_main);
+        new JNI().mG(this);
         LinearLayout ll = findViewById(R.id.ll);
         final int[] texts = new int[]{
                 R.string.some_codecs,

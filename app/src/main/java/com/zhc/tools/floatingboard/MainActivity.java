@@ -43,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.floating_board_activity);
+        new JNI().mG(this);
         //noinspection deprecation
         width = this.getWindowManager().getDefaultDisplay().getWidth();
         //noinspection deprecation
         height = this.getWindowManager().getDefaultDisplay().getHeight();
-        setContentView(R.layout.floating_board_activity);
         Switch notBeKilledSwitch = findViewById(R.id.not_be_killed);
         notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notBeKilled = isChecked);
 //        RelativeLayout rl = findViewById(R.id.main);
@@ -485,6 +486,7 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             startFloatingWindow();
             Toast.makeText(MainActivity.this, "a", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 }
