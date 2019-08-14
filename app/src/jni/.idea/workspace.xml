@@ -12,154 +12,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/jni.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingboard_JNI.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/c/verification/verify.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/c/zhc.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jni_c++/pi/zhc.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/zhc.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../libs/x86/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../libs/x86_64/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/floatingboard/JNI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../app.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../build/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/../../build/outputs/apk/debug/app-debug.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../build/outputs/apk/debug/output.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../build/outputs/apk/debug/output.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Base128Lib.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/Base128Lib.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Base128Lib.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/Base128Lib.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/doJNI.dir/DependInfo.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/doJNI.dir/build.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/doJNI.dir/cmake_clean.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/doJNI.dir/depend.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/doJNI.dir/flags.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/doJNI.dir/link.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/doJNI.dir/progress.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Project.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/jni.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/qmc_test" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/com_zhc_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/com_zhc_JNI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doJNI.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/doJNI.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/jni_c++/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeCXXCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/a.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.cxx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/DependInfo.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/build.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/cmake_clean.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/depend.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/flags.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/link.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/progress.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/CXX.includecache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/DependInfo.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/build.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/cmake_clean.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/depend.internal" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/depend.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/flags.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/link.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/progress.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/s.cpp.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/s.dir/zhc.cpp.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/Project.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/cmake_install.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/cmake-build-debug/s" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/com_zhc_tools_pi_PiJNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/jni_c++/pi/com_zhc_tools_pi_PiJNI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/pi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/jni_c++/pi/pi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/zhc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/c/zhc.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kwm.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/kwm.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kwm.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/kwm.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/qmcLib.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/qmcLib.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/qmcLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/qmcLib.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingboard_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingboard_JNI.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/verification/verify.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/verification/verify.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/liba.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/com/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/com/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/pi/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/pi/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/zhc.o.d" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake2/cmake-build-debug/" />
@@ -180,8 +50,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/c/verification/verify.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="712">
-              <caret line="88" column="27" selection-start-line="88" selection-start-column="27" selection-end-line="88" selection-end-column="27" />
+            <state relative-caret-position="503">
+              <caret line="86" column="16" selection-start-line="86" selection-start-column="16" selection-end-line="86" selection-end-column="16" />
               <folding>
                 <element signature="e#38#60#0" expanded="true" />
               </folding>
@@ -193,7 +63,7 @@
         <entry file="file://$PROJECT_DIR$/c/verification/com_zhc_tools_floatingboard_JNI.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="285">
-              <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
+              <caret line="15" column="35" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -397,12 +267,12 @@
       <workItem from="1564789745160" duration="21489000" />
       <workItem from="1564896291905" duration="1947000" />
       <workItem from="1565000406844" duration="1201000" />
-      <workItem from="1565706120436" duration="11179000" />
+      <workItem from="1565706120436" duration="13947000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84230000" />
+    <option name="totallyTimeSpent" value="86998000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -722,14 +592,14 @@
     <entry file="file://$PROJECT_DIR$/c/verification/com_zhc_tools_floatingboard_JNI.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
-          <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
+          <caret line="15" column="35" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/c/verification/verify.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="712">
-          <caret line="88" column="27" selection-start-line="88" selection-start-column="27" selection-end-line="88" selection-end-column="27" />
+        <state relative-caret-position="503">
+          <caret line="86" column="16" selection-start-line="86" selection-start-column="16" selection-end-line="86" selection-end-column="16" />
           <folding>
             <element signature="e#38#60#0" expanded="true" />
           </folding>
