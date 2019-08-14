@@ -11,153 +11,23 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bf0853d-1662-447f-a820-7530ab28c2cd" name="Default Changelist" comment="vertification">
-      <change afterPath="$PROJECT_DIR$/app/src/jni/.idea/jni.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/c/verification/com_zhc_tools_floatingboard_JNI.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/c/verification/verify.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/c/zhc.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/jni_c++/pi/zhc.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/zhc.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/JNI.java" afterDir="false" />
+    <list default="true" id="3bf0853d-1662-447f-a820-7530ab28c2cd" name="Default Changelist" comment="v&#10;修改&#10;算法&#10;TODO">
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/Android.mk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/Base128Lib.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/Base128Lib.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/Base128Lib.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/Base128Lib.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/DependInfo.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/build.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/cmake_clean.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/depend.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/flags.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/link.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/doJNI.dir/progress.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/feature_tests.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/Project.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/cmake_install.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/jni.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cmake-build-debug/qmc_test" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/com_zhc_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/com_zhc_JNI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/doJNI.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/doJNI.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/jni_c++/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeCXXCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/a.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.cxx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/DependInfo.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/build.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/cmake_clean.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/depend.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/flags.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/link.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/progress.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/CXX.includecache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/DependInfo.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/build.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/cmake_clean.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/depend.internal" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/depend.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/flags.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/link.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/progress.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/s.cpp.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/s.dir/zhc.cpp.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/Project.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/cmake_install.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/s" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/com_zhc_tools_pi_PiJNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/jni_c++/pi/com_zhc_tools_pi_PiJNI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/pi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/jni_c++/pi/pi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/zhc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/zhc.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/kwm.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/kwm.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/kwm.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/kwm.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/qmcLib.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/qmcLib.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/qmcLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/qmcLib.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/verification/com_zhc_tools_floatingboard_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/verification/com_zhc_tools_floatingboard_JNI.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/verification/verify.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/verification/verify.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o.d" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -213,48 +83,18 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/MainActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="46" column="19" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1022#1058#0" expanded="true" />
-                <element signature="e#2447#2477#0" expanded="true" />
-                <element signature="e#2917#2946#0" expanded="true" />
-                <element signature="e#8950#8966#0" expanded="true" />
-                <element signature="e#9014#9041#0" expanded="true" />
-                <element signature="e#9336#9356#0" expanded="true" />
-                <element signature="e#9404#9435#0" expanded="true" />
-                <element signature="e#10678#10679#0" expanded="true" />
-                <element signature="e#10773#10774#0" expanded="true" />
-                <element signature="e#12083#12104#0" expanded="true" />
-                <element signature="e#12152#12184#0" expanded="true" />
-                <element signature="e#12336#12356#0" expanded="true" />
-                <element signature="e#12404#12435#0" expanded="true" />
-                <element signature="e#14412#14440#0" expanded="true" />
-                <element signature="e#18303#18322#0" expanded="true" />
-                <element signature="e#19085#19124#0" expanded="true" />
-                <element signature="e#27154#27155#0" expanded="true" />
-                <element signature="e#27191#27192#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="23" column="33" lean-forward="true" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
+            <state relative-caret-position="233">
+              <caret line="23" selection-start-line="23" selection-end-line="23" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#798#818#0" expanded="true" />
-                <element signature="e#836#856#0" expanded="true" />
-                <element signature="e#874#888#0" expanded="true" />
-                <element signature="e#906#931#0" expanded="true" />
-                <element signature="e#949#980#0" expanded="true" />
+                <element signature="e#866#886#0" expanded="true" />
+                <element signature="e#904#924#0" expanded="true" />
+                <element signature="e#942#956#0" expanded="true" />
+                <element signature="e#974#999#0" expanded="true" />
+                <element signature="e#1017#1048#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -278,6 +118,9 @@
       <find>start</find>
       <find>oncreate</find>
       <find>oncrea</find>
+      <find>vert</find>
+      <find>jniLog</find>
+      <find>jnilo</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -655,13 +498,20 @@
       <option name="project" value="LOCAL" />
       <updated>1565707128040</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="emmmmmmm.&#10;native verification.................">
+      <created>1565717542594</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1565717542594</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20544000" />
+    <option name="totallyTimeSpent" value="23500000" />
   </component>
-  <component name="TodoView">
+  <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
     </todo-panel>
@@ -672,7 +522,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49795082" visible="true" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -685,18 +534,18 @@
       <window_info id="UI Designer" order="8" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.46724892" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.19759825" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32969433" />
+      <window_info active="true" anchor="bottom" id="TODO" order="6" visible="true" weight="0.32969433" />
       <window_info anchor="bottom" id="Android Profiler" order="7" weight="0.32969433" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Build" order="10" weight="0.32969433" />
       <window_info anchor="bottom" id="Logcat" order="11" weight="0.37554586" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
-      <window_info anchor="bottom" id="Version Control" order="13" />
+      <window_info anchor="bottom" id="Version Control" order="13" weight="0.32969433" />
       <window_info anchor="bottom" id="Terminal" order="14" weight="0.32969433" />
       <window_info anchor="bottom" id="Messages" order="15" weight="0.32969433" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -746,7 +595,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="叠加画板" />
     <MESSAGE value="集成 叠加画板项目&#10;改AToast直接输入Editable，不进行toString()，否则会失去HTML格式" />
-    <option name="LAST_COMMIT_MESSAGE" value="集成 叠加画板项目&#10;改AToast直接输入Editable，不进行toString()，否则会失去HTML格式" />
+    <MESSAGE value="emmmmmmm.&#10;native verification.................&#10;20190825" />
+    <MESSAGE value="v&#10;修改&#10;算法&#10;TODO" />
+    <option name="LAST_COMMIT_MESSAGE" value="v&#10;修改&#10;算法&#10;TODO" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/picker.xml">
@@ -942,17 +793,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/os/Environment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="32" column="15" selection-start-line="32" selection-start-column="15" selection-end-line="32" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/io/File.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="2132" column="33" selection-start-line="2132" selection-start-column="33" selection-end-line="2132" selection-end-column="33" />
+          <folding>
+            <element signature="e#91486#91487#0" expanded="true" />
+            <element signature="e#91518#91519#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="23" column="33" lean-forward="true" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
+        <state relative-caret-position="233">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#798#818#0" expanded="true" />
-            <element signature="e#836#856#0" expanded="true" />
-            <element signature="e#874#888#0" expanded="true" />
-            <element signature="e#906#931#0" expanded="true" />
-            <element signature="e#949#980#0" expanded="true" />
+            <element signature="e#866#886#0" expanded="true" />
+            <element signature="e#904#924#0" expanded="true" />
+            <element signature="e#942#956#0" expanded="true" />
+            <element signature="e#974#999#0" expanded="true" />
+            <element signature="e#1017#1048#0" expanded="true" />
           </folding>
         </state>
       </provider>
