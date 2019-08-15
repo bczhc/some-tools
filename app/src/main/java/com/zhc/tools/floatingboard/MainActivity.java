@@ -469,7 +469,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        finish();
+//        super.onBackPressed();
     }
 
     public class NotificationClickReceiver extends BroadcastReceiver {
