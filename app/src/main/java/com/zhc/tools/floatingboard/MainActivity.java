@@ -1,9 +1,15 @@
 package com.zhc.tools.floatingboard;
 
 import android.annotation.SuppressLint;
-import android.app.*;
+import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -235,12 +242,12 @@ public class MainActivity extends AppCompatActivity {
                             }
                             break;
                         case 7:
-                            Dialog d1 = new Dialog(this);
-
-                            pv.clearAll();
+                            createConfirmationAD((dialog1, which) -> pv.clearAll(), (dialog1, which) -> {
+                            }, R.string.whether_to_clear).show();
                             break;
                         case 8:
-                            hide();
+                            createConfirmationAD((dialog1, which) -> hide(), (dialog1, which) -> {
+                            }, R.string.whether_to_hide).show();
                             break;
                         case 9:
                             Dialog c = new Dialog(this);
@@ -315,8 +322,11 @@ public class MainActivity extends AppCompatActivity {
                             c.show();
                             break;
                         case 10:
-                            stopFloatingWindow();
-                            finish();
+                            createConfirmationAD((dialog1, which) -> {
+                                stopFloatingWindow();
+                                finish();
+                            }, (dialog1, which) -> {
+                            }, R.string.whether_to_exit).show();
                             break;
                     }
                     System.out.println("i = " + finalI);
@@ -477,5 +487,13 @@ public class MainActivity extends AppCompatActivity {
             Objects.requireNonNull(d.getWindow()).setAttributes(new WindowManager.LayoutParams(((int) (width * .8)), ((int) (height * .4)), WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
         } else                                 //noinspection deprecation
             Objects.requireNonNull(d.getWindow()).setAttributes(new WindowManager.LayoutParams(((int) (width * .8)), ((int) (height * .4)), WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 0, PixelFormat.RGB_888));
+    }
+
+    private AlertDialog createConfirmationAD(DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId) {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        AlertDialog ad = adb.setPositiveButton(R.string.ok, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId).create();
+        setDialogAttr(ad);
+        ad.setCanceledOnTouchOutside(true);
+        return ad;
     }
 }
