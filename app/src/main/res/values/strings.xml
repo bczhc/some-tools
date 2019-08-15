@@ -62,4 +62,7 @@
     <string name="whether_text_color_is_inverted">是否文字颜色反相</string>
     <string name="not_be_killed">防杀进程</string>
     <string name="floating_board">悬浮画板</string>
+    <string name="whether_to_clear">是否清空</string>
+    <string name="whether_to_hide">是否隐藏</string>
+    <string name="whether_to_exit">是否退出</string>
 </resources>
