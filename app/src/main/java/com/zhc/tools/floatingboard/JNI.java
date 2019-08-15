@@ -7,5 +7,5 @@ public class JNI {
         System.loadLibrary("a");
     }
 
-    public native String mG(Context mainActivity);
+    public native int mG(Context mainActivity, String key);
 }
