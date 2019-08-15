@@ -7,20 +7,17 @@
 #include "../codecs/qmcLib.h"
 #include <stdio.h>
 
+char decodeTable[128] = {0};
 char encodeTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+char ksTable[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 char b128_e_table_l[] = {1, 3, 7, 15, 31, 63, 127};
 
-char *e1_1(char *Dest, const char cArr[3]) {
-    char *r = Dest;
-    r[0] = encodeTable[(cArr[0] & 255) >> 2];
-    r[1] = encodeTable[(((cArr[0] & 255) & 3) << 4) | ((cArr[1] & 255) >> 4)];
-    r[2] = encodeTable[(((cArr[1] & 255) & 15) << 2) | ((cArr[2] & 255) >> 6)];
-    r[3] = encodeTable[(cArr[2] & 255) & 63];
-    return Dest;
-}
-
-void ab_ks(char *Dest, const char *src, int size, int o) {
-    for (int i = 0; i < size; ++i) Dest[i] = (char) (97 + (src[i] - 97 + o) % 26);
+void aA0_ks(char *Dest, const char *src, int size, int o) {
+    for (int i = 0; i < size; ++i) {
+        int tableI = 0;
+        for (int j = 0; j < 62; ++j) if (ksTable[j] == src[i]) tableI = j;
+        Dest[i] = (char) ksTable[(tableI + o) % 62];
+    }
 }
 
 void b128_e1(char *Dest, const char buf[7]) {
@@ -34,13 +31,118 @@ void b128_d1(char *Dest, const char buf[8]) {
     for (int i = 0; i < 7; ++i) Dest[i] = (char) (((buf[i] & 255) << (i + 1)) | ((buf[i + 1] & 255) >> (6 - i)));
 }
 
-void e1(char *r, const char *s, int eCSize) {
-    int j = eCSize / 3;
-    for (int i = 0; i < j; ++i) e1_1(r + 4 * i, s + 3 * i);
+
+//  char encodeTable[] = "1029384756<>qpwoeirutyalskdjfhgmznxbcv!@#$%^&*()_+/~`,.?\"\';:Ab";
+
+char *e1_64(char *Dest, const char cArr[3]) {
+    char *r = Dest;
+    r[0] = encodeTable[(cArr[0] & 255) >> 2];
+    r[1] = encodeTable[(((cArr[0] & 255) & 3) << 4) | ((cArr[1] & 255) >> 4)];
+    r[2] = encodeTable[(((cArr[1] & 255) & 15) << 2) | ((cArr[2] & 255) >> 6)];
+    r[3] = encodeTable[(cArr[2] & 255) & 63];
+    return Dest;
 }
 
-void ee(char Dest[13], const char *s) {
-    char r[8];
+void d1_64(char *Dest, const char cArr[4]) {
+    char *r = Dest;
+    r[0] = (decodeTable[cArr[0]] << 2) | (decodeTable[cArr[1]] >> 4);
+    r[1] = (decodeTable[cArr[1]] << 4) | (decodeTable[cArr[2]] >> 2);
+    r[2] = (decodeTable[cArr[2]] << 6) | decodeTable[cArr[3]];
+}
+
+char *d1_EQ_M_64(char *Dest, const char cArr[4], int eqM_C) {
+    char *r = Dest;
+    if (eqM_C == 2) {
+        r[0] = (decodeTable[cArr[0]] << 2) | (decodeTable[cArr[1]] >> 4);
+        return r;
+    } else {
+        r[0] = (decodeTable[cArr[0]] << 2) | (decodeTable[cArr[1]] >> 4);
+        r[1] = (decodeTable[cArr[1]] << 4) | (decodeTable[cArr[2]] >> 2);
+        return r;
+    }
+}
+
+void initDT() {
+    for (int i = 65; i < 91; ++i) {
+        decodeTable[i] = i - 65;
+    }
+    for (int j = 97; j < 123; ++j) {
+        decodeTable[j] = j - 71;
+    }
+    for (int k = 48; k < 59; ++k) {
+        decodeTable[k] = k + 4;
+    }
+    decodeTable['+'] = 62;
+    decodeTable['/'] = 63;
+}
+
+void eD_64(char **Dest, const char *s, size_t sSize) {
+    int a = sSize, b = a % 3, t = a / 3;
+    size_t size = t * 4 + (b ? 4 : 0);
+    *Dest = (char *) malloc(size);
+    char r[4] = {0};
+    for (int i = 0; i < t; ++i) {
+        e1_64(r, s + 3 * i);
+        for (int j = 0; j < 4; ++j) {
+//            printf("%c", r[j]);
+            (*Dest)[i * 4 + j] = r[j];
+        }
+    }
+    if (b) {
+        char n[3] = {0};
+        for (int i = 0; i < b; ++i) {
+            n[i] = s[3 * t + i];
+        }
+        e1_64(r, n);
+        for (int k = 0; k < b + 1; ++k) {
+//            printf("%c", r[k]);
+            (*Dest)[size - 4 + k] = r[k];
+        }
+        for (int j = 0; j < 3 - b; ++j) {
+//            printf("%c", '=');
+        }
+        for (int l = size - 1; l > size - 1 - (3 - b); --l) {
+            (*Dest)[l] = '=';
+        }
+    }
+}
+
+void dD_64(char **Dest, const char *s, usi sSize) {
+    int a = sSize, t = a / 4;
+    int eqMC = (s[a - 1] == '=') + (s[a - 2] == '=');
+    int d = a - eqMC;
+    int b = d / 4;
+    char r[3] = {0};
+    char c2S[] = {0, 0};
+    if (eqMC) {
+        for (int i = 0; i < b; ++i) {
+            d1_64(r, s + 4 * i);
+            for (int j = 0; j < 3; ++j) {
+                c2S[0] = r[j];
+                strcat_auto(Dest, c2S);
+//                printf("%c", r[j]);
+            }
+        }
+        d1_EQ_M_64(r, s + b * 4, eqMC);
+        for (int l = 0; l < 3 - eqMC; ++l) {
+            c2S[0] = r[l];
+            strcat_auto(Dest, c2S);
+//            printf("%c", r[l]);
+        }
+    } else {
+        for (int i = 0; i < t; ++i) {
+            d1_64(r, s + 4 * i);
+            for (int j = 0; j < 3; ++j) {
+                c2S[0] = r[j];
+                strcat_auto(Dest, c2S);
+//                printf("%c", r[j]);
+            }
+        }
+    }
+}
+
+void ee(char **Dest, const char *s) {
+    /*char r[8];
     e1(r, s, 6);
     char rr[8];
     unsigned int o = 0;
@@ -51,11 +153,44 @@ void ee(char Dest[13], const char *s) {
     rrr[7] = 0, rrr[8] = 0;
     for (int i = 0; i < 7; ++i) rrr[i] ^= s[i];
     e1(Dest, rrr, 9);
-    Dest[10] = '=', Dest[11] = Dest[10], Dest[12] = Dest[11] - '=';;
+    Dest[10] = '=', Dest[11] = Dest[10], Dest[12] = Dest[11] - '=';;*/
+    char *r1_t = NULL;
+    eD_64(&r1_t, s, strlen(s));
+    int *p = NULL;
+    usi eqN = strInStrCount(&p, r1_t, "=");
+    free(p);
+    int r1S = strlen(r1_t) + 1 - eqN;
+    char r1[r1S];
+    for (int k = 0; k < r1S; ++k) {
+        if (r1_t[k] == '=') break;
+        r1[k] = r1_t[k];
+    }
+    r1[r1S - 1] = 0;
+    size_t strLen = strlen(r1);
+    char r2[strLen + 1];
+    memset(r2, 0, strLen + 1);
+    usi o = 0;
+    for (int i = 0; i < strLen; ++i) {
+        o ^= (usi) r1[i];
+    }
+    aA0_ks(r2, r1, strLen, o);
+    size_t r2StrLen = strlen(r2);
+    size_t b128SrcSize = r2StrLen % 8 ? ((r2StrLen / 8 + 1) * 8) : r2StrLen;
+    size_t b128DestSize = r2StrLen / 8 * 7 + (r2StrLen % 8 ? 7 : 0);
+    char b128Src[b128SrcSize];
+    memset(b128Src, 0, b128SrcSize);
+    for (int j = 0; j < r2StrLen; ++j) {
+        b128Src[j] = r2[j];
+    }
+    char b128Dest[b128DestSize];
+    for (int f = 0; f < b128SrcSize / 8; ++f) {
+        b128_d1(b128Dest + 7 * f, b128Src + 8 * f);
+    }
+    eD_64(Dest, b128Dest, b128DestSize);
 }
 
-JNIEXPORT jstring JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
-        (JNIEnv *env, jobject obj, jobject ctx) {
+JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
+        (JNIEnv *env, jobject obj, jobject ctx, jstring iStr) {
     JNIEnv e = *env;
     jclass DateClass = e->FindClass(env, "java/util/Date");
     jmethodID DateMId = e->GetMethodID(env, DateClass, "<init>", "()V");
@@ -66,9 +201,8 @@ JNIEXPORT jstring JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
     jmethodID sdfFormatMId = e->GetMethodID(env, sdfClass, "format", "(Ljava/util/Date;)Ljava/lang/String;");
     jobject strObj = e->CallObjectMethod(env, sdfObj, sdfFormatMId, DateObj);
     const char *d = e->GetStringUTFChars(env, (jstring) strObj, (jboolean *) 0);
-    char R[13];
-    ee(R, d);
 //    Log(env, R);
+    Log(env, d);
     jclass ctxClass = e->GetObjectClass(env, ctx);
     //TODO GetExternalFilePath
     /*jclass EClass = e->FindClass(env, "android/os/Environment");
@@ -78,15 +212,8 @@ JNIEXPORT jstring JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
     jmethodID tSMId = e->GetMethodID(env, tSClass, "toString", "()Ljava/lang/String;");
     jstring fStr = (jstring) e->CallObjectMethod(env, F, tSMId);
     Log(env, e->NewStringUTF(env, fStr));*/
-    char *cS = NULL;
-    char qS[12];
-    qS[11] = '\0';
-    qS[0] = 'r', qS[1] = 'm', qS[2] = 'J', qS[3] = 'f', qS[4] = 'o', qS[5] = 'g', qS[6] = qS[4], qS[7] = 'V', qS[8] = '+';
-    qS[9] = 'Q', qS[10] = '=';
-    strcpyAndCat_auto(&cS, qS, "=");
-//    Log(env, cS);
-//    Log(env, R);
-    if (!strcmp(R, cS)) {
+
+    /*if (!strcmp(R, cS) || (d[4] == '2')) {
         jmethodID ctxMId = e->GetMethodID(env, ctxClass, "finish", "()V");
         e->CallVoidMethod(env, ctx, ctxMId);
         Log(env, "verification.........\n"
@@ -97,6 +224,37 @@ JNIEXPORT jstring JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
         jfieldID f = e->GetStaticFieldID(env, RClass, "tools_activity_main", "I");
         jint cI = e->GetStaticIntField(env, RClass, f);
         e->CallVoidMethod(env, ctx, sCMId, cI);
+    }*/
+    jmethodID sCMId = e->GetMethodID(env, ctxClass, "setContentView", "(I)V");
+    jclass RClass = e->FindClass(env, "com/zhc/tools/R$layout");
+    jfieldID f = e->GetStaticFieldID(env, RClass, "tools_activity_main", "I");
+    jint cI = e->GetStaticIntField(env, RClass, f);
+    e->CallVoidMethod(env, ctx, sCMId, cI);
+    const char *s = e->GetStringUTFChars(env, iStr, (jboolean *) 0);
+    int *p = NULL;
+    int n = strInStrCount(&p, s, "-");
+    if (n != 1) return (jint) 1;
+    int i = p[0];
+    free(p);
+    char **str = (char **) malloc((size_t) (sizeof(char *) * 2));
+    size_t str1S = (strlen(s) - i);
+    str[0] = (char *) malloc(i + 1), str[1] = (char *) malloc(str1S);
+    for (int j = 0; j < i; ++j) {
+        str[0][j] = s[j];
     }
-    return e->NewStringUTF(env, R);
+    for (int k = 0; k < str1S - 1; ++k) {
+        str[1][k] = s[k + i + 1];
+    }
+    str[0][i] = 0, str[1][str1S - 1] = 0;
+    char *r = NULL;
+    initDT();
+    dD_64(&r, str[0], i);
+    char *rr = NULL;
+    ee(&rr, r);
+    free(r);
+    if (!strcmp(str[1], rr)) {
+
+    }
+    free(rr);
+    return 0;
 }
