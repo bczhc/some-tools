@@ -124,7 +124,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
             hsv[0] = event.getX() * 360F / ((float) hW);
             int color = invertColor(Color.HSVToColor(255, hsv));
             oppositeColorPaint.setColor(color);
-            System.out.println("color = " + color);
+//            System.out.println("color = " + color);
             invalidateAllView();
             return true;
         }

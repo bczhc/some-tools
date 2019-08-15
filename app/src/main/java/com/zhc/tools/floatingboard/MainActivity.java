@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
-        new JNI().mG(this);
         //noinspection deprecation
         width = this.getWindowManager().getDefaultDisplay().getWidth();
         //noinspection deprecation
@@ -204,21 +203,14 @@ public class MainActivity extends AppCompatActivity {
                             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
                             /*dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                                     , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));*/
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                Objects.requireNonNull(dialog.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-                            } else //noinspection deprecation
-                                Objects.requireNonNull(dialog.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                            setDialogAttr(dialog);
                             HSVColorPickerRL hsvColorPickerRL = new HSVColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4))) {
                                 @Override
                                 void onPickedAction(int color) {
                                     pv.setPaintColor(color);
                                 }
                             };
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                dialog.getWindow().setAttributes(new WindowManager.LayoutParams((int) (width * .8), (int) (height * .4), WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGBX_8888));
-                            } else
-                                //noinspection deprecation
-                                dialog.getWindow().setAttributes(new WindowManager.LayoutParams((int) (width * .8), (int) (height * .4), WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 0, PixelFormat.RGBX_8888));
+                            setDialogAttr(dialog);
                             dialog.setContentView(hsvColorPickerRL);
                             dialog.show();
                             break;
@@ -243,6 +235,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                             break;
                         case 7:
+                            Dialog d1 = new Dialog(this);
+
                             pv.clearAll();
                             break;
                         case 8:
@@ -250,11 +244,7 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case 9:
                             Dialog c = new Dialog(this);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                Objects.requireNonNull(c.getWindow()).setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
-                            } else
-                                //noinspection ControlFlowStatementWithoutBraces,deprecation
-                                Objects.requireNonNull(c.getWindow()).setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 0, PixelFormat.RGB_888));
+                            setDialogAttr(c);
                             LinearLayout cLL = new LinearLayout(this);
                             cLL.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             cLL.setOrientation(LinearLayout.VERTICAL);
@@ -268,11 +258,7 @@ public class MainActivity extends AppCompatActivity {
                             TVsColorBtn.setText(R.string.control_panel_color);
                             TVsColorBtn.setOnClickListener(v2 -> {
                                 Dialog TVsColorDialog = new Dialog(MainActivity.this);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    Objects.requireNonNull(TVsColorDialog.getWindow()).setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
-                                } else
-                                    //noinspection deprecation
-                                    Objects.requireNonNull(TVsColorDialog.getWindow()).setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 0, PixelFormat.RGB_888));
+                                setDialogAttr(TVsColorDialog);
                                 HSVColorPickerRL TVsColorPicker = new HSVColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
                                     void onPickedAction(int color) {
@@ -290,11 +276,7 @@ public class MainActivity extends AppCompatActivity {
                             Button textsColorBtn = new Button(this);
                             textsColorBtn.setOnClickListener(v2 -> {
                                 Dialog textsColorDialog = new Dialog(MainActivity.this);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    Objects.requireNonNull(textsColorDialog.getWindow()).setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
-                                } else
-                                    //noinspection deprecation
-                                    Objects.requireNonNull(textsColorDialog.getWindow()).setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 0, PixelFormat.RGB_888));
+                                setDialogAttr(textsColorDialog);
                                 HSVColorPickerRL textsColorPicker = new HSVColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
                                     void onPickedAction(int color) {
@@ -488,5 +470,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "a", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    private void setDialogAttr(Dialog d) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Objects.requireNonNull(d.getWindow()).setAttributes(new WindowManager.LayoutParams(((int) (width * .8)), ((int) (height * .4)), WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
+        } else                                 //noinspection deprecation
+            Objects.requireNonNull(d.getWindow()).setAttributes(new WindowManager.LayoutParams(((int) (width * .8)), ((int) (height * .4)), WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 0, PixelFormat.RGB_888));
     }
 }

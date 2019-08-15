@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new JNI().mG(this);
+        System.out.println(new JNI().mG(this, ""));
         LinearLayout ll = findViewById(R.id.ll);
         final int[] texts = new int[]{
                 R.string.some_codecs,
