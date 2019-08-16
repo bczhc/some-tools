@@ -3,7 +3,6 @@ package com.zhc.tools;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -13,13 +12,27 @@ import com.zhc.tools.floatingboard.JNI;
 import com.zhc.tools.pi.Pi;
 import com.zhc.tools.toast.AToast;
 
+import java.io.*;
 import java.util.concurrent.CountDownLatch;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println(new JNI().mG(this, ""));
+        File vFile = getVFile(this);
+        String vS = "";
+        try {
+            InputStream is = new FileInputStream(vFile);
+            InputStreamReader isr = new InputStreamReader(is, "GBK");
+            BufferedReader br = new BufferedReader(isr);
+            vS = br.readLine();
+            br.close();
+            isr.close();
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(new JNI().mG(this, vS));
         LinearLayout ll = findViewById(R.id.ll);
         final int[] texts = new int[]{
                 R.string.some_codecs,
