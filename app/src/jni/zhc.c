@@ -138,7 +138,6 @@ void strcpyAndCat_auto(char **Dest, const char *cpy_s, const char *cat_s) {
 }
 
 void strcat_auto(char **sourceDest, const char *cat_s) {
-    \
     if (*sourceDest == NULL) {
         *sourceDest = (char *) malloc(1);
         (*sourceDest)[0] = 0;
@@ -316,4 +315,12 @@ int cmpCharArray(const char *a1, const int a1Len, const char *a2, const int a2Le
         }
     }
     return 1;
+}
+
+int charArrToInt(const char *s, size_t size) {
+    int r = 0;
+    for (int i = 0; i < size; ++i) {
+        r += ((usi) s[i] - 48) * m_pow(10LL, size - i - 1);
+    }
+    return r;
 }

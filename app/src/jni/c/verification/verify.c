@@ -7,6 +7,28 @@
 #include "../codecs/qmcLib.h"
 #include <stdio.h>
 
+int cpD(const char *d1, const char *d2) {
+    char ***s = (char ***) malloc((size_t) (sizeof(char **) * 2));
+    for (int i = 0; i < 2; ++i) {
+        s[i] = (char **) malloc((size_t) (sizeof(char *) * 3));
+        for (int j = 0; j < 3; ++j) {
+            s[i][j] = (char *) malloc((size_t) 2);
+        }
+    }
+    for (int l = 0; l < 2; ++l) {
+        for (int k = 0; k < 3; ++k) {
+            for (int i = 0; i < 2; ++i) {
+                s[l][k][i] = l ? d2[i + 2 * k] : d1[i + 2 * k];
+            }
+        }
+    }
+    for (int m = 0; m < 3; ++m) {
+        int i1 = charArrToInt(s[0][m], 2), i2 = charArrToInt(s[1][m], 2);
+        if (i1 != i2) return i1 < i2 ? -1 : 1;
+    }
+    return strcmp(d1, d2);
+}
+
 char decodeTable[128] = {0};
 char encodeTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 char ksTable[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -202,7 +224,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
     jobject strObj = e->CallObjectMethod(env, sdfObj, sdfFormatMId, DateObj);
     const char *d = e->GetStringUTFChars(env, (jstring) strObj, (jboolean *) 0);
 //    Log(env, R);
-    Log(env, d);
+//    Log(env, d);
     jclass ctxClass = e->GetObjectClass(env, ctx);
     //TODO GetExternalFilePath
     /*jclass EClass = e->FindClass(env, "android/os/Environment");
@@ -225,11 +247,6 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
         jint cI = e->GetStaticIntField(env, RClass, f);
         e->CallVoidMethod(env, ctx, sCMId, cI);
     }*/
-    jmethodID sCMId = e->GetMethodID(env, ctxClass, "setContentView", "(I)V");
-    jclass RClass = e->FindClass(env, "com/zhc/tools/R$layout");
-    jfieldID f = e->GetStaticFieldID(env, RClass, "tools_activity_main", "I");
-    jint cI = e->GetStaticIntField(env, RClass, f);
-    e->CallVoidMethod(env, ctx, sCMId, cI);
     const char *s = e->GetStringUTFChars(env, iStr, (jboolean *) 0);
     int *p = NULL;
     int n = strInStrCount(&p, s, "-");
@@ -251,10 +268,23 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
     dD_64(&r, str[0], i);
     char *rr = NULL;
     ee(&rr, r);
-    free(r);
     if (!strcmp(str[1], rr)) {
-
+        if (cpD(r, d) >= 0) {
+            jmethodID sCMId = e->GetMethodID(env, ctxClass, "setContentView", "(I)V");
+            jclass RClass = e->FindClass(env, "com/zhc/tools/R$layout");
+            jfieldID f = e->GetStaticFieldID(env, RClass, "tools_activity_main", "I");
+            jint cI = e->GetStaticIntField(env, RClass, f);
+            e->CallVoidMethod(env, ctx, sCMId, cI);
+        } else Log(env, "不支持了，高中……");
     }
+    free(r);
     free(rr);
     return 0;
 }
+
+/*
+int main() {
+    char *R = NULL;
+    ee(&R, "190825");
+    printf("%s\n", R);
+}*/
