@@ -130,4 +130,6 @@ int cmpIntArray(const int *a1, const int a1Len, const int *a2, const int a2Len);
 
 int cmpCharArray(const char *a1, const int a1Len, const char *a2, const int a2Len);
 
+int charArrToInt(const char *s, size_t size);
+
 #endif //C99_ZHC_H

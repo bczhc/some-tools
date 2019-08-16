@@ -1,10 +1,35 @@
 package com.zhc.tools;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.*;
+
 public class BaseActivity extends AppCompatActivity {
+
+    protected File getVFile(Context ctx) {
+        File filesDir = getFilesDir();
+        if (!filesDir.exists()) System.out.println("filesDir.mkdirs() = " + filesDir.mkdirs());
+        File vF = new File(filesDir.toString() + "/v");
+        if (!vF.exists()) {
+            try {
+                System.out.println("vF.createNewFile() = " + vF.createNewFile());
+                OutputStream os = new FileOutputStream(vF);
+                OutputStreamWriter osw = new OutputStreamWriter(os, "GBK");
+                BufferedWriter bw = new BufferedWriter(osw);
+                bw.write("MTkwODI1-jzsvGT4h1g==");
+                bw.flush();
+                bw.close();
+                osw.close();
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return vF;
+    }
 
     /**
      * onConfigurationChanged
