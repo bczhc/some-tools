@@ -39,7 +39,8 @@ public class MainActivity extends BaseActivity {
                 R.string.generate_pi,
                 R.string.toast,
                 R.string.put_in_clipboard,
-                R.string.overlaid_drawing_board
+                R.string.overlaid_drawing_board,
+                R.string.function_drawing
 
         };
         final Class<?>[] classes = new Class[]{
@@ -47,7 +48,8 @@ public class MainActivity extends BaseActivity {
                 Pi.class,
                 AToast.class,
                 Clip.class,
-                com.zhc.tools.floatingboard.MainActivity.class
+                com.zhc.tools.floatingboard.MainActivity.class,
+                com.zhc.tools.functiondrawing.FunctionDrawing.class
         };
         new Thread(() -> {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
