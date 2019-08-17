@@ -88,5 +88,15 @@
 
             </intent-filter>
         </activity>
+        <activity android:name=".functiondrawing.FunctionDrawing"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
