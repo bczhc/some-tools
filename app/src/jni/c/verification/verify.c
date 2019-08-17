@@ -6,6 +6,19 @@
 #include "./com_zhc_tools_floatingboard_JNI.h"
 #include "../codecs/qmcLib.h"
 #include <stdio.h>
+#include "jni.h"
+
+void LogArr(JNIEnv *env, const char *tag, const char *s, int size) {
+    char *r = NULL;
+    char *R = NULL;
+    for (int i = 0; i < size; ++i) {
+        m_itoa(&r, (int) (usi) s[i]);
+        strcat_auto(&R, r);
+        strcat_auto(&R, " ");
+    }
+    Log(env, tag, R);
+}
+
 
 int cpD(const char *d1, const char *d2) {
     char ***s = (char ***) malloc((size_t) (sizeof(char **) * 2));
@@ -102,6 +115,8 @@ void eD_64(char **Dest, const char *s, size_t sSize) {
     int a = sSize, b = a % 3, t = a / 3;
     size_t size = t * 4 + (b ? 4 : 0);
     *Dest = (char *) malloc(size);
+//    memset(*Dest, 0, size);
+    (*Dest)[size - 1] = 0;
     char r[4] = {0};
     for (int i = 0; i < t; ++i) {
         e1_64(r, s + 3 * i);
@@ -248,7 +263,8 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
         e->CallVoidMethod(env, ctx, sCMId, cI);
     }*/
     const char *s = e->GetStringUTFChars(env, iStr, (jboolean *) 0);
-    Log(env, s);
+    LogArr(env, "", s, 22);
+//    Log(env, s);
     int *p = NULL;
     int n = strInStrCount(&p, s, "-");
     if (n != 1) return (jint) 1;
@@ -269,28 +285,52 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
     dD_64(&r, str[0], i);
     char *rr = NULL;
     ee(&rr, r);
-    Log(env, str[1]);
+//    LogArr(env, rr, 14);
+    /*Log(env, str[1]);
     Log(env, rr);
-    Log(env, r);
+    Log(env, r);*/
     if (!strcmp(str[1], rr)) {
-        Log(env, "验证通过");
+//        Log(env, "", "验证通过");
         if (cpD(r, d) >= 0) {
             jmethodID sCMId = e->GetMethodID(env, ctxClass, "setContentView", "(I)V");
             jclass RClass = e->FindClass(env, "com/zhc/tools/R$layout");
             jfieldID f = e->GetStaticFieldID(env, RClass, "tools_activity_main", "I");
             jint cI = e->GetStaticIntField(env, RClass, f);
-            Log(env, "sCV...");
+//            Log(env, "sCV...");
             e->CallVoidMethod(env, ctx, sCMId, cI);
-            Log(env, "sCVOk");
-        } else Log(env, "不支持了，高中……");
-    }
+//            Log(env, "sCVOk");
+        }
+    } else Log(env, "", "不支持了，高中……");
     free(r);
     free(rr);
     return 0;
 }
 
-int main() {
-    char *R = NULL;
-    ee(&R, "190825");
-    printf("%s\n", R);
+int main(int argc, char **argv) {
+//    if (argc != 2) return argc;
+    for (int m = 0; m < 10000; ++m) {
+        const char *s = "MTkwODI1-jzsvGT4h1g==";
+        int *p = NULL;
+        int n = strInStrCount(&p, s, "-");
+        if (n != 1) return (jint) 1;
+        int i = p[0];
+        free(p);
+        char **str = (char **) malloc((size_t) (sizeof(char *) * 2));
+        size_t str1S = (strlen(s) - i);
+        str[0] = (char *) malloc(i + 1), str[1] = (char *) malloc(str1S);
+        for (int j = 0; j < i; ++j) {
+            str[0][j] = s[j];
+        }
+        for (int k = 0; k < str1S - 1; ++k) {
+            str[1][k] = s[k + i + 1];
+        }
+        str[0][i] = 0, str[1][str1S - 1] = 0;
+        char *r = NULL;
+        initDT();
+        dD_64(&r, str[0], i);
+        char *rr = NULL;
+        ee(&rr, r);
+//        printf("%s\n", rr);
+        printArr(rr, strlen(rr) + 2);
+    }
 }
