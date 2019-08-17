@@ -40,7 +40,7 @@ public class FunctionDrawing extends BaseActivity {
     }
 
     private void init() {
-        fs = new FourierSeries(20) {
+        fs = new FourierSeries(30) {
             @Override
             public double f_f(double x) {
                 /*if (x < 5) return 10;
@@ -74,7 +74,8 @@ public class FunctionDrawing extends BaseActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // 检测屏幕的方向：纵向或横向
+        // 检测屏幕的
+        // 方向：纵向或横向
         if (this.getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE) {
             //当前为横屏， 在此处添加额外的处理代码
