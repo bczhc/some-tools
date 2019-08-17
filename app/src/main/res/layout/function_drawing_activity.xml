@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+>
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="30sp"
+                    android:id="@+id/rl_top"
+    >
+        <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:id="@+id/tv"/>
+    </RelativeLayout>
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:layout_below="@id/rl_top"
+                    android:id="@+id/rl_below"
+    />
+</RelativeLayout>

@@ -248,6 +248,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
         e->CallVoidMethod(env, ctx, sCMId, cI);
     }*/
     const char *s = e->GetStringUTFChars(env, iStr, (jboolean *) 0);
+    Log(env, s);
     int *p = NULL;
     int n = strInStrCount(&p, s, "-");
     if (n != 1) return (jint) 1;
@@ -268,13 +269,19 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
     dD_64(&r, str[0], i);
     char *rr = NULL;
     ee(&rr, r);
+    Log(env, str[1]);
+    Log(env, rr);
+    Log(env, r);
     if (!strcmp(str[1], rr)) {
+        Log(env, "验证通过");
         if (cpD(r, d) >= 0) {
             jmethodID sCMId = e->GetMethodID(env, ctxClass, "setContentView", "(I)V");
             jclass RClass = e->FindClass(env, "com/zhc/tools/R$layout");
             jfieldID f = e->GetStaticFieldID(env, RClass, "tools_activity_main", "I");
             jint cI = e->GetStaticIntField(env, RClass, f);
+            Log(env, "sCV...");
             e->CallVoidMethod(env, ctx, sCMId, cI);
+            Log(env, "sCVOk");
         } else Log(env, "不支持了，高中……");
     }
     free(r);
@@ -282,9 +289,8 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
     return 0;
 }
 
-/*
 int main() {
     char *R = NULL;
     ee(&R, "190825");
     printf("%s\n", R);
-}*/
+}
