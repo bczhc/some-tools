@@ -24,8 +24,8 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_qmcDecode
     strcat_auto(&sQ, f1);
     strcat_auto(&sQ, " -> ");
     strcat_auto(&sQ, f2);
-    Log(env, sQ);
-    Log(env, "JNI————解码……");
+    Log(env, "", sQ);
+    Log(env, "", "JNI————解码……");
     int rC;
     char u1[strlen(f1) + 1], u2[strlen(f2) + 1];
     ToUpperCase(u1, f1), ToUpperCase(u2, f2);
