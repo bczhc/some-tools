@@ -1,20 +1,12 @@
 package com.zhc.tools.floatingboard;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
+import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
+import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
@@ -22,19 +14,19 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
+import com.zhc.tools.BaseActivity;
 import com.zhc.tools.R;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private WindowManager wm = null;
     private LinearLayout ll;
     private PaintView pv;
@@ -51,10 +43,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
-        //noinspection deprecation
+        Point point = new Point();
+        /*//noinspection deprecation
         width = this.getWindowManager().getDefaultDisplay().getWidth();
         //noinspection deprecation
-        height = this.getWindowManager().getDefaultDisplay().getHeight();
+        height = this.getWindowManager().getDefaultDisplay().getHeight();*/
+        getWindowManager().getDefaultDisplay().getSize(point);
+        width = point.x;
+        height = point.y;
         Switch notBeKilledSwitch = findViewById(R.id.not_be_killed);
         notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notBeKilled = isChecked);
 //        RelativeLayout rl = findViewById(R.id.main);
