@@ -1,4 +1,4 @@
-package com.zhc.tools.floatingboard;
+package com.zhc.utils;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 class ColorUtils {

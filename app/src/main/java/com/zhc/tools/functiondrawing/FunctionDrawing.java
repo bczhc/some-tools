@@ -1,5 +1,6 @@
 package com.zhc.tools.functiondrawing;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import com.zhc.tools.BaseActivity;
 import com.zhc.tools.R;
@@ -18,6 +20,7 @@ public class FunctionDrawing extends BaseActivity {
     private FourierSeries fs;
     private int nNum = 100;
     private TextView tv;
+    private FunctionDrawingView functionDrawingView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class FunctionDrawing extends BaseActivity {
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void init() {
         fs = new FourierSeries(30) {
             @Override
@@ -57,6 +61,48 @@ public class FunctionDrawing extends BaseActivity {
             fs.initAB(nNum, s -> runOnUiThread(() -> tv.setText(s)));
             draw();
         }).start();
+        /*TextView[] textViews = new TextView[]{
+                findViewById(R.id.increase_tv),
+                findViewById(R.id.decrease_tv)
+        };
+        textViews[0].setOnClickListener(v -> {
+            if (functionDrawingView.xLength > 0 && functionDrawingView.yLength > 0)
+                functionDrawingView.zoom(functionDrawingView.xLength - 5, functionDrawingView.yLength - 5);
+        });
+        for (TextView textView : textViews) {
+            textView.setOnTouchListener((v, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        v.setBackgroundColor(Color.parseColor("#FD9A44"));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        v.setBackgroundColor(Color.WHITE);
+                        v.performClick();
+                        break;
+                }
+                return true;
+            });
+        }
+        textViews[1].setOnClickListener(v -> functionDrawingView.zoom(functionDrawingView.xLength + 5, functionDrawingView.yLength + 5));*/
+        SeekBar sb = findViewById(R.id.zoom_sb);
+        sb.setProgress(50);
+        sb.setMax(100);
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                functionDrawingView.zoom(((float) (100 - progress)), ((float) (100 - progress)));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void draw() {
@@ -65,9 +111,12 @@ public class FunctionDrawing extends BaseActivity {
         getWindowManager().getDefaultDisplay().getSize(point);
         int width = point.x;
         int height = point.y - DisplayUtil.sp2px(this, 20);
-        FunctionDrawingView functionDrawingView = new FunctionDrawingView(this, width, height);
+        functionDrawingView = new FunctionDrawingView(this, width, height);
         runOnUiThread(() -> rl.addView(functionDrawingView));
-        functionDrawingView.drawFunction(x -> (float) fs.F(nNum, x), 4);
+        functionDrawingView.drawFunction(x -> {
+            return (float) fs.F(nNum, x);
+//            return (float) Math.sin(x);
+        });
         runOnUiThread(() -> tv.setText(R.string.nul));
     }
 
