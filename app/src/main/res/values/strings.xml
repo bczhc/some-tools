@@ -69,4 +69,6 @@
     <string name="type_n_num">输入合成正弦波项数</string>
     <string name="increase">+</string>
     <string name="decrease">-</string>
+    <string name="record">记录</string>
+    <string name="notes">笔记</string>
 </resources>
