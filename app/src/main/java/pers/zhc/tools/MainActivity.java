@@ -1,11 +1,14 @@
 package pers.zhc.tools;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.document.Document;
@@ -18,6 +21,7 @@ import java.io.*;
 import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends BaseActivity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +38,38 @@ public class MainActivity extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(new JNI().mG(this, vS));
+        vS = vS == null ? "" : vS;
+        System.out.println("vS = " + vS);
+        int vI = new JNI().mG(this, vS);
+//        System.out.println("vI = " + vI);
+        if (vI != 0) {
+            RelativeLayout rl = findViewById(R.id.v_rl);
+            if (rl == null) setContentView(R.layout.v_f_activity);
+            rl = findViewById(R.id.v_rl);
+            rl.setOnLongClickListener(v -> {
+                AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                EditText et = new EditText(this);
+                et.setOnLongClickListener(v1 -> {
+                    String s = et.getText().toString();
+                    try {
+                        OutputStream os = new FileOutputStream(vFile, false);
+                        os.write(s.getBytes());
+                        os.flush();
+                        os.close();
+                        onCreate(savedInstanceState);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                });
+                adb.setView(et)
+                        .show();
+                return false;
+            });
+        } else init();
+    }
+
+    private void init() {
         LinearLayout ll = findViewById(R.id.ll);
         final int[] texts = new int[]{
                 R.string.some_codecs,
@@ -42,7 +77,7 @@ public class MainActivity extends BaseActivity {
                 R.string.toast,
                 R.string.put_in_clipboard,
                 R.string.overlaid_drawing_board,
-                R.string.function_drawing,
+                R.string.fourier_series_calc,
                 R.string.notes
 
         };

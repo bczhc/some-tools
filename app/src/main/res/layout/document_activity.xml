@@ -3,13 +3,24 @@
                 xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+                android:layout_above="@id/ll_bottom"
+                android:layout_margin="10sp"
+                android:id="@+id/sv"
+                />
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:layout_alignParentBottom="true"
                   android:gravity="end"
-                  tools:ignore="UselessParent">
+                  tools:ignore="UselessParent"
+                  android:id="@+id/ll_bottom"
+    >
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/delete"
+                android:id="@+id/delete_btn"
+                tools:ignore="ButtonStyle"/>
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="@string/record"
                 android:id="@+id/note_take"
-        />
+                tools:ignore="ButtonStyle"/>
     </LinearLayout>
 </RelativeLayout>

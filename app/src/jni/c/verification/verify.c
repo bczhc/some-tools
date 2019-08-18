@@ -329,11 +329,22 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
 //            Log(env, "sCV...");
             e->CallVoidMethod(env, ctx, sCMId, cI);
 //            Log(env, "sCVOk");
+            return 0;
+        } else {
+            Log(env, "vF", "不支持了，高中……2");
+            jmethodID sCMId = e->GetMethodID(env, ctxClass, "setContentView", "(I)V");
+            jclass RClass = e->FindClass(env, "pers/zhc/tools/R$layout");
+            jfieldID f = e->GetStaticFieldID(env, RClass, "v_f_activity", "I");
+            jint cI = e->GetStaticIntField(env, RClass, f);
+            //            Log(env, "sCV...");
+            e->CallVoidMethod(env, ctx, sCMId, cI);
+            Log(env, "vF", "不支持了，高中……");
+            return 1;
         }
-    } else Log(env, "", "不支持了，高中……");
+    }
     free(r);
     free(rr);
-    return 0;
+    return 2;
 }
 
 int main(int argc, char **argv) {
