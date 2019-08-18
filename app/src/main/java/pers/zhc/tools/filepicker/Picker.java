@@ -69,7 +69,7 @@ public class Picker extends AppCompatActivity {
         Intent intent = getIntent();
         this.option = intent.getIntExtra("option", 0);
         String path = intent.getStringExtra("path");
-        setContentView(R.layout.picker);
+        setContentView(R.layout.picker_activity);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.currentPath = path == null ? Environment.getExternalStorageDirectory() : new File(path);
 //        this.currentPath = new File("/storage/emulated/0");

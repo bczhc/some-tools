@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
+import pers.zhc.tools.document.Document;
 import pers.zhc.tools.floatingboard.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawing;
 import pers.zhc.tools.pi.Pi;
@@ -41,7 +42,8 @@ public class MainActivity extends BaseActivity {
                 R.string.toast,
                 R.string.put_in_clipboard,
                 R.string.overlaid_drawing_board,
-                R.string.function_drawing
+                R.string.function_drawing,
+                R.string.notes
 
         };
         final Class<?>[] classes = new Class[]{
@@ -50,7 +52,8 @@ public class MainActivity extends BaseActivity {
                 AToast.class,
                 Clip.class,
                 pers.zhc.tools.floatingboard.MainActivity.class,
-                FunctionDrawing.class
+                FunctionDrawing.class,
+                Document.class
         };
         new Thread(() -> {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
