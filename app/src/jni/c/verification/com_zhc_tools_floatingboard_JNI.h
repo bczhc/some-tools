@@ -12,7 +12,7 @@ extern "C" {
  * Method:    mV
  * Signature: ()V
  */
-JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
         (JNIEnv *, jobject, jobject, jstring);
 
 #ifdef __cplusplus
