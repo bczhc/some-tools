@@ -12,9 +12,13 @@ import android.view.ViewGroup;
 import android.widget.*;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.filepicker.Picker;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DisplayUtil;
+import pers.zhc.u.FileU;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,6 +31,8 @@ public class Document extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.document_activity);
         Button insertBtn = findViewById(R.id.note_take);
+        Button importBtn = findViewById(R.id.import_btn);
+        Button exportBtn = findViewById(R.id.export_btn);
         insertBtn.setOnClickListener(v -> startActivityForResult(new Intent(this, NoteTakingActivity.class), 41));
         Button deleteBtn = findViewById(R.id.delete_btn);
         deleteBtn.setOnClickListener(v -> {
@@ -57,6 +63,18 @@ public class Document extends BaseActivity {
                     .show();
         });
         sv = findViewById(R.id.sv);
+        importBtn.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClass(this, Picker.class);
+            intent.putExtra("option", Picker.PICK_FILE);
+            startActivityForResult(intent, 51);
+        });
+        exportBtn.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClass(this, Picker.class);
+            intent.putExtra("option", Picker.PICK_FOLDER);
+            startActivityForResult(intent, 61);
+        });
         db = getDB(this);
         setSVViews();
     }
@@ -64,8 +82,32 @@ public class Document extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 41) {
-            setSVViews();
+        switch (requestCode) {
+            case 41:
+                setSVViews();
+                break;
+            case 51:
+                if (data != null) {
+                    File file = new File(data.getStringExtra("result"));
+                    db = SQLiteDatabase.openOrCreateDatabase(file, null);
+                    Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
+                    setSVViews();
+                }
+                break;
+            case 61:
+                if (data != null) {
+                    String destFileDir = data.getStringExtra("result");
+                    File file = new File(db.getPath());
+                    try {
+                        File destFile = new File(destFileDir + "/" + file.getName());
+                        FileU.FileCopy(file, destFile);
+                        if (destFile.exists())
+                            Toast.makeText(this, getString(R.string.exporting_success) + "\n" + destFile.getCanonicalPath(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Common.showException(e, this);
+                    }
+                }
+                break;
         }
     }
 
