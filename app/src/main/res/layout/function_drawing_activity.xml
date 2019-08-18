@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_height="match_parent"
+>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="30sp"
+                  android:id="@+id/ll_top"
+                  android:orientation="horizontal"
+                  android:baselineAligned="false">
+        <LinearLayout android:layout_width="0sp" android:layout_height="match_parent"
+                      android:layout_weight="1">
+            <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                      android:id="@+id/tv"
+            />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0sp" android:layout_height="match_parent"
+                      android:layout_weight="3"
+                      android:orientation="horizontal"
+        >
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                            tools:ignore="UselessParent">
+                <SeekBar android:layout_width="match_parent" android:layout_height="match_parent"
+                         android:layout_toLeftOf="@id/i_d_rl"
+                         android:layout_toStartOf="@id/i_d_rl"
+                         android:id="@+id/zoom_sb"
+                />
+                <RelativeLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                                android:id="@+id/i_d_rl"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginRight="20sp"
+                                android:layout_marginEnd="20sp">
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:layout_below="@id/ll_top"
+                    android:id="@+id/rl_below"
+    />
+</RelativeLayout>

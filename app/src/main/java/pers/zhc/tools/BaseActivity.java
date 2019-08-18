@@ -1,4 +1,4 @@
-package com.zhc.tools;
+package pers.zhc.tools;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -9,7 +9,7 @@ import java.io.*;
 
 public class BaseActivity extends AppCompatActivity {
 
-    protected File getVFile(Context ctx) {
+    File getVFile(Context ctx) {
         File filesDir = getFilesDir();
         if (!filesDir.exists()) System.out.println("filesDir.mkdirs() = " + filesDir.mkdirs());
         File vF = new File(filesDir.toString() + "/v");

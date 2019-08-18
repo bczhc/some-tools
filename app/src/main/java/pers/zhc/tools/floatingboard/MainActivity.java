@@ -1,20 +1,9 @@
-package com.zhc.tools.floatingboard;
+package pers.zhc.tools.floatingboard;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
+import android.app.*;
+import android.content.*;
+import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
@@ -22,19 +11,21 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
-import com.zhc.tools.R;
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+import static pers.zhc.tools.utils.ColorUtils.invertColor;
+
+public class MainActivity extends BaseActivity {
     private WindowManager wm = null;
     private LinearLayout ll;
     private PaintView pv;
@@ -44,19 +35,55 @@ public class MainActivity extends AppCompatActivity {
     private int height;
     private int TVsColor = Color.WHITE, textsColor = Color.GRAY;
     private boolean whetherTextsColorIsInverted_isChecked = false;
-    private boolean notBeKilled = false;
+    private View globalOnTouchListenerFloatingView;
+    private NotificationClickReceiver notificationClickReceiver;
+//    private boolean notBeKilled = false;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
-        //noinspection deprecation
+        init();
+    }
+
+    private void init() {
+        notificationClickReceiver = new NotificationClickReceiver();
+        Point point = new Point();
+        /*//noinspection deprecation
         width = this.getWindowManager().getDefaultDisplay().getWidth();
         //noinspection deprecation
-        height = this.getWindowManager().getDefaultDisplay().getHeight();
+        height = this.getWindowManager().getDefaultDisplay().getHeight();*/
+        getWindowManager().getDefaultDisplay().getSize(point);
+        width = point.x;
+        height = point.y;
         Switch notBeKilledSwitch = findViewById(R.id.not_be_killed);
-        notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notBeKilled = isChecked);
+        globalOnTouchListenerFloatingView = new View(this) {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouchEvent(MotionEvent event) {
+                System.out.println("event.getAction() = " + event.getAction());
+                System.out.println("event.getX() = " + event.getX());
+                System.out.println("event.getY() = " + event.getY());
+                return true;
+            }
+        };
+        globalOnTouchListenerFloatingView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
+        View keepNotBeingKilledView = new View(this);
+        keepNotBeingKilledView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
+        notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            notBeKilled = isChecked;
+            if (isChecked) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    wm.addView(keepNotBeingKilledView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
+                } else
+                    //noinspection deprecation
+                    wm.addView(keepNotBeingKilledView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
+            } else try {
+                wm.removeViewImmediate(keepNotBeingKilledView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 //        RelativeLayout rl = findViewById(R.id.main);
         pv = new PaintView(this, width, height);
         pv.setStrokeWidth(10);
@@ -68,8 +95,15 @@ public class MainActivity extends AppCompatActivity {
         if (a == 1) {
             startFloatingWindow();
         }
+        IntentFilter filter = new IntentFilter();
+        registerReceiver(notificationClickReceiver, filter);
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(notificationClickReceiver);
+        super.onDestroy();
+    }
 
     private void setBtn() {
         Button startFW = findViewById(R.id.start_f_w);
@@ -281,6 +315,7 @@ public class MainActivity extends AppCompatActivity {
                                 TVsColorDialog.show();
                             });
                             Button textsColorBtn = new Button(this);
+                            textsColorBtn.setEnabled(!this.whetherTextsColorIsInverted_isChecked);
                             textsColorBtn.setOnClickListener(v2 -> {
                                 Dialog textsColorDialog = new Dialog(MainActivity.this);
                                 setDialogAttr(textsColorDialog);
@@ -303,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
                                 textsColorBtn.setEnabled(!isChecked);
                                 whetherTextsColorIsInverted_isChecked = isChecked;
                                 for (TextView childTV : childTVs) {
-                                    childTV.setTextColor(textsColor = HSVColorPickerRL.invertColor(TVsColor));
+                                    childTV.setTextColor(textsColor = invertColor(TVsColor));
                                 }
                             });
                             whetherTextColorIsInverted.setText(R.string.whether_text_color_is_inverted);
@@ -322,10 +357,7 @@ public class MainActivity extends AppCompatActivity {
                             c.show();
                             break;
                         case 10:
-                            createConfirmationAD((dialog1, which) -> {
-                                stopFloatingWindow();
-                                finish();
-                            }, (dialog1, which) -> {
+                            createConfirmationAD((dialog1, which) -> stopFloatingWindow(), (dialog1, which) -> {
                             }, R.string.whether_to_exit).show();
                             break;
                     }
@@ -339,20 +371,11 @@ public class MainActivity extends AppCompatActivity {
         iv.setOnTouchListener(smallViewOnTouchListener);
         ll.addView(iv);
         wm.addView(ll, lp2);
-        if (notBeKilled) {
-            View view = new View(this) {
-                @Override
-                public boolean onTouchEvent(MotionEvent event) {
-                    System.out.println(event.getAction() + "\t" + event.getX() + "\t" + event.getY());
-                    return true;
-                }
-            };
-            view.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                wm.addView(view, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
-            } else                 //noinspection deprecation
-                wm.addView(view, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
+        } else
+            //noinspection deprecation
+            wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
     }
 
     private void hide() {
@@ -370,11 +393,8 @@ public class MainActivity extends AppCompatActivity {
             nb.setSmallIcon(Icon.createWithBitmap(icon))
                     .setContentTitle("画板")
                     .setContentText("点击取消隐藏控制悬浮窗");
-//            PendingIntent pi = PendingIntent.getBroadcast(this, 1, new Intent(this, NotificationClickReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
-            Intent intent = new Intent(this, this.getClass());
-            intent.putExtra("a", 1);
-            PendingIntent pi = PendingIntent.getActivity(this, 11, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//            nb.setContentIntent(pi);
+            Intent intent = new Intent(this, notificationClickReceiver.getClass());
+            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             nb.setContentIntent(pi);
             Notification build = nb.build();
             nm.notify(1, build);
@@ -385,6 +405,9 @@ public class MainActivity extends AppCompatActivity {
                     .setContentTitle("画板")
                     .setContentText("点击取消隐藏控制悬浮窗")
                     .setSmallIcon(R.mipmap.ic_launcher);
+            Intent intent = new Intent(this, NotificationClickReceiver.class);
+            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            ncb.setContentIntent(pi);
             nm.notify(1, ncb.build());
         }
     }
@@ -465,6 +488,10 @@ public class MainActivity extends AppCompatActivity {
             wm.removeViewImmediate(pv);
         } catch (Exception ignored) {
         }
+        try {
+            wm.removeViewImmediate(globalOnTouchListenerFloatingView);
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
@@ -477,9 +504,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            System.out.println("onReceiveClick!");
             startFloatingWindow();
             Toast.makeText(MainActivity.this, "a", Toast.LENGTH_SHORT).show();
-            finish();
         }
     }
 

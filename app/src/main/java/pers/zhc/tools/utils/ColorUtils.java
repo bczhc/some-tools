@@ -1,7 +1,7 @@
-package com.zhc.tools.floatingboard;
+package pers.zhc.tools.utils;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-class ColorUtils {
+public class ColorUtils {
     private int[] colors;
     private float startPos, endPos;
 
@@ -52,6 +52,15 @@ class ColorUtils {
 
     private static int parseColorInt(RGB rgb) {
         return 0xff000000 | (rgb.r << 16) | (rgb.g << 8) | rgb.b;
+    }
+
+    public static int invertColor(int color) {
+        /*float[] HSV = new float[3];
+        Color.colorToHSV(color, HSV);
+        HSV[0] = HSV[0] + 180 - (HSV[0] > 180 ? 360 : 0);
+        return Color.HSVToColor(HSV);*/
+        RGB rgb = parseRGB(color);
+        return parseColorInt(new RGB(255 - rgb.r, 255 - rgb.g, 255 - rgb.b));
     }
 }
 

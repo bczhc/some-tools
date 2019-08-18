@@ -1,4 +1,4 @@
-package com.zhc.tools.floatingboard;
+package pers.zhc.tools.floatingboard;
 
 import android.content.Context;
 

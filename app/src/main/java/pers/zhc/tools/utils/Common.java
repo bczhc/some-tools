@@ -1,4 +1,4 @@
-package com.zhc.utils;
+package pers.zhc.tools.utils;
 
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
