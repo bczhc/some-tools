@@ -20,14 +20,21 @@ int dx = 1;
 int i = -1;
 
 void Log(JNIEnv *env, const char *tag, const char *s) {
-    JNIEnv e = *env;
-    jstring str = e->NewStringUTF(env, s);
-    char *T = NULL;
-    strcpyAndCat_auto(&T, "jniLog: ", tag);
-    jstring tagS = e->NewStringUTF(env, T);
-    jclass mClass = e->FindClass(env, "android/util/Log");
-    jmethodID mid = e->GetStaticMethodID(env, mClass, "d", "(Ljava/lang/String;Ljava/lang/String;)I");
-    e->CallStaticIntMethod(env, mClass, mid, tagS, str);
+    if (env == NULL) {
+        char *R = NULL;
+        strcpyAndCat_auto(&R, tag, ": ");
+        strcat_auto(&R, s);
+        printf("%s\n", R);
+    } else {
+        JNIEnv e = *env;
+        jstring str = e->NewStringUTF(env, s);
+        char *T = NULL;
+        strcpyAndCat_auto(&T, "jniLog ", tag);
+        jstring tagS = e->NewStringUTF(env, T);
+        jclass mClass = e->FindClass(env, "android/util/Log");
+        jmethodID mid = e->GetStaticMethodID(env, mClass, "d", "(Ljava/lang/String;Ljava/lang/String;)I");
+        e->CallStaticIntMethod(env, mClass, mid, tagS, str);
+    }
 }
 
 void callMethod(JNIEnv *env, jmethodID id, char *s, double d, jobject obj) {
