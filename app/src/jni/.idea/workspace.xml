@@ -94,7 +94,20 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/c/verification/verify.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="288">
+              <caret line="325" column="56" lean-forward="true" selection-start-line="325" selection-start-column="56" selection-end-line="325" selection-end-column="56" />
+              <folding>
+                <element signature="e#38#60#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -105,8 +118,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>printf</find>
-      <find>strle</find>
       <find>'\0'</find>
       <find>DT</find>
       <find>in</find>
@@ -135,6 +146,8 @@
       <find>Log\(</find>
       <find>Java_com_zhc_tools_codecs_JNI</find>
       <find>com_</find>
+      <find>com/z</find>
+      <find>zhc/</find>
     </findStrings>
     <replaceStrings>
       <replace>Java_pers_zhc_tools_codecs_JNI</replace>
@@ -181,9 +194,9 @@
         <option value="$PROJECT_DIR$/c/codecs/com_zhc_JNI.h" />
         <option value="$PROJECT_DIR$/c/codecs/doJNI.c" />
         <option value="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingboard_JNI.h" />
-        <option value="$PROJECT_DIR$/c/verification/verify.c" />
         <option value="$PROJECT_DIR$/jni_c++/pi/com_zhc_tools_pi_PiJNI.h" />
         <option value="$PROJECT_DIR$/jni_c++/pi/pi.cpp" />
+        <option value="$PROJECT_DIR$/c/verification/verify.c" />
       </list>
     </option>
   </component>
@@ -319,15 +332,16 @@
       <workItem from="1564896291905" duration="1947000" />
       <workItem from="1565000406844" duration="1201000" />
       <workItem from="1565706120436" duration="15641000" />
-      <workItem from="1565876446441" duration="29081000" />
+      <workItem from="1565876446441" duration="29719000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="117773000" />
+    <option name="totallyTimeSpent" value="118411000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2596154" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -653,16 +667,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/c/verification/verify.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="259" column="29" selection-start-line="259" selection-start-column="22" selection-end-line="259" selection-end-column="29" />
-          <folding>
-            <element signature="e#38#60#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/c/codecs/doJNI.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="299">
@@ -684,6 +688,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
           <caret line="22" column="28" lean-forward="true" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/c/verification/verify.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="325" column="56" lean-forward="true" selection-start-line="325" selection-start-column="56" selection-end-line="325" selection-end-column="56" />
+          <folding>
+            <element signature="e#38#60#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
