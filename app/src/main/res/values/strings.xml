@@ -76,4 +76,8 @@
     <string name="content">内容</string>
     <string name="dismiss_x">×</string>
     <string name="delete">删除</string>
+    <string name="export">导出</string>
+    <string name="import_">导入</string>
+    <string name="importing_cuccess">导入成功</string>
+    <string name="exporting_success">导出成功</string>
 </resources>
