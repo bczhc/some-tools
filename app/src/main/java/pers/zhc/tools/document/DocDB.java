@@ -13,7 +13,7 @@ class DocDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE doc(\n" +
-                "    date varchar(13) not null,\n" +
+                "    date varchar(50) not null,\n" +
                 "    title varchar(1048576) not null,\n" +
                 "    content varchar(10485760) not null\n" +
                 ");");
