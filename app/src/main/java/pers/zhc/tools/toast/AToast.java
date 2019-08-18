@@ -1,4 +1,4 @@
-package com.zhc.tools.toast;
+package pers.zhc.tools.toast;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,7 @@ import android.text.Editable;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.zhc.tools.R;
+import pers.zhc.tools.R;
 
 public class AToast extends AppCompatActivity {
     @Override

@@ -1,4 +1,4 @@
-package com.zhc.tools.clipboard;
+package pers.zhc.tools.clipboard;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.zhc.tools.R;
+import pers.zhc.tools.R;
 
 public class Clip extends AppCompatActivity {
     @Override

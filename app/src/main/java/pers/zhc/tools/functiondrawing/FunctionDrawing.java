@@ -1,4 +1,4 @@
-package com.zhc.tools.functiondrawing;
+package pers.zhc.tools.functiondrawing;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -10,10 +10,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import com.zhc.tools.BaseActivity;
-import com.zhc.tools.R;
-import com.zhc.u.FourierSeries;
-import com.zhc.utils.DisplayUtil;
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.utils.DisplayUtil;
+import pers.zhc.u.FourierSeries;
 
 public class FunctionDrawing extends BaseActivity {
     private RelativeLayout rl;
