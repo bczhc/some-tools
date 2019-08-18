@@ -1,4 +1,4 @@
-package com.zhc.tools;
+package pers.zhc.tools;
 
 import android.content.Context;
 import android.content.res.Configuration;

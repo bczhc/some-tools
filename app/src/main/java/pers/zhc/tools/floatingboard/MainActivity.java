@@ -1,11 +1,8 @@
-package com.zhc.tools.floatingboard;
+package pers.zhc.tools.floatingboard;
 
 import android.annotation.SuppressLint;
 import android.app.*;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.*;
 import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -19,12 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
-import com.zhc.tools.BaseActivity;
-import com.zhc.tools.R;
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
+
+import static pers.zhc.tools.utils.ColorUtils.invertColor;
 
 public class MainActivity extends BaseActivity {
     private WindowManager wm = null;
@@ -37,13 +36,18 @@ public class MainActivity extends BaseActivity {
     private int TVsColor = Color.WHITE, textsColor = Color.GRAY;
     private boolean whetherTextsColorIsInverted_isChecked = false;
     private View globalOnTouchListenerFloatingView;
+    private NotificationClickReceiver notificationClickReceiver;
 //    private boolean notBeKilled = false;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
+        init();
+    }
+
+    private void init() {
+        notificationClickReceiver = new NotificationClickReceiver();
         Point point = new Point();
         /*//noinspection deprecation
         width = this.getWindowManager().getDefaultDisplay().getWidth();
@@ -54,6 +58,7 @@ public class MainActivity extends BaseActivity {
         height = point.y;
         Switch notBeKilledSwitch = findViewById(R.id.not_be_killed);
         globalOnTouchListenerFloatingView = new View(this) {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouchEvent(MotionEvent event) {
                 System.out.println("event.getAction() = " + event.getAction());
@@ -90,8 +95,15 @@ public class MainActivity extends BaseActivity {
         if (a == 1) {
             startFloatingWindow();
         }
+        IntentFilter filter = new IntentFilter();
+        registerReceiver(notificationClickReceiver, filter);
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(notificationClickReceiver);
+        super.onDestroy();
+    }
 
     private void setBtn() {
         Button startFW = findViewById(R.id.start_f_w);
@@ -303,6 +315,7 @@ public class MainActivity extends BaseActivity {
                                 TVsColorDialog.show();
                             });
                             Button textsColorBtn = new Button(this);
+                            textsColorBtn.setEnabled(!this.whetherTextsColorIsInverted_isChecked);
                             textsColorBtn.setOnClickListener(v2 -> {
                                 Dialog textsColorDialog = new Dialog(MainActivity.this);
                                 setDialogAttr(textsColorDialog);
@@ -325,7 +338,7 @@ public class MainActivity extends BaseActivity {
                                 textsColorBtn.setEnabled(!isChecked);
                                 whetherTextsColorIsInverted_isChecked = isChecked;
                                 for (TextView childTV : childTVs) {
-                                    childTV.setTextColor(textsColor = HSVColorPickerRL.invertColor(TVsColor));
+                                    childTV.setTextColor(textsColor = invertColor(TVsColor));
                                 }
                             });
                             whetherTextColorIsInverted.setText(R.string.whether_text_color_is_inverted);
@@ -380,11 +393,8 @@ public class MainActivity extends BaseActivity {
             nb.setSmallIcon(Icon.createWithBitmap(icon))
                     .setContentTitle("画板")
                     .setContentText("点击取消隐藏控制悬浮窗");
-//            PendingIntent pi = PendingIntent.getBroadcast(this, 1, new Intent(this, NotificationClickReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
-            Intent intent = new Intent(this, this.getClass());
-            intent.putExtra("a", 1);
-            PendingIntent pi = PendingIntent.getActivity(this, 11, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//            nb.setContentIntent(pi);
+            Intent intent = new Intent(this, notificationClickReceiver.getClass());
+            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             nb.setContentIntent(pi);
             Notification build = nb.build();
             nm.notify(1, build);
@@ -395,6 +405,9 @@ public class MainActivity extends BaseActivity {
                     .setContentTitle("画板")
                     .setContentText("点击取消隐藏控制悬浮窗")
                     .setSmallIcon(R.mipmap.ic_launcher);
+            Intent intent = new Intent(this, NotificationClickReceiver.class);
+            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            ncb.setContentIntent(pi);
             nm.notify(1, ncb.build());
         }
     }
@@ -490,9 +503,9 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            System.out.println("onReceiveClick!");
             startFloatingWindow();
             Toast.makeText(MainActivity.this, "a", Toast.LENGTH_SHORT).show();
-            finish();
         }
     }
 

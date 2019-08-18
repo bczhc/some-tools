@@ -1,4 +1,4 @@
-package com.zhc.tools;
+package pers.zhc.tools;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,11 +6,12 @@ import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.zhc.tools.clipboard.Clip;
-import com.zhc.tools.codecs.CodecsActivity;
-import com.zhc.tools.floatingboard.JNI;
-import com.zhc.tools.pi.Pi;
-import com.zhc.tools.toast.AToast;
+import pers.zhc.tools.clipboard.Clip;
+import pers.zhc.tools.codecs.CodecsActivity;
+import pers.zhc.tools.floatingboard.JNI;
+import pers.zhc.tools.functiondrawing.FunctionDrawing;
+import pers.zhc.tools.pi.Pi;
+import pers.zhc.tools.toast.AToast;
 
 import java.io.*;
 import java.util.concurrent.CountDownLatch;
@@ -48,8 +49,8 @@ public class MainActivity extends BaseActivity {
                 Pi.class,
                 AToast.class,
                 Clip.class,
-                com.zhc.tools.floatingboard.MainActivity.class,
-                com.zhc.tools.functiondrawing.FunctionDrawing.class
+                pers.zhc.tools.floatingboard.MainActivity.class,
+                FunctionDrawing.class
         };
         new Thread(() -> {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

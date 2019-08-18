@@ -1,4 +1,4 @@
-package filepicker;
+package pers.zhc.tools.filepicker;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -15,12 +15,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.*;
-import com.zhc.tools.R;
+import pers.zhc.tools.R;
 
 import java.io.File;
 import java.io.IOException;
 
-import static com.zhc.utils.Common.showException;
+import static pers.zhc.tools.utils.Common.showException;
 
 public class Picker extends AppCompatActivity {
     private Toast notHavePermissionAccessToast = null;

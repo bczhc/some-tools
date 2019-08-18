@@ -12,7 +12,7 @@ extern "C" {
  * Method:    gen
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_com_zhc_tools_pi_PiJNI_gen
+JNIEXPORT void JNICALL Java_pers_zhc_tools_pi_PiJNI_gen
   (JNIEnv *, jobject, jint);
 
 #ifdef __cplusplus

@@ -1,4 +1,4 @@
-package com.zhc.tools.codecs;
+package pers.zhc.tools.codecs;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +9,10 @@ import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
-import com.zhc.tools.R;
-import com.zhc.tools.BaseActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ import java.util.concurrent.Executors;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
-import static com.zhc.utils.Common.showException;
-import static com.zhc.utils.DisplayUtil.px2sp;
+import static pers.zhc.tools.utils.Common.showException;
+import static pers.zhc.tools.utils.DisplayUtil.px2sp;
 
 public class Settings extends BaseActivity {
     private Intent r_intent = new Intent();

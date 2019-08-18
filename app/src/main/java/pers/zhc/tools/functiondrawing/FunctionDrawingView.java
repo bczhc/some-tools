@@ -1,4 +1,4 @@
-package com.zhc.tools.functiondrawing;
+package pers.zhc.tools.functiondrawing;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
-import com.zhc.u.MathFloatFunctionInterface;
+import pers.zhc.u.MathFloatFunctionInterface;
 
 @SuppressLint("ViewConstructor")
 class FunctionDrawingView extends View {
