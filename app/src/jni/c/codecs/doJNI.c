@@ -13,7 +13,7 @@
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 
-JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_qmcDecode
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_codecs_JNI_qmcDecode
         (JNIEnv *env, jobject obj, jstring f, jstring dF, jint mode) {
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
@@ -24,8 +24,8 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_qmcDecode
     strcat_auto(&sQ, f1);
     strcat_auto(&sQ, " -> ");
     strcat_auto(&sQ, f2);
-    Log(env, sQ);
-    Log(env, "JNI————解码……");
+    Log(env, "", sQ);
+    Log(env, "", "JNI————解码……");
     int rC;
     char u1[strlen(f1) + 1], u2[strlen(f2) + 1];
     ToUpperCase(u1, f1), ToUpperCase(u2, f2);
@@ -37,7 +37,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_qmcDecode
     return (jint) rC;
 }
 
-JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_kwmDecode
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_codecs_JNI_kwmDecode
         (JNIEnv *env, jobject obj, jstring f, jstring dF, jint mode) {
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
@@ -54,7 +54,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_kwmDecode
     return stt;
 }
 
-JNIEXPORT void JNICALL Java_com_zhc_tools_codecs_JNI_Base128_1encode
+JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1encode
         (JNIEnv *env, jobject obj, jstring f1, jstring f2, jint mode) {
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
@@ -77,7 +77,7 @@ JNIEXPORT void JNICALL Java_com_zhc_tools_codecs_JNI_Base128_1encode
     if (mode) remove(FileName);
 }
 
-JNIEXPORT void JNICALL Java_com_zhc_tools_codecs_JNI_Base128_1decode
+JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1decode
         (JNIEnv *env, jobject obj, jstring f1, jstring f2, jint mode) {
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);

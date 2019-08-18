@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.zhc.tools">
+          package="pers.zhc.tools">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <application
@@ -10,7 +10,10 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true">
-        <activity android:name=".MainActivity"
+        <receiver android:name="pers.zhc.tools.floatingboard.MainActivity$NotificationClickReceiver"
+                  android:enabled="true"
+                  android:exported="false"/>
+        <activity android:name="pers.zhc.tools.MainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
@@ -21,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="filepicker.Picker"
+        <activity android:name="pers.zhc.tools.filepicker.Picker"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
@@ -31,12 +34,12 @@
 
             </intent-filter>
         </activity>
-        <activity android:name="com.zhc.tools.codecs.Settings"
+        <activity android:name="pers.zhc.tools.codecs.Settings"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/settings"
                   android:label="@string/settings"
         />
-        <activity android:name=".pi.Pi"
+        <activity android:name="pers.zhc.tools.pi.Pi"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
@@ -46,7 +49,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name=".toast.AToast"
+        <activity android:name="pers.zhc.tools.toast.AToast"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
@@ -56,7 +59,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name=".clipboard.Clip"
+        <activity android:name="pers.zhc.tools.clipboard.Clip"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
@@ -66,7 +69,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name="com.zhc.tools.codecs.CodecsActivity"
+        <activity android:name="pers.zhc.tools.codecs.CodecsActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
@@ -76,10 +79,20 @@
 
             </intent-filter>
         </activity>
-        <activity android:name=".BaseActivity"/>
-        <activity android:name=".floatingboard.MainActivity"
+        <activity android:name="pers.zhc.tools.BaseActivity"/>
+        <activity android:name="pers.zhc.tools.floatingboard.MainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:label="@string/overlaid_drawing_board"
+                  android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+            </intent-filter>
+        </activity>
+        <activity android:name="pers.zhc.tools.functiondrawing.FunctionDrawing"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

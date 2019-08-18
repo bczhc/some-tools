@@ -12,7 +12,7 @@ extern "C" {
  * Method:    decode
  * Signature: (Ljava/lang/String;Ljava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_qmcDecode
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_codecs_JNI_qmcDecode
         (JNIEnv *env, jobject obj, jstring f, jstring dF, jint mode);
 
 /*
@@ -20,7 +20,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_qmcDecode
  * Method:    kwmDecode
  * Signature: (Ljava/lang/String;Ljava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_kwmDecode
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_codecs_JNI_kwmDecode
         (JNIEnv *env, jobject obj, jstring f, jstring dF, jint mode);
 
 /*
@@ -28,7 +28,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_codecs_JNI_kwmDecode
  * Method:    Base128_encode
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_zhc_tools_codecs_JNI_Base128_1encode
+JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1encode
         (JNIEnv *env, jobject obj, jstring f1, jstring f2, jint mode);
 
 /*
@@ -36,7 +36,7 @@ JNIEXPORT void JNICALL Java_com_zhc_tools_codecs_JNI_Base128_1encode
  * Method:    Base128_decode
  * Signature: (Ljava/lang/String;Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_com_zhc_tools_codecs_JNI_Base128_1decode
+JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1decode
         (JNIEnv *env, jobject obj, jstring f1, jstring f2, jint mode);
 
 
