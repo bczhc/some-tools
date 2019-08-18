@@ -111,7 +111,7 @@ public class CodecsActivity extends BaseActivity {
                     }
 //                    this.creat();
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.saving_success, Snackbar.LENGTH_SHORT);
-                    snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                    snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
                 }
                 break;
         }
@@ -235,7 +235,7 @@ public class CodecsActivity extends BaseActivity {
                     dstExtensions = conf.get(0).get(1).split("\\|");
                     if (srcExtensions.length != dstExtensions.length) {
                         Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
-                        snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                        snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
                         try {
                             switch (x) {
                                 case "qmc0":
@@ -253,7 +253,7 @@ public class CodecsActivity extends BaseActivity {
                     dstExtensions = conf.get(1).get(1).split("\\|");
                     if (srcExtensions.length != dstExtensions.length) {
                         Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
-                        snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                        snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
                         if (!(x.equals("kwm") | x.equals("kwd"))) return null;
                         String r;
                         if (name.matches(".*\\..*")) {
@@ -269,7 +269,7 @@ public class CodecsActivity extends BaseActivity {
                     dstExtensions = conf.get(2).get(1).split("\\|");
                     if (srcExtensions.length != dstExtensions.length) {
                         Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
-                        snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                        snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
                         return p + "/" + name_no_x + "." + "base128e";
                     }
                     return conf_getX(srcExtensions, dstExtensions, p, name_no_x, x);
@@ -278,7 +278,7 @@ public class CodecsActivity extends BaseActivity {
                     dstExtensions = conf.get(3).get(1).split("\\|");
                     if (srcExtensions.length != dstExtensions.length) {
                         Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
-                        snackbar.setAction("×", v -> snackbar.dismiss()).show();
+                        snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
                         return p + "/" + name_no_x + "." + "base128d";
                     }
                     return conf_getX(srcExtensions, dstExtensions, p, name_no_x, x);
