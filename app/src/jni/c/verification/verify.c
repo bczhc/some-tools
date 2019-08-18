@@ -6,6 +6,19 @@
 #include "./com_zhc_tools_floatingboard_JNI.h"
 #include "../codecs/qmcLib.h"
 #include <stdio.h>
+#include "jni.h"
+
+void LogArr(JNIEnv *env, const char *tag, const char *s, int size) {
+    char *r = NULL;
+    char *R = NULL;
+    for (int i = 0; i < size; ++i) {
+        m_itoa(&r, (int) (usi) s[i]);
+        strcat_auto(&R, r);
+        strcat_auto(&R, " ");
+    }
+    Log(env, tag, R);
+}
+
 
 int cpD(const char *d1, const char *d2) {
     char ***s = (char ***) malloc((size_t) (sizeof(char **) * 2));
@@ -98,16 +111,19 @@ void initDT() {
     decodeTable['/'] = 63;
 }
 
-void eD_64(char **Dest, const char *s, size_t sSize) {
+void eD_64(char **Dest, const char *s, size_t sSize, JNIEnv *env) {
     int a = sSize, b = a % 3, t = a / 3;
-    size_t size = t * 4 + (b ? 4 : 0);
+    size_t size = t * 4 + (b ? 4 : 0) + 1;
     *Dest = (char *) malloc(size);
+    memset(*Dest, 0, size);
+//    (*Dest)[size - 1] = 0;
     char r[4] = {0};
     for (int i = 0; i < t; ++i) {
         e1_64(r, s + 3 * i);
         for (int j = 0; j < 4; ++j) {
 //            printf("%c", r[j]);
             (*Dest)[i * 4 + j] = r[j];
+//            LogArr(env, "*Dest 1", *Dest, size);
         }
     }
     if (b) {
@@ -118,13 +134,15 @@ void eD_64(char **Dest, const char *s, size_t sSize) {
         e1_64(r, n);
         for (int k = 0; k < b + 1; ++k) {
 //            printf("%c", r[k]);
-            (*Dest)[size - 4 + k] = r[k];
+            (*Dest)[size - 4 + k - 1] = r[k];
+//            LogArr(env, "*Dest 2", *Dest, size);
         }
         for (int j = 0; j < 3 - b; ++j) {
 //            printf("%c", '=');
         }
         for (int l = size - 1; l > size - 1 - (3 - b); --l) {
-            (*Dest)[l] = '=';
+            (*Dest)[l - 1] = '=';
+//            LogArr(env, "*Dest 3", *Dest, size);
         }
     }
 }
@@ -163,7 +181,7 @@ void dD_64(char **Dest, const char *s, usi sSize) {
     }
 }
 
-void ee(char **Dest, const char *s) {
+void ee(char **Dest, const char *s, JNIEnv *env) {
     /*char r[8];
     e1(r, s, 6);
     char rr[8];
@@ -177,11 +195,25 @@ void ee(char **Dest, const char *s) {
     e1(Dest, rrr, 9);
     Dest[10] = '=', Dest[11] = Dest[10], Dest[12] = Dest[11] - '=';;*/
     char *r1_t = NULL;
-    eD_64(&r1_t, s, strlen(s));
+    size_t ss = strlen(s);
+    eD_64(&r1_t, s, ss, env);
+//    LogArr(env, "r1_t", r1_t, strlen(r1_t));
     int *p = NULL;
     usi eqN = strInStrCount(&p, r1_t, "=");
+    {
+        char *z = NULL;
+        m_itoa(&z, eqN);
+//        Log(env, "eqN", z);
+        free(z);
+    }
     free(p);
     int r1S = strlen(r1_t) + 1 - eqN;
+    {
+        char *z = NULL;
+        m_itoa(&z, r1S);
+//        Log(env, "rqS", z);
+        free(z);
+    }
     char r1[r1S];
     for (int k = 0; k < r1S; ++k) {
         if (r1_t[k] == '=') break;
@@ -189,6 +221,8 @@ void ee(char **Dest, const char *s) {
     }
     r1[r1S - 1] = 0;
     size_t strLen = strlen(r1);
+//    LogArr(env, "r1", r1, strLen);
+//    Log(env, "r1", r1);
     char r2[strLen + 1];
     memset(r2, 0, strLen + 1);
     usi o = 0;
@@ -196,6 +230,8 @@ void ee(char **Dest, const char *s) {
         o ^= (usi) r1[i];
     }
     aA0_ks(r2, r1, strLen, o);
+//    LogArr(env, "r2", r2, strLen + 1);
+//    Log(env, "r2", r2);
     size_t r2StrLen = strlen(r2);
     size_t b128SrcSize = r2StrLen % 8 ? ((r2StrLen / 8 + 1) * 8) : r2StrLen;
     size_t b128DestSize = r2StrLen / 8 * 7 + (r2StrLen % 8 ? 7 : 0);
@@ -205,13 +241,22 @@ void ee(char **Dest, const char *s) {
         b128Src[j] = r2[j];
     }
     char b128Dest[b128DestSize];
+    memset(b128Dest, 0, b128DestSize);
     for (int f = 0; f < b128SrcSize / 8; ++f) {
         b128_d1(b128Dest + 7 * f, b128Src + 8 * f);
     }
-    eD_64(Dest, b128Dest, b128DestSize);
+    {
+        char *z = NULL;
+        m_itoa(&z, b128DestSize);
+//        Log(env, "b128DestSize", z);
+        free(z);
+    }
+//    LogArr(env, "b128Dest", b128Dest, b128DestSize);
+    eD_64(Dest, b128Dest, b128DestSize, env);
+//    LogArr(env, "b128Dest-", b128Dest, b128DestSize);
 }
 
-JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
         (JNIEnv *env, jobject obj, jobject ctx, jstring iStr) {
     JNIEnv e = *env;
     jclass DateClass = e->FindClass(env, "java/util/Date");
@@ -248,6 +293,8 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
         e->CallVoidMethod(env, ctx, sCMId, cI);
     }*/
     const char *s = e->GetStringUTFChars(env, iStr, (jboolean *) 0);
+//    LogArr(env, "", s, 22);
+//    Log(env, s);
     int *p = NULL;
     int n = strInStrCount(&p, s, "-");
     if (n != 1) return (jint) 1;
@@ -267,24 +314,51 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
     initDT();
     dD_64(&r, str[0], i);
     char *rr = NULL;
-    ee(&rr, r);
+    ee(&rr, r, env);
+//    LogArr(env, "rr", rr, 14);
+//    Log(env, "str[1]", str[1]);
+//    Log(env, "rr", rr);
+//    Log(env, "r", r);
     if (!strcmp(str[1], rr)) {
+//        Log(env, "", "验证通过");
         if (cpD(r, d) >= 0) {
             jmethodID sCMId = e->GetMethodID(env, ctxClass, "setContentView", "(I)V");
-            jclass RClass = e->FindClass(env, "com/zhc/tools/R$layout");
+            jclass RClass = e->FindClass(env, "pers/zhc/tools/R$layout");
             jfieldID f = e->GetStaticFieldID(env, RClass, "tools_activity_main", "I");
             jint cI = e->GetStaticIntField(env, RClass, f);
+//            Log(env, "sCV...");
             e->CallVoidMethod(env, ctx, sCMId, cI);
-        } else Log(env, "不支持了，高中……");
-    }
+//            Log(env, "sCVOk");
+        }
+    } else Log(env, "", "不支持了，高中……");
     free(r);
     free(rr);
     return 0;
 }
 
-/*
-int main() {
-    char *R = NULL;
-    ee(&R, "190825");
-    printf("%s\n", R);
-}*/
+int main(int argc, char **argv) {
+//    if (argc != 2) return argc;
+    const char *s = "MTkwODI1-jzsvGT4h1g==";
+    int *p = NULL;
+    int n = strInStrCount(&p, s, "-");
+    if (n != 1) return (jint) 1;
+    int i = p[0];
+    free(p);
+    char **str = (char **) malloc((size_t) (sizeof(char *) * 2));
+    size_t str1S = (strlen(s) - i);
+    str[0] = (char *) malloc(i + 1), str[1] = (char *) malloc(str1S);
+    for (int j = 0; j < i; ++j) {
+        str[0][j] = s[j];
+    }
+    for (int k = 0; k < str1S - 1; ++k) {
+        str[1][k] = s[k + i + 1];
+    }
+    str[0][i] = 0, str[1][str1S - 1] = 0;
+    char *r = NULL;
+    initDT();
+    dD_64(&r, str[0], i);
+    char *rr = NULL;
+    ee(&rr, r, NULL);
+//        printf("%s\n", rr);
+    printArr(rr, strlen(rr) + 2);
+}
