@@ -55,7 +55,7 @@ void pi(JNIEnv *env, jobject obj, int bN, jmethodID mid) {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 
-JNIEXPORT void JNICALL Java_com_zhc_tools_pi_PiJNI_gen
+JNIEXPORT void JNICALL Java_pers_zhc_tools_pi_PiJNI_gen
         (JNIEnv *env, jobject obj, jint i) {
     jclass clz = env->GetObjectClass(obj);
     jmethodID mid = env->GetMethodID(clz, "O", "(I)V");

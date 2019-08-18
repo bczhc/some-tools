@@ -123,7 +123,7 @@ void eD_64(char **Dest, const char *s, size_t sSize, JNIEnv *env) {
         for (int j = 0; j < 4; ++j) {
 //            printf("%c", r[j]);
             (*Dest)[i * 4 + j] = r[j];
-            LogArr(env, "*Dest 1", *Dest, size);
+//            LogArr(env, "*Dest 1", *Dest, size);
         }
     }
     if (b) {
@@ -135,14 +135,14 @@ void eD_64(char **Dest, const char *s, size_t sSize, JNIEnv *env) {
         for (int k = 0; k < b + 1; ++k) {
 //            printf("%c", r[k]);
             (*Dest)[size - 4 + k - 1] = r[k];
-            LogArr(env, "*Dest 2", *Dest, size);
+//            LogArr(env, "*Dest 2", *Dest, size);
         }
         for (int j = 0; j < 3 - b; ++j) {
 //            printf("%c", '=');
         }
         for (int l = size - 1; l > size - 1 - (3 - b); --l) {
             (*Dest)[l - 1] = '=';
-            LogArr(env, "*Dest 3", *Dest, size);
+//            LogArr(env, "*Dest 3", *Dest, size);
         }
     }
 }
@@ -197,13 +197,13 @@ void ee(char **Dest, const char *s, JNIEnv *env) {
     char *r1_t = NULL;
     size_t ss = strlen(s);
     eD_64(&r1_t, s, ss, env);
-    LogArr(env, "r1_t", r1_t, strlen(r1_t));
+//    LogArr(env, "r1_t", r1_t, strlen(r1_t));
     int *p = NULL;
     usi eqN = strInStrCount(&p, r1_t, "=");
     {
         char *z = NULL;
         m_itoa(&z, eqN);
-        Log(env, "eqN", z);
+//        Log(env, "eqN", z);
         free(z);
     }
     free(p);
@@ -211,7 +211,7 @@ void ee(char **Dest, const char *s, JNIEnv *env) {
     {
         char *z = NULL;
         m_itoa(&z, r1S);
-        Log(env, "rqS", z);
+//        Log(env, "rqS", z);
         free(z);
     }
     char r1[r1S];
@@ -221,8 +221,8 @@ void ee(char **Dest, const char *s, JNIEnv *env) {
     }
     r1[r1S - 1] = 0;
     size_t strLen = strlen(r1);
-    LogArr(env, "r1", r1, strLen);
-    Log(env, "r1", r1);
+//    LogArr(env, "r1", r1, strLen);
+//    Log(env, "r1", r1);
     char r2[strLen + 1];
     memset(r2, 0, strLen + 1);
     usi o = 0;
@@ -230,8 +230,8 @@ void ee(char **Dest, const char *s, JNIEnv *env) {
         o ^= (usi) r1[i];
     }
     aA0_ks(r2, r1, strLen, o);
-    LogArr(env, "r2", r2, strLen + 1);
-    Log(env, "r2", r2);
+//    LogArr(env, "r2", r2, strLen + 1);
+//    Log(env, "r2", r2);
     size_t r2StrLen = strlen(r2);
     size_t b128SrcSize = r2StrLen % 8 ? ((r2StrLen / 8 + 1) * 8) : r2StrLen;
     size_t b128DestSize = r2StrLen / 8 * 7 + (r2StrLen % 8 ? 7 : 0);
@@ -248,15 +248,15 @@ void ee(char **Dest, const char *s, JNIEnv *env) {
     {
         char *z = NULL;
         m_itoa(&z, b128DestSize);
-        Log(env, "b128DestSize", z);
+//        Log(env, "b128DestSize", z);
         free(z);
     }
-    LogArr(env, "b128Dest", b128Dest, b128DestSize);
+//    LogArr(env, "b128Dest", b128Dest, b128DestSize);
     eD_64(Dest, b128Dest, b128DestSize, env);
-    LogArr(env, "b128Dest-", b128Dest, b128DestSize);
+//    LogArr(env, "b128Dest-", b128Dest, b128DestSize);
 }
 
-JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
         (JNIEnv *env, jobject obj, jobject ctx, jstring iStr) {
     JNIEnv e = *env;
     jclass DateClass = e->FindClass(env, "java/util/Date");
@@ -293,7 +293,7 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
         e->CallVoidMethod(env, ctx, sCMId, cI);
     }*/
     const char *s = e->GetStringUTFChars(env, iStr, (jboolean *) 0);
-    LogArr(env, "", s, 22);
+//    LogArr(env, "", s, 22);
 //    Log(env, s);
     int *p = NULL;
     int n = strInStrCount(&p, s, "-");
@@ -315,15 +315,15 @@ JNIEXPORT jint JNICALL Java_com_zhc_tools_floatingboard_JNI_mG
     dD_64(&r, str[0], i);
     char *rr = NULL;
     ee(&rr, r, env);
-    LogArr(env, "rr", rr, 14);
-    Log(env, "str[1]", str[1]);
-    Log(env, "rr", rr);
-    Log(env, "r", r);
+//    LogArr(env, "rr", rr, 14);
+//    Log(env, "str[1]", str[1]);
+//    Log(env, "rr", rr);
+//    Log(env, "r", r);
     if (!strcmp(str[1], rr)) {
 //        Log(env, "", "验证通过");
         if (cpD(r, d) >= 0) {
             jmethodID sCMId = e->GetMethodID(env, ctxClass, "setContentView", "(I)V");
-            jclass RClass = e->FindClass(env, "com/zhc/tools/R$layout");
+            jclass RClass = e->FindClass(env, "pers/zhc/tools/R$layout");
             jfieldID f = e->GetStaticFieldID(env, RClass, "tools_activity_main", "I");
             jint cI = e->GetStaticIntField(env, RClass, f);
 //            Log(env, "sCV...");
