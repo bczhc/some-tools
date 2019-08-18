@@ -36,7 +36,8 @@ public class MainActivity extends BaseActivity {
     private int height;
     private int TVsColor = Color.WHITE, textsColor = Color.GRAY;
     private boolean whetherTextsColorIsInverted_isChecked = false;
-    private boolean notBeKilled = false;
+    private View globalOnTouchListenerFloatingView;
+//    private boolean notBeKilled = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -52,7 +53,32 @@ public class MainActivity extends BaseActivity {
         width = point.x;
         height = point.y;
         Switch notBeKilledSwitch = findViewById(R.id.not_be_killed);
-        notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notBeKilled = isChecked);
+        globalOnTouchListenerFloatingView = new View(this) {
+            @Override
+            public boolean onTouchEvent(MotionEvent event) {
+                System.out.println("event.getAction() = " + event.getAction());
+                System.out.println("event.getX() = " + event.getX());
+                System.out.println("event.getY() = " + event.getY());
+                return true;
+            }
+        };
+        globalOnTouchListenerFloatingView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
+        View keepNotBeingKilledView = new View(this);
+        keepNotBeingKilledView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
+        notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            notBeKilled = isChecked;
+            if (isChecked) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    wm.addView(keepNotBeingKilledView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
+                } else
+                    //noinspection deprecation
+                    wm.addView(keepNotBeingKilledView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
+            } else try {
+                wm.removeViewImmediate(keepNotBeingKilledView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 //        RelativeLayout rl = findViewById(R.id.main);
         pv = new PaintView(this, width, height);
         pv.setStrokeWidth(10);
@@ -318,10 +344,7 @@ public class MainActivity extends BaseActivity {
                             c.show();
                             break;
                         case 10:
-                            createConfirmationAD((dialog1, which) -> {
-                                stopFloatingWindow();
-                                finish();
-                            }, (dialog1, which) -> {
+                            createConfirmationAD((dialog1, which) -> stopFloatingWindow(), (dialog1, which) -> {
                             }, R.string.whether_to_exit).show();
                             break;
                     }
@@ -335,20 +358,11 @@ public class MainActivity extends BaseActivity {
         iv.setOnTouchListener(smallViewOnTouchListener);
         ll.addView(iv);
         wm.addView(ll, lp2);
-        if (notBeKilled) {
-            View view = new View(this) {
-                @Override
-                public boolean onTouchEvent(MotionEvent event) {
-                    System.out.println(event.getAction() + "\t" + event.getX() + "\t" + event.getY());
-                    return true;
-                }
-            };
-            view.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                wm.addView(view, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
-            } else                 //noinspection deprecation
-                wm.addView(view, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
+        } else
+            //noinspection deprecation
+            wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
     }
 
     private void hide() {
@@ -459,6 +473,10 @@ public class MainActivity extends BaseActivity {
         }
         try {
             wm.removeViewImmediate(pv);
+        } catch (Exception ignored) {
+        }
+        try {
+            wm.removeViewImmediate(globalOnTouchListenerFloatingView);
         } catch (Exception ignored) {
         }
     }
