@@ -7,20 +7,31 @@
                 android:layout_above="@id/ll_bottom"
                 android:layout_margin="10sp"
                 android:id="@+id/sv"
-                />
+    />
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:layout_alignParentBottom="true"
-                  android:gravity="end"
-                  tools:ignore="UselessParent"
                   android:id="@+id/ll_bottom"
     >
-        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="@string/delete"
-                android:id="@+id/delete_btn"
-                tools:ignore="ButtonStyle"/>
-        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
                 android:text="@string/record"
                 android:id="@+id/note_take"
-                tools:ignore="ButtonStyle"/>
+                tools:ignore="ButtonStyle"
+                android:layout_weight="1"
+        />
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+                android:text="@string/delete"
+                android:id="@+id/delete_btn"
+                tools:ignore="ButtonStyle"
+                android:layout_weight="1"
+        />
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/export_btn"
+                android:text="@string/export" tools:ignore="ButtonStyle"/>
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+                android:text="@string/import_"
+                android:layout_weight="1" tools:ignore="ButtonStyle"
+                android:id="@+id/import_btn"
+        />
     </LinearLayout>
 </RelativeLayout>
