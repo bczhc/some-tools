@@ -59,7 +59,7 @@ public class Settings extends BaseActivity {
             this.jsonData = this.getResources().getStringArray(R.array.json);
             latch2.countDown();
         }).start();
-        setContentView(R.layout.settings);
+        setContentView(R.layout.settings_activity);
         ll = findViewById(R.id.ll);
         ExecutorService es = Executors.newCachedThreadPool();
         this.latch = new CountDownLatch(1);
