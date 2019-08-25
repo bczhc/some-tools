@@ -168,7 +168,7 @@ public class PaintView extends View {
             FileOutputStream fileOutputStream = null;
             try {
                 fileOutputStream = new FileOutputStream(file);
-                if (mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)) {
+                if (mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)) {
                     fileOutputStream.flush();
                     return true;
                 }
