@@ -81,4 +81,5 @@
     <string name="importing_cuccess">导入成功</string>
     <string name="exporting_success">导出成功</string>
     <string name="drawing_board">画板</string>
+    <string name="copying_failed">复制失败</string>
 </resources>

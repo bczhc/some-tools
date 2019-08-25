@@ -3,19 +3,17 @@ package pers.zhc.tools.filepicker;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.*;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.PermissionRequester;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,28 +39,13 @@ public class Picker extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            }, 1);
-        } else {
-            D();
-        }
+        new PermissionRequester(this::D).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 33);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults[0] == -1) {
-                ActivityCompat.requestPermissions(this, new String[]{
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                }, 1);
-            } else {
-                D();
-            }
-        }
+        if (requestCode == 33 && grantResults[0] == 0) D();
     }
 
     private void D() {
@@ -142,7 +125,8 @@ public class Picker extends AppCompatActivity {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void fillViews(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor, int[] justPicked, LinearLayout ll) {
+    private void fillViews(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor,
+                           int[] justPicked, LinearLayout ll) {
         new Thread(() -> {
             justPicked[0] = -1;
             runOnUiThread(() -> {
@@ -230,7 +214,8 @@ public class Picker extends AppCompatActivity {
         }).start();
     }
 
-    private void extractM1(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor, TextView[] textViews, int i) {
+    private void extractM1(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor, TextView[] textViews,
+                           int i) {
         textViews[i] = new TextView(this);
         textViews[i].setTextSize(25);
         textViews[i].setText(listFiles[i].isFile() ? listFiles[i].getName() : (listFiles[i].getName() + "/"));
