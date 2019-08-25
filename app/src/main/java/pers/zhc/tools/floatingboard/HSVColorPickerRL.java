@@ -19,6 +19,7 @@ import pers.zhc.tools.R;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
 
+@SuppressWarnings("SameParameterValue")
 @SuppressLint("ViewConstructor")
 abstract class HSVColorPickerRL extends RelativeLayout {
     private float[] hsv = new float[3];
@@ -30,16 +31,16 @@ abstract class HSVColorPickerRL extends RelativeLayout {
     private float[][] temp = new float[4][4];
     private float[] currentXPos = new float[4];
     private Paint oppositeColorPaint;
-    private float lW = 3;
+    private float lW = 1.5F;
 
-    HSVColorPickerRL(Context context, int initial, int width, int height) {
+    HSVColorPickerRL(Context context, int initialColor, int width, int height) {
         super(context);
         this.width = width;
         this.height = height;
         this.context = context;
         oppositeColorPaint = new Paint();
-        alpha = initial >>> 24;
-        Color.colorToHSV(initial, hsv);
+        alpha = initialColor >>> 24;
+        Color.colorToHSV(initialColor, hsv);
         for (int i = 0; i < 4; i++) {
             setCurrentX(i);
         }
@@ -106,7 +107,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
                 hPaint.setColor(Color.HSVToColor((int) temp[0][3], temp[0]));
                 canvas.drawLine(i, 0, i, hH, hPaint);
             }
-            canvas.drawRect(setCurrentX(0), 0, currentXPos[0] + lW, hH, oppositeColorPaint);
+            canvas.drawRect(setCurrentX(0) - lW, 0, currentXPos[0] + lW, hH, oppositeColorPaint);
         }
 
         private void hInit() {
@@ -123,7 +124,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            hsv[0] = event.getX() * 360F / ((float) hW);
+            hsv[0] = limitValue(event.getX() * 360F / ((float) hW), 0, 360);
             oppositeColorPaint.setColor(invertColor(Color.HSVToColor(255, hsv)));
 //            System.out.println("color = " + color);
             invalidateAllView();
@@ -162,13 +163,13 @@ abstract class HSVColorPickerRL extends RelativeLayout {
                 sPaint.setColor(Color.HSVToColor((int) temp[1][3], temp[1]));
                 canvas.drawLine(i, 0F, i, ((float) height), sPaint);
             }
-            canvas.drawRect(setCurrentX(1), 0F, currentXPos[1] + lW, sH, oppositeColorPaint);
+            canvas.drawRect(setCurrentX(1) - lW, 0F, currentXPos[1] + lW, sH, oppositeColorPaint);
         }
 
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            hsv[1] = event.getX() / ((float) sW);
+            hsv[1] = limitValue(event.getX() / ((float) sW), 0, 1F);
             oppositeColorPaint.setColor(invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
@@ -206,13 +207,13 @@ abstract class HSVColorPickerRL extends RelativeLayout {
                 vPaint.setColor(Color.HSVToColor((int) temp[2][3], temp[2]));
                 canvas.drawLine(i, 0F, i, ((float) height), vPaint);
             }
-            canvas.drawRect(setCurrentX(2), 0F, currentXPos[2] + lW, vH, oppositeColorPaint);
+            canvas.drawRect(setCurrentX(2) - lW, 0F, currentXPos[2] + lW, vH, oppositeColorPaint);
         }
 
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            hsv[2] = event.getX() / ((float) vW);
+            hsv[2] = limitValue(event.getX() / ((float) vW), 0, 1);
             oppositeColorPaint.setColor(invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
@@ -243,7 +244,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
                 aPaint.setColor(Color.HSVToColor((int) (i * 255 / ((float) aW)), temp[3]));
                 canvas.drawLine(i, 0F, i, ((float) aH), aPaint);
             }
-            canvas.drawRect(setCurrentX(3), 0F, currentXPos[3] + lW, aH, oppositeColorPaint);
+            canvas.drawRect(setCurrentX(3) - lW, 0F, currentXPos[3] + lW, aH, oppositeColorPaint);
         }
 
         @Override
@@ -255,12 +256,19 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            alpha = (int) (event.getX() / ((float) aW) * 255);
-            alpha = alpha < 0 ? 0 : (alpha > 255 ? 255 : alpha);
+            alpha = limitValue((int) (event.getX() / ((float) aW) * 255), 0, 255);
             oppositeColorPaint.setColor(invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
         }
+    }
+
+    private int limitValue(int value, int min, int max) {
+        return value < min ? min : (value > max ? max : value);
+    }
+
+    private float limitValue(float value, float min, float max) {
+        return value < min ? min : (value > max ? max : value);
     }
 
     private void invalidateAllView() {
