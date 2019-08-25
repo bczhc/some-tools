@@ -26,35 +26,14 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19484206-ce84-4243-bfbd-1e57011b4ede" name="Default Changelist" comment="数据库储存在应用私有目录/files/db下&#10;动态申请权限封装">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequester.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequesterInterface.java" afterDir="false" />
+    <list default="true" id="19484206-ce84-4243-bfbd-1e57011b4ede" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/zhc.jar" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/zhc.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/DocDB.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/Common.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/Common.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -145,47 +124,13 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="100" column="69" selection-start-line="100" selection-start-column="69" selection-end-line="100" selection-end-column="69" />
+            <state relative-caret-position="496">
+              <caret line="67" column="15" selection-start-line="67" selection-start-column="15" selection-end-line="67" selection-end-column="15" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3927#3953#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="44" column="23" selection-start-line="44" selection-start-column="23" selection-end-line="44" selection-end-column="23" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2753#2792#0" expanded="true" />
-                <element signature="e#4599#4628#0" expanded="true" />
-                <element signature="e#6274#6275#0" expanded="true" />
-                <element signature="e#6318#6319#0" expanded="true" />
-                <element signature="e#7224#7225#0" expanded="true" />
-                <element signature="e#7268#7269#0" expanded="true" />
-                <element signature="e#8665#8666#0" expanded="true" />
-                <element signature="e#8709#8710#0" expanded="true" />
-                <element signature="e#10106#10107#0" expanded="true" />
-                <element signature="e#10150#10151#0" expanded="true" />
-                <element signature="e#11496#11497#0" expanded="true" />
-                <element signature="e#11566#11567#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
-              <caret line="61" column="77" selection-start-line="61" selection-start-column="77" selection-end-line="61" selection-end-column="77" />
             </state>
           </provider>
         </entry>
@@ -246,7 +191,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="floatingDrawingBoard" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
   </component>
@@ -340,13 +285,6 @@
               <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="libs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -365,46 +303,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="tools" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="clipboard" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="codecs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="document" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="filepicker" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
@@ -415,57 +313,6 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="tools" type="462c0819:PsiDirectoryNode" />
               <item name="floatingboard" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="functiondrawing" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="pi" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="toast" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-              <item name="ColorUtils.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
             </path>
           </expand>
           <select />
@@ -488,19 +335,19 @@
     <property name="settings.editor.selected.configurable" value="instant.run" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/functiondrawing" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.zhc" />
       <recent name="com.zhc.tools" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/libs" />
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/zhc/utils" />
-    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.zhc.tools.functiondrawing" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/functiondrawing" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/libs" />
+      <recent name="$PROJECT_DIR$/app/src/main/java/com/zhc/utils" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -570,6 +417,8 @@
         <item itemvalue="Application.FourierSeries" />
         <item itemvalue="Application.FourierSeries" />
         <item itemvalue="Application.FourierSeries" />
+        <item itemvalue="Application.FourierSeries" />
+        <item itemvalue="Application.FourierSeries" />
       </list>
     </recent_temporary>
   </component>
@@ -636,11 +485,18 @@
       <option name="project" value="LOCAL" />
       <updated>1566171449245</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="数据库储存在应用私有目录/files/db下  doc.db&#10;动态申请权限封装&#10;HSV颜色选择器指示条条不会拖到外面去">
+      <created>1566707479579</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1566707479579</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="79678000" />
+    <option name="totallyTimeSpent" value="79748000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -736,7 +592,8 @@
     <MESSAGE value="笔记 使用数据库 SQLite，增、查ok&#10;修正前面提交消息错误：包名为pers.zhc.tools&#10;一些名字修改操作" />
     <MESSAGE value="笔记 正式。。增ok&#10;删*ok。。还未加id&#10;v。。输入。。" />
     <MESSAGE value="笔记 数据库 导入导出" />
-    <option name="LAST_COMMIT_MESSAGE" value="笔记 数据库 导入导出" />
+    <MESSAGE value="数据库储存在应用私有目录/files/db下  doc.db&#10;动态申请权限封装&#10;HSV颜色选择器指示条条不会拖到外面去" />
+    <option name="LAST_COMMIT_MESSAGE" value="数据库储存在应用私有目录/files/db下  doc.db&#10;动态申请权限封装&#10;HSV颜色选择器指示条条不会拖到外面去" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1038,13 +895,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AndroidStudio/DeviceExplorer/huawei-lnd_al30-73EBB18621217594/data/data/pers.zhc.tools/files/config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="21" column="1" lean-forward="true" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AndroidStudio/DeviceExplorer/huawei-lnd_al30-73EBB18621217594/data/data/pers.zhc.tools/files/config.json" />
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/document_activity.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="627">
@@ -1053,13 +904,7 @@
       </provider>
       <provider editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$USER_HOME$/AndroidStudio/DeviceExplorer/huawei-lnd_al30-73EBB18621217594/data/data/pers.zhc.tools/files/v">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="21" lean-forward="true" selection-start-column="21" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AndroidStudio/DeviceExplorer/huawei-lnd_al30-73EBB18621217594/data/data/pers.zhc.tools/files/v" />
     <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/database/sqlite/SQLiteDatabase.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="283">
@@ -1292,8 +1137,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        <state relative-caret-position="496">
+          <caret line="67" column="15" selection-start-line="67" selection-start-column="15" selection-end-line="67" selection-end-column="15" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1335,16 +1180,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/DocDB.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/DocDB.java" />
     <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/view/View.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
