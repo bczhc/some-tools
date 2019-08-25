@@ -3,14 +3,11 @@ package pers.zhc.tools.codecs;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -22,6 +19,7 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.MainActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.Picker;
+import pers.zhc.tools.utils.PermissionRequester;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -57,7 +55,7 @@ public class CodecsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.creat();
+        new PermissionRequester(this::D).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 13);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -69,7 +67,7 @@ public class CodecsActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 0) {
+        if (requestCode == 13) {
             if (grantResults[0] == 0) {
                 D();
             }
@@ -338,17 +336,6 @@ public class CodecsActivity extends BaseActivity {
 
             }
         });
-    }
-
-    private void creat() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CodecsActivity.this, new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            }, 0);
-        } else {
-            D();
-        }
     }
 
     /**
