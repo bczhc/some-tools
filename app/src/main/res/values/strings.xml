@@ -65,8 +65,20 @@
     <string name="whether_to_clear">是否清空</string>
     <string name="whether_to_hide">是否隐藏</string>
     <string name="whether_to_exit">是否退出</string>
-    <string name="function_drawing">函数图像绘制</string>
+    <string name="fourier_series_calc">傅里叶级数验证计算</string>
     <string name="type_n_num">输入合成正弦波项数</string>
     <string name="increase">+</string>
     <string name="decrease">-</string>
+    <string name="record">记录</string>
+    <string name="notes">笔记</string>
+    <string name="insert_record">增加记录</string>
+    <string name="title">标题</string>
+    <string name="content">内容</string>
+    <string name="dismiss_x">×</string>
+    <string name="delete">删除</string>
+    <string name="export">导出</string>
+    <string name="import_">导入</string>
+    <string name="importing_cuccess">导入成功</string>
+    <string name="exporting_success">导出成功</string>
+    <string name="drawing_board">画板</string>
 </resources>

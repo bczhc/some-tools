@@ -32,14 +32,14 @@ abstract class HSVColorPickerRL extends RelativeLayout {
     private Paint oppositeColorPaint;
     private float lW = 3;
 
-    HSVColorPickerRL(Context context, int initializeColor, int width, int height) {
+    HSVColorPickerRL(Context context, int initial, int width, int height) {
         super(context);
         this.width = width;
         this.height = height;
         this.context = context;
         oppositeColorPaint = new Paint();
-        alpha = initializeColor >>> 24;
-        Color.colorToHSV(initializeColor, hsv);
+        alpha = initial >>> 24;
+        Color.colorToHSV(initial, hsv);
         for (int i = 0; i < 4; i++) {
             setCurrentX(i);
         }
