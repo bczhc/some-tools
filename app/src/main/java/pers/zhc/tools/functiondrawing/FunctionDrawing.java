@@ -56,10 +56,31 @@ public class FunctionDrawing extends BaseActivity {
                 return x - 20;
             }
         };
+        SeekBar sb = findViewById(R.id.zoom_sb);
+        sb.setProgress(50);
+        sb.setMax(100);
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                functionDrawingView.zoom(((float) (100 - progress)), ((float) (100 - progress)));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        sb.setEnabled(false);
         fs.definite.n = 100000;
         new Thread(() -> {
             fs.initAB(nNum, s -> runOnUiThread(() -> tv.setText(s)));
             draw();
+            sb.setEnabled(true);
         }).start();
         /*TextView[] textViews = new TextView[]{
                 findViewById(R.id.increase_tv),
@@ -84,25 +105,6 @@ public class FunctionDrawing extends BaseActivity {
             });
         }
         textViews[1].setOnClickListener(v -> functionDrawingView.zoom(functionDrawingView.xLength + 5, functionDrawingView.yLength + 5));*/
-        SeekBar sb = findViewById(R.id.zoom_sb);
-        sb.setProgress(50);
-        sb.setMax(100);
-        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                functionDrawingView.zoom(((float) (100 - progress)), ((float) (100 - progress)));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
     }
 
     private void draw() {
