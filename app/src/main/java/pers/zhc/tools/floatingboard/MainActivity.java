@@ -8,6 +8,7 @@ import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,8 +20,11 @@ import android.widget.*;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
@@ -128,7 +132,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "SimpleDateFormat"})
     private void startFloatingWindow() {
         pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -357,6 +361,14 @@ public class MainActivity extends BaseActivity {
                             c.show();
                             break;
                         case 10:
+                            File d = new File(Environment.getExternalStorageDirectory().toString() + File.separator + getString(R.string.drawing_board));
+                            if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
+                            String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                            if (pv.saveImg(d.toString(), format + ".png")) {
+                                Toast.makeText(this, R.string.saving_success, Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                        case 11:
                             createConfirmationAD((dialog1, which) -> stopFloatingWindow(), (dialog1, which) -> {
                             }, R.string.whether_to_exit).show();
                             break;
