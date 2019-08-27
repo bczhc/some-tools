@@ -8,6 +8,7 @@ import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.u.Random;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -237,24 +238,6 @@ public class PaintView extends View {
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
-        byte[][] bytes = new byte[5][4];
-        bytes[0] = jni.floatToByteArray(x);
-        bytes[1] = jni.floatToByteArray(y);
-        bytes[2] = jni.intToByteArray(getColor());
-        bytes[3] = jni.floatToByteArray(getStrokeWidth());
-        bytes[4] = jni.intToByteArray(action);
-        byte[] data = new byte[22];
-        for (int i = 0; i < bytes.length; i++) {
-            System.arraycopy(bytes[i], 0, data, 4 * i, bytes[i].length);
-        }
-        try {
-            data[20] = (byte) (isEraserMode ? 1 : 0);
-            os.write(data);
-            os.flush();
-//            System.out.println("data = " + Arrays.toString(data));
-        } catch (IOException e) {
-            Common.showException(e, (Activity) ctx);
-        }
         onTouchAction(action, x, y);
         postInvalidate();
         return true;
@@ -314,7 +297,7 @@ public class PaintView extends View {
         closeStream(os);
     }
 
-    void importPathFile(File f) {
+    void importPathFile(File f, Runnable d) {
         new Thread(() -> {
             try {
                 InputStream is = new FileInputStream(f);
@@ -323,7 +306,13 @@ public class PaintView extends View {
                 byte[] bytes_4 = new byte[4];
                 while (is.read(bytes) != -1) {
                     switch (bytes[21]) {
-                        case 0:
+                        case 1:
+                            undo();
+                            break;
+                        case 2:
+                            redo();
+                            break;
+                        default:
                             System.arraycopy(bytes, 16, bytes_4, 0, 4);
                             int motionAction = jni.byteArrayToInt(bytes_4);
                             System.arraycopy(bytes, 0, bytes_4, 0, 4);
@@ -334,19 +323,18 @@ public class PaintView extends View {
                             int color = jni.byteArrayToInt(bytes_4);
                             System.arraycopy(bytes, 12, bytes_4, 0, 4);
                             float strokeWidth = jni.byteArrayTofloat(bytes_4);
-                            setEraserMode(bytes[20] != 0);
+                            if (strokeWidth <= 0) strokeWidth = Random.ran_sc(1, 800);
+                            if (motionAction != 0 && motionAction != 1 && motionAction != 2)
+                                motionAction = Random.ran_sc(0, 2);
+                            setEraserMode(bytes[20] == 1);
                             setPaintColor(color);
                             setStrokeWidth(strokeWidth);
                             onTouchAction(motionAction, x, y);
                             break;
-                        case 1:
-                            undo();
-                            break;
-                        case 2:
-                            redo();
-                            break;
                     }
                 }
+                is.close();
+                d.run();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -354,6 +342,24 @@ public class PaintView extends View {
     }
 
     private void onTouchAction(int motionAction, float x, float y) {
+        byte[][] bytes = new byte[5][4];
+        bytes[0] = jni.floatToByteArray(x);
+        bytes[1] = jni.floatToByteArray(y);
+        bytes[2] = jni.intToByteArray(getColor());
+        bytes[3] = jni.floatToByteArray(getStrokeWidth());
+        bytes[4] = jni.intToByteArray(motionAction);
+        byte[] data = new byte[22];
+        for (int i = 0; i < bytes.length; i++) {
+            System.arraycopy(bytes[i], 0, data, 4 * i, bytes[i].length);
+        }
+        try {
+            data[20] = (byte) (isEraserMode ? 1 : 0);
+            os.write(data);
+            os.flush();
+//            System.out.println("data = " + Arrays.toString(data));
+        } catch (IOException e) {
+            Common.showException(e, (Activity) ctx);
+        }
         switch (motionAction) {
             case MotionEvent.ACTION_DOWN:
                 //路径
@@ -363,16 +369,18 @@ public class PaintView extends View {
                 mPath.moveTo(mLastX, mLastY);
                 break;
             case MotionEvent.ACTION_UP:
-                Paint eraserPaint_ref = isEraserMode ? eraserPaint : mPaint;
-                mCanvas.drawPath(mPath, eraserPaint_ref);//将路径绘制在mBitmap上
-                Path path = new Path(mPath);//复制出一份mPath
-                Paint paint = new Paint(eraserPaint_ref);
-                PathBean pb = new PathBean(path, paint);
-                undoList.add(pb);//将路径对象存入集合
-                mPath.reset();
-                mPath = null;
+                if (mPath != null) {
+                    Paint eraserPaint_ref = isEraserMode ? eraserPaint : mPaint;
+                    mCanvas.drawPath(mPath, eraserPaint_ref);//将路径绘制在mBitmap上
+                    Path path = new Path(mPath);//复制出一份mPath
+                    Paint paint = new Paint(eraserPaint_ref);
+                    PathBean pb = new PathBean(path, paint);
+                    undoList.add(pb);//将路径对象存入集合
+                    mPath.reset();
+                    mPath = null;
+                }
                 break;
-            default:
+            case MotionEvent.ACTION_MOVE:
                 float dx = Math.abs(x - mLastX);
                 float dy = Math.abs(y - mLastY);
                 if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
