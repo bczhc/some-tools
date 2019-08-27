@@ -3,7 +3,10 @@ package pers.zhc.tools.floatingboard;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.*;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -18,7 +21,9 @@ import android.view.*;
 import android.widget.*;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.u.FileU;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,20 +33,20 @@ import java.util.Date;
 import java.util.Objects;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
+import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
+import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class MainActivity extends BaseActivity {
     private WindowManager wm = null;
     private LinearLayout ll;
     private PaintView pv;
     private int width;
-    @SuppressWarnings("FieldCanBeLocal")
     private Bitmap icon;
     private int height;
     private int TVsColor = Color.WHITE, textsColor = Color.GRAY;
     private boolean whetherTextsColorIsInverted_isChecked = false;
     private View globalOnTouchListenerFloatingView;
     private NotificationClickReceiver notificationClickReceiver;
-//    private boolean notBeKilled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,14 +253,14 @@ public class MainActivity extends BaseActivity {
                             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
                             /*dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                                     , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));*/
-                            setDialogAttr(dialog, true);
+                            setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                             HSVColorPickerRL hsvColorPickerRL = new HSVColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4))) {
                                 @Override
                                 void onPickedAction(int color) {
                                     pv.setPaintColor(color);
                                 }
                             };
-                            setDialogAttr(dialog, true);
+                            setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                             dialog.setContentView(hsvColorPickerRL);
                             dialog.show();
                             break;
@@ -280,16 +285,20 @@ public class MainActivity extends BaseActivity {
                             }
                             break;
                         case 7:
-                            createConfirmationAD((dialog1, which) -> pv.clearAll(), (dialog1, which) -> {
-                            }, R.string.whether_to_clear).show();
+                            createConfirmationAD(this, (dialog1, which) -> {
+                                File internalPathFile = new File(getFilesDir() + File.separator + "fb.path");
+                                System.out.println("internalPathFile.delete() = " + internalPathFile.delete());
+                                pv.clearAll();
+                            }, (dialog1, which) -> {
+                            }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).show();
                             break;
                         case 8:
-                            createConfirmationAD((dialog1, which) -> hide(), (dialog1, which) -> {
-                            }, R.string.whether_to_hide).show();
+                            createConfirmationAD(this, (dialog1, which) -> hide(), (dialog1, which) -> {
+                            }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).show();
                             break;
                         case 9:
                             Dialog c = new Dialog(this);
-                            setDialogAttr(c, false);
+                            setDialogAttr(c, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                             LinearLayout cLL = new LinearLayout(this);
                             cLL.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             cLL.setOrientation(LinearLayout.VERTICAL);
@@ -303,7 +312,7 @@ public class MainActivity extends BaseActivity {
                             TVsColorBtn.setText(R.string.control_panel_color);
                             TVsColorBtn.setOnClickListener(v2 -> {
                                 Dialog TVsColorDialog = new Dialog(MainActivity.this);
-                                setDialogAttr(TVsColorDialog, true);
+                                setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                                 HSVColorPickerRL TVsColorPicker = new HSVColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
                                     void onPickedAction(int color) {
@@ -322,7 +331,7 @@ public class MainActivity extends BaseActivity {
                             textsColorBtn.setEnabled(!this.whetherTextsColorIsInverted_isChecked);
                             textsColorBtn.setOnClickListener(v2 -> {
                                 Dialog textsColorDialog = new Dialog(MainActivity.this);
-                                setDialogAttr(textsColorDialog, true);
+                                setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                                 HSVColorPickerRL textsColorPicker = new HSVColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
                                     void onPickedAction(int color) {
@@ -361,11 +370,11 @@ public class MainActivity extends BaseActivity {
                             c.show();
                             break;
                         case 10:
-                            new PermissionRequester(this::saveImgAction).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 23);
+                            new PermissionRequester(this::saveAction).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 23);
                             break;
                         case 11:
-                            createConfirmationAD((dialog1, which) -> stopFloatingWindow(), (dialog1, which) -> {
-                            }, R.string.whether_to_exit).show();
+                            createConfirmationAD(this, (dialog1, which) -> stopFloatingWindow(), (dialog1, which) -> {
+                            }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).show();
                             break;
                     }
                     System.out.println("i = " + finalI);
@@ -431,13 +440,13 @@ public class MainActivity extends BaseActivity {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
             et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            adb.setPositiveButton("确定", (dialog, which) -> {
+            adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                 double edit = Double.parseDouble(et.getText().toString());
                 double a = Math.log(edit) / Math.log(1.07D);
                 widthWatchView.setHeight((int) edit);
                 sb.setProgress((int) a);
-            }).setNegativeButton("取消", (dialog, which) -> {
-            }).setTitle("输入画笔宽度(pixels)").setView(et);
+            }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+            }).setTitle(R.string.type_stroke_width__pixels).setView(et);
             AlertDialog ad = adb.create();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
@@ -503,23 +512,136 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
-//        super.onBackPressed();
+        super.onBackPressed();
+        overridePendingTransition(0, R.anim.slide_out_bottom);
     }
 
-    private void saveImgAction() {
-        File d = new File(Environment.getExternalStorageDirectory().toString() + File.separator + getString(R.string.drawing_board));
-        if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
-        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        if (pv.saveImg(d.toString(), format + ".png")) {
-            Toast.makeText(this, R.string.saving_success, Toast.LENGTH_SHORT).show();
+    private void saveAction() {
+        Dialog moreOptionsDialog = new Dialog(this);
+        ScrollView sv = new ScrollView(this);
+        sv.setLayoutParams(new ScrollView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        setDialogAttr(moreOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout ll = new LinearLayout(this);
+        Button[] buttons = new Button[3];
+        int[] textsRes = new int[]{
+                R.string.save_image,
+                R.string.save_path,
+                R.string.import_path
+        };
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i] = new Button(this);
+            buttons[i].setText(textsRes[i]);
+            ll.addView(buttons[i]);
+            File d = new File(Environment.getExternalStorageDirectory().toString() + File.separator + getString(R.string.drawing_board));
+            if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
+            File pathDir = new File(d.toString() + File.separator + "path");
+            if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
+            File internalPathFile = new File(getFilesDir() + File.separator + "fb.path");
+            View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
+                    v -> {
+                        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                        EditText et = new EditText(this);
+                        et.setText(String.format(getString(R.string.tv), format));
+                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                            if (pv.saveImg(d.toString(), format + ".png")) {
+                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + d.toString() + File.separator + et.getText().toString() + ".png", Toast.LENGTH_SHORT).show();
+                            }
+                            moreOptionsDialog.dismiss();
+                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        }).setTitle(R.string.type_file_name).setView(et).create();
+                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    },
+                    v -> {
+                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                        EditText et = new EditText(this);
+                        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        et.setText(String.format(getString(R.string.tv), format));
+                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                            File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
+                            try {
+                                FileU.FileCopy(internalPathFile, pathFile);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (pathFile.exists())
+                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + pathFile.toString(), Toast.LENGTH_SHORT).show();
+                            else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                            moreOptionsDialog.dismiss();
+                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        }).setTitle(R.string.type_file_name).setView(et).create();
+                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    },
+                    v -> {
+                        /*LinearLayout ll1 = new LinearLayout(this);
+                        ll1.setLayoutParams(layoutParams);
+                        ll1.setOrientation(LinearLayout.HORIZONTAL);
+                        EditText et = new EditText(this);
+                        et.setLayoutParams(layoutParams);
+                        et.setGravity(Gravity.TOP);
+                        ll1.addView(et);
+                        Button btn1 = new Button(this);
+                        btn1.setText(R.string.pick_file);
+                        btn1.setLayoutParams(layoutParams);
+                        ll1.addView(btn1);
+                        btn1.setOnClickListener(v1 -> {
+                            Dialog dialog = new Dialog(this);
+                            setDialogAttr(dialog, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .8)));
+                            dialog.show();
+                        });
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                        AlertDialog ad = dialog.setPositiveButton(R.string.ok, (dialog1, which) -> {
+                            File file = new File(getFilesDir() + File.separator + "FilePickerResult");
+                            pv.importPathFile(new File(et.getText().toString()));
+                        }).setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                        }).setTitle(R.string.choose_path_file)
+                                .setView(ll1).create();
+                        setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        ad.show();*/
+                        /*Intent intent = new Intent();
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setClass(this, Picker.class);
+                        intent.putExtra("option", Picker.PICK_FILE);
+                        startActivityForResult(intent, 71);
+                        overridePendingTransition(R.anim.in_left_and_bottom, 0);
+                        moreOptionsDialog.dismiss();*/
+                        Dialog dialog = new Dialog(this);
+                        dialog.setCanceledOnTouchOutside(false);
+                        dialog.setCancelable(false);
+                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, null, dialog::dismiss, s -> {
+                            dialog.dismiss();
+                            pv.importPathFile(new File(s));
+                            Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
+                            moreOptionsDialog.dismiss();
+                        });
+                        dialog.setOnKeyListener((dialog1, keyCode, event) -> {
+                            if (event.getAction() == KeyEvent.ACTION_UP)
+                                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                                    filePickerRL.previous();
+                                }
+                            return true;
+                        });
+                        setDialogAttr(dialog, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .8)));
+                        dialog.setContentView(filePickerRL);
+                        dialog.show();
+                    }
+            };
+            buttons[i].setOnClickListener(onClickListeners[i]);
         }
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        ll.setLayoutParams(layoutParams);
+        ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        sv.addView(ll);
+        moreOptionsDialog.setContentView(sv);
+        moreOptionsDialog.setCanceledOnTouchOutside(true);
+        moreOptionsDialog.show();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 23 && grantResults[0] == 0) saveImgAction();
+        if (requestCode == 23 && grantResults[0] == 0) saveAction();
     }
 
     public class NotificationClickReceiver extends BroadcastReceiver {
@@ -532,26 +654,13 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void setDialogAttr(Dialog d, boolean isTransparent) {
-        Window window;
-        try {
-            window = Objects.requireNonNull(d.getWindow());
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return;
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 71 && data != null) {
+            String file = data.getStringExtra("result");
+            pv.importPathFile(new File(file));
+            Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            window.setAttributes(new WindowManager.LayoutParams(((int) (width * .8)), ((int) (height * .4)), WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
-        } else                                 //noinspection deprecation
-            window.setAttributes(new WindowManager.LayoutParams(((int) (width * .8)), ((int) (height * .4)), WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 0, PixelFormat.RGB_888));
-        if (isTransparent) window.setBackgroundDrawableResource(R.color.transparent);
-    }
-
-    private AlertDialog createConfirmationAD(DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId) {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        AlertDialog ad = adb.setPositiveButton(R.string.ok, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId).create();
-        setDialogAttr(ad, false);
-        ad.setCanceledOnTouchOutside(true);
-        return ad;
-    }
+    }*/
 }

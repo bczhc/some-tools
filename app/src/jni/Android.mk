@@ -18,3 +18,9 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := a
 LOCAL_SRC_FILES := ./c/verification/verify.c ./zhc.c ./c/codecs/qmcLib.c
 include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := fb_tools
+LOCAL_SRC_FILES := ./c/floatingboard/fb_tools.c
+include $(BUILD_SHARED_LIBRARY)
