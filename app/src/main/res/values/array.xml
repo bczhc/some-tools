@@ -31,4 +31,8 @@
         <item>保\n存</item>
         <item>退\n出</item>
     </array>
+    <array name="sqlite_options">
+        <item>修改</item>
+        <item>删除</item>
+    </array>
 </resources>

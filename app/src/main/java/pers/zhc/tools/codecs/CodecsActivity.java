@@ -148,12 +148,14 @@ public class CodecsActivity extends BaseActivity {
             intent.putExtra("option", Picker.PICK_FILE);
             intent.setClass(this, Picker.class);
             startActivityForResult(intent, 1);
+            overridePendingTransition(R.anim.in_left_and_bottom, 0);
         });
         pF.setOnLongClickListener(v -> {
             Intent intent = new Intent();
             intent.putExtra("option", Picker.PICK_FOLDER);
             intent.setClass(this, Picker.class);
             startActivityForResult(intent, 2);
+            overridePendingTransition(R.anim.in_left_and_bottom, 0);
             return true;
         });
         try {
@@ -604,9 +606,10 @@ public class CodecsActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
         if (this.isRunning) this.moveTaskToBack(false);
         else finish();
+//        else super.onBackPressed();
+        overridePendingTransition(0, R.anim.slide_out_bottom);
     }
 
     private String conf_getX(String[] srcExtensions, String[] dstExtensions, String p, String name_no_x, String x) {

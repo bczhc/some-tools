@@ -3,7 +3,10 @@ package pers.zhc.tools.floatingboard;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.*;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -14,7 +17,10 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
-import android.view.*;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.*;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
@@ -28,6 +34,8 @@ import java.util.Date;
 import java.util.Objects;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
+import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
+import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class MainActivity extends BaseActivity {
     private WindowManager wm = null;
@@ -248,14 +256,14 @@ public class MainActivity extends BaseActivity {
                             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
                             /*dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                                     , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));*/
-                            setDialogAttr(dialog, true);
+                            setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                             HSVColorPickerRL hsvColorPickerRL = new HSVColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4))) {
                                 @Override
                                 void onPickedAction(int color) {
                                     pv.setPaintColor(color);
                                 }
                             };
-                            setDialogAttr(dialog, true);
+                            setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                             dialog.setContentView(hsvColorPickerRL);
                             dialog.show();
                             break;
@@ -280,16 +288,16 @@ public class MainActivity extends BaseActivity {
                             }
                             break;
                         case 7:
-                            createConfirmationAD((dialog1, which) -> pv.clearAll(), (dialog1, which) -> {
-                            }, R.string.whether_to_clear).show();
+                            createConfirmationAD(this, (dialog1, which) -> pv.clearAll(), (dialog1, which) -> {
+                            }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).show();
                             break;
                         case 8:
-                            createConfirmationAD((dialog1, which) -> hide(), (dialog1, which) -> {
-                            }, R.string.whether_to_hide).show();
+                            createConfirmationAD(this, (dialog1, which) -> hide(), (dialog1, which) -> {
+                            }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).show();
                             break;
                         case 9:
                             Dialog c = new Dialog(this);
-                            setDialogAttr(c, false);
+                            setDialogAttr(c, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                             LinearLayout cLL = new LinearLayout(this);
                             cLL.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             cLL.setOrientation(LinearLayout.VERTICAL);
@@ -303,7 +311,7 @@ public class MainActivity extends BaseActivity {
                             TVsColorBtn.setText(R.string.control_panel_color);
                             TVsColorBtn.setOnClickListener(v2 -> {
                                 Dialog TVsColorDialog = new Dialog(MainActivity.this);
-                                setDialogAttr(TVsColorDialog, true);
+                                setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                                 HSVColorPickerRL TVsColorPicker = new HSVColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
                                     void onPickedAction(int color) {
@@ -322,7 +330,7 @@ public class MainActivity extends BaseActivity {
                             textsColorBtn.setEnabled(!this.whetherTextsColorIsInverted_isChecked);
                             textsColorBtn.setOnClickListener(v2 -> {
                                 Dialog textsColorDialog = new Dialog(MainActivity.this);
-                                setDialogAttr(textsColorDialog, true);
+                                setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)));
                                 HSVColorPickerRL textsColorPicker = new HSVColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
                                     void onPickedAction(int color) {
@@ -364,8 +372,8 @@ public class MainActivity extends BaseActivity {
                             new PermissionRequester(this::saveImgAction).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 23);
                             break;
                         case 11:
-                            createConfirmationAD((dialog1, which) -> stopFloatingWindow(), (dialog1, which) -> {
-                            }, R.string.whether_to_exit).show();
+                            createConfirmationAD(this, (dialog1, which) -> stopFloatingWindow(), (dialog1, which) -> {
+                            }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).show();
                             break;
                     }
                     System.out.println("i = " + finalI);
@@ -504,6 +512,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        overridePendingTransition(0, R.anim.slide_out_bottom);
     }
 
     private void saveImgAction() {
@@ -529,28 +538,5 @@ public class MainActivity extends BaseActivity {
             startFloatingWindow();
             Toast.makeText(MainActivity.this, "a", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void setDialogAttr(Dialog d, boolean isTransparent) {
-        Window window;
-        try {
-            window = Objects.requireNonNull(d.getWindow());
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            window.setAttributes(new WindowManager.LayoutParams(((int) (width * .8)), ((int) (height * .4)), WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
-        } else                                 //noinspection deprecation
-            window.setAttributes(new WindowManager.LayoutParams(((int) (width * .8)), ((int) (height * .4)), WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 0, PixelFormat.RGB_888));
-        if (isTransparent) window.setBackgroundDrawableResource(R.color.transparent);
-    }
-
-    private AlertDialog createConfirmationAD(DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId) {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        AlertDialog ad = adb.setPositiveButton(R.string.ok, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId).create();
-        setDialogAttr(ad, false);
-        ad.setCanceledOnTouchOutside(true);
-        return ad;
     }
 }
