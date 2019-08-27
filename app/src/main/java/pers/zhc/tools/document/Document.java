@@ -167,6 +167,7 @@ public class Document extends BaseActivity {
                             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                                     v1 -> {
                                         Intent intent = new Intent(this, NoteTakingActivity.class);
+                                        intent.putExtra("origin", false);
                                         Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + mills, null);
                                         c.moveToFirst();
                                         intent.putExtra("title", c.getString(1));

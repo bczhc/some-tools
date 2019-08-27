@@ -10,7 +10,6 @@ import android.view.View;
 import pers.zhc.tools.utils.Common;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 @SuppressWarnings({"unused"})
@@ -226,59 +225,25 @@ public class PaintView extends View {
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                //路径
-                mPath = new Path();
-                mLastX = x;
-                mLastY = y;
-                mPath.moveTo(mLastX, mLastY);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float dx = Math.abs(x - mLastX);
-                float dy = Math.abs(y - mLastY);
-                if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
-                    //利用二阶贝塞尔曲线，使绘制路径更加圆滑
-                    try {
-                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
-                        byte[][] bytes = new byte[4][5];
-                        bytes[0] = jni.floatToByteArray(mLastX);
-                        bytes[1] = jni.floatToByteArray(mLastY);
-                        bytes[2] = jni.floatToByteArray((mLastX + x) / 2);
-                        bytes[3] = jni.floatToByteArray((mLastY + y) / 2);
-                        byte[] data = new byte[13];
-                        try {
-                            byte[] bytes1 = jni.intToByteArray(getColor());
-                            System.arraycopy(bytes1, 0, data, 4, bytes1.length);
-                            byte[] bytes2 = jni.floatToByteArray(getStrokeWidth());
-                            System.arraycopy(bytes2, 0, data, 8, bytes2.length);
-                            data[12] = (byte) (isEraserMode ? 1 : 0);
-                            for (int i = 0; i < 4; i++) {
-                                System.arraycopy(bytes[i], 0, data, 0, bytes[i].length);
-                                os.write(data);
-                                os.flush();
-                                System.out.println("data = " + Arrays.toString(data));
-                            }
-                        } catch (IOException e) {
-                            Common.showException(e, (Activity) ctx);
-                        }
-                    } catch (NullPointerException ignored) {
-                    }
-                }
-                mLastX = x;
-                mLastY = y;
-                break;
-            case MotionEvent.ACTION_UP:
-                Paint eraserPaint_ref = isEraserMode ? eraserPaint : mPaint;
-                mCanvas.drawPath(mPath, eraserPaint_ref);//将路径绘制在mBitmap上
-                Path path = new Path(mPath);//复制出一份mPath
-                Paint paint = new Paint(eraserPaint_ref);
-                PathBean pb = new PathBean(path, paint);
-                undoList.add(pb);//将路径对象存入集合
-                mPath.reset();
-                mPath = null;
-                break;
+        byte[][] bytes = new byte[5][4];
+        bytes[0] = jni.floatToByteArray(x);
+        bytes[1] = jni.floatToByteArray(y);
+        bytes[2] = jni.intToByteArray(getColor());
+        bytes[3] = jni.floatToByteArray(getStrokeWidth());
+        bytes[4] = jni.intToByteArray(action);
+        byte[] data = new byte[21];
+        for (int i = 0; i < bytes.length; i++) {
+            System.arraycopy(bytes[i], 0, data, 4 * i, bytes[i].length);
         }
+        try {
+            data[20] = (byte) (isEraserMode ? 1 : 0);
+            os.write(data);
+            os.flush();
+//            System.out.println("data = " + Arrays.toString(data));
+        } catch (IOException e) {
+            Common.showException(e, (Activity) ctx);
+        }
+        onTouchAction(action, x, y);
         invalidate();
         return true;
     }
@@ -335,5 +300,68 @@ public class PaintView extends View {
 
     void closePathRecoderOS() {
         closeStream(os);
+    }
+
+    void importPathFile(File f) {
+        try {
+            InputStream is = new FileInputStream(f);
+            byte[] bytes = new byte[21];
+            byte[] bytes_4 = new byte[4];
+            while (is.read(bytes) != -1) {
+//                System.out.println("bytes = " + Arrays.toString(bytes));
+                System.arraycopy(bytes, 16, bytes_4, 0, 4);
+                int motionAction = jni.byteArrayToInt(bytes_4);
+                System.arraycopy(bytes, 0, bytes_4, 0, 4);
+                float x = jni.byteArrayTofloat(bytes_4);
+                System.arraycopy(bytes, 4, bytes_4, 0, 4);
+                float y = jni.byteArrayTofloat(bytes_4);
+                System.arraycopy(bytes, 8, bytes_4, 0, 4);
+                int color = jni.byteArrayToInt(bytes_4);
+                System.arraycopy(bytes, 12, bytes_4, 0, 4);
+                float strokeWidth = jni.byteArrayTofloat(bytes_4);
+                setEraserMode(bytes[20] == 1);
+                setPaintColor(color);
+                setStrokeWidth(strokeWidth);
+                onTouchAction(motionAction, x, y);
+                invalidate();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onTouchAction(int motionAction, float x, float y) {
+        switch (motionAction) {
+            case MotionEvent.ACTION_DOWN:
+                //路径
+                mPath = new Path();
+                mLastX = x;
+                mLastY = y;
+                mPath.moveTo(mLastX, mLastY);
+                break;
+            case MotionEvent.ACTION_UP:
+                Paint eraserPaint_ref = isEraserMode ? eraserPaint : mPaint;
+                mCanvas.drawPath(mPath, eraserPaint_ref);//将路径绘制在mBitmap上
+                Path path = new Path(mPath);//复制出一份mPath
+                Paint paint = new Paint(eraserPaint_ref);
+                PathBean pb = new PathBean(path, paint);
+                undoList.add(pb);//将路径对象存入集合
+                mPath.reset();
+                mPath = null;
+                break;
+            default:
+                float dx = Math.abs(x - mLastX);
+                float dy = Math.abs(y - mLastY);
+                if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
+                    //利用二阶贝塞尔曲线，使绘制路径更加圆滑
+                    try {
+                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
+                    } catch (NullPointerException ignored) {
+                    }
+                }
+                mLastX = x;
+                mLastY = y;
+                break;
+        }
     }
 }
