@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">tools</string>
-    <string name="tv">%1$s</string>
+    <string name="tv" translatable="false">%1$s</string>
     <string name="pick_file">选择文件/目录</string>
     <string name="encode">编码</string>
     <string name="decode">解码</string>
@@ -18,7 +18,7 @@
     <string name="have_task">正在进行任务</string>
     <string name="type_path">输入路径</string>
     <string name="no_access">无此路径或无权访问</string>
-    <string name="nul"/>
+    <string name="nul" translatable="false"/>
     <string name="filter">过滤器：</string>
     <string name="iFileExtension">操作文件扩展名</string>
     <string name="oFileExtension">输出文件类型</string>
@@ -32,16 +32,16 @@
     <string name="calc">计算</string>
     <string name="pi______type">输入小数点后位数：</string>
     <string name="wait">请等待..</string>
-    <string name="toast">Toast</string>
+    <string name="toast" translatable="false">Toast</string>
     <string name="copy">复制</string>
     <string name="html_clipboard_unsupported">android版本不支持HTML放入剪切板</string>
     <string name="copying_success">复制成功</string>
     <string name="html_content">html内容</string>
     <string name="put_in_clipboard">放入剪切板</string>
-    <string name="tv_millis">%1$sms</string>
+    <string name="tv_millis" translatable="false">%1$sms</string>
     <string name="some_codecs">some-codecs</string>
     <string name="type_html_code">输入HTML代码</string>
-    <string name="piTV">3.%1$s</string>
+    <string name="piTV" translatable="false">3.%1$s</string>
     <string name="get_config_file_failed">获取配置文件路径失败</string>
     <string name="whether_to_save">是否保存</string>
     <string name="no">否</string>
@@ -54,7 +54,7 @@
     <string name="controlling">操\n控</string>
     <string name="drawing_mode">绘\n画</string>
     <string name="eraser_mode">擦\n除</string>
-    <string name="alpha">alpha</string>
+    <string name="alpha" translatable="false">alpha</string>
     <string name="done">完成</string>
     <string name="h_s_v_a_color_picker">HSVA调色板</string>
     <string name="control_panel_color">面板颜色</string>
@@ -67,14 +67,12 @@
     <string name="whether_to_exit">是否退出</string>
     <string name="fourier_series_calc">傅里叶级数验证计算</string>
     <string name="type_n_num">输入合成正弦波项数</string>
-    <string name="increase">+</string>
-    <string name="decrease">-</string>
     <string name="record">记录</string>
     <string name="notes">笔记</string>
     <string name="insert_record">增加记录</string>
     <string name="title">标题</string>
     <string name="content">内容</string>
-    <string name="dismiss_x">×</string>
+    <string name="dismiss_x" translatable="false">×</string>
     <string name="delete">删除</string>
     <string name="export">导出</string>
     <string name="import_">导入</string>
