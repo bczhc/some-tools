@@ -286,9 +286,8 @@ public class MainActivity extends BaseActivity {
                             break;
                         case 7:
                             createConfirmationAD(this, (dialog1, which) -> {
-                                File internalPathFile = new File(getFilesDir() + File.separator + "fb.path");
-                                System.out.println("internalPathFile.delete() = " + internalPathFile.delete());
                                 pv.clearAll();
+                                pv.clearTouchRecordOSContent();
                             }, (dialog1, which) -> {
                             }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).show();
                             break;
