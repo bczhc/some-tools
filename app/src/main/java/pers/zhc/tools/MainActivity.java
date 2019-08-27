@@ -105,6 +105,7 @@ public class MainActivity extends BaseActivity {
                     Intent intent = new Intent();
                     intent.setClass(this, classes[finalI]);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_bottom, 0);
                 });
                 CountDownLatch latch = new CountDownLatch(1);
                 runOnUiThread(() -> {
