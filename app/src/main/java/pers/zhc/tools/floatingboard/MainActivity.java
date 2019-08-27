@@ -544,14 +544,17 @@ public class MainActivity extends BaseActivity {
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
                         EditText et = new EditText(this);
                         et.setText(String.format(getString(R.string.tv), format));
+                        File file = new File(d.toString() + File.separator + et.getText().toString() + ".png");
                         AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
-                            if (pv.saveImg(d.toString(), format + ".png")) {
+                            pv.saveImg(file);
+                            if (file.exists())
                                 Toast.makeText(this, getString(R.string.saving_success) + "\n" + d.toString() + File.separator + et.getText().toString() + ".png", Toast.LENGTH_SHORT).show();
-                            }
+                            else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                         }).setTitle(R.string.type_file_name).setView(et).create();
                         setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        alertDialog.show();
                     },
                     v -> {
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -572,6 +575,7 @@ public class MainActivity extends BaseActivity {
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                         }).setTitle(R.string.type_file_name).setView(et).create();
                         setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        alertDialog.show();
                     },
                     v -> {
                         /*LinearLayout ll1 = new LinearLayout(this);

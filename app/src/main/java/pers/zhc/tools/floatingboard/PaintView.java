@@ -171,25 +171,19 @@ public class PaintView extends View {
     /**
      * 保存到指定的文件夹中
      */
-    boolean saveImg(String filePath, String imgName) {
-        boolean isCanSave = mBitmap != null && mLastY != 0f && !undoList.isEmpty();
-        if (isCanSave) {//空白板时，就不保存
-            //保存图片
-            File file = new File(filePath + File.separator + imgName);
-            FileOutputStream fileOutputStream = null;
-            try {
-                fileOutputStream = new FileOutputStream(file);
-                if (mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)) {
-                    fileOutputStream.flush();
-                    return true;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                closeStream(fileOutputStream);
+    void saveImg(File f) {
+        //保存图片
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(f);
+            if (mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)) {
+                fileOutputStream.flush();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            closeStream(fileOutputStream);
         }
-        return false;
     }
 
     /**
@@ -319,7 +313,7 @@ public class PaintView extends View {
                 int color = jni.byteArrayToInt(bytes_4);
                 System.arraycopy(bytes, 12, bytes_4, 0, 4);
                 float strokeWidth = jni.byteArrayTofloat(bytes_4);
-                setEraserMode(bytes[20] == 1);
+                setEraserMode(bytes[20] != 0);
                 setPaintColor(color);
                 setStrokeWidth(strokeWidth);
                 onTouchAction(motionAction, x, y);

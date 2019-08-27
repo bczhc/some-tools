@@ -50,6 +50,7 @@ public class Picker extends AppCompatActivity {
         if (requestCode == 33 && grantResults[0] == 0) D();
     }
 
+    @SuppressWarnings("Duplicates")
     private void D() {
         Intent intent = getIntent();
         this.option = intent.getIntExtra("option", 0);
