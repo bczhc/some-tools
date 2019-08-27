@@ -37,22 +37,26 @@ public class PaintView extends View {
         init();
     }*/
 
-    PaintView(Context context, int width, int height) {
-        super(context);
-        init(width, height);
-        ctx = context;
+    private void setOS(Context context, boolean append) {
         File file = new File(context.getFilesDir().toString() + File.separator + "fb.path");
         try {
-            os = new FileOutputStream(file, true);
+            os = new FileOutputStream(file, append);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    PaintView(Context context, int width, int height) {
+        super(context);
+        ctx = context;
+        init(width, height);
     }
 
     /***
      * 初始化
      */
     private void init(int width, int height) {
+        setOS(ctx, true);
         //关闭硬件加速
         //否则橡皮擦模式下，设置的 PorterDuff.Mode.CLEAR ，实时绘制的轨迹是黑色
 //        setBackgroundColor(Color.WHITE);//设置白色背景
@@ -113,6 +117,13 @@ public class PaintView extends View {
      * 撤销操作
      */
     void undo() {
+        try {
+            byte[] bytes = new byte[22];
+            bytes[21] = 1;
+            os.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (!undoList.isEmpty()) {
             clearPaint();//清除之前绘制内容
             PathBean lastPb = undoList.removeLast();//将最后一个移除
@@ -121,7 +132,7 @@ public class PaintView extends View {
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
             }
-            invalidate();
+            postInvalidate();
         }
     }
 
@@ -129,11 +140,18 @@ public class PaintView extends View {
      * 恢复操作
      */
     void redo() {
+        try {
+            byte[] bytes = new byte[22];
+            bytes[21] = 2;
+            os.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (!redoList.isEmpty()) {
             PathBean pathBean = redoList.removeLast();
             mCanvas.drawPath(pathBean.path, pathBean.paint);
-            invalidate();
             undoList.add(pathBean);
+            postInvalidate();
         }
     }
 
@@ -206,7 +224,7 @@ public class PaintView extends View {
      */
     private void clearPaint() {
         mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        invalidate();
+        postInvalidate();
     }
 
 
@@ -225,7 +243,7 @@ public class PaintView extends View {
         bytes[2] = jni.intToByteArray(getColor());
         bytes[3] = jni.floatToByteArray(getStrokeWidth());
         bytes[4] = jni.intToByteArray(action);
-        byte[] data = new byte[21];
+        byte[] data = new byte[22];
         for (int i = 0; i < bytes.length; i++) {
             System.arraycopy(bytes[i], 0, data, 4 * i, bytes[i].length);
         }
@@ -238,7 +256,7 @@ public class PaintView extends View {
             Common.showException(e, (Activity) ctx);
         }
         onTouchAction(action, x, y);
-        invalidate();
+        postInvalidate();
         return true;
     }
 
@@ -297,31 +315,42 @@ public class PaintView extends View {
     }
 
     void importPathFile(File f) {
-        try {
-            InputStream is = new FileInputStream(f);
-            byte[] bytes = new byte[21];
-            byte[] bytes_4 = new byte[4];
-            while (is.read(bytes) != -1) {
-//                System.out.println("bytes = " + Arrays.toString(bytes));
-                System.arraycopy(bytes, 16, bytes_4, 0, 4);
-                int motionAction = jni.byteArrayToInt(bytes_4);
-                System.arraycopy(bytes, 0, bytes_4, 0, 4);
-                float x = jni.byteArrayTofloat(bytes_4);
-                System.arraycopy(bytes, 4, bytes_4, 0, 4);
-                float y = jni.byteArrayTofloat(bytes_4);
-                System.arraycopy(bytes, 8, bytes_4, 0, 4);
-                int color = jni.byteArrayToInt(bytes_4);
-                System.arraycopy(bytes, 12, bytes_4, 0, 4);
-                float strokeWidth = jni.byteArrayTofloat(bytes_4);
-                setEraserMode(bytes[20] != 0);
-                setPaintColor(color);
-                setStrokeWidth(strokeWidth);
-                onTouchAction(motionAction, x, y);
-                invalidate();
+        new Thread(() -> {
+            try {
+                InputStream is = new FileInputStream(f);
+                //                System.out.println("bytes = " + Arrays.toString(bytes));
+                byte[] bytes = new byte[22];
+                byte[] bytes_4 = new byte[4];
+                while (is.read(bytes) != -1) {
+                    switch (bytes[21]) {
+                        case 0:
+                            System.arraycopy(bytes, 16, bytes_4, 0, 4);
+                            int motionAction = jni.byteArrayToInt(bytes_4);
+                            System.arraycopy(bytes, 0, bytes_4, 0, 4);
+                            float x = jni.byteArrayTofloat(bytes_4);
+                            System.arraycopy(bytes, 4, bytes_4, 0, 4);
+                            float y = jni.byteArrayTofloat(bytes_4);
+                            System.arraycopy(bytes, 8, bytes_4, 0, 4);
+                            int color = jni.byteArrayToInt(bytes_4);
+                            System.arraycopy(bytes, 12, bytes_4, 0, 4);
+                            float strokeWidth = jni.byteArrayTofloat(bytes_4);
+                            setEraserMode(bytes[20] != 0);
+                            setPaintColor(color);
+                            setStrokeWidth(strokeWidth);
+                            onTouchAction(motionAction, x, y);
+                            break;
+                        case 1:
+                            undo();
+                            break;
+                        case 2:
+                            redo();
+                            break;
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     private void onTouchAction(int motionAction, float x, float y) {
@@ -356,6 +385,16 @@ public class PaintView extends View {
                 mLastX = x;
                 mLastY = y;
                 break;
+        }
+        postInvalidate();
+    }
+
+    void clearTouchRecordOSContent() {
+        try {
+            os.close();
+            setOS(ctx, false);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
