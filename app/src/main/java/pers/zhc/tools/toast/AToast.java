@@ -21,4 +21,10 @@ public class AToast extends AppCompatActivity {
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, R.anim.slide_out_bottom);
+    }
 }
