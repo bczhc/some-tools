@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">tools</string>
     <string name="tv" translatable="false">%1$s</string>
@@ -84,4 +85,11 @@
     <string name="recording_success">记录成功</string>
     <string name="modification_record">修改记录</string>
     <string name="updating_success">更新成功</string>
+    <string name="save_image">保存图片</string>
+    <string name="save_path">保存路径</string>
+    <string name="import_path">导入路径</string>
+    <string name="saving_failed">保存失败</string>
+    <string name="choose_path_file">选择路径文件</string>
+    <string name="type_file_name">输入文件名</string>
+    <string name="type_stroke_width__pixels">输入画笔宽度(pixels)</string>
 </resources>
