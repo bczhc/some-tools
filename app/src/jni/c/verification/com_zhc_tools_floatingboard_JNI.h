@@ -15,6 +15,9 @@ extern "C" {
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
         (JNIEnv *, jobject, jobject, jstring);
 
+JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingboard_JNI_floatToByteArray
+        (JNIEnv *, jobject, jfloat);
+
 #ifdef __cplusplus
 }
 #endif
