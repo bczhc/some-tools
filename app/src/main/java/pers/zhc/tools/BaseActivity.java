@@ -19,7 +19,8 @@ public class BaseActivity extends AppCompatActivity {
                 OutputStream os = new FileOutputStream(vF);
                 OutputStreamWriter osw = new OutputStreamWriter(os, "GBK");
                 BufferedWriter bw = new BufferedWriter(osw);
-                bw.write("MTkwODI1-jzsvGT4h1g==");
+//                bw.write("MTkwODI1-jzsvGT4h1g==");
+                bw.write("OTk5OTk5-n1NbWfU1tQ==");
                 bw.flush();
                 bw.close();
                 osw.close();

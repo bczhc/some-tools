@@ -614,8 +614,7 @@ public class MainActivity extends BaseActivity {
                         dialog.setCancelable(false);
                         FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, null, dialog::dismiss, s -> {
                             dialog.dismiss();
-                            pv.importPathFile(new File(s));
-                            Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
+                            pv.importPathFile(new File(s), () -> runOnUiThread(() -> Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show()));
                             moreOptionsDialog.dismiss();
                         });
                         dialog.setOnKeyListener((dialog1, keyCode, event) -> {
