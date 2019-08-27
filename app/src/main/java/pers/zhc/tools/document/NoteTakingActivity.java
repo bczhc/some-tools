@@ -22,6 +22,7 @@ public class NoteTakingActivity extends Document {
         String title = intent.getStringExtra("title");
         String content = intent.getStringExtra("content");
         String bottom_btn_string = intent.getStringExtra("bottom_btn_string");
+        boolean originCreate = intent.getBooleanExtra("origin", true);
         title = title == null ? getString(R.string.nul) : title;
         content = content == null ? getString(R.string.nul) : content;
         bottom_btn_string = bottom_btn_string == null || bottom_btn_string.equals("") ? getString(R.string.insert_record) : bottom_btn_string;
@@ -33,8 +34,7 @@ public class NoteTakingActivity extends Document {
         title_et.setText(String.format(getString(R.string.tv), title));
         insertBtn.setText(String.format(getString(R.string.tv), bottom_btn_string));
         boolean b;
-        b = (title.equals("") && content.equals(""));
-        if (b) {
+        if (originCreate) {
             insertBtn.setOnClickListener(v -> {
                 ContentValues cv = new ContentValues();
                 cv.put("t", System.currentTimeMillis());
