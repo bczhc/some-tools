@@ -1,18 +1,21 @@
 package pers.zhc.tools.floatingboard;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
+import pers.zhc.tools.utils.Common;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.LinkedList;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings({"unused"})
+@SuppressLint("ViewConstructor")
 public class PaintView extends View {
+    private OutputStream os;
     private Paint mPaint;
     private Path mPath;
     private Paint eraserPaint;
@@ -24,6 +27,9 @@ public class PaintView extends View {
     private LinkedList<PathBean> undoList;
     private LinkedList<PathBean> redoList;
     boolean isEraserMode;
+    private JNI jni = new JNI();
+    private Context ctx;
+
 
 
     /*public PaintView(Context context, AttributeSet attrs) {
@@ -31,9 +37,16 @@ public class PaintView extends View {
         init();
     }*/
 
-    public PaintView(Context context, int width, int height) {
+    PaintView(Context context, int width, int height) {
         super(context);
         init(width, height);
+        ctx = context;
+        File file = new File(context.getFilesDir().toString() + File.separator + "fb.path");
+        try {
+            os = new FileOutputStream(file, true);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /***
@@ -52,18 +65,16 @@ public class PaintView extends View {
         mPaint.setStrokeCap(Paint.Cap.ROUND);//同上
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
         //保存签名的画布
-        post(new Runnable() {//拿到控件的宽和高
-            @Override
-            public void run() {
-                //获取PaintView的宽和高
-                //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
-                mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-                mCanvas = new Canvas(mBitmap);
-                //抗锯齿
-                mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-                //背景色
+        //拿到控件的宽和高
+        post(() -> {
+            //获取PaintView的宽和高
+            //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
+            mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+            mCanvas = new Canvas(mBitmap);
+            //抗锯齿
+            mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+            //背景色
 //                mCanvas.drawColor(Color.WHITE);
-            }
         });
 
         undoList = new LinkedList<>();
@@ -101,7 +112,7 @@ public class PaintView extends View {
     /**
      * 撤销操作
      */
-    public void undo() {
+    void undo() {
         if (!undoList.isEmpty()) {
             clearPaint();//清除之前绘制内容
             PathBean lastPb = undoList.removeLast();//将最后一个移除
@@ -117,7 +128,7 @@ public class PaintView extends View {
     /**
      * 恢复操作
      */
-    public void redo() {
+    void redo() {
         if (!redoList.isEmpty()) {
             PathBean pathBean = redoList.removeLast();
             mCanvas.drawPath(pathBean.path, pathBean.paint);
@@ -130,14 +141,14 @@ public class PaintView extends View {
     /**
      * 设置画笔颜色
      */
-    public void setPaintColor(@ColorInt int color) {
+    void setPaintColor(@ColorInt int color) {
         mPaint.setColor(color);
     }
 
     /**
      * 清空，包括撤销和恢复操作列表
      */
-    public void clearAll() {
+    void clearAll() {
         clearPaint();
         mLastY = 0f;
         //清空 撤销 ，恢复 操作列表
@@ -148,7 +159,7 @@ public class PaintView extends View {
     /**
      * 设置橡皮擦模式
      */
-    public void setEraserMode(boolean isEraserMode) {
+    void setEraserMode(boolean isEraserMode) {
         this.isEraserMode = isEraserMode;
         if (eraserPaint == null) {
             eraserPaint = new Paint(mPaint);
@@ -160,7 +171,7 @@ public class PaintView extends View {
     /**
      * 保存到指定的文件夹中
      */
-    public boolean saveImg(String filePath, String imgName) {
+    boolean saveImg(String filePath, String imgName) {
         boolean isCanSave = mBitmap != null && mLastY != 0f && !undoList.isEmpty();
         if (isCanSave) {//空白板时，就不保存
             //保存图片
@@ -208,103 +219,42 @@ public class PaintView extends View {
     /**
      * 触摸事件 触摸绘制
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (isEraserMode) {
-            eraserTouchEvent(event);
-        } else {
-            commonTouchEvent(event);
+        int action = event.getAction();
+        float x = event.getX();
+        float y = event.getY();
+        byte[][] bytes = new byte[5][4];
+        bytes[0] = jni.floatToByteArray(x);
+        bytes[1] = jni.floatToByteArray(y);
+        bytes[2] = jni.intToByteArray(getColor());
+        bytes[3] = jni.floatToByteArray(getStrokeWidth());
+        bytes[4] = jni.intToByteArray(action);
+        byte[] data = new byte[21];
+        for (int i = 0; i < bytes.length; i++) {
+            System.arraycopy(bytes[i], 0, data, 4 * i, bytes[i].length);
         }
+        try {
+            data[20] = (byte) (isEraserMode ? 1 : 0);
+            os.write(data);
+            os.flush();
+//            System.out.println("data = " + Arrays.toString(data));
+        } catch (IOException e) {
+            Common.showException(e, (Activity) ctx);
+        }
+        onTouchAction(action, x, y);
         invalidate();
         return true;
     }
 
-    /**
-     * 橡皮擦事件
-     */
-    private void eraserTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                //路径
-                mPath = new Path();
-                mLastX = x;
-                mLastY = y;
-                mPath.moveTo(mLastX, mLastY);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float dx = Math.abs(x - mLastX);
-                float dy = Math.abs(y - mLastY);
-                if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
-                    //利用二阶贝塞尔曲线，使绘制路径更加圆滑
-                    try {
-                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
-                    } catch (NullPointerException ignored) {
-                    }
-                }
-                mLastX = x;
-                mLastY = y;
-                break;
-            case MotionEvent.ACTION_UP:
-                mCanvas.drawPath(mPath, eraserPaint);//将路径绘制在mBitmap上
-                Path path = new Path(mPath);//复制出一份mPath
-                Paint paint = new Paint(eraserPaint);
-                PathBean pb = new PathBean(path, paint);
-                undoList.add(pb);//将路径对象存入集合
-                mPath.reset();
-                mPath = null;
-                break;
-        }
-    }
-
-    /**
-     * 普通画笔事件
-     */
-    private void commonTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                //路径
-                mPath = new Path();
-                mLastX = x;
-                mLastY = y;
-                mPath.moveTo(mLastX, mLastY);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float dx = Math.abs(x - mLastX);
-                float dy = Math.abs(y - mLastY);
-                if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
-                    //利用二阶贝塞尔曲线，使绘制路径更加圆滑
-                    try {
-                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
-                    } catch (NullPointerException ignored) {
-                    }
-                }
-                mLastX = x;
-                mLastY = y;
-                break;
-            case MotionEvent.ACTION_UP:
-                mCanvas.drawPath(mPath, mPaint);//将路径绘制在mBitmap上
-                Path path = new Path(mPath);//复制出一份mPath
-                Paint paint = new Paint(mPaint);
-                PathBean pb = new PathBean(path, paint);
-                undoList.add(pb);//将路径对象存入集合
-                mPath.reset();
-                mPath = null;
-                break;
-        }
-    }
 
     /**
      * 关闭流
      *
-     * @param closeable
+     * @param closeable c
      */
-    private void closeStream(FileOutputStream closeable) {
+    private void closeStream(OutputStream closeable) {
         if (closeable != null) {
             try {
                 closeable.close();
@@ -347,4 +297,71 @@ public class PaintView extends View {
         }
     }
 
+
+    void closePathRecoderOS() {
+        closeStream(os);
+    }
+
+    void importPathFile(File f) {
+        try {
+            InputStream is = new FileInputStream(f);
+            byte[] bytes = new byte[21];
+            byte[] bytes_4 = new byte[4];
+            while (is.read(bytes) != -1) {
+//                System.out.println("bytes = " + Arrays.toString(bytes));
+                System.arraycopy(bytes, 16, bytes_4, 0, 4);
+                int motionAction = jni.byteArrayToInt(bytes_4);
+                System.arraycopy(bytes, 0, bytes_4, 0, 4);
+                float x = jni.byteArrayTofloat(bytes_4);
+                System.arraycopy(bytes, 4, bytes_4, 0, 4);
+                float y = jni.byteArrayTofloat(bytes_4);
+                System.arraycopy(bytes, 8, bytes_4, 0, 4);
+                int color = jni.byteArrayToInt(bytes_4);
+                System.arraycopy(bytes, 12, bytes_4, 0, 4);
+                float strokeWidth = jni.byteArrayTofloat(bytes_4);
+                setEraserMode(bytes[20] == 1);
+                setPaintColor(color);
+                setStrokeWidth(strokeWidth);
+                onTouchAction(motionAction, x, y);
+                invalidate();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onTouchAction(int motionAction, float x, float y) {
+        switch (motionAction) {
+            case MotionEvent.ACTION_DOWN:
+                //路径
+                mPath = new Path();
+                mLastX = x;
+                mLastY = y;
+                mPath.moveTo(mLastX, mLastY);
+                break;
+            case MotionEvent.ACTION_UP:
+                Paint eraserPaint_ref = isEraserMode ? eraserPaint : mPaint;
+                mCanvas.drawPath(mPath, eraserPaint_ref);//将路径绘制在mBitmap上
+                Path path = new Path(mPath);//复制出一份mPath
+                Paint paint = new Paint(eraserPaint_ref);
+                PathBean pb = new PathBean(path, paint);
+                undoList.add(pb);//将路径对象存入集合
+                mPath.reset();
+                mPath = null;
+                break;
+            default:
+                float dx = Math.abs(x - mLastX);
+                float dy = Math.abs(y - mLastY);
+                if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
+                    //利用二阶贝塞尔曲线，使绘制路径更加圆滑
+                    try {
+                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
+                    } catch (NullPointerException ignored) {
+                    }
+                }
+                mLastX = x;
+                mLastY = y;
+                break;
+        }
+    }
 }

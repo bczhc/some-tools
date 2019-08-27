@@ -100,6 +100,8 @@ public class Pi extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (this.isGenerating) this.moveTaskToBack(true);
-        else super.onBackPressed();
+//        else super.onBackPressed();
+        else finish();
+        overridePendingTransition(0, R.anim.slide_out_bottom);
     }
 }
