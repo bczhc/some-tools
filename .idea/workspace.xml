@@ -7,6 +7,7 @@
         <option name="name" value="Android SQLite" />
         <option name="comment" />
         <option name="packageName" value="pers.zhc.tools" />
+        <option name="databaseName" value="/storage/emulated/0/doc.db" />
         <classpath-elements>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.25.1/sqlite-jdbc-3.25.1.jar</url>
         </classpath-elements>
@@ -22,39 +23,43 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="error" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="19484206-ce84-4243-bfbd-1e57011b4ede" name="Default Changelist" comment="数据库储存在应用私有目录/files/db下&#10;动态申请权限封装">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequester.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequesterInterface.java" afterDir="false" />
+    <list default="true" id="087741a8-148e-41bf-8932-dab0ece6231a" name="Default Changelist" comment="切换activity动画">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ViewWithExtras.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/anim/in_left_and_bottom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/anim/slide_in_bottom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/anim/slide_out_bottom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/root.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/zhc.jar" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/zhc.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QMCFLAC.iml" beforeDir="false" afterPath="$PROJECT_DIR$/QMCFLAC.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/clipboard/Clip.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/clipboard/Clip.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/DocDB.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/Common.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/Common.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/pi/Pi.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/pi/Pi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/toast/AToast.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/toast/AToast.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/take_note_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/take_note_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/array.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/array.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -62,16 +67,23 @@
     <ignored path="$PROJECT_DIR$/app/build/generated/source/r/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/annotation_processor_list/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/apk_list/" />
-    <ignored path="$PROJECT_DIR$/app/build/intermediates/app_classes/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/blame/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/build-info/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/bundle_manifest/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/check_manifest_result/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/compatible_screen_manifest/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/duplicate_classes_check/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/incremental/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/incremental-runtime-classes/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/instant-run-apk/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/instant_app_manifest/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/instant_run_app_info_output_file/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/instant_run_main_apk_resources/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/instant_run_merged_manifests/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/instant_run_split_apk_resources/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/javac/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/manifest-checker/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/merged_assets/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/merged_jni_libs/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/merged_manifests/" />
@@ -79,11 +91,13 @@
     <ignored path="$PROJECT_DIR$/app/build/intermediates/metadata_feature_manifest/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/prebuild/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/processed_res/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/reload-dex/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/res/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/resources/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/shader_assets/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/signing_config/" />
+    <ignored path="$PROJECT_DIR$/app/build/intermediates/split-apk/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/symbols/" />
-    <ignored path="$PROJECT_DIR$/app/build/intermediates/tmp/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/transforms/" />
     <ignored path="$PROJECT_DIR$/app/build/intermediates/validate_signing_config/" />
     <ignored path="$PROJECT_DIR$/app/build/outputs/" />
@@ -108,12 +122,7 @@
     <option name="HIDDEN_KINDS">
       <set />
     </option>
-    <expand>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="Android SQLite" type="feb32156:DbDataSourceImpl" />
-      </path>
-    </expand>
+    <expand />
     <select />
   </component>
   <component name="DefaultGradleProjectSettings">
@@ -122,70 +131,72 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
-        <task path="$PROJECT_DIR$">
-          <activation />
-        </task>
-        <task path="$PROJECT_DIR$/app">
-          <activation />
-        </task>
-        <projects_view>
-          <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="QMCFLAC" type="f1a62948:ProjectNode" />
-              </path>
-            </expand>
-            <select />
-          </tree_state>
-        </projects_view>
+        <projects_view />
       </state>
     </system>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1425">
+              <caret line="93" column="28" selection-start-line="93" selection-start-column="28" selection-end-line="93" selection-end-column="28" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="100" column="69" selection-start-line="100" selection-start-column="69" selection-end-line="100" selection-end-column="69" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#3927#3953#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="296">
+              <caret line="178" column="39" selection-start-line="178" selection-start-column="39" selection-end-line="178" selection-end-column="39" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/array.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="44" column="23" selection-start-line="44" selection-start-column="23" selection-end-line="44" selection-end-column="23" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2753#2792#0" expanded="true" />
-                <element signature="e#4599#4628#0" expanded="true" />
-                <element signature="e#6274#6275#0" expanded="true" />
-                <element signature="e#6318#6319#0" expanded="true" />
-                <element signature="e#7224#7225#0" expanded="true" />
-                <element signature="e#7268#7269#0" expanded="true" />
-                <element signature="e#8665#8666#0" expanded="true" />
-                <element signature="e#8709#8710#0" expanded="true" />
-                <element signature="e#10106#10107#0" expanded="true" />
-                <element signature="e#10150#10151#0" expanded="true" />
-                <element signature="e#11496#11497#0" expanded="true" />
-                <element signature="e#11566#11567#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="646">
+              <caret line="34" column="23" selection-start-line="34" selection-start-column="23" selection-end-line="34" selection-end-column="23" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
-              <caret line="61" column="77" selection-start-line="61" selection-start-column="77" selection-end-line="61" selection-end-column="77" />
+            <state relative-caret-position="412">
+              <caret line="330" column="66" selection-start-line="330" selection-start-column="66" selection-end-line="330" selection-end-column="66" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ViewWithExtras.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="38">
+              <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="789">
+              <caret line="54" column="35" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2209#2235#0" expanded="true" />
+                <element signature="e#2300#2318#0" expanded="true" />
+                <element signature="e#3025#3050#0" expanded="true" />
+                <element signature="e#3115#3133#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -195,110 +206,61 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="layoutResourceFile_vertical" />
         <option value="resourceFile" />
-        <option value="layoutResourceFile" />
         <option value="Class" />
-        <option value="Interface" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>case 7</find>
-      <find>outsi</find>
-      <find>com.z</find>
-      <find>TRANSLUCENT</find>
-      <find>TRANS</find>
-      <find>transparent</find>
-      <find>save</find>
-      <find>export</find>
-      <find>inport</find>
-      <find>importin</find>
-      <find>openOrC</find>
-      <find>cursor</find>
-      <find>importing_</find>
-      <find>permission</find>
-      <find>interface</find>
-      <find>base</find>
-      <find>oncrea</find>
-      <find>== 1</find>
-      <find>saveI</find>
-      <find>sav</find>
-      <find>R.</find>
-      <find>R.s</find>
-      <find>reques</find>
-      <find>onTouchEvent</find>
-      <find>alpha =</find>
-      <find>ontouch</find>
-      <find>onTouch</find>
-      <find>setCurrentX</find>
-      <find>SimpleDateFormat</find>
-      <find>importing</find>
+      <find>startActivity(</find>
+      <find>anim.</find>
+      <find>onbac</find>
+      <find>OVERRI</find>
+      <find>overridepen</find>
+      <find>record</find>
+      <find>startactivityforresult</find>
+      <find>onback</find>
+      <find>onba</find>
+      <find>execsql</find>
+      <find>notet</find>
+      <find>setDi</find>
+      <find>v1 -</find>
+      <find>t=&quot; +</find>
+      <find>db.exe</find>
+      <find>success</find>
+      <find>+ fin</find>
+      <find>delete</find>
+      <find>putextra(&quot;title</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
-    <option name="PREVIOUS_COMMIT_AUTHORS">
-      <list>
-        <option value="bczhc &lt;bczhc0@126.com&gt;" />
-      </list>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="floatingDrawingBoard" />
-      </map>
-    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/BaseActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/utils/ColorUtils.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/function_drawing_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/functiondrawing/FunctionDrawing.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/functiondrawing/FunctionDrawingView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/floatingboard/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/github/tools/floatingboard/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/github/bczhc/tools/floatingboard/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/github/bczhc/tools/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/clipboard/Clip.java" />
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/900055df-d111-459a-8152-c145110fe39e/console.sql" />
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/588fcfd7-56bf-4abf-8b48-f10a12e2846b/console.sql" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/anim/b_to_t.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/anim/left_bottom__in.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/anim/slide_in_buttom.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/anim/slide_out_bottom.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/anim/slide_in_bottom.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/pi/Pi.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/toast/AToast.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/Settings.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawingView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ColorUtils.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/picker_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/take_note_activity.xml" />
-        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/a0bcb581-cfda-4cb9-bdb5-78d83e82cc76/console.sql" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/pi_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/codecs_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/drawable/view_stroke.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/v_f_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/jni/c/verification/verify.c" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/document_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/array.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
-        <option value="$USER_HOME$/AndroidStudio/DeviceExplorer/huawei-lnd_al30-73EBB18621217594/data/data/pers.zhc.tools/files/config.json" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/DocDB.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/Common.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DisplayUtil.java" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequester.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequesterInterface.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/clipboard/Clip.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/anim/in_left_and_bottom.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ViewWithExtras.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/array.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/take_note_activity.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" />
       </list>
     </option>
@@ -310,12 +272,11 @@
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
-      <hideEmptyPackages ProjectPane="true" />
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
@@ -340,13 +301,6 @@
               <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="libs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -365,26 +319,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="tools" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="clipboard" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="codecs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
@@ -404,16 +338,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="filepicker" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
               <item name="floatingboard" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -424,36 +348,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="functiondrawing" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="pi" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="toast" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
               <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -462,10 +356,16 @@
               <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="tools" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-              <item name="ColorUtils.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
+              <item name="res" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="res" type="462c0819:PsiDirectoryNode" />
+              <item name="values" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -477,30 +377,16 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="database.console.LAST_STATE" value="true" />
     <property name="device.picker.selection" value="73EBB18621217594" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/libs" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/res/anim" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.21790235" />
-    <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="instant.run" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.zhc" />
-      <recent name="com.zhc.tools" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/libs" />
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/zhc/utils" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.zhc.tools.functiondrawing" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/zhc/tools/functiondrawing" />
+      <recent name="$PROJECT_DIR$/app/src/main/res/anim" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -515,7 +401,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Android App.app">
+  <component name="RunManager">
     <configuration default="true" type="AndroidJUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -553,938 +439,379 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FourierSeries" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.zhc.u.FourierSeries" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.zhc.u.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.FourierSeries" />
-        <item itemvalue="Application.FourierSeries" />
-        <item itemvalue="Application.FourierSeries" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="19484206-ce84-4243-bfbd-1e57011b4ede" name="Default Changelist" comment="v&#10;更换算法&#10;xx-xx&#10;截止 日期" />
-      <created>1566003109930</created>
+      <changelist id="087741a8-148e-41bf-8932-dab0ece6231a" name="Default Changelist" comment="" />
+      <created>1566827892237</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1566003109930</updated>
-      <workItem from="1566003112035" duration="39506000" />
-      <workItem from="1566135864516" duration="11741000" />
-      <workItem from="1566641506894" duration="3346000" />
+      <updated>1566827892237</updated>
+      <workItem from="1566827899320" duration="14270000" />
+      <workItem from="1566875372439" duration="1674000" />
     </task>
-    <task id="LOCAL-00001" summary="函数生成，加入傅里叶级数。……&#10;发现v有错误ee，todo">
-      <created>1566013053996</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1566013053996</updated>
-    </task>
-    <task id="LOCAL-00002" summary="应该解决jni...........">
-      <created>1566019325535</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1566019325535</updated>
-    </task>
-    <task id="LOCAL-00003" summary="修复 jni。。。。。 以后要养成 注释/s:size; /ss:string size(size + 1('\0')) &#10;防止杀死 switch的时候就操作&#10;傅里叶级数函数计算，固定线程排&#10;函数生成器 放大缩小+鬼畜移动">
-      <created>1566098382166</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1566098382166</updated>
-    </task>
-    <task id="LOCAL-00004" summary="merge">
-      <created>1566105541310</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1566105541310</updated>
-    </task>
-    <task id="LOCAL-00005" summary="笔记 使用数据库 SQLite，增、查ok&#10;一些名字修改操作">
-      <created>1566127449776</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1566127449776</updated>
-    </task>
-    <task id="LOCAL-00006" summary="笔记 正式。。增ok&#10;删*ok。。还未加id&#10;v。。输入。。">
-      <created>1566145672292</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1566145672293</updated>
-    </task>
-    <task id="LOCAL-00007" summary="笔记 数据库 导入导出">
-      <created>1566171449245</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1566171449245</updated>
-    </task>
-    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="79678000" />
+    <option name="totallyTimeSpent" value="15944000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17948718" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24973205" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Build Variants" order="3" side_tool="true" />
-      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="4" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info id="Captures" order="6" side_tool="true" />
-      <window_info id="Capture Tool" order="7" />
+      <window_info id="UI Designer" order="7" />
       <window_info id="Image Layers" order="8" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.54694325" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.41703057" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32963374" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39955604" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Build" order="7" visible="true" weight="0.40283844" />
-      <window_info anchor="bottom" id="Android Profiler" order="8" weight="0.5775109" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Logcat" order="10" weight="0.42030567" />
-      <window_info anchor="bottom" id="Database Changes" order="11" weight="0.32969433" />
-      <window_info anchor="bottom" id="Terminal" order="12" weight="0.32969433" />
-      <window_info anchor="bottom" id="Docker" order="13" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="14" weight="0.45524016" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.32963374" />
+      <window_info anchor="bottom" id="Database Console" order="8" weight="0.32963374" />
+      <window_info anchor="bottom" id="Android Profiler" order="9" />
+      <window_info anchor="bottom" id="Docker" order="10" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" weight="0.32963374" />
+      <window_info active="true" anchor="bottom" id="Logcat" order="12" visible="true" weight="0.38845727" />
+      <window_info anchor="bottom" id="Database Changes" order="13" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="14" />
+      <window_info anchor="bottom" id="Terminal" order="15" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.24973205" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Maven" order="3" />
       <window_info anchor="right" id="Palette" order="4" />
-      <window_info anchor="right" id="Capture Analysis" order="5" />
-      <window_info anchor="right" id="Device File Explorer" order="6" sideWeight="0.510917" side_tool="true" visible="true" weight="0.22168803" />
-      <window_info anchor="right" id="Gradle" order="7" weight="0.32959402" />
+      <window_info anchor="right" id="Preview" order="5" sideWeight="0.49909255" weight="0.329582" />
+      <window_info anchor="right" id="Device File Explorer" order="6" sideWeight="0.5009074" side_tool="true" weight="0.329582" />
+      <window_info anchor="right" id="Gradle" order="7" />
       <window_info anchor="right" id="SciView" order="8" />
-      <window_info anchor="right" id="Database" order="9" sideWeight="0.49674267" weight="0.32959402" />
+      <window_info anchor="right" id="Database" order="9" weight="0.329582" />
       <window_info anchor="right" id="Palette&#9;" order="10" />
       <window_info anchor="right" id="Theme Preview" order="11" />
-      <window_info anchor="right" id="Preview" order="12" sideWeight="0.48908296" weight="0.32959402" />
+      <window_info anchor="right" id="Capture Analysis" order="12" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="RECENT_FILTERS">
-      <map>
-        <entry key="Branch">
-          <value>
-            <list />
-          </value>
-        </entry>
-        <entry key="User">
-          <value>
-            <list />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="函数生成，加入傅里叶级数。……&#10;发现v有错误ee，todo&#10;加zhc.jar" />
-    <MESSAGE value="应该解决jni..........." />
-    <MESSAGE value="修复 jni。。。。。 以后要养成 注释/s:size; /ss:string size(size + 1('\0')) &#10;防止杀死 switch的时候就操作&#10;傅里叶级数函数计算，固定线程排&#10;函数生成器 放大缩小+鬼畜移动" />
-    <MESSAGE value="merge" />
-    <MESSAGE value="笔记 使用数据库 SQLite，增、查ok&#10;修正前面提交消息错误：包名为pers.zhc.tools&#10;一些名字修改操作" />
-    <MESSAGE value="笔记 正式。。增ok&#10;删*ok。。还未加id&#10;v。。输入。。" />
-    <MESSAGE value="笔记 数据库 导入导出" />
-    <option name="LAST_COMMIT_MESSAGE" value="笔记 数据库 导入导出" />
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/github/bczhc/tools/functiondrawing/FunctionDrawingView.java</url>
-          <line>41</line>
-          <properties />
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/github/bczhc/tools/functiondrawing/FunctionDrawingView.java</url>
-          <line>40</line>
-          <properties />
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/github/bczhc/tools/floatingboard/MainActivity.java</url>
-          <line>99</line>
-          <properties />
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/github/bczhc/tools/floatingboard/MainActivity.java</url>
-          <line>47</line>
-          <properties />
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java</url>
-          <line>19</line>
-          <properties />
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java</url>
-          <line>144</line>
+          <line>171</line>
           <properties />
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java</url>
-          <line>129</line>
-          <properties />
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java</url>
-          <line>152</line>
-          <properties />
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java</url>
-          <line>150</line>
-          <properties />
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java</url>
-          <line>27</line>
-          <properties />
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java</url>
-          <line>33</line>
-          <properties />
-          <option name="timeStamp" value="54" />
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
-      <default-breakpoints>
-        <breakpoint type="python-exception">
-          <properties notifyOnTerminate="true" exception="BaseException">
-            <option name="notifyOnTerminate" value="true" />
-          </properties>
-        </breakpoint>
-      </default-breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
       <expression>
-        <expression-string>db.execSQL(&quot;DROP TABLE IF EXISTS doc&quot;)</expression-string>
+        <expression-string>c.getString(2)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>db.execSQL(&quot;DROP TABLE IF EXIST doc&quot;)</expression-string>
+        <expression-string>c.getString(1)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>db.execSQL(&quot;DROP TABLE Doc&quot;);</expression-string>
+        <expression-string>c.getString(0)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>db.execSQL(&quot;CREATE TABLE doc(\n&quot; +                 &quot;    date varchar(50) not null,\n&quot; +                 &quot;    title varchar(1048576) not null,\n&quot; +                 &quot;    content varchar(10485760) not null\n&quot; +                 &quot;);&quot;)</expression-string>
+        <expression-string>c.moveToFirst()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>db.execSQL(&quot;IF EXIST TABLE doc&quot;);</expression-string>
+        <expression-string>c.getColumnNames()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>db.getSyncedTables()</expression-string>
+        <expression-string>cursor.getString(0)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>db.execSQL();</expression-string>
+        <expression-string>1566870543L / 60 / 60 / 24 / 365</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>db.execSQL(&quot;CREATE TABLE doc(\\n\&quot; +                 \&quot;    date varchar(50) not null,\\n\&quot; +                 \&quot;    title varchar(1048576) not null,\\n\&quot; +                 \&quot;    content varchar(10485760) not null\\n\&quot; +                 \&quot;);&quot;)</expression-string>
+        <expression-string>1566870543873L / 100 / 60 / 60 / 24 / 365</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>db.execSQL(&quot;&quot;);</expression-string>
+        <expression-string>1566870543873L / 1000 / 60 / 60 / 24 / 365</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>db.getPath()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
-    <expressions id="setValue">
-      <expression>
-        <expression-string>&quot;MTkwODI1-jzsvGT4h1g==&quot;</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>&quot;a&quot;</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>&quot;no such table: a (Sqlite code 1): , while compiling: INSERT INTO a(date,title,content) VALUES(1,2,3), (OS error - 2:No such file or directory)&quot;</expression-string>
+        <expression-string>1566870543873L / 1000 / 60 / 60 / 24</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/a0bcb581-cfda-4cb9-bdb5-78d83e82cc76/console.sql">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/900055df-d111-459a-8152-c145110fe39e/console.sql">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/view/ViewGroup.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="5514" column="7" lean-forward="true" selection-start-line="5514" selection-start-column="7" selection-end-line="5514" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/picker_activity.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2" />
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0d8b3f6c045787c3fcd508f3b03c867c/jars/classes.jar!/android/support/design/widget/CoordinatorLayout.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="73" column="13" selection-start-line="73" selection-start-column="13" selection-end-line="73" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/codecs_activity.xml">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/588fcfd7-56bf-4abf-8b48-f10a12e2846b/console.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <folding>
-            <element signature="e#4808#4827#0" expanded="true" />
-          </folding>
+          <caret column="7" selection-start-column="7" selection-end-column="7" />
         </state>
       </provider>
-      <provider editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/take_note_activity.xml">
+    <entry file="file://$PROJECT_DIR$/.idea/caches/gradle_models.ser">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/platforms/android-28/data/res/interpolator/decelerate_quad.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="14" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
-          <folding>
-            <element signature="e#573#588#0" expanded="true" />
-            <element signature="e#999#1016#0" expanded="true" />
-            <element signature="e#1523#1546#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="380">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
         </state>
       </provider>
-      <provider editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/view_stroke.xml">
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/platforms/android-28/data/res/anim/fade_in.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="36" selection-start-line="1" selection-start-column="36" selection-end-line="1" selection-end-column="36" />
+        <state relative-caret-position="437">
+          <caret line="23" column="50" selection-start-line="23" selection-start-column="50" selection-end-line="23" selection-end-column="50" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/v_f_activity.xml">
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/platforms/android-28/data/res/values/config.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" column="38" lean-forward="true" selection-start-line="4" selection-start-column="38" selection-end-line="4" selection-end-column="38" />
+        <state relative-caret-position="342">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
         </state>
       </provider>
-      <provider editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/jni/c/verification/verify.c">
+    <entry file="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b92f6ff19ea5f487a3bb9c03d734611d/res/anim/abc_slide_in_bottom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="343" column="5" selection-start-line="343" selection-start-column="5" selection-end-line="343" selection-end-column="5" />
+        <state relative-caret-position="342">
+          <caret line="18" column="65" lean-forward="true" selection-start-line="18" selection-start-column="65" selection-end-line="18" selection-end-column="65" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/JNI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="5" lean-forward="true" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/floating_board_activity.xml">
-      <provider editor-type-id="text-editor" />
-      <provider selected="true" editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/pi_activity.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="39" column="16" selection-start-line="39" selection-start-column="16" selection-end-line="39" selection-end-column="16" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="26" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/content/ContextWrapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="232" column="16" selection-start-line="232" selection-start-column="16" selection-end-line="232" selection-end-column="16" />
-          <folding>
-            <element signature="e#6071#6072#0" expanded="true" />
-            <element signature="e#6112#6113#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/os/Build.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="789" column="11" lean-forward="true" selection-start-line="789" selection-start-column="11" selection-end-line="789" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/io/FileSystem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="41" column="40" lean-forward="true" selection-start-line="41" selection-start-column="40" selection-end-line="41" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/array.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="30" column="25" lean-forward="true" selection-start-line="30" selection-start-column="25" selection-end-line="30" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/buildConfig/debug/com/zhc/tools/BuildConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="3" column="22" lean-forward="true" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AndroidStudio/DeviceExplorer/huawei-lnd_al30-73EBB18621217594/data/data/pers.zhc.tools/files/config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="21" column="1" lean-forward="true" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/document_activity.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="627">
-          <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$USER_HOME$/AndroidStudio/DeviceExplorer/huawei-lnd_al30-73EBB18621217594/data/data/pers.zhc.tools/files/v">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="21" lean-forward="true" selection-start-column="21" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/database/sqlite/SQLiteDatabase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="82" column="33" lean-forward="true" selection-start-line="82" selection-start-column="33" selection-end-line="82" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/com/android/providers/settings/DatabaseHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="1889" column="25" selection-start-line="1889" selection-start-column="25" selection-end-line="1889" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/database/sqlite/SQLiteOpenHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="478" column="30" lean-forward="true" selection-start-line="478" selection-start-column="30" selection-end-line="478" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/content/Context.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
-          <caret line="72" column="18" selection-start-line="72" selection-start-column="18" selection-end-line="72" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#216904#0" expanded="true" />
-            <element signature="e#24104#24105#0" expanded="true" />
-            <element signature="e#24156#24157#0" expanded="true" />
-            <element signature="e#24507#24508#0" expanded="true" />
-            <element signature="e#24561#24562#0" expanded="true" />
-            <element signature="e#25834#25835#0" expanded="true" />
-            <element signature="e#25896#25897#0" expanded="true" />
-            <element signature="e#26498#26499#0" expanded="true" />
-            <element signature="e#26563#26564#0" expanded="true" />
-            <element signature="e#27793#27794#0" expanded="true" />
-            <element signature="e#27817#27818#0" expanded="true" />
-            <element signature="e#32057#32058#0" expanded="true" />
-            <element signature="e#32110#32111#0" expanded="true" />
-            <element signature="e#78247#78248#0" expanded="true" />
-            <element signature="e#78275#78276#0" expanded="true" />
-            <element signature="e#135824#135851#0" expanded="true" />
-            <element signature="e#150777#150807#0" expanded="true" />
-            <element signature="e#208265#208266#0" expanded="true" />
-            <element signature="e#208321#208322#0" expanded="true" />
-            <element signature="e#208453#208454#0" expanded="true" />
-            <element signature="e#208508#208509#0" expanded="true" />
-            <element signature="e#214318#214319#0" expanded="true" />
-            <element signature="e#214346#214347#0" expanded="true" />
-            <element signature="e#215076#215077#0" expanded="true" />
-            <element signature="e#215167#215168#0" expanded="true" />
-            <element signature="e#215839#215840#0" expanded="true" />
-            <element signature="e#215866#215867#0" expanded="true" />
-            <element signature="e#215932#215959#1" expanded="true" />
-            <element signature="e#216073#216074#0" expanded="true" />
-            <element signature="e#216101#216102#0" expanded="true" />
-            <element signature="e#216207#216234#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/io/File.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="1365" lean-forward="true" selection-start-line="1365" selection-end-line="1365" />
-          <folding>
-            <element signature="e#22482#22483#0" expanded="true" />
-            <element signature="e#22509#22510#0" expanded="true" />
-            <element signature="e#91486#91487#0" expanded="true" />
-            <element signature="e#91518#91519#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="21" column="26" lean-forward="true" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/Common.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawingView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="51" column="24" selection-start-line="51" selection-start-column="24" selection-end-line="51" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/app/src/libs/zhc.jar!/pers/zhc/u/MathFloatFunctionInterface.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="8" column="24" lean-forward="true" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DisplayUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="82" column="58" selection-start-line="82" selection-start-column="58" selection-end-line="82" selection-end-column="58" />
-        </state>
-      </provider>
+    <entry file="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b92f6ff19ea5f487a3bb9c03d734611d/res/anim/abc_grow_fade_in_from_bottom.xml">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/app/Activity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="467">
-          <caret line="4478" column="9" lean-forward="true" selection-start-line="4478" selection-start-column="9" selection-end-line="4478" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../../../bin/android-sdk-linux/platforms/android-28/android.jar!/android/Manifest.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequesterInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/content/pm/PackageManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="551" column="51" selection-start-line="551" selection-start-column="51" selection-end-line="551" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="234" column="28" lean-forward="true" selection-start-line="234" selection-start-column="28" selection-end-line="234" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#849#876#0" expanded="true" />
-            <element signature="e#918#945#0" expanded="true" />
-            <element signature="e#4122#4140#0" expanded="true" />
-            <element signature="e#4181#4192#0" expanded="true" />
-            <element signature="e#5040#5055#0" expanded="true" />
-            <element signature="e#6416#6434#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequester.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="53" selection-start-line="17" selection-start-column="53" selection-end-line="17" selection-end-column="53" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="69" column="32" selection-start-line="69" selection-start-column="32" selection-end-line="69" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1910#1943#0" expanded="true" />
-            <element signature="e#3794#3835#0" expanded="true" />
-            <element signature="e#3990#4013#0" expanded="true" />
-            <element signature="e#4078#4096#0" expanded="true" />
-            <element signature="e#6835#6872#0" expanded="true" />
-            <element signature="e#7215#7252#0" expanded="true" />
-            <element signature="e#7585#7629#0" expanded="true" />
-            <element signature="e#8476#8501#0" expanded="true" />
-            <element signature="e#8570#8588#0" expanded="true" />
-            <element signature="e#9490#9515#0" expanded="true" />
-            <element signature="e#9584#9602#0" expanded="true" />
-            <element signature="e#10443#10468#0" expanded="true" />
-            <element signature="e#10537#10555#0" expanded="true" />
-            <element signature="e#11085#11110#0" expanded="true" />
-            <element signature="e#11179#11197#0" expanded="true" />
-            <element signature="e#12933#12948#0" expanded="true" />
-            <element signature="e#12994#13009#0" expanded="true" />
-            <element signature="e#15101#15116#0" expanded="true" />
-            <element signature="e#15873#15891#0" expanded="true" />
-            <element signature="e#16536#16573#0" expanded="true" />
-            <element signature="e#17251#17271#0" expanded="true" />
-            <element signature="e#17939#17969#0" expanded="true" />
-            <element signature="e#17984#18014#0" expanded="true" />
-            <element signature="e#18017#18047#0" expanded="true" />
-            <element signature="e#18260#18282#0" expanded="true" />
-            <element signature="e#18436#18448#0" expanded="true" />
-            <element signature="e#19812#19845#0" expanded="true" />
-            <element signature="e#20501#20519#0" expanded="true" />
-            <element signature="e#20956#20976#0" expanded="true" />
-            <element signature="e#21131#21152#0" expanded="true" />
-            <element signature="e#21779#21799#0" expanded="true" />
-            <element signature="e#21814#21834#0" expanded="true" />
-            <element signature="e#21837#21857#0" expanded="true" />
-            <element signature="e#23859#23900#0" expanded="true" />
-            <element signature="e#25572#25603#0" expanded="true" />
-            <element signature="e#26182#26221#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="520" column="53" lean-forward="true" selection-start-line="520" selection-start-column="53" selection-end-line="520" selection-end-column="53" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1000#1036#0" expanded="true" />
-            <element signature="e#4511#4541#0" expanded="true" />
-            <element signature="e#5023#5052#0" expanded="true" />
-            <element signature="e#11080#11096#0" expanded="true" />
-            <element signature="e#11144#11171#0" expanded="true" />
-            <element signature="e#11466#11486#0" expanded="true" />
-            <element signature="e#11534#11565#0" expanded="true" />
-            <element signature="e#12476#12477#0" expanded="true" />
-            <element signature="e#12571#12572#0" expanded="true" />
-            <element signature="e#13311#13332#0" expanded="true" />
-            <element signature="e#13380#13412#0" expanded="true" />
-            <element signature="e#13564#13584#0" expanded="true" />
-            <element signature="e#13632#13663#0" expanded="true" />
-            <element signature="e#13899#13924#0" expanded="true" />
-            <element signature="e#14131#14155#0" expanded="true" />
-            <element signature="e#15211#15239#0" expanded="true" />
-            <element signature="e#17835#17854#0" expanded="true" />
-            <element signature="e#18600#18639#0" expanded="true" />
-            <element signature="e#20560#20584#0" expanded="true" />
-            <element signature="e#27278#27279#0" expanded="true" />
-            <element signature="e#27315#27316#0" expanded="true" />
-            <element signature="e#27036#27069#0" expanded="true" />
-            <element signature="e#27319#27342#0" expanded="true" />
-            <element signature="e#28980#28991#0" expanded="true" />
-            <element signature="e#29027#29042#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/DocDB.java">
-      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
-          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/view/View.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="16375" column="10" lean-forward="true" selection-start-line="16375" selection-start-column="10" selection-end-line="16375" selection-end-column="10" />
-          <folding>
-            <element signature="e#665721#665722#0" expanded="true" />
-            <element signature="e#665753#665754#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="44" column="23" selection-start-line="44" selection-start-column="23" selection-end-line="44" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2753#2792#0" expanded="true" />
-            <element signature="e#4599#4628#0" expanded="true" />
-            <element signature="e#6274#6275#0" expanded="true" />
-            <element signature="e#6318#6319#0" expanded="true" />
-            <element signature="e#7224#7225#0" expanded="true" />
-            <element signature="e#7268#7269#0" expanded="true" />
-            <element signature="e#8665#8666#0" expanded="true" />
-            <element signature="e#8709#8710#0" expanded="true" />
-            <element signature="e#10106#10107#0" expanded="true" />
-            <element signature="e#10150#10151#0" expanded="true" />
-            <element signature="e#11496#11497#0" expanded="true" />
-            <element signature="e#11566#11567#0" expanded="true" />
-          </folding>
+          <caret line="5357" column="5" lean-forward="true" selection-start-line="5357" selection-start-column="5" selection-end-line="5357" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="80" column="18" selection-start-line="80" selection-start-column="18" selection-end-line="80" selection-end-column="18" />
+        <state relative-caret-position="99">
+          <caret line="29" column="20" selection-start-line="29" selection-start-column="20" selection-end-line="29" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/slide_out_bottom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/slide_in_bottom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="17" column="32" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="535">
+          <caret line="609" column="22" selection-start-line="609" selection-start-column="22" selection-end-line="609" selection-end-column="22" />
+          <folding>
+            <element signature="e#25184#25215#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/pi/Pi.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="706">
+          <caret line="103" column="22" selection-start-line="103" selection-start-column="22" selection-end-line="103" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/toast/AToast.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="27" column="62" selection-start-line="27" selection-start-column="62" selection-end-line="27" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/clipboard/Clip.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="34" column="62" selection-start-line="34" selection-start-column="62" selection-end-line="34" selection-end-column="62" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="61" column="77" selection-start-line="61" selection-start-column="77" selection-end-line="61" selection-end-column="77" />
+        <state relative-caret-position="782">
+          <caret line="143" column="62" selection-start-line="143" selection-start-column="62" selection-end-line="143" selection-end-column="62" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/app/src/libs/zhc.jar!/pers/zhc/u/FileU.class">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/anim/in_left_and_bottom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="136" column="37" selection-start-line="136" selection-start-column="37" selection-end-line="136" selection-end-column="37" />
+        <state relative-caret-position="38">
+          <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/util/Date.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="397">
+          <caret line="1072" lean-forward="true" selection-start-line="1072" selection-end-line="1072" />
+          <folding>
+            <element signature="e#7406#7407#0" expanded="true" />
+            <element signature="e#7454#7455#0" expanded="true" />
+            <element signature="e#7860#7861#0" expanded="true" />
+            <element signature="e#7891#7892#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/util/List.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="110" column="33" lean-forward="true" selection-start-line="110" selection-start-column="33" selection-end-line="110" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="34" column="39" lean-forward="true" selection-start-line="34" selection-start-column="39" selection-end-line="34" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1524#1535#0" expanded="true" />
+            <element signature="e#1571#1586#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/content/Intent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="727" column="7" lean-forward="true" selection-start-line="727" selection-start-column="7" selection-end-line="727" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1425">
+          <caret line="93" column="28" selection-start-line="93" selection-start-column="28" selection-end-line="93" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/array.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="34" column="23" selection-start-line="34" selection-start-column="23" selection-end-line="34" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/take_note_activity.xml">
+      <provider editor-type-id="android-designer2" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="16" column="37" selection-start-line="16" selection-start-column="37" selection-end-line="16" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="330" column="66" selection-start-line="330" selection-start-column="66" selection-end-line="330" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/database/sqlite/SQLiteDatabase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="1602" column="6" lean-forward="true" selection-start-line="1602" selection-start-column="6" selection-end-line="1602" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ViewWithExtras.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="789">
+          <caret line="54" column="35" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2209#2235#0" expanded="true" />
+            <element signature="e#2300#2318#0" expanded="true" />
+            <element signature="e#3025#3050#0" expanded="true" />
+            <element signature="e#3115#3133#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="100" column="69" selection-start-line="100" selection-start-column="69" selection-end-line="100" selection-end-column="69" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3927#3953#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="296">
+          <caret line="178" column="39" selection-start-line="178" selection-start-column="39" selection-end-line="178" selection-end-column="39" />
         </state>
       </provider>
     </entry>
   </component>
   <component name="masterDetails">
     <states>
-      <state key="ArtifactsStructureConfigurable.UI">
-        <settings>
-          <artifact-editor />
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="FacetStructureConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="GlobalLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="JdkListConfigurable.UI">
-        <settings>
-          <last-edited>Android API 15 Platform</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ModuleStructureConfigurable.UI">
-        <settings>
-          <last-edited>app</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
       <state key="ProjectJDKs.UI">
         <settings>
           <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectLibrariesConfigurable.UI">
-        <settings>
           <splitter-proportions>
             <option name="proportions">
               <list>

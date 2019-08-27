@@ -28,4 +28,10 @@ public class Clip extends AppCompatActivity {
             } else Toast.makeText(this, getString(R.string.html_clipboard_unsupported), Toast.LENGTH_SHORT).show();
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, R.anim.slide_out_bottom);
+    }
 }
