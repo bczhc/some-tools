@@ -94,4 +94,5 @@
     <string name="type_stroke_width__pixels">输入画笔宽度(pixels)</string>
     <string name="eraser_paint_stroke_width">橡皮擦大小</string>
     <string name="drawing_paint_stroke_width">画笔大小</string>
+    <string name="clear_application_internal_recoded_path">清除应用内部路径记录(%1$dkB)</string>
 </resources>
