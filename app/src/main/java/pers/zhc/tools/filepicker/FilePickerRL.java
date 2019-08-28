@@ -91,7 +91,7 @@ public class FilePickerRL extends RelativeLayout {
             AlertDialog.Builder ad = new AlertDialog.Builder(ctx);
             EditText et = new EditText(ctx);
             String s = pathView.getText().toString();
-            et.setText(String.format("%s", s.equals("/storage/emulated") ? s + "/0" : s));
+            ctx.runOnUiThread(() -> et.setText(String.format("%s", s.equals("/storage/emulated") ? s + "/0" : s)));
             et.setLayoutParams(lp);
             ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
@@ -211,7 +211,7 @@ public class FilePickerRL extends RelativeLayout {
                            int i) {
         textViews[i] = new TextView(ctx);
         textViews[i].setTextSize(25);
-        textViews[i].setText(listFiles[i].isFile() ? listFiles[i].getName() : (listFiles[i].getName() + "/"));
+        ctx.runOnUiThread(() -> textViews[i].setText(listFiles[i].isFile() ? listFiles[i].getName() : (listFiles[i].getName() + "/")));
         textViews[i].setLayoutParams(lp);
         switch (type) {
             case 1:
