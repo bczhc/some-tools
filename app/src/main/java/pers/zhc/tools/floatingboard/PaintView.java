@@ -39,7 +39,7 @@ public class PaintView extends View {
         init();
     }*/
 
-    private void setOS(Context context, boolean append) {
+    void setOS(Context context, boolean append) {
         File file = new File(context.getFilesDir().toString() + File.separator + "fb.path");
         try {
             os = new FileOutputStream(file, append);
@@ -127,9 +127,10 @@ public class PaintView extends View {
      */
     void undo() {
         try {
-            byte[] bytes = new byte[22];
-            bytes[21] = 1;
+            byte[] bytes = new byte[26];
+            bytes[25] = 1;
             os.write(bytes);
+            os.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -151,9 +152,10 @@ public class PaintView extends View {
      */
     void redo() {
         try {
-            byte[] bytes = new byte[22];
-            bytes[21] = 2;
+            byte[] bytes = new byte[26];
+            bytes[25] = 2;
             os.write(bytes);
+            os.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -306,10 +308,15 @@ public class PaintView extends View {
             try {
                 InputStream is = new FileInputStream(f);
                 //                System.out.println("bytes = " + Arrays.toString(bytes));
-                byte[] bytes = new byte[22];
+                byte[] bytes = new byte[26];
                 byte[] bytes_4 = new byte[4];
                 while (is.read(bytes) != -1) {
-                    switch (bytes[21]) {
+                    /*try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }*/
+                    switch (bytes[25]) {
                         case 1:
                             undo();
                             break;
@@ -320,17 +327,20 @@ public class PaintView extends View {
                             System.arraycopy(bytes, 16, bytes_4, 0, 4);
                             int motionAction = jni.byteArrayToInt(bytes_4);
                             System.arraycopy(bytes, 0, bytes_4, 0, 4);
-                            float x = jni.byteArrayTofloat(bytes_4);
+                            float x = jni.byteArrayToFloat(bytes_4);
                             System.arraycopy(bytes, 4, bytes_4, 0, 4);
-                            float y = jni.byteArrayTofloat(bytes_4);
+                            float y = jni.byteArrayToFloat(bytes_4);
                             System.arraycopy(bytes, 8, bytes_4, 0, 4);
                             int color = jni.byteArrayToInt(bytes_4);
                             System.arraycopy(bytes, 12, bytes_4, 0, 4);
-                            float strokeWidth = jni.byteArrayTofloat(bytes_4);
+                            float strokeWidth = jni.byteArrayToFloat(bytes_4);
+                            System.arraycopy(bytes, 20, bytes_4, 0, 4);
+                            float eraserStrokeWidth = jni.byteArrayToFloat(bytes_4);
                             if (strokeWidth <= 0) strokeWidth = Random.ran_sc(1, 800);
                             if (motionAction != 0 && motionAction != 1 && motionAction != 2)
                                 motionAction = Random.ran_sc(0, 2);
-                            setEraserMode(bytes[20] == 1);
+                            setEraserMode(bytes[24] == 1);
+                            setEraserStrokeWidth(eraserStrokeWidth);
                             setPaintColor(color);
                             setStrokeWidth(strokeWidth);
                             onTouchAction(motionAction, x, y);
@@ -346,18 +356,19 @@ public class PaintView extends View {
     }
 
     private void onTouchAction(int motionAction, float x, float y) {
-        byte[][] bytes = new byte[5][4];
+        byte[][] bytes = new byte[6][4];
         bytes[0] = jni.floatToByteArray(x);
         bytes[1] = jni.floatToByteArray(y);
         bytes[2] = jni.intToByteArray(getColor());
         bytes[3] = jni.floatToByteArray(getStrokeWidth());
-        bytes[4] = jni.intToByteArray(motionAction);
-        byte[] data = new byte[22];
+        bytes[4] = jni.floatToByteArray(getEraserStrokeWidth());
+        bytes[5] = jni.intToByteArray(motionAction);
+        byte[] data = new byte[26];
         for (int i = 0; i < bytes.length; i++) {
             System.arraycopy(bytes[i], 0, data, 4 * i, bytes[i].length);
         }
         try {
-            data[20] = (byte) (isEraserMode ? 1 : 0);
+            data[24] = (byte) (isEraserMode ? 1 : 0);
             os.write(data);
             os.flush();
 //            System.out.println("data = " + Arrays.toString(data));
