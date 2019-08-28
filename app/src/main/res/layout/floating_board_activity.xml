@@ -19,4 +19,12 @@
             android:text="@string/not_be_killed"
             android:id="@+id/not_be_killed"
     />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/clear_application_internal_recoded_path"
+            android:layout_below="@id/not_be_killed"
+            android:layout_alignLeft="@id/not_be_killed"
+            android:layout_alignRight="@id/not_be_killed" android:layout_alignStart="@id/not_be_killed"
+            android:layout_alignEnd="@id/not_be_killed"
+            android:id="@+id/clear_path_btn"
+    />
 </RelativeLayout>

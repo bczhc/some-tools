@@ -35,7 +35,7 @@ JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingboard_JNI_intToByteArra
     return (jbyteArray) r;
 }
 
-JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingboard_JNI_byteArrayTofloat
+JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingboard_JNI_byteArrayToFloat
         (JNIEnv *env, jobject obj, jbyteArray bytes) {
     JNIEnv e = *env;
     jbyte b[4];
