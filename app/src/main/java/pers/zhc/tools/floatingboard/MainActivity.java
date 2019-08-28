@@ -95,7 +95,8 @@ public class MainActivity extends BaseActivity {
         });
 //        RelativeLayout rl = findViewById(R.id.main);
         pv = new PaintView(this, width, height);
-        pv.setStrokeWidth(10);
+        pv.setStrokeWidth(10F);
+        pv.setEraserStrokeWidth(10F);
         pv.setPaintColor(Color.RED);
         wm = (WindowManager) this.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         setBtn();
@@ -428,10 +429,31 @@ public class MainActivity extends BaseActivity {
     }
 
     private void changeStrokeWidth() {
+        Dialog mainDialog = new Dialog(this);
+        LinearLayout mainLL = new LinearLayout(this);
+        mainLL.setOrientation(LinearLayout.VERTICAL);
+        mainLL.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout barLL = new LinearLayout(this);
+        RadioGroup rg = new RadioGroup(this);
+        barLL.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+        barLL.setOrientation(LinearLayout.HORIZONTAL);
+        RadioButton[] radioButtons = new RadioButton[2];
+        int[] strRes = new int[]{
+                R.string.drawing_paint_stroke_width,
+                R.string.eraser_paint_stroke_width
+        };
+        for (int i = 0; i < radioButtons.length; i++) {
+            radioButtons[i] = new RadioButton(this);
+            if (i == 0) radioButtons[0].setChecked(true);
+            radioButtons[i].setText(strRes[i]);
+            radioButtons[i].setId(i + 1);
+            rg.addView(radioButtons[i]);
+        }
+        rg.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+        barLL.addView(rg);
         LinearLayout ll = new LinearLayout(this);
-        TextView widthWatchView = new TextView(this);
+        StrokeWatchView strokeWatchView = new StrokeWatchView(this, width, height);
         SeekBar sb = new SeekBar(this);
-        widthWatchView.setBackgroundColor(pv.getColor());
         TextView tv = new TextView(this);
         tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         tv.setTextSize(20F);
@@ -442,7 +464,7 @@ public class MainActivity extends BaseActivity {
             adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                 double edit = Double.parseDouble(et.getText().toString());
                 double a = Math.log(edit) / Math.log(1.07D);
-                widthWatchView.setHeight((int) edit);
+                strokeWatchView.change(((float) edit), pv.getColor());
                 sb.setProgress((int) a);
             }).setNegativeButton(R.string.cancel, (dialog, which) -> {
             }).setTitle(R.string.type_stroke_width__pixels).setView(et);
@@ -453,18 +475,39 @@ public class MainActivity extends BaseActivity {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             ad.show();
         });
-        Dialog dialog = new Dialog(this);
-        sb.setProgress(((int) (Math.log((double) pv.getStrokeWidth()) / Math.log(1.07D))));
-        widthWatchView.setHeight((int) Math.pow(1.07D, (double) sb.getProgress()));
-        tv.setText(String.valueOf((int) Math.pow(1.07D, (double) sb.getProgress())));
+        /*sb.setProgress(((int) (Math.log((double) pv.getStrokeWidth()) / Math.log(1.07D))));
+        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(sb.getProgress(), sb.getProgress()));
+        strokeWatchView.change((float) Math.pow(1.07D, (double) sb.getProgress()), pv.getColor());
+        tv.setText(String.valueOf((int) Math.pow(1.07D, (double) sb.getProgress())));*/
+        double pow = pv.getStrokeWidth();
+        pv.setStrokeWidth((float) ((int) pow));
+        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
+        strokeWatchView.change(((float) pow), pv.getColor());
+        tv.setText(String.valueOf((int) pow));
+        sb.setProgress((int) (Math.log(pow) / Math.log(1.07D)));
+        sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        sb.setMax(100);
+        ll.setOrientation(LinearLayout.VERTICAL);
+        ll.addView(tv);
+        ll.addView(sb);
+        ll.addView(strokeWatchView);
+        ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
+        setDialogAttr(mainDialog, false, width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int[] checked = {1};
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                System.out.println("progress = " + progress);
                 double pow = Math.pow(1.07D, ((double) progress));
-                pv.setStrokeWidth((float) ((int) pow));
-                widthWatchView.setHeight((int) pow);
-                tv.setText(String.valueOf((int) pow));
+                if (checked[0] == 1) {
+                    pv.setStrokeWidth((float) ((int) pow));
+                    tv.setText(String.valueOf(((int) pow)));
+                } else {
+                    pv.setEraserStrokeWidth((float) pow);
+                    tv.setText(String.valueOf(((int) pow)));
+                }
+                strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
+                strokeWatchView.change(((float) pow), pv.getColor());
             }
 
             @Override
@@ -477,21 +520,18 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-        sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        sb.setMax(100);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        ll.addView(tv);
-        ll.addView(sb);
-        ll.addView(widthWatchView);
-        ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        dialog.setContentView(ll, new ViewGroup.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
-        dialog.setTitle("change stroke width");
-//        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Objects.requireNonNull(dialog.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-        } else //noinspection deprecation
-            Objects.requireNonNull(dialog.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        dialog.show();
+        rg.setOnCheckedChangeListener((group, checkedId) -> {
+            checked[0] = checkedId;
+            float w = checkedId == 1 ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
+            strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) w), ((int) w)));
+            strokeWatchView.change(w, pv.getColor());
+            tv.setText(String.format(getString(R.string.tv), String.valueOf(((int) w))));
+            sb.setProgress((int) (Math.log(w) / Math.log(1.07D)));
+        });
+        mainLL.addView(barLL);
+        mainLL.addView(ll);
+        mainDialog.setContentView(mainLL);
+        mainDialog.show();
     }
 
     private void stopFloatingWindow() {
@@ -543,8 +583,8 @@ public class MainActivity extends BaseActivity {
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
                         EditText et = new EditText(this);
                         et.setText(String.format(getString(R.string.tv), format));
-                        File file = new File(d.toString() + File.separator + et.getText().toString() + ".png");
                         AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                            File file = new File(d.toString() + File.separator + et.getText().toString() + ".png");
                             pv.saveImg(file);
                             if (file.exists())
                                 Toast.makeText(this, getString(R.string.saving_success) + "\n" + d.toString() + File.separator + et.getText().toString() + ".png", Toast.LENGTH_SHORT).show();
