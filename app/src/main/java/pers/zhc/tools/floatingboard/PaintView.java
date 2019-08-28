@@ -8,7 +8,6 @@ import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.u.Random;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -141,7 +140,6 @@ public class PaintView extends View {
             //遍历，将Path重新绘制到 mCanvas
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
-                System.out.println("pb.paint.getColor() = " + pb.paint.getColor());
             }
             postInvalidate();
         }
@@ -307,7 +305,6 @@ public class PaintView extends View {
         new Thread(() -> {
             try {
                 InputStream is = new FileInputStream(f);
-                //                System.out.println("bytes = " + Arrays.toString(bytes));
                 byte[] bytes = new byte[26];
                 byte[] bytes_4 = new byte[4];
                 while (is.read(bytes) != -1) {
@@ -324,8 +321,6 @@ public class PaintView extends View {
                             redo();
                             break;
                         default:
-                            System.arraycopy(bytes, 16, bytes_4, 0, 4);
-                            int motionAction = jni.byteArrayToInt(bytes_4);
                             System.arraycopy(bytes, 0, bytes_4, 0, 4);
                             float x = jni.byteArrayToFloat(bytes_4);
                             System.arraycopy(bytes, 4, bytes_4, 0, 4);
@@ -334,11 +329,10 @@ public class PaintView extends View {
                             int color = jni.byteArrayToInt(bytes_4);
                             System.arraycopy(bytes, 12, bytes_4, 0, 4);
                             float strokeWidth = jni.byteArrayToFloat(bytes_4);
+                            System.arraycopy(bytes, 16, bytes_4, 0, 4);
+                            int motionAction = jni.byteArrayToInt(bytes_4);
                             System.arraycopy(bytes, 20, bytes_4, 0, 4);
                             float eraserStrokeWidth = jni.byteArrayToFloat(bytes_4);
-                            if (strokeWidth <= 0) strokeWidth = Random.ran_sc(1, 800);
-                            if (motionAction != 0 && motionAction != 1 && motionAction != 2)
-                                motionAction = Random.ran_sc(0, 2);
                             setEraserMode(bytes[24] == 1);
                             setEraserStrokeWidth(eraserStrokeWidth);
                             setPaintColor(color);
@@ -361,8 +355,8 @@ public class PaintView extends View {
         bytes[1] = jni.floatToByteArray(y);
         bytes[2] = jni.intToByteArray(getColor());
         bytes[3] = jni.floatToByteArray(getStrokeWidth());
-        bytes[4] = jni.floatToByteArray(getEraserStrokeWidth());
-        bytes[5] = jni.intToByteArray(motionAction);
+        bytes[4] = jni.intToByteArray(motionAction);
+        bytes[5] = jni.floatToByteArray(getEraserStrokeWidth());
         byte[] data = new byte[26];
         for (int i = 0; i < bytes.length; i++) {
             System.arraycopy(bytes[i], 0, data, 4 * i, bytes[i].length);
@@ -371,7 +365,6 @@ public class PaintView extends View {
             data[24] = (byte) (isEraserMode ? 1 : 0);
             os.write(data);
             os.flush();
-//            System.out.println("data = " + Arrays.toString(data));
         } catch (IOException e) {
             Common.showException(e, (Activity) ctx);
         }
@@ -423,7 +416,6 @@ public class PaintView extends View {
 
     void setEraserStrokeWidth(float w) {
         eraserPaint.setStrokeWidth(w);
-        System.out.println("w = " + w);
     }
 
     float getEraserStrokeWidth() {
