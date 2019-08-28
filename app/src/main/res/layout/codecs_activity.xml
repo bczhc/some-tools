@@ -78,7 +78,7 @@
                                           android:layout_weight="2"
                             >
                                 <Button
-                                        android:text="@string/pick_file"
+                                        android:text="@string/select_file_or_directory"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:id="@+id/pF"

@@ -30,6 +30,7 @@ public class PaintView extends View {
     boolean isEraserMode;
     private JNI jni = new JNI();
     private Context ctx;
+    private float mEraserStrokeWidth;
 
 
 
@@ -58,6 +59,14 @@ public class PaintView extends View {
      */
     private void init(int width, int height) {
         setOS(ctx, true);
+        setEraserMode(false);
+        eraserPaint = new Paint();
+        eraserPaint.setColor(Color.TRANSPARENT);
+        eraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        eraserPaint.setAntiAlias(true);
+        eraserPaint.setStyle(Paint.Style.STROKE);
+        eraserPaint.setStrokeJoin(Paint.Join.ROUND);//使画笔更加圆润
+        eraserPaint.setStrokeCap(Paint.Cap.ROUND);//同上
         //关闭硬件加速
         //否则橡皮擦模式下，设置的 PorterDuff.Mode.CLEAR ，实时绘制的轨迹是黑色
 //        setBackgroundColor(Color.WHITE);//设置白色背景
@@ -103,7 +112,6 @@ public class PaintView extends View {
 
     void setStrokeWidth(float width) {
         mPaint.setStrokeWidth(width);
-        if (eraserPaint != null) eraserPaint.setStrokeWidth(width);
     }
 
     float getStrokeWidth() {
@@ -180,11 +188,6 @@ public class PaintView extends View {
      */
     void setEraserMode(boolean isEraserMode) {
         this.isEraserMode = isEraserMode;
-        if (eraserPaint == null) {
-            eraserPaint = new Paint(mPaint);
-            eraserPaint.setColor(Color.TRANSPARENT);
-            eraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        }
     }
 
     /**
@@ -370,11 +373,11 @@ public class PaintView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
-                    Paint eraserPaint_ref = isEraserMode ? eraserPaint : mPaint;
-                    mCanvas.drawPath(mPath, eraserPaint_ref);//将路径绘制在mBitmap上
+                    Paint paintRef = isEraserMode ? eraserPaint : mPaint;
+                    mCanvas.drawPath(mPath, paintRef);//将路径绘制在mBitmap上
                     Path path = new Path(mPath);//复制出一份mPath
-                    Paint paint = new Paint(eraserPaint_ref);
-                    PathBean pb = new PathBean(path, paint);
+                    Paint paint = new Paint(paintRef);
+                    PathBean pb = new PathBean(path, paintRef);
                     undoList.add(pb);//将路径对象存入集合
                     mPath.reset();
                     mPath = null;
@@ -404,5 +407,14 @@ public class PaintView extends View {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    void setEraserStrokeWidth(float w) {
+        eraserPaint.setStrokeWidth(w);
+        System.out.println("w = " + w);
+    }
+
+    float getEraserStrokeWidth() {
+        return eraserPaint.getStrokeWidth();
     }
 }
