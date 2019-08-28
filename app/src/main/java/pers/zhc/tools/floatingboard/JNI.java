@@ -14,7 +14,7 @@ public class JNI {
 
     native byte[] intToByteArray(int i);
 
-    native float byteArrayTofloat(byte[] bytes);
+    native float byteArrayToFloat(byte[] bytes);
 
     native int byteArrayToInt(byte[] bytes);
 }
