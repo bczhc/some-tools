@@ -56,6 +56,29 @@ public class MainActivity extends BaseActivity {
     }
 
     private void init() {
+        Button clearPathBtn = findViewById(R.id.clear_path_btn);
+        File pathFile = new File(getFilesDir().toString() + File.separator + "fb.path");
+        final int[] d = {0};
+        if (pathFile.exists()) {
+            d[0] = (int) (pathFile.length() / 1000L);
+        }
+        clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
+        clearPathBtn.setOnClickListener(v -> {
+            pv.clearTouchRecordOSContent();
+            d[0] = 0;
+            if (pathFile.exists()) {
+                d[0] = (int) (pathFile.length() / 1000L);
+            }
+            clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
+        });
+        clearPathBtn.setOnLongClickListener(v -> {
+            d[0] = 0;
+            if (pathFile.exists()) {
+                d[0] = (int) (pathFile.length() / 1000L);
+            }
+            clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
+            return true;
+        });
         notificationClickReceiver = new NotificationClickReceiver();
         Point point = new Point();
         /*//noinspection deprecation
@@ -584,11 +607,13 @@ public class MainActivity extends BaseActivity {
                         EditText et = new EditText(this);
                         et.setText(String.format(getString(R.string.tv), format));
                         AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                            pv.closePathRecoderOS();
                             File file = new File(d.toString() + File.separator + et.getText().toString() + ".png");
                             pv.saveImg(file);
                             if (file.exists())
                                 Toast.makeText(this, getString(R.string.saving_success) + "\n" + d.toString() + File.separator + et.getText().toString() + ".png", Toast.LENGTH_SHORT).show();
                             else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                            pv.setOS(this, true);
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                         }).setTitle(R.string.type_file_name).setView(et).create();
