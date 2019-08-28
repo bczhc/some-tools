@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">tools</string>
     <string name="tv" translatable="false">%1$s</string>
-    <string name="pick_file">选择文件/目录</string>
+    <string name="select_file_or_directory">选择文件/目录</string>
     <string name="encode">编码</string>
     <string name="decode">解码</string>
     <string name="ok">确定</string>
@@ -89,7 +89,9 @@
     <string name="save_path">保存路径</string>
     <string name="import_path">导入路径</string>
     <string name="saving_failed">保存失败</string>
-    <string name="choose_path_file">选择路径文件</string>
+    <string name="select_path_file">选择路径文件</string>
     <string name="type_file_name">输入文件名</string>
     <string name="type_stroke_width__pixels">输入画笔宽度(pixels)</string>
+    <string name="eraser_paint_stroke_width">橡皮擦大小</string>
+    <string name="drawing_paint_stroke_width">画笔大小</string>
 </resources>
