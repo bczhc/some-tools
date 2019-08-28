@@ -140,6 +140,7 @@ public class PaintView extends View {
             //遍历，将Path重新绘制到 mCanvas
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
+                System.out.println("pb.paint.getColor() = " + pb.paint.getColor());
             }
             postInvalidate();
         }
@@ -377,7 +378,7 @@ public class PaintView extends View {
                     mCanvas.drawPath(mPath, paintRef);//将路径绘制在mBitmap上
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(paintRef);
-                    PathBean pb = new PathBean(path, paintRef);
+                    PathBean pb = new PathBean(path, paint);
                     undoList.add(pb);//将路径对象存入集合
                     mPath.reset();
                     mPath = null;
