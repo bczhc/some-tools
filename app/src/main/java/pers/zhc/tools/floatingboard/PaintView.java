@@ -15,6 +15,7 @@ import pers.zhc.u.common.Documents;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,6 +41,7 @@ public class PaintView extends View {
     private Context ctx;
     private float mEraserStrokeWidth;
     private Bitmap backgroundBitmap;
+    private List<PathBean> pathBeanList;
 
 
 
@@ -249,6 +251,8 @@ public class PaintView extends View {
     }
 
 
+    private double firstDistance;
+
     /**
      * 触摸事件 触摸绘制
      */
@@ -256,14 +260,31 @@ public class PaintView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        /*if (action == MotionEvent.ACTION_POINTER_INDEX_MASK) {
-            if (event.getPointerCount() == 2) {
-
+        int pointerCount = event.getPointerCount();
+        if (pointerCount == 2) {
+            float x1 = event.getX(0);
+            float x2 = event.getX(1);
+            float y1 = event.getY(0);
+            float y2 = event.getY(1);
+            double distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+            if (firstDistance == 0) firstDistance = distance;
+            if (action == MotionEvent.ACTION_MOVE) {
+                /*if (distance > firstDistance) {
+                    System.out.println("zoom+");
+                } else System.out.println("zoom-");*/
+                mCanvas.translate((x1 + x2) / 2, (y1 + y2) / 2);
+                mCanvas.scale(((float) (width * (distance / firstDistance))), ((float) (height * (distance / firstDistance))));
+                mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                for (PathBean pathBean : pathBeanList) {
+                    mCanvas.drawPath(pathBean.path, pathBean.paint);
+                }
+                mCanvas.translate(0F, 0F);
+                invalidate();
             }
-        } else onTouchAction(action, x, y);*/
-        onTouchAction(action, x, y);
+        } else if (pointerCount == 1) {
+            onTouchAction(action, event.getX(), event.getY());
+            firstDistance = 0;
+        }
         postInvalidate();
         return true;
     }
@@ -407,6 +428,7 @@ public class PaintView extends View {
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(paintRef);
                     PathBean pb = new PathBean(path, paint);
+                    pathBeanList.add(pb);
                     undoList.add(pb);//将路径对象存入集合
                     mPath.reset();
                     mPath = null;
