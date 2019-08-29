@@ -8,6 +8,7 @@ import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.u.Random;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -15,6 +16,9 @@ import java.util.LinkedList;
 @SuppressWarnings({"unused"})
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
+    private final File internalPathFile;
+    private final int height;
+    private final int width;
     private OutputStream os;
     private Paint mPaint;
     private Path mPath;
@@ -38,8 +42,7 @@ public class PaintView extends View {
         init();
     }*/
 
-    void setOS(Context context, boolean append) {
-        File file = new File(context.getFilesDir().toString() + File.separator + "fb.path");
+    void setOS(File file, boolean append) {
         try {
             os = new FileOutputStream(file, append);
         } catch (FileNotFoundException e) {
@@ -47,17 +50,20 @@ public class PaintView extends View {
         }
     }
 
-    PaintView(Context context, int width, int height) {
+    PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
         ctx = context;
-        init(width, height);
+        this.internalPathFile = internalPathFile;
+        this.width = width;
+        this.height = height;
+        init();
     }
 
     /***
      * 初始化
      */
-    private void init(int width, int height) {
-        setOS(ctx, true);
+    private void init() {
+        setOS(internalPathFile, true);
         setEraserMode(false);
         eraserPaint = new Paint();
         eraserPaint.setColor(Color.TRANSPARENT);
@@ -333,6 +339,10 @@ public class PaintView extends View {
                             int motionAction = jni.byteArrayToInt(bytes_4);
                             System.arraycopy(bytes, 20, bytes_4, 0, 4);
                             float eraserStrokeWidth = jni.byteArrayToFloat(bytes_4);
+                            if (motionAction != 0 && motionAction != 1 && motionAction != 2)
+                                motionAction = Random.ran_sc(0, 2);
+                            if (strokeWidth <= 0) strokeWidth = Random.ran_sc(1, 800);
+                            if (eraserStrokeWidth <= 0) eraserStrokeWidth = Random.ran_sc(1, 800);
                             setEraserMode(bytes[24] == 1);
                             setEraserStrokeWidth(eraserStrokeWidth);
                             setPaintColor(color);
@@ -408,7 +418,7 @@ public class PaintView extends View {
     void clearTouchRecordOSContent() {
         try {
             os.close();
-            setOS(ctx, false);
+            setOS(internalPathFile, false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -420,5 +430,12 @@ public class PaintView extends View {
 
     float getEraserStrokeWidth() {
         return eraserPaint.getStrokeWidth();
+    }
+
+    void importImage(String filePath) {
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        mCanvas.drawBitmap(bitmap, 0F, 0F, mBitmapPaint);
+        invalidate();
     }
 }

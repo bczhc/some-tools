@@ -162,7 +162,7 @@ public class Document extends BaseActivity {
                             LinearLayout linearLayout1 = new LinearLayout(this);
                             linearLayout1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             linearLayout1.setOrientation(LinearLayout.VERTICAL);
-                            DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
                             Button[] buttons = new Button[2];
                             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                                     v1 -> {
@@ -189,7 +189,7 @@ public class Document extends BaseActivity {
                                             setSVViews();
                                             dialog.dismiss();
                                         }, (dialog1, which) -> {
-                                        }, R.string.whether_to_delete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                        }, R.string.whether_to_delete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
                                         confirmationAD.show();
                                     }
                             };
