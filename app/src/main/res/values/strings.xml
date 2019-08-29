@@ -103,4 +103,5 @@
     <string name="top_starting_point">右起始点</string>
     <string name="scaled_width">缩放至宽度</string>
     <string name="scaled_height">缩放至高度</string>
+    <string name="type_error">输入不合法</string>
 </resources>

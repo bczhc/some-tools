@@ -722,11 +722,16 @@ public class MainActivity extends BaseActivity {
                             AlertDialog importImageOptionsDialog = importImageOptionsDialogBuilder.setView(linearLayout)
                                     .setTitle(R.string.set__top__left__scaled_width__scaled_height)
                                     .setPositiveButton(R.string.ok, (dialog1, which) -> {
-                                        pv.importImage(imageBitmap,
-                                                Float.parseFloat(editTexts[0].getText().toString())
-                                                , Float.parseFloat(editTexts[1].getText().toString())
-                                                , Integer.parseInt(editTexts[2].getText().toString())
-                                                , Integer.parseInt(editTexts[3].getText().toString()));
+                                        try {
+                                            pv.importImage(imageBitmap,
+                                                    Float.parseFloat(editTexts[0].getText().toString())
+                                                    , Float.parseFloat(editTexts[1].getText().toString())
+                                                    , Integer.parseInt(editTexts[2].getText().toString())
+                                                    , Integer.parseInt(editTexts[3].getText().toString()));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            Toast.makeText(this, R.string.type_error, Toast.LENGTH_SHORT).show();
+                                        }
                                         Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
                                         moreOptionsDialog.dismiss();
                                     })
