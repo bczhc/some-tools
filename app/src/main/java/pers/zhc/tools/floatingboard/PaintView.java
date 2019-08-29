@@ -7,6 +7,8 @@ import android.graphics.*;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.u.Random;
 
@@ -36,7 +38,7 @@ public class PaintView extends View {
     private JNI jni = new JNI();
     private Context ctx;
     private float mEraserStrokeWidth;
-    private Bitmap backGroundBitmap;
+    private Bitmap backgroundBitmap;
 
 
 
@@ -147,8 +149,8 @@ public class PaintView extends View {
             PathBean lastPb = undoList.removeLast();//将最后一个移除
             redoList.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 mCanvas
-            if (backGroundBitmap != null) {
-                mCanvas.drawBitmap(backGroundBitmap, 0, 0, mBitmapPaint);
+            if (backgroundBitmap != null) {
+                mCanvas.drawBitmap(backgroundBitmap, 0, 0, mBitmapPaint);
             }
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
@@ -194,6 +196,7 @@ public class PaintView extends View {
         //清空 撤销 ，恢复 操作列表
         redoList.clear();
         undoList.clear();
+        backgroundBitmap = null;
     }
 
     /**
@@ -438,8 +441,13 @@ public class PaintView extends View {
     }
 
     void importImage(String filePath) {
-        backGroundBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), width, height, true);
-        mCanvas.drawBitmap(backGroundBitmap, 0, 0, mBitmapPaint);
-        invalidate();
+        try {
+            backgroundBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), width, height, true);
+            mCanvas.drawBitmap(backgroundBitmap, 0, 0, mBitmapPaint);
+            invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(ctx, R.string.importing_failed, Toast.LENGTH_SHORT).show();
+        }
     }
 }
