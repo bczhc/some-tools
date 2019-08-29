@@ -34,6 +34,7 @@ public class PaintView extends View {
     private JNI jni = new JNI();
     private Context ctx;
     private float mEraserStrokeWidth;
+    private Bitmap backGroundBitmap;
 
 
 
@@ -88,7 +89,7 @@ public class PaintView extends View {
         post(() -> {
             //获取PaintView的宽和高
             //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
-            mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+            mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(mBitmap);
             //抗锯齿
             mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
@@ -144,6 +145,7 @@ public class PaintView extends View {
             PathBean lastPb = undoList.removeLast();//将最后一个移除
             redoList.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 mCanvas
+            mCanvas.drawBitmap(backGroundBitmap, 0, 0, mBitmapPaint);
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
             }
@@ -433,9 +435,8 @@ public class PaintView extends View {
     }
 
     void importImage(String filePath) {
-        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
-        mCanvas.drawBitmap(bitmap, 0F, 0F, mBitmapPaint);
+        backGroundBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), width, height, true);
+        mCanvas.drawBitmap(backGroundBitmap, 0, 0, mBitmapPaint);
         invalidate();
     }
 }

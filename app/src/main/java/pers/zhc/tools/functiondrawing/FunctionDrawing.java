@@ -80,7 +80,7 @@ public class FunctionDrawing extends BaseActivity {
         new Thread(() -> {
             fs.initAB(nNum, s -> runOnUiThread(() -> tv.setText(s)));
             draw();
-            sb.setEnabled(true);
+            runOnUiThread(() -> sb.setEnabled(true));
         }).start();
         /*TextView[] textViews = new TextView[]{
                 findViewById(R.id.increase_tv),
