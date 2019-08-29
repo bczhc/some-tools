@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity {
     private void init() {
         currentInternalPathFile = new File(getFilesDir().toString() + File.separator + System.currentTimeMillis() + ".path");
         Button clearPathBtn = findViewById(R.id.clear_path_btn);
+        clearPathBtn.setVisibility(View.INVISIBLE);
         final int[] d = {0};
         if (currentInternalPathFile.exists()) {
             d[0] = (int) (currentInternalPathFile.length() / 1000L);
