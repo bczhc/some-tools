@@ -18,6 +18,15 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
 JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingboard_JNI_floatToByteArray
         (JNIEnv *, jobject, jfloat);
 
+JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingboard_JNI_intToByteArray
+        (JNIEnv *env, jobject obj, jint j);
+
+JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingboard_JNI_byteArrayToFloat
+        (JNIEnv *env, jobject obj, jbyteArray bytes);
+
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_byteArrayToInt
+        (JNIEnv *env, jobject obj, jbyteArray bytes);
+
 #ifdef __cplusplus
 }
 #endif
