@@ -9,9 +9,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.common.Documents;
 
 import java.io.File;
@@ -93,7 +95,7 @@ public class FilePickerRL extends RelativeLayout {
             String s = pathView.getText().toString();
             ctx.runOnUiThread(() -> et.setText(String.format("%s", s.equals("/storage/emulated") ? s + "/0" : s)));
             et.setLayoutParams(lp);
-            ad.setTitle(R.string.type_path)
+            AlertDialog alertDialog = ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
                         File f = new File(et.getText().toString());
                         if (f.isFile() && type == 1) {
@@ -110,7 +112,9 @@ public class FilePickerRL extends RelativeLayout {
                     })
                     .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     })
-                    .setView(et).show();
+                    .setView(et).create();
+            DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            alertDialog.show();
         });
         this.ll = findViewById(R.id.ll);
         new Thread(() -> {
