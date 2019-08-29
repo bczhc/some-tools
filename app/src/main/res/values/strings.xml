@@ -97,4 +97,10 @@
     <string name="clear_application_internal_recoded_path">清除应用内部路径记录(%1$dkB)</string>
     <string name="import_image">导入图片</string>
     <string name="importing_failed">导入失败</string>
+    <string name="set__top__left__scaled_width__scaled_height">设置左起始点、顶起始点、缩放宽度、缩放高度</string>
+    <string name="board_w_h_info_and_bitmap_w_h_info">画板宽高：%1$d, %2$d%3$s图片宽高：%4$d, %5$d</string>
+    <string name="left_starting_point">左起始点</string>
+    <string name="top_starting_point">右起始点</string>
+    <string name="scaled_width">缩放至宽度</string>
+    <string name="scaled_height">缩放至高度</string>
 </resources>

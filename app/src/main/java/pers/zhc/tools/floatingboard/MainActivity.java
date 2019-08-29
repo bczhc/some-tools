@@ -22,6 +22,7 @@ import android.widget.*;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
+import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.u.FileU;
 
@@ -501,15 +502,24 @@ public class MainActivity extends BaseActivity {
         TextView tv = new TextView(this);
         tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         tv.setTextSize(20F);
+        final int[] checked = {1};
         tv.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
             et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             adb.setPositiveButton(R.string.ok, (dialog, which) -> {
-                double edit = Double.parseDouble(et.getText().toString());
-                double a = Math.log(edit) / Math.log(1.07D);
-                strokeWatchView.change(((float) edit), pv.getColor());
-                sb.setProgress((int) a);
+                try {
+                    int edit = Integer.parseInt(et.getText().toString());
+                    double a = Math.log(edit) / Math.log(1.07D);
+                    strokeWatchView.change(((float) edit), pv.getColor());
+                    sb.setProgress((int) a);
+                    if (checked[0] == 1)
+                        pv.setStrokeWidth(((float) edit));
+                    else pv.setEraserStrokeWidth(((float) edit));
+                    tv.setText(getString(R.string.tv, String.valueOf(edit)));
+                } catch (Exception e) {
+                    Common.showException(e, this);
+                }
             }).setNegativeButton(R.string.cancel, (dialog, which) -> {
             }).setTitle(R.string.type_stroke_width__pixels).setView(et);
             AlertDialog ad = adb.create();
@@ -538,20 +548,21 @@ public class MainActivity extends BaseActivity {
         ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 //        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
         setDialogAttr(mainDialog, false, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        final int[] checked = {1};
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                double pow = Math.pow(1.07D, ((double) progress));
-                if (checked[0] == 1) {
-                    pv.setStrokeWidth((float) ((int) pow));
-                    tv.setText(String.valueOf(((int) pow)));
-                } else {
-                    pv.setEraserStrokeWidth((float) pow);
-                    tv.setText(String.valueOf(((int) pow)));
+                if (fromUser) {
+                    double pow = Math.pow(1.07D, ((double) progress));
+                    if (checked[0] == 1) {
+                        pv.setStrokeWidth((float) ((int) pow));
+                        tv.setText(String.valueOf(((int) pow)));
+                    } else {
+                        pv.setEraserStrokeWidth((float) pow);
+                        tv.setText(String.valueOf(((int) pow)));
+                    }
+                    strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
+                    strokeWatchView.change(((float) pow), pv.getColor());
                 }
-                strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
-                strokeWatchView.change(((float) pow), pv.getColor());
             }
 
             @Override
@@ -663,38 +674,6 @@ public class MainActivity extends BaseActivity {
                         alertDialog.show();
                     },
                     v -> {
-                        /*LinearLayout ll1 = new LinearLayout(this);
-                        ll1.setLayoutParams(layoutParams);
-                        ll1.setOrientation(LinearLayout.HORIZONTAL);
-                        EditText et = new EditText(this);
-                        et.setLayoutParams(layoutParams);
-                        et.setGravity(Gravity.TOP);
-                        ll1.addView(et);
-                        Button btn1 = new Button(this);
-                        btn1.setText(R.string.pick_file);
-                        btn1.setLayoutParams(layoutParams);
-                        ll1.addView(btn1);
-                        btn1.setOnClickListener(v1 -> {
-                            Dialog dialog = new Dialog(this);
-                            setDialogAttr(dialog, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .8)));
-                            dialog.show();
-                        });
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                        AlertDialog ad = dialog.setPositiveButton(R.string.ok, (dialog1, which) -> {
-                            File file = new File(getFilesDir() + File.separator + "FilePickerResult");
-                            pv.importPathFile(new File(et.getText().toString()));
-                        }).setNegativeButton(R.string.cancel, (dialog1, which) -> {
-                        }).setTitle(R.string.choose_path_file)
-                                .setView(ll1).create();
-                        setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        ad.show();*/
-                        /*Intent intent = new Intent();
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setClass(this, Picker.class);
-                        intent.putExtra("option", Picker.PICK_FILE);
-                        startActivityForResult(intent, 71);
-                        overridePendingTransition(R.anim.in_left_and_bottom, 0);
-                        moreOptionsDialog.dismiss();*/
                         Dialog dialog = new Dialog(this);
                         dialog.setCanceledOnTouchOutside(false);
                         dialog.setCancelable(false);
@@ -711,9 +690,51 @@ public class MainActivity extends BaseActivity {
                         dialog.setCancelable(false);
                         FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, null, dialog::dismiss, s -> {
                             dialog.dismiss();
-                            pv.importImage(s);
-                            Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
-                            moreOptionsDialog.dismiss();
+                            AlertDialog.Builder importImageOptionsDialogBuilder = new AlertDialog.Builder(this);
+                            LinearLayout linearLayout = new LinearLayout(this);
+                            linearLayout.setOrientation(LinearLayout.VERTICAL);
+                            TextView infoTV = new TextView(this);
+                            EditText[] editTexts = new EditText[4];
+                            Bitmap imageBitmap;
+                            if ((imageBitmap = BitmapFactory.decodeFile(s)) == null) {
+                                Toast.makeText(this, R.string.importing_failed, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            int imageBitmapWidth = imageBitmap.getWidth();
+                            int imageBitmapHeight = imageBitmap.getHeight();
+                            infoTV.setText(String.format(getString(R.string.board_w_h_info_and_bitmap_w_h_info), width, height, "\n", imageBitmapWidth, imageBitmapHeight));
+                            int[] hintRes = new int[]{
+                                    R.string.left_starting_point,
+                                    R.string.top_starting_point,
+                                    R.string.scaled_width,
+                                    R.string.scaled_height,
+                            };
+                            for (int j = 0; j < editTexts.length; j++) {
+                                editTexts[j] = new EditText(this);
+                                editTexts[j].setHint(hintRes[j]);
+                                linearLayout.addView(editTexts[j]);
+                            }
+                            editTexts[0].setText(getString(R.string.tv, "0"));
+                            editTexts[1].setText(getString(R.string.tv, "0"));
+                            editTexts[2].setText(getString(R.string.tv, String.valueOf(imageBitmapWidth)));
+                            editTexts[3].setText(getString(R.string.tv, String.valueOf(imageBitmapHeight)));
+                            linearLayout.addView(infoTV);
+                            AlertDialog importImageOptionsDialog = importImageOptionsDialogBuilder.setView(linearLayout)
+                                    .setTitle(R.string.set__top__left__scaled_width__scaled_height)
+                                    .setPositiveButton(R.string.ok, (dialog1, which) -> {
+                                        pv.importImage(imageBitmap,
+                                                Float.parseFloat(editTexts[0].getText().toString())
+                                                , Float.parseFloat(editTexts[1].getText().toString())
+                                                , Integer.parseInt(editTexts[2].getText().toString())
+                                                , Integer.parseInt(editTexts[3].getText().toString()));
+                                        Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
+                                        moreOptionsDialog.dismiss();
+                                    })
+                                    .setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                                    })
+                                    .create();
+                            setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                            importImageOptionsDialog.show();
                         });
                         setFilePickerDialog(dialog, filePickerRL);
                     }
