@@ -48,6 +48,7 @@ public class MainActivity extends BaseActivity {
     private View globalOnTouchListenerFloatingView;
     private NotificationClickReceiver notificationClickReceiver;
     private File currentInternalPathFile = null;
+    private Runnable importPathFileDoneAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,6 +246,16 @@ public class MainActivity extends BaseActivity {
             }
         };
         TextView[] childTVs = new TextView[strings.length];
+        importPathFileDoneAction = () -> {
+            if (pv.isEraserMode) {
+                childTVs[6].setText(R.string.eraser_mode);
+                strings[6] = getString(R.string.eraser_mode);
+            } else {
+                childTVs[6].setText(R.string.drawing_mode);
+                strings[6] = getString(R.string.drawing_mode);
+            }
+            Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
+        };
         iv.setOnClickListener(v -> {
             System.out.println("click");
             ll.removeAllViews();
@@ -688,7 +699,7 @@ public class MainActivity extends BaseActivity {
                         dialog.setCancelable(false);
                         FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, null, dialog::dismiss, s -> {
                             dialog.dismiss();
-                            pv.importPathFile(new File(s), () -> runOnUiThread(() -> Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show()));
+                            pv.importPathFile(new File(s), () -> runOnUiThread(importPathFileDoneAction));
                             moreOptionsDialog.dismiss();
                         });
                         setFilePickerDialog(dialog, filePickerRL);
