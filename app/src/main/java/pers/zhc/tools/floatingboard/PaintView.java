@@ -11,6 +11,7 @@ import android.widget.Toast;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.u.Random;
+import pers.zhc.u.common.Documents;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -257,6 +258,11 @@ public class PaintView extends View {
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
+        /*if (action == MotionEvent.ACTION_POINTER_INDEX_MASK) {
+            if (event.getPointerCount() == 2) {
+
+            }
+        } else onTouchAction(action, x, y);*/
         onTouchAction(action, x, y);
         postInvalidate();
         return true;
@@ -440,10 +446,10 @@ public class PaintView extends View {
         return eraserPaint.getStrokeWidth();
     }
 
-    void importImage(String filePath) {
+    void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
         try {
-            backgroundBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), width, height, true);
-            mCanvas.drawBitmap(backgroundBitmap, 0, 0, mBitmapPaint);
+            backgroundBitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
+            mCanvas.drawBitmap(backgroundBitmap, left, top, mBitmapPaint);
             invalidate();
         } catch (Exception e) {
             e.printStackTrace();
