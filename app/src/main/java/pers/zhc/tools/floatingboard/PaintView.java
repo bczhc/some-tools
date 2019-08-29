@@ -12,6 +12,8 @@ import pers.zhc.u.Random;
 
 import java.io.*;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @SuppressWarnings({"unused"})
 @SuppressLint("ViewConstructor")
@@ -34,6 +36,7 @@ public class PaintView extends View {
     private JNI jni = new JNI();
     private Context ctx;
     private float mEraserStrokeWidth;
+    private Bitmap backGroundBitmap;
 
 
 
@@ -88,7 +91,7 @@ public class PaintView extends View {
         post(() -> {
             //获取PaintView的宽和高
             //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
-            mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+            mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             mCanvas = new Canvas(mBitmap);
             //抗锯齿
             mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
@@ -144,6 +147,9 @@ public class PaintView extends View {
             PathBean lastPb = undoList.removeLast();//将最后一个移除
             redoList.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 mCanvas
+            if (backGroundBitmap != null) {
+                mCanvas.drawBitmap(backGroundBitmap, 0, 0, mBitmapPaint);
+            }
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
             }
@@ -308,23 +314,21 @@ public class PaintView extends View {
     }
 
     void importPathFile(File f, Runnable d) {
-        new Thread(() -> {
+        ExecutorService es = Executors.newCachedThreadPool();
+        es.execute(() -> {
             try {
                 InputStream is = new FileInputStream(f);
                 byte[] bytes = new byte[26];
                 byte[] bytes_4 = new byte[4];
                 while (is.read(bytes) != -1) {
-                    /*try {
-                        Thread.sleep(20);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }*/
                     switch (bytes[25]) {
                         case 1:
                             undo();
+                            System.out.println("undo!");
                             break;
                         case 2:
                             redo();
+                            System.out.println("redo!");
                             break;
                         default:
                             System.arraycopy(bytes, 0, bytes_4, 0, 4);
@@ -356,7 +360,8 @@ public class PaintView extends View {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }).start();
+        });
+        es.shutdown();
     }
 
     private void onTouchAction(int motionAction, float x, float y) {
@@ -433,9 +438,8 @@ public class PaintView extends View {
     }
 
     void importImage(String filePath) {
-        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-        bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
-        mCanvas.drawBitmap(bitmap, 0F, 0F, mBitmapPaint);
+        backGroundBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), width, height, true);
+        mCanvas.drawBitmap(backGroundBitmap, 0, 0, mBitmapPaint);
         invalidate();
     }
 }
