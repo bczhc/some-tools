@@ -464,6 +464,7 @@ public class MainActivity extends BaseActivity {
             PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             nb.setContentIntent(pi);
             Notification build = nb.build();
+            build.flags = Notification.FLAG_AUTO_CANCEL;
             nm.notify(1, build);
         } else {
             NotificationCompat.Builder ncb = new NotificationCompat.Builder(this, "channel1");
@@ -475,7 +476,9 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
             PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             ncb.setContentIntent(pi);
-            nm.notify(1, ncb.build());
+            Notification build = ncb.build();
+            build.flags = Notification.FLAG_AUTO_CANCEL;
+            nm.notify(1, build);
         }
     }
 
