@@ -107,7 +107,7 @@ public class Document extends BaseActivity {
                         Common.showException(e, this);
                         return;
                     }
-                    if (file.exists()) Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
+                    if (file.exists()) Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
                     else Toast.makeText(this, R.string.copying_failed, Toast.LENGTH_SHORT).show();
                     setSVViews();
                 }

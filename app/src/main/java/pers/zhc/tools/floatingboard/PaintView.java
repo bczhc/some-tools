@@ -15,7 +15,6 @@ import pers.zhc.u.common.Documents;
 
 import java.io.*;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,7 +40,6 @@ public class PaintView extends View {
     private Context ctx;
     private float mEraserStrokeWidth;
     private Bitmap backgroundBitmap;
-    private List<PathBean> pathBeanList;
 
 
 
@@ -261,21 +259,23 @@ public class PaintView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         int pointerCount = event.getPointerCount();
-        if (pointerCount == 2) {
+        /*if (pointerCount == 2) {
             float x1 = event.getX(0);
             float x2 = event.getX(1);
             float y1 = event.getY(0);
             float y2 = event.getY(1);
             double distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-            if (firstDistance == 0) firstDistance = distance;
+            if (firstDistance == 0) {
+                firstDistance = distance;
+            }
             if (action == MotionEvent.ACTION_MOVE) {
-                /*if (distance > firstDistance) {
+                *//*if (distance > firstDistance) {
                     System.out.println("zoom+");
-                } else System.out.println("zoom-");*/
+                } else System.out.println("zoom-");*//*
                 mCanvas.translate((x1 + x2) / 2, (y1 + y2) / 2);
                 mCanvas.scale(((float) (width * (distance / firstDistance))), ((float) (height * (distance / firstDistance))));
                 mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                for (PathBean pathBean : pathBeanList) {
+                for (PathBean pathBean : undoList) {
                     mCanvas.drawPath(pathBean.path, pathBean.paint);
                 }
                 mCanvas.translate(0F, 0F);
@@ -284,7 +284,8 @@ public class PaintView extends View {
         } else if (pointerCount == 1) {
             onTouchAction(action, event.getX(), event.getY());
             firstDistance = 0;
-        }
+        }*/
+        onTouchAction(action, event.getX(), event.getY());
         postInvalidate();
         return true;
     }
@@ -428,7 +429,6 @@ public class PaintView extends View {
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(paintRef);
                     PathBean pb = new PathBean(path, paint);
-                    pathBeanList.add(pb);
                     undoList.add(pb);//将路径对象存入集合
                     mPath.reset();
                     mPath = null;
@@ -477,5 +477,14 @@ public class PaintView extends View {
             e.printStackTrace();
             Toast.makeText(ctx, R.string.importing_failed, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    void scaleCanvas(float scaledWidth, float scaledHeight) {
+        mCanvas.save();
+        mCanvas.scale(scaledWidth, scaledHeight);
+        for (PathBean pathBean : undoList) {
+            mCanvas.drawPath(pathBean.path, pathBean.paint);
+        }
+        mCanvas.restore();
     }
 }
