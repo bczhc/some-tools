@@ -23,7 +23,7 @@ import static pers.zhc.tools.utils.Common.showException;
 
 @SuppressLint("ViewConstructor")
 public class FilePickerRL extends RelativeLayout {
-    private final String initialPath;
+    private final File initialPath;
     private final Runnable cancelAction;
     private final OnPickedResultActionInterface pickedResultAction;
     private Toast notHavePermissionAccessToast = null;
@@ -47,7 +47,7 @@ public class FilePickerRL extends RelativeLayout {
         void result(String s);
     }
 
-    public FilePickerRL(Context context, int type, @Documents.Nullable String initialPath, Runnable cancelAction, OnPickedResultActionInterface pickedResultAction) {
+    public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath, Runnable cancelAction, OnPickedResultActionInterface pickedResultAction) {
         super(context);
         this.ctx = (Activity) context;
         this.type = type;
@@ -62,7 +62,7 @@ public class FilePickerRL extends RelativeLayout {
         View view = View.inflate(ctx, R.layout.file_picker_rl_activity, null);
         this.addView(view);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        this.currentPath = initialPath == null ? Environment.getExternalStorageDirectory() : new File(initialPath);
+        this.currentPath = initialPath == null ? Environment.getExternalStorageDirectory() : initialPath;
 //        this.currentPath = new File("/storage/emulated/0");
         lp.setMargins(2, 10, 10, 0);
         Button cancel = findViewById(R.id.cancel);
