@@ -10,9 +10,23 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true">
-        <receiver android:name="pers.zhc.tools.floatingboard.MainActivity$NotificationClickReceiver"
+        <!--<receiver android:name="pers.zhc.tools.floatingboard.MainActivity$NotificationClickReceiver"
                   android:enabled="true"
-                  android:exported="false"/>
+                  android:exported="false">
+            <intent-filter>
+                <action android:name="pers.zhc.tools.floatingboard.MainActivity"
+            </intent-filter>
+        </receiver>-->
+        <receiver android:name=".floatingboard.MainActivity$NotificationClickReceiver"
+                  android:exported="false"
+                  android:enabled="true">
+            <intent-filter>
+                <action android:name="pers.zhc.tools.START_SERVICE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="pers.zhc.tools.STOP_SERVICE"/>
+            </intent-filter>
+        </receiver>
         <activity android:name="pers.zhc.tools.MainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">

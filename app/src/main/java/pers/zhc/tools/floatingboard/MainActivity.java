@@ -17,12 +17,14 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Selection;
 import android.view.*;
 import android.widget.*;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.u.FileU;
 
@@ -59,6 +61,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void init() {
+        notificationClickReceiver = new NotificationClickReceiver();
+        registerReceiver(notificationClickReceiver, new IntentFilter("pers.zhc.tools.START_SERVICE"));
         currentInternalPathFile = new File(getFilesDir().toString() + File.separator + System.currentTimeMillis() + ".path");
         Button clearPathBtn = findViewById(R.id.clear_path_btn);
         clearPathBtn.setVisibility(View.INVISIBLE);
@@ -83,7 +87,6 @@ public class MainActivity extends BaseActivity {
             clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
             return true;
         });
-        notificationClickReceiver = new NotificationClickReceiver();
         Point point = new Point();
         /*//noinspection deprecation
         width = this.getWindowManager().getDefaultDisplay().getWidth();
@@ -138,15 +141,12 @@ public class MainActivity extends BaseActivity {
         Intent intent = getIntent();
         int a = intent.getIntExtra("a", 0);
         if (a == 1) {
-            startFloatingWindow();
+            startFloatingWindow(true, true);
         }
-        IntentFilter filter = new IntentFilter();
-        registerReceiver(notificationClickReceiver, filter);
     }
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(notificationClickReceiver);
         super.onDestroy();
     }
 
@@ -166,15 +166,16 @@ public class MainActivity extends BaseActivity {
                         stopFloatingWindow();
                         setBtn();
                     });
-                    startFloatingWindow();
+                    startFloatingWindow(true, true);
 //                    moveTaskToBack(true);
                 }
             }
         });
     }
 
+
     @SuppressLint({"ClickableViewAccessibility"})
-    private void startFloatingWindow() {
+    private void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
         pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         WindowManager.LayoutParams lp2 = new WindowManager.LayoutParams();
@@ -193,7 +194,7 @@ public class MainActivity extends BaseActivity {
         lp.width = width;
         lp.height = height;
         lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        wm.addView(pv, lp);
+        if (addPV) wm.addView(pv, lp);
         lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         lp2.width = /*(int) (width * proportionX)*/WindowManager.LayoutParams.WRAP_CONTENT;
         lp2.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -256,7 +257,7 @@ public class MainActivity extends BaseActivity {
                 childTVs[6].setText(R.string.drawing_mode);
                 strings[6] = getString(R.string.drawing_mode);
             }
-            Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
         };
         iv.setOnClickListener(v -> {
             System.out.println("click");
@@ -418,8 +419,12 @@ public class MainActivity extends BaseActivity {
                             new PermissionRequester(this::saveAction).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 23);
                             break;
                         case 11:
-                            createConfirmationAD(this, (dialog1, which) -> stopFloatingWindow(), (dialog1, which) -> {
+                            createConfirmationAD(this, (dialog1, which) -> {
+                                stopFloatingWindow();
+                                unregisterReceiver(notificationClickReceiver);
+                            }, (dialog1, which) -> {
                             }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
+//                            pv.scaleCanvas((float) (width * 2), ((float) (height * 2)));
                             break;
                     }
                     System.out.println("i = " + finalI);
@@ -432,7 +437,7 @@ public class MainActivity extends BaseActivity {
         iv.setOnTouchListener(smallViewOnTouchListener);
         ll.addView(iv);
         wm.addView(ll, lp2);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (addGlobalTL) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
         } else
             //noinspection deprecation
@@ -454,8 +459,9 @@ public class MainActivity extends BaseActivity {
             nb.setSmallIcon(Icon.createWithBitmap(icon))
                     .setContentTitle("画板")
                     .setContentText("点击取消隐藏控制悬浮窗");
-            Intent intent = new Intent(this, notificationClickReceiver.getClass());
-            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+//            Intent intent = new Intent(this, NotificationClickReceiver.class);
+            Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
+            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             nb.setContentIntent(pi);
             Notification build = nb.build();
             nm.notify(1, build);
@@ -466,7 +472,7 @@ public class MainActivity extends BaseActivity {
                     .setContentTitle("画板")
                     .setContentText("点击取消隐藏控制悬浮窗")
                     .setSmallIcon(R.mipmap.ic_launcher);
-            Intent intent = new Intent(this, NotificationClickReceiver.class);
+            Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
             PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             ncb.setContentIntent(pi);
             nm.notify(1, ncb.build());
@@ -617,8 +623,8 @@ public class MainActivity extends BaseActivity {
         setDialogAttr(moreOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         LinearLayout ll = new LinearLayout(this);
         int[] textsRes = new int[]{
-                R.string.save_image,
-                R.string.save_path,
+                R.string.export_image,
+                R.string.export_path,
                 R.string.import_path,
                 R.string.import_image
         };
@@ -632,31 +638,30 @@ public class MainActivity extends BaseActivity {
             if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
             File pathDir = new File(d.toString() + File.separator + "path");
             if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
+            File imageDir = new File(d.toString() + File.separator + "image");
+            if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                     v -> {
-                        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        EditText et = getSelectedET_currentMills();
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        EditText et = new EditText(this);
-                        et.setText(String.format(getString(R.string.tv), format));
                         AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                             pv.closePathRecoderOS();
-                            File file = new File(d.toString() + File.separator + et.getText().toString() + ".png");
-                            pv.saveImg(file);
-                            if (file.exists())
-                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + d.toString() + File.separator + et.getText().toString() + ".png", Toast.LENGTH_SHORT).show();
+                            File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
+                            pv.saveImg(imageFile);
+                            if (imageFile.exists())
+                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + imageDir.toString() + File.separator + et.getText().toString() + ".png", Toast.LENGTH_SHORT).show();
                             else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             pv.setOS(currentInternalPathFile, true);
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                         }).setTitle(R.string.type_file_name).setView(et).create();
                         setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
                         alertDialog.show();
                     },
                     v -> {
+                        EditText et = getSelectedET_currentMills();
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        EditText et = new EditText(this);
-                        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                        et.setText(String.format(getString(R.string.tv), format));
                         AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                             File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
                             try {
@@ -671,13 +676,14 @@ public class MainActivity extends BaseActivity {
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                         }).setTitle(R.string.type_file_name).setView(et).create();
                         setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
                         alertDialog.show();
                     },
                     v -> {
                         Dialog dialog = new Dialog(this);
                         dialog.setCanceledOnTouchOutside(false);
                         dialog.setCancelable(false);
-                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, null, dialog::dismiss, s -> {
+                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
                             dialog.dismiss();
                             pv.importPathFile(new File(s), () -> runOnUiThread(importPathFileDoneAction));
                             moreOptionsDialog.dismiss();
@@ -688,7 +694,7 @@ public class MainActivity extends BaseActivity {
                         Dialog dialog = new Dialog(this);
                         dialog.setCanceledOnTouchOutside(false);
                         dialog.setCancelable(false);
-                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, null, dialog::dismiss, s -> {
+                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, imageDir, dialog::dismiss, s -> {
                             dialog.dismiss();
                             AlertDialog.Builder importImageOptionsDialogBuilder = new AlertDialog.Builder(this);
                             LinearLayout linearLayout = new LinearLayout(this);
@@ -732,7 +738,7 @@ public class MainActivity extends BaseActivity {
                                             e.printStackTrace();
                                             Toast.makeText(this, R.string.type_error, Toast.LENGTH_SHORT).show();
                                         }
-                                        Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
                                         moreOptionsDialog.dismiss();
                                     })
                                     .setNegativeButton(R.string.cancel, (dialog1, which) -> {
@@ -753,6 +759,14 @@ public class MainActivity extends BaseActivity {
         moreOptionsDialog.setContentView(sv);
         moreOptionsDialog.setCanceledOnTouchOutside(true);
         moreOptionsDialog.show();
+    }
+
+    private EditText getSelectedET_currentMills() {
+        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        EditText et = new EditText(this);
+        et.setText(String.format(getString(R.string.tv), format));
+        Selection.selectAll(et.getText());
+        return et;
     }
 
     private void setFilePickerDialog(Dialog dialog, FilePickerRL filePickerRL) {
@@ -778,11 +792,10 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            System.out.println("onReceiveClick!");
-            startFloatingWindow();
-            Toast.makeText(MainActivity.this, "a", Toast.LENGTH_SHORT).show();
+            startFloatingWindow(false, false);
         }
     }
+
 
     /*@Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -790,7 +803,7 @@ public class MainActivity extends BaseActivity {
         if (requestCode == 71 && data != null) {
             String file = data.getStringExtra("result");
             pv.importPathFile(new File(file));
-            Toast.makeText(this, R.string.importing_cuccess, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
         }
     }*/
 }
