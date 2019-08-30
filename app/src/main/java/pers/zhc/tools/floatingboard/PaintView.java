@@ -7,8 +7,11 @@ import android.graphics.*;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.u.Random;
+import pers.zhc.u.common.Documents;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -36,7 +39,7 @@ public class PaintView extends View {
     private JNI jni = new JNI();
     private Context ctx;
     private float mEraserStrokeWidth;
-    private Bitmap backGroundBitmap;
+    private Bitmap backgroundBitmap;
 
 
 
@@ -147,8 +150,8 @@ public class PaintView extends View {
             PathBean lastPb = undoList.removeLast();//将最后一个移除
             redoList.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 mCanvas
-            if (backGroundBitmap != null) {
-                mCanvas.drawBitmap(backGroundBitmap, 0, 0, mBitmapPaint);
+            if (backgroundBitmap != null) {
+                mCanvas.drawBitmap(backgroundBitmap, 0, 0, mBitmapPaint);
             }
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
@@ -194,6 +197,7 @@ public class PaintView extends View {
         //清空 撤销 ，恢复 操作列表
         redoList.clear();
         undoList.clear();
+        backgroundBitmap = null;
     }
 
     /**
@@ -245,6 +249,8 @@ public class PaintView extends View {
     }
 
 
+    private double firstDistance;
+
     /**
      * 触摸事件 触摸绘制
      */
@@ -252,9 +258,34 @@ public class PaintView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        onTouchAction(action, x, y);
+        int pointerCount = event.getPointerCount();
+        /*if (pointerCount == 2) {
+            float x1 = event.getX(0);
+            float x2 = event.getX(1);
+            float y1 = event.getY(0);
+            float y2 = event.getY(1);
+            double distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+            if (firstDistance == 0) {
+                firstDistance = distance;
+            }
+            if (action == MotionEvent.ACTION_MOVE) {
+                *//*if (distance > firstDistance) {
+                    System.out.println("zoom+");
+                } else System.out.println("zoom-");*//*
+                mCanvas.translate((x1 + x2) / 2, (y1 + y2) / 2);
+                mCanvas.scale(((float) (width * (distance / firstDistance))), ((float) (height * (distance / firstDistance))));
+                mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                for (PathBean pathBean : undoList) {
+                    mCanvas.drawPath(pathBean.path, pathBean.paint);
+                }
+                mCanvas.translate(0F, 0F);
+                invalidate();
+            }
+        } else if (pointerCount == 1) {
+            onTouchAction(action, event.getX(), event.getY());
+            firstDistance = 0;
+        }*/
+        onTouchAction(action, event.getX(), event.getY());
         postInvalidate();
         return true;
     }
@@ -437,9 +468,23 @@ public class PaintView extends View {
         return eraserPaint.getStrokeWidth();
     }
 
-    void importImage(String filePath) {
-        backGroundBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(filePath), width, height, true);
-        mCanvas.drawBitmap(backGroundBitmap, 0, 0, mBitmapPaint);
-        invalidate();
+    void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
+        try {
+            backgroundBitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
+            mCanvas.drawBitmap(backgroundBitmap, left, top, mBitmapPaint);
+            invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(ctx, R.string.importing_failed, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void scaleCanvas(float scaledWidth, float scaledHeight) {
+        mCanvas.save();
+        mCanvas.scale(scaledWidth, scaledHeight);
+        for (PathBean pathBean : undoList) {
+            mCanvas.drawPath(pathBean.path, pathBean.paint);
+        }
+        mCanvas.restore();
     }
 }
