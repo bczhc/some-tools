@@ -1,5 +1,6 @@
 package pers.zhc.tools.utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,5 +37,16 @@ public class DialogUtil {
         setDialogAttr(ad, false, width, height, application_overlay);
         ad.setCanceledOnTouchOutside(true);
         return ad;
+    }
+
+    public static void setAlertDialogWithEditText_auto_show_softInput(AlertDialog alertDialog, Activity ctx) {
+        try {
+            Objects.requireNonNull(alertDialog.getWindow()).clearFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                            WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        } catch (NullPointerException e) {
+            Common.showException(e, ctx);
+        }
     }
 }
