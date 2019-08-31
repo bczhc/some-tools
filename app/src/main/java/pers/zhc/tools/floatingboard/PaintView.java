@@ -470,8 +470,7 @@ public class PaintView extends View {
 
     void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
         try {
-            backgroundBitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
-            mCanvas.drawBitmap(backgroundBitmap, left, top, mBitmapPaint);
+            backgroundBitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);mCanvas.drawBitmap(backgroundBitmap, left, top, mBitmapPaint);
             invalidate();
         } catch (Exception e) {
             e.printStackTrace();

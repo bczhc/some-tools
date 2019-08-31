@@ -17,7 +17,7 @@
                 <action android:name="pers.zhc.tools.floatingboard.MainActivity"
             </intent-filter>
         </receiver>-->
-        <!--<receiver android:name=".floatingboard.MainActivity$NotificationClickReceiver"
+        <receiver android:name=".floatingboard.MainActivity$NotificationClickReceiver"
                   android:exported="false"
                   android:enabled="true">
             <intent-filter>
@@ -26,7 +26,7 @@
             <intent-filter>
                 <action android:name="pers.zhc.tools.STOP_SERVICE"/>
             </intent-filter>
-        </receiver>-->
+        </receiver>
         <activity android:name="pers.zhc.tools.MainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">

@@ -6,7 +6,6 @@ import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -32,8 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
 import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
@@ -49,21 +47,27 @@ public class MainActivity extends BaseActivity {
     private int TVsColor = Color.WHITE, textsColor = Color.GRAY;
     private boolean whetherTextsColorIsInverted_isChecked = false;
     private View globalOnTouchListenerFloatingView;
-    private NotificationClickReceiver notificationClickReceiver;
     private File currentInternalPathFile = null;
     private Runnable importPathFileDoneAction;
+    private static Map<Long, MainActivity> longMainActivityMap;//memory leak??
+    private long currentInstanceMills;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
         init();
+        if (longMainActivityMap == null) {
+            longMainActivityMap = new HashMap<>();
+        }
+        longMainActivityMap.put(currentInstanceMills, this);
     }
 
     private void init() {
-        notificationClickReceiver = new NotificationClickReceiver();
-        registerReceiver(notificationClickReceiver, new IntentFilter("pers.zhc.tools.START_SERVICE"));
-        currentInternalPathFile = new File(getFilesDir().toString() + File.separator + System.currentTimeMillis() + ".path");
+//        NotificationClickReceiver notificationClickReceiver = new NotificationClickReceiver();
+//        registerReceiver(this.notificationClickReceiver, new IntentFilter("pers.zhc.tools.START_SERVICE"));
+        currentInstanceMills = System.currentTimeMillis();
+        currentInternalPathFile = new File(getFilesDir().toString() + File.separator + currentInstanceMills + ".path");
         Button clearPathBtn = findViewById(R.id.clear_path_btn);
         clearPathBtn.setVisibility(View.INVISIBLE);
         final int[] d = {0};
@@ -421,7 +425,7 @@ public class MainActivity extends BaseActivity {
                         case 11:
                             createConfirmationAD(this, (dialog1, which) -> {
                                 stopFloatingWindow();
-                                unregisterReceiver(notificationClickReceiver);
+//                                unregisterReceiver(notificationClickReceiver);
                             }, (dialog1, which) -> {
                             }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
 //                            pv.scaleCanvas((float) (width * 2), ((float) (height * 2)));
@@ -444,6 +448,7 @@ public class MainActivity extends BaseActivity {
             wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
     }
 
+    @SuppressWarnings("Duplicates")
     private void hide() {
         wm.removeViewImmediate(ll);
         NotificationManager nm = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
@@ -461,6 +466,7 @@ public class MainActivity extends BaseActivity {
                     .setContentText("点击取消隐藏控制悬浮窗");
 //            Intent intent = new Intent(this, NotificationClickReceiver.class);
             Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
+            intent.putExtra("mills", currentInstanceMills);
             PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             nb.setContentIntent(pi);
             Notification build = nb.build();
@@ -474,7 +480,8 @@ public class MainActivity extends BaseActivity {
                     .setContentText("点击取消隐藏控制悬浮窗")
                     .setSmallIcon(R.mipmap.ic_launcher);
             Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
-            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            intent.putExtra("mills", currentInstanceMills);
+            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             ncb.setContentIntent(pi);
             Notification build = ncb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
@@ -791,11 +798,18 @@ public class MainActivity extends BaseActivity {
         if (requestCode == 23 && grantResults[0] == 0) saveAction();
     }
 
-    public class NotificationClickReceiver extends BroadcastReceiver {
+    public static class NotificationClickReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            startFloatingWindow(false, false);
+//            startFloatingWindow(false, false);
+            if (Objects.requireNonNull(intent.getAction()).equals("pers.zhc.tools.START_SERVICE")) {
+                long mills = intent.getLongExtra("mills", 0);
+                MainActivity activity = MainActivity.longMainActivityMap.get(mills);
+                if (activity != null) {
+                    activity.startFloatingWindow(false, false);
+                }
+            }
         }
     }
 
