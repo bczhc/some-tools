@@ -27,7 +27,7 @@
                 <action android:name="pers.zhc.tools.STOP_SERVICE"/>
             </intent-filter>
         </receiver>
-        <activity android:name="pers.zhc.tools.MainActivity"
+        <activity android:name="pers.zhc.tools.floatingboard.MainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
@@ -95,17 +95,6 @@
             </intent-filter>
         </activity>
         <activity android:name="pers.zhc.tools.BaseActivity"/>
-        <activity android:name="pers.zhc.tools.floatingboard.MainActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:label="@string/overlaid_drawing_board"
-                  android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-
-            </intent-filter>
-        </activity>
         <activity android:name="pers.zhc.tools.functiondrawing.FunctionDrawing"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
