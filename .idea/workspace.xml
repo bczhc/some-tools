@@ -7,18 +7,17 @@
   </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39f5ba89-6e96-4bbf-9f84-07f84a34e83c" name="Default Changelist" comment="non-static BR不需要清单中再注册一次。。只要代码中用广播实例去注册就行了。迷……">
+    <list default="true" id="39f5ba89-6e96-4bbf-9f84-07f84a34e83c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,10 +43,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="475">
-              <caret line="480" selection-start-line="480" selection-end-line="480" />
+            <state relative-caret-position="242">
+              <caret line="254" column="39" selection-start-line="254" selection-start-column="39" selection-end-line="254" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#2694#2753#0" expanded="true" />
+                <element signature="e#3062#3121#0" expanded="true" />
+                <element signature="e#3402#3461#0" expanded="true" />
                 <element signature="e#6593#6594#0" expanded="true" />
                 <element signature="e#6626#6627#0" expanded="true" />
                 <element signature="e#6736#6766#0" expanded="true" />
@@ -73,46 +75,73 @@
                 <element signature="e#21209#21228#0" expanded="true" />
                 <element signature="e#21974#22013#0" expanded="true" />
                 <element signature="e#23475#23499#0" expanded="true" />
-                <element signature="e#27261#27296#0" expanded="true" />
-                <element signature="e#27314#27348#0" expanded="true" />
-                <element signature="e#28528#28539#0" expanded="true" />
-                <element signature="e#29040#29084#0" expanded="true" />
-                <element signature="e#29229#29244#0" expanded="true" />
-                <element signature="e#29291#29325#0" expanded="true" />
-                <element signature="e#32576#32598#0" expanded="true" />
-                <element signature="e#33870#33891#0" expanded="true" />
-                <element signature="e#33909#33929#0" expanded="true" />
-                <element signature="e#33947#33967#0" expanded="true" />
-                <element signature="e#33985#34006#0" expanded="true" />
-                <element signature="e#34505#34538#0" expanded="true" />
-                <element signature="e#35297#35308#0" expanded="true" />
-                <element signature="e#35668#35702#0" expanded="true" />
-                <element signature="e#35867#35889#0" expanded="true" />
-                <element signature="e#36090#36105#0" expanded="true" />
-                <element signature="e#36164#36187#0" expanded="true" />
-                <element signature="e#36767#36778#0" expanded="true" />
-                <element signature="e#37286#37320#0" expanded="true" />
-                <element signature="e#37433#37455#0" expanded="true" />
-                <element signature="e#37587#37602#0" expanded="true" />
-                <element signature="e#37661#37684#0" expanded="true" />
-                <element signature="e#39666#39691#0" expanded="true" />
-                <element signature="e#40000#40054#0" expanded="true" />
-                <element signature="e#40207#40235#0" expanded="true" />
-                <element signature="e#40273#40300#0" expanded="true" />
-                <element signature="e#40338#40359#0" expanded="true" />
-                <element signature="e#40397#40419#0" expanded="true" />
-                <element signature="e#40805#40832#0" expanded="true" />
-                <element signature="e#40884#40911#0" expanded="true" />
-                <element signature="e#40963#41019#0" expanded="true" />
-                <element signature="e#41071#41128#0" expanded="true" />
-                <element signature="e#41356#41408#0" expanded="true" />
-                <element signature="e#41465#41476#0" expanded="true" />
-                <element signature="e#42236#42255#0" expanded="true" />
-                <element signature="e#42388#42414#0" expanded="true" />
-                <element signature="e#42607#42622#0" expanded="true" />
-                <element signature="e#43792#43814#0" expanded="true" />
-                <element signature="e#44882#44883#0" expanded="true" />
-                <element signature="e#44939#44940#0" expanded="true" />
+                <element signature="e#25025#25056#0" expanded="true" />
+                <element signature="e#27415#27450#0" expanded="true" />
+                <element signature="e#27468#27502#0" expanded="true" />
+                <element signature="e#28682#28693#0" expanded="true" />
+                <element signature="e#29194#29238#0" expanded="true" />
+                <element signature="e#29383#29398#0" expanded="true" />
+                <element signature="e#29445#29479#0" expanded="true" />
+                <element signature="e#32730#32752#0" expanded="true" />
+                <element signature="e#34024#34045#0" expanded="true" />
+                <element signature="e#34063#34083#0" expanded="true" />
+                <element signature="e#34101#34121#0" expanded="true" />
+                <element signature="e#34139#34160#0" expanded="true" />
+                <element signature="e#34659#34692#0" expanded="true" />
+                <element signature="e#35451#35462#0" expanded="true" />
+                <element signature="e#35822#35856#0" expanded="true" />
+                <element signature="e#36021#36043#0" expanded="true" />
+                <element signature="e#36244#36259#0" expanded="true" />
+                <element signature="e#36318#36341#0" expanded="true" />
+                <element signature="e#36921#36932#0" expanded="true" />
+                <element signature="e#37440#37474#0" expanded="true" />
+                <element signature="e#37587#37609#0" expanded="true" />
+                <element signature="e#37741#37756#0" expanded="true" />
+                <element signature="e#37815#37838#0" expanded="true" />
+                <element signature="e#39820#39845#0" expanded="true" />
+                <element signature="e#40154#40208#0" expanded="true" />
+                <element signature="e#40361#40389#0" expanded="true" />
+                <element signature="e#40427#40454#0" expanded="true" />
+                <element signature="e#40492#40513#0" expanded="true" />
+                <element signature="e#40551#40573#0" expanded="true" />
+                <element signature="e#40959#40986#0" expanded="true" />
+                <element signature="e#41038#41065#0" expanded="true" />
+                <element signature="e#41117#41173#0" expanded="true" />
+                <element signature="e#41225#41282#0" expanded="true" />
+                <element signature="e#41510#41562#0" expanded="true" />
+                <element signature="e#41619#41630#0" expanded="true" />
+                <element signature="e#42390#42409#0" expanded="true" />
+                <element signature="e#42542#42568#0" expanded="true" />
+                <element signature="e#42761#42776#0" expanded="true" />
+                <element signature="e#43946#43968#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequester.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="245">
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="130">
+              <caret line="22" column="48" selection-start-line="22" selection-start-column="48" selection-end-line="22" selection-end-column="48" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2630#2650#0" expanded="true" />
+                <element signature="e#2668#2688#0" expanded="true" />
+                <element signature="e#2706#2720#0" expanded="true" />
+                <element signature="e#2738#2763#0" expanded="true" />
+                <element signature="e#2781#2812#0" expanded="true" />
+                <element signature="e#2830#2858#0" expanded="true" />
+                <element signature="e#2876#2890#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -131,7 +160,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
+            <state relative-caret-position="512">
               <caret line="275" column="1" selection-start-line="275" selection-start-column="1" selection-end-line="275" selection-end-column="1" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -143,8 +172,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
-              <caret line="471" column="13" selection-start-line="471" selection-start-column="13" selection-end-line="471" selection-end-column="13" />
+            <state relative-caret-position="173">
+              <caret line="472" column="103" selection-start-line="472" selection-start-column="103" selection-end-line="472" selection-end-column="103" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#6453#6454#0" expanded="true" />
@@ -160,8 +189,12 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
           <provider editor-type-id="android-manifest" />
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="24" column="16" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
+            <state>
+              <caret column="9" selection-start-column="9" selection-end-column="9" />
+              <folding>
+                <element signature="e#2511#2529#0" expanded="true" />
+                <element signature="e#4423#4455#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -169,8 +202,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2641">
-              <caret line="158" column="23" selection-start-line="158" selection-start-column="23" selection-end-line="158" selection-end-column="23" />
+            <state relative-caret-position="52">
+              <caret line="143" column="15" lean-forward="true" selection-start-line="143" selection-start-column="15" selection-end-line="143" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -197,15 +230,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>_UP</find>
-      <find>ondraw</find>
-      <find>undo</find>
-      <find>scale</find>
-      <find>textviews[</find>
-      <find>case 10</find>
-      <find>resigter</find>
-      <find>&gt; has no zero argument constructor</find>
-      <find>destor</find>
       <find>destro</find>
       <find>start</find>
       <find>startF</find>
@@ -221,16 +245,30 @@
       <find>wm.addview(ll</find>
       <find>wm.add</find>
       <find>onrec</find>
-      <find>pending</find>
       <find>regis</find>
-      <find>register</find>
       <find>un</find>
       <find>exit</find>
       <find>notifica</find>
+      <find>unregis</find>
+      <find>new No</find>
+      <find>register</find>
+      <find>oncreate</find>
+      <find>mills</find>
+      <find>current</find>
+      <find>currentTimeMillis</find>
+      <find>intent</find>
+      <find>pending</find>
+      <find>suppress</find>
+      <find>memor</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="floatingDrawingBoard" />
+      </map>
+    </option>
     <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="IdeDocumentHistory">
@@ -241,10 +279,11 @@
         <option value="$PROJECT_DIR$/app/src/main/res/anim/slide_in_bottom.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" />
       </list>
     </option>
   </component>
@@ -256,6 +295,7 @@
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
+      <hideEmptyPackages ProjectPane="true" />
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
@@ -356,7 +396,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="device.picker.selection" value="73EBB18621217594" />
+    <property name="device.picker.selection" value="Pixel_XL_API_23" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="instant.run" />
@@ -433,11 +473,18 @@
       <option name="project" value="LOCAL" />
       <updated>1567091269205</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="程序返回后隐藏就没用了，因为动态广播跟随宿主（Activity）生命，Activity结束，广播就没了，可是如果注册成静态广播，又不能与Activity字段交互&#10;静态注册广播可以通过创建实例时赋值静态对象，但是这样做有内存泄漏风险。用了Map之后memory leak warning又消失了。。&#10;采用静态广播">
+      <created>1567209776932</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1567209776932</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15723000" />
+    <option name="totallyTimeSpent" value="18714000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -452,6 +499,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info id="Captures" order="7" side_tool="true" />
       <window_info id="UI Designer" order="8" />
+      <window_info anchor="bottom" id="Duplicates" weight="0.32963374" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32963374" />
@@ -463,10 +511,10 @@
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Build" order="10" weight="0.29078802" />
-      <window_info active="true" anchor="bottom" id="Logcat" order="11" visible="true" weight="0.3618202" />
+      <window_info active="true" anchor="bottom" id="Logcat" order="11" visible="true" weight="0.5027747" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
-      <window_info anchor="bottom" id="Version Control" order="13" weight="0.6825749" />
-      <window_info anchor="bottom" id="Terminal" order="14" weight="0.32929516" />
+      <window_info anchor="bottom" id="Version Control" order="13" weight="0.6970033" />
+      <window_info anchor="bottom" id="Terminal" order="14" weight="0.32852387" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -515,7 +563,13 @@
       <map>
         <entry key="Branch">
           <value>
-            <list />
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/master" />
+                </option>
+              </RecentGroup>
+            </list>
           </value>
         </entry>
         <entry key="User">
@@ -529,32 +583,33 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="修复bug：清空时背景图片没有重置，导致会走撤回&#10;导入图片如果无法识别就异常捕获而不是闪退&#10;？？？？   莫名不能横屏了。。" />
     <MESSAGE value="导入图片增加导入选项&#10;修复画笔宽度调节精度问题&#10;准备加双指缩放" />
-    <option name="LAST_COMMIT_MESSAGE" value="导入图片增加导入选项&#10;修复画笔宽度调节精度问题&#10;准备加双指缩放" />
+    <MESSAGE value="程序返回后隐藏就没用了，因为动态广播跟随宿主（Activity）生命，Activity结束，广播就没了，可是如果注册成静态广播，又不能与Activity字段交互&#10;静态注册广播可以通过创建实例时赋值静态对象，但是这样做有内存泄漏风险。用了Map之后memory leak warning又消失了。。&#10;采用静态广播" />
+    <option name="LAST_COMMIT_MESSAGE" value="程序返回后隐藏就没用了，因为动态广播跟随宿主（Activity）生命，Activity结束，广播就没了，可是如果注册成静态广播，又不能与Activity字段交互&#10;静态注册广播可以通过创建实例时赋值静态对象，但是这样做有内存泄漏风险。用了Map之后memory leak warning又消失了。。&#10;采用静态广播" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java</url>
-          <line>549</line>
+          <line>556</line>
           <properties />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java</url>
-          <line>592</line>
+          <line>599</line>
           <properties />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java</url>
-          <line>546</line>
+          <line>553</line>
           <properties />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java</url>
-          <line>566</line>
+          <line>573</line>
           <properties />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
@@ -709,31 +764,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/floating_board_activity.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="38" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="275" column="1" selection-start-line="275" selection-start-column="1" selection-end-line="275" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2641">
-          <caret line="158" column="23" selection-start-line="158" selection-start-column="23" selection-end-line="158" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1710">
@@ -748,10 +778,64 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="275" column="1" selection-start-line="275" selection-start-column="1" selection-end-line="275" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/floating_board_activity.xml">
+      <provider editor-type-id="android-designer2" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="9" column="38" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="22" column="48" selection-start-line="22" selection-start-column="48" selection-end-line="22" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2630#2650#0" expanded="true" />
+            <element signature="e#2668#2688#0" expanded="true" />
+            <element signature="e#2706#2720#0" expanded="true" />
+            <element signature="e#2738#2763#0" expanded="true" />
+            <element signature="e#2781#2812#0" expanded="true" />
+            <element signature="e#2830#2858#0" expanded="true" />
+            <element signature="e#2876#2890#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="9" selection-start-column="9" selection-end-column="9" />
+          <folding>
+            <element signature="e#2511#2529#0" expanded="true" />
+            <element signature="e#4423#4455#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="157" column="55" lean-forward="true" selection-start-line="157" selection-start-column="55" selection-end-line="157" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="471" column="13" selection-start-line="471" selection-start-column="13" selection-end-line="471" selection-end-column="13" />
+        <state relative-caret-position="173">
+          <caret line="472" column="103" selection-start-line="472" selection-start-column="103" selection-end-line="472" selection-end-column="103" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#6453#6454#0" expanded="true" />
@@ -762,20 +846,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="24" column="16" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
+        <state relative-caret-position="52">
+          <caret line="143" column="15" lean-forward="true" selection-start-line="143" selection-start-column="15" selection-end-line="143" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequester.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="480" selection-start-line="480" selection-end-line="480" />
+        <state relative-caret-position="242">
+          <caret line="254" column="39" selection-start-line="254" selection-start-column="39" selection-end-line="254" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#2694#2753#0" expanded="true" />
+            <element signature="e#3062#3121#0" expanded="true" />
+            <element signature="e#3402#3461#0" expanded="true" />
             <element signature="e#6593#6594#0" expanded="true" />
             <element signature="e#6626#6627#0" expanded="true" />
             <element signature="e#6736#6766#0" expanded="true" />
@@ -801,46 +894,45 @@
             <element signature="e#21209#21228#0" expanded="true" />
             <element signature="e#21974#22013#0" expanded="true" />
             <element signature="e#23475#23499#0" expanded="true" />
-            <element signature="e#27261#27296#0" expanded="true" />
-            <element signature="e#27314#27348#0" expanded="true" />
-            <element signature="e#28528#28539#0" expanded="true" />
-            <element signature="e#29040#29084#0" expanded="true" />
-            <element signature="e#29229#29244#0" expanded="true" />
-            <element signature="e#29291#29325#0" expanded="true" />
-            <element signature="e#32576#32598#0" expanded="true" />
-            <element signature="e#33870#33891#0" expanded="true" />
-            <element signature="e#33909#33929#0" expanded="true" />
-            <element signature="e#33947#33967#0" expanded="true" />
-            <element signature="e#33985#34006#0" expanded="true" />
-            <element signature="e#34505#34538#0" expanded="true" />
-            <element signature="e#35297#35308#0" expanded="true" />
-            <element signature="e#35668#35702#0" expanded="true" />
-            <element signature="e#35867#35889#0" expanded="true" />
-            <element signature="e#36090#36105#0" expanded="true" />
-            <element signature="e#36164#36187#0" expanded="true" />
-            <element signature="e#36767#36778#0" expanded="true" />
-            <element signature="e#37286#37320#0" expanded="true" />
-            <element signature="e#37433#37455#0" expanded="true" />
-            <element signature="e#37587#37602#0" expanded="true" />
-            <element signature="e#37661#37684#0" expanded="true" />
-            <element signature="e#39666#39691#0" expanded="true" />
-            <element signature="e#40000#40054#0" expanded="true" />
-            <element signature="e#40207#40235#0" expanded="true" />
-            <element signature="e#40273#40300#0" expanded="true" />
-            <element signature="e#40338#40359#0" expanded="true" />
-            <element signature="e#40397#40419#0" expanded="true" />
-            <element signature="e#40805#40832#0" expanded="true" />
-            <element signature="e#40884#40911#0" expanded="true" />
-            <element signature="e#40963#41019#0" expanded="true" />
-            <element signature="e#41071#41128#0" expanded="true" />
-            <element signature="e#41356#41408#0" expanded="true" />
-            <element signature="e#41465#41476#0" expanded="true" />
-            <element signature="e#42236#42255#0" expanded="true" />
-            <element signature="e#42388#42414#0" expanded="true" />
-            <element signature="e#42607#42622#0" expanded="true" />
-            <element signature="e#43792#43814#0" expanded="true" />
-            <element signature="e#44882#44883#0" expanded="true" />
-            <element signature="e#44939#44940#0" expanded="true" />
+            <element signature="e#25025#25056#0" expanded="true" />
+            <element signature="e#27415#27450#0" expanded="true" />
+            <element signature="e#27468#27502#0" expanded="true" />
+            <element signature="e#28682#28693#0" expanded="true" />
+            <element signature="e#29194#29238#0" expanded="true" />
+            <element signature="e#29383#29398#0" expanded="true" />
+            <element signature="e#29445#29479#0" expanded="true" />
+            <element signature="e#32730#32752#0" expanded="true" />
+            <element signature="e#34024#34045#0" expanded="true" />
+            <element signature="e#34063#34083#0" expanded="true" />
+            <element signature="e#34101#34121#0" expanded="true" />
+            <element signature="e#34139#34160#0" expanded="true" />
+            <element signature="e#34659#34692#0" expanded="true" />
+            <element signature="e#35451#35462#0" expanded="true" />
+            <element signature="e#35822#35856#0" expanded="true" />
+            <element signature="e#36021#36043#0" expanded="true" />
+            <element signature="e#36244#36259#0" expanded="true" />
+            <element signature="e#36318#36341#0" expanded="true" />
+            <element signature="e#36921#36932#0" expanded="true" />
+            <element signature="e#37440#37474#0" expanded="true" />
+            <element signature="e#37587#37609#0" expanded="true" />
+            <element signature="e#37741#37756#0" expanded="true" />
+            <element signature="e#37815#37838#0" expanded="true" />
+            <element signature="e#39820#39845#0" expanded="true" />
+            <element signature="e#40154#40208#0" expanded="true" />
+            <element signature="e#40361#40389#0" expanded="true" />
+            <element signature="e#40427#40454#0" expanded="true" />
+            <element signature="e#40492#40513#0" expanded="true" />
+            <element signature="e#40551#40573#0" expanded="true" />
+            <element signature="e#40959#40986#0" expanded="true" />
+            <element signature="e#41038#41065#0" expanded="true" />
+            <element signature="e#41117#41173#0" expanded="true" />
+            <element signature="e#41225#41282#0" expanded="true" />
+            <element signature="e#41510#41562#0" expanded="true" />
+            <element signature="e#41619#41630#0" expanded="true" />
+            <element signature="e#42390#42409#0" expanded="true" />
+            <element signature="e#42542#42568#0" expanded="true" />
+            <element signature="e#42761#42776#0" expanded="true" />
+            <element signature="e#43946#43968#0" expanded="true" />
           </folding>
         </state>
       </provider>
