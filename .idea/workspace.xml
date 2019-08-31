@@ -10,18 +10,14 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39f5ba89-6e96-4bbf-9f84-07f84a34e83c" name="Default Changelist" comment="程序返回后隐藏就没用了，因为动态广播跟随宿主（Activity）生命，Activity结束，广播就没了，可是如果注册成静态广播，又不能与Activity字段交互&#10;静态注册广播可以通过创建实例时赋值静态对象，但是这样做有内存泄漏风险。用了Map之后memory leak warning又消失了。。&#10;采用静态广播">
+    <list default="true" id="39f5ba89-6e96-4bbf-9f84-07f84a34e83c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,8 +43,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="51" column="78" selection-start-line="51" selection-start-column="78" selection-end-line="51" selection-end-column="78" />
+            <state relative-caret-position="242">
+              <caret line="254" column="39" selection-start-line="254" selection-start-column="39" selection-end-line="254" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2694#2753#0" expanded="true" />
@@ -119,6 +115,15 @@
                 <element signature="e#42761#42776#0" expanded="true" />
                 <element signature="e#43946#43968#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequester.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="245">
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
             </state>
           </provider>
         </entry>
@@ -197,8 +202,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2641">
-              <caret line="158" column="23" selection-start-line="158" selection-start-column="23" selection-end-line="158" selection-end-column="23" />
+            <state relative-caret-position="52">
+              <caret line="143" column="15" lean-forward="true" selection-start-line="143" selection-start-column="15" selection-end-line="143" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -274,11 +279,11 @@
         <option value="$PROJECT_DIR$/app/src/main/res/anim/slide_in_bottom.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" />
       </list>
     </option>
   </component>
@@ -391,7 +396,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="device.picker.selection" value="73EBB18621217594" />
+    <property name="device.picker.selection" value="Pixel_XL_API_23" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="instant.run" />
@@ -468,11 +473,18 @@
       <option name="project" value="LOCAL" />
       <updated>1567091269205</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="程序返回后隐藏就没用了，因为动态广播跟随宿主（Activity）生命，Activity结束，广播就没了，可是如果注册成静态广播，又不能与Activity字段交互&#10;静态注册广播可以通过创建实例时赋值静态对象，但是这样做有内存泄漏风险。用了Map之后memory leak warning又消失了。。&#10;采用静态广播">
+      <created>1567209776932</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1567209776932</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18456000" />
+    <option name="totallyTimeSpent" value="18714000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
@@ -499,7 +511,7 @@
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Build" order="10" weight="0.29078802" />
-      <window_info anchor="bottom" id="Logcat" order="11" weight="0.4328524" />
+      <window_info active="true" anchor="bottom" id="Logcat" order="11" visible="true" weight="0.5027747" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="bottom" id="Version Control" order="13" weight="0.6970033" />
       <window_info anchor="bottom" id="Terminal" order="14" weight="0.32852387" />
@@ -571,7 +583,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="修复bug：清空时背景图片没有重置，导致会走撤回&#10;导入图片如果无法识别就异常捕获而不是闪退&#10;？？？？   莫名不能横屏了。。" />
     <MESSAGE value="导入图片增加导入选项&#10;修复画笔宽度调节精度问题&#10;准备加双指缩放" />
-    <option name="LAST_COMMIT_MESSAGE" value="导入图片增加导入选项&#10;修复画笔宽度调节精度问题&#10;准备加双指缩放" />
+    <MESSAGE value="程序返回后隐藏就没用了，因为动态广播跟随宿主（Activity）生命，Activity结束，广播就没了，可是如果注册成静态广播，又不能与Activity字段交互&#10;静态注册广播可以通过创建实例时赋值静态对象，但是这样做有内存泄漏风险。用了Map之后memory leak warning又消失了。。&#10;采用静态广播" />
+    <option name="LAST_COMMIT_MESSAGE" value="程序返回后隐藏就没用了，因为动态广播跟随宿主（Activity）生命，Activity结束，广播就没了，可是如果注册成静态广播，又不能与Activity字段交互&#10;静态注册广播可以通过创建实例时赋值静态对象，但是这样做有内存泄漏风险。用了Map之后memory leak warning又消失了。。&#10;采用静态广播" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -751,13 +764,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2641">
-          <caret line="158" column="23" selection-start-line="158" selection-start-column="23" selection-end-line="158" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1710">
@@ -840,10 +846,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="52">
+          <caret line="143" column="15" lean-forward="true" selection-start-line="143" selection-start-column="15" selection-end-line="143" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequester.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="51" column="78" selection-start-line="51" selection-start-column="78" selection-end-line="51" selection-end-column="78" />
+        <state relative-caret-position="242">
+          <caret line="254" column="39" selection-start-line="254" selection-start-column="39" selection-end-line="254" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2694#2753#0" expanded="true" />
