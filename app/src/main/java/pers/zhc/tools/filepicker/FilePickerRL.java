@@ -135,11 +135,13 @@ public class FilePickerRL extends RelativeLayout {
         new Thread(() -> {
             justPicked[0] = -1;
             ctx.runOnUiThread(ll::removeAllViews);
-            try {
-                pathView.setText(String.format("%s", currentPath.getCanonicalFile()));
-            } catch (IOException e) {
-                showException(e, ctx);
-            }
+            ctx.runOnUiThread(() -> {
+                try {
+                    pathView.setText(String.format("%s", currentPath.getCanonicalFile()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
             TextView[] textViews;
             int length = 0;
             try {
