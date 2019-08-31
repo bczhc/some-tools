@@ -40,6 +40,8 @@ public class PaintView extends View {
     private Context ctx;
     private float mEraserStrokeWidth;
     private Bitmap backgroundBitmap;
+    private float importedBitmapLeft;
+    private float importedBitmapTop;
 
 
 
@@ -151,7 +153,7 @@ public class PaintView extends View {
             redoList.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 mCanvas
             if (backgroundBitmap != null) {
-                mCanvas.drawBitmap(backgroundBitmap, 0, 0, mBitmapPaint);
+                mCanvas.drawBitmap(backgroundBitmap, importedBitmapLeft, importedBitmapTop, mBitmapPaint);
             }
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
@@ -470,7 +472,10 @@ public class PaintView extends View {
 
     void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
         try {
-            backgroundBitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);mCanvas.drawBitmap(backgroundBitmap, left, top, mBitmapPaint);
+            this.importedBitmapLeft = left;
+            this.importedBitmapTop = top;
+            backgroundBitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
+            mCanvas.drawBitmap(backgroundBitmap, left, top, mBitmapPaint);
             invalidate();
         } catch (Exception e) {
             e.printStackTrace();

@@ -78,7 +78,7 @@ public class FunctionDrawing extends BaseActivity {
         sb.setEnabled(false);
         fs.definite.n = 100000;
         new Thread(() -> {
-            fs.initAB(nNum, s -> runOnUiThread(() -> tv.setText(s)));
+            fs.initAB(nNum, s -> runOnUiThread(() -> tv.setText(s)), Runtime.getRuntime().availableProcessors());
             draw();
             runOnUiThread(() -> sb.setEnabled(true));
         }).start();

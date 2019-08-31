@@ -51,6 +51,7 @@ public class MainActivity extends BaseActivity {
     private Runnable importPathFileDoneAction;
     private static Map<Long, MainActivity> longMainActivityMap;//memory leak??
     private long currentInstanceMills;
+    private TextView[] childTVs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,7 +253,7 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         };
-        TextView[] childTVs = new TextView[strings.length];
+        childTVs = new TextView[strings.length];
         importPathFileDoneAction = () -> {
             if (pv.isEraserMode) {
                 childTVs[6].setText(R.string.eraser_mode);
@@ -266,6 +267,9 @@ public class MainActivity extends BaseActivity {
         iv.setOnClickListener(v -> {
             System.out.println("click");
             ll.removeAllViews();
+            if (pv.isEraserMode) {
+                strings[6] = getString(R.string.eraser_mode);
+            } else strings[6] = getString(R.string.drawing_mode);
             for (int i = 0; i < strings.length; i++) {
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
@@ -802,7 +806,6 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-//            startFloatingWindow(false, false);
             if (Objects.requireNonNull(intent.getAction()).equals("pers.zhc.tools.START_SERVICE")) {
                 long mills = intent.getLongExtra("mills", 0);
                 MainActivity activity = MainActivity.longMainActivityMap.get(mills);
