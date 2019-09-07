@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Selection;
+import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
 import pers.zhc.tools.BaseActivity;
@@ -30,9 +31,11 @@ import pers.zhc.u.FileU;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
 import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
@@ -50,7 +53,7 @@ public class MainActivity extends BaseActivity {
     private View globalOnTouchListenerFloatingView;
     private File currentInternalPathFile = null;
     private Runnable importPathFileDoneAction;
-    private static Map<Long, MainActivity> longMainActivityMap;//memory leak??
+    private static Map<Long, Activity> longMainActivityMap;//memory leak??
     private long currentInstanceMills;
     private TextView[] childTVs;
 
@@ -274,13 +277,42 @@ public class MainActivity extends BaseActivity {
             for (int i = 0; i < strings.length; i++) {
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
-                childTVs[i] = new TextView(this);
+//                int finalI1 = i;
+                childTVs[i] = new android.support.v7.widget.AppCompatTextView(this) {
+                    private float firstX, firstY;
+
+                    @Override
+                    public boolean onTouchEvent(MotionEvent event) {
+                        /*float x = event.getX();
+                        float y = event.getY();
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                firstX = x;
+                                firstY = y;
+                                break;
+                            case MotionEvent.ACTION_MOVE:
+                                if (x == firstX && y == firstY) {
+                                    childTVs[finalI1].setBackgroundColor(Color.YELLOW);
+                                } else {
+                                    childTVs[finalI1].setBackgroundColor(Color.WHITE);
+                                }
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                childTVs[finalI1].setBackgroundColor(Color.WHITE);
+                                break;
+                        }
+                        return true;*/
+                        return super.onTouchEvent(event);
+                    }
+                };
                 childTVs[i].setLayoutParams(childTV_lp);
                 childTVs[i].setText(strings[i]);
                 childTVs[i].setBackgroundColor(TVsColor);
                 childTVs[i].setTextColor(textsColor);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+//                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                    childTVs[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
+                    childTVs[i].setGravity(Gravity.CENTER);
                 } else childTVs[i].setTextSize(20F);
                 int finalI = i;
                 childTVs[i].setOnClickListener(v1 -> {
@@ -439,6 +471,7 @@ public class MainActivity extends BaseActivity {
                     System.out.println("i = " + finalI);
                 });
                 childTVs[i].setOnTouchListener(smallViewOnTouchListener);
+                linearLayout.setGravity(Gravity.CENTER);
                 linearLayout.addView(childTVs[i]);
                 ll.addView(linearLayout);
             }
@@ -826,7 +859,7 @@ public class MainActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             if (Objects.requireNonNull(intent.getAction()).equals("pers.zhc.tools.START_SERVICE")) {
                 long mills = intent.getLongExtra("mills", 0);
-                MainActivity activity = MainActivity.longMainActivityMap.get(mills);
+                MainActivity activity = (MainActivity) MainActivity.longMainActivityMap.get(mills);
                 if (activity != null) {
                     activity.startFloatingWindow(false, false);
                 }
