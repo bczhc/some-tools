@@ -41,8 +41,7 @@ public class PaintView extends View {
     private Context ctx;
     private float mEraserStrokeWidth;
     private Bitmap backgroundBitmap;
-    private float importedBitmapLeft;
-    private float importedBitmapTop;
+    private Canvas mBackgroundCanvas;
 
 
 
@@ -98,7 +97,9 @@ public class PaintView extends View {
             //获取PaintView的宽和高
             //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
             mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            backgroundBitmap = Bitmap.createBitmap(mBitmap);
             mCanvas = new Canvas(mBitmap);
+            mBackgroundCanvas = new Canvas(backgroundBitmap);
             //抗锯齿
             mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
             //背景色
@@ -154,7 +155,7 @@ public class PaintView extends View {
             redoList.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 mCanvas
             if (backgroundBitmap != null) {
-                mCanvas.drawBitmap(backgroundBitmap, importedBitmapLeft, importedBitmapTop, mBitmapPaint);
+                mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
             }
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
@@ -200,7 +201,7 @@ public class PaintView extends View {
         //清空 撤销 ，恢复 操作列表
         redoList.clear();
         undoList.clear();
-        backgroundBitmap = null;
+        mBackgroundCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
     }
 
     /**
@@ -262,7 +263,7 @@ public class PaintView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
         int pointerCount = event.getPointerCount();
-        /*if (pointerCount == 2) {
+        if (pointerCount == 2) {
             float x1 = event.getX(0);
             float x2 = event.getX(1);
             float y1 = event.getY(0);
@@ -272,23 +273,23 @@ public class PaintView extends View {
                 firstDistance = distance;
             }
             if (action == MotionEvent.ACTION_MOVE) {
-                *//*if (distance > firstDistance) {
+                if (distance > firstDistance) {
                     System.out.println("zoom+");
-                } else System.out.println("zoom-");*//*
+                } else System.out.println("zoom-");
                 mCanvas.translate((x1 + x2) / 2, (y1 + y2) / 2);
                 mCanvas.scale(((float) (width * (distance / firstDistance))), ((float) (height * (distance / firstDistance))));
                 mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                mPaint.setStrokeWidth((float) (getStrokeWidth() * distance));
                 for (PathBean pathBean : undoList) {
                     mCanvas.drawPath(pathBean.path, pathBean.paint);
                 }
                 mCanvas.translate(0F, 0F);
-                invalidate();
             }
         } else if (pointerCount == 1) {
+//            mCanvas.scale(width * 2, height * 2);
             onTouchAction(action, event.getX(), event.getY());
             firstDistance = 0;
-        }*/
-        onTouchAction(action, event.getX(), event.getY());
+        }
         postInvalidate();
         return true;
     }
@@ -476,14 +477,17 @@ public class PaintView extends View {
 
     void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
         try {
-            this.importedBitmapLeft = left;
-            this.importedBitmapTop = top;
-            backgroundBitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
-            mCanvas.drawBitmap(backgroundBitmap, left, top, mBitmapPaint);
+            Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
+            mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
+            if (backgroundBitmap == null) {
+                Toast.makeText(ctx, ctx.getString(R.string.importing_failed), Toast.LENGTH_SHORT).show();
+            } else {
+                mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
+            }
             invalidate();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(ctx, R.string.importing_failed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(ctx, ctx.getString(R.string.importing_failed) + "\n" + e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
