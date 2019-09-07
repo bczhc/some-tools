@@ -30,6 +30,7 @@ import pers.zhc.u.FileU;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -741,19 +742,14 @@ public class MainActivity extends BaseActivity {
                             Dialog importPathFileProgressDialog = new Dialog(this);
                             setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                             importPathFileProgressDialog.setCanceledOnTouchOutside(false);
-                            LinearLayout progressDialogLL = new LinearLayout(this);
-                            progressDialogLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                            progressDialogLL.setOrientation(LinearLayout.VERTICAL);
+                            RelativeLayout progressRL = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
+                            progressRL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             importPathFileProgressDialog.show();
-                            importPathFileProgressDialog.setContentView(progressDialogLL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
-                            ProgressBar progressBar = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.progress_bar);
-                            progressBar.setMax(100);
-                            TextView tv = new TextView(this);
+                            importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
+                            TextView tv = progressRL.findViewById(R.id.progress_tv);
                             tv.setText(R.string.importing);
-                            TextView pTV = new TextView(this);
-                            progressDialogLL.addView(tv);
-                            progressDialogLL.addView(progressBar);
-                            progressDialogLL.addView(pTV);
+                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
+                            TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
                             pv.importPathFile(new File(s), () -> {
                                 runOnUiThread(importPathFileDoneAction);
                                 importPathFileProgressDialog.dismiss();
