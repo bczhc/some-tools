@@ -11,6 +11,7 @@ import android.widget.Toast;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.u.Random;
+import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
 
 import java.io.*;
@@ -346,14 +347,16 @@ public class PaintView extends View {
         closeStream(os);
     }
 
-    void importPathFile(File f, Runnable d) {
+    void importPathFile(File f, Runnable d, @Documents.Nullable ValueInterface<Float> floatValueInterface) {
         ExecutorService es = Executors.newCachedThreadPool();
         es.execute(() -> {
             try {
+                long length = f.length(), haveRead = 0L;
                 InputStream is = new FileInputStream(f);
                 byte[] bytes = new byte[26];
                 byte[] bytes_4 = new byte[4];
                 while (is.read(bytes) != -1) {
+                    haveRead += 26L;
                     switch (bytes[25]) {
                         case 1:
                             undo();
@@ -385,6 +388,7 @@ public class PaintView extends View {
                             setPaintColor(color);
                             setStrokeWidth(strokeWidth);
                             onTouchAction(motionAction, x, y);
+                            floatValueInterface.f(((float) haveRead) / ((float) length) * 100F);
                             break;
                     }
                 }
