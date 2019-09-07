@@ -52,10 +52,10 @@
     <string name="pick_color">选择颜色</string>
     <string name="start_floating_window">开启悬浮窗</string>
     <string name="stop_floating_window">关闭悬浮窗</string>
-    <string name="drawing">绘\n画</string>
-    <string name="controlling">操\n控</string>
-    <string name="drawing_mode">绘\n画</string>
-    <string name="eraser_mode">擦\n除</string>
+    <string name="drawing">绘画</string>
+    <string name="controlling">操控</string>
+    <string name="drawing_mode">绘画</string>
+    <string name="eraser_mode">擦除</string>
     <string name="alpha" translatable="false">alpha</string>
     <string name="done">完成</string>
     <string name="h_s_v_a_color_picker">HSVA调色板</string>
@@ -103,7 +103,7 @@
     <string name="set__top__left__scaled_width__scaled_height">设置左起始点、顶起始点、缩放宽度、缩放高度</string>
     <string name="board_w_h_info_and_bitmap_w_h_info">画板宽高：%1$d, %2$d%3$s图片宽高：%4$d, %5$d</string>
     <string name="left_starting_point">左起始点</string>
-    <string name="top_starting_point">右起始点</string>
+    <string name="top_starting_point">上起始点</string>
     <string name="scaled_width">缩放至宽度</string>
     <string name="scaled_height">缩放至高度</string>
     <string name="type_error">输入不合法</string>
