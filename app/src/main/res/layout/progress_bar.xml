@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ProgressBar android:layout_width="match_parent" android:layout_height="match_parent"
-             android:layout_below="@id/clear_path_btn"
-             android:indeterminate="false"
-             style="?android:attr/progressBarStyleHorizontal"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             android:id="@+id/progress_bar"
-/>
+<RelativeLayout android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rl"
+>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="@string/title"
+              android:id="@+id/progress_bar_title"
+    />
+    <ProgressBar android:layout_width="match_parent" android:layout_height="wrap_content"
+                 android:layout_below="@id/progress_bar_title"
+                 android:indeterminate="false"
+                 style="?android:attr/progressBarStyleHorizontal"
+                 xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:id="@+id/progress_bar"
+                 android:max="100"
+    />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/progress_tv"
+              android:layout_below="@id/progress_bar"
+    />
+</RelativeLayout>
