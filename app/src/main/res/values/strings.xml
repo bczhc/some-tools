@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">tools</string>
     <string name="tv" translatable="false">%1$s</string>
+    <string name="progress_tv" translatable="false">%1$f%%</string>
     <string name="select_file_or_directory">选择文件/目录</string>
     <string name="encode">编码</string>
     <string name="decode">解码</string>
@@ -106,4 +107,5 @@
     <string name="scaled_width">缩放至宽度</string>
     <string name="scaled_height">缩放至高度</string>
     <string name="type_error">输入不合法</string>
+    <string name="importing">正在导入</string>
 </resources>
