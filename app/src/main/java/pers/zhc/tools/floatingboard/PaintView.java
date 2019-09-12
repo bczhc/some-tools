@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@SuppressWarnings({"unused"})
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
     private final File internalPathFile;
@@ -39,7 +38,6 @@ public class PaintView extends View {
     boolean isEraserMode;
     private JNI jni = new JNI();
     private Context ctx;
-    private float mEraserStrokeWidth;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
 
@@ -232,6 +230,7 @@ public class PaintView extends View {
     /**
      * 是否可以撤销
      */
+    @SuppressWarnings("unused")
     public boolean isCanUndo() {
         return undoList.isEmpty();
     }
@@ -239,6 +238,7 @@ public class PaintView extends View {
     /**
      * 是否可以恢复
      */
+    @SuppressWarnings("unused")
     public boolean isCanRedo() {
         return redoList.isEmpty();
     }
@@ -252,8 +252,37 @@ public class PaintView extends View {
         postInvalidate();
     }
 
+    private class FloatPoint {
+        private float x, y;
 
-    private double firstDistance;
+        FloatPoint(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        FloatPoint() {
+        }
+    }
+
+    private class PointWithBoolean {
+        private FloatPoint p1, p2;
+
+        private PointWithBoolean() {
+            p1 = new FloatPoint();
+            p2 = new FloatPoint();
+        }
+
+        private boolean b = false;
+
+        private FloatPoint getCentralPoint() {
+            return new FloatPoint((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+        }
+    }
+
+    private float firstDistance;
+    private float lastScale = 1;
+    private PointWithBoolean firstP = new PointWithBoolean();
+    private PointWithBoolean lastP = new PointWithBoolean();
 
     /**
      * 触摸事件 触摸绘制
@@ -268,7 +297,14 @@ public class PaintView extends View {
             float x2 = event.getX(1);
             float y1 = event.getY(0);
             float y2 = event.getY(1);
-            double distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+            if (!firstP.b) {
+                firstP.p1.x = x1;
+                firstP.p2.x = x2;
+                firstP.p1.y = y1;
+                firstP.p2.y = y2;
+                firstP.b = true;
+            }
+            float distance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
             if (firstDistance == 0) {
                 firstDistance = distance;
             }
@@ -276,20 +312,34 @@ public class PaintView extends View {
                 if (distance > firstDistance) {
                     System.out.println("zoom+");
                 } else System.out.println("zoom-");
-                mCanvas.translate((x1 + x2) / 2, (y1 + y2) / 2);
-                mCanvas.scale(((float) (width * (distance / firstDistance))), ((float) (height * (distance / firstDistance))));
+                float centralPointX = (x1 + x2) / 2;
+                float centralPointY = (y1 + y2) / 2;
+                FloatPoint firstPCentralPoint = firstP.getCentralPoint();
+                float scale = 1F / lastScale * (distance / firstDistance);
+                mCanvas.scale(scale, scale, centralPointX, centralPointY);
+                lastScale = distance / firstDistance;
+                System.out.println("scale = " + scale);
                 mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                mPaint.setStrokeWidth((float) (getStrokeWidth() * distance));
+                FloatPoint lastPCentralPoint = lastP.getCentralPoint();
+                mCanvas.translate(centralPointX - firstPCentralPoint.x, centralPointY - firstPCentralPoint.y);
                 for (PathBean pathBean : undoList) {
                     mCanvas.drawPath(pathBean.path, pathBean.paint);
                 }
-                mCanvas.translate(0F, 0F);
+                mCanvas.translate(firstPCentralPoint.x - centralPointX, firstPCentralPoint.y - centralPointY);
+                if (!lastP.b) {
+                    lastP.p1.x = x1;
+                    lastP.p2.x = x2;
+                    lastP.p1.y = y1;
+                    lastP.p2.y = y2;
+                    lastP.b = true;
+                }
             }
         } else if (pointerCount == 1) {
 //            mCanvas.scale(width * 2, height * 2);
             onTouchAction(action, event.getX(), event.getY());
             firstDistance = 0;
         }
+        onTouchAction(action, event.getX(), event.getY());
         postInvalidate();
         return true;
     }
@@ -492,11 +542,6 @@ public class PaintView extends View {
     }
 
     void scaleCanvas(float scaledWidth, float scaledHeight) {
-        mCanvas.save();
-        mCanvas.scale(scaledWidth, scaledHeight);
-        for (PathBean pathBean : undoList) {
-            mCanvas.drawPath(pathBean.path, pathBean.paint);
-        }
-        mCanvas.restore();
+
     }
 }

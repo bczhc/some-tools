@@ -279,7 +279,7 @@ public class MainActivity extends BaseActivity {
                 linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
 //                int finalI1 = i;
                 childTVs[i] = new android.support.v7.widget.AppCompatTextView(this) {
-                    private float firstX, firstY;
+//                    private float firstX, firstY;
 
                     @Override
                     public boolean onTouchEvent(MotionEvent event) {
