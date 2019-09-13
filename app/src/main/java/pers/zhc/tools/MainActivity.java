@@ -13,7 +13,7 @@ import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.floatingboard.JNI;
-import pers.zhc.tools.functiondrawing.FunctionDrawing;
+import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.toast.AToast;
 
@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity {
                 AToast.class,
                 Clip.class,
                 pers.zhc.tools.floatingboard.MainActivity.class,
-                FunctionDrawing.class,
+                FunctionDrawingBoard.class,
                 Document.class
         };
         new Thread(() -> {
