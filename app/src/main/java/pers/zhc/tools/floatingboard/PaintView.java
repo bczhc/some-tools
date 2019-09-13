@@ -44,6 +44,7 @@ public class PaintView extends View {
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
     private GestureDetectorCompat gestureDetector;
+    private MyGesture onGestureListener;
 
 
 
@@ -110,7 +111,15 @@ public class PaintView extends View {
 
         undoList = new LinkedList<>();
         redoList = new LinkedList<>();
-        gestureDetector = new GestureDetectorCompat(ctx, new GestureDetector.OnGestureListener() {
+        onGestureListener = new MyGesture() {
+            @Override
+            public void onFirst2Down(float p1X, float p1Y, float p2X, float p2Y) {
+                lastP.p1.x = p1X;
+                lastP.p1.y = p1Y;
+                lastP.p2.x = p2X;
+                lastP.p2.y = p2Y;
+            }
+
             @Override
             public boolean onDown(MotionEvent e) {
                 Log.v("gd", "onDown" + e);
@@ -128,9 +137,22 @@ public class PaintView extends View {
                 return true;
             }
 
+            private PointWithBoolean lastP = new PointWithBoolean();
+
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 Log.v("gd", "onScroll" + e1 + " " + e2 + " " + distanceX + " " + distanceY);
+                if (e2.getPointerCount() == 2) {
+                    float x1 = e2.getX(0);
+                    float x2 = e2.getX(1);
+                    float y1 = e2.getY(0);
+                    float y2 = e2.getY(1);
+                    mCanvas.translate((x1 + x2) / 2 - lastP.getCentralPoint().x, (y1 + y2) / 2 - lastP.getCentralPoint().y);
+                    lastP.p1.x = x1;
+                    lastP.p2.x = x2;
+                    lastP.p1.y = y1;
+                    lastP.p2.y = y2;
+                }
                 return true;
             }
 
@@ -144,7 +166,12 @@ public class PaintView extends View {
                 Log.v("gd", "onFling" + e1 + " " + e2 + " " + velocityX + " " + velocityY);
                 return true;
             }
-        });
+
+            @Override
+            void onZoom(float scale) {
+            }
+        };
+        gestureDetector = new GestureDetectorCompat(ctx, onGestureListener);
     }
 
     /**
@@ -332,6 +359,23 @@ public class PaintView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getPointerCount() == 1) {
             onTouchAction(event.getAction(), event.getX(), event.getY());
+            onGestureListener.first2Down = false;
+        } else if (event.getPointerCount() == 2) {
+            float x1 = event.getX(0);
+            float y1 = event.getY(0);
+            float x2 = event.getX(1);
+            float y2 = event.getY(1);
+            if (!onGestureListener.first2Down) {
+                onGestureListener.onFirst2Down(x1, y1, x2, y2);
+                firstDistance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+            }
+            onGestureListener.first2Down = true;
+            float distance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+            float scale = distance / firstDistance;
+            mCanvas.scale(scale / lastScale, scale / lastScale, (x1 + x2) / 2, (y1 + y2) / 2);
+            lastScale = scale;
+            mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            for (PathBean pathBean : undoList) mCanvas.drawPath(pathBean.path, pathBean.paint);
         }
         /*int action = event.getAction();
         int pointerCount = event.getPointerCount();
@@ -375,7 +419,7 @@ public class PaintView extends View {
             }
         }*/
         boolean b = gestureDetector.onTouchEvent(event);
-        postInvalidate();
+        invalidate();
         return b;
     }
 
@@ -580,4 +624,43 @@ public class PaintView extends View {
 
     }
 
+    private class MyGesture implements GestureDetector.OnGestureListener {
+        boolean first2Down;
+
+        void onFirst2Down(float p1X, float p1Y, float p2X, float p2Y) {
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return false;
+        }
+
+        void onZoom(float scale) {
+        }
+    }
 }
