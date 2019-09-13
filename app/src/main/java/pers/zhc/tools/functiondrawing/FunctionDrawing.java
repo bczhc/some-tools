@@ -18,7 +18,7 @@ import pers.zhc.u.FourierSeries;
 public class FunctionDrawing extends BaseActivity {
     private RelativeLayout rl;
     private FourierSeries fs;
-    private int nNum = 100;
+    private int nNum = 10;
     private TextView tv;
     private FunctionDrawingView functionDrawingView;
 
@@ -44,16 +44,11 @@ public class FunctionDrawing extends BaseActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void init() {
+
         fs = new FourierSeries(30) {
             @Override
             public double f_f(double x) {
-                /*if (x < 5) return 10;
-                if (x >= 5 && x < 7.5F) return -2 * x + 20;
-                if (x >= 7.5F && x < 17.5F) return x - 2.5;
-                return -2 * x + 50;*/
-                if (x < 10) return x;
-                if (x >= 10 && x < 20) return -x + 20;
-                return x - 20;
+                return ((double) FunctionDrawingBoard.functionInterface.f(((float) x)));
             }
         };
         SeekBar sb = findViewById(R.id.zoom_sb);
