@@ -674,7 +674,8 @@ public class MainActivity extends BaseActivity {
                 R.string.import_image,
                 R.string.export_image,
                 R.string.import_path,
-                R.string.export_path
+                R.string.export_path,
+                R.string.resetTranslate
         };
         Button[] buttons = new Button[textsRes.length];
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -813,7 +814,8 @@ public class MainActivity extends BaseActivity {
                         setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
                         alertDialog.show();
-                    }
+                    },
+                    v -> pv.resetTranslate()
             };
             buttons[i].setOnClickListener(onClickListeners[i]);
         }

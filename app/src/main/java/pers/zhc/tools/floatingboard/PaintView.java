@@ -45,6 +45,8 @@ public class PaintView extends View {
     private Canvas mBackgroundCanvas;
     private GestureDetectorCompat gestureDetector;
     private MyGesture onGestureListener;
+    private float finalScale = 1;
+    private float finalTranslateX, finalTranslateY;
 
 
 
@@ -137,7 +139,7 @@ public class PaintView extends View {
                 return true;
             }
 
-            private PointWithBoolean lastP = new PointWithBoolean();
+            private MyPoint lastP = new MyPoint();
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
@@ -147,7 +149,11 @@ public class PaintView extends View {
                     float x2 = e2.getX(1);
                     float y1 = e2.getY(0);
                     float y2 = e2.getY(1);
-                    mCanvas.translate((x1 + x2) / 2 - lastP.getCentralPoint().x, (y1 + y2) / 2 - lastP.getCentralPoint().y);
+                    float tX = (x1 + x2) / 2 - lastP.getCentralPoint().x;
+                    float tY = (y1 + y2) / 2 - lastP.getCentralPoint().y;
+                    finalTranslateX += tX;
+                    finalTranslateY += tY;
+                    mCanvas.translate(tX, tY);
                     lastP.p1.x = x1;
                     lastP.p2.x = x2;
                     lastP.p1.y = y1;
@@ -165,10 +171,6 @@ public class PaintView extends View {
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 Log.v("gd", "onFling" + e1 + " " + e2 + " " + velocityX + " " + velocityY);
                 return true;
-            }
-
-            @Override
-            void onZoom(float scale) {
             }
         };
         gestureDetector = new GestureDetectorCompat(ctx, onGestureListener);
@@ -330,15 +332,13 @@ public class PaintView extends View {
         }
     }
 
-    private class PointWithBoolean {
+    private class MyPoint {
         private FloatPoint p1, p2;
 
-        private PointWithBoolean() {
+        private MyPoint() {
             p1 = new FloatPoint();
             p2 = new FloatPoint();
         }
-
-        private boolean b = false;
 
         private FloatPoint getCentralPoint() {
             return new FloatPoint((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
@@ -346,9 +346,7 @@ public class PaintView extends View {
     }
 
     private float firstDistance;
-    private float lastScale = 1;
-    private PointWithBoolean firstP = new PointWithBoolean();
-    private PointWithBoolean lastP = new PointWithBoolean();
+    private float lastScale;
 
 
     /**
@@ -361,6 +359,7 @@ public class PaintView extends View {
             onTouchAction(event.getAction(), event.getX(), event.getY());
             onGestureListener.first2Down = false;
         } else if (event.getPointerCount() == 2) {
+            mPath = null;
             float x1 = event.getX(0);
             float y1 = event.getY(0);
             float x2 = event.getX(1);
@@ -368,12 +367,15 @@ public class PaintView extends View {
             if (!onGestureListener.first2Down) {
                 onGestureListener.onFirst2Down(x1, y1, x2, y2);
                 firstDistance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+                lastScale = 1;
             }
             onGestureListener.first2Down = true;
             float distance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-            float scale = distance / firstDistance;
-            mCanvas.scale(scale / lastScale, scale / lastScale, (x1 + x2) / 2, (y1 + y2) / 2);
-            lastScale = scale;
+            float ratio = distance / firstDistance;
+            float scale = ratio / lastScale;
+            mCanvas.scale(scale, scale, (x1 + x2) / 2, (y1 + y2) / 2);
+            finalScale *= scale;
+            lastScale = ratio;
             mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             for (PathBean pathBean : undoList) mCanvas.drawPath(pathBean.path, pathBean.paint);
         }
@@ -620,10 +622,6 @@ public class PaintView extends View {
         }
     }
 
-    void scaleCanvas(float scaledWidth, float scaledHeight) {
-
-    }
-
     private class MyGesture implements GestureDetector.OnGestureListener {
         boolean first2Down;
 
@@ -659,8 +657,16 @@ public class PaintView extends View {
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             return false;
         }
+    }
 
-        void onZoom(float scale) {
-        }
+    void resetTranslate() {
+        /*mCanvas.scale(1 / this.finalScale, 1 / this.finalScale, finalTranslateX, finalTranslateY);
+        mCanvas.translate(-finalTranslateX, -finalTranslateY);*/
+        mCanvas = new Canvas(mBitmap);
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        for (PathBean pathBean : undoList) mCanvas.drawPath(pathBean.path, pathBean.paint);
+        finalTranslateX = (finalTranslateY = 0);
+        finalScale = 1;
+        invalidate();
     }
 }
