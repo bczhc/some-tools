@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Selection;
+import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
 import pers.zhc.tools.BaseActivity;
@@ -31,7 +32,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
 import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
@@ -49,7 +53,7 @@ public class MainActivity extends BaseActivity {
     private View globalOnTouchListenerFloatingView;
     private File currentInternalPathFile = null;
     private Runnable importPathFileDoneAction;
-    private static Map<Long, MainActivity> longMainActivityMap;//memory leak??
+    private static Map<Long, Activity> longMainActivityMap;//memory leak??
     private long currentInstanceMills;
     private TextView[] childTVs;
 
@@ -273,13 +277,42 @@ public class MainActivity extends BaseActivity {
             for (int i = 0; i < strings.length; i++) {
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
-                childTVs[i] = new TextView(this);
+//                int finalI1 = i;
+                childTVs[i] = new android.support.v7.widget.AppCompatTextView(this) {
+//                    private float firstX, firstY;
+
+                    @Override
+                    public boolean onTouchEvent(MotionEvent event) {
+                        /*float x = event.getX();
+                        float y = event.getY();
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                firstX = x;
+                                firstY = y;
+                                break;
+                            case MotionEvent.ACTION_MOVE:
+                                if (x == firstX && y == firstY) {
+                                    childTVs[finalI1].setBackgroundColor(Color.YELLOW);
+                                } else {
+                                    childTVs[finalI1].setBackgroundColor(Color.WHITE);
+                                }
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                childTVs[finalI1].setBackgroundColor(Color.WHITE);
+                                break;
+                        }
+                        return true;*/
+                        return super.onTouchEvent(event);
+                    }
+                };
                 childTVs[i].setLayoutParams(childTV_lp);
                 childTVs[i].setText(strings[i]);
                 childTVs[i].setBackgroundColor(TVsColor);
                 childTVs[i].setTextColor(textsColor);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+//                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                    childTVs[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
+                    childTVs[i].setGravity(Gravity.CENTER);
                 } else childTVs[i].setTextSize(20F);
                 int finalI = i;
                 childTVs[i].setOnClickListener(v1 -> {
@@ -438,6 +471,7 @@ public class MainActivity extends BaseActivity {
                     System.out.println("i = " + finalI);
                 });
                 childTVs[i].setOnTouchListener(smallViewOnTouchListener);
+                linearLayout.setGravity(Gravity.CENTER);
                 linearLayout.addView(childTVs[i]);
                 ll.addView(linearLayout);
             }
@@ -637,10 +671,11 @@ public class MainActivity extends BaseActivity {
         setDialogAttr(moreOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         LinearLayout ll = new LinearLayout(this);
         int[] textsRes = new int[]{
+                R.string.import_image,
                 R.string.export_image,
-                R.string.export_path,
                 R.string.import_path,
-                R.string.import_image
+                R.string.export_path,
+                R.string.resetTranslate
         };
         Button[] buttons = new Button[textsRes.length];
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -655,55 +690,6 @@ public class MainActivity extends BaseActivity {
             File imageDir = new File(d.toString() + File.separator + "image");
             if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
-                    v -> {
-                        EditText et = getSelectedET_currentMills();
-                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
-                            pv.closePathRecoderOS();
-                            File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
-                            pv.saveImg(imageFile);
-                            if (imageFile.exists())
-                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + imageDir.toString() + File.separator + et.getText().toString() + ".png", Toast.LENGTH_SHORT).show();
-                            else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
-                            pv.setOS(currentInternalPathFile, true);
-                            moreOptionsDialog.dismiss();
-                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                        }).setTitle(R.string.type_file_name).setView(et).create();
-                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
-                        alertDialog.show();
-                    },
-                    v -> {
-                        EditText et = getSelectedET_currentMills();
-                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
-                            File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
-                            try {
-                                FileU.FileCopy(currentInternalPathFile, pathFile);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            if (pathFile.exists())
-                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + pathFile.toString(), Toast.LENGTH_SHORT).show();
-                            else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
-                            moreOptionsDialog.dismiss();
-                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                        }).setTitle(R.string.type_file_name).setView(et).create();
-                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
-                        alertDialog.show();
-                    },
-                    v -> {
-                        Dialog dialog = new Dialog(this);
-                        dialog.setCanceledOnTouchOutside(false);
-                        dialog.setCancelable(false);
-                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
-                            dialog.dismiss();
-                            pv.importPathFile(new File(s), () -> runOnUiThread(importPathFileDoneAction));
-                            moreOptionsDialog.dismiss();
-                        });
-                        setFilePickerDialog(dialog, filePickerRL);
-                    },
                     v -> {
                         Dialog dialog = new Dialog(this);
                         dialog.setCanceledOnTouchOutside(false);
@@ -762,7 +748,74 @@ public class MainActivity extends BaseActivity {
                             importImageOptionsDialog.show();
                         });
                         setFilePickerDialog(dialog, filePickerRL);
-                    }
+                    },
+                    v -> {
+                        EditText et = getSelectedET_currentMills();
+                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                            pv.closePathRecoderOS();
+                            File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
+                            pv.saveImg(imageFile);
+                            if (imageFile.exists())
+                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + imageDir.toString() + File.separator + et.getText().toString() + ".png", Toast.LENGTH_SHORT).show();
+                            else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                            pv.setOS(currentInternalPathFile, true);
+                            moreOptionsDialog.dismiss();
+                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        }).setTitle(R.string.type_file_name).setView(et).create();
+                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
+                        alertDialog.show();
+                    },
+                    v -> {
+                        Dialog dialog = new Dialog(this);
+                        dialog.setCanceledOnTouchOutside(false);
+                        dialog.setCancelable(false);
+                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
+                            dialog.dismiss();
+                            Dialog importPathFileProgressDialog = new Dialog(this);
+                            setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                            importPathFileProgressDialog.setCanceledOnTouchOutside(false);
+                            RelativeLayout progressRL = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
+                            progressRL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            importPathFileProgressDialog.show();
+                            importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
+                            TextView tv = progressRL.findViewById(R.id.progress_tv);
+                            tv.setText(R.string.importing);
+                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
+                            TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
+                            pv.importPathFile(new File(s), () -> {
+                                runOnUiThread(importPathFileDoneAction);
+                                importPathFileProgressDialog.dismiss();
+                            }, aFloat -> runOnUiThread(() -> {
+                                progressBar.setProgress(aFloat.intValue());
+                                pTV.setText(getString(R.string.progress_tv, aFloat));
+                            }));
+                            moreOptionsDialog.dismiss();
+                        });
+                        setFilePickerDialog(dialog, filePickerRL);
+                    },
+                    v -> {
+                        EditText et = getSelectedET_currentMills();
+                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                            File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
+                            try {
+                                FileU.FileCopy(currentInternalPathFile, pathFile);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (pathFile.exists())
+                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + pathFile.toString(), Toast.LENGTH_SHORT).show();
+                            else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                            moreOptionsDialog.dismiss();
+                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        }).setTitle(R.string.type_file_name).setView(et).create();
+                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
+                        alertDialog.show();
+                    },
+                    v -> pv.resetTranslate()
             };
             buttons[i].setOnClickListener(onClickListeners[i]);
         }
@@ -808,7 +861,7 @@ public class MainActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             if (Objects.requireNonNull(intent.getAction()).equals("pers.zhc.tools.START_SERVICE")) {
                 long mills = intent.getLongExtra("mills", 0);
-                MainActivity activity = MainActivity.longMainActivityMap.get(mills);
+                MainActivity activity = (MainActivity) MainActivity.longMainActivityMap.get(mills);
                 if (activity != null) {
                     activity.startFloatingWindow(false, false);
                 }
