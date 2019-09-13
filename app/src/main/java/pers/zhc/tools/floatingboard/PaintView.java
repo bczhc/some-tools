@@ -45,8 +45,8 @@ public class PaintView extends View {
     private Canvas mBackgroundCanvas;
     private GestureDetectorCompat gestureDetector;
     private MyGesture onGestureListener;
-    private float finalScale = 1;
-    private float finalTranslateX, finalTranslateY;
+    /*private float finalScale = 1;
+    private float finalTranslateX, finalTranslateY;*/
 
 
 
@@ -151,8 +151,8 @@ public class PaintView extends View {
                     float y2 = e2.getY(1);
                     float tX = (x1 + x2) / 2 - lastP.getCentralPoint().x;
                     float tY = (y1 + y2) / 2 - lastP.getCentralPoint().y;
-                    finalTranslateX += tX;
-                    finalTranslateY += tY;
+                    /*finalTranslateX += tX;
+                    finalTranslateY += tY;*/
                     mCanvas.translate(tX, tY);
                     lastP.p1.x = x1;
                     lastP.p2.x = x2;
@@ -374,7 +374,7 @@ public class PaintView extends View {
             float ratio = distance / firstDistance;
             float scale = ratio / lastScale;
             mCanvas.scale(scale, scale, (x1 + x2) / 2, (y1 + y2) / 2);
-            finalScale *= scale;
+            /*finalScale *= scale;*/
             lastScale = ratio;
             mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             for (PathBean pathBean : undoList) mCanvas.drawPath(pathBean.path, pathBean.paint);
@@ -665,8 +665,8 @@ public class PaintView extends View {
         mCanvas = new Canvas(mBitmap);
         mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         for (PathBean pathBean : undoList) mCanvas.drawPath(pathBean.path, pathBean.paint);
-        finalTranslateX = (finalTranslateY = 0);
-        finalScale = 1;
+        /*finalTranslateX = (finalTranslateY = 0);
+        finalScale = 1;*/
         invalidate();
     }
 }
