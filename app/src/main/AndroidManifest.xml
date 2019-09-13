@@ -3,6 +3,7 @@
           package="pers.zhc.tools">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
             android:testOnly="false"
             android:allowBackup="false"
