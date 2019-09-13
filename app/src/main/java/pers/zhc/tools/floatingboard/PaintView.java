@@ -5,12 +5,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.ColorInt;
+import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.u.Random;
+import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
 
 import java.io.*;
@@ -18,7 +22,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@SuppressWarnings({"unused"})
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
     private final File internalPathFile;
@@ -38,10 +41,12 @@ public class PaintView extends View {
     boolean isEraserMode;
     private JNI jni = new JNI();
     private Context ctx;
-    private float mEraserStrokeWidth;
     private Bitmap backgroundBitmap;
-    private float importedBitmapLeft;
-    private float importedBitmapTop;
+    private Canvas mBackgroundCanvas;
+    private GestureDetectorCompat gestureDetector;
+    private MyGesture onGestureListener;
+    private float finalScale = 1;
+    private float finalTranslateX, finalTranslateY;
 
 
 
@@ -97,7 +102,9 @@ public class PaintView extends View {
             //获取PaintView的宽和高
             //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
             mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            backgroundBitmap = Bitmap.createBitmap(mBitmap);
             mCanvas = new Canvas(mBitmap);
+            mBackgroundCanvas = new Canvas(backgroundBitmap);
             //抗锯齿
             mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
             //背景色
@@ -106,6 +113,67 @@ public class PaintView extends View {
 
         undoList = new LinkedList<>();
         redoList = new LinkedList<>();
+        onGestureListener = new MyGesture() {
+            @Override
+            public void onFirst2Down(float p1X, float p1Y, float p2X, float p2Y) {
+                lastP.p1.x = p1X;
+                lastP.p1.y = p1Y;
+                lastP.p2.x = p2X;
+                lastP.p2.y = p2Y;
+            }
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                Log.v("gd", "onDown" + e);
+                return true;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+                Log.v("gd", "onShowPress" + e);
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                Log.v("gd", "onSingleTapUp" + e);
+                return true;
+            }
+
+            private MyPoint lastP = new MyPoint();
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                Log.v("gd", "onScroll" + e1 + " " + e2 + " " + distanceX + " " + distanceY);
+                if (e2.getPointerCount() == 2) {
+                    float x1 = e2.getX(0);
+                    float x2 = e2.getX(1);
+                    float y1 = e2.getY(0);
+                    float y2 = e2.getY(1);
+                    float tX = (x1 + x2) / 2 - lastP.getCentralPoint().x;
+                    float tY = (y1 + y2) / 2 - lastP.getCentralPoint().y;
+                    finalTranslateX += tX;
+                    finalTranslateY += tY;
+                    mCanvas.translate(tX, tY);
+                    lastP.p1.x = x1;
+                    lastP.p2.x = x2;
+                    lastP.p1.y = y1;
+                    lastP.p2.y = y2;
+                }
+                return true;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                Log.v("gd", "onLongPress" + e);
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                Log.v("gd", "onFling" + e1 + " " + e2 + " " + velocityX + " " + velocityY);
+                return true;
+            }
+        };
+        gestureDetector = new GestureDetectorCompat(ctx, onGestureListener);
     }
 
     /**
@@ -153,7 +221,7 @@ public class PaintView extends View {
             redoList.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 mCanvas
             if (backgroundBitmap != null) {
-                mCanvas.drawBitmap(backgroundBitmap, importedBitmapLeft, importedBitmapTop, mBitmapPaint);
+                mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
             }
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
@@ -199,7 +267,7 @@ public class PaintView extends View {
         //清空 撤销 ，恢复 操作列表
         redoList.clear();
         undoList.clear();
-        backgroundBitmap = null;
+        mBackgroundCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
     }
 
     /**
@@ -230,6 +298,7 @@ public class PaintView extends View {
     /**
      * 是否可以撤销
      */
+    @SuppressWarnings("unused")
     public boolean isCanUndo() {
         return undoList.isEmpty();
     }
@@ -237,6 +306,7 @@ public class PaintView extends View {
     /**
      * 是否可以恢复
      */
+    @SuppressWarnings("unused")
     public boolean isCanRedo() {
         return redoList.isEmpty();
     }
@@ -250,8 +320,34 @@ public class PaintView extends View {
         postInvalidate();
     }
 
+    private class FloatPoint {
+        private float x, y;
 
-    private double firstDistance;
+        FloatPoint(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        FloatPoint() {
+        }
+    }
+
+    private class MyPoint {
+        private FloatPoint p1, p2;
+
+        private MyPoint() {
+            p1 = new FloatPoint();
+            p2 = new FloatPoint();
+        }
+
+        private FloatPoint getCentralPoint() {
+            return new FloatPoint((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+        }
+    }
+
+    private float firstDistance;
+    private float lastScale;
+
 
     /**
      * 触摸事件 触摸绘制
@@ -259,37 +355,74 @@ public class PaintView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int action = event.getAction();
+        if (event.getPointerCount() == 1) {
+            onTouchAction(event.getAction(), event.getX(), event.getY());
+            onGestureListener.first2Down = false;
+        } else if (event.getPointerCount() == 2) {
+            mPath = null;
+            float x1 = event.getX(0);
+            float y1 = event.getY(0);
+            float x2 = event.getX(1);
+            float y2 = event.getY(1);
+            if (!onGestureListener.first2Down) {
+                onGestureListener.onFirst2Down(x1, y1, x2, y2);
+                firstDistance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+                lastScale = 1;
+            }
+            onGestureListener.first2Down = true;
+            float distance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+            float ratio = distance / firstDistance;
+            float scale = ratio / lastScale;
+            mCanvas.scale(scale, scale, (x1 + x2) / 2, (y1 + y2) / 2);
+            finalScale *= scale;
+            lastScale = ratio;
+            mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            for (PathBean pathBean : undoList) mCanvas.drawPath(pathBean.path, pathBean.paint);
+        }
+        /*int action = event.getAction();
         int pointerCount = event.getPointerCount();
-        /*if (pointerCount == 2) {
+        if (pointerCount >= 2) {
             float x1 = event.getX(0);
             float x2 = event.getX(1);
             float y1 = event.getY(0);
             float y2 = event.getY(1);
-            double distance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+            if (!firstP.b) {
+                firstP.p1.x = x1;
+                firstP.p2.x = x2;
+                firstP.p1.y = y1;
+                firstP.p2.y = y2;
+                firstP.b = true;
+            }
+            float distance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
             if (firstDistance == 0) {
                 firstDistance = distance;
             }
             if (action == MotionEvent.ACTION_MOVE) {
-                *//*if (distance > firstDistance) {
+                if (distance > firstDistance) {
                     System.out.println("zoom+");
-                } else System.out.println("zoom-");*//*
-                mCanvas.translate((x1 + x2) / 2, (y1 + y2) / 2);
-                mCanvas.scale(((float) (width * (distance / firstDistance))), ((float) (height * (distance / firstDistance))));
+                } else System.out.println("zoom-");
+                float centralPointX = (x1 + x2) / 2;
+                float centralPointY = (y1 + y2) / 2;
+                FloatPoint firstPCentralPoint = firstP.getCentralPoint();
+                float scale = 1F / lastScale * (distance / firstDistance);
+                mCanvas.scale(scale, scale, centralPointX, centralPointY);
+                lastScale = distance / firstDistance;
+                System.out.println("scale = " + scale);
                 mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                FloatPoint lastPCentralPoint = lastP.getCentralPoint();
+                mCanvas.translate(centralPointX - lastPCentralPoint.x, centralPointY - lastPCentralPoint.y);
                 for (PathBean pathBean : undoList) {
                     mCanvas.drawPath(pathBean.path, pathBean.paint);
                 }
-                mCanvas.translate(0F, 0F);
-                invalidate();
+                lastP.p1.x = x1;
+                lastP.p2.x = x2;
+                lastP.p1.y = y1;
+                lastP.p2.y = y2;
             }
-        } else if (pointerCount == 1) {
-            onTouchAction(action, event.getX(), event.getY());
-            firstDistance = 0;
         }*/
-        onTouchAction(action, event.getX(), event.getY());
-        postInvalidate();
-        return true;
+        boolean b = gestureDetector.onTouchEvent(event);
+        invalidate();
+        return b;
     }
 
 
@@ -346,14 +479,16 @@ public class PaintView extends View {
         closeStream(os);
     }
 
-    void importPathFile(File f, Runnable d) {
+    void importPathFile(File f, Runnable d, @Documents.Nullable ValueInterface<Float> floatValueInterface) {
         ExecutorService es = Executors.newCachedThreadPool();
         es.execute(() -> {
             try {
+                long length = f.length(), haveRead = 0L;
                 InputStream is = new FileInputStream(f);
                 byte[] bytes = new byte[26];
                 byte[] bytes_4 = new byte[4];
                 while (is.read(bytes) != -1) {
+                    haveRead += 26L;
                     switch (bytes[25]) {
                         case 1:
                             undo();
@@ -385,6 +520,7 @@ public class PaintView extends View {
                             setPaintColor(color);
                             setStrokeWidth(strokeWidth);
                             onTouchAction(motionAction, x, y);
+                            floatValueInterface.f(((float) haveRead) / ((float) length) * 100F);
                             break;
                     }
                 }
@@ -472,23 +608,65 @@ public class PaintView extends View {
 
     void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
         try {
-            this.importedBitmapLeft = left;
-            this.importedBitmapTop = top;
-            backgroundBitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
-            mCanvas.drawBitmap(backgroundBitmap, left, top, mBitmapPaint);
+            Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
+            mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
+            if (backgroundBitmap == null) {
+                Toast.makeText(ctx, ctx.getString(R.string.importing_failed), Toast.LENGTH_SHORT).show();
+            } else {
+                mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
+            }
             invalidate();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(ctx, R.string.importing_failed, Toast.LENGTH_SHORT).show();
+            Toast.makeText(ctx, ctx.getString(R.string.importing_failed) + "\n" + e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    void scaleCanvas(float scaledWidth, float scaledHeight) {
-        mCanvas.save();
-        mCanvas.scale(scaledWidth, scaledHeight);
-        for (PathBean pathBean : undoList) {
-            mCanvas.drawPath(pathBean.path, pathBean.paint);
+    private class MyGesture implements GestureDetector.OnGestureListener {
+        boolean first2Down;
+
+        void onFirst2Down(float p1X, float p1Y, float p2X, float p2Y) {
         }
-        mCanvas.restore();
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return false;
+        }
+    }
+
+    void resetTranslate() {
+        /*mCanvas.scale(1 / this.finalScale, 1 / this.finalScale, finalTranslateX, finalTranslateY);
+        mCanvas.translate(-finalTranslateX, -finalTranslateY);*/
+        mCanvas = new Canvas(mBitmap);
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        for (PathBean pathBean : undoList) mCanvas.drawPath(pathBean.path, pathBean.paint);
+        finalTranslateX = (finalTranslateY = 0);
+        finalScale = 1;
+        invalidate();
     }
 }
