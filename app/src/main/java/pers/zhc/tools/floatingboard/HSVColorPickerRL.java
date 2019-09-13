@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,8 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         barLL.setOrientation(LinearLayout.HORIZONTAL);
         TextView tv = new TextView(context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+//            tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+            tv.setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
         } else tv.setTextSize(25F);
         tv.setText(R.string.h_s_v_a_color_picker);
         tv.setBackgroundColor(Color.WHITE);

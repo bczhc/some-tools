@@ -90,7 +90,6 @@ public class MainActivity extends BaseActivity {
                 FunctionDrawing.class,
                 Document.class
         };
-        startActivityForResult(new Intent(this, classes[4]), 21);
         new Thread(() -> {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             for (int i = 0; i < texts.length; i++) {
@@ -141,8 +140,8 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 21) finish();
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, R.anim.fade_out);
     }
 }
