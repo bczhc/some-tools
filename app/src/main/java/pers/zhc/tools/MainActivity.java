@@ -138,4 +138,10 @@ public class MainActivity extends BaseActivity {
         });*/
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, R.anim.slide_out_bottom);
+    }
 }
