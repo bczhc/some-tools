@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.ColorInt;
+import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -40,6 +43,7 @@ public class PaintView extends View {
     private Context ctx;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
+    private GestureDetectorCompat gestureDetector;
 
 
 
@@ -106,6 +110,41 @@ public class PaintView extends View {
 
         undoList = new LinkedList<>();
         redoList = new LinkedList<>();
+        gestureDetector = new GestureDetectorCompat(ctx, new GestureDetector.OnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                Log.v("gd", "onDown" + e);
+                return true;
+            }
+
+            @Override
+            public void onShowPress(MotionEvent e) {
+                Log.v("gd", "onShowPress" + e);
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                Log.v("gd", "onSingleTapUp" + e);
+                return true;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                Log.v("gd", "onScroll" + e1 + " " + e2 + " " + distanceX + " " + distanceY);
+                return true;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                Log.v("gd", "onLongPress" + e);
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                Log.v("gd", "onFling" + e1 + " " + e2 + " " + velocityX + " " + velocityY);
+                return true;
+            }
+        });
     }
 
     /**
@@ -284,15 +323,19 @@ public class PaintView extends View {
     private PointWithBoolean firstP = new PointWithBoolean();
     private PointWithBoolean lastP = new PointWithBoolean();
 
+
     /**
      * 触摸事件 触摸绘制
      */
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int action = event.getAction();
+        if (event.getPointerCount() == 1) {
+            onTouchAction(event.getAction(), event.getX(), event.getY());
+        }
+        /*int action = event.getAction();
         int pointerCount = event.getPointerCount();
-        if (pointerCount == 2) {
+        if (pointerCount >= 2) {
             float x1 = event.getX(0);
             float x2 = event.getX(1);
             float y1 = event.getY(0);
@@ -321,27 +364,19 @@ public class PaintView extends View {
                 System.out.println("scale = " + scale);
                 mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                 FloatPoint lastPCentralPoint = lastP.getCentralPoint();
-                mCanvas.translate(centralPointX - firstPCentralPoint.x, centralPointY - firstPCentralPoint.y);
+                mCanvas.translate(centralPointX - lastPCentralPoint.x, centralPointY - lastPCentralPoint.y);
                 for (PathBean pathBean : undoList) {
                     mCanvas.drawPath(pathBean.path, pathBean.paint);
                 }
-                mCanvas.translate(firstPCentralPoint.x - centralPointX, firstPCentralPoint.y - centralPointY);
-                if (!lastP.b) {
-                    lastP.p1.x = x1;
-                    lastP.p2.x = x2;
-                    lastP.p1.y = y1;
-                    lastP.p2.y = y2;
-                    lastP.b = true;
-                }
+                lastP.p1.x = x1;
+                lastP.p2.x = x2;
+                lastP.p1.y = y1;
+                lastP.p2.y = y2;
             }
-        } else if (pointerCount == 1) {
-//            mCanvas.scale(width * 2, height * 2);
-            onTouchAction(action, event.getX(), event.getY());
-            firstDistance = 0;
-        }
-        onTouchAction(action, event.getX(), event.getY());
+        }*/
+        boolean b = gestureDetector.onTouchEvent(event);
         postInvalidate();
-        return true;
+        return b;
     }
 
 
@@ -544,4 +579,5 @@ public class PaintView extends View {
     void scaleCanvas(float scaledWidth, float scaledHeight) {
 
     }
+
 }
