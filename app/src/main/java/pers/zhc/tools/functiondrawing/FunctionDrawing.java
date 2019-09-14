@@ -2,6 +2,7 @@ package pers.zhc.tools.functiondrawing;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ public class FunctionDrawing extends BaseActivity {
     private int nNum = 10;
     private TextView tv;
     private FunctionDrawingView functionDrawingView;
+    private int xLen;
+    private int yLen;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,8 +47,10 @@ public class FunctionDrawing extends BaseActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void init() {
-
-        fs = new FourierSeries(30) {
+        Intent intent = getIntent();
+        xLen = intent.getIntExtra("xLen", 30);
+        yLen = intent.getIntExtra("yLen", 30);
+        fs = new FourierSeries(intent.getIntExtra("FS_T", 30)) {
             @Override
             public double f_f(double x) {
                 return ((double) FunctionDrawingBoard.functionInterface.f(((float) x)));
@@ -108,7 +113,7 @@ public class FunctionDrawing extends BaseActivity {
         getWindowManager().getDefaultDisplay().getSize(point);
         int width = point.x;
         int height = point.y - DisplayUtil.sp2px(this, 20);
-        functionDrawingView = new FunctionDrawingView(this, width, height);
+        functionDrawingView = new FunctionDrawingView(this, width, height, ((float) xLen), ((float) yLen));
         runOnUiThread(() -> rl.addView(functionDrawingView));
         functionDrawingView.drawFunction(x -> {
             return (float) fs.F(nNum, x);

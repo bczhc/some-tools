@@ -14,17 +14,19 @@ class FunctionDrawingView extends View {
     private int width, height;
     private Paint mPaint;
     private MathFloatFunctionInterface f;
-    private float xLength = 30, yLength = 30;
+    private float xLength, yLength;
     private float phaseC = 0;
     private float yC = 0;
 
-    FunctionDrawingView(Context context, int width, int height) {
+    FunctionDrawingView(Context context, int width, int height, float xLength, float yLength) {
         super(context);
         this.width = width;
         this.height = height;
         mPaint = new Paint();
         mPaint.setStrokeWidth(1);
         mPaint.setColor(Color.BLACK);
+        this.xLength = xLength / 2F;
+        this.yLength = yLength / 2F;
     }
 
     @Override
