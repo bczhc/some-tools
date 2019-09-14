@@ -3,21 +3,26 @@ package pers.zhc.tools.functiondrawing;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.View;
 import pers.zhc.u.MathFloatFunctionInterface;
+import pers.zhc.u.util.FFMap;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@SuppressLint("ViewConstructor")
 public class FunctionDrawingBoardView extends View {
+    private final int[] inf;
+    private final int xLength;
+    private final int yLength;
     private Paint mPaint;
     private Path mPath;
     private int width, height;
     private FFMap funInf;
 
-    public FunctionDrawingBoardView(Context context) {
+    FunctionDrawingBoardView(Context context, int[] r) {
         super(context);
         mPaint = new Paint();
         Point point = new Point();
@@ -28,6 +33,9 @@ public class FunctionDrawingBoardView extends View {
         mPaint.setStrokeWidth(5);
         mPaint.setStyle(Paint.Style.STROKE);
         funInf = new FFMap();
+        xLength = r[0];
+        yLength = r[1];
+        this.inf = r;
     }
 
     private float lastX, lastY;
@@ -38,8 +46,6 @@ public class FunctionDrawingBoardView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
-        int xLength = 30;
-        int yLength = 30;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 lastX = x;
@@ -83,52 +89,5 @@ public class FunctionDrawingBoardView extends View {
 
     MathFloatFunctionInterface getFunction() {
         return funInf.getFunction();
-    }
-
-    private class FFMap {
-        private List<FF> ffList = new ArrayList<>();
-
-        void reset() {
-            ffList.clear();
-        }
-
-        private class FF {
-            private float k, v;
-
-            FF(float k, float v) {
-                this.k = k;
-                this.v = v;
-            }
-        }
-
-        void put(float k, float v) {
-            ffList.add(new FF(k, v));
-        }
-
-        /*float get(float k) {
-            for (FF ff : ffList) {
-                if (ff.k == k) {
-                    return ff.v;
-                }
-            }
-            return 0F;
-        }*/
-
-        MathFloatFunctionInterface getFunction() {
-            return v -> {
-                for (int i = 1; i < ffList.size(); i++) {
-                    try {
-                        FF ff1 = ffList.get(i - 1);
-                        FF ff2 = ffList.get(i + 1);
-                        if (v > ff1.k && v <= ff2.k) {
-                            return (ff1.v + ff2.v) / 2;
-                        }
-                    } catch (Exception ignored) {
-                        return 0;
-                    }
-                }
-                return 0;
-            };
-        }
     }
 }
