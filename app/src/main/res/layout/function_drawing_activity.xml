@@ -19,11 +19,6 @@
         >
             <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
                             tools:ignore="UselessParent">
-                <SeekBar android:layout_width="match_parent" android:layout_height="match_parent"
-                         android:layout_toLeftOf="@id/i_d_rl"
-                         android:layout_toStartOf="@id/i_d_rl"
-                         android:id="@+id/zoom_sb"
-                />
                 <RelativeLayout android:layout_width="wrap_content" android:layout_height="match_parent"
                                 android:id="@+id/i_d_rl"
                                 android:layout_alignParentRight="true"
