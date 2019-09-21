@@ -15,6 +15,7 @@ import pers.zhc.tools.document.Document;
 import pers.zhc.tools.floatingboard.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
+import pers.zhc.tools.test.epicycles_test.EpicyclesTest;
 import pers.zhc.tools.toast.AToast;
 
 import java.io.*;
@@ -78,7 +79,8 @@ public class MainActivity extends BaseActivity {
                 R.string.put_in_clipboard,
                 R.string.overlaid_drawing_board,
                 R.string.fourier_series_calc,
-                R.string.notes
+                R.string.notes,
+                R.string.epicycles_test
 
         };
         final Class<?>[] classes = new Class[]{
@@ -88,7 +90,8 @@ public class MainActivity extends BaseActivity {
                 Clip.class,
                 pers.zhc.tools.floatingboard.MainActivity.class,
                 FunctionDrawingBoard.class,
-                Document.class
+                Document.class,
+                EpicyclesTest.class
         };
         new Thread(() -> {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
