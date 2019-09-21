@@ -147,5 +147,16 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity android:name="pers.zhc.tools.test.epicycles_test.EpicyclesTest"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppThemeNotTranslucent"
+                  android:screenOrientation="landscape"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
