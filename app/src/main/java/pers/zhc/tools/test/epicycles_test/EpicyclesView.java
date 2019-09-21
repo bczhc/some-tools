@@ -27,6 +27,7 @@ class EpicyclesView extends View {
     private Paint mVectorPaint;
     private Paint mPathPaint;
     private boolean b = true;
+    private double epicyclesScale = 40D;
 
     EpicyclesView(Context context, EpicyclesSequence epicyclesSequence) {
         super(context);
@@ -75,11 +76,14 @@ class EpicyclesView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() != MotionEvent.ACTION_DOWN) return true;
         if (b) {
             new Thread(() -> {
                 float t = 0;
                 CoordinateDouble lastLineToPoint = new CoordinateDouble(0D, 0D);
                 CoordinateDouble center = new CoordinateDouble(0D, 0D);
+                int n_0_index = epicyclesSequence.get_n_0_index();
+//                EpicyclesSequence.AEpicycle n_0 = epicyclesSequence.epicycles.get(n_0_index);
                 while (t <= 2F * Math.PI) {
                     center.y = (center.x = 0);
                     lastLineToPoint.x = (lastLineToPoint.y = 0);
@@ -92,15 +96,18 @@ class EpicyclesView extends View {
                     for (int i = 0; i < epicycles.size(); i++) {
                         EpicyclesSequence.AEpicycle epicycle = epicycles.get(i);
                         //一次画所有本轮
-                        float radius = ((float) Math.sqrt(Math.pow(epicycle.c.re, 2D) + Math.pow(epicycle.c.im, 2D)));
-                        CoordinateDouble centerPointCanvasCoordinate = rectCoordinateToCanvasCoordinate(center.x + lastLineToPoint.x, center.y + lastLineToPoint.y);
+                        float radius = ((float) Math.sqrt(Math.pow(epicycle.c.re * epicyclesScale, 2D) + Math.pow(epicycle.c.im * epicyclesScale, 2D)));
+                        CoordinateDouble centerPointCanvasCoordinate = rectCoordinateToCanvasCoordinate(center.x + lastLineToPoint.x, center.y + lastLineToPoint.y, 1);
                         mEpicyclesCanvas.drawCircle(((float) centerPointCanvasCoordinate.x), ((float) centerPointCanvasCoordinate.y)
                                 , radius, mCirclePaint);
+                        double phaseAddition = getComplexArg(epicycle.c.re, epicycle.c.im);
                         CoordinateDouble lineTo = rectCoordinateToCanvasCoordinate(
-                                radius * Math.cos(t * epicycle.n) + lastLineToPoint.x
-                                , radius * Math.sin(t * epicycle.n) + lastLineToPoint.y);
+                                radius * Math.cos(t * epicycle.n + phaseAddition) + lastLineToPoint.x
+                                , radius * Math.sin(t * epicycle.n + phaseAddition) + lastLineToPoint.y
+                                , 1
+                        );
                         mEpicyclesCanvas.drawLine(((float) centerPointCanvasCoordinate.x), ((float) centerPointCanvasCoordinate.y), ((float) lineTo.x), ((float) lineTo.y), mVectorPaint);
-                        lastLineToPoint = canvasCoordinateToRectCoordinate(lineTo);
+                        lastLineToPoint = canvasCoordinateToRectCoordinate(lineTo, 1);
                         if (i == epicycles.size() - 1)
                             mPathCanvas.drawPoint(((float) lineTo.x), ((float) lineTo.y), mPathPaint);
                     /*
@@ -116,7 +123,7 @@ class EpicyclesView extends View {
                     CoordinateFloat coordinate1 = coordinateToCanvasCoordinate(50D * Math.cos(t), 50D * Math.sin(t));
                     mCanvas.drawLine(((float) coordinate0.x), ((float) coordinate0.y), ((float) (coordinate1.x + coordinate0.x)), ((float) (coordinate1.y - coordinate0.y)), mVectorPaint);*/
                     try {
-                        Thread.sleep(10);
+                        Thread.sleep(0L, 500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -131,23 +138,32 @@ class EpicyclesView extends View {
         return true;
     }
 
-    private CoordinateDouble rectCoordinateToCanvasCoordinate(double x, double y) {
-        return new CoordinateDouble(x + canvasWidth / 2D, -y + canvasHeight / 2D);
+    private CoordinateDouble rectCoordinateToCanvasCoordinate(double x, double y, double scale) {
+        return new CoordinateDouble(x * scale + canvasWidth / 2D, -y * scale + canvasHeight / 2D);
     }
 
-    private CoordinateDouble rectCoordinateToCanvasCoordinate(CoordinateDouble coordinateDouble) {
+    /*private CoordinateDouble rectCoordinateToCanvasCoordinate(CoordinateDouble coordinateDouble) {
         return new CoordinateDouble(coordinateDouble.x + canvasWidth / 2D, -coordinateDouble.y + canvasHeight / 2D);
     }
 
     private CoordinateDouble canvasCoordinateToRectCoordinate(double x, double y) {
         return new CoordinateDouble(x - canvasWidth / 2D, -y + canvasHeight / 2D);
-    }
+    }*/
 
-    private CoordinateDouble canvasCoordinateToRectCoordinate(CoordinateDouble coordinateDouble) {
-        return new CoordinateDouble(coordinateDouble.x - canvasWidth / 2D, -coordinateDouble.y + canvasHeight / 2D);
+    private CoordinateDouble canvasCoordinateToRectCoordinate(CoordinateDouble coordinateDouble, double scale) {
+        return new CoordinateDouble(coordinateDouble.x * scale - canvasWidth / 2D, -coordinateDouble.y * scale + canvasHeight / 2D);
     }
 
     /*private CoordinateDouble eComplexPower(ComplexValue complexValue, double e_pow_i_num) {
 //        return new CoordinateDouble(Math.cos(e_pow_i_num) * complexValue.)
     }*/
+
+    private double getComplexArg(double re, double im) {
+        if (re > 0) return Math.atan(im / re);
+        if (re == 0 && im > 0) return Math.PI / 2D;
+        if (re == 0 && im < 0) return Math.PI / -2D;
+        if (re < 0 && im >= 0) return Math.atan(im / re) + Math.PI;
+        if (re < 0 && im < 0) return Math.atan(im / re) - Math.PI;
+        return 0;
+    }
 }
