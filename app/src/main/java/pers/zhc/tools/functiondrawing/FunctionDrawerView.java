@@ -25,6 +25,8 @@ public class FunctionDrawerView extends View {
     private Paint curvePaint;
     private ExecutorService es;
     private MathFunctionInterface f;
+    private float scaleX = 1;
+    private float scaleY = 1;
 
     FunctionDrawerView(Context context, double xLength, double yLength) {
         super(context);
@@ -108,11 +110,11 @@ public class FunctionDrawerView extends View {
 
     private void render(Canvas canvas) {
         float endX = canvasHalfWidth - xOffset;
-        float addition = ((float) (((double) canvasWidth) / 8000D));
-        for (float x = -canvasHalfWidth - xOffset; x <= endX; x += addition) {
+        float addition = ((float) (((double) canvasWidth) / 2000D));
+        for (float x = (-canvasHalfWidth - xOffset) / scaleX; x <= endX; x += addition) {
             double fX = x * xLength / canvasWidth;
             try {
-                double y = -f.f(fX) * canvasHalfWidth / yLength;
+                double y = (-f.f(fX) * canvasHalfWidth / yLength) / scaleY;
                 canvas.drawPoint(x, ((float) y), curvePaint);
             } catch (Exception ignored) {
             }
@@ -138,11 +140,32 @@ public class FunctionDrawerView extends View {
         yCenter = canvasHalfHeightWithOffset;
     }
 
+    private boolean first2Down = false;
+    private double firstDistance;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        gestureDetector.onTouchEvent(event);
-        es.execute(this::postInvalidate);
+        int pointerCount = event.getPointerCount();
+        if (pointerCount == 2) {
+            float x1 = event.getX(0);
+            float x2 = event.getX(1);
+            float y1 = event.getY(0);
+            float y2 = event.getY(1);
+            if (!first2Down) {
+                firstDistance = Math.sqrt(Math.pow((x1 - x2), 2)) + Math.sqrt(Math.pow((y1 - y2), 2));
+            }
+            first2Down = true;
+            double distance = Math.sqrt(Math.pow((x1 - x2), 2)) + Math.sqrt(Math.pow((y1 - y2), 2));
+//            float zoomPointX = (x1 + x2) / 2;
+//            float zoomPointY = (y1 + y2) / 2;
+            scaleX *= distance / firstDistance;
+            scaleY *= distance / firstDistance;
+        } else if (pointerCount == 1) {
+            first2Down = false;
+            gestureDetector.onTouchEvent(event);
+            es.execute(this::postInvalidate);
+        }
         return true;
     }
 

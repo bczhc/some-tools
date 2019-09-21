@@ -113,4 +113,5 @@
     <string name="function_drawing_y_length">函数绘制y轴长度</string>
     <string name="function_drawing_board_a_period_Length">函数画板一个周期x长度</string>
     <string name="function_drawing_board_a_period_length">函数画板一个周期y长度</string>
+    <string name="epicycles_test">本轮测试</string>
 </resources>
