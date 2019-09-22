@@ -78,7 +78,8 @@ class EpicyclesView extends View {
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 reOffset -= distanceX;
                 imOffset -= distanceY;
-                quadDrawing.reset();
+//                quadDrawing.reset();
+                quadDrawing.path.offset(-distanceX, -distanceY);
                 return true;
             }
 
@@ -101,6 +102,7 @@ class EpicyclesView extends View {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
                 EpicyclesView.this.reOffset = (EpicyclesView.this.imOffset = 0);
+                quadDrawing.reset();
                 return true;
             }
 
@@ -238,7 +240,7 @@ class EpicyclesView extends View {
 }
 
 class QuadDrawing {
-    private Path path;
+    Path path;
     private byte i = -1;
     private float cX;
     private float cY;

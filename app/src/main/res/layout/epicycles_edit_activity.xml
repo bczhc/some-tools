@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10sp"
+>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/left_parenthesis"
+    />
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/c_re_tv"
+
+              tools:ignore="Autofill,LabelFor,TextFields"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/add"
+              android:layout_toRightOf="@id/c_re_tv" android:layout_toEndOf="@id/c_re_tv"
+              android:id="@+id/tv1"
+              android:textSize="30sp"
+    />
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/c_im_tv"
+              tools:ignore="Autofill,LabelFor,TextFields"
+              android:layout_toRightOf="@id/tv1"
+              android:layout_toEndOf="@id/tv1"
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/i"
+              android:layout_toRightOf="@id/c_im_tv" android:layout_toEndOf="@id/c_im_tv"
+              android:id="@+id/tv2"
+              android:textSize="30sp"
+
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/right_parenthesis"
+              android:layout_toRightOf="@id/tv2"
+              android:layout_toEndOf="@id/tv2"
+              android:id="@+id/tv3" android:textSize="30sp"
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/e"
+              android:layout_toRightOf="@id/tv3"
+              android:layout_toEndOf="@id/tv3"
+              android:id="@+id/tv4" android:textSize="30sp"
+
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/caret"
+              android:layout_toRightOf="@id/tv4"
+              android:layout_toEndOf="@id/tv4"
+              android:id="@+id/tv5" android:textSize="30sp"
+
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/left_parenthesis"
+              android:layout_toRightOf="@id/tv5"
+              android:layout_toEndOf="@id/tv5"
+              android:id="@+id/tv6" android:textSize="30sp"
+
+    />
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/et_n"
+              tools:ignore="Autofill,LabelFor,TextFields"
+              android:layout_toRightOf="@id/tv6"
+              android:layout_toEndOf="@id/tv6"
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/i"
+              android:layout_toRightOf="@id/et_n"
+              android:layout_toEndOf="@id/et_n"
+              android:id="@+id/tv7" android:textSize="30sp"
+
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/t"
+              android:layout_toRightOf="@id/tv7"
+              android:layout_toEndOf="@id/tv7"
+              android:id="@+id/tv8" android:textSize="30sp"
+
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/right_parenthesis"
+              android:layout_toRightOf="@id/tv8"
+              android:layout_toEndOf="@id/tv8"
+              android:id="@+id/tv9" android:textSize="30sp"
+
+    />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/add"
+            android:layout_below="@id/et_n"
+            android:id="@+id/add_btn"
+    />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/start"
+            android:layout_below="@id/et_n"
+            android:id="@+id/start"
+            android:layout_toRightOf="@id/add_btn"
+            android:layout_toEndOf="@id/add_btn"
+    />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+                android:layout_below="@id/add_btn"
+    >
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:id="@+id/ll"
+        />
+    </ScrollView>
+</RelativeLayout>
