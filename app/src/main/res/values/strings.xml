@@ -114,4 +114,12 @@
     <string name="function_drawing_board_a_period_Length">函数画板一个周期x长度</string>
     <string name="function_drawing_board_a_period_length">函数画板一个周期y长度</string>
     <string name="epicycles_test">本轮测试</string>
+    <string name="add">+</string>
+    <string name="left_parenthesis">(</string>
+    <string name="right_parenthesis">)</string>
+    <string name="i">i</string>
+    <string name="e">e</string>
+    <string name="caret">^</string>
+    <string name="t">t</string>
+    <string name="start">开始</string>
 </resources>
