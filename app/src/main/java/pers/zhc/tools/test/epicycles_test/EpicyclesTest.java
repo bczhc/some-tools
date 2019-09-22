@@ -6,9 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import pers.zhc.tools.R;
-import pers.zhc.u.Random;
-import pers.zhc.u.math.fourier.EpicyclesSequence;
-import pers.zhc.u.math.util.ComplexValue;
 
 public class EpicyclesTest extends AppCompatActivity {
     private EpicyclesView epicyclesView;
@@ -19,7 +16,6 @@ public class EpicyclesTest extends AppCompatActivity {
         setContentView(R.layout.epicycles_test_activity);
         RelativeLayout rl = findViewById(R.id.rl);
         SeekBar sb = findViewById(R.id.sb);
-        EpicyclesSequence epicyclesSequence = new EpicyclesSequence();
         /*epicyclesSequence.put(3, new ComplexValue(30D, 30D));
         epicyclesSequence.put(3, new ComplexValue(30D, 30D));
         epicyclesSequence.put(3, new ComplexValue(30D, 30D));
@@ -43,9 +39,6 @@ public class EpicyclesTest extends AppCompatActivity {
         epicyclesSequence.put(4, new ComplexValue(0D, -50D));
         epicyclesSequence.put(4, new ComplexValue(0D, -50D));
         epicyclesSequence.put(4, new ComplexValue(0D, -50D));*/
-        for (int i = 0; i < 1000; i++) {
-            epicyclesSequence.put(Random.ran_sc(-10, 10), new ComplexValue(Math.random() * (Math.random() > .5 ? 1 : -1), Math.random() * (Math.random() > .5 ? 1 : -1)));
-        }
 //        epicyclesSequence.put(4, 1, 1);
 //        epicyclesSequence.put(1, new ComplexValue(100, 100));
 
@@ -55,7 +48,7 @@ public class EpicyclesTest extends AppCompatActivity {
         epicyclesSequence.put(-1, -135.66, -45.57);
         epicyclesSequence.put(2, -44.85, -23.71);
         epicyclesSequence.put(-2, 66.75, -53.07);*/
-        epicyclesView = new EpicyclesView(this, epicyclesSequence);
+        epicyclesView = new EpicyclesView(this, EpicyclesEdit.epicyclesSequence);
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

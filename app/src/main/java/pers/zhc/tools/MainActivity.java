@@ -15,7 +15,7 @@ import pers.zhc.tools.document.Document;
 import pers.zhc.tools.floatingboard.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
-import pers.zhc.tools.test.epicycles_test.EpicyclesTest;
+import pers.zhc.tools.test.epicycles_test.EpicyclesEdit;
 import pers.zhc.tools.toast.AToast;
 
 import java.io.*;
@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity {
                 pers.zhc.tools.floatingboard.MainActivity.class,
                 FunctionDrawingBoard.class,
                 Document.class,
-                EpicyclesTest.class
+                EpicyclesEdit.class
         };
         new Thread(() -> {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
