@@ -124,4 +124,9 @@
     <string name="start">开始</string>
     <string name="random">随机</string>
     <string name="drawing_graph">绘制图像</string>
+    <string name="exit">退出</string>
+    <string name="choose_calculate_or_exit">选择计算或者退出</string>
+    <string name="definite_n">积分分段数</string>
+    <string name="period">周期</string>
+    <string name="epicycles_count">本轮数量</string>
 </resources>

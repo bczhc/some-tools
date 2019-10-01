@@ -37,7 +37,7 @@ class EpicyclesView extends View {
     private CoordinateDouble lastLineToPoint;
     private Path path;
     private float t;
-    private double omega = 100;
+    static double T = 2 * Math.PI, omega = 2 * Math.PI / T;
 
     EpicyclesView(Context context, EpicyclesSequence epicyclesSequence) {
         super(context);
@@ -221,8 +221,8 @@ class EpicyclesView extends View {
                     , radius, mCirclePaint);
             double phaseAddition = getComplexArg(epicycle.c.re, epicycle.c.im);
             CoordinateDouble lineTo = rectCoordinateToCanvasCoordinate(
-                    radius * Math.cos((t * epicycle.n + phaseAddition) * omega) + lastLineToPoint.x
-                    , radius * Math.sin((t * epicycle.n + phaseAddition) * omega) + lastLineToPoint.y
+                    radius * Math.cos((t * omega) * epicycle.n + phaseAddition) + lastLineToPoint.x
+                    , radius * Math.sin(((t * omega) * epicycle.n) + phaseAddition) + lastLineToPoint.y
             );
             mEpicyclesCanvas.drawLine(((float) centerPointCanvasCoordinate.x), ((float) centerPointCanvasCoordinate.y), ((float) lineTo.x), ((float) lineTo.y), mVectorPaint);
             lastLineToPoint = canvasCoordinateToRectCoordinate(lineTo);
@@ -232,7 +232,7 @@ class EpicyclesView extends View {
             }
         }
         mDrawingCanvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
-        t += .00001F;
+        t += .01F;
         canvas.drawBitmap(mDrawingBitmap, 0F, 0F, mBitmapPaint);
     }
 
