@@ -9,12 +9,11 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.View;
-import pers.zhc.u.MathFloatFunctionInterface;
+import pers.zhc.u.math.util.MathFloatFunctionInterface;
 import pers.zhc.u.util.FFMap;
 
 @SuppressLint("ViewConstructor")
 public class FunctionDrawingBoardView extends View {
-    private final int[] inf;
     private final int xLength;
     private final int yLength;
     private Paint mPaint;
@@ -35,7 +34,6 @@ public class FunctionDrawingBoardView extends View {
         funInf = new FFMap();
         xLength = r[0];
         yLength = r[1];
-        this.inf = r;
     }
 
     private float lastX, lastY;

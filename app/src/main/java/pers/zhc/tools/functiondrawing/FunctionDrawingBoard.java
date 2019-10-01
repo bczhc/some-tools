@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
-import pers.zhc.u.MathFloatFunctionInterface;
+import pers.zhc.u.math.util.MathFloatFunctionInterface;
 
 import java.util.Objects;
 
