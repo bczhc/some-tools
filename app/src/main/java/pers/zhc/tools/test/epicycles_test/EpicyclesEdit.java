@@ -32,7 +32,16 @@ public class EpicyclesEdit extends AppCompatActivity {
         Button start_btn = findViewById(R.id.start);
         Button randomBtn = findViewById(R.id.random);
         Button drawGraphBtn = findViewById(R.id.drawing_graph);
-        drawGraphBtn.setOnClickListener(v -> startActivity(new Intent(this, ComplexGraphDrawing.class)));
+        EditText definite_n = findViewById(R.id.definite_n_et);
+        EditText T = findViewById(R.id.t_et);
+        EditText epicycles_count = findViewById(R.id.epicycles_count);
+        drawGraphBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ComplexGraphDrawing.class);
+            intent.putExtra("definite_n", Integer.valueOf(definite_n.getText().toString()));
+            intent.putExtra("T", Integer.valueOf(T.getText().toString()));
+            intent.putExtra("epicycles_count", Double.valueOf(epicycles_count.getText().toString()));
+            startActivityForResult(intent, 71);
+        });
         randomBtn.setOnClickListener(v -> {
             EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Math.random() * 30, new ComplexValue(Math.random() * 10, Math.random() * 10));
             EpicyclesEdit.epicyclesSequence.put(aEpicycle);
@@ -66,17 +75,17 @@ public class EpicyclesEdit extends AppCompatActivity {
                     , Double.valueOf(s3)));
             AppCompatTextView tv = new AppCompatTextView(this);
             setTV(tv, aEpicycle);
-            String s = getString(R.string.left_parenthesis)
-                    + s2 + getString(R.string.add)
-                    + s3 + getString(R.string.i)
-                    + getString(R.string.right_parenthesis)
-                    + getString(R.string.e)
-                    + getString(R.string.caret)
-                    + getString(R.string.left_parenthesis)
-                    + s1
-                    + getString(R.string.i)
-                    + getString(R.string.t)
-                    + getString(R.string.right_parenthesis);
+            String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
+                    getString(R.string.left_parenthesis)
+                    , s2, getString(R.string.add)
+                    , s3, getString(R.string.i)
+                    , getString(R.string.right_parenthesis)
+                    , getString(R.string.e)
+                    , getString(R.string.caret)
+                    , getString(R.string.left_parenthesis)
+                    , s1, getString(R.string.i)
+                    , getString(R.string.t)
+                    , getString(R.string.right_parenthesis));
             tv.setText(getString(R.string.tv, s));
             ll.addView(tv);
             epicyclesSequence.put(aEpicycle);
@@ -105,5 +114,29 @@ public class EpicyclesEdit extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, R.anim.fade_out);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 71) {
+            for (EpicyclesSequence.AEpicycle epicycle : EpicyclesEdit.epicyclesSequence.epicycles) {
+                String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
+                        getString(R.string.left_parenthesis)
+                        , String.valueOf(epicycle.c.re), getString(R.string.add)
+                        , String.valueOf(epicycle.c.im), getString(R.string.i)
+                        , getString(R.string.right_parenthesis)
+                        , getString(R.string.e)
+                        , getString(R.string.caret)
+                        , getString(R.string.left_parenthesis)
+                        , String.valueOf(epicycle.n), getString(R.string.i)
+                        , getString(R.string.t)
+                        , getString(R.string.right_parenthesis));
+                TextView tv = new TextView(this);
+                tv.setText(s);
+                setTV(tv, new EpicyclesSequence.AEpicycle(epicycle.n, epicycle.c));
+                ll.addView(tv);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

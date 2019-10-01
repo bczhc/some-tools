@@ -11,11 +11,12 @@ import android.view.View;
 
 public class ComplexGraphDrawingView extends View {
 
-    private int width;
-    private int height;
+    private float width;
+    private float height;
     private Paint mCoPaint;
     private Paint mPaint;
     private Path mPath;
+    static ComplexFunction complexFunction;
 
     public ComplexGraphDrawingView(Context context) {
         super(context);
@@ -31,12 +32,13 @@ public class ComplexGraphDrawingView extends View {
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
+        complexFunction = new ComplexFunction();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        width = getWidth();
-        height = getHeight();
+        width = ((float) getWidth());
+        height = ((float) getHeight());
         canvas.drawLine(0F, height / 2F, width, height / 2F, mCoPaint);
         canvas.drawLine(width / 2F, 0F, width / 2F, height, mCoPaint);
 //            画实轴和虚轴 无箭头
@@ -52,6 +54,7 @@ public class ComplexGraphDrawingView extends View {
         float y = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                complexFunction.clear();
                 mPath = new Path();
                 mPath.moveTo(x, y);
                 break;
@@ -62,6 +65,7 @@ public class ComplexGraphDrawingView extends View {
                 mPath.close();
                 break;
         }
+        complexFunction.put(x - width / 2D, -y + height / 2D);
         invalidate();
         return true;
     }
