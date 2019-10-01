@@ -49,6 +49,7 @@ public class EpicyclesTest extends AppCompatActivity {
         epicyclesSequence.put(2, -44.85, -23.71);
         epicyclesSequence.put(-2, 66.75, -53.07);*/
         epicyclesView = new EpicyclesView(this, EpicyclesEdit.epicyclesSequence);
+        sb.setMax(100);
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
