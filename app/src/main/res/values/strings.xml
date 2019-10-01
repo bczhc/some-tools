@@ -122,4 +122,6 @@
     <string name="caret">^</string>
     <string name="t">t</string>
     <string name="start">开始</string>
+    <string name="random">随机</string>
+    <string name="drawing_graph">绘制图像</string>
 </resources>
