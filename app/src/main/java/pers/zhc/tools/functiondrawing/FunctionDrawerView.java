@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import pers.zhc.u.MathFunctionInterface;
+import pers.zhc.u.math.util.MathFunctionInterface;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

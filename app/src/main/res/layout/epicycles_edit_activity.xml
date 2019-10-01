@@ -90,12 +90,22 @@
             android:id="@+id/add_btn"
     />
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/random"
+            android:layout_toRightOf="@id/add_btn" android:layout_toEndOf="@id/add_btn"
+            android:layout_below="@id/et_n"
+            android:id="@+id/random"
+    />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/start"
             android:layout_below="@id/et_n"
             android:id="@+id/start"
-            android:layout_toRightOf="@id/add_btn"
-            android:layout_toEndOf="@id/add_btn"
-    />
+            android:layout_toRightOf="@id/random"
+            android:layout_toEndOf="@id/random"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/drawing_graph"
+            android:id="@+id/drawing_graph"
+            android:layout_toRightOf="@id/start" android:layout_toEndOf="@id/start"
+            android:layout_below="@id/et_n"/>
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
                 android:layout_below="@id/add_btn"
     >

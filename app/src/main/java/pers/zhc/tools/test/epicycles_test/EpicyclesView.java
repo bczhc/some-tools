@@ -33,6 +33,11 @@ class EpicyclesView extends View {
     private double reOffset, imOffset;
     private QuadDrawing quadDrawing;
     private GestureDetector gd;
+    private CoordinateDouble center;
+    private CoordinateDouble lastLineToPoint;
+    private Path path;
+    private float t;
+    private double omega = 100;
 
     EpicyclesView(Context context, EpicyclesSequence epicyclesSequence) {
         super(context);
@@ -111,6 +116,11 @@ class EpicyclesView extends View {
                 return true;
             }
         });
+        path = new Path();
+        quadDrawing = new QuadDrawing(path);
+        t = 0;
+        lastLineToPoint = new CoordinateDouble(0D, 0D);
+        center = new CoordinateDouble(0D, 0D);
     }
 
     @Override
@@ -125,7 +135,7 @@ class EpicyclesView extends View {
             mEpicyclesCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
         }
         if (mDrawingBitmap != null) {
-            canvas.drawBitmap(mDrawingBitmap, 0F, 0F, mBitmapPaint);
+            render(canvas);
         }
     }
 
@@ -180,94 +190,82 @@ class EpicyclesView extends View {
     }
 
     private void run() {
-        Path path = new Path();
-        quadDrawing = new QuadDrawing(path);
-        float t = 0;
-        CoordinateDouble lastLineToPoint = new CoordinateDouble(0D, 0D);
-        CoordinateDouble center = new CoordinateDouble(0D, 0D);
-//        int n_0_index = epicyclesSequence.get_n_0_index();
-//        EpicyclesSequence.AEpicycle n_0 = epicyclesSequence.epicycles.get(n_0_index);
-        //noinspection InfiniteLoopStatement
-        while (true) {
-            center.y = (center.x = 0);
-            lastLineToPoint.x = (lastLineToPoint.y = 0);
-            mEpicyclesCanvas.drawColor(Color.WHITE);
-//            清空上一次bitmap上绘画的
-            mEpicyclesCanvas.drawLine(0F, (float) (canvasHeight / 2F + imOffset), canvasWidth, (float) (canvasHeight / 2F + imOffset), mCoPaint);
-            mEpicyclesCanvas.drawLine((float) (canvasWidth / 2F + reOffset), 0F, (float) (canvasWidth / 2F + reOffset), canvasHeight, mCoPaint);
-//            画实轴和虚轴
-            List<EpicyclesSequence.AEpicycle> epicycles = this.epicyclesSequence.epicycles;
-            for (int i = 0; i < epicycles.size(); i++) {
-                EpicyclesSequence.AEpicycle epicycle = epicycles.get(i);
-                //一次画所有本轮
-                float radius = ((float) Math.sqrt(Math.pow(epicycle.c.re * epicyclesScale, 2D) + Math.pow(epicycle.c.im * epicyclesScale, 2D)));
-                CoordinateDouble centerPointCanvasCoordinate = rectCoordinateToCanvasCoordinate(center.x + lastLineToPoint.x, center.y + lastLineToPoint.y);
-                mEpicyclesCanvas.drawCircle(((float) centerPointCanvasCoordinate.x), ((float) centerPointCanvasCoordinate.y)
-                        , radius, mCirclePaint);
-                double phaseAddition = getComplexArg(epicycle.c.re, epicycle.c.im);
-                CoordinateDouble lineTo = rectCoordinateToCanvasCoordinate(
-                        radius * Math.cos(t * epicycle.n + phaseAddition) + lastLineToPoint.x
-                        , radius * Math.sin(t * epicycle.n + phaseAddition) + lastLineToPoint.y
-                );
-                mEpicyclesCanvas.drawLine(((float) centerPointCanvasCoordinate.x), ((float) centerPointCanvasCoordinate.y), ((float) lineTo.x), ((float) lineTo.y), mVectorPaint);
-                lastLineToPoint = canvasCoordinateToRectCoordinate(lineTo);
-                if (i == epicycles.size() - 1) {
-                    quadDrawing.quadTo(((float) lineTo.x), ((float) lineTo.y));
-                    mEpicyclesCanvas.drawPath(path, mPathPaint);
+        es.execute(() -> {
+            //noinspection InfiniteLoopStatement
+            for (; ; ) {
+                postInvalidate();
+                try {
+                    Thread.sleep(0, 500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-    /*
-    c_n * e^(-int)
-    */
             }
-    /*CoordinateFloat coordinate00 = coordinateToCanvasCoordinate(0, 0);
-    mCanvas.drawCircle(((float) coordinate00.x), ((float) coordinate00.y), 100F, mCoPaint);
-    CoordinateFloat coordinate0 = coordinateToCanvasCoordinate(100D * Math.cos(t), 100D * Math.sin(t));
-    mCanvas.drawLine(((float) coordinate00.x), ((float) coordinate00.y), ((float) coordinate0.x), ((float) coordinate0.y), mVectorPaint);
+        });
+    }
 
-    mCanvas.drawCircle(((float) coordinate0.x), ((float) coordinate0.y), 50F, mCoPaint);
-    CoordinateFloat coordinate1 = coordinateToCanvasCoordinate(50D * Math.cos(t), 50D * Math.sin(t));
-    mCanvas.drawLine(((float) coordinate0.x), ((float) coordinate0.y), ((float) (coordinate1.x + coordinate0.x)), ((float) (coordinate1.y - coordinate0.y)), mVectorPaint);*/
-            try {
-                Thread.sleep(0L, 500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    private void render(Canvas canvas) {
+        center.y = (center.x = 0);
+        lastLineToPoint.x = (lastLineToPoint.y = 0);
+        mEpicyclesCanvas.drawColor(Color.WHITE);
+//            清空上一次bitmap上绘画的
+        mEpicyclesCanvas.drawLine(0F, (float) (canvasHeight / 2F + imOffset), canvasWidth, (float) (canvasHeight / 2F + imOffset), mCoPaint);
+        mEpicyclesCanvas.drawLine((float) (canvasWidth / 2F + reOffset), 0F, (float) (canvasWidth / 2F + reOffset), canvasHeight, mCoPaint);
+//            画实轴和虚轴 无箭头
+        List<EpicyclesSequence.AEpicycle> epicycles = this.epicyclesSequence.epicycles;
+        for (int i = 0; i < epicycles.size(); i++) {
+            EpicyclesSequence.AEpicycle epicycle = epicycles.get(i);
+            //一次画所有本轮
+            float radius = ((float) Math.sqrt(Math.pow(epicycle.c.re * epicyclesScale, 2D) + Math.pow(epicycle.c.im * epicyclesScale, 2D)));
+            CoordinateDouble centerPointCanvasCoordinate = rectCoordinateToCanvasCoordinate(center.x + lastLineToPoint.x, center.y + lastLineToPoint.y);
+            mEpicyclesCanvas.drawCircle(((float) centerPointCanvasCoordinate.x), ((float) centerPointCanvasCoordinate.y)
+                    , radius, mCirclePaint);
+            double phaseAddition = getComplexArg(epicycle.c.re, epicycle.c.im);
+            CoordinateDouble lineTo = rectCoordinateToCanvasCoordinate(
+                    radius * Math.cos((t * epicycle.n + phaseAddition) * omega) + lastLineToPoint.x
+                    , radius * Math.sin((t * epicycle.n + phaseAddition) * omega) + lastLineToPoint.y
+            );
+            mEpicyclesCanvas.drawLine(((float) centerPointCanvasCoordinate.x), ((float) centerPointCanvasCoordinate.y), ((float) lineTo.x), ((float) lineTo.y), mVectorPaint);
+            lastLineToPoint = canvasCoordinateToRectCoordinate(lineTo);
+            if (i == epicycles.size() - 1) {
+                quadDrawing.quadTo(((float) lineTo.x), ((float) lineTo.y));
+                mEpicyclesCanvas.drawPath(path, mPathPaint);
             }
-            mDrawingCanvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
-            postInvalidate();
-            t += .001F;
         }
-    }
-}
-
-class QuadDrawing {
-    Path path;
-    private byte i = -1;
-    private float cX;
-    private float cY;
-
-    QuadDrawing(Path path) {
-        this.path = path;
+        mDrawingCanvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
+        t += .00001F;
+        canvas.drawBitmap(mDrawingBitmap, 0F, 0F, mBitmapPaint);
     }
 
-    void quadTo(float x, float y) {
-        switch (i) {
-            case -1:
-                path.moveTo(x, y);
-                break;
-            case 1:
-                cX = x;
-                cY = y;
-                break;
-            case 2:
-                path.quadTo(cX, cY, x, y);
-                i = 0;
-                break;
+    class QuadDrawing {
+        Path path;
+        private byte i = -1;
+        private float cX;
+        private float cY;
+
+        QuadDrawing(Path path) {
+            this.path = path;
         }
-        ++i;
-    }
 
-    void reset() {
-        path.reset();
-        i = -1;
+        void quadTo(float x, float y) {
+            switch (i) {
+                case -1:
+                    path.moveTo(x, y);
+                    break;
+                case 1:
+                    cX = x;
+                    cY = y;
+                    break;
+                case 2:
+                    path.quadTo(cX, cY, x, y);
+                    i = 0;
+                    break;
+            }
+            ++i;
+        }
+
+        void reset() {
+            path.reset();
+            i = -1;
+        }
     }
 }
