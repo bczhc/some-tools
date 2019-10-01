@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
@@ -17,6 +18,7 @@ import pers.zhc.u.math.util.ComplexValue;
 public class EpicyclesEdit extends AppCompatActivity {
 
     static EpicyclesSequence epicyclesSequence;
+    private LinearLayout ll;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +30,30 @@ public class EpicyclesEdit extends AppCompatActivity {
         EditText et_n = findViewById(R.id.et_n);
         Button btn = findViewById(R.id.add_btn);
         Button start_btn = findViewById(R.id.start);
-        LinearLayout ll = findViewById(R.id.ll);
+        Button randomBtn = findViewById(R.id.random);
+        Button drawGraphBtn = findViewById(R.id.drawing_graph);
+        drawGraphBtn.setOnClickListener(v -> startActivity(new Intent(this, ComplexGraphDrawing.class)));
+        randomBtn.setOnClickListener(v -> {
+            EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Math.random() * 30, new ComplexValue(Math.random() * 10, Math.random() * 10));
+            EpicyclesEdit.epicyclesSequence.put(aEpicycle);
+            TextView tv = new TextView(this);
+            setTV(tv, aEpicycle);
+            String s = getString(R.string.left_parenthesis)
+                    + aEpicycle.c.re + getString(R.string.add)
+                    + aEpicycle.c.im + getString(R.string.i)
+                    + getString(R.string.right_parenthesis)
+                    + getString(R.string.e)
+                    + getString(R.string.caret)
+                    + getString(R.string.left_parenthesis)
+                    + aEpicycle.n
+                    + getString(R.string.i)
+                    + getString(R.string.t)
+                    + getString(R.string.right_parenthesis);
+            tv.setText(getString(R.string.tv, s));
+            ll.addView(tv);
+
+        });
+        ll = findViewById(R.id.ll);
         btn.setOnClickListener(v -> {
             String s1 = et_n.getText().toString();
             s1 = s1.equals("") ? "0" : s1;
@@ -36,20 +61,11 @@ public class EpicyclesEdit extends AppCompatActivity {
             s2 = s2.equals("") ? "0" : s2;
             String s3 = et_c_im.getText().toString();
             s3 = s3.equals("") ? "0" : s3;
-            EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Double.valueOf(s1).intValue()
+            EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Double.valueOf(s1)
                     , new ComplexValue(Double.valueOf(s2)
                     , Double.valueOf(s3)));
             AppCompatTextView tv = new AppCompatTextView(this);
-            tv.setTextSize(20);
-            tv.setOnLongClickListener(v1 -> {
-                DialogUtil.createConfirmationAD(this, (dialog, which) -> {
-                            ll.removeView(tv);
-                            epicyclesSequence.epicycles.remove(aEpicycle);
-                        }, (dialog, which) -> {
-                        }, R.string.whether_to_delete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                        , false).show();
-                return true;
-            });
+            setTV(tv, aEpicycle);
             String s = getString(R.string.left_parenthesis)
                     + s2 + getString(R.string.add)
                     + s3 + getString(R.string.i)
@@ -70,6 +86,19 @@ public class EpicyclesEdit extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_bottom, 0);
         });
 
+    }
+
+    private void setTV(TextView tv, EpicyclesSequence.AEpicycle aEpicycle) {
+        tv.setTextSize(20);
+        tv.setOnLongClickListener(v1 -> {
+            DialogUtil.createConfirmationAD(this, (dialog, which) -> {
+                        ll.removeView(tv);
+                        epicyclesSequence.epicycles.remove(aEpicycle);
+                    }, (dialog, which) -> {
+                    }, R.string.whether_to_delete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    , false).show();
+            return true;
+        });
     }
 
     @Override
