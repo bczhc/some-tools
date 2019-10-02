@@ -1,4 +1,4 @@
-package pers.zhc.tools.test.epicycles_test;
+package pers.zhc.tools.epicycles;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -1,1 +1,1 @@
-add_executable(verify ../c/verification/verify.cpp)
+add_executable(pi pi/pi.cpp)

@@ -42,8 +42,6 @@ char nextMask() {
 }
 */
 
-void Log(JNIEnv *env, const char *tag, const char *s);
-
 void callMethod(JNIEnv *env, jmethodID id, char *s, double d, jobject obj);
 
 char nextMask_();

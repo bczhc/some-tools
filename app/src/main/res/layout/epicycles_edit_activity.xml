@@ -131,6 +131,14 @@
               android:layout_below="@id/add_btn"
               android:id="@+id/epicycles_count"
               android:layout_toEndOf="@id/t_et"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+              tools:ignore="Autofill,LabelFor,TextFields"
+              android:inputType="number"
+              android:hint="@string/thread_num"
+              android:layout_toRightOf="@id/epicycles_count"
+              android:layout_below="@id/add_btn"
+              android:id="@+id/thread_num"
+              android:layout_toEndOf="@id/epicycles_count"/>
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
                 android:layout_below="@id/definite_n_et"
     >
