@@ -47,8 +47,8 @@ class ComplexFunction {
                 if (scale[i] * s)
             }
         };*/
-        ComplexValue cv = new ComplexValue(0, 0);
-        return t -> {
+        //ComplexValue cv = new ComplexValue(0, 0);
+        /*return t -> {
             double i = (t - t_start) / s * (size - 1);
             if (i < size) {
                 ComplexValue complexValue = this.complexValueList.get(((int) i));
@@ -59,11 +59,12 @@ class ComplexFunction {
                 return complexValue.selfAdd(this.complexValueList.get(0).selfMultiply(cv.setValue(i - ((int) i), 0)));
             }
             return new ComplexValue(0, 0);
-        };
-        /*return v -> {
-            if (v < s / 2) return new ComplexValue(20, 0);
-            return new ComplexValue(-10, -5);
         };*/
+        return v -> {
+            if (v < s / 3) return new ComplexValue(10, 0);
+            else if (v < s / 3 * 2) return new ComplexValue(10, -5);
+            return new ComplexValue(-10, 5);
+        };
 //        return v -> {
 //            if (v < s / 2) return new ComplexValue(10, 0);
 //            return new ComplexValue(-10, 5);

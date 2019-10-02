@@ -39,66 +39,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="傅里叶级数展开-时而成功时而不成功（多线程关系未检查）&#10;另外应避免频繁使Android GC（未检查）&#10;jni整合jni_help">
-      <change afterPath="$PROJECT_DIR$/app/src/jni/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/jni_help.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/jni_help.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/jni/jni_help.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libfb_tools.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libfb_tools.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86/libfb_tools.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libfb_tools.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/Android.mk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/c/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/c/codecs/doJNI.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/doJNI.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/c/codecs/qmcLib.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/qmcLib.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/c/codecs/qmcLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/codecs/qmcLib.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/c/verification/verify.c" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/verification/verify.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/jni_c++/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/zhc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/zhc.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/ComplexFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/ComplexGraphDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/ComplexGraphDrawingView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawingView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/EpicyclesEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/EpicyclesTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/EpicyclesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/epicycles_edit_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/epicycles_edit_activity.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libpi.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libpi.so" afterDir="false" />
-    </list>
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,8 +86,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1045">
-              <caret line="270" column="1" selection-start-line="270" selection-start-column="1" selection-end-line="270" selection-end-column="1" />
+            <state relative-caret-position="279">
+              <caret line="217" column="12" selection-start-line="217" selection-start-column="12" selection-end-line="217" selection-end-column="12" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -157,8 +98,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="60" column="12" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="12" />
+            <state relative-caret-position="279">
+              <caret line="29" column="37" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -166,11 +107,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="182">
-              <caret line="80" column="60" selection-start-line="80" selection-start-column="60" selection-end-line="80" selection-end-column="60" />
+            <state relative-caret-position="431">
+              <caret line="93" column="23" lean-forward="true" selection-start-line="93" selection-start-column="23" selection-end-line="93" selection-end-column="23" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1410#1423#0" expanded="true" />
@@ -182,11 +123,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="163">
-              <caret line="39" column="32" selection-start-line="39" selection-start-column="32" selection-end-line="39" selection-end-column="32" />
+              <caret line="40" column="48" selection-start-line="40" selection-start-column="48" selection-end-line="40" selection-end-column="48" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5924#5960#0" expanded="true" />
@@ -230,7 +171,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>seekbar</find>
       <find>Math.PI * 2</find>
       <find>2 * Math.PI</find>
       <find>complexdefinite</find>
@@ -260,6 +200,7 @@
       <find>thread</find>
       <find>getfunction</find>
       <find>drawing</find>
+      <find>getfunc</find>
     </findStrings>
     <replaceStrings>
       <replace>10F</replace>
@@ -311,9 +252,9 @@
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/EpicyclesView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/EpicyclesEdit.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java" />
       </list>
     </option>
   </component>
@@ -508,7 +449,7 @@
       <workItem from="1569926762206" duration="967000" />
       <workItem from="1569928515619" duration="27360000" />
       <workItem from="1570019465040" duration="5800000" />
-      <workItem from="1570027180590" duration="6452000" />
+      <workItem from="1570027180590" duration="6716000" />
     </task>
     <task id="LOCAL-00001" summary="修复文字错误&#10;文字横排，大小适应">
       <created>1567869315028</created>
@@ -594,11 +535,18 @@
       <option name="project" value="LOCAL" />
       <updated>1569950737165</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="傅里叶级数展开-时而成功时而不成功（多线程关系未检查）&#10;另外应避免频繁使Android GC（未检查）&#10;jni整合jni_help">
+      <created>1570034429344</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1570034429344</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="144617000" />
+    <option name="totallyTimeSpent" value="144881000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -633,10 +581,10 @@
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5005359" side_tool="true" weight="0.32963374" />
       <window_info anchor="bottom" id="Build" order="10" sideWeight="0.4994641" weight="0.2552719" />
-      <window_info active="true" anchor="bottom" id="Logcat" order="11" visible="true" weight="0.4517203" />
+      <window_info anchor="bottom" id="Logcat" order="11" weight="0.4517203" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="bottom" id="Version Control" order="13" weight="0.336293" />
-      <window_info anchor="bottom" id="Terminal" order="14" weight="0.32963374" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="14" visible="true" weight="0.32963374" />
       <window_info anchor="bottom" id="Messages" order="15" visible="true" weight="0.32963374" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -720,7 +668,8 @@
     <MESSAGE value="本轮绘制基本功能实现" />
     <MESSAGE value="本轮 缩放（非手势式）、移动" />
     <MESSAGE value="傅里叶级数展开复平面中图像绘制+普通函数解析，未完成绘制函数。但目前好像改了周期就会乱套" />
-    <option name="LAST_COMMIT_MESSAGE" value="傅里叶级数展开复平面中图像绘制+普通函数解析，未完成绘制函数。但目前好像改了周期就会乱套" />
+    <MESSAGE value="傅里叶级数展开-时而成功时而不成功（多线程关系未检查）&#10;另外应避免频繁使Android GC（未检查）&#10;jni整合jni_help" />
+    <option name="LAST_COMMIT_MESSAGE" value="傅里叶级数展开-时而成功时而不成功（多线程关系未检查）&#10;另外应避免频繁使Android GC（未检查）&#10;jni整合jni_help" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1035,18 +984,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoardView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="87" column="31" selection-start-line="87" selection-start-column="31" selection-end-line="87" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2848#2849#0" expanded="true" />
-            <element signature="e#2891#2892#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/app/src/libs/zhc.jar!/pers/zhc/u/ComplexDefinite.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="207">
@@ -1221,44 +1158,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1045">
-          <caret line="270" column="1" selection-start-line="270" selection-start-column="1" selection-end-line="270" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="80" column="60" selection-start-line="80" selection-start-column="60" selection-end-line="80" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1410#1423#0" expanded="true" />
-            <element signature="e#1557#1570#0" expanded="true" />
-            <element signature="e#5263#5388#0" expanded="true" />
-            <element signature="e#6194#6227#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="60" column="12" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="12" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="163">
-          <caret line="39" column="32" selection-start-line="39" selection-start-column="32" selection-end-line="39" selection-end-column="32" />
+          <caret line="40" column="48" selection-start-line="40" selection-start-column="48" selection-end-line="40" selection-end-column="48" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5924#5960#0" expanded="true" />
@@ -1271,6 +1174,52 @@
             <element signature="e#6402#6423#0" expanded="true" />
             <element signature="e#6450#6471#0" expanded="true" />
             <element signature="e#6498#6535#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="217" column="12" selection-start-line="217" selection-start-column="12" selection-end-line="217" selection-end-column="12" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoardView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="698">
+          <caret line="88" column="22" selection-start-line="88" selection-start-column="22" selection-end-line="88" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2848#2849#0" expanded="true" />
+            <element signature="e#2891#2892#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="29" column="37" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="431">
+          <caret line="93" column="23" lean-forward="true" selection-start-line="93" selection-start-column="23" selection-end-line="93" selection-end-column="23" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1410#1423#0" expanded="true" />
+            <element signature="e#1557#1570#0" expanded="true" />
+            <element signature="e#5263#5388#0" expanded="true" />
+            <element signature="e#6194#6227#0" expanded="true" />
           </folding>
         </state>
       </provider>
