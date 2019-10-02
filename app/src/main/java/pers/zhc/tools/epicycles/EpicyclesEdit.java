@@ -1,4 +1,4 @@
-package pers.zhc.tools.test.epicycles_test;
+package pers.zhc.tools.epicycles;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,11 +35,15 @@ public class EpicyclesEdit extends AppCompatActivity {
         EditText definite_n = findViewById(R.id.definite_n_et);
         EditText T = findViewById(R.id.t_et);
         EditText epicycles_count = findViewById(R.id.epicycles_count);
+        EditText threadNum = findViewById(R.id.thread_num);
         drawGraphBtn.setOnClickListener(v -> {
+            ll.removeAllViews();
+            epicyclesSequence.epicycles.clear();
             Intent intent = new Intent(this, ComplexGraphDrawing.class);
             intent.putExtra("definite_n", Integer.valueOf(definite_n.getText().toString()));
-            intent.putExtra("T", Integer.valueOf(T.getText().toString()));
-            intent.putExtra("epicycles_count", Double.valueOf(epicycles_count.getText().toString()));
+            intent.putExtra("T", Double.valueOf(T.getText().toString()));
+            intent.putExtra("epicycles_count", Integer.valueOf(epicycles_count.getText().toString()));
+            intent.putExtra("thread_num", Integer.valueOf(threadNum.getText().toString()));
             startActivityForResult(intent, 71);
         });
         randomBtn.setOnClickListener(v -> {
@@ -91,7 +95,10 @@ public class EpicyclesEdit extends AppCompatActivity {
             epicyclesSequence.put(aEpicycle);
         });
         start_btn.setOnClickListener(v -> {
-            startActivity(new Intent(this, EpicyclesTest.class));
+            Intent intent = new Intent(this, EpicyclesTest.class);
+            EpicyclesView.T = Double.parseDouble(T.getText().toString());
+            EpicyclesView.omega = 2 * Math.PI / EpicyclesView.T;
+            startActivity(intent);
             overridePendingTransition(R.anim.slide_in_bottom, 0);
         });
 

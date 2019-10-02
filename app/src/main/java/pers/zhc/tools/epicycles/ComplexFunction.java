@@ -1,4 +1,4 @@
-package pers.zhc.tools.test.epicycles_test;
+package pers.zhc.tools.epicycles;
 
 import pers.zhc.u.math.util.ComplexFunctionInterface;
 import pers.zhc.u.math.util.ComplexValue;
@@ -48,19 +48,33 @@ class ComplexFunction {
             }
         };*/
         ComplexValue cv = new ComplexValue(0, 0);
-        /*return t -> {
-            double i = (t - t_start) * (size - 1) / s;
-            ComplexValue complexValue = this.complexValueList.get(((int) i));
-            try {
-                return complexValue.selfAdd(this.complexValueList.get(((int) i) + 1).selfMultiply(cv.setValue(i - ((int) i), 0)));
-            } catch (Exception ignored) {
+        return t -> {
+            double i = (t - t_start) / s * (size - 1);
+            if (i < size) {
+                ComplexValue complexValue = this.complexValueList.get(((int) i));
+                try {
+                    return complexValue.selfAdd(this.complexValueList.get(((int) i) + 1).selfMultiply(cv.setValue(i - ((int) i), 0)));
+                } catch (Exception ignored) {
+                }
+                return complexValue.selfAdd(this.complexValueList.get(0).selfMultiply(cv.setValue(i - ((int) i), 0)));
             }
-            return complexValue.selfAdd(this.complexValueList.get(0).selfMultiply(cv.setValue(i - ((int) i), 0)));
+            return new ComplexValue(0, 0);
+        };
+        /*return v -> {
+            if (v < s / 2) return new ComplexValue(20, 0);
+            return new ComplexValue(-10, -5);
         };*/
-        return v -> new ComplexValue(10 * Math.cos(2 * v + 5), 10 * Math.sin(2 * v));
+//        return v -> {
+//            if (v < s / 2) return new ComplexValue(10, 0);
+//            return new ComplexValue(-10, 5);
+//            return new ComplexValue(10, 0);
+//            return new ComplexValue(v / 1000, v / 1000);
+//            return new ComplexValue(10, 5);
+//            return new ComplexValue(10 * Math.cos(2 * v * EpicyclesView.omega), 10 * Math.sin(3 * v * EpicyclesView.omega - 10));
+//        };
     }
 
-    private double getModulus(double x1, double y1, double x2, double y2) {
+    /*private double getModulus(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x1 - y1, 2) + Math.pow(x2 - y2, 2));
-    }
+    }*/
 }

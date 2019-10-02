@@ -5,20 +5,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.floatingboard.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
-import pers.zhc.tools.test.epicycles_test.EpicyclesEdit;
+import pers.zhc.tools.epicycles.EpicyclesEdit;
 import pers.zhc.tools.toast.AToast;
+import pers.zhc.u.common.ReadIS;
 
 import java.io.*;
+import java.net.URL;
 import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends BaseActivity {
@@ -94,6 +95,17 @@ public class MainActivity extends BaseActivity {
                 EpicyclesEdit.class
         };
         new Thread(() -> {
+            JSONObject jsonObject = null;
+            try {
+                URL url = new URL("http://235m82e811.imwork.net/tools_app/i.zhc");
+                InputStream inputStream = url.openStream();
+                StringBuilder sb = new StringBuilder();
+                new ReadIS(inputStream, "utf-8").read(sb::append);
+                inputStream.close();
+                jsonObject = new JSONObject(sb.toString());
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             for (int i = 0; i < texts.length; i++) {
                 Button btn = new Button(this);
@@ -119,6 +131,20 @@ public class MainActivity extends BaseActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+            if (jsonObject != null) {
+                JSONObject finalJsonObject = jsonObject;
+                runOnUiThread(() -> {
+                    try {
+                        String mainActivityText = finalJsonObject.getString("MainActivityText");
+                        if (mainActivityText == null) return;
+                        TextView tv = new TextView(this);
+                        tv.setText(getString(R.string.tv, mainActivityText));
+                        ll.addView(tv);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }).start();
         /*Button btn1 = findViewById(R.id.gen_pi);

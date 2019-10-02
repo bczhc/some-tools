@@ -147,7 +147,7 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.test.epicycles_test.EpicyclesTest"
+        <activity android:name="pers.zhc.tools.epicycles.EpicyclesTest"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppThemeNotTranslucent"
                   android:screenOrientation="landscape"
@@ -158,7 +158,7 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".test.epicycles_test.EpicyclesEdit"
+        <activity android:name=".epicycles.EpicyclesEdit"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
@@ -167,7 +167,7 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".test.epicycles_test.ComplexGraphDrawing"
+        <activity android:name=".epicycles.ComplexGraphDrawing"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppThemeNotTranslucent"
                   android:screenOrientation="landscape"

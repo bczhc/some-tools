@@ -7,17 +7,7 @@
 #include "../codecs/qmcLib.h"
 #include <stdio.h>
 #include "jni.h"
-
-void LogArr(JNIEnv *env, const char *tag, const char *s, int size) {
-    char *r = NULL;
-    char *R = NULL;
-    for (int i = 0; i < size; ++i) {
-        m_itoa(&r, (int) (usi) s[i]);
-        strcat_auto(&R, r);
-        strcat_auto(&R, " ");
-    }
-    Log(env, tag, R);
-}
+#include "../../jni_help.h"
 
 
 int cpD(const char *d1, const char *d2) {
