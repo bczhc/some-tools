@@ -9,7 +9,7 @@ char *ToUpperCase(char *Dest, const char *string) {
     int len = strlen(string);
     char r[len + 1];
     int i = 0;
-    while (1) {
+    while (true) {
         r[i] = (char) toupper((int) string[i]);
         if (string[i] == '\0') break;
         i++;
@@ -279,7 +279,7 @@ void m_ltoa(char **Dest, const long i) {
 }
 
 int split(char ***Dest, const char *SourceString, const char *SplitStr) {
-    int *pos = NULL;
+    int *pos = nullptr;
     int posL = strInStrCount(&pos, SourceString, SplitStr);
     usi srcLen = strlen(SourceString), splitStrLen = strlen(SplitStr), toP = srcLen - splitStrLen;
     int lastIndex = 0;

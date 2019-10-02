@@ -659,7 +659,7 @@ public class PaintView extends View {
         }
     }
 
-    void resetTranslate() {
+    void resetTransform() {
         /*mCanvas.scale(1 / this.finalScale, 1 / this.finalScale, finalTranslateX, finalTranslateY);
         mCanvas.translate(-finalTranslateX, -finalTranslateY);*/
         mCanvas = new Canvas(mBitmap);

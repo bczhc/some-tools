@@ -1,4 +1,4 @@
-package pers.zhc.tools.test.epicycles_test;
+package pers.zhc.tools.epicycles;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -36,7 +36,7 @@ class EpicyclesView extends View {
     private CoordinateDouble center;
     private CoordinateDouble lastLineToPoint;
     private Path path;
-    private float t;
+    private double t;
     static double T = 2 * Math.PI, omega = 2 * Math.PI / T;
 
     EpicyclesView(Context context, EpicyclesSequence epicyclesSequence) {
@@ -232,7 +232,7 @@ class EpicyclesView extends View {
             }
         }
         mDrawingCanvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
-        t += .01F;
+        t += .1F;
         canvas.drawBitmap(mDrawingBitmap, 0F, 0F, mBitmapPaint);
     }
 
