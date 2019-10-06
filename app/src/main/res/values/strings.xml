@@ -132,4 +132,5 @@
     <string name="epicycles_calc_progress" translatable="false">%1$f%%--%2$d/%3$d</string>
     <string name="thread_num">线程数</string>
     <string name="please_type_correct_value">请输入正确的数值</string>
+    <string name="fourier_series_in_complex">复平面内傅里叶级数展开</string>
 </resources>

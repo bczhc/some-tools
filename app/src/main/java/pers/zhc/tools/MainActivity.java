@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity {
                 R.string.overlaid_drawing_board,
                 R.string.fourier_series_calc,
                 R.string.notes,
-                R.string.epicycles_test
+                R.string.fourier_series_in_complex
 
         };
         final Class<?>[] classes = new Class[]{
