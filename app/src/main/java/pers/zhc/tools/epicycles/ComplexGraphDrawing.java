@@ -75,20 +75,19 @@ public class ComplexGraphDrawing extends BaseActivity {
                         ThreadSequence threadSequence = new ThreadSequence(threadNum);
                         ComplexDefinite complexDefinite = new ComplexDefinite();
                         complexDefinite.n = definite_n;
-                        ComplexValue complexValue = new ComplexValue(EpicyclesView.T, 0);
                         int a = -(epicycles_count) / 2;
                         int epi = ((int) Math.ceil(((double) (epicycles_count + 1)) / ((double) threadNum)));
                         EpicyclesSequence.AEpicycle[][] aEpicycles = new EpicyclesSequence.AEpicycle[epi][threadNum];
                         CountDownLatch latch = new CountDownLatch(epicycles_count + 1);
                         for (int n = a; n <= a + epicycles_count; n++) {
                             int finalN = n;
-                            ComplexFunctionInterface f = t -> function.x(t).multiply(new ComplexValue(
+                            ComplexFunctionInterface f = t -> function.x(t).multiply(
                                     Math.cos(-finalN * t * EpicyclesView.omega), Math.sin(-finalN * t * EpicyclesView.omega)
-                            ));
+                            );
                             threadSequence.execute((j, ro) -> {
                                 ComplexValue df = complexDefinite.getDefiniteIntegralByTrapezium(0, EpicyclesView.T, f);
                                 EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(
-                                        finalN, df.selfDivide(complexValue));
+                                        finalN, df.selfDivide(EpicyclesView.T, 0));
                                 aEpicycles[ro][j % threadNum] = aEpicycle;
                                 runOnUiThread(() -> textViews[j % threadNum].setText(getString(R.string.epicycles_calc_progress
                                         , ((float) ro) / ((float) epi) * 100F, ro, epi)));
