@@ -65,38 +65,36 @@ public class ComplexGraphDrawing extends BaseActivity {
                     calcDialog.setCanceledOnTouchOutside(false);
                     calcDialog.setCancelable(false);
                     calcDialog.show();
-                    ComplexFunctionInterface function = ComplexGraphDrawingView.complexFunction.getFunction(0, EpicyclesView.T);
                     int definite_n = intent.getIntExtra("definite_n", 10000);
                     int epicycles_count = intent.getIntExtra("epicycles_count", 100) - 1;//除去中间的0
-                    EpicyclesView.T = intent.getDoubleExtra("T", 2 * Math.PI);
+                    EpicyclesView.setT(intent.getDoubleExtra("T", 2 * Math.PI));
+                    ComplexFunctionInterface function = ComplexGraphDrawingView.complexFunction.getFunction(0, EpicyclesView.T);
                     new Thread(() -> {
                         ThreadSequence threadSequence = new ThreadSequence(threadNum);
                         ComplexDefinite complexDefinite = new ComplexDefinite();
                         complexDefinite.n = definite_n;
                         ComplexValue complexValue = new ComplexValue(EpicyclesView.T, 0);
-                        ComplexValue complexValue1 = new ComplexValue(0, 0);
-                        ComplexValue complexValue2 = new ComplexValue(10, 0);
                         int a = -(epicycles_count) / 2;
                         int epi = ((int) Math.ceil(((double) (epicycles_count + 1)) / ((double) threadNum)));
                         EpicyclesSequence.AEpicycle[][] aEpicycles = new EpicyclesSequence.AEpicycle[epi][threadNum];
                         for (int n = a; n <= a + epicycles_count; n++) {
                             int finalN = n;
+                            ComplexFunctionInterface f = t -> function.x(t).multiply(new ComplexValue(
+                                    Math.cos(-finalN * t * EpicyclesView.omega), Math.sin(-finalN * t * EpicyclesView.omega)
+                            ));
                             threadSequence.execute((j, ro) -> {
-                                EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(finalN, complexDefinite
-                                        .getDefiniteIntegralByTrapezium(0, EpicyclesView.T,
-                                                t -> function.x(t).multiply(complexValue1.setValue(
-                                                        Math.cos(-finalN * t * EpicyclesView.omega), Math.sin(-finalN * t * EpicyclesView.omega)
-                                                ))).selfMultiply(complexValue2).selfDivide(complexValue));
-//                                EpicyclesEdit.epicyclesSequence.put(aEpicycle);
+                                ComplexValue df = complexDefinite.getDefiniteIntegralByTrapezium(0, EpicyclesView.T, f);
+                                EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(
+                                        finalN, df.selfDivide(complexValue));
                                 aEpicycles[ro][j % threadNum] = aEpicycle;
                                 runOnUiThread(() -> textViews[j % threadNum].setText(getString(R.string.epicycles_calc_progress
-                                        , ((float) ro) / ((float) epi) * 100F, ro)));
+                                        , ((float) ro) / ((float) epi) * 100F, ro, epi)));
                             });
                         }
                         threadSequence.start(() -> {
                             for (EpicyclesSequence.AEpicycle[] aEpicycle : aEpicycles) {
                                 for (EpicyclesSequence.AEpicycle epicycle : aEpicycle) {
-                                    EpicyclesEdit.epicyclesSequence.put(epicycle);
+                                    if (epicycle != null) EpicyclesEdit.epicyclesSequence.put(epicycle);
                                 }
                             }
                             runOnUiThread(() -> {
@@ -106,8 +104,7 @@ public class ComplexGraphDrawing extends BaseActivity {
                             overridePendingTransition(0, R.anim.fade_out);
                         });
                     }).start();
-                }).setTitle(R.string.choose_calculate_or_exit)
-                .create();
+                }).setTitle(R.string.choose_calculate_or_exit).create();
         DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT
                 , ViewGroup.LayoutParams.WRAP_CONTENT, false);
         alertDialog.show();
