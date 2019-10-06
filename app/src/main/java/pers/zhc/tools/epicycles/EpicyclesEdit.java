@@ -96,8 +96,7 @@ public class EpicyclesEdit extends AppCompatActivity {
         });
         start_btn.setOnClickListener(v -> {
             Intent intent = new Intent(this, EpicyclesTest.class);
-            EpicyclesView.T = Double.parseDouble(T.getText().toString());
-            EpicyclesView.omega = 2 * Math.PI / EpicyclesView.T;
+            EpicyclesView.setT(Double.parseDouble(T.getText().toString()));
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_bottom, 0);
         });
