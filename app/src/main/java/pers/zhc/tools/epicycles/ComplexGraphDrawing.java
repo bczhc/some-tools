@@ -19,6 +19,8 @@ import pers.zhc.u.math.fourier.EpicyclesSequence;
 import pers.zhc.u.math.util.ComplexFunctionInterface;
 import pers.zhc.u.math.util.ComplexValue;
 
+import java.util.concurrent.CountDownLatch;
+
 public class ComplexGraphDrawing extends BaseActivity {
 
     private int width;
@@ -77,6 +79,7 @@ public class ComplexGraphDrawing extends BaseActivity {
                         int a = -(epicycles_count) / 2;
                         int epi = ((int) Math.ceil(((double) (epicycles_count + 1)) / ((double) threadNum)));
                         EpicyclesSequence.AEpicycle[][] aEpicycles = new EpicyclesSequence.AEpicycle[epi][threadNum];
+                        CountDownLatch latch = new CountDownLatch(epicycles_count + 1);
                         for (int n = a; n <= a + epicycles_count; n++) {
                             int finalN = n;
                             ComplexFunctionInterface f = t -> function.x(t).multiply(new ComplexValue(
@@ -89,9 +92,15 @@ public class ComplexGraphDrawing extends BaseActivity {
                                 aEpicycles[ro][j % threadNum] = aEpicycle;
                                 runOnUiThread(() -> textViews[j % threadNum].setText(getString(R.string.epicycles_calc_progress
                                         , ((float) ro) / ((float) epi) * 100F, ro, epi)));
+                                latch.countDown();
                             });
                         }
                         threadSequence.start(() -> {
+                            try {
+                                latch.await();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             for (EpicyclesSequence.AEpicycle[] aEpicycle : aEpicycles) {
                                 for (EpicyclesSequence.AEpicycle epicycle : aEpicycle) {
                                     if (epicycle != null) EpicyclesEdit.epicyclesSequence.put(epicycle);

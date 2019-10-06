@@ -101,6 +101,7 @@ public class PaintView extends View {
         post(() -> {
             //获取PaintView的宽和高
             //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
+            System.gc();
             mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             backgroundBitmap = Bitmap.createBitmap(mBitmap);
             mCanvas = new Canvas(mBitmap);
@@ -608,6 +609,7 @@ public class PaintView extends View {
 
     void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
         try {
+            System.gc();
             Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
             mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
             if (backgroundBitmap == null) {
