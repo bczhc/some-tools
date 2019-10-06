@@ -13,7 +13,7 @@ public class EpicyclesTest extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.epicycles_test_activity);
+        setContentView(R.layout.fourier_series_in_complex_activity);
         RelativeLayout rl = findViewById(R.id.rl);
         SeekBar sb = findViewById(R.id.sb);
         /*epicyclesSequence.put(3, new ComplexValue(30D, 30D));

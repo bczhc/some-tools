@@ -50,7 +50,7 @@ class ComplexFunction {
                     ComplexValue r;
                     r = aPointLinearToBPoint(complexValueList.get(i), complexValueList.get(i + 1)
                             , (currModulusLen - z + moduli[i]) / moduli[i]);
-                    return r.selfDivide(new ComplexValue(50, 0));
+                    return r.selfDivide(50, 0);
                 }
             }
             return new ComplexValue(0, 0);
@@ -93,6 +93,6 @@ class ComplexFunction {
     private ComplexValue aPointLinearToBPoint(ComplexValue cv1, ComplexValue cv2, @FloatRange(from = 0D, to = 1D) double progress) {
         double reS = cv2.re - cv1.re;
         double imS = cv2.im - cv1.im;
-        return cv1.add(new ComplexValue(reS * progress, imS * progress));//todo alloc频繁
+        return cv1.add(reS * progress, imS * progress);
     }
 }
