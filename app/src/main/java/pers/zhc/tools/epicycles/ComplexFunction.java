@@ -1,9 +1,5 @@
 package pers.zhc.tools.epicycles;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.support.annotation.FloatRange;
 import pers.zhc.u.math.util.ComplexFunctionInterface;
 import pers.zhc.u.math.util.ComplexValue;
@@ -13,7 +9,7 @@ import java.util.List;
 
 class ComplexFunction {
     private List<ComplexValue> complexValueList;
-    private float w = 1361, h = 636;
+//    private float w = 1361, h = 636;
 
     ComplexFunction() {
         complexValueList = new ArrayList<>();
@@ -36,30 +32,36 @@ class ComplexFunction {
     ComplexFunctionInterface getFunction(double t_start, double t_end) {
         int size = this.complexValueList.size();
         double s = t_end - t_start;
-        double[] moduli = new double[size - 1];
+        double[] moduli = new double[size];
         double moduliSum = 0D;
         final double[] z = {0D};
-        for (int i = 0; i < this.complexValueList.size() - 1; i++) {
+        for (int i = 0; i < this.complexValueList.size(); i++) {
             ComplexValue complexValue = this.complexValueList.get(i);
-            ComplexValue nextComplexValue = this.complexValueList.get(i + 1);
+            ComplexValue nextComplexValue;
+            if (i == size - 1) nextComplexValue = this.complexValueList.get(0);
+            else nextComplexValue = this.complexValueList.get(i + 1);
             moduliSum += (moduli[i] = getModulus(complexValue.re, complexValue.im, nextComplexValue.re, nextComplexValue.im));
         }
         double finalModuliSum = moduliSum;
-        Bitmap bitmap = Bitmap.createBitmap(((int) w), ((int) h), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        Paint paint = new Paint();
-        paint.setStrokeWidth(10);
-        paint.setColor(Color.RED);
+        double ab = getModulus(complexValueList.get(size - 1), complexValueList.get(0));
+//        Bitmap bitmap = Bitmap.createBitmap(((int) w), ((int) h), Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(bitmap);
+//        Paint paint = new Paint();
+//        paint.setStrokeWidth(10);
+//        paint.setColor(Color.RED);
         return v -> {
             z[0] = 0D;
             double currModulusLen = finalModuliSum * (v - t_start) / (s - t_start);
             for (int i = 0; i < moduli.length; i++) {
                 z[0] += moduli[i];
                 if (z[0] >= currModulusLen) {
-                    ComplexValue r = aPointLinearToBPoint(complexValueList.get(i), complexValueList.get(i + 1)
+                    ComplexValue r;
+                    if (i + 1 < size) r = aPointLinearToBPoint(complexValueList.get(i), complexValueList.get(i + 1)
                             , (currModulusLen - z[0] + moduli[i]) / moduli[i]);
-                    canvas.drawPoint(((float) (r.re + w / 2F)), ((float) (-r.im + h / 2F)), paint);
-                    bitmap.getHeight();
+                    else r = aPointLinearToBPoint(complexValueList.get(i), complexValueList.get(0)
+                            , (currModulusLen - finalModuliSum + ab) / ab);
+//                    canvas.drawPoint(((float) (r.re + w / 2F)), ((float) (-r.im + h / 2F)), paint);
+//                    bitmap.getHeight();
                     return r.selfDivide(new ComplexValue(50, 0));
                 }
             }
@@ -93,7 +95,11 @@ class ComplexFunction {
     }
 
     private double getModulus(double x1, double y1, double x2, double y2) {
-        return Math.sqrt(Math.pow(x1 - y1, 2) + Math.pow(x2 - y2, 2));
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    private double getModulus(ComplexValue cv1, ComplexValue cv2) {
+        return Math.sqrt(Math.pow(cv1.re - cv2.re, 2) + Math.pow(cv1.im - cv2.im, 2));
     }
 
     private ComplexValue aPointLinearToBPoint(ComplexValue cv1, ComplexValue cv2, @FloatRange(from = 0D, to = 1D) double progress) {
