@@ -11,10 +11,10 @@ import org.json.JSONObject;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.document.Document;
+import pers.zhc.tools.epicycles.EpicyclesEdit;
 import pers.zhc.tools.floatingboard.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
-import pers.zhc.tools.epicycles.EpicyclesEdit;
 import pers.zhc.tools.toast.AToast;
 import pers.zhc.u.common.ReadIS;
 
@@ -94,6 +94,7 @@ public class MainActivity extends BaseActivity {
                 Document.class,
                 EpicyclesEdit.class
         };
+        CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
             JSONObject jsonObject = null;
             try {
@@ -106,31 +107,10 @@ public class MainActivity extends BaseActivity {
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            for (int i = 0; i < texts.length; i++) {
-                Button btn = new Button(this);
-                btn.setText(texts[i]);
-//                btn.setTextSize(sp2px(this, 15F));
-                btn.setTextSize(25F);
-                btn.setAllCaps(false);
-                btn.setLayoutParams(lp);
-                int finalI = i;
-                btn.setOnClickListener(v -> {
-                    Intent intent = new Intent();
-                    intent.setClass(this, classes[finalI]);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_bottom, 0);
-                });
-                CountDownLatch latch = new CountDownLatch(1);
-                runOnUiThread(() -> {
-                    ll.addView(btn);
-                    latch.countDown();
-                });
-                try {
-                    latch.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                mainTextLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
             if (jsonObject != null) {
                 JSONObject finalJsonObject = jsonObject;
@@ -146,6 +126,26 @@ public class MainActivity extends BaseActivity {
                     }
                 });
             }
+        }).start();
+        new Thread(() -> {
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            for (int i = 0; i < texts.length; i++) {
+                Button btn = new Button(this);
+                btn.setText(texts[i]);
+//                btn.setTextSize(sp2px(this, 15F));
+                btn.setTextSize(25F);
+                btn.setAllCaps(false);
+                btn.setLayoutParams(lp);
+                int finalI = i;
+                btn.setOnClickListener(v -> {
+                    Intent intent = new Intent();
+                    intent.setClass(this, classes[finalI]);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_bottom, 0);
+                });
+                runOnUiThread(() -> ll.addView(btn));
+            }
+            mainTextLatch.countDown();
         }).start();
         /*Button btn1 = findViewById(R.id.gen_pi);
         btn1.setOnClickListener(v -> {
