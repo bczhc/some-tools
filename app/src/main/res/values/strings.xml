@@ -129,6 +129,6 @@
     <string name="definite_n">积分分段数</string>
     <string name="period">周期</string>
     <string name="epicycles_count">本轮数量</string>
-    <string name="epicycles_calc_progress" translatable="false">%1$f%%--%2$d</string>
+    <string name="epicycles_calc_progress" translatable="false">%1$f%%--%2$d/%3$d</string>
     <string name="thread_num">线程数</string>
 </resources>

@@ -268,4 +268,18 @@ class EpicyclesView extends View {
             i = -1;
         }
     }
+
+    public static double getT() {
+        return EpicyclesView.T;
+    }
+
+    public static void setT(double T) {
+        EpicyclesView.T = T;
+        EpicyclesView.omega = 2 * Math.PI / T;
+    }
+
+    @SuppressWarnings("unused")
+    public static double getOmega() {
+        return EpicyclesView.omega;
+    }
 }
