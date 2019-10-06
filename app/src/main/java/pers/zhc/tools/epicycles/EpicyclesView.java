@@ -128,6 +128,7 @@ class EpicyclesView extends View {
         if (canvasWidth == 0 && canvasHeight == 0) {
             canvasWidth = getWidth();
             canvasHeight = getHeight();
+            System.gc();
             mDrawingBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888);
             mDrawingCanvas = new Canvas(mDrawingBitmap);
             mEpicyclesBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888);
