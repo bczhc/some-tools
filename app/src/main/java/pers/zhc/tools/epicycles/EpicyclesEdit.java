@@ -6,10 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
@@ -39,12 +36,17 @@ public class EpicyclesEdit extends AppCompatActivity {
         drawGraphBtn.setOnClickListener(v -> {
             ll.removeAllViews();
             epicyclesSequence.epicycles.clear();
-            Intent intent = new Intent(this, ComplexGraphDrawing.class);
-            intent.putExtra("definite_n", Integer.valueOf(definite_n.getText().toString()));
-            intent.putExtra("T", Double.valueOf(T.getText().toString()));
-            intent.putExtra("epicycles_count", Integer.valueOf(epicycles_count.getText().toString()));
-            intent.putExtra("thread_num", Integer.valueOf(threadNum.getText().toString()));
-            startActivityForResult(intent, 71);
+            try {
+                Intent intent = new Intent(this, ComplexGraphDrawing.class);
+                intent.putExtra("definite_n", Integer.valueOf(definite_n.getText().toString()));
+                intent.putExtra("T", Double.valueOf(T.getText().toString()));
+                intent.putExtra("epicycles_count", Integer.valueOf(epicycles_count.getText().toString()));
+                intent.putExtra("thread_num", Integer.valueOf(threadNum.getText().toString()));
+                startActivityForResult(intent, 71);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, R.string.please_type_correct_value, Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         });
         randomBtn.setOnClickListener(v -> {
             EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Math.random() * 30, new ComplexValue(Math.random() * 10, Math.random() * 10));
