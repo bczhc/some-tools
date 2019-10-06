@@ -39,7 +39,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="修复傅里叶解析的函数的解析bug：解析函数传入的周期T不正确（顺序错误：在设置T语句之前）&#10;有频繁GC！&#10;换绘制函数解析方法：按照模">
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="优化傅里叶函数解析，但是目前需要很大很大工作量才能比较精确画出图像，不知是否最优化。&#10;频繁GC！">
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
@@ -48,12 +48,7 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -113,8 +108,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="111">
-              <caret line="54" column="54" lean-forward="true" selection-start-line="54" selection-start-column="54" selection-end-line="54" selection-end-column="54" />
+            <state relative-caret-position="170">
+              <caret line="60" column="65" selection-start-line="60" selection-start-column="65" selection-end-line="60" selection-end-column="65" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#280#281#0" expanded="true" />
@@ -130,8 +125,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
-              <caret line="78" column="47" selection-start-line="78" selection-start-column="47" selection-end-line="78" selection-end-column="47" />
+            <state relative-caret-position="132">
+              <caret line="85" selection-start-line="85" selection-end-line="85" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5126#5256#0" expanded="true" />
@@ -468,7 +463,7 @@
       <workItem from="1570019465040" duration="5800000" />
       <workItem from="1570027180590" duration="6716000" />
       <workItem from="1570281780952" duration="6690000" />
-      <workItem from="1570316658769" duration="4697000" />
+      <workItem from="1570316658769" duration="6046000" />
     </task>
     <task id="LOCAL-00001" summary="修复文字错误&#10;文字横排，大小适应">
       <created>1567869315028</created>
@@ -561,11 +556,18 @@
       <option name="project" value="LOCAL" />
       <updated>1570034429344</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="修复傅里叶解析的函数的解析bug：解析函数传入的周期T不正确（顺序错误：在设置T语句之前）&#10;有频繁GC！&#10;换绘制函数解析方法：按照模">
+      <created>1570321583169</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1570321583169</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="157082000" />
+    <option name="totallyTimeSpent" value="158431000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -593,14 +595,14 @@
       <window_info anchor="bottom" id="Find" order="1" weight="0.32963374" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.25749168" />
       <window_info anchor="bottom" id="Android Profiler" order="3" weight="0.96670365" />
-      <window_info active="true" anchor="bottom" id="Debug" order="4" visible="true" weight="0.41287458" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.41287458" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32963374" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5005359" side_tool="true" weight="0.32963374" />
       <window_info anchor="bottom" id="Build" order="10" sideWeight="0.4994641" weight="0.2552719" />
-      <window_info anchor="bottom" id="Logcat" order="11" weight="0.336293" />
+      <window_info active="true" anchor="bottom" id="Logcat" order="11" visible="true" weight="0.4916759" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="bottom" id="Version Control" order="13" weight="0.336293" />
       <window_info anchor="bottom" id="Terminal" order="14" weight="0.32963374" />
@@ -688,7 +690,8 @@
     <MESSAGE value="本轮 缩放（非手势式）、移动" />
     <MESSAGE value="傅里叶级数展开复平面中图像绘制+普通函数解析，未完成绘制函数。但目前好像改了周期就会乱套" />
     <MESSAGE value="傅里叶级数展开-时而成功时而不成功（多线程关系未检查）&#10;另外应避免频繁使Android GC（未检查）&#10;jni整合jni_help" />
-    <option name="LAST_COMMIT_MESSAGE" value="傅里叶级数展开-时而成功时而不成功（多线程关系未检查）&#10;另外应避免频繁使Android GC（未检查）&#10;jni整合jni_help" />
+    <MESSAGE value="修复傅里叶解析的函数的解析bug：解析函数传入的周期T不正确（顺序错误：在设置T语句之前）&#10;有频繁GC！&#10;换绘制函数解析方法：按照模" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复傅里叶解析的函数的解析bug：解析函数传入的周期T不正确（顺序错误：在设置T语句之前）&#10;有频繁GC！&#10;换绘制函数解析方法：按照模" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1090,13 +1093,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/app/src/libs/zhc.jar!/pers/zhc/u/ComplexDefinite.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="39" column="19" lean-forward="true" selection-start-line="39" selection-start-column="19" selection-end-line="39" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="217">
@@ -1182,8 +1178,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="78" column="47" selection-start-line="78" selection-start-column="47" selection-end-line="78" selection-end-column="47" />
+        <state relative-caret-position="132">
+          <caret line="85" selection-start-line="85" selection-end-line="85" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5126#5256#0" expanded="true" />
@@ -1191,10 +1187,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$PROJECT_DIR$/app/src/libs/zhc.jar!/pers/zhc/u/ComplexDefinite.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="142">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="54" column="54" lean-forward="true" selection-start-line="54" selection-start-column="54" selection-end-line="54" selection-end-column="54" />
+        <state relative-caret-position="170">
+          <caret line="60" column="65" selection-start-line="60" selection-start-column="65" selection-end-line="60" selection-end-column="65" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#280#281#0" expanded="true" />
