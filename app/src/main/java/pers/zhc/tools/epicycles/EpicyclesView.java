@@ -28,7 +28,7 @@ class EpicyclesView extends View {
     private Paint mVectorPaint;
     private Paint mPathPaint;
     private boolean b = true;
-    private double epicyclesScale = 10D;
+    private double epicyclesScale = 50D;
     private ExecutorService es;
     private double reOffset, imOffset;
     private QuadDrawing quadDrawing;
