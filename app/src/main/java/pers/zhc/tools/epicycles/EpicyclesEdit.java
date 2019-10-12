@@ -6,7 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
@@ -36,17 +39,21 @@ public class EpicyclesEdit extends AppCompatActivity {
         drawGraphBtn.setOnClickListener(v -> {
             ll.removeAllViews();
             epicyclesSequence.epicycles.clear();
-            try {
-                Intent intent = new Intent(this, ComplexGraphDrawing.class);
-                intent.putExtra("definite_n", Integer.valueOf(definite_n.getText().toString()));
-                intent.putExtra("T", Double.valueOf(T.getText().toString()));
-                intent.putExtra("epicycles_count", Integer.valueOf(epicycles_count.getText().toString()));
-                intent.putExtra("thread_num", Integer.valueOf(threadNum.getText().toString()));
-                startActivityForResult(intent, 71);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, R.string.please_type_correct_value, Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
+            String s1 = definite_n.getText().toString();
+            String s2 = T.getText().toString();
+            String s3 = epicycles_count.getText().toString();
+            String s4 = threadNum.getText().toString();
+            ck(s1, s2, s3, s4, definite_n, T, epicycles_count, threadNum);
+            s1 = definite_n.getText().toString();
+            s2 = T.getText().toString();
+            s3 = epicycles_count.getText().toString();
+            s4 = threadNum.getText().toString();
+            Intent intent = new Intent(this, ComplexGraphDrawing.class);
+            intent.putExtra("definite_n", Integer.valueOf(s1));
+            intent.putExtra("T", Double.valueOf(s2));
+            intent.putExtra("epicycles_count", Integer.valueOf(s3));
+            intent.putExtra("thread_num", Integer.valueOf(s4));
+            startActivityForResult(intent, 71);
         });
         randomBtn.setOnClickListener(v -> {
             EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Math.random() * 30, new ComplexValue(Math.random() * 10, Math.random() * 10));
@@ -98,11 +105,22 @@ public class EpicyclesEdit extends AppCompatActivity {
         });
         start_btn.setOnClickListener(v -> {
             Intent intent = new Intent(this, EpicyclesTest.class);
-            EpicyclesView.setT(Double.parseDouble(T.getText().toString()));
+            String s = T.getText().toString();
+            if (s.equals("")) T.setText(getString(R.string.tv, "50"));
+            s = T.getText().toString();
+            EpicyclesView.setT(Double.parseDouble(s));
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_bottom, 0);
         });
 
+    }
+
+    private void ck(String s1, String s2, String s3, String s4, EditText definite_n, EditText T, EditText epicycles_count, EditText threadNum) {
+        if (s1.equals("")) definite_n.setText(getString(R.string.tv, "100000"));
+        if (s2.equals("")) T.setText(getString(R.string.tv, "50"));
+        if (s3.equals("")) epicycles_count.setText(getString(R.string.tv, "150"));
+        if (s4.equals(""))
+            threadNum.setText(getString(R.string.tv, String.valueOf(Runtime.getRuntime().availableProcessors())));
     }
 
     private void setTV(TextView tv, EpicyclesSequence.AEpicycle aEpicycle) {
