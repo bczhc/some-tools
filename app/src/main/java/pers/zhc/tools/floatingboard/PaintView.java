@@ -5,14 +5,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.ColorInt;
-import android.support.v4.view.GestureDetectorCompat;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Toast;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
@@ -43,10 +43,12 @@ public class PaintView extends View {
     private Context ctx;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
-    private GestureDetectorCompat gestureDetector;
-    private MyGesture onGestureListener;
     private float finalScale = 1;
     private float finalTranslateX, finalTranslateY;
+    private GestureResolver gestureResolver;
+    private float scalePointX;
+    private float scalePointY;
+    private ScaleGestureDetector scaleGestureDetector;
 
 
 
@@ -114,67 +116,75 @@ public class PaintView extends View {
 
         undoList = new LinkedList<>();
         redoList = new LinkedList<>();
-        onGestureListener = new MyGesture() {
+        gestureResolver = new GestureResolver(ctx, new GestureResolver.GestureInterface() {
+
             @Override
-            public void onFirst2Down(float p1X, float p1Y, float p2X, float p2Y) {
-                lastP.p1.x = p1X;
-                lastP.p1.y = p1Y;
-                lastP.p2.x = p2X;
-                lastP.p2.y = p2Y;
+            public boolean onScale(ScaleGestureDetector detector) {
+                finalScale *= detector.getScaleFactor();
+                return true;
+            }
+
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector detector) {
+                return false;
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetector detector) {
+
             }
 
             @Override
             public boolean onDown(MotionEvent e) {
-                Log.v("gd", "onDown" + e);
-                return true;
+                return false;
             }
 
             @Override
             public void onShowPress(MotionEvent e) {
-                Log.v("gd", "onShowPress" + e);
+
             }
 
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
-                Log.v("gd", "onSingleTapUp" + e);
-                return true;
+                return false;
             }
-
-            private MyPoint lastP = new MyPoint();
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                Log.v("gd", "onScroll" + e1 + " " + e2 + " " + distanceX + " " + distanceY);
                 if (e2.getPointerCount() == 2) {
-                    float x1 = e2.getX(0);
-                    float x2 = e2.getX(1);
-                    float y1 = e2.getY(0);
-                    float y2 = e2.getY(1);
-                    float tX = (x1 + x2) / 2 - lastP.getCentralPoint().x;
-                    float tY = (y1 + y2) / 2 - lastP.getCentralPoint().y;
-                    finalTranslateX += tX;
-                    finalTranslateY += tY;
-                    mCanvas.translate(tX, tY);
-                    lastP.p1.x = x1;
-                    lastP.p2.x = x2;
-                    lastP.p1.y = y1;
-                    lastP.p2.y = y2;
+                    finalTranslateX -= distanceX;
+                    finalTranslateY -= distanceY;
                 }
                 return true;
             }
 
             @Override
             public void onLongPress(MotionEvent e) {
-                Log.v("gd", "onLongPress" + e);
+
             }
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                Log.v("gd", "onFling" + e1 + " " + e2 + " " + velocityX + " " + velocityY);
+                return false;
+            }
+        });
+        scaleGestureDetector = new ScaleGestureDetector(ctx, new ScaleGestureDetector.OnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector detector) {
+                finalScale *= detector.getScaleFactor();
                 return true;
             }
-        };
-        gestureDetector = new GestureDetectorCompat(ctx, onGestureListener);
+
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector detector) {
+                return false;
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetector detector) {
+
+            }
+        });
     }
 
     /**
@@ -182,7 +192,6 @@ public class PaintView extends View {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
         if (mBitmap != null) {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
             if (null != mPath) {//显示实时正在绘制的path轨迹
@@ -356,29 +365,19 @@ public class PaintView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getPointerCount() == 1) {
-            onTouchAction(event.getAction(), event.getX(), event.getY());
-            onGestureListener.first2Down = false;
-        } else if (event.getPointerCount() == 2) {
+        scaleGestureDetector.onTouchEvent(event);
+        onTouchAction(event.getAction(), event.getX(), event.getY(), event.getPointerCount());
+        gestureResolver.onTouch(event);
+        if (event.getPointerCount() == 2) {
             mPath = null;
-            float x1 = event.getX(0);
-            float y1 = event.getY(0);
-            float x2 = event.getX(1);
-            float y2 = event.getY(1);
-            if (!onGestureListener.first2Down) {
-                onGestureListener.onFirst2Down(x1, y1, x2, y2);
-                firstDistance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-                lastScale = 1;
-            }
-            onGestureListener.first2Down = true;
-            float distance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-            float ratio = distance / firstDistance;
-            float scale = ratio / lastScale;
-            mCanvas.scale(scale, scale, (x1 + x2) / 2, (y1 + y2) / 2);
-            finalScale *= scale;
-            lastScale = ratio;
             mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            for (PathBean pathBean : undoList) mCanvas.drawPath(pathBean.path, pathBean.paint);
+            mCanvas.translate(finalTranslateX, finalTranslateY);
+            mCanvas.scale(finalScale, finalScale, scalePointX, scalePointY);
+            for (PathBean pathBean : undoList) {
+                mCanvas.drawPath(pathBean.path, pathBean.paint);
+            }
+//            mCanvas.scale(1 / finalScale, 1 / finalScale, scalePointX, scalePointY);
+            mCanvas.translate(-finalTranslateX, -finalTranslateY);
         }
         /*int action = event.getAction();
         int pointerCount = event.getPointerCount();
@@ -421,9 +420,8 @@ public class PaintView extends View {
                 lastP.p2.y = y2;
             }
         }*/
-        boolean b = gestureDetector.onTouchEvent(event);
         invalidate();
-        return b;
+        return true;
     }
 
 
@@ -520,7 +518,7 @@ public class PaintView extends View {
                             setEraserStrokeWidth(eraserStrokeWidth);
                             setPaintColor(color);
                             setStrokeWidth(strokeWidth);
-                            onTouchAction(motionAction, x, y);
+                            onTouchAction(motionAction, x, y, 1);
                             floatValueInterface.f(((float) haveRead) / ((float) length) * 100F);
                             break;
                     }
@@ -534,7 +532,7 @@ public class PaintView extends View {
         es.shutdown();
     }
 
-    private void onTouchAction(int motionAction, float x, float y) {
+    private void onTouchAction(int motionAction, float x, float y, int pointCount) {
         byte[][] bytes = new byte[6][4];
         bytes[0] = jni.floatToByteArray(x);
         bytes[1] = jni.floatToByteArray(y);
@@ -564,7 +562,9 @@ public class PaintView extends View {
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
                     Paint paintRef = isEraserMode ? eraserPaint : mPaint;
+                    mCanvas.translate(finalTranslateX, finalTranslateY);
                     mCanvas.drawPath(mPath, paintRef);//将路径绘制在mBitmap上
+                    mCanvas.translate(-finalTranslateX, -finalTranslateY);
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(paintRef);
                     PathBean pb = new PathBean(path, paint);
@@ -647,7 +647,8 @@ public class PaintView extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return false;
+
+            return true;
         }
 
         @Override
