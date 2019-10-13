@@ -3,18 +3,15 @@ package pers.zhc.tools.utils;
 import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 
 public class GestureResolver {
     private GestureInterface gestureInterface;
     private GestureDetector gestureDetector;
-    private float pDistance;
-    private ScaleGestureDetector scaleGestureDetector;
+    private float firstDistance;
 
     public GestureResolver(Context context, GestureInterface gestureInterface) {
         this.gestureInterface = gestureInterface;
         gestureDetector = new GestureDetector(context, this.gestureInterface);
-        scaleGestureDetector = new ScaleGestureDetector(context, this.gestureInterface);
     }
 
     private float getDistance(float x1, float x2, float y1, float y2) {
@@ -22,7 +19,6 @@ public class GestureResolver {
     }
 
     private float lastScale = 1;
-    private float scaleC = 1;
 
     public void onTouch(MotionEvent event) {
         int pointerCount = event.getPointerCount();
@@ -36,21 +32,18 @@ public class GestureResolver {
                 case MotionEvent.ACTION_DOWN:
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (pDistance == 0.0) pDistance = distance;
-                    float currentScale = distance / pDistance;
-                    if (currentScale != lastScale) {
-                        scaleC *= currentScale;
-                        lastScale = currentScale;
-                    }
-                    gestureInterface.onZoomGesture(pDistance
-                            , distance, currentScale, scaleC, (x1 + x2) / 2, (y1 + y2) / 2, event);
+                    if (firstDistance == 0.0) firstDistance = distance;
+                    float currentScale = distance / firstDistance;
+                    float scaleC = distance / firstDistance;
+                    firstDistance = distance;
+                    gestureInterface.onZoomGesture(firstDistance
+                            , distance, currentScale, scaleC * lastScale, (x1 + x2) / 2, (y1 + y2) / 2, event);
                     break;
                 case MotionEvent.ACTION_UP:
-                    pDistance = 0;
+                    firstDistance = 0;
                     break;
             }
-        }
-        scaleGestureDetector.onTouchEvent(event);
+        } else firstDistance = 0;
         gestureDetector.onTouchEvent(event);
     }
 
@@ -58,39 +51,7 @@ public class GestureResolver {
         this.gestureInterface = gestureInterface;
     }
 
-    public static class GestureInterface extends ScaleGestureDetector.SimpleOnScaleGestureListener implements GestureDetector.OnGestureListener {
-        void onZoomGesture(float firstDistance, float currentDistance, float scale, float scaleC, float centralPointX, float centralPointY, MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return false;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            return false;
-        }
+    public interface GestureInterface extends GestureDetector.OnGestureListener {
+        void onZoomGesture(float pDistance, float distance, float currentScale, float scaleC, float centralPointX, float centralPointY, MotionEvent event);
     }
 }
