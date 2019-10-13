@@ -7,7 +7,6 @@ import android.graphics.*;
 import android.support.annotation.ColorInt;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Toast;
 import pers.zhc.tools.R;
@@ -43,12 +42,12 @@ public class PaintView extends View {
     private Context ctx;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
-    private float finalScale = 1;
+    private float scaleC = 1;
     private float finalTranslateX, finalTranslateY;
     private GestureResolver gestureResolver;
     private float scalePointX;
     private float scalePointY;
-    private ScaleGestureDetector scaleGestureDetector;
+    private float finalScale = 1F;
 
 
 
@@ -117,21 +116,11 @@ public class PaintView extends View {
         undoList = new LinkedList<>();
         redoList = new LinkedList<>();
         gestureResolver = new GestureResolver(ctx, new GestureResolver.GestureInterface() {
-
             @Override
-            public boolean onScale(ScaleGestureDetector detector) {
-                finalScale *= detector.getScaleFactor();
-                return true;
-            }
-
-            @Override
-            public boolean onScaleBegin(ScaleGestureDetector detector) {
-                return false;
-            }
-
-            @Override
-            public void onScaleEnd(ScaleGestureDetector detector) {
-
+            public void onZoomGesture(float pDistance, float distance, float currentScale, float scaleC, float centralPointX, float centralPointY, MotionEvent event) {
+                PaintView.this.scaleC = scaleC;
+                scalePointX = centralPointX;
+                scalePointY = centralPointY;
             }
 
             @Override
@@ -152,8 +141,8 @@ public class PaintView extends View {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 if (e2.getPointerCount() == 2) {
-                    finalTranslateX -= distanceX;
-                    finalTranslateY -= distanceY;
+                    finalTranslateX -= distanceX / finalScale;
+                    finalTranslateY -= distanceY / finalScale;
                 }
                 return true;
             }
@@ -166,23 +155,6 @@ public class PaintView extends View {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 return false;
-            }
-        });
-        scaleGestureDetector = new ScaleGestureDetector(ctx, new ScaleGestureDetector.OnScaleGestureListener() {
-            @Override
-            public boolean onScale(ScaleGestureDetector detector) {
-                finalScale *= detector.getScaleFactor();
-                return true;
-            }
-
-            @Override
-            public boolean onScaleBegin(ScaleGestureDetector detector) {
-                return false;
-            }
-
-            @Override
-            public void onScaleEnd(ScaleGestureDetector detector) {
-
             }
         });
     }
@@ -365,14 +337,14 @@ public class PaintView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        scaleGestureDetector.onTouchEvent(event);
         onTouchAction(event.getAction(), event.getX(), event.getY(), event.getPointerCount());
         gestureResolver.onTouch(event);
         if (event.getPointerCount() == 2) {
             mPath = null;
             mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            mCanvas.scale(scaleC, scaleC, scalePointX + finalTranslateX, scalePointY + finalTranslateY);
+            finalScale *= scaleC;
             mCanvas.translate(finalTranslateX, finalTranslateY);
-            mCanvas.scale(finalScale, finalScale, scalePointX, scalePointY);
             for (PathBean pathBean : undoList) {
                 mCanvas.drawPath(pathBean.path, pathBean.paint);
             }
@@ -663,13 +635,7 @@ public class PaintView extends View {
     }
 
     void resetTransform() {
-        /*mCanvas.scale(1 / this.finalScale, 1 / this.finalScale, finalTranslateX, finalTranslateY);
-        mCanvas.translate(-finalTranslateX, -finalTranslateY);*/
-        mCanvas = new Canvas(mBitmap);
-        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        for (PathBean pathBean : undoList) mCanvas.drawPath(pathBean.path, pathBean.paint);
-        /*finalTranslateX = (finalTranslateY = 0);
-        finalScale = 1;*/
+        finalScale = 1;
         invalidate();
     }
 }
