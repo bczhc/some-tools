@@ -12,6 +12,7 @@ import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.epicycles.EpicyclesEdit;
+import pers.zhc.tools.floatingboard.FloatingBoardMainActivity;
 import pers.zhc.tools.floatingboard.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
@@ -89,7 +90,7 @@ public class MainActivity extends BaseActivity {
                 Pi.class,
                 AToast.class,
                 Clip.class,
-                pers.zhc.tools.floatingboard.MainActivity.class,
+                FloatingBoardMainActivity.class,
                 FunctionDrawingBoard.class,
                 Document.class,
                 EpicyclesEdit.class
