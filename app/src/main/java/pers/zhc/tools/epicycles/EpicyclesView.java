@@ -19,16 +19,14 @@ class EpicyclesView extends View {
     private int canvasWidth = 0;
     private int canvasHeight = 0;
     private Bitmap mEpicyclesBitmap;
-    private Bitmap mDrawingBitmap;
     private Canvas mEpicyclesCanvas;
-    private Canvas mDrawingCanvas;
     private Paint mBitmapPaint;
     private Paint mCoPaint;
     private Paint mCirclePaint;
     private Paint mVectorPaint;
     private Paint mPathPaint;
     private boolean b = true;
-    private double epicyclesScale = 50D;
+    private double epicyclesScale;
     private ExecutorService es;
     private double reOffset, imOffset;
     private QuadDrawing quadDrawing;
@@ -83,8 +81,6 @@ class EpicyclesView extends View {
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 reOffset -= distanceX;
                 imOffset -= distanceY;
-//                quadDrawing.reset();
-                quadDrawing.path.offset(-distanceX, -distanceY);
                 return true;
             }
 
@@ -121,6 +117,7 @@ class EpicyclesView extends View {
         t = 0;
         lastLineToPoint = new CoordinateDouble(0D, 0D);
         center = new CoordinateDouble(0D, 0D);
+        scale(50D);
     }
 
     @Override
@@ -129,15 +126,11 @@ class EpicyclesView extends View {
             canvasWidth = getWidth();
             canvasHeight = getHeight();
             System.gc();
-            mDrawingBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888);
-            mDrawingCanvas = new Canvas(mDrawingBitmap);
             mEpicyclesBitmap = Bitmap.createBitmap(canvasWidth, canvasHeight, Bitmap.Config.ARGB_8888);
             mEpicyclesCanvas = new Canvas(mEpicyclesBitmap);
             mEpicyclesCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
         }
-        if (mDrawingBitmap != null) {
-            render(canvas);
-        }
+        render(canvas);
     }
 
 
@@ -228,13 +221,14 @@ class EpicyclesView extends View {
             mEpicyclesCanvas.drawLine(((float) centerPointCanvasCoordinate.x), ((float) centerPointCanvasCoordinate.y), ((float) lineTo.x), ((float) lineTo.y), mVectorPaint);
             lastLineToPoint = canvasCoordinateToRectCoordinate(lineTo);
             if (i == epicycles.size() - 1) {
-                quadDrawing.quadTo(((float) lineTo.x), ((float) lineTo.y));
+                quadDrawing.quadTo(((float) (lineTo.x - reOffset)), ((float) (lineTo.y - imOffset)));
+                mEpicyclesCanvas.translate(((float) reOffset), (float) imOffset);
                 mEpicyclesCanvas.drawPath(path, mPathPaint);
+                mEpicyclesCanvas.translate(((float) -reOffset), (float) -imOffset);
             }
         }
-        mDrawingCanvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
         t += .1F;
-        canvas.drawBitmap(mDrawingBitmap, 0F, 0F, mBitmapPaint);
+        canvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
     }
 
     class QuadDrawing {
