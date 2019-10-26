@@ -43,7 +43,7 @@ import static pers.zhc.tools.utils.ColorUtils.invertColor;
 import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
-public class MainActivity extends BaseActivity {
+public class FloatingBoardMainActivity extends BaseActivity {
     private WindowManager wm = null;
     private LinearLayout ll;
     private PaintView pv;
@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity {
         notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
 //            notBeKilled = isChecked;
             if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(MainActivity.this)) {
+                if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                             Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, 4444);
@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity {
         startFW.setText(R.string.start_floating_window);
         startFW.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(MainActivity.this)) {
+                if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                             Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, 4444);
@@ -436,7 +436,7 @@ public class MainActivity extends BaseActivity {
                             Button TVsColorBtn = new Button(this);
                             TVsColorBtn.setText(R.string.control_panel_color);
                             TVsColorBtn.setOnClickListener(v2 -> {
-                                Dialog TVsColorDialog = new Dialog(MainActivity.this);
+                                Dialog TVsColorDialog = new Dialog(FloatingBoardMainActivity.this);
                                 setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
                                 HSVColorPickerRL TVsColorPicker = new HSVColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
@@ -455,7 +455,7 @@ public class MainActivity extends BaseActivity {
                             Button textsColorBtn = new Button(this);
                             textsColorBtn.setEnabled(!this.whetherTextsColorIsInverted_isChecked);
                             textsColorBtn.setOnClickListener(v2 -> {
-                                Dialog textsColorDialog = new Dialog(MainActivity.this);
+                                Dialog textsColorDialog = new Dialog(FloatingBoardMainActivity.this);
                                 setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
                                 HSVColorPickerRL textsColorPicker = new HSVColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
@@ -899,7 +899,7 @@ public class MainActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             if (Objects.requireNonNull(intent.getAction()).equals("pers.zhc.tools.START_SERVICE")) {
                 long mills = intent.getLongExtra("mills", 0);
-                MainActivity activity = (MainActivity) MainActivity.longMainActivityMap.get(mills);
+                FloatingBoardMainActivity activity = (FloatingBoardMainActivity) FloatingBoardMainActivity.longMainActivityMap.get(mills);
                 if (activity != null) {
                     activity.startFloatingWindow(false, false);
                 }
