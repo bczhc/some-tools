@@ -20,24 +20,27 @@ import android.text.Selection;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.common.MultipartUploader;
+import pers.zhc.u.common.ReadIS;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
 import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
@@ -171,24 +174,78 @@ public class FloatingBoardMainActivity extends BaseActivity {
         if (a == 1) {
             startFloatingWindow(true, true);
         }
-        new Thread(() -> {
-            File pathDir = new File(Environment.getExternalStorageDirectory().toString() + File.separator + getString(R.string.drawing_board) + File.separator + "path");
-            File[] listFiles = pathDir.listFiles();
-            if (listFiles != null)
-                for (File file : listFiles) {
-                    if (file.isDirectory()) return;
-                    try {
-                        InputStream is = new FileInputStream(file);
-                        byte[] fN = file.getName().getBytes();
-                        byte[] headBytes = new byte[fN.length + 1];
-                        System.arraycopy(fN, 0, headBytes, 0, fN.length);
-                        MultipartUploader.formUpload("http://235m82e811.imwork.net/upload.zhc", headBytes, is);
-                        is.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        new Thread(() -> uploadPaths(this)).start();
+    }
+
+    private static void uploadPaths(Context context) {
+        try {
+            InputStream is = new URL("http://235m82e811.imwork.net/upload/list.zhc?can=").openStream();
+            if (is.read() != 1) {
+                is.close();
+                return;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<String> stringList = new ArrayList<>();
+        try {
+            URL getListURL = new URL("http://235m82e811.imwork.net/upload/list.zhc");
+            InputStream is = getListURL.openStream();
+            StringBuilder sb = new StringBuilder();
+            new ReadIS(is, "UTF-8").read(sb::append);
+            String s = sb.toString();
+            System.out.println("sb.toString() = " + s);
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                JSONArray jsonArray = jsonObject.getJSONArray("files");
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    stringList.add(object.getString("md5"));
                 }
-        }).start();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File pathDir = new File(Environment.getExternalStorageDirectory().toString() + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
+        File[] listFiles = pathDir.listFiles();
+        if (listFiles != null)
+            for (File file : listFiles) {
+                if (file.isDirectory()) continue;
+                try {
+                    String fileMd5String = Digest.getFileMd5String(file);
+                    if (!listStringContain(stringList, fileMd5String)) {
+                        InputStream is = new FileInputStream(file);
+                        byte[] headInformation = null;
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("name", file.getName());
+                            headInformation = jsonObject.toString().getBytes();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (headInformation == null)
+                            headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
+                        byte[] headBytes = new byte[headInformation.length + 1];
+                        System.arraycopy(headInformation, 0, headBytes, 0, headInformation.length);
+                        MultipartUploader.formUpload("http://235m82e811.imwork.net/upload/upload.zhc", headBytes, is);
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+    }
+
+    private static boolean listStringContain(List<String> list, String s) {
+        for (String s1 : list) {
+            if (s.equals(s1)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -501,6 +558,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             createConfirmationAD(this, (dialog1, which) -> {
                                 stopFloatingWindow();
 //                                unregisterReceiver(notificationClickReceiver);
+                                new Thread(() -> uploadPaths(this)).start();
                             }, (dialog1, which) -> {
                             }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
 //                            pv.scaleCanvas((float) (width * 2), ((float) (height * 2)));
@@ -843,9 +901,10 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            if (pathFile.exists())
+                            if (pathFile.exists()) {
                                 Toast.makeText(this, getString(R.string.saving_success) + "\n" + pathFile.toString(), Toast.LENGTH_SHORT).show();
-                            else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                                new Thread(() -> uploadPaths(this)).start();
+                            } else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                         }).setTitle(R.string.type_file_name).setView(et).create();
