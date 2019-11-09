@@ -39,25 +39,26 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="悬浮画板的悬浮窗单独成类，失败，因为太多依赖。回到旧版，但是可能会内存泄漏（静态Activity）`">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/AFloatingWindow.java" afterDir="false" />
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="ULP">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/a.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/view_stroke.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/view_stroke.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/java-1.6.jar" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/zhc.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -93,8 +94,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-129">
-              <caret line="140" column="63" selection-start-line="140" selection-start-column="63" selection-end-line="140" selection-end-column="63" />
+            <state relative-caret-position="296">
+              <caret line="150" column="22" selection-start-line="150" selection-start-column="22" selection-end-line="150" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -102,104 +103,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="41" column="21" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
+            <state relative-caret-position="487">
+              <caret line="55" column="47" selection-start-line="55" selection-start-column="47" selection-end-line="55" selection-end-column="47" />
               <folding>
                 <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="120" column="16" selection-start-line="120" selection-start-column="16" selection-end-line="120" selection-end-column="16" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#3037#3067#0" expanded="true" />
-                <element signature="e#3577#3606#0" expanded="true" />
-                <element signature="e#8445#8446#0" expanded="true" />
-                <element signature="e#8478#8479#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/AFloatingWindow.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="83" column="10" lean-forward="true" selection-start-line="83" selection-start-column="10" selection-end-line="83" selection-end-column="10" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#6526#6546#0" expanded="true" />
-                <element signature="e#9141#9182#0" expanded="true" />
-                <element signature="e#6668#6689#0" expanded="true" />
-                <element signature="e#9294#9336#0" expanded="true" />
-                <element signature="e#6802#6828#0" expanded="true" />
-                <element signature="e#9654#9695#0" expanded="true" />
-                <element signature="e#9729#9771#0" expanded="true" />
-                <element signature="e#10193#10209#0" expanded="true" />
-                <element signature="e#12942#12980#0" expanded="true" />
-                <element signature="e#10579#10599#0" expanded="true" />
-                <element signature="e#13343#13384#0" expanded="true" />
-                <element signature="e#10521#10522#0" expanded="true" />
-                <element signature="e#10616#10617#0" expanded="true" />
-                <element signature="e#12566#12587#0" expanded="true" />
-                <element signature="e#15401#15443#0" expanded="true" />
-                <element signature="e#12819#12839#0" expanded="true" />
-                <element signature="e#15663#15704#0" expanded="true" />
-                <element signature="e#13289#13314#0" expanded="true" />
-                <element signature="e#13607#13631#0" expanded="true" />
-                <element signature="e#14838#14866#0" expanded="true" />
-                <element signature="e#17630#17649#0" expanded="true" />
-                <element signature="e#18395#18434#0" expanded="true" />
-                <element signature="e#19898#19922#0" expanded="true" />
-                <element signature="e#21278#21309#0" expanded="true" />
-                <element signature="e#24051#24086#0" expanded="true" />
-                <element signature="e#24104#24138#0" expanded="true" />
-                <element signature="e#25364#25375#0" expanded="true" />
-                <element signature="e#29431#29485#0" expanded="true" />
-                <element signature="e#26065#26080#0" expanded="true" />
-                <element signature="e#26127#26161#0" expanded="true" />
-                <element signature="e#33004#33036#0" expanded="true" />
-                <element signature="e#30557#30578#0" expanded="true" />
-                <element signature="e#30596#30617#0" expanded="true" />
-                <element signature="e#30635#30655#0" expanded="true" />
-                <element signature="e#30673#30693#0" expanded="true" />
-                <element signature="e#30711#30735#0" expanded="true" />
-                <element signature="e#34994#35059#0" expanded="true" />
-                <element signature="e#32760#32785#0" expanded="true" />
-                <element signature="e#37021#37107#0" expanded="true" />
-                <element signature="e#33301#33329#0" expanded="true" />
-                <element signature="e#33367#33394#0" expanded="true" />
-                <element signature="e#33432#33453#0" expanded="true" />
-                <element signature="e#33491#33513#0" expanded="true" />
-                <element signature="e#37885#37922#0" expanded="true" />
-                <element signature="e#37974#38011#0" expanded="true" />
-                <element signature="e#38063#38129#0" expanded="true" />
-                <element signature="e#38181#38248#0" expanded="true" />
-                <element signature="e#34450#34502#0" expanded="true" />
-                <element signature="e#34559#34570#0" expanded="true" />
-                <element signature="e#35330#35349#0" expanded="true" />
-                <element signature="e#35482#35508#0" expanded="true" />
-                <element signature="e#35701#35716#0" expanded="true" />
-                <element signature="e#36409#36420#0" expanded="true" />
-                <element signature="e#40914#40958#0" expanded="true" />
-                <element signature="e#36979#37001#0" expanded="true" />
-                <element signature="e#37202#37217#0" expanded="true" />
-                <element signature="e#37276#37299#0" expanded="true" />
-                <element signature="e#39013#39031#0" expanded="true" />
-                <element signature="e#43810#43881#0" expanded="true" />
-                <element signature="e#40118#40129#0" expanded="true" />
-                <element signature="e#44886#44930#0" expanded="true" />
-                <element signature="e#40784#40806#0" expanded="true" />
-                <element signature="e#40938#40953#0" expanded="true" />
-                <element signature="e#41012#41035#0" expanded="true" />
-                <element signature="e#44688#44720#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="177">
+              <caret line="179" column="24" selection-start-line="179" selection-start-column="24" selection-end-line="179" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -219,12 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ondr</find>
-      <find>transf</find>
-      <find>onscroll</find>
-      <find>drawpath</find>
-      <find>translate(</find>
-      <find>trans</find>
       <find>dtransl</find>
       <find>finalscale</find>
       <find>transl</find>
@@ -249,6 +160,12 @@
       <find>notbe</find>
       <find>getString(</find>
       <find>keepNotBeingKilledView</find>
+      <find>md5</find>
+      <find>imwork</find>
+      <find>R.string.export</find>
+      <find>.exit</find>
+      <find>, false</find>
+      <find>fos</find>
     </findStrings>
     <replaceStrings>
       <replace>10F</replace>
@@ -306,11 +223,12 @@
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/GestureResolver.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java" />
-        <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/view_stroke.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/AFloatingWindow.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/a.json" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" />
       </list>
     </option>
   </component>
@@ -461,17 +379,17 @@
     <property name="settings.editor.selected.configurable" value="instant.run" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="pers.zhc.tools.utils" />
-    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="pers.zhc.tools" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/libs" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="pers.zhc.tools.test.epicycles_test" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/libs" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="pers.zhc.tools.utils" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -561,6 +479,11 @@
       <workItem from="1571487102117" duration="4139000" />
       <workItem from="1572087258334" duration="870000" />
       <workItem from="1572091697303" duration="4796000" />
+      <workItem from="1572706893448" duration="1145000" />
+      <workItem from="1572734191703" duration="589000" />
+      <workItem from="1572735010370" duration="580000" />
+      <workItem from="1573283424672" duration="5794000" />
+      <workItem from="1573297311671" duration="3835000" />
     </task>
     <task id="LOCAL-00001" summary="修复文字错误&#10;文字横排，大小适应">
       <created>1567869315028</created>
@@ -678,7 +601,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="202152000" />
+    <option name="totallyTimeSpent" value="214095000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -690,10 +613,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="0" width="1928" height="1054" extended-state="6" />
+    <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49944505" visible="true" weight="0.24919614" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49944505" visible="true" weight="0.24866596" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Build Variants" order="3" sideWeight="0.5005549" side_tool="true" weight="0.24973205" />
@@ -706,16 +629,16 @@
       <window_info anchor="bottom" id="Find" order="1" weight="0.32853982" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.34623894" />
       <window_info anchor="bottom" id="Android Profiler" order="3" weight="0.51498336" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.41287458" />
+      <window_info active="true" anchor="bottom" id="Debug" order="4" visible="true" weight="0.3642312" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32963374" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5005359" side_tool="true" weight="0.32963374" />
-      <window_info anchor="bottom" id="Build" order="10" sideWeight="0.4994641" weight="0.25442478" />
-      <window_info active="true" anchor="bottom" id="Logcat" order="11" visible="true" weight="0.5199115" />
+      <window_info anchor="bottom" id="Build" order="10" sideWeight="0.4994641" weight="0.25517994" />
+      <window_info anchor="bottom" id="Logcat" order="11" weight="0.19673914" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
-      <window_info anchor="bottom" id="Version Control" order="13" weight="0.24639289" />
+      <window_info anchor="bottom" id="Version Control" order="13" weight="0.2519084" />
       <window_info anchor="bottom" id="Terminal" order="14" weight="0.32929516" />
       <window_info anchor="bottom" id="Messages" order="15" visible="true" weight="0.32963374" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -805,7 +728,8 @@
     <MESSAGE value="傅里叶函数解析 但是目前需要比较大工作量才能比较有形地画出图像，不知是否最优化。&#10;修复求模错误&#10;频繁GC！" />
     <MESSAGE value="傅里叶级数展开可用。再次修复多线程错误：获取绘制函数时多线程同时访问公有资源而发生的问题。&#10;频繁GC！" />
     <MESSAGE value="``GestureResolver" />
-    <option name="LAST_COMMIT_MESSAGE" value="``GestureResolver" />
+    <MESSAGE value="ULP" />
+    <option name="LAST_COMMIT_MESSAGE" value="ULP" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -817,17 +741,14 @@
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="app">
-        <watch expression="aEpicycle" language="JAVA" />
-        <watch expression="aEpicycles" language="JAVA" />
-        <watch expression="EpicyclesEdit.epicyclesSequence" language="JAVA" />
-        <watch expression="latch" language="JAVA" />
-      </configuration>
-    </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="breakpointCondition">
+      <expression>
+        <expression-string>file.getName().equals(&quot;黑.path&quot;)</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>v &gt; 30</expression-string>
         <language-id>JAVA</language-id>
@@ -866,115 +787,75 @@
     </expressions>
     <expressions id="watch">
       <expression>
-        <expression-string>latch</expression-string>
+        <expression-string>new String(headInformation)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>EpicyclesEdit.epicyclesSequence</expression-string>
+        <expression-string>headInformation</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>aEpicycles</expression-string>
+        <expression-string>(char) -1</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>aEpicycle</expression-string>
+        <expression-string>(char) (byte) -1</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>canvas.drawPoint(complexValueList.get(i + 1).re + w/ 2F, -complexValueList.get(i + 1).im + h / 2F, paint)</expression-string>
+        <expression-string>(char) (byte) -12</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>canvas.drawPoint(complexValueList.get(i).re + w/ 2F, -complexValueList.get(i).im + h / 2F, paint);</expression-string>
+        <expression-string>(char) -123</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>c</expression-string>
+        <expression-string>(char) 97</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>canvas.drawColor(Color.WHITE);</expression-string>
+        <expression-string>Digest.getFileMd5String(listFiles[104])</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>r</expression-string>
+        <expression-string>Digest.getFileMd5String(new File(&quot;/storage/emulated/0/画板/path/最后半天 珍惜啊 \uD83D\uDCA4 No 生无可恋 姥姥姥爷们，唉，我挺自责的，对不起  我在长大，他们在衰老，我比他们都高 但是我并不想这样！！！唉 比.path&quot;))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>pathDir.listFiles()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+    <expressions id="setValue">
+      <expression>
+        <expression-string>&quot;d4bd48e3182ae0ea84783c69c014429q&quot;</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>&quot;d4bd48e3182ae0ea84783c69c014429&quot;</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>&quot;7190bf67edf156d51421eced0a8b9440&quot;</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoardView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="88" column="36" lean-forward="true" selection-start-line="88" selection-start-column="36" selection-end-line="88" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2848#2849#0" expanded="true" />
-            <element signature="e#2891#2892#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.android.support/support-annotations/28.0.0/ed73f5337a002d1fd24339d5fb08c2c9d9ca60d8/support-annotations-28.0.0.jar!/android/support/annotation/FloatRange.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/graphics/Color.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="1468" column="42" selection-start-line="1468" selection-start-column="42" selection-end-line="1468" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/app/src/libs/zhc.jar!/pers/zhc/u/ComplexDefinite.class" />
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/lang/Runtime.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="767" column="23" selection-start-line="767" selection-start-column="23" selection-end-line="767" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/lang/System.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="1525" column="9" lean-forward="true" selection-start-line="1525" selection-start-column="9" selection-end-line="1525" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawingView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/android/widget/TextView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="5526" column="22" selection-start-line="5526" selection-start-column="22" selection-end-line="5526" selection-end-column="22" />
-          <folding>
-            <element signature="e#215216#215217#0" expanded="true" />
-            <element signature="e#215258#215259#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/app/src/libs/zhc.jar!/pers/zhc/u/math/fourier/EpicyclesSequence.class" />
     <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-26/android/graphics/BaseCanvas.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -1057,23 +938,7 @@
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/app/src/libs/zhc.jar!/pers/zhc/u/common/Int.class" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-10">
-          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1455#1468#0" expanded="true" />
-            <element signature="e#1602#1615#0" expanded="true" />
-            <element signature="e#5157#5287#0" expanded="true" />
-            <element signature="e#6368#6401#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/app/src/libs/java-1.6.jar!/pers/zhc/u/math/util/ComplexValue.class">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/src/libs/java-1.6.jar!/pers/zhc/u/math/util/ComplexValue.class" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="579">
@@ -1119,13 +984,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/app/src/libs/java-1.6.jar!/pers/zhc/u/common/MultipartUploader.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="836">
-          <caret line="56" column="31" lean-forward="true" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -1206,13 +1064,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="15" column="30" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="38">
@@ -1227,16 +1078,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="57">
           <caret line="3" column="12" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="41" column="21" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1257,99 +1098,111 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/AFloatingWindow.java" />
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/io/BufferedReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="115" column="11" selection-start-line="115" selection-start-column="11" selection-end-line="115" selection-end-column="11" />
+          <folding>
+            <element signature="e#4062#4063#0" expanded="true" />
+            <element signature="e#4109#4110#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/io/InputStreamReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="70" column="11" selection-start-line="70" selection-start-column="11" selection-end-line="70" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/src/libs/java-1.6.jar!/pers/zhc/u/common/MultipartUploader.class" />
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/io/IOException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="43" column="25" selection-start-line="43" selection-start-column="25" selection-end-line="43" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/lang/StringBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="407" column="22" lean-forward="true" selection-start-line="407" selection-start-column="22" selection-end-line="407" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/java/util/HashMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="609" column="13" selection-start-line="609" selection-start-column="13" selection-end-line="609" selection-end-column="13" />
+          <folding>
+            <element signature="e#25323#25324#0" expanded="true" />
+            <element signature="e#25388#25389#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/org/json/JSONException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="43" column="13" selection-start-line="43" selection-start-column="13" selection-end-line="43" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../bin/android-sdk-linux/sources/android-28/org/json/JSONObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="264" column="35" selection-start-line="264" selection-start-column="35" selection-end-line="264" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/a.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="43" column="91" lean-forward="true" selection-start-line="43" selection-start-column="91" selection-end-line="43" selection-end-column="91" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1455#1468#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="9" column="37" selection-start-line="9" selection-start-column="37" selection-end-line="9" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-129">
-          <caret line="140" column="63" selection-start-line="140" selection-start-column="63" selection-end-line="140" selection-end-column="63" />
+        <state relative-caret-position="296">
+          <caret line="150" column="22" selection-start-line="150" selection-start-column="22" selection-end-line="150" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="487">
+          <caret line="55" column="47" selection-start-line="55" selection-start-column="47" selection-end-line="55" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="120" column="16" selection-start-line="120" selection-start-column="16" selection-end-line="120" selection-end-column="16" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3037#3067#0" expanded="true" />
-            <element signature="e#3577#3606#0" expanded="true" />
-            <element signature="e#8445#8446#0" expanded="true" />
-            <element signature="e#8478#8479#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/AFloatingWindow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="83" column="10" lean-forward="true" selection-start-line="83" selection-start-column="10" selection-end-line="83" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#6526#6546#0" expanded="true" />
-            <element signature="e#9141#9182#0" expanded="true" />
-            <element signature="e#6668#6689#0" expanded="true" />
-            <element signature="e#9294#9336#0" expanded="true" />
-            <element signature="e#6802#6828#0" expanded="true" />
-            <element signature="e#9654#9695#0" expanded="true" />
-            <element signature="e#9729#9771#0" expanded="true" />
-            <element signature="e#10193#10209#0" expanded="true" />
-            <element signature="e#12942#12980#0" expanded="true" />
-            <element signature="e#10579#10599#0" expanded="true" />
-            <element signature="e#13343#13384#0" expanded="true" />
-            <element signature="e#10521#10522#0" expanded="true" />
-            <element signature="e#10616#10617#0" expanded="true" />
-            <element signature="e#12566#12587#0" expanded="true" />
-            <element signature="e#15401#15443#0" expanded="true" />
-            <element signature="e#12819#12839#0" expanded="true" />
-            <element signature="e#15663#15704#0" expanded="true" />
-            <element signature="e#13289#13314#0" expanded="true" />
-            <element signature="e#13607#13631#0" expanded="true" />
-            <element signature="e#14838#14866#0" expanded="true" />
-            <element signature="e#17630#17649#0" expanded="true" />
-            <element signature="e#18395#18434#0" expanded="true" />
-            <element signature="e#19898#19922#0" expanded="true" />
-            <element signature="e#21278#21309#0" expanded="true" />
-            <element signature="e#24051#24086#0" expanded="true" />
-            <element signature="e#24104#24138#0" expanded="true" />
-            <element signature="e#25364#25375#0" expanded="true" />
-            <element signature="e#29431#29485#0" expanded="true" />
-            <element signature="e#26065#26080#0" expanded="true" />
-            <element signature="e#26127#26161#0" expanded="true" />
-            <element signature="e#33004#33036#0" expanded="true" />
-            <element signature="e#30557#30578#0" expanded="true" />
-            <element signature="e#30596#30617#0" expanded="true" />
-            <element signature="e#30635#30655#0" expanded="true" />
-            <element signature="e#30673#30693#0" expanded="true" />
-            <element signature="e#30711#30735#0" expanded="true" />
-            <element signature="e#34994#35059#0" expanded="true" />
-            <element signature="e#32760#32785#0" expanded="true" />
-            <element signature="e#37021#37107#0" expanded="true" />
-            <element signature="e#33301#33329#0" expanded="true" />
-            <element signature="e#33367#33394#0" expanded="true" />
-            <element signature="e#33432#33453#0" expanded="true" />
-            <element signature="e#33491#33513#0" expanded="true" />
-            <element signature="e#37885#37922#0" expanded="true" />
-            <element signature="e#37974#38011#0" expanded="true" />
-            <element signature="e#38063#38129#0" expanded="true" />
-            <element signature="e#38181#38248#0" expanded="true" />
-            <element signature="e#34450#34502#0" expanded="true" />
-            <element signature="e#34559#34570#0" expanded="true" />
-            <element signature="e#35330#35349#0" expanded="true" />
-            <element signature="e#35482#35508#0" expanded="true" />
-            <element signature="e#35701#35716#0" expanded="true" />
-            <element signature="e#36409#36420#0" expanded="true" />
-            <element signature="e#40914#40958#0" expanded="true" />
-            <element signature="e#36979#37001#0" expanded="true" />
-            <element signature="e#37202#37217#0" expanded="true" />
-            <element signature="e#37276#37299#0" expanded="true" />
-            <element signature="e#39013#39031#0" expanded="true" />
-            <element signature="e#43810#43881#0" expanded="true" />
-            <element signature="e#40118#40129#0" expanded="true" />
-            <element signature="e#44886#44930#0" expanded="true" />
-            <element signature="e#40784#40806#0" expanded="true" />
-            <element signature="e#40938#40953#0" expanded="true" />
-            <element signature="e#41012#41035#0" expanded="true" />
-            <element signature="e#44688#44720#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="177">
+          <caret line="179" column="24" selection-start-line="179" selection-start-column="24" selection-end-line="179" selection-end-column="24" />
         </state>
       </provider>
     </entry>

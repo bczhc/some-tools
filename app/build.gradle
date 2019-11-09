@@ -6,8 +6,8 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 27
-        versionName "4.5.0.0_20191006🐸"
+        versionCode 28
+        versionName "4.5.0.1_20191109🐸"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
