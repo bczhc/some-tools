@@ -116,7 +116,7 @@ public class EpicyclesEdit extends AppCompatActivity {
     }
 
     private void ck(String s1, String s2, String s3, String s4, EditText definite_n, EditText T, EditText epicycles_count, EditText threadNum) {
-        if (s1.equals("")) definite_n.setText(getString(R.string.tv, "100000"));
+        if (s1.equals("")) definite_n.setText(getString(R.string.tv, "10000"));
         if (s2.equals("")) T.setText(getString(R.string.tv, "50"));
         if (s3.equals("")) epicycles_count.setText(getString(R.string.tv, "150"));
         if (s4.equals(""))

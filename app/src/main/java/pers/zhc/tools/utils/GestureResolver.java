@@ -47,10 +47,6 @@ public class GestureResolver {
         gestureDetector.onTouchEvent(event);
     }
 
-    public void setGestureInterface(GestureInterface gestureInterface) {
-        this.gestureInterface = gestureInterface;
-    }
-
     public interface GestureInterface extends GestureDetector.OnGestureListener {
         void onZoomGesture(float pDistance, float distance, float currentScale, float scaleC, float centralPointX, float centralPointY, MotionEvent event);
     }
