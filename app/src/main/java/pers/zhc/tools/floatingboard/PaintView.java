@@ -42,12 +42,9 @@ public class PaintView extends View {
     private Context ctx;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
-    private float scaleC = 1;
-    private float finalTranslateX, finalTranslateY;
     private GestureResolver gestureResolver;
-    private float scalePointX;
-    private float scalePointY;
-    private float finalScale = 1F;
+    private float finalScale = 1;
+    private PointF finalCanvasMidPoint;
 
 
 
@@ -88,7 +85,6 @@ public class PaintView extends View {
         eraserPaint.setStrokeCap(Paint.Cap.ROUND);//同上
         //关闭硬件加速
         //否则橡皮擦模式下，设置的 PorterDuff.Mode.CLEAR ，实时绘制的轨迹是黑色
-//        setBackgroundColor(Color.WHITE);//设置白色背景
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         //画笔
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
@@ -117,10 +113,9 @@ public class PaintView extends View {
         redoList = new LinkedList<>();
         gestureResolver = new GestureResolver(ctx, new GestureResolver.GestureInterface() {
             @Override
-            public void onZoomGesture(float pDistance, float distance, float currentScale, float scaleC, float centralPointX, float centralPointY, MotionEvent event) {
-                PaintView.this.scaleC = scaleC;
-                scalePointX = centralPointX;
-                scalePointY = centralPointY;
+            public void onZoomGesture(float firstDistance, float currentDistance, float currentScale, float dScale, float midPointX, float midPointY, GestureResolver.Point firstMidPoint, MotionEvent event) {
+                mCanvas.scale(dScale, dScale, firstMidPoint.x, firstMidPoint.y);
+                PaintView.this.finalScale *= dScale;
             }
 
             @Override
@@ -141,8 +136,9 @@ public class PaintView extends View {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 if (e2.getPointerCount() == 2) {
-                    finalTranslateX -= distanceX / finalScale;
-                    finalTranslateY -= distanceY / finalScale;
+                    mCanvas.translate(-distanceX / finalScale, -distanceY / finalScale);
+                    PaintView.this.finalCanvasMidPoint.x -= distanceX;
+                    PaintView.this.finalCanvasMidPoint.y -= distanceY;
                 }
                 return true;
             }
@@ -157,6 +153,7 @@ public class PaintView extends View {
                 return false;
             }
         });
+        this.finalCanvasMidPoint = new PointF(width / 2F, height / 2F);
     }
 
     /**
@@ -327,9 +324,6 @@ public class PaintView extends View {
         }
     }
 
-    private float firstDistance;
-    private float lastScale;
-
 
     /**
      * 触摸事件 触摸绘制
@@ -337,62 +331,15 @@ public class PaintView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        onTouchAction(event.getAction(), event.getX(), event.getY(), event.getPointerCount());
         gestureResolver.onTouch(event);
-        if (event.getPointerCount() == 2) {
-            mPath = null;
-            mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            mCanvas.scale(scaleC, scaleC, scalePointX + finalTranslateX, scalePointY + finalTranslateY);
-            finalScale *= scaleC;
-            mCanvas.translate(finalTranslateX, finalTranslateY);
-            for (PathBean pathBean : undoList) {
-                mCanvas.drawPath(pathBean.path, pathBean.paint);
-            }
-//            mCanvas.scale(1 / finalScale, 1 / finalScale, scalePointX, scalePointY);
-            mCanvas.translate(-finalTranslateX, -finalTranslateY);
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        for (PathBean pathBean : PaintView.this.undoList) {
+            mCanvas.drawPath(pathBean.path, pathBean.paint);
         }
-        /*int action = event.getAction();
-        int pointerCount = event.getPointerCount();
-        if (pointerCount >= 2) {
-            float x1 = event.getX(0);
-            float x2 = event.getX(1);
-            float y1 = event.getY(0);
-            float y2 = event.getY(1);
-            if (!firstP.b) {
-                firstP.p1.x = x1;
-                firstP.p2.x = x2;
-                firstP.p1.y = y1;
-                firstP.p2.y = y2;
-                firstP.b = true;
-            }
-            float distance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-            if (firstDistance == 0) {
-                firstDistance = distance;
-            }
-            if (action == MotionEvent.ACTION_MOVE) {
-                if (distance > firstDistance) {
-                    System.out.println("zoom+");
-                } else System.out.println("zoom-");
-                float centralPointX = (x1 + x2) / 2;
-                float centralPointY = (y1 + y2) / 2;
-                FloatPoint firstPCentralPoint = firstP.getCentralPoint();
-                float scale = 1F / lastScale * (distance / firstDistance);
-                mCanvas.scale(scale, scale, centralPointX, centralPointY);
-                lastScale = distance / firstDistance;
-                System.out.println("scale = " + scale);
-                mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                FloatPoint lastPCentralPoint = lastP.getCentralPoint();
-                mCanvas.translate(centralPointX - lastPCentralPoint.x, centralPointY - lastPCentralPoint.y);
-                for (PathBean pathBean : undoList) {
-                    mCanvas.drawPath(pathBean.path, pathBean.paint);
-                }
-                lastP.p1.x = x1;
-                lastP.p2.x = x2;
-                lastP.p1.y = y1;
-                lastP.p2.y = y2;
-            }
-        }*/
-        invalidate();
+        mCanvas.drawRect(0, 0, width, height, mPaint);
+        float x = event.getX();
+        float y = event.getY();
+        onTouchAction(event.getAction(), this.finalCanvasMidPoint.x + (x - this.finalCanvasMidPoint.x) * this.finalScale, this.finalCanvasMidPoint.y + (y - this.finalCanvasMidPoint.y) * this.finalScale, event.getPointerCount());
         return true;
     }
 
@@ -534,9 +481,7 @@ public class PaintView extends View {
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
                     Paint paintRef = isEraserMode ? eraserPaint : mPaint;
-                    mCanvas.translate(finalTranslateX, finalTranslateY);
                     mCanvas.drawPath(mPath, paintRef);//将路径绘制在mBitmap上
-                    mCanvas.translate(-finalTranslateX, -finalTranslateY);
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(paintRef);
                     PathBean pb = new PathBean(path, paint);
@@ -635,7 +580,6 @@ public class PaintView extends View {
     }
 
     void resetTransform() {
-        finalScale = 1;
         invalidate();
     }
 }

@@ -23,6 +23,14 @@ class ComplexFunction {
         complexValueList.add(new ComplexValue(re, im));
     }
 
+    ComplexValue get(int index) {
+        return this.complexValueList.get(index);
+    }
+
+    int length() {
+        return this.complexValueList.size();
+    }
+
     void clear() {
         this.complexValueList.clear();
     }
@@ -55,8 +63,10 @@ class ComplexFunction {
             }
             return new ComplexValue(0, 0);
         };
-//        ComplexValue cv = new ComplexValue(0, 0);
-        /*return t -> {
+
+
+        /*ComplexValue cv = new ComplexValue(0, 0);
+        return t -> {
             double i = (t - t_start) / s * (size - 1);
             if (i < size) {
                 ComplexValue complexValue = this.complexValueList.get(((int) i));
