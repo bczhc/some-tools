@@ -97,7 +97,7 @@
     <string name="type_stroke_width__pixels">输入画笔宽度(pixels)</string>
     <string name="eraser_paint_stroke_width">橡皮擦大小</string>
     <string name="drawing_paint_stroke_width">画笔大小</string>
-    <string name="clear_application_internal_recoded_path">清除应用内部路径记录(%1$dkB)</string>
+    <string name="clear_application_caches">清除应用缓存（正在活动悬浮窗的会保留）\n(%1$fkB)</string>
     <string name="import_image">导入图片</string>
     <string name="importing_failed">导入失败</string>
     <string name="set__top__left__scaled_width__scaled_height">设置左起始点、顶起始点、缩放宽度、缩放高度</string>
@@ -133,4 +133,8 @@
     <string name="thread_num">线程数</string>
     <string name="please_type_correct_value">请输入正确的数值</string>
     <string name="fourier_series_in_complex">复平面内傅里叶级数展开</string>
+    <string name="s">s</string>
+    <string name="appear_f_b">显示悬浮窗%1$s</string>
+    <string name="hide_notification">隐藏通知</string>
+    <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
