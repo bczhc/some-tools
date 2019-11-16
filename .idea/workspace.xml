@@ -39,7 +39,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="傅里叶级数复数的展开：函数（图像）绘制数据保留，一次绘制可多次调参计算&#10;重写。。优化了缩放、移动操作">
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="悬浮画板移动、缩放：以第一个点位置偏移设为移动偏移，第二个点操控缩放">
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
@@ -48,9 +48,6 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawingView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawingView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/GestureResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/GestureResolver.java" afterDir="false" />
     </list>
@@ -97,17 +94,19 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="340" column="31" lean-forward="true" selection-start-line="340" selection-start-column="31" selection-end-line="340" selection-end-column="31" />
+            <state relative-caret-position="253">
+              <caret line="121" column="28" selection-start-line="121" selection-start-column="28" selection-end-line="121" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#4366#4367#0" expanded="true" />
                 <element signature="e#4410#4411#0" expanded="true" />
                 <element signature="e#4582#4583#0" expanded="true" />
                 <element signature="e#4626#4627#0" expanded="true" />
+                <element signature="e#4700#4701#0" expanded="true" />
+                <element signature="e#4743#4744#0" expanded="true" />
                 <element signature="e#5405#5406#0" expanded="true" />
                 <element signature="e#5449#5450#0" expanded="true" />
                 <element signature="e#5912#5913#0" expanded="true" />
@@ -120,10 +119,10 @@
                 <element signature="e#7473#7474#0" expanded="true" />
                 <element signature="e#7818#7819#0" expanded="true" />
                 <element signature="e#7866#7867#0" expanded="true" />
-                <element signature="e#8388#8415#0" expanded="true" />
+                <element signature="e#8806#8833#0" expanded="true" />
                 <element signature="e#8447#8448#0" expanded="true" />
                 <element signature="e#8488#8489#0" expanded="true" />
-                <element signature="e#8525#8552#0" expanded="true" />
+                <element signature="e#8943#8970#0" expanded="true" />
                 <element signature="e#8584#8585#0" expanded="true" />
                 <element signature="e#8625#8626#0" expanded="true" />
                 <element signature="e#9224#9225#0" expanded="true" />
@@ -134,8 +133,8 @@
                 <element signature="e#17104#17105#0" expanded="true" />
                 <element signature="e#17140#17141#0" expanded="true" />
                 <element signature="e#17191#17192#0" expanded="true" />
-                <element signature="e#17609#17649#0" expanded="true" />
-                <element signature="e#17913#17953#0" expanded="true" />
+                <element signature="e#17658#17698#0" expanded="true" />
+                <element signature="e#17962#18002#0" expanded="true" />
                 <element signature="e#18272#18273#0" expanded="true" />
                 <element signature="e#18308#18309#0" expanded="true" />
                 <element signature="e#18460#18461#0" expanded="true" />
@@ -152,8 +151,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="423">
-              <caret line="80" column="21" selection-start-line="80" selection-start-column="21" selection-end-line="80" selection-end-column="21" />
+            <state relative-caret-position="-18">
+              <caret line="59" column="16" selection-start-line="59" selection-start-column="16" selection-end-line="59" selection-end-column="16" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#3950#4017#0" expanded="true" />
@@ -239,11 +238,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/GestureResolver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="776">
-              <caret line="53" column="41" selection-start-line="53" selection-start-column="41" selection-end-line="53" selection-end-column="41" />
+            <state relative-caret-position="274">
+              <caret line="50" column="38" selection-start-line="50" selection-start-column="38" selection-end-line="50" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -282,7 +281,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>&quot;.path</find>
       <find>EXIT</find>
       <find>clear</find>
       <find>c</find>
@@ -309,9 +307,10 @@
       <find>tra</find>
       <find>width</find>
       <find>init(</find>
-      <find>transl</find>
       <find>move</find>
       <find>x +</find>
+      <find>ondraw</find>
+      <find>transl</find>
     </findStrings>
     <replaceStrings>
       <replace>10F</replace>
@@ -633,7 +632,7 @@
       <workItem from="1573861165212" duration="174000" />
       <workItem from="1573861374925" duration="2795000" />
       <workItem from="1573872263775" duration="275000" />
-      <workItem from="1573875773119" duration="15801000" />
+      <workItem from="1573875773119" duration="19416000" />
     </task>
     <task id="LOCAL-00001" summary="修复文字错误&#10;文字横排，大小适应">
       <created>1567869315028</created>
@@ -761,11 +760,18 @@
       <option name="project" value="LOCAL" />
       <updated>1573879871001</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="傅里叶级数复数的展开：函数（图像）绘制数据保留，一次绘制可多次调参计算&#10;重写。。优化了缩放、移动操作&#10;但是绘画校准等还有问题">
+      <created>1573893320176</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1573893320176</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="236283000" />
+    <option name="totallyTimeSpent" value="239898000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -793,16 +799,16 @@
       <window_info anchor="bottom" id="Find" order="1" weight="0.32824427" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3456925" />
       <window_info anchor="bottom" id="Android Profiler" order="3" weight="0.51498336" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.3642312" />
+      <window_info active="true" anchor="bottom" id="Debug" order="4" visible="true" weight="0.3217012" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32963374" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5005359" side_tool="true" weight="0.32963374" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5010672" side_tool="true" weight="0.19629225" />
       <window_info anchor="bottom" id="Build" order="10" sideWeight="0.4994641" weight="0.25517994" />
       <window_info anchor="bottom" id="Logcat" order="11" weight="0.3053435" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="13" visible="true" weight="0.19629225" />
+      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.49893278" weight="0.19629225" />
       <window_info anchor="bottom" id="Terminal" order="14" weight="0.32824427" />
       <window_info anchor="bottom" id="Messages" order="15" visible="true" weight="0.32963374" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -895,7 +901,8 @@
     <MESSAGE value="ULP" />
     <MESSAGE value="ULP..............&#10;..............&#10;...........&#10;.......&#10;.&#10;.&#10;.&#10;.&#10;." />
     <MESSAGE value="S&#10;优化&#10;清除缓存按钮" />
-    <option name="LAST_COMMIT_MESSAGE" value="S&#10;优化&#10;清除缓存按钮" />
+    <MESSAGE value="傅里叶级数复数的展开：函数（图像）绘制数据保留，一次绘制可多次调参计算&#10;重写。。优化了缩放、移动操作&#10;但是绘画校准等还有问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="傅里叶级数复数的展开：函数（图像）绘制数据保留，一次绘制可多次调参计算&#10;重写。。优化了缩放、移动操作&#10;但是绘画校准等还有问题" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -907,11 +914,6 @@
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="app">
-        <watch expression="dScale" language="JAVA" />
-      </configuration>
-    </watches-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="breakpointCondition">
@@ -1027,13 +1029,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/view_stroke.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" column="12" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="530">
@@ -1475,10 +1470,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/myHome/zhc/bin/android-sdk-linux/sources/android-28/android/view/MotionEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="2188" column="36" selection-start-line="2188" selection-start-column="36" selection-end-line="2188" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="80" column="21" selection-start-line="80" selection-start-column="21" selection-end-line="80" selection-end-column="21" />
+        <state relative-caret-position="-18">
+          <caret line="59" column="16" selection-start-line="59" selection-start-column="16" selection-end-line="59" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#3950#4017#0" expanded="true" />
@@ -1563,23 +1565,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/GestureResolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="776">
-          <caret line="53" column="41" selection-start-line="53" selection-start-column="41" selection-end-line="53" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="340" column="31" lean-forward="true" selection-start-line="340" selection-start-column="31" selection-end-line="340" selection-end-column="31" />
+        <state relative-caret-position="253">
+          <caret line="121" column="28" selection-start-line="121" selection-start-column="28" selection-end-line="121" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#4366#4367#0" expanded="true" />
             <element signature="e#4410#4411#0" expanded="true" />
             <element signature="e#4582#4583#0" expanded="true" />
             <element signature="e#4626#4627#0" expanded="true" />
+            <element signature="e#4700#4701#0" expanded="true" />
+            <element signature="e#4743#4744#0" expanded="true" />
             <element signature="e#5405#5406#0" expanded="true" />
             <element signature="e#5449#5450#0" expanded="true" />
             <element signature="e#5912#5913#0" expanded="true" />
@@ -1592,10 +1589,10 @@
             <element signature="e#7473#7474#0" expanded="true" />
             <element signature="e#7818#7819#0" expanded="true" />
             <element signature="e#7866#7867#0" expanded="true" />
-            <element signature="e#8388#8415#0" expanded="true" />
+            <element signature="e#8806#8833#0" expanded="true" />
             <element signature="e#8447#8448#0" expanded="true" />
             <element signature="e#8488#8489#0" expanded="true" />
-            <element signature="e#8525#8552#0" expanded="true" />
+            <element signature="e#8943#8970#0" expanded="true" />
             <element signature="e#8584#8585#0" expanded="true" />
             <element signature="e#8625#8626#0" expanded="true" />
             <element signature="e#9224#9225#0" expanded="true" />
@@ -1606,8 +1603,8 @@
             <element signature="e#17104#17105#0" expanded="true" />
             <element signature="e#17140#17141#0" expanded="true" />
             <element signature="e#17191#17192#0" expanded="true" />
-            <element signature="e#17609#17649#0" expanded="true" />
-            <element signature="e#17913#17953#0" expanded="true" />
+            <element signature="e#17658#17698#0" expanded="true" />
+            <element signature="e#17962#18002#0" expanded="true" />
             <element signature="e#18272#18273#0" expanded="true" />
             <element signature="e#18308#18309#0" expanded="true" />
             <element signature="e#18460#18461#0" expanded="true" />
@@ -1617,6 +1614,13 @@
             <element signature="e#18919#18920#0" expanded="true" />
             <element signature="e#18947#18948#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/GestureResolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="50" column="38" selection-start-line="50" selection-start-column="38" selection-end-line="50" selection-end-column="38" />
         </state>
       </provider>
     </entry>

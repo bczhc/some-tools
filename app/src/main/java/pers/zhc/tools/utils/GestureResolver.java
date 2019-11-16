@@ -29,20 +29,25 @@ public class GestureResolver {
         private boolean first = true;
     }
 
+    private float lastFirstPointX = 0, lastFirstPointY = 0;
+
     public void onTouch(MotionEvent event) {
         gestureDetector.onTouchEvent(event);
-        float x1 = 0;
+        float x1;
         float x2 = 0;
-        float y1 = 0;
+        float y1;
         float y2 = 0;
-        float currentDistance = getDistance(x1, x2, y1, y2);
+        float currentDistance = 0;
+        x1 = event.getX(0);
+        y1 = event.getY(0);
         if (event.getPointerCount() == 2) {
-            x1 = event.getX(0);
             x2 = event.getX(1);
-            y1 = event.getY(0);
             y2 = event.getY(1);
             currentDistance = getDistance(x1, x2, y1, y2);
         }
+        gestureInterface.onOnePointScroll(x1, y1, x1 - lastFirstPointX, y1 - lastFirstPointY);
+        lastFirstPointX = x1;
+        lastFirstPointY = y1;
         Point firstMidPoint = new Point();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -80,9 +85,11 @@ public class GestureResolver {
     public interface GestureInterface extends GestureDetector.OnGestureListener {
         //        void onZoomGesture(float pDistance, float distance, float currentScale, float scaleC, float centralPointX, float centralPointY, MotionEvent event);
         void onZoomGesture(float firstDistance, float currentDistance, float currentScale, float dScale, float midPointX, float midPointY, Point firstMidPoint, MotionEvent event);
+
         /*
         original * scale * (1 / scale)
         ... * scale2 * (1 / scale2)
          */
+        void onOnePointScroll(float firstPointX, float firstPointY, float firstPointDistanceX, float firstPointDistanceY);
     }
 }
