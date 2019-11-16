@@ -114,8 +114,15 @@ public class PaintView extends View {
         gestureResolver = new GestureResolver(ctx, new GestureResolver.GestureInterface() {
             @Override
             public void onZoomGesture(float firstDistance, float currentDistance, float currentScale, float dScale, float midPointX, float midPointY, GestureResolver.Point firstMidPoint, MotionEvent event) {
-                mCanvas.scale(dScale, dScale, firstMidPoint.x, firstMidPoint.y);
+                mCanvas.scale(dScale, dScale, event.getX(0), event.getY(0));
                 PaintView.this.finalScale *= dScale;
+            }
+
+            @Override
+            public void onOnePointScroll(float firstPointX, float firstPointY, float firstPointDistanceX, float firstPointDistanceY) {
+                mCanvas.translate(firstPointDistanceX, firstPointDistanceY);
+                PaintView.this.finalCanvasMidPoint.x -= firstPointDistanceX;
+                PaintView.this.finalCanvasMidPoint.y -= firstPointDistanceY;
             }
 
             @Override
@@ -135,11 +142,6 @@ public class PaintView extends View {
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                if (e2.getPointerCount() == 2) {
-                    mCanvas.translate(-distanceX / finalScale, -distanceY / finalScale);
-                    PaintView.this.finalCanvasMidPoint.x -= distanceX;
-                    PaintView.this.finalCanvasMidPoint.y -= distanceY;
-                }
                 return true;
             }
 
@@ -165,7 +167,10 @@ public class PaintView extends View {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
             if (null != mPath) {//显示实时正在绘制的path轨迹
                 if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
-                else canvas.drawPath(mPath, mPaint);
+                else {
+                    canvas.scale(this.finalScale, this.finalScale, this.finalCanvasMidPoint.x, this.finalCanvasMidPoint.y);
+                    canvas.drawPath(mPath, mPaint);
+                }
             }
         }
     }
@@ -339,7 +344,7 @@ public class PaintView extends View {
         mCanvas.drawRect(0, 0, width, height, mPaint);
         float x = event.getX();
         float y = event.getY();
-        onTouchAction(event.getAction(), this.finalCanvasMidPoint.x + (x - this.finalCanvasMidPoint.x) * this.finalScale, this.finalCanvasMidPoint.y + (y - this.finalCanvasMidPoint.y) * this.finalScale, event.getPointerCount());
+        onTouchAction(event.getAction(), width / 2F + (x - this.finalCanvasMidPoint.x) / this.finalScale, height / 2F + (y - this.finalCanvasMidPoint.y) / this.finalScale, event.getPointerCount());
         return true;
     }
 
