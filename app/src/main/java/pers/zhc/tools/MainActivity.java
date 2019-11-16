@@ -16,6 +16,7 @@ import pers.zhc.tools.floatingboard.FloatingBoardMainActivity;
 import pers.zhc.tools.floatingboard.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
+import pers.zhc.tools.test.S;
 import pers.zhc.tools.toast.AToast;
 import pers.zhc.u.common.ReadIS;
 
@@ -82,8 +83,8 @@ public class MainActivity extends BaseActivity {
                 R.string.overlaid_drawing_board,
                 R.string.fourier_series_calc,
                 R.string.notes,
-                R.string.fourier_series_in_complex
-
+                R.string.fourier_series_in_complex,
+                R.string.s
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -93,7 +94,8 @@ public class MainActivity extends BaseActivity {
                 FloatingBoardMainActivity.class,
                 FunctionDrawingBoard.class,
                 Document.class,
-                EpicyclesEdit.class
+                EpicyclesEdit.class,
+                S.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
