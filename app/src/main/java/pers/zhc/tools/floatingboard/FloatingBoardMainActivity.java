@@ -94,29 +94,35 @@ public class FloatingBoardMainActivity extends BaseActivity {
         //        NotificationClickReceiver notificationClickReceiver = new NotificationClickReceiver();
 //        registerReceiver(this.notificationClickReceiver, new IntentFilter("pers.zhc.tools.START_SERVICE"));
         currentInstanceMills = System.currentTimeMillis();
-        currentInternalPathFile = new File(getFilesDir().toString() + File.separator + currentInstanceMills + ".path");
-        Button clearPathBtn = findViewById(R.id.clear_path_btn);
-        clearPathBtn.setVisibility(View.INVISIBLE);
-        final int[] d = {0};
-        if (currentInternalPathFile.exists()) {
-            d[0] = (int) (currentInternalPathFile.length() / 1000L);
+        File currentInternalPathDir = new File(getFilesDir().getPath() + File.separatorChar + "path");
+        if (!currentInternalPathDir.exists()) {
+            System.out.println("currentInternalPathDir.mkdirs() = " + currentInternalPathDir.mkdirs());
         }
-        clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
+        currentInternalPathFile = new File(currentInternalPathDir.getPath() + File.separatorChar + currentInstanceMills + ".path");
+        Button clearPathBtn = findViewById(R.id.clear_path_btn);
+        final float[] cachesSize = {0F};
+        if (currentInternalPathDir.exists()) {
+            for (File file : currentInternalPathDir.listFiles()) {
+                cachesSize[0] += file.length();
+            }
+        }
+        clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
         clearPathBtn.setOnClickListener(v -> {
-            pv.clearTouchRecordOSContent();
-            d[0] = 0;
-            if (currentInternalPathFile.exists()) {
-                d[0] = (int) (currentInternalPathFile.length() / 1000L);
+            FileU fileU = new FileU();
+            if (currentInternalPathDir.exists()) {
+                for (File file : currentInternalPathDir.listFiles()) {
+                    if (!FloatingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(fileU.getFileName(file.getName())))) {
+                        System.out.println("file.delete() = " + file.delete());
+                    }
+                }
             }
-            clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
-        });
-        clearPathBtn.setOnLongClickListener(v -> {
-            d[0] = 0;
-            if (currentInternalPathFile.exists()) {
-                d[0] = (int) (currentInternalPathFile.length() / 1000L);
+            cachesSize[0] = 0;
+            if (currentInternalPathDir.exists()) {
+                for (File file : currentInternalPathDir.listFiles()) {
+                    cachesSize[0] += file.length();
+                }
             }
-            clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
-            return true;
+            clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
         });
         Point point = new Point();
         /*//noinspection deprecation
@@ -555,11 +561,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             new PermissionRequester(this::saveAction).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 23);
                             break;
                         case 11:
-                            createConfirmationAD(this, (dialog1, which) -> {
-                                stopFloatingWindow();
-//                                unregisterReceiver(notificationClickReceiver);
-                                new Thread(() -> uploadPaths(this)).start();
-                            }, (dialog1, which) -> {
+                            createConfirmationAD(this, (dialog1, which) -> exit(), (dialog1, which) -> {
                             }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
 //                            pv.scaleCanvas((float) (width * 2), ((float) (height * 2)));
                             break;
@@ -582,13 +584,21 @@ public class FloatingBoardMainActivity extends BaseActivity {
             wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
     }
 
+    private void exit() {
+        stopFloatingWindow();
+//                                unregisterReceiver(notificationClickReceiver);
+        new Thread(() -> uploadPaths(this)).start();
+        FloatingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
+    }
+
     @SuppressWarnings("Duplicates")
     private void hide() {
         wm.removeViewImmediate(ll);
         NotificationManager nm = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+        String date = SimpleDateFormat.getDateTimeInstance().format(new Date(this.currentInstanceMills));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel nc = new NotificationChannel("channel1", "隐藏通知", NotificationManager.IMPORTANCE_DEFAULT);
-            nc.setDescription("隐藏通知");
+            NotificationChannel nc = new NotificationChannel("channel1", getString(R.string.hide_notification), NotificationManager.IMPORTANCE_DEFAULT);
+            nc.setDescription(getString(R.string.hide_notification));
             nc.canBypassDnd();
             nc.setBypassDnd(true);
             nc.enableLights(false);
@@ -596,8 +606,8 @@ public class FloatingBoardMainActivity extends BaseActivity {
             nm.createNotificationChannel(nc);
             Notification.Builder nb = new Notification.Builder(this, "channel1");
             nb.setSmallIcon(Icon.createWithBitmap(icon))
-                    .setContentTitle("画板")
-                    .setContentText("点击取消隐藏控制悬浮窗");
+                    .setContentTitle(getString(R.string.drawing_board))
+                    .setContentText(getString(R.string.appear_f_b, date));
 //            Intent intent = new Intent(this, NotificationClickReceiver.class);
             Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
             intent.putExtra("mills", currentInstanceMills);
@@ -605,13 +615,13 @@ public class FloatingBoardMainActivity extends BaseActivity {
             nb.setContentIntent(pi);
             Notification build = nb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
-            nm.notify(1, build);
+            nm.notify(((int) (System.currentTimeMillis() - this.currentInstanceMills)), build);
         } else {
             NotificationCompat.Builder ncb = new NotificationCompat.Builder(this, "channel1");
             ncb.setOngoing(false)
                     .setAutoCancel(true)
-                    .setContentTitle("画板")
-                    .setContentText("点击取消隐藏控制悬浮窗")
+                    .setContentTitle(getString(R.string.drawing_board))
+                    .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
             Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
             intent.putExtra("mills", currentInstanceMills);
@@ -619,7 +629,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
             ncb.setContentIntent(pi);
             Notification build = ncb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
-            nm.notify(1, build);
+            nm.notify(((int) (System.currentTimeMillis() - this.currentInstanceMills)), build);
         }
     }
 
