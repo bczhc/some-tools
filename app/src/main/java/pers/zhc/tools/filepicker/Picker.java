@@ -16,13 +16,12 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.utils.PermissionRequester;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import static pers.zhc.tools.utils.Common.showException;
 
 public class Picker extends AppCompatActivity {
+    public static String result = null;
     private Toast notHavePermissionAccessToast = null;
     @SuppressWarnings("unused")
     public static int PICK_FILE = 1;
@@ -84,11 +83,7 @@ public class Picker extends AppCompatActivity {
                     break;
             }
             this.setResult(3, r);
-            try {
-                ioSetResult(r.getStringExtra("result"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            setResult(r.getStringExtra("result"));
             finish();
         });
         this.pathView = findViewById(R.id.textView);
@@ -109,11 +104,7 @@ public class Picker extends AppCompatActivity {
                                 showException(e, this);
                             }
                             this.setResult(3, r);
-                            try {
-                                ioSetResult(r.getStringExtra("result"));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+//                            setResult(r.getStringExtra("result"));
                             finish();
                         } else {
                             File[] listFiles = f.listFiles();
@@ -266,12 +257,12 @@ public class Picker extends AppCompatActivity {
         }
     }
 
-    private void ioSetResult(String s) throws IOException {
+    /*private void ioSetResult(String s) throws IOException {
         File file = new File(getFilesDir() + File.separator + "FilePickerResult");
         OutputStream os = new FileOutputStream(file, false);
         @SuppressWarnings("CharsetObjectCanBeUsed") byte[] bytes = s.getBytes("UTF-8");
         os.write(bytes);
         os.flush();
         os.close();
-    }
+    }*/
 }

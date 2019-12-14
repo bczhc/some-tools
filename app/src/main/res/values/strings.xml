@@ -97,7 +97,7 @@
     <string name="type_stroke_width__pixels">输入画笔宽度(pixels)</string>
     <string name="eraser_paint_stroke_width">橡皮擦大小</string>
     <string name="drawing_paint_stroke_width">画笔大小</string>
-    <string name="clear_application_internal_recoded_path">清除应用内部路径记录(%1$dkB)</string>
+    <string name="clear_application_caches">清除应用缓存（正在活动悬浮窗的会保留）\n(%1$fkB)</string>
     <string name="import_image">导入图片</string>
     <string name="importing_failed">导入失败</string>
     <string name="set__top__left__scaled_width__scaled_height">设置左起始点、顶起始点、缩放宽度、缩放高度</string>
@@ -108,5 +108,33 @@
     <string name="scaled_height">缩放至高度</string>
     <string name="type_error">输入不合法</string>
     <string name="importing">正在导入</string>
-    <string name="resetTranslate">重置变换</string>
+    <string name="reset_transform">重置变换</string>
+    <string name="function_drawing_x_length">函数绘制x轴长度</string>
+    <string name="function_drawing_y_length">函数绘制y轴长度</string>
+    <string name="function_drawing_board_a_period_Length">函数画板一个周期x长度</string>
+    <string name="function_drawing_board_a_period_length">函数画板一个周期y长度</string>
+    <string name="epicycles_test">本轮测试</string>
+    <string name="add">+</string>
+    <string name="left_parenthesis">(</string>
+    <string name="right_parenthesis">)</string>
+    <string name="i">i</string>
+    <string name="e">e</string>
+    <string name="caret">^</string>
+    <string name="t">t</string>
+    <string name="start">开始</string>
+    <string name="random">随机</string>
+    <string name="drawing_graph">绘制图像</string>
+    <string name="exit">退出</string>
+    <string name="choose_calculate_or_exit">选择计算或者退出</string>
+    <string name="definite_n">积分分段数</string>
+    <string name="period">周期</string>
+    <string name="epicycles_count">本轮数量</string>
+    <string name="epicycles_calc_progress" translatable="false">%1$f%%--%2$d/%3$d</string>
+    <string name="thread_num">线程数</string>
+    <string name="please_type_correct_value">请输入正确的数值</string>
+    <string name="fourier_series_in_complex">复平面内傅里叶级数展开</string>
+    <string name="s">s</string>
+    <string name="appear_f_b">显示悬浮窗%1$s</string>
+    <string name="hide_notification">隐藏通知</string>
+    <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

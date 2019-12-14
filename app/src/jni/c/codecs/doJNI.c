@@ -8,6 +8,7 @@
 #include "com_zhc_JNI.h"
 #include "Base128Lib.h"
 #include "kwm.h"
+#include "../../jni_help.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"

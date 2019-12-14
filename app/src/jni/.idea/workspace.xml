@@ -2,7 +2,10 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="jni" targetName="verification" />
+      <config projectName="Project" targetName="zhc_cpp" />
+      <config projectName="Project" targetName="zhc_c" />
+      <config projectName="Project" targetName="jni_help_cpp" />
+      <config projectName="Project" targetName="jni_help_c" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -12,6 +15,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
+      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_help.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_help.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_help.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
@@ -20,6 +27,37 @@
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/doJNI.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/doJNI.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/qmcLib.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/qmcLib.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/qmcLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/qmcLib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/verification/verify.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/verification/verify.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jni_c++/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/jni_c++/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/zhc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/zhc.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libpi.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libpi.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libpi.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libpi.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/PaintView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/ComplexFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/ComplexFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/ComplexGraphDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/ComplexGraphDrawing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/EpicyclesEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/EpicyclesEdit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/EpicyclesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/EpicyclesView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/layout/epicycles_edit_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/layout/epicycles_edit_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake2/cmake-build-debug/" />
@@ -36,20 +74,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/c/floatingboard/fb_tools.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="307">
-              <caret line="22" selection-start-line="22" selection-end-line="22" />
-              <folding>
-                <element signature="e#38#57#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -60,8 +85,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>'\0'</find>
-      <find>DT</find>
       <find>in</find>
       <find>*d</find>
       <find>const char *d</find>
@@ -81,15 +104,17 @@
       <find>ss =</find>
       <find>*Dest 1</find>
       <find>Dest 2</find>
-      <find>log</find>
       <find>LogArr(</find>
-      <find>Log</find>
       <find>^\ *LogArr\(</find>
       <find>Log\(</find>
       <find>Java_com_zhc_tools_codecs_JNI</find>
       <find>com_</find>
       <find>com/z</find>
       <find>zhc/</find>
+      <find>Log</find>
+      <find>logarr</find>
+      <find>log</find>
+      <find>log(</find>
     </findStrings>
     <replaceStrings>
       <replace>Java_pers_zhc_tools_codecs_JNI</replace>
@@ -112,7 +137,6 @@
         <option value="$PROJECT_DIR$/Base128Lib.c" />
         <option value="$PROJECT_DIR$/Base128Lib.h" />
         <option value="$PROJECT_DIR$/qmcLib.c" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/pi.h" />
         <option value="$PROJECT_DIR$/pi.cpp" />
         <option value="$PROJECT_DIR$/cmake2/CMakeLists.txt" />
@@ -123,24 +147,28 @@
         <option value="$PROJECT_DIR$/jni_c++/pi.cpp" />
         <option value="$PROJECT_DIR$/com_zhc_JNI.h" />
         <option value="$PROJECT_DIR$/kwm.c" />
-        <option value="$PROJECT_DIR$/jni_c++/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/jni_c++/verification/verify.cpp" />
         <option value="$PROJECT_DIR$/c/zhc.c" />
         <option value="$PROJECT_DIR$/zhc.c" />
-        <option value="$PROJECT_DIR$/zhc.cpp" />
         <option value="$PROJECT_DIR$/zhc.h" />
-        <option value="$PROJECT_DIR$/c/codecs/qmcLib.h" />
-        <option value="$PROJECT_DIR$/c/codecs/qmcLib.c" />
         <option value="$PROJECT_DIR$/c/codecs/com_zhc_JNI.h" />
-        <option value="$PROJECT_DIR$/c/codecs/doJNI.c" />
         <option value="$PROJECT_DIR$/jni_c++/pi/com_zhc_tools_pi_PiJNI.h" />
         <option value="$PROJECT_DIR$/jni_c++/pi/pi.cpp" />
-        <option value="$PROJECT_DIR$/c/verification/verify.c" />
-        <option value="$PROJECT_DIR$/c/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/Android.mk" />
         <option value="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingboard_JNI.h" />
         <option value="$PROJECT_DIR$/c/floatingboard/fb_tools.c" />
         <option value="$PROJECT_DIR$/Application.mk" />
+        <option value="$PROJECT_DIR$/c/codecs/qmcLib.c" />
+        <option value="$PROJECT_DIR$/c/codecs/qmcLib.h" />
+        <option value="$PROJECT_DIR$/jni_help.h" />
+        <option value="$PROJECT_DIR$/c/verification/verify.c" />
+        <option value="$PROJECT_DIR$/jni_c++/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/c/codecs/doJNI.c" />
+        <option value="$PROJECT_DIR$/c/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/jni_help.c" />
+        <option value="$PROJECT_DIR$/Android.mk" />
+        <option value="$PROJECT_DIR$/zhc.cpp" />
+        <option value="$PROJECT_DIR$/jni_help.cpp" />
       </list>
     </option>
   </component>
@@ -174,13 +202,7 @@
               <item name="jni" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="$PROJECT_DIR$" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="c" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="floatingboard" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="jni" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="$PROJECT_DIR$" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="c" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="verification" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="codecs" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="jni" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -210,19 +232,19 @@
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/jni_c++" />
-      <recent name="$PROJECT_DIR$/c" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/codecs" />
-      <recent name="C:\code\code\Android\QMCFLAC\app\src\jni" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/c" />
       <recent name="$PROJECT_DIR$/jni_c++/verification" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/jni_c++/pi" />
       <recent name="$PROJECT_DIR$/codecs/jni_c++" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/jni_c++" />
+      <recent name="$PROJECT_DIR$/c" />
+      <recent name="$PROJECT_DIR$/codecs" />
+      <recent name="C:\code\code\Android\QMCFLAC\app\src\jni" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -237,12 +259,33 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
-    <configuration name="verification" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="jni" TARGET_NAME="verification" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="jni" RUN_TARGET_NAME="verification">
+  <component name="RunManager" selected="CMake Application.jni_help_c">
+    <configuration name="jni_help_c" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="jni_help_c" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="jni_help_c">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="jni_help_cpp" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="jni_help_cpp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="jni_help_cpp">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="zhc_c" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="zhc_c" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="zhc_c">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="zhc_cpp" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="zhc_cpp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="zhc_cpp">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.jni_help_c" />
+      <item itemvalue="CMake Application.jni_help_cpp" />
+      <item itemvalue="CMake Application.zhc_c" />
+      <item itemvalue="CMake Application.zhc_cpp" />
+    </list>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -282,17 +325,17 @@
       <workItem from="1566946315338" duration="274000" />
       <workItem from="1567834612203" duration="1259000" />
       <workItem from="1568334471196" duration="579000" />
+      <workItem from="1570019598706" duration="1124000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="128909000" />
+    <option name="totallyTimeSpent" value="130033000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27759916" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2813505" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -305,7 +348,7 @@
       <window_info anchor="bottom" id="Database Changes" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3286026" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.32969433" />
-      <window_info anchor="bottom" id="CMake" order="10" weight="0.5305677" />
+      <window_info anchor="bottom" id="CMake" order="10" visible="true" weight="0.29411766" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.32969433" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.37663755" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -449,10 +492,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/Sdk/includes/stdint.h" />
-    <entry file="file://D:/Sdk/includes/jni.h" />
-    <entry file="file://D:/Sdk/includes/stdio.h" />
-    <entry file="file://$PROJECT_DIR$/QMC.c" />
     <entry file="file://$PROJECT_DIR$/com_zhc_base128_JNI.h" />
     <entry file="file://$PROJECT_DIR$/Base128.c" />
     <entry file="file://$PROJECT_DIR$/test/qmc_test.c" />
@@ -481,13 +520,6 @@
     <entry file="file://$PROJECT_DIR$/kwm.c" />
     <entry file="file://$PROJECT_DIR$/doJNI.c" />
     <entry file="file://$PROJECT_DIR$/jni_c++/zhc.h" />
-    <entry file="file://$PROJECT_DIR$/jni_c++/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="48" lean-forward="true" selection-start-column="48" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/c/codecs/Base128Lib.h">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -499,13 +531,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/c/zhc.c" />
-    <entry file="file://$PROJECT_DIR$/zhc.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="797">
-          <caret line="325" column="1" selection-start-line="325" selection-start-column="1" selection-end-line="325" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/zhc.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="683">
@@ -520,69 +545,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/c/codecs/qmcLib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="44" column="54" selection-start-line="44" selection-start-column="54" selection-end-line="44" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/zhc.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="254" column="12" selection-start-line="254" selection-start-column="12" selection-end-line="254" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/codecs/qmcLib.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="101" selection-start-line="101" selection-end-line="101" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jni_c++/pi/zhc.cpp" />
-    <entry file="file://$PROJECT_DIR$/jni_c++/pi/pi.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="42" column="27" selection-start-line="42" selection-start-column="27" selection-end-line="42" selection-end-column="27" />
-          <folding>
-            <element signature="e#37#72#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/codecs/doJNI.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="78" lean-forward="true" selection-start-line="78" selection-end-line="79" />
-          <folding>
-            <element signature="e#125#144#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/c/codecs/com_zhc_JNI.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
           <caret line="22" column="28" lean-forward="true" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/verification/verify.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="49" column="5" selection-start-line="49" selection-start-column="5" selection-end-line="49" selection-end-column="5" />
-          <folding>
-            <element signature="e#38#60#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" column="102" lean-forward="true" selection-start-line="3" selection-start-column="102" selection-end-line="3" selection-end-column="102" />
         </state>
       </provider>
     </entry>
@@ -638,20 +605,119 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Android.mk">
+    <entry file="file://$PROJECT_DIR$/c/codecs/qmcLib.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="24" column="47" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="47" />
+        <state relative-caret-position="630">
+          <caret line="43" selection-start-line="43" selection-end-line="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jni_help.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <element signature="e#111#127#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/c/verification/verify.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="323" column="12" lean-forward="true" selection-start-line="323" selection-start-column="12" selection-end-line="323" selection-end-column="12" />
+          <folding>
+            <element signature="e#38#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/c/codecs/qmcLib.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="18" lean-forward="true" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/c/floatingboard/fb_tools.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        <state relative-caret-position="212">
+          <caret line="17" column="13" lean-forward="true" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
           <folding>
             <element signature="e#38#57#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jni_c++/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="28" selection-start-column="28" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jni_c++/pi/pi.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+          <folding>
+            <element signature="e#37#72#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/c/codecs/doJNI.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="419">
+          <caret line="30" column="13" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+          <folding>
+            <element signature="e#125#144#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/c/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zhc.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="128" column="5" selection-start-line="128" selection-start-column="5" selection-end-line="128" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jni_help.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" column="21" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zhc.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="70" column="33" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jni_help.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Android.mk">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="25" column="3" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
         </state>
       </provider>
     </entry>
