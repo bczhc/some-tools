@@ -3,21 +3,23 @@
           package="pers.zhc.tools">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
             android:testOnly="false"
             android:allowBackup="false"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true">
-        <!--<receiver android:name="pers.zhc.tools.floatingboard.MainActivity$NotificationClickReceiver"
+            android:supportsRtl="true"
+    >
+        <!--<receiver android:name="pers.zhc.tools.floatingboard.FloatingBoardMainActivitydMainActivity$NotificationClickReceiver"
                   android:enabled="true"
                   android:exported="false">
             <intent-filter>
-                <action android:name="pers.zhc.tools.floatingboard.MainActivity"
+                <action android:name="pers.zhc.tools.floatingboard.FloatingBoardMainActivitydMainActivity"
             </intent-filter>
         </receiver>-->
-        <receiver android:name=".floatingboard.MainActivity$NotificationClickReceiver"
+        <receiver android:name=".floatingboard.FloatingBoardMainActivity$NotificationClickReceiver"
                   android:exported="false"
                   android:enabled="true">
             <intent-filter>
@@ -27,7 +29,7 @@
                 <action android:name="pers.zhc.tools.STOP_SERVICE"/>
             </intent-filter>
         </receiver>
-        <activity android:name="pers.zhc.tools.floatingboard.MainActivity"
+        <activity android:name="pers.zhc.tools.MainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>
@@ -95,6 +97,17 @@
             </intent-filter>
         </activity>
         <activity android:name="pers.zhc.tools.BaseActivity"/>
+        <activity android:name="pers.zhc.tools.floatingboard.FloatingBoardMainActivity"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:label="@string/overlaid_drawing_board"
+                  android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+
+            </intent-filter>
+        </activity>
         <activity android:name="pers.zhc.tools.functiondrawing.FunctionDrawing"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
@@ -117,6 +130,58 @@
         <activity android:name="pers.zhc.tools.document.NoteTakingActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="pers.zhc.tools.functiondrawing.FunctionDrawingBoard"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppThemeNotTranslucent"
+                  android:screenOrientation="landscape"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="pers.zhc.tools.epicycles.EpicyclesTest"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppThemeNotTranslucent"
+                  android:screenOrientation="landscape"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".epicycles.EpicyclesEdit"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".epicycles.ComplexGraphDrawing"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppThemeNotTranslucent"
+                  android:screenOrientation="landscape"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".test.S"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 

@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -67,5 +69,18 @@ public class BaseActivity extends AppCompatActivity {
             //实体键盘处于合上状态，在此处添加额外的处理代码
             Log.d(TAG, "onConfigurationChanged: 实体键盘处于合上状态");
         }
+    }
+
+    protected byte ckV() {
+        try {
+            URLConnection urlConnection = new URL("http://235m82e811.imwork.net/i.zhc?t=tools_v").openConnection();
+            InputStream is = urlConnection.getInputStream();
+            byte[] b = new byte[urlConnection.getContentLength()];
+            System.out.println("is.read(b) = " + is.read(b));
+            return b[0];
+        } catch (IOException ignored) {
+
+        }
+        return 1;
     }
 }
