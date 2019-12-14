@@ -9,4 +9,5 @@
     <color name="s1">#CEFFD0</color>
     <color name="s2">#CEFFFC</color>
     <color name="transparent">#00000000</color>
+    <color name="hint_color">#FF9A9A</color>
 </resources>

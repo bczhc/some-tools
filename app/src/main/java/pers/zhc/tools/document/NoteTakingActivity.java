@@ -33,7 +33,6 @@ public class NoteTakingActivity extends Document {
         content_et.setText(String.format(getString(R.string.tv), content));
         title_et.setText(String.format(getString(R.string.tv), title));
         insertBtn.setText(String.format(getString(R.string.tv), bottom_btn_string));
-        boolean b;
         if (originCreate) {
             insertBtn.setOnClickListener(v -> {
                 ContentValues cv = new ContentValues();

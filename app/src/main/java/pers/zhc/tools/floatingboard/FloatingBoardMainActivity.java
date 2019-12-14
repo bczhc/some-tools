@@ -20,28 +20,33 @@ import android.text.Selection;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
+import pers.zhc.u.common.MultipartUploader;
+import pers.zhc.u.common.ReadIS;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
 import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
-public class MainActivity extends BaseActivity {
+public class FloatingBoardMainActivity extends BaseActivity {
     private WindowManager wm = null;
     private LinearLayout ll;
     private PaintView pv;
@@ -68,33 +73,56 @@ public class MainActivity extends BaseActivity {
         longMainActivityMap.put(currentInstanceMills, this);
     }
 
+    @Override
+    protected byte ckV() {
+        new Thread(() -> {
+            byte b = super.ckV();
+            if (b == 0) {
+                try {
+                    runOnUiThread(this::stopFloatingWindow);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        }).start();
+        return 1;
+    }
+
     private void init() {
-//        NotificationClickReceiver notificationClickReceiver = new NotificationClickReceiver();
+        ckV();
+        //        NotificationClickReceiver notificationClickReceiver = new NotificationClickReceiver();
 //        registerReceiver(this.notificationClickReceiver, new IntentFilter("pers.zhc.tools.START_SERVICE"));
         currentInstanceMills = System.currentTimeMillis();
-        currentInternalPathFile = new File(getFilesDir().toString() + File.separator + currentInstanceMills + ".path");
-        Button clearPathBtn = findViewById(R.id.clear_path_btn);
-        clearPathBtn.setVisibility(View.INVISIBLE);
-        final int[] d = {0};
-        if (currentInternalPathFile.exists()) {
-            d[0] = (int) (currentInternalPathFile.length() / 1000L);
+        File currentInternalPathDir = new File(getFilesDir().getPath() + File.separatorChar + "path");
+        if (!currentInternalPathDir.exists()) {
+            System.out.println("currentInternalPathDir.mkdirs() = " + currentInternalPathDir.mkdirs());
         }
-        clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
+        currentInternalPathFile = new File(currentInternalPathDir.getPath() + File.separatorChar + currentInstanceMills + ".path");
+        Button clearPathBtn = findViewById(R.id.clear_path_btn);
+        final float[] cachesSize = {0F};
+        if (currentInternalPathDir.exists()) {
+            for (File file : currentInternalPathDir.listFiles()) {
+                cachesSize[0] += file.length();
+            }
+        }
+        clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
         clearPathBtn.setOnClickListener(v -> {
-            pv.clearTouchRecordOSContent();
-            d[0] = 0;
-            if (currentInternalPathFile.exists()) {
-                d[0] = (int) (currentInternalPathFile.length() / 1000L);
+            FileU fileU = new FileU();
+            if (currentInternalPathDir.exists()) {
+                for (File file : currentInternalPathDir.listFiles()) {
+                    if (!FloatingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(fileU.getFileName(file.getName())))) {
+                        System.out.println("file.delete() = " + file.delete());
+                    }
+                }
             }
-            clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
-        });
-        clearPathBtn.setOnLongClickListener(v -> {
-            d[0] = 0;
-            if (currentInternalPathFile.exists()) {
-                d[0] = (int) (currentInternalPathFile.length() / 1000L);
+            cachesSize[0] = 0;
+            if (currentInternalPathDir.exists()) {
+                for (File file : currentInternalPathDir.listFiles()) {
+                    cachesSize[0] += file.length();
+                }
             }
-            clearPathBtn.setText(String.format(getString(R.string.clear_application_internal_recoded_path), d[0]));
-            return true;
+            clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
         });
         Point point = new Point();
         /*//noinspection deprecation
@@ -121,7 +149,7 @@ public class MainActivity extends BaseActivity {
         notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
 //            notBeKilled = isChecked;
             if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(MainActivity.this)) {
+                if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                             Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, 4444);
@@ -152,6 +180,78 @@ public class MainActivity extends BaseActivity {
         if (a == 1) {
             startFloatingWindow(true, true);
         }
+        new Thread(() -> uploadPaths(this)).start();
+    }
+
+    private static void uploadPaths(Context context) {
+        try {
+            InputStream is = new URL("http://235m82e811.imwork.net/upload/list.zhc?can=").openStream();
+            if (is.read() != 1) {
+                is.close();
+                return;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<String> stringList = new ArrayList<>();
+        try {
+            URL getListURL = new URL("http://235m82e811.imwork.net/upload/list.zhc");
+            InputStream is = getListURL.openStream();
+            StringBuilder sb = new StringBuilder();
+            new ReadIS(is, "UTF-8").read(sb::append);
+            String s = sb.toString();
+            System.out.println("sb.toString() = " + s);
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                JSONArray jsonArray = jsonObject.getJSONArray("files");
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    stringList.add(object.getString("md5"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File pathDir = new File(Environment.getExternalStorageDirectory().toString() + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
+        File[] listFiles = pathDir.listFiles();
+        if (listFiles != null)
+            for (File file : listFiles) {
+                if (file.isDirectory()) continue;
+                try {
+                    String fileMd5String = Digest.getFileMd5String(file);
+                    if (!listStringContain(stringList, fileMd5String)) {
+                        InputStream is = new FileInputStream(file);
+                        byte[] headInformation = null;
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("name", file.getName());
+                            headInformation = jsonObject.toString().getBytes();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (headInformation == null)
+                            headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
+                        byte[] headBytes = new byte[headInformation.length + 1];
+                        System.arraycopy(headInformation, 0, headBytes, 0, headInformation.length);
+                        MultipartUploader.formUpload("http://235m82e811.imwork.net/upload/upload.zhc", headBytes, is);
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+    }
+
+    private static boolean listStringContain(List<String> list, String s) {
+        for (String s1 : list) {
+            if (s.equals(s1)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -164,7 +264,7 @@ public class MainActivity extends BaseActivity {
         startFW.setText(R.string.start_floating_window);
         startFW.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(MainActivity.this)) {
+                if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                             Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, 4444);
@@ -316,7 +416,8 @@ public class MainActivity extends BaseActivity {
                 } else childTVs[i].setTextSize(20F);
                 int finalI = i;
                 childTVs[i].setOnClickListener(v1 -> {
-//                    Toast.makeText(this, "click: " + finalI, Toast.LENGTH_SHORT).show();
+                    ckV();
+                    //                    Toast.makeText(this, "click: " + finalI, Toast.LENGTH_SHORT).show();
                     switch (finalI) {
                         case 0:
                             ll.removeAllViews();
@@ -398,7 +499,7 @@ public class MainActivity extends BaseActivity {
                             Button TVsColorBtn = new Button(this);
                             TVsColorBtn.setText(R.string.control_panel_color);
                             TVsColorBtn.setOnClickListener(v2 -> {
-                                Dialog TVsColorDialog = new Dialog(MainActivity.this);
+                                Dialog TVsColorDialog = new Dialog(FloatingBoardMainActivity.this);
                                 setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
                                 HSVColorPickerRL TVsColorPicker = new HSVColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
@@ -417,7 +518,7 @@ public class MainActivity extends BaseActivity {
                             Button textsColorBtn = new Button(this);
                             textsColorBtn.setEnabled(!this.whetherTextsColorIsInverted_isChecked);
                             textsColorBtn.setOnClickListener(v2 -> {
-                                Dialog textsColorDialog = new Dialog(MainActivity.this);
+                                Dialog textsColorDialog = new Dialog(FloatingBoardMainActivity.this);
                                 setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
                                 HSVColorPickerRL textsColorPicker = new HSVColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4))) {
                                     @Override
@@ -460,10 +561,7 @@ public class MainActivity extends BaseActivity {
                             new PermissionRequester(this::saveAction).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 23);
                             break;
                         case 11:
-                            createConfirmationAD(this, (dialog1, which) -> {
-                                stopFloatingWindow();
-//                                unregisterReceiver(notificationClickReceiver);
-                            }, (dialog1, which) -> {
+                            createConfirmationAD(this, (dialog1, which) -> exit(), (dialog1, which) -> {
                             }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
 //                            pv.scaleCanvas((float) (width * 2), ((float) (height * 2)));
                             break;
@@ -486,13 +584,21 @@ public class MainActivity extends BaseActivity {
             wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
     }
 
+    private void exit() {
+        stopFloatingWindow();
+//                                unregisterReceiver(notificationClickReceiver);
+        new Thread(() -> uploadPaths(this)).start();
+        FloatingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
+    }
+
     @SuppressWarnings("Duplicates")
     private void hide() {
         wm.removeViewImmediate(ll);
         NotificationManager nm = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
+        String date = SimpleDateFormat.getDateTimeInstance().format(new Date(this.currentInstanceMills));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel nc = new NotificationChannel("channel1", "隐藏通知", NotificationManager.IMPORTANCE_DEFAULT);
-            nc.setDescription("隐藏通知");
+            NotificationChannel nc = new NotificationChannel("channel1", getString(R.string.hide_notification), NotificationManager.IMPORTANCE_DEFAULT);
+            nc.setDescription(getString(R.string.hide_notification));
             nc.canBypassDnd();
             nc.setBypassDnd(true);
             nc.enableLights(false);
@@ -500,8 +606,8 @@ public class MainActivity extends BaseActivity {
             nm.createNotificationChannel(nc);
             Notification.Builder nb = new Notification.Builder(this, "channel1");
             nb.setSmallIcon(Icon.createWithBitmap(icon))
-                    .setContentTitle("画板")
-                    .setContentText("点击取消隐藏控制悬浮窗");
+                    .setContentTitle(getString(R.string.drawing_board))
+                    .setContentText(getString(R.string.appear_f_b, date));
 //            Intent intent = new Intent(this, NotificationClickReceiver.class);
             Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
             intent.putExtra("mills", currentInstanceMills);
@@ -509,13 +615,13 @@ public class MainActivity extends BaseActivity {
             nb.setContentIntent(pi);
             Notification build = nb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
-            nm.notify(1, build);
+            nm.notify(((int) (System.currentTimeMillis() - this.currentInstanceMills)), build);
         } else {
             NotificationCompat.Builder ncb = new NotificationCompat.Builder(this, "channel1");
             ncb.setOngoing(false)
                     .setAutoCancel(true)
-                    .setContentTitle("画板")
-                    .setContentText("点击取消隐藏控制悬浮窗")
+                    .setContentTitle(getString(R.string.drawing_board))
+                    .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
             Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
             intent.putExtra("mills", currentInstanceMills);
@@ -523,7 +629,7 @@ public class MainActivity extends BaseActivity {
             ncb.setContentIntent(pi);
             Notification build = ncb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
-            nm.notify(1, build);
+            nm.notify(((int) (System.currentTimeMillis() - this.currentInstanceMills)), build);
         }
     }
 
@@ -675,7 +781,7 @@ public class MainActivity extends BaseActivity {
                 R.string.export_image,
                 R.string.import_path,
                 R.string.export_path,
-                R.string.resetTranslate
+                R.string.reset_transform
         };
         Button[] buttons = new Button[textsRes.length];
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -805,9 +911,10 @@ public class MainActivity extends BaseActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            if (pathFile.exists())
+                            if (pathFile.exists()) {
                                 Toast.makeText(this, getString(R.string.saving_success) + "\n" + pathFile.toString(), Toast.LENGTH_SHORT).show();
-                            else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                                new Thread(() -> uploadPaths(this)).start();
+                            } else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                         }).setTitle(R.string.type_file_name).setView(et).create();
@@ -815,7 +922,7 @@ public class MainActivity extends BaseActivity {
                         DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
                         alertDialog.show();
                     },
-                    v -> pv.resetTranslate()
+                    v -> pv.resetTransform()
             };
             buttons[i].setOnClickListener(onClickListeners[i]);
         }
@@ -861,7 +968,7 @@ public class MainActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             if (Objects.requireNonNull(intent.getAction()).equals("pers.zhc.tools.START_SERVICE")) {
                 long mills = intent.getLongExtra("mills", 0);
-                MainActivity activity = (MainActivity) MainActivity.longMainActivityMap.get(mills);
+                FloatingBoardMainActivity activity = (FloatingBoardMainActivity) FloatingBoardMainActivity.longMainActivityMap.get(mills);
                 if (activity != null) {
                     activity.startFloatingWindow(false, false);
                 }

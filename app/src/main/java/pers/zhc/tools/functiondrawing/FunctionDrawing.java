@@ -2,31 +2,28 @@ package pers.zhc.tools.functiondrawing;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
-import pers.zhc.tools.utils.DisplayUtil;
 import pers.zhc.u.FourierSeries;
 
 public class FunctionDrawing extends BaseActivity {
-    private RelativeLayout rl;
     private FourierSeries fs;
-    private int nNum = 100;
+    private int nNum = 10;
     private TextView tv;
-    private FunctionDrawingView functionDrawingView;
+    private FunctionDrawerView functionDrawingView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.function_drawing_activity);
-        rl = findViewById(R.id.rl_below);
+        RelativeLayout rl = findViewById(R.id.rl_below);
         tv = findViewById(R.id.tv);
         init();
         tv.setOnClickListener(v -> {
@@ -40,48 +37,29 @@ public class FunctionDrawing extends BaseActivity {
             ad.setCanceledOnTouchOutside(true);
             ad.show();
         });
+        rl.addView(functionDrawingView);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void init() {
-        fs = new FourierSeries(30) {
+        Intent intent = getIntent();
+        int xLen = intent.getIntExtra("xLen", 30);
+        int yLen = intent.getIntExtra("yLen", 30);
+        fs = new FourierSeries(intent.getIntExtra("FS_T", 30)) {
             @Override
             public double f_f(double x) {
-                /*if (x < 5) return 10;
-                if (x >= 5 && x < 7.5F) return -2 * x + 20;
-                if (x >= 7.5F && x < 17.5F) return x - 2.5;
-                return -2 * x + 50;*/
-                if (x < 10) return x;
-                if (x >= 10 && x < 20) return -x + 20;
-                return x - 20;
+                return ((double) FunctionDrawingBoard.functionInterface.f(((float) x)));
             }
         };
-        SeekBar sb = findViewById(R.id.zoom_sb);
-        sb.setProgress(50);
-        sb.setMax(100);
-        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                functionDrawingView.zoom(((float) (100 - progress)), ((float) (100 - progress)));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        sb.setEnabled(false);
-        fs.definite.n = 100000;
+        fs.definite.n = 20000;
         new Thread(() -> {
-            fs.initAB(nNum, s -> runOnUiThread(() -> tv.setText(s)), Runtime.getRuntime().availableProcessors());
-            draw();
-            runOnUiThread(() -> sb.setEnabled(true));
+            fs.initAB(nNum, s -> {
+                runOnUiThread(() -> tv.setText(s));
+                draw();
+            }, Runtime.getRuntime().availableProcessors());
+            runOnUiThread(() -> tv.setText(R.string.nul));
         }).start();
+        functionDrawingView = new FunctionDrawerView(this, xLen, yLen);
         /*TextView[] textViews = new TextView[]{
                 findViewById(R.id.increase_tv),
                 findViewById(R.id.decrease_tv)
@@ -108,18 +86,7 @@ public class FunctionDrawing extends BaseActivity {
     }
 
     private void draw() {
-        runOnUiThread(() -> rl.removeAllViews());
-        Point point = new Point();
-        getWindowManager().getDefaultDisplay().getSize(point);
-        int width = point.x;
-        int height = point.y - DisplayUtil.sp2px(this, 20);
-        functionDrawingView = new FunctionDrawingView(this, width, height);
-        runOnUiThread(() -> rl.addView(functionDrawingView));
-        functionDrawingView.drawFunction(x -> {
-            return (float) fs.F(nNum, x);
-//            return (float) Math.sin(x);
-        });
-        runOnUiThread(() -> tv.setText(R.string.nul));
+        functionDrawingView.drawFunction(x -> fs.F(nNum, x));
     }
 
     @Override
