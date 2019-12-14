@@ -7,11 +7,7 @@ import android.view.MotionEvent;
 public class GestureResolver {
     private GestureInterface gestureInterface;
     private GestureDetector gestureDetector;
-    private float firstDistance = -1;
-    /**
-     * 可变的距离，最初是firstDistance，后面会等于上一次的距离，dScale用
-     */
-    private float tDistance = -1;
+    private float firstDistance;
 
     public GestureResolver(Context context, GestureInterface gestureInterface) {
         this.gestureInterface = gestureInterface;
@@ -22,74 +18,36 @@ public class GestureResolver {
         return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
-//    private float lastScale = 1;
-
-    public class Point {
-        public float x, y;
-        private boolean first = true;
-    }
-
-    private float lastFirstPointX = 0, lastFirstPointY = 0;
+    private float lastScale = 1;
 
     public void onTouch(MotionEvent event) {
+        int pointerCount = event.getPointerCount();
+        if (pointerCount == 2) {
+            float x1 = event.getX(0);
+            float x2 = event.getX(1);
+            float y1 = event.getY(0);
+            float y2 = event.getY(1);
+            float distance = getDistance(x1, x2, y1, y2);
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (firstDistance == 0.0) firstDistance = distance;
+                    float currentScale = distance / firstDistance;
+                    float scaleC = distance / firstDistance;
+                    firstDistance = distance;
+                    gestureInterface.onZoomGesture(firstDistance
+                            , distance, currentScale, scaleC * lastScale, (x1 + x2) / 2, (y1 + y2) / 2, event);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    firstDistance = 0;
+                    break;
+            }
+        } else firstDistance = 0;
         gestureDetector.onTouchEvent(event);
-        float x1;
-        float x2 = 0;
-        float y1;
-        float y2 = 0;
-        float currentDistance = 0;
-        x1 = event.getX(0);
-        y1 = event.getY(0);
-        if (event.getPointerCount() == 2) {
-            x2 = event.getX(1);
-            y2 = event.getY(1);
-            currentDistance = getDistance(x1, x2, y1, y2);
-        }
-        gestureInterface.onOnePointScroll(x1, y1, x1 - lastFirstPointX, y1 - lastFirstPointY);
-        lastFirstPointX = x1;
-        lastFirstPointY = y1;
-        Point firstMidPoint = new Point();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                /*if (event.getPointerCount() == 2) {
-                    this.firstDistance = getDistance(x1, x2, y1, y2);
-                    this.tDistance = this.firstDistance;
-                }*/
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (firstMidPoint.first) {
-                    firstMidPoint.x = (x1 + x2) / 2F;
-                    firstMidPoint.y = (y1 + y2) / 2F;
-                }
-                firstMidPoint.first = false;
-                if (event.getPointerCount() == 2) {
-                    if (this.firstDistance == -1) this.firstDistance = getDistance(x1, x2, y1, y2);
-                    if (this.tDistance == -1) this.tDistance = this.firstDistance;
-                    gestureInterface.onZoomGesture(firstDistance, currentDistance
-                            , currentDistance / firstDistance
-                            , currentDistance / tDistance
-                            , (x1 + x2) / 2F, (y1 + y2) / 2F
-                            , firstMidPoint
-                            , event);
-                    this.tDistance = getDistance(x1, x2, y1, y2);
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                firstDistance = -1;
-                tDistance = -1;
-                firstMidPoint.first = true;
-                break;
-        }
     }
 
     public interface GestureInterface extends GestureDetector.OnGestureListener {
-        //        void onZoomGesture(float pDistance, float distance, float currentScale, float scaleC, float centralPointX, float centralPointY, MotionEvent event);
-        void onZoomGesture(float firstDistance, float currentDistance, float currentScale, float dScale, float midPointX, float midPointY, Point firstMidPoint, MotionEvent event);
-
-        /*
-        original * scale * (1 / scale)
-        ... * scale2 * (1 / scale2)
-         */
-        void onOnePointScroll(float firstPointX, float firstPointY, float firstPointDistanceX, float firstPointDistanceY);
+        void onZoomGesture(float pDistance, float distance, float currentScale, float scaleC, float centralPointX, float centralPointY, MotionEvent event);
     }
 }
