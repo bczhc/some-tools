@@ -8,15 +8,15 @@
               android:text="@string/title"
               android:id="@+id/progress_bar_title"
     />
-    <ProgressBar android:layout_width="match_parent" android:layout_height="wrap_content"
+    <!--<ProgressBar android:layout_width="match_parent" android:layout_height="wrap_content"
                  android:layout_below="@id/progress_bar_title"
                  android:indeterminate="false"
                  style="?android:attr/progressBarStyleHorizontal"
                  xmlns:android="http://schemas.android.com/apk/res/android"
                  android:id="@+id/progress_bar"
                  android:max="100"
-    />
+    />-->
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/progress_tv"
-              android:layout_below="@id/progress_bar"
+              android:layout_below="@id/progress_bar_title"
     />
 </RelativeLayout>
