@@ -12,13 +12,6 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
     >
-        <!--<receiver android:name="pers.zhc.tools.floatingboard.FloatingBoardMainActivitydMainActivity$NotificationClickReceiver"
-                  android:enabled="true"
-                  android:exported="false">
-            <intent-filter>
-                <action android:name="pers.zhc.tools.floatingboard.FloatingBoardMainActivitydMainActivity"
-            </intent-filter>
-        </receiver>-->
         <receiver android:name=".floatingboard.FloatingBoardMainActivity$NotificationClickReceiver"
                   android:exported="false"
                   android:enabled="true">

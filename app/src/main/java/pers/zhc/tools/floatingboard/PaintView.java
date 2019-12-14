@@ -168,7 +168,10 @@ public class PaintView extends View {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
             if (null != mPath) {//显示实时正在绘制的path轨迹
                 if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
-                else canvas.drawPath(mPath, mPaint);
+                else {
+                    canvas.scale(finalScale, finalScale, scalePointX, scalePointY);
+                    canvas.drawPath(mPath, mPaint);
+                }
             }
         }
     }

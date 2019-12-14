@@ -888,13 +888,13 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
                             TextView tv = progressRL.findViewById(R.id.progress_tv);
                             tv.setText(R.string.importing);
-                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
+//                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
                             TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
                             pv.importPathFile(new File(s), () -> {
                                 runOnUiThread(importPathFileDoneAction);
                                 importPathFileProgressDialog.dismiss();
                             }, aFloat -> runOnUiThread(() -> {
-                                progressBar.setProgress(aFloat.intValue());
+//                                progressBar.setProgress(aFloat.intValue());
                                 pTV.setText(getString(R.string.progress_tv, aFloat));
                             }));
                             moreOptionsDialog.dismiss();

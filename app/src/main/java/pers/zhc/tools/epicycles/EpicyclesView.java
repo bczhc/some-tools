@@ -29,13 +29,13 @@ class EpicyclesView extends View {
     private double epicyclesScale;
     private ExecutorService es;
     private double reOffset, imOffset;
-    private QuadDrawing quadDrawing;
     private GestureDetector gd;
     private CoordinateDouble center;
     private CoordinateDouble lastLineToPoint;
-    private Path path;
+    private Path mPath;
     private double t;
     static double T = 2 * Math.PI, omega = 2 * Math.PI / T;
+    private boolean pathMove = true;
 
     EpicyclesView(Context context, EpicyclesSequence epicyclesSequence) {
         super(context);
@@ -103,7 +103,8 @@ class EpicyclesView extends View {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
                 EpicyclesView.this.reOffset = (EpicyclesView.this.imOffset = 0);
-                quadDrawing.reset();
+                mPath.reset();
+                pathMove = true;
                 return true;
             }
 
@@ -112,8 +113,7 @@ class EpicyclesView extends View {
                 return true;
             }
         });
-        path = new Path();
-        quadDrawing = new QuadDrawing(path);
+        mPath = new Path();
         t = 0;
         lastLineToPoint = new CoordinateDouble(0D, 0D);
         center = new CoordinateDouble(0D, 0D);
@@ -175,7 +175,8 @@ class EpicyclesView extends View {
     }
 
     void scale(double a) {
-        quadDrawing.reset();
+        mPath.reset();
+        pathMove = true;
         epicyclesScale = a;
     }
 
@@ -221,47 +222,18 @@ class EpicyclesView extends View {
             mEpicyclesCanvas.drawLine(((float) centerPointCanvasCoordinate.x), ((float) centerPointCanvasCoordinate.y), ((float) lineTo.x), ((float) lineTo.y), mVectorPaint);
             lastLineToPoint = canvasCoordinateToRectCoordinate(lineTo);
             if (i == epicycles.size() - 1) {
-                quadDrawing.quadTo(((float) (lineTo.x - reOffset)), ((float) (lineTo.y - imOffset)));
+                if (pathMove) {
+                    mPath.moveTo(((float) (lineTo.x - reOffset)), ((float) (lineTo.y - imOffset)));
+                    pathMove = false;
+                }
+                mPath.lineTo(((float) (lineTo.x - reOffset)), ((float) (lineTo.y - imOffset)));
                 mEpicyclesCanvas.translate(((float) reOffset), (float) imOffset);
-                mEpicyclesCanvas.drawPath(path, mPathPaint);
+                mEpicyclesCanvas.drawPath(mPath, mPathPaint);
                 mEpicyclesCanvas.translate(((float) -reOffset), (float) -imOffset);
             }
         }
         t += .1F;
         canvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
-    }
-
-    class QuadDrawing {
-        Path path;
-        private byte i = -1;
-        private float cX;
-        private float cY;
-
-        QuadDrawing(Path path) {
-            this.path = path;
-        }
-
-        void quadTo(float x, float y) {
-            switch (i) {
-                case -1:
-                    path.moveTo(x, y);
-                    break;
-                case 1:
-                    cX = x;
-                    cY = y;
-                    break;
-                case 2:
-                    path.quadTo(cX, cY, x, y);
-                    i = 0;
-                    break;
-            }
-            ++i;
-        }
-
-        void reset() {
-            path.reset();
-            i = -1;
-        }
     }
 
     public static double getT() {
