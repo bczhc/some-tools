@@ -1,17 +1,18 @@
 package pers.zhc.tools.epicycles;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.u.Random;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
 import pers.zhc.u.math.util.ComplexValue;
 
@@ -75,7 +76,7 @@ public class EpicyclesEdit extends AppCompatActivity {
             ll.addView(tv);
 
         });
-        ll = findViewById(R.id.ll);
+        ll = findViewById(R.id.sc_ll);
         btn.setOnClickListener(v -> {
             String s1 = et_n.getText().toString();
             s1 = s1.equals("") ? "0" : s1;
@@ -112,7 +113,61 @@ public class EpicyclesEdit extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_bottom, 0);
         });
-
+        Button sortBtn = findViewById(R.id.sort);
+        sortBtn.setOnClickListener(v -> {
+            LinearLayout dialog_ll = new LinearLayout(this);
+            dialog_ll.setOrientation(LinearLayout.VERTICAL);
+            Dialog dialog = new Dialog(this);
+            DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    , false);
+            dialog_ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            dialog.setContentView(dialog_ll, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            Button[] optionBtns = new Button[3];
+            int[] strRes = new int[]{
+                    R.string.vector_module_ascending_order,
+                    R.string.vector_module_descending_order,
+                    R.string.random_order
+            };
+            View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
+                    v0 -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> {
+                                double c = o1.c.getComplexModule() - o2.c.getComplexModule();
+                                return c < 0 ? -1 : (c == 0 ? 0 : 1);
+                            });
+                        } else Toast.makeText(this, "暂不支持", Toast.LENGTH_SHORT).show();
+                        reListEpicycles();
+                        dialog.dismiss();
+                    },
+                    v1 -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> {
+                                double c = -o1.c.getComplexModule() + o2.c.getComplexModule();
+                                return c < 0 ? -1 : (c == 0 ? 0 : 1);
+                            });
+                        } else Toast.makeText(this, "暂不支持", Toast.LENGTH_SHORT).show();
+                        reListEpicycles();
+                        dialog.dismiss();
+                    },
+                    v2 -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            //noinspection ComparatorMethodParameterNotUsed
+                            EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> Random.ran_sc(-10, 10));
+                        } else Toast.makeText(this, "暂不支持", Toast.LENGTH_SHORT).show();
+                        reListEpicycles();
+                        dialog.dismiss();
+                    }
+            };
+            for (int i = 0; i < optionBtns.length; i++) {
+                optionBtns[i] = new Button(this);
+                optionBtns[i].setText(strRes[i]);
+                optionBtns[i].setOnClickListener(onClickListeners[i]);
+                dialog_ll.addView(optionBtns[i]);
+            }
+            dialog.setCancelable(true);
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.show();
+        });
     }
 
     private void ck(String s1, String s2, String s3, String s4, EditText definite_n, EditText T, EditText epicycles_count, EditText threadNum) {
@@ -145,24 +200,29 @@ public class EpicyclesEdit extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == 71) {
-            for (EpicyclesSequence.AEpicycle epicycle : EpicyclesEdit.epicyclesSequence.epicycles) {
-                String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
-                        getString(R.string.left_parenthesis)
-                        , String.valueOf(epicycle.c.re), getString(R.string.add)
-                        , String.valueOf(epicycle.c.im), getString(R.string.i)
-                        , getString(R.string.right_parenthesis)
-                        , getString(R.string.e)
-                        , getString(R.string.caret)
-                        , getString(R.string.left_parenthesis)
-                        , String.valueOf(epicycle.n), getString(R.string.i)
-                        , getString(R.string.t)
-                        , getString(R.string.right_parenthesis));
-                TextView tv = new TextView(this);
-                tv.setText(s);
-                setTV(tv, new EpicyclesSequence.AEpicycle(epicycle.n, epicycle.c));
-                ll.addView(tv);
-            }
+            reListEpicycles();
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void reListEpicycles() {
+        this.ll.removeAllViews();
+        for (EpicyclesSequence.AEpicycle epicycle : EpicyclesEdit.epicyclesSequence.epicycles) {
+            String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
+                    getString(R.string.left_parenthesis)
+                    , String.valueOf(epicycle.c.re), getString(R.string.add)
+                    , String.valueOf(epicycle.c.im), getString(R.string.i)
+                    , getString(R.string.right_parenthesis)
+                    , getString(R.string.e)
+                    , getString(R.string.caret)
+                    , getString(R.string.left_parenthesis)
+                    , String.valueOf(epicycle.n), getString(R.string.i)
+                    , getString(R.string.t)
+                    , getString(R.string.right_parenthesis));
+            TextView tv = new TextView(this);
+            tv.setText(s);
+            setTV(tv, new EpicyclesSequence.AEpicycle(epicycle.n, epicycle.c));
+            ll.addView(tv);
+        }
     }
 }
