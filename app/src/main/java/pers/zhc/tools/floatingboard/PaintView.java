@@ -5,13 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
 import android.support.annotation.ColorInt;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
@@ -26,6 +24,7 @@ public class PaintView extends View {
     private final File internalPathFile;
     private final int height;
     private final int width;
+    private final Paint zP;
     private OutputStream os;
     private Paint mPaint;
     private Path mPath;
@@ -42,12 +41,6 @@ public class PaintView extends View {
     private Context ctx;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
-    private float scaleC = 1;
-    private float finalTranslateX, finalTranslateY;
-    private GestureResolver gestureResolver;
-    private float scalePointX;
-    private float scalePointY;
-    private float finalScale = 1F;
 
 
 
@@ -71,6 +64,8 @@ public class PaintView extends View {
         this.width = width;
         this.height = height;
         init();
+        zP = new Paint();
+        zP.setColor(Color.parseColor("#5000ff00"));
     }
 
     /***
@@ -115,48 +110,6 @@ public class PaintView extends View {
 
         undoList = new LinkedList<>();
         redoList = new LinkedList<>();
-        gestureResolver = new GestureResolver(ctx, new GestureResolver.GestureInterface() {
-            @Override
-            public void onZoomGesture(float pDistance, float distance, float currentScale, float scaleC, float centralPointX, float centralPointY, MotionEvent event) {
-                PaintView.this.scaleC = scaleC;
-                scalePointX = centralPointX;
-                scalePointY = centralPointY;
-            }
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onShowPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                if (e2.getPointerCount() == 2) {
-                    finalTranslateX -= distanceX / finalScale;
-                    finalTranslateY -= distanceY / finalScale;
-                }
-                return true;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-
-            }
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                return false;
-            }
-        });
     }
 
     /**
@@ -169,7 +122,6 @@ public class PaintView extends View {
             if (null != mPath) {//显示实时正在绘制的path轨迹
                 if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
                 else {
-                    canvas.scale(finalScale, finalScale, scalePointX, scalePointY);
                     canvas.drawPath(mPath, mPaint);
                 }
             }
@@ -325,13 +277,10 @@ public class PaintView extends View {
             p2 = new FloatPoint();
         }
 
-        private FloatPoint getCentralPoint() {
+        private FloatPoint getMidPoint() {
             return new FloatPoint((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
         }
     }
-
-    private float firstDistance;
-    private float lastScale;
 
 
     /**
@@ -341,9 +290,8 @@ public class PaintView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         onTouchAction(event.getAction(), event.getX(), event.getY(), event.getPointerCount());
-        gestureResolver.onTouch(event);
         if (event.getPointerCount() == 2) {
-            mPath = null;
+            /*mPath = null;
             mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             mCanvas.scale(scaleC, scaleC, scalePointX + finalTranslateX, scalePointY + finalTranslateY);
             finalScale *= scaleC;
@@ -351,50 +299,10 @@ public class PaintView extends View {
             for (PathBean pathBean : undoList) {
                 mCanvas.drawPath(pathBean.path, pathBean.paint);
             }
+            mCanvas.drawRect(0, 0, width, height, zP);
 //            mCanvas.scale(1 / finalScale, 1 / finalScale, scalePointX, scalePointY);
-            mCanvas.translate(-finalTranslateX, -finalTranslateY);
+            mCanvas.translate(-finalTranslateX, -finalTranslateY);*/
         }
-        /*int action = event.getAction();
-        int pointerCount = event.getPointerCount();
-        if (pointerCount >= 2) {
-            float x1 = event.getX(0);
-            float x2 = event.getX(1);
-            float y1 = event.getY(0);
-            float y2 = event.getY(1);
-            if (!firstP.b) {
-                firstP.p1.x = x1;
-                firstP.p2.x = x2;
-                firstP.p1.y = y1;
-                firstP.p2.y = y2;
-                firstP.b = true;
-            }
-            float distance = (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-            if (firstDistance == 0) {
-                firstDistance = distance;
-            }
-            if (action == MotionEvent.ACTION_MOVE) {
-                if (distance > firstDistance) {
-                    System.out.println("zoom+");
-                } else System.out.println("zoom-");
-                float centralPointX = (x1 + x2) / 2;
-                float centralPointY = (y1 + y2) / 2;
-                FloatPoint firstPCentralPoint = firstP.getCentralPoint();
-                float scale = 1F / lastScale * (distance / firstDistance);
-                mCanvas.scale(scale, scale, centralPointX, centralPointY);
-                lastScale = distance / firstDistance;
-                System.out.println("scale = " + scale);
-                mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                FloatPoint lastPCentralPoint = lastP.getCentralPoint();
-                mCanvas.translate(centralPointX - lastPCentralPoint.x, centralPointY - lastPCentralPoint.y);
-                for (PathBean pathBean : undoList) {
-                    mCanvas.drawPath(pathBean.path, pathBean.paint);
-                }
-                lastP.p1.x = x1;
-                lastP.p2.x = x2;
-                lastP.p1.y = y1;
-                lastP.p2.y = y2;
-            }
-        }*/
         invalidate();
         return true;
     }
@@ -537,9 +445,7 @@ public class PaintView extends View {
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
                     Paint paintRef = isEraserMode ? eraserPaint : mPaint;
-                    mCanvas.translate(finalTranslateX, finalTranslateY);
                     mCanvas.drawPath(mPath, paintRef);//将路径绘制在mBitmap上
-                    mCanvas.translate(-finalTranslateX, -finalTranslateY);
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(paintRef);
                     PathBean pb = new PathBean(path, paint);
@@ -599,46 +505,7 @@ public class PaintView extends View {
         }
     }
 
-    private class MyGesture implements GestureDetector.OnGestureListener {
-        boolean first2Down;
-
-        void onFirst2Down(float p1X, float p1Y, float p2X, float p2Y) {
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            return false;
-        }
-    }
-
     void resetTransform() {
-        finalScale = 1;
         invalidate();
     }
 }
