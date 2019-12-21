@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 import pers.zhc.tools.R;
 
 import java.io.IOException;
@@ -22,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         AView aView = new AView(this, bitmap);
-        setContentView(aView);
+        DoubleMoveView3 doubleMoveView3 = new DoubleMoveView3(this, bitmap);
+        setContentView(doubleMoveView3);
+        Toast.makeText(this, String.valueOf(SKt.f(3)), Toast.LENGTH_SHORT).show();
+//        setContentView(aView);
     }
 }
