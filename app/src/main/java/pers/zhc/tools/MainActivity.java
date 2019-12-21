@@ -84,7 +84,8 @@ public class MainActivity extends BaseActivity {
                 R.string.fourier_series_calc,
                 R.string.notes,
                 R.string.fourier_series_in_complex,
-                R.string.s
+                R.string.s,
+                R.string.view_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -95,7 +96,8 @@ public class MainActivity extends BaseActivity {
                 FunctionDrawingBoard.class,
                 Document.class,
                 EpicyclesEdit.class,
-                S.class
+                S.class,
+                pers.zhc.tools.test.viewtest.MainActivity.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
