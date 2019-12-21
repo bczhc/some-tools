@@ -4,8 +4,8 @@
     <generated>
       <config projectName="Project" targetName="zhc_cpp" />
       <config projectName="Project" targetName="zhc_c" />
-      <config projectName="Project" targetName="jni_help_cpp" />
       <config projectName="Project" targetName="jni_help_c" />
+      <config projectName="Project" targetName="jni_help_cpp" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -15,10 +15,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
-      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jni_help.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jni_help.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jni_help.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
@@ -27,37 +23,9 @@
       <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/c/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/c/codecs/doJNI.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/doJNI.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/c/codecs/qmcLib.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/qmcLib.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/c/codecs/qmcLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/qmcLib.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/c/verification/verify.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/verification/verify.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jni_c++/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/jni_c++/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zhc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/zhc.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libpi.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/liba.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libpi.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/liba.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libpi.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/liba.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libdoJNI.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libpi.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/PaintView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/ComplexFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/ComplexFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/ComplexGraphDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/ComplexGraphDrawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/EpicyclesEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/EpicyclesEdit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/EpicyclesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/epicycles_test/EpicyclesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/res/layout/epicycles_edit_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/layout/epicycles_edit_activity.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/S.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/S.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake2/cmake-build-debug/" />
@@ -74,7 +42,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -326,16 +294,19 @@
       <workItem from="1567834612203" duration="1259000" />
       <workItem from="1568334471196" duration="579000" />
       <workItem from="1570019598706" duration="1124000" />
+      <workItem from="1576379243758" duration="674000" />
+      <workItem from="1576915681579" duration="598000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="130033000" />
+    <option name="totallyTimeSpent" value="131305000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2813505" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28792736" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -348,13 +319,14 @@
       <window_info anchor="bottom" id="Database Changes" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3286026" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.32969433" />
-      <window_info anchor="bottom" id="CMake" order="10" visible="true" weight="0.29411766" />
+      <window_info anchor="bottom" id="CMake" order="10" visible="true" weight="0.29605263" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.32969433" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.37663755" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="right" id="make" order="4" />
     </layout>
     <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2596154" />
