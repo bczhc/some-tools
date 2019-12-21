@@ -12,7 +12,6 @@ import pers.zhc.tools.utils.GestureResolver;
 
 @SuppressLint("ViewConstructor")
 public class AView extends View {
-    private final Context ctx;
     private Paint mPaint;
     private Paint mPaint2;
     private Bitmap bitmap;
@@ -21,10 +20,11 @@ public class AView extends View {
     private int width = 0, height = 0;
     private Paint mBitmapPaint;
     private GestureResolver gestureResolver;
+    private float scale = 1;
+    private float transX, transY;
 
     AView(Context context, Bitmap bitmap) {
         super(context);
-        this.ctx = context;
         this.bitmap = bitmap;
     }
 
@@ -36,10 +36,18 @@ public class AView extends View {
         this.mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         this.mCanvas = new Canvas(mBitmap);
         mBitmapPaint = new Paint();
-        gestureResolver = new GestureResolver(ctx, new GestureResolver.GestureInterface() {
+        gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
-                mCanvas.translate(distanceX, distanceY);
+//                mCanvas.translate(distanceX / scale, distanceY / scale);
+                transX += distanceX / scale;
+                transY += distanceY / scale;
+            }
+
+            @Override
+            public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float pScale, MotionEvent event) {
+                AView.this.scale *= pScale;
+                mCanvas.scale(pScale, pScale, firstMidPointX, firstMidPointY);
             }
         });
     }
@@ -59,7 +67,7 @@ public class AView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mCanvas.drawBitmap(this.bitmap, 0, 0, mBitmapPaint);
+        mCanvas.drawBitmap(this.bitmap, this.transX, this.transY, mBitmapPaint);
         invalidate();
         this.gestureResolver.onTouch(event);
         return true;
