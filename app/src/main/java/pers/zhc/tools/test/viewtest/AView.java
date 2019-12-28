@@ -37,17 +37,21 @@ public class AView extends View {
         this.mCanvas = new Canvas(mBitmap);
         mBitmapPaint = new Paint();
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
+            private float realX, realY;
             @Override
             public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
 //                mCanvas.translate(distanceX / scale, distanceY / scale);
-                transX += distanceX / scale;
-                transY += distanceY / scale;
+                realX = distanceX / scale;
+                realY = distanceY / scale;
+                transX += distanceX;
+                transY += distanceY;
+                mCanvas.translate(realX, realY);
             }
 
             @Override
             public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float pScale, MotionEvent event) {
                 AView.this.scale *= pScale;
-                mCanvas.scale(pScale, pScale, firstMidPointX, firstMidPointY);
+                mCanvas.scale(pScale, pScale, firstMidPointX - transX, firstMidPointY - transY);
             }
         });
     }
@@ -67,7 +71,7 @@ public class AView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mCanvas.drawBitmap(this.bitmap, this.transX, this.transY, mBitmapPaint);
+        mCanvas.drawBitmap(this.bitmap, 0, 0, mBitmapPaint);
         invalidate();
         this.gestureResolver.onTouch(event);
         return true;

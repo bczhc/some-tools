@@ -9,7 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.Random;
@@ -122,48 +125,64 @@ public class EpicyclesEdit extends AppCompatActivity {
                     , false);
             dialog_ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             dialog.setContentView(dialog_ll, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            Button[] optionBtns = new Button[3];
             int[] strRes = new int[]{
                     R.string.vector_module_ascending_order,
                     R.string.vector_module_descending_order,
+                    R.string.velocity_ascending_order,
+                    R.string.velocity_descending_order,
                     R.string.random_order
             };
-            View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
-                    v0 -> {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            View.OnClickListener[] onClickListeners = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                onClickListeners = new View.OnClickListener[]{
+                        v0 -> {
                             EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> {
                                 double c = o1.c.getComplexModule() - o2.c.getComplexModule();
                                 return c < 0 ? -1 : (c == 0 ? 0 : 1);
                             });
-                        } else Toast.makeText(this, "暂不支持", Toast.LENGTH_SHORT).show();
-                        reListEpicycles();
-                        dialog.dismiss();
-                    },
-                    v1 -> {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            reListEpicycles();
+                            dialog.dismiss();
+                        },
+                        v1 -> {
                             EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> {
                                 double c = -o1.c.getComplexModule() + o2.c.getComplexModule();
                                 return c < 0 ? -1 : (c == 0 ? 0 : 1);
                             });
-                        } else Toast.makeText(this, "暂不支持", Toast.LENGTH_SHORT).show();
-                        reListEpicycles();
-                        dialog.dismiss();
-                    },
-                    v2 -> {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            reListEpicycles();
+                            dialog.dismiss();
+                        },
+                        v2 -> {
+                            EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> {
+                                if (Math.abs(o1.n) == Math.abs(o2.n)) return 0;
+                                return Math.abs(o1.n) < Math.abs(o2.n) ? -1 : 1;
+                            });
+                            reListEpicycles();
+                            dialog.dismiss();
+                        },
+                        v3 -> {
+                            EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> {
+                                if (Math.abs(o1.n) == Math.abs(o2.n)) return 0;
+                                return Math.abs(o1.n) < Math.abs(o2.n) ? 1 : -1;
+                            });
+                            reListEpicycles();
+                            dialog.dismiss();
+                        },
+                        v4 -> {
                             //noinspection ComparatorMethodParameterNotUsed
-                            EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> Random.ran_sc(-10, 10));
-                        } else Toast.makeText(this, "暂不支持", Toast.LENGTH_SHORT).show();
-                        reListEpicycles();
-                        dialog.dismiss();
-                    }
-            };
-            for (int i = 0; i < optionBtns.length; i++) {
-                optionBtns[i] = new Button(this);
-                optionBtns[i].setText(strRes[i]);
-                optionBtns[i].setOnClickListener(onClickListeners[i]);
-                dialog_ll.addView(optionBtns[i]);
+                            EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> Random.ran_sc(-100, 100));
+                            reListEpicycles();
+                            dialog.dismiss();
+                        }
+                };
             }
+            Button[] optionBtns = new Button[strRes.length];
+            if (onClickListeners != null)
+                for (int i = 0; i < optionBtns.length; i++) {
+                    optionBtns[i] = new Button(this);
+                    optionBtns[i].setText(strRes[i]);
+                    optionBtns[i].setOnClickListener(onClickListeners[i]);
+                    dialog_ll.addView(optionBtns[i]);
+                }
             dialog.setCancelable(true);
             dialog.setCanceledOnTouchOutside(true);
             dialog.show();
