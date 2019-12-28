@@ -9,7 +9,7 @@ import android.graphics.Paint;
  * 涂鸦时所用的画笔
  */
 public class MyPen {
-    boolean mBooleanPen;//是否是画笔 true - 画笔  false - 橡皮差
+    boolean mBooleanPen;//是否是画笔 true - 画笔  false - 橡皮擦
     private int mPenColor;
     private int mPenSize;
     private int mPenAlpha;//0 - 100
