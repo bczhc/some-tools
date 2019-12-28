@@ -180,7 +180,7 @@ public class Document extends BaseActivity {
                                         overridePendingTransition(R.anim.in_left_and_bottom, 0);
                                     },
                                     v1 -> {
-                                        android.support.v7.app.AlertDialog confirmationAD = DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
+                                        AlertDialog confirmationAD = DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
                                             try {
                                                 db.execSQL("DELETE FROM doc WHERE t=" + mills);
                                             } catch (Exception e) {

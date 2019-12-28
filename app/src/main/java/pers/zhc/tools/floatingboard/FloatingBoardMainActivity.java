@@ -14,7 +14,6 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Selection;
 import android.util.TypedValue;
 import android.view.*;
@@ -61,6 +60,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private long currentInstanceMills;
     private TextView[] childTVs;
 
+    @SuppressLint("UseSparseArrays")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -377,7 +377,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
 //                int finalI1 = i;
-                childTVs[i] = new android.support.v7.widget.AppCompatTextView(this) {
+                childTVs[i] = new TextView(this) {
 //                    private float firstX, firstY;
 
                     @Override

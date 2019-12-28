@@ -8,7 +8,7 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 28
+        versionCode 29
         versionName "4.6.0.1_20191222🐸_"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -31,6 +31,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'src/libs')
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:design:28.0.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:support-v4:28.0.0'
 }

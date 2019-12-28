@@ -5,13 +5,13 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 
-public class Clip extends AppCompatActivity {
+public class Clip extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

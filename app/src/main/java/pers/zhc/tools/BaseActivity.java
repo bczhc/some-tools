@@ -1,15 +1,15 @@
 package pers.zhc.tools;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends Activity {
 
     File getVFile(Context ctx) {
         File filesDir = ctx.getFilesDir();
