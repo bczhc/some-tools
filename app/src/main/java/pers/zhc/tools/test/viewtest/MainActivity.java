@@ -1,9 +1,9 @@
 package pers.zhc.tools.test.viewtest;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import pers.zhc.tools.BaseActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,12 +1,12 @@
 package pers.zhc.tools.utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PixelFormat;
 import android.os.Build;
-import android.support.v7.app.AlertDialog;
 import android.view.Window;
 import android.view.WindowManager;
 import pers.zhc.tools.R;

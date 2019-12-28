@@ -8,10 +8,10 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import pers.zhc.tools.BaseActivity;
@@ -48,12 +48,12 @@ public class FunctionDrawingBoard extends BaseActivity {
                 R.string.function_drawing_y_length
         };
         int[] initialValue = new int[]{30, 30, 30, 30};
-        AppCompatEditText[] editTexts = new AppCompatEditText[4];
+        EditText[] editTexts = new EditText[4];
         StringBuilder s = new StringBuilder();
         r = new int[4];
         for (int i = 0; i < editTexts.length; i++) {
             int finalI = i;
-            editTexts[i] = new AppCompatEditText(this) {
+            editTexts[i] = new EditText(this) {
                 @Override
                 protected void onDraw(Canvas canvas) {
                     s.delete(0, s.length());
