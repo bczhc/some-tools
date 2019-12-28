@@ -1,11 +1,10 @@
 package pers.zhc.tools.codecs;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
@@ -142,7 +141,6 @@ public class Settings extends BaseActivity {
                     }
                     checkBoxes[finalI] = new CheckBox(this);
                     checkBoxes[finalI].setText(R.string.delete_old_file);
-//                    checkBoxes[finalI].setOnClickListener(v -> Snackbar.make(ll, String.valueOf(checkBoxes[finalI].isChecked()), Snackbar.LENGTH_SHORT).show());
                     try {
                         checkBoxes[finalI].setChecked(Boolean.parseBoolean(this.saved.get(finalI).get(2)));
                     } catch (IndexOutOfBoundsException ignored) {
@@ -164,8 +162,8 @@ public class Settings extends BaseActivity {
             rl.setGravity(Gravity.CENTER);
             RelativeLayout.LayoutParams rl_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             rl.setLayoutParams(rl_lp);
-            FloatingActionButton fab = new FloatingActionButton(this);
-            fab.setOnClickListener(v -> {
+            Button okBtn = new Button(this);
+            okBtn.setOnClickListener(v -> {
                 saveAll();
                 String s = null;
                 try {
@@ -178,7 +176,7 @@ public class Settings extends BaseActivity {
                 returnIntent(this.r_intent);
             });
             runOnUiThread(() -> {
-                rl.addView(fab);
+                rl.addView(okBtn);
                 ll.addView(rl);
             });
         });
@@ -221,52 +219,6 @@ public class Settings extends BaseActivity {
             adb.setTitle(R.string.whether_to_save)
                     .setNegativeButton(R.string.no, (dialog, which) -> this.finish())
                     .setPositiveButton(R.string.yes, (dialog, which) -> {
-                        /*List<IIOObject> list = this.iio.list;
-                        for (IIOObject iioObject : list) {
-                            String s = ((EditText) iioObject.o).getText().toString();
-                            String name = this.jsonText[iioObject.key1][iioObject.key2];
-                            boolean isNull = units[iioObject.key1].isNull(name);
-                            try {
-                                if (isNull || units[iioObject.key1].get(name).equals(""))
-                                    units[iioObject.key1].put(name, s);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                if (isNull) {
-                                    try {
-                                        units[iioObject.key1].put(name, s);
-                                    } catch (JSONException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-                                Snackbar snackbar = Snackbar.make(ll, e.toString(), Snackbar.LENGTH_SHORT);
-                                snackbar.setAction("×", v -> snackbar.dismiss()).show();
-                            }
-                        }*/
-                        /*for (IIOObject iioObject : list) {
-                            units[iioObject.key1][iioObject.key2] = new JSONObject();
-                            try {
-                                if ((iioObject.key2 & 1) == 0) {
-                                    units[iioObject.key1][iioObject.key2].put(jsonText[iioObject.key1][iioObject.key2], ((EditText) iioObject.o).getText().toString());
-                                } else {
-                                    units[iioObject.key1][iioObject.key2].put(jsonText[iioObject.key1][iioObject.key2], ((EditText) iioObject.o).getText().toString());
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Snackbar snackbar = Snackbar.make(ll, e.toString(), Snackbar.LENGTH_SHORT);
-                                snackbar.setAction("×", v -> snackbar.dismiss()).show();
-                            }
-                        }*/
-                        /*try {
-                            OutputStream os = new FileOutputStream(this.file);
-                            OutputStreamWriter osw = new OutputStreamWriter(os);
-                            BufferedWriter bw = new BufferedWriter(osw);
-
-                            bw.close();
-                            osw.close();
-                            os.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }*/
                         saveAll();
                         String r = this.json.toString();
                         this.r_intent.putExtra("result", r);

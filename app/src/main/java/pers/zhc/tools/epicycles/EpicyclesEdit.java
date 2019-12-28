@@ -5,21 +5,20 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.Random;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
 import pers.zhc.u.math.util.ComplexValue;
 
-public class EpicyclesEdit extends AppCompatActivity {
+public class EpicyclesEdit extends BaseActivity {
 
     static EpicyclesSequence epicyclesSequence;
     private LinearLayout ll;
@@ -90,7 +89,7 @@ public class EpicyclesEdit extends AppCompatActivity {
             EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Double.valueOf(s1)
                     , new ComplexValue(Double.valueOf(s2)
                     , Double.valueOf(s3)));
-            AppCompatTextView tv = new AppCompatTextView(this);
+            TextView tv = new TextView(this);
             setTV(tv, aEpicycle);
             String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
                     getString(R.string.left_parenthesis)

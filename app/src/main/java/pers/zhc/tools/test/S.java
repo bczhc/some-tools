@@ -3,12 +3,12 @@ package pers.zhc.tools.test;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.utils.Common;
 
 import java.io.IOException;
 
-public class S extends AppCompatActivity {
+public class S extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

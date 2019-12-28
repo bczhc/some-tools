@@ -2,12 +2,12 @@ package pers.zhc.tools.epicycles;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 
-public class EpicyclesTest extends AppCompatActivity {
+public class EpicyclesTest extends BaseActivity {
     private EpicyclesView epicyclesView;
 
     @Override
