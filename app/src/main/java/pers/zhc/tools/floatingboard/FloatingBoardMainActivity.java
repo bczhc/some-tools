@@ -3,7 +3,6 @@ package pers.zhc.tools.floatingboard;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.*;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.*;
@@ -58,7 +57,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private View globalOnTouchListenerFloatingView;
     private File currentInternalPathFile = null;
     private Runnable importPathFileDoneAction;
-    private static Map<Long, Activity> longMainActivityMap;//memory leak??
+    static Map<Long, Activity> longMainActivityMap;//memory leak??
     private long currentInstanceMills;
     private TextView[] childTVs;
 
@@ -284,7 +283,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
 
 
     @SuppressLint({"ClickableViewAccessibility"})
-    private void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
+    void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
         pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         WindowManager.LayoutParams lp2 = new WindowManager.LayoutParams();
@@ -609,9 +608,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                     .setContentTitle(getString(R.string.drawing_board))
                     .setContentText(getString(R.string.appear_f_b, date));
 //            Intent intent = new Intent(this, NotificationClickReceiver.class);
-            Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
+            Intent intent = new Intent();
+            intent.setAction("pers.zhc.tools.START_FB");
+            intent.setPackage(getPackageName());
             intent.putExtra("mills", currentInstanceMills);
-            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pi = PendingIntent.getBroadcast(this, ((int) (System.currentTimeMillis() - this.currentInstanceMills)), intent, PendingIntent.FLAG_UPDATE_CURRENT);
             nb.setContentIntent(pi);
             Notification build = nb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
@@ -623,9 +624,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                     .setContentTitle(getString(R.string.drawing_board))
                     .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
-            Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
+            Intent intent = new Intent();
+            intent.setAction("pers.zhc.tools.START_FB");
             intent.putExtra("mills", currentInstanceMills);
-            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            intent.setPackage(getPackageName());
+            PendingIntent pi = PendingIntent.getBroadcast(this, ((int) (System.currentTimeMillis() - this.currentInstanceMills)), intent, PendingIntent.FLAG_UPDATE_CURRENT);
             ncb.setContentIntent(pi);
             Notification build = ncb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
@@ -960,20 +963,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 23 && grantResults[0] == 0) saveAction();
-    }
-
-    public static class NotificationClickReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Objects.requireNonNull(intent.getAction()).equals("pers.zhc.tools.START_SERVICE")) {
-                long mills = intent.getLongExtra("mills", 0);
-                FloatingBoardMainActivity activity = (FloatingBoardMainActivity) FloatingBoardMainActivity.longMainActivityMap.get(mills);
-                if (activity != null) {
-                    activity.startFloatingWindow(false, false);
-                }
-            }
-        }
     }
 
 

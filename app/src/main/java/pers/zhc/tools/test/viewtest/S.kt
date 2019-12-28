@@ -20,8 +20,6 @@ fun create(ac: AppCompatActivity) {
     }
 
     val aView = AView(ac, bitmap)
-    DoubleMoveView3(ac, bitmap)
-    //        setContentView(doubleMoveView3);
     Toast.makeText(ac, f(3).toString(), Toast.LENGTH_SHORT).show()
     ac.setContentView(aView)
 }
