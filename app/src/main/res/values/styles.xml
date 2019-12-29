@@ -1,39 +1,11 @@
 <resources>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="android:Theme.Holo.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
-    <style name="AppThemeNotTranslucent" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeNotTranslucent" parent="android:Theme.Holo.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowIsTranslucent">false</item>
-    </style>
-    <style name="settings" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/settings_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/settings_colorPrimaryDark</item>
-        <item name="colorAccent">@color/settings_colorAccent</item>
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
-    <!--dialog样式的界面-->
-    <style name="dialog_style" parent="Theme.AppCompat.Light.Dialog">
-        <!--是否悬浮在activity上-->
-        <item name="android:windowIsFloating">true</item>
-        <!--透明是否-->
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:background">@null</item>
-        <!--设置没有窗口标题、dialog标题等各种标题-->
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:title">@null</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:dialogTitle">@null</item>
-        <!--点击 dialog Activity 周围是否关闭弹窗 true 关闭（默认为true） false 为不关闭-->
-        <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
 </resources>

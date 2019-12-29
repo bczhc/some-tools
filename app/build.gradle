@@ -6,8 +6,8 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 28
-        versionName "4.5.0.1_20191109🐸"
+        versionCode 30
+        versionName "4.6.0.1_201912🐸29_"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -21,41 +21,15 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDirs = ['src/libs']
+    sourceSets {
+        main {
+            jni.srcDirs = ['src/jni']
+            jniLibs.srcDirs = ['src/libs']
+        }
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'src/libs')
-//    implementation 'com.android.support:support-v4:28.0.0'
-//    implementation 'com.android.support:appcompat-v7:27.1.1'
-//    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:design:28.0.0'
-//    implementation 'com.android.support:design:27.1.1'
-//    implementation "com.android.tools.build:gradle-experimental:0.11.1"
-//    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.31'
-
-    /*repositories {
-        maven {
-            url 'https://raw.githubusercontent.com/bczhc/mvn-repo-zhc/master'
-        }
-    }
-    
-    implementation 'zhc:java:1.2'
-
-    configurations.all {
-        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-            def requested = details.requested
-            if (requested.group == 'com.android.support') {
-                if (!requested.name.startsWith("multidex")) {
-                    details.useVersion '28.0.0'
-                }
-            }
-        }
-    }*/
-    /*---------------------
-            版权声明：本文为CSDN博主「那一夜_」的原创文章，遵循CC 4.0 by-sa版权协议，转载请附上原文出处链接及本声明。
-    原文链接：https://blog.csdn.net/weixin_44247225/article/details/86157455*/
+    implementation 'com.android.support:support-v4:28.0.0'
 }
