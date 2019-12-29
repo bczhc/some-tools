@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,8 +106,7 @@ public class CodecsActivity extends BaseActivity {
                         this.runOnUiThread(() -> toast(4, this.getString(R.string.json_solve_error) + e.toString()));
                     }
 //                    this.creat();
-                    Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.saving_success, Snackbar.LENGTH_SHORT);
-                    snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
+                    makeText(this, R.string.saving_success, LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -126,15 +123,15 @@ public class CodecsActivity extends BaseActivity {
             latch1.countDown();
             this.toasts = new Toast[13];
         }).start();
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
+        Button sBtn = findViewById(R.id.setting_btn);
+        sBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.putExtra("jsonText", this.jsonText);
             intent.putExtra("file", this.file);
             intent.setClass(this, Settings.class);
             startActivityForResult(intent, 3);
         });
-        fab.setOnLongClickListener(v -> {
+        sBtn.setOnLongClickListener(v -> {
             Intent intent = new Intent();
             intent.setClass(this, MainActivity.class);
             startActivity(intent);
@@ -234,8 +231,7 @@ public class CodecsActivity extends BaseActivity {
                     srcExtensions = conf.get(0).get(0).split("\\|");
                     dstExtensions = conf.get(0).get(1).split("\\|");
                     if (srcExtensions.length != dstExtensions.length) {
-                        Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
-                        snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
+                        makeText(this, R.string.dismiss_x, LENGTH_SHORT).show();
                         try {
                             switch (x) {
                                 case "qmc0":
@@ -252,8 +248,7 @@ public class CodecsActivity extends BaseActivity {
                     srcExtensions = conf.get(1).get(0).split("\\|");
                     dstExtensions = conf.get(1).get(1).split("\\|");
                     if (srcExtensions.length != dstExtensions.length) {
-                        Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
-                        snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
+                        makeText(this, R.string.dismiss_x, LENGTH_SHORT).show();
                         if (!(x.equals("kwm") | x.equals("kwd"))) return null;
                         String r;
                         if (name.matches(".*\\..*")) {
@@ -268,8 +263,7 @@ public class CodecsActivity extends BaseActivity {
                     srcExtensions = conf.get(2).get(0).split("\\|");
                     dstExtensions = conf.get(2).get(1).split("\\|");
                     if (srcExtensions.length != dstExtensions.length) {
-                        Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
-                        snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
+                        makeText(this, R.string.dismiss_x, LENGTH_SHORT).show();
                         return p + "/" + name_no_x + "." + "base128e";
                     }
                     return conf_getX(srcExtensions, dstExtensions, p, name_no_x, x);
@@ -277,8 +271,7 @@ public class CodecsActivity extends BaseActivity {
                     srcExtensions = conf.get(3).get(0).split("\\|");
                     dstExtensions = conf.get(3).get(1).split("\\|");
                     if (srcExtensions.length != dstExtensions.length) {
-                        Snackbar snackbar = Snackbar.make(findViewById(R.id.fab), R.string.expression_error, Snackbar.LENGTH_SHORT);
-                        snackbar.setAction(R.string.dismiss_x, v -> snackbar.dismiss()).show();
+                        makeText(this, R.string.dismiss_x, LENGTH_SHORT).show();
                         return p + "/" + name_no_x + "." + "base128d";
                     }
                     return conf_getX(srcExtensions, dstExtensions, p, name_no_x, x);
@@ -297,7 +290,7 @@ public class CodecsActivity extends BaseActivity {
 
     private void setTSpinner() {
         Spinner dT = findViewById(R.id.dT);
-        SpinnerAdapter adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item
+        SpinnerAdapter adapter = new ArrayAdapter<>(this,  R.layout.adapter_layout
                 , this.spinnerData);
         dT.setAdapter(adapter);
         dT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

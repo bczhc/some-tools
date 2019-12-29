@@ -2,8 +2,14 @@ package pers.zhc.tools.floatingboard;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.*;
-import android.content.BroadcastReceiver;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.*;
@@ -15,11 +21,26 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Selection;
 import android.util.TypedValue;
-import android.view.*;
-import android.widget.*;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +61,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
 import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
@@ -58,10 +84,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private View globalOnTouchListenerFloatingView;
     private File currentInternalPathFile = null;
     private Runnable importPathFileDoneAction;
-    private static Map<Long, Activity> longMainActivityMap;//memory leak??
+    static Map<Long, Activity> longMainActivityMap;//memory leak??
     private long currentInstanceMills;
     private TextView[] childTVs;
 
+    @SuppressLint("UseSparseArrays")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -284,7 +311,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
 
 
     @SuppressLint({"ClickableViewAccessibility"})
-    private void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
+    void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
         pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         WindowManager.LayoutParams lp2 = new WindowManager.LayoutParams();
@@ -378,7 +405,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
 //                int finalI1 = i;
-                childTVs[i] = new android.support.v7.widget.AppCompatTextView(this) {
+                childTVs[i] = new TextView(this) {
 //                    private float firstX, firstY;
 
                     @Override
@@ -609,9 +636,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                     .setContentTitle(getString(R.string.drawing_board))
                     .setContentText(getString(R.string.appear_f_b, date));
 //            Intent intent = new Intent(this, NotificationClickReceiver.class);
-            Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
+            Intent intent = new Intent();
+            intent.setAction("pers.zhc.tools.START_FB");
+            intent.setPackage(getPackageName());
             intent.putExtra("mills", currentInstanceMills);
-            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pi = PendingIntent.getBroadcast(this, ((int) (System.currentTimeMillis() - this.currentInstanceMills)), intent, PendingIntent.FLAG_UPDATE_CURRENT);
             nb.setContentIntent(pi);
             Notification build = nb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
@@ -623,9 +652,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                     .setContentTitle(getString(R.string.drawing_board))
                     .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
-            Intent intent = new Intent("pers.zhc.tools.START_SERVICE");
+            Intent intent = new Intent();
+            intent.setAction("pers.zhc.tools.START_FB");
             intent.putExtra("mills", currentInstanceMills);
-            PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            intent.setPackage(getPackageName());
+            PendingIntent pi = PendingIntent.getBroadcast(this, ((int) (System.currentTimeMillis() - this.currentInstanceMills)), intent, PendingIntent.FLAG_UPDATE_CURRENT);
             ncb.setContentIntent(pi);
             Notification build = ncb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
@@ -888,13 +919,13 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
                             TextView tv = progressRL.findViewById(R.id.progress_tv);
                             tv.setText(R.string.importing);
-                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
+//                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
                             TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
                             pv.importPathFile(new File(s), () -> {
                                 runOnUiThread(importPathFileDoneAction);
                                 importPathFileProgressDialog.dismiss();
                             }, aFloat -> runOnUiThread(() -> {
-                                progressBar.setProgress(aFloat.intValue());
+//                                progressBar.setProgress(aFloat.intValue());
                                 pTV.setText(getString(R.string.progress_tv, aFloat));
                             }));
                             moreOptionsDialog.dismiss();
@@ -961,29 +992,4 @@ public class FloatingBoardMainActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 23 && grantResults[0] == 0) saveAction();
     }
-
-    public static class NotificationClickReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Objects.requireNonNull(intent.getAction()).equals("pers.zhc.tools.START_SERVICE")) {
-                long mills = intent.getLongExtra("mills", 0);
-                FloatingBoardMainActivity activity = (FloatingBoardMainActivity) FloatingBoardMainActivity.longMainActivityMap.get(mills);
-                if (activity != null) {
-                    activity.startFloatingWindow(false, false);
-                }
-            }
-        }
-    }
-
-
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 71 && data != null) {
-            String file = data.getStringExtra("result");
-            pv.importPathFile(new File(file));
-            Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
-        }
-    }*/
 }
