@@ -2,6 +2,7 @@ package pers.zhc.tools.filepicker;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -9,9 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.*;
+import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.PermissionRequester;
 
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import static pers.zhc.tools.utils.Common.showException;
 
-public class Picker extends AppCompatActivity {
+public class Picker extends BaseActivity {
     public static String result = null;
     private Toast notHavePermissionAccessToast = null;
     @SuppressWarnings("unused")
@@ -151,8 +151,6 @@ public class Picker extends AppCompatActivity {
                     if (notHavePermissionAccessToast != null) notHavePermissionAccessToast.cancel();
                     notHavePermissionAccessToast = Toast.makeText(this, R.string.no_access, Toast.LENGTH_SHORT);
                     notHavePermissionAccessToast.show();
-                    /*Snackbar snackbar = Snackbar.make(this.ll, R.string.no_access, Snackbar.LENGTH_SHORT);
-                    snackbar.setAction("×", v -> snackbar.dismiss()).show();*/
                 });
                 e.printStackTrace();
             }
@@ -177,7 +175,6 @@ public class Picker extends AppCompatActivity {
                                             textViews[finalI].setBackgroundColor(Color.GREEN);
                                             justPicked[0] = finalI;
                                         } catch (ArrayIndexOutOfBoundsException e) {
-//                                            Snackbar.make(this.ll, e.toString(), Snackbar.LENGTH_SHORT).show();
                                             showException(e, Picker.this);
                                         }
                                     }

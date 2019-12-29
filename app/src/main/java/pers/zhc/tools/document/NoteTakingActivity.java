@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.u.common.Documents;
@@ -41,9 +41,7 @@ public class NoteTakingActivity extends Document {
                 cv.put("content", content_et.getText().toString());
                 try {
                     db.insertOrThrow("doc", null, cv);
-                    Snackbar snackbar = Snackbar.make(insertBtn, R.string.recording_success, Snackbar.LENGTH_SHORT);
-                    snackbar.setAction(R.string.dismiss_x, v1 -> snackbar.dismiss());
-                    snackbar.show();
+                    Toast.makeText(this, R.string.recording_success, Toast.LENGTH_SHORT).show();
                 } catch (SQLException e) {
                     Common.showException(e, this);
                 }
@@ -55,9 +53,7 @@ public class NoteTakingActivity extends Document {
                     values.put("title", title_et.getText().toString());
                     values.put("content", content_et.getText().toString());
                     db.update("doc", values, "t=?", new String[]{String.valueOf(mills)});
-                    Snackbar snackbar = Snackbar.make(insertBtn, R.string.updating_success, Snackbar.LENGTH_SHORT);
-                    snackbar.setAction(R.string.dismiss_x, v1 -> snackbar.dismiss());
-                    snackbar.show();
+                    Toast.makeText(this, R.string.updating_success, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Common.showException(e, this);
                 }

@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.view.MotionEvent;
 import android.view.View;
+import pers.zhc.u.math.util.ComplexValue;
 
 public class ComplexGraphDrawingView extends View {
 
@@ -32,13 +33,27 @@ public class ComplexGraphDrawingView extends View {
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
-        complexFunction = new ComplexFunction();
+        if (complexFunction == null) complexFunction = new ComplexFunction();
     }
+
+    private boolean instanceFirst = true;
 
     @Override
     protected void onDraw(Canvas canvas) {
         width = ((float) getWidth());
         height = ((float) getHeight());
+        if (instanceFirst && complexFunction.length() != 0) {
+            mPath = new Path();
+            ComplexValue complexValue = complexFunction.get(0);
+            mPath.moveTo(((float) (complexValue.re + width / 2D)), ((float) (height / 2D - complexValue.im)));
+            int length = complexFunction.length();
+            for (int i = 1; i < length; i++) {
+                complexValue = complexFunction.get(i);
+                mPath.lineTo(((float) (complexValue.re + width / 2D)), ((float) (height / 2D - complexValue.im)));
+            }
+            mPath.close();
+            instanceFirst = false;
+        }
         canvas.drawLine(0F, height / 2F, width, height / 2F, mCoPaint);
         canvas.drawLine(width / 2F, 0F, width / 2F, height, mCoPaint);
 //            画实轴和虚轴 无箭头

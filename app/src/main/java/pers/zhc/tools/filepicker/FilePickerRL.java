@@ -2,12 +2,12 @@ package pers.zhc.tools.filepicker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -152,8 +152,6 @@ public class FilePickerRL extends RelativeLayout {
                     notHavePermissionAccessToast = Toast.makeText(ctx, R.string.no_access, Toast.LENGTH_SHORT);
                     notHavePermissionAccessToast.show();
                 });
-                    /*Snackbar snackbar = Snackbar.make(this.ll, R.string.no_access, Snackbar.LENGTH_SHORT);
-                    snackbar.setAction("×", v -> snackbar.dismiss()).show();*/
                 e.printStackTrace();
             }
             textViews = new TextView[length];
@@ -176,7 +174,6 @@ public class FilePickerRL extends RelativeLayout {
                                         textViews[finalI].setBackgroundColor(Color.GREEN);
                                         justPicked[0] = finalI;
                                     } catch (ArrayIndexOutOfBoundsException e) {
-//                                            Snackbar.make(this.ll, e.toString(), Snackbar.LENGTH_SHORT).show();
                                         showException(e, ctx);
                                     }
                                 }

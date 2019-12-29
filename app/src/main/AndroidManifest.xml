@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="pers.zhc.tools">
+          xmlns:tools="http://schemas.android.com/tools" package="pers.zhc.tools">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -12,21 +12,11 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
     >
-        <!--<receiver android:name="pers.zhc.tools.floatingboard.FloatingBoardMainActivitydMainActivity$NotificationClickReceiver"
-                  android:enabled="true"
-                  android:exported="false">
+        <receiver android:name=".floatingboard.NotificationClickReceiver"
+                  android:exported="true"
+                  android:enabled="true" tools:ignore="ExportedReceiver">
             <intent-filter>
-                <action android:name="pers.zhc.tools.floatingboard.FloatingBoardMainActivitydMainActivity"
-            </intent-filter>
-        </receiver>-->
-        <receiver android:name=".floatingboard.FloatingBoardMainActivity$NotificationClickReceiver"
-                  android:exported="false"
-                  android:enabled="true">
-            <intent-filter>
-                <action android:name="pers.zhc.tools.START_SERVICE"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="pers.zhc.tools.STOP_SERVICE"/>
+                <action android:name="pers.zhc.tools.START_FB"/>
             </intent-filter>
         </receiver>
         <activity android:name="pers.zhc.tools.MainActivity"
@@ -53,7 +43,7 @@
         </activity>
         <activity android:name="pers.zhc.tools.codecs.Settings"
                   android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/settings"
+                  android:theme="@style/AppTheme"
                   android:label="@string/settings"
         />
         <activity android:name="pers.zhc.tools.pi.Pi"
@@ -179,6 +169,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".test.S"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".test.viewtest.MainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         >

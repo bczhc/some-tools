@@ -84,34 +84,47 @@
               android:id="@+id/tv9" android:textSize="30sp"
 
     />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/add"
-            android:layout_below="@id/et_n"
-            android:id="@+id/add_btn"
-    />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/random"
-            android:layout_toRightOf="@id/add_btn" android:layout_toEndOf="@id/add_btn"
-            android:layout_below="@id/et_n"
-            android:id="@+id/random"
-    />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/start"
-            android:layout_below="@id/et_n"
-            android:id="@+id/start"
-            android:layout_toRightOf="@id/random"
-            android:layout_toEndOf="@id/random"/>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/drawing_graph"
-            android:id="@+id/drawing_graph"
-            android:layout_alignBaseline="@id/start"
-            android:layout_toRightOf="@id/start" android:layout_toEndOf="@id/start"
-            android:layout_below="@id/et_n"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:layout_below="@id/et_n"
+                  android:id="@id/ll"
+                  android:orientation="horizontal"
+    >
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+                android:text="@string/add"
+                android:id="@+id/add_btn"
+                tools:ignore="ButtonStyle"
+                android:layout_weight="1"
+        />
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+                android:text="@string/random"
+                android:id="@+id/random"
+                tools:ignore="ButtonStyle"
+                android:layout_weight="1"
+        />
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+                android:text="@string/start"
+                android:id="@+id/start"
+                tools:ignore="ButtonStyle"
+                android:layout_weight="1"
+        />
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+                android:text="@string/drawing_graph"
+                android:id="@+id/drawing_graph"
+                tools:ignore="ButtonStyle"
+                android:layout_weight="1"
+        />
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+                android:text="@string/sort"
+                tools:ignore="ButtonStyle"
+                android:layout_weight="1"
+                android:id="@+id/sort"
+        />
+    </LinearLayout>
     <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
               tools:ignore="Autofill,LabelFor,TextFields"
               android:inputType="number"
               android:hint="@string/definite_n"
-              android:layout_below="@id/add_btn"
+              android:layout_below="@id/ll"
               android:id="@+id/definite_n_et"
     />
     <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -119,7 +132,7 @@
               android:inputType="numberDecimal"
               android:hint="@string/period"
               android:layout_toRightOf="@id/definite_n_et"
-              android:layout_below="@id/add_btn"
+              android:layout_below="@id/ll"
               android:id="@+id/t_et"
               android:layout_toEndOf="@id/definite_n_et"
     />
@@ -128,7 +141,7 @@
               android:inputType="number"
               android:hint="@string/epicycles_count"
               android:layout_toRightOf="@id/t_et"
-              android:layout_below="@id/add_btn"
+              android:layout_below="@id/ll"
               android:id="@+id/epicycles_count"
               android:layout_toEndOf="@id/t_et"/>
     <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -136,7 +149,7 @@
               android:inputType="number"
               android:hint="@string/thread_num"
               android:layout_toRightOf="@id/epicycles_count"
-              android:layout_below="@id/add_btn"
+              android:layout_below="@id/ll"
               android:id="@+id/thread_num"
               android:layout_toEndOf="@id/epicycles_count"/>
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
@@ -144,7 +157,7 @@
     >
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:orientation="vertical"
-                      android:id="@+id/ll"
+                      android:id="@+id/sc_ll"
         />
     </ScrollView>
 </RelativeLayout>
