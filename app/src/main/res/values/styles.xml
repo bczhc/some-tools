@@ -1,10 +1,11 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.DeviceDefault.Light.NoActionBar">
+    <style name="BaseTheme" parent="android:Theme.DeviceDefault.Light.NoActionBar"/>
+    <style name="AppTheme" parent="BaseTheme">
         <!-- Customize your theme here. -->
         <item name="android:windowIsTranslucent">true</item>
     </style>
-    <style name="AppThemeNotTranslucent" parent="android:Theme.DeviceDefault.Light.NoActionBar">
+    <style name="AppThemeNotTranslucent" parent="BaseTheme">
         <!-- Customize your theme here. -->
         <item name="android:windowIsTranslucent">false</item>
     </style>

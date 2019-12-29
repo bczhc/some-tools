@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -163,6 +164,9 @@ public class Settings extends BaseActivity {
             RelativeLayout.LayoutParams rl_lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             rl.setLayoutParams(rl_lp);
             Button okBtn = new Button(this);
+            okBtn.setText(R.string.save);
+            ViewGroup.LayoutParams btnLP = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            okBtn.setLayoutParams(btnLP);
             okBtn.setOnClickListener(v -> {
                 saveAll();
                 String s = null;
