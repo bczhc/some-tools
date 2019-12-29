@@ -1,6 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
@@ -8,8 +6,8 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 29
-        versionName "4.6.0.1_20191222🐸_"
+        versionCode 30
+        versionName "4.6.0.1_201912🐸29_"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,14 +21,15 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDirs = ['src/libs']
+    sourceSets {
+        main {
+            jni.srcDirs = ['src/jni']
+            jniLibs.srcDirs = ['src/libs']
+        }
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'src/libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:support-v4:28.0.0'
 }
