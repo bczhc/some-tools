@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -132,6 +133,10 @@ public class Document extends BaseActivity {
     }
 
     private void setSVViews() {
+        Drawable stroke = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            stroke = getDrawable(R.drawable.view_stroke);
+        }
         db = getDB(this);
         sv.removeAllViews();
         LinearLayout linearLayout = new LinearLayout(this);
@@ -146,6 +151,7 @@ public class Document extends BaseActivity {
         ExecutorService es = Executors.newCachedThreadPool();
         String[] sqliteOptions = getResources().getStringArray(R.array.sqlite_options);
         if (cursor.moveToFirst()) {
+            Drawable finalStroke = stroke;
             es.execute(() -> {
                 do {
                     ViewWithExtras<LinearLayout, Long> ll = new ViewWithExtras<>();
@@ -213,7 +219,7 @@ public class Document extends BaseActivity {
                         setSmallTVExtracted(smallLL_LP4, ll.a, smallLL, s);
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        ll.a.setBackground(getDrawable(R.drawable.view_stroke));
+                        ll.a.setBackground(finalStroke);
                     }
                     runOnUiThread(() -> linearLayout.addView(ll.a));
                 } while (cursor.moveToNext());
