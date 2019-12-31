@@ -29,7 +29,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="error" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ArtifactsWorkspaceSettings">
@@ -38,29 +38,19 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="稍改">
-      <change afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libdoJNI.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libfb_tools.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libdoJNI.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libfb_tools.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86/libdoJNI.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86/libfb_tools.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libdoJNI.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libfb_tools.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" afterDir="false" />
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="颜色选择器：手动输入颜色十六进制">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/theme/SetTheme.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/RGB.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/shape.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/set_app_theme_activity.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/Settings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/adapter_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/adapter_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ColorUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ColorUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ZipUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
     </list>
@@ -110,39 +100,30 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="12" column="46" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="294">
+              <caret line="14" column="41" selection-start-line="14" selection-start-column="41" selection-end-line="14" selection-end-column="41" />
+            </state>
+          </provider>
           <provider editor-type-id="android-manifest" />
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
-            </state>
-          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/adapter_layout.xml">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/floating_board_activity.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="525">
+              <caret line="25" column="43" selection-start-line="25" selection-start-column="29" selection-end-line="25" selection-end-column="43" />
+            </state>
+          </provider>
           <provider editor-type-id="android-designer2" />
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="21">
-              <caret line="1" column="58" selection-start-line="1" selection-start-column="58" selection-end-line="1" selection-end-column="58" />
-            </state>
-          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/viewtest/MainActivity.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="63">
-              <caret line="3" column="38" selection-start-line="3" selection-start-column="38" selection-end-line="3" selection-end-column="38" />
+            <state relative-caret-position="200">
+              <caret line="60" column="9" selection-start-line="60" selection-start-column="9" selection-end-line="60" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -150,51 +131,69 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
-              <caret line="4" column="34" selection-start-line="4" selection-start-column="34" selection-end-line="4" selection-end-column="34" />
+            <state relative-caret-position="231">
+              <caret line="11" selection-start-line="11" selection-end-line="11" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/Settings.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="182" column="34" lean-forward="true" selection-start-line="182" selection-start-column="34" selection-end-line="182" selection-end-column="34" />
+            <state relative-caret-position="399">
+              <caret line="97" column="55" lean-forward="true" selection-start-line="97" selection-start-column="55" selection-end-line="97" selection-end-column="55" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#7258#7271#0" expanded="true" />
+                <element signature="e#2785#2824#0" expanded="true" />
+                <element signature="e#4775#4804#0" expanded="true" />
+                <element signature="e#5571#5582#0" expanded="true" />
+                <element signature="e#5672#5687#0" expanded="true" />
+                <element signature="e#6470#6471#0" expanded="true" />
+                <element signature="e#6514#6515#0" expanded="true" />
+                <element signature="e#7440#7441#0" expanded="true" />
+                <element signature="e#7484#7485#0" expanded="true" />
+                <element signature="e#8905#8906#0" expanded="true" />
+                <element signature="e#8949#8950#0" expanded="true" />
+                <element signature="e#10369#10370#0" expanded="true" />
+                <element signature="e#10413#10414#0" expanded="true" />
+                <element signature="e#11579#11580#0" expanded="true" />
+                <element signature="e#11649#11650#0" expanded="true" />
+                <element signature="e#12609#12610#0" expanded="true" />
+                <element signature="e#12649#12650#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="447">
-              <caret line="221" column="56" selection-start-line="221" selection-start-column="56" selection-end-line="221" selection-end-column="56" />
+            <state relative-caret-position="218">
+              <caret line="16" column="27" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1927#1938#0" expanded="true" />
-                <element signature="e#2804#2819#0" expanded="true" />
-                <element signature="e#4288#4314#0" expanded="true" />
-                <element signature="e#4390#4413#0" expanded="true" />
-                <element signature="e#5066#5103#0" expanded="true" />
-                <element signature="e#8427#8466#0" expanded="true" />
-                <element signature="e#9552#9578#0" expanded="true" />
-                <element signature="e#9993#10015#0" expanded="true" />
-                <element signature="e#11698#11720#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/view_stroke.xml">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/RGB.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+            <state relative-caret-position="42">
+              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="147">
+              <caret line="534" column="149" selection-start-line="534" selection-start-column="149" selection-end-line="534" selection-end-column="149" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -204,20 +203,18 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="resourceFile" />
         <option value="layoutResourceFile_vertical" />
         <option value="Interface" />
         <option value="Kotlin File" />
-        <option value="Class" />
+        <option value="valueResourceFile" />
+        <option value="resourceFile" />
         <option value="layoutResourceFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ondraw</find>
-      <find>scale</find>
-      <find>main</find>
       <find>point.x</find>
       <find>getMid</find>
       <find>skt</find>
@@ -245,6 +242,9 @@
       <find>sh</find>
       <find>TextView</find>
       <find>button</find>
+      <find>hsva</find>
+      <find>this.add</find>
+      <find>setAutoSizeTextTypeUniformWithConfiguration</find>
     </findStrings>
     <replaceStrings>
       <replace>10F</replace>
@@ -277,16 +277,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/EpicyclesView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/epicycles_test/EpicyclesEdit.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/G.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/epicycles_edit_activity.xml" />
-        <option value="$USER_HOME$/myHome/zhc/bin/android-sdk-linux/sources/android-28/java/util/List.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/PaintView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/GestureResolver.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/viewtest/Aa.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/viewtest/MyDrawSinglePath.java" />
@@ -305,12 +296,10 @@
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/viewtest/AView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/codecs_activity.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/pi/Pi.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/clipboard/Clip.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesTest.java" />
@@ -321,13 +310,24 @@
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/toast/AToast.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/viewtest/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/Settings.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/adapter_layout.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/viewtest/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/drawable/shape.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/set_app_theme_activity.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/theme/SetTheme.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/RGB.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ColorUtils.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" />
       </list>
     </option>
   </component>
@@ -353,7 +353,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -370,13 +369,14 @@
               <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
               <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
               <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
@@ -421,7 +421,12 @@
             </path>
             <path>
               <item name="QMCFLAC" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="QMCFLAC" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="res" type="462c0819:PsiDirectoryNode" />
+              <item name="values" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -438,6 +443,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -544,6 +550,8 @@
       <list>
         <item itemvalue="Groovy.build" />
         <item itemvalue="Groovy.build" />
+        <item itemvalue="Groovy.build" />
+        <item itemvalue="Groovy.build" />
       </list>
     </recent_temporary>
   </component>
@@ -589,6 +597,7 @@
       <workItem from="1577543110562" duration="2851000" />
       <workItem from="1577573243968" duration="5219000" />
       <workItem from="1577578674169" duration="878000" />
+      <workItem from="1577790535746" duration="3734000" />
     </task>
     <task id="LOCAL-00001" summary="修复文字错误&#10;文字横排，大小适应">
       <created>1567869315028</created>
@@ -748,7 +757,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="240774000" />
+    <option name="totallyTimeSpent" value="244777000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -760,10 +769,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-4" y="0" width="1928" height="1054" extended-state="6" />
+    <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49944505" visible="true" weight="0.1664888" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49944505" visible="true" weight="0.1664888" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Build Variants" order="3" sideWeight="0.5005549" side_tool="true" weight="0.24973205" />
@@ -783,10 +792,10 @@
       <window_info anchor="bottom" id="TODO" order="7" weight="0.3293348" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5010672" side_tool="true" weight="0.23695652" />
-      <window_info anchor="bottom" id="Logcat" order="10" weight="0.53152174" />
-      <window_info anchor="bottom" id="Build" order="11" sideWeight="0.49839914" weight="0.4054348" />
+      <window_info anchor="bottom" id="Logcat" order="10" visible="true" weight="0.25517994" />
+      <window_info anchor="bottom" id="Build" order="11" sideWeight="0.49839914" weight="0.40458015" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="13" sideWeight="0.49839914" visible="true" weight="0.54347825" />
+      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.49839914" weight="0.54307526" />
       <window_info anchor="bottom" id="Terminal" order="14" weight="0.3054348" />
       <window_info anchor="bottom" id="Messages" order="15" weight="0.32826087" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -913,7 +922,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java</url>
-          <line>662</line>
+          <line>658</line>
           <properties />
           <option name="timeStamp" value="26" />
         </line-breakpoint>
@@ -1039,116 +1048,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/viewtest/MyReceiver.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/NotificationClickReceiverImpl.java" />
-    <entry file="file://$USER_HOME$/myHome/zhc/bin/android-sdk-linux/sources/android-28/android/content/BroadcastReceiver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="44" column="22" selection-start-line="44" selection-start-column="22" selection-end-line="44" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/A.java" />
-    <entry file="file://$USER_HOME$/myHome/zhc/bin/android-sdk-linux/sources/android-28/android/app/PendingIntent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="551" column="47" selection-start-line="551" selection-start-column="47" selection-end-line="551" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/NotificationClickReceiver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="8" column="48" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="16" column="31" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="9" column="6" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/codecs_activity.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="165" column="84" selection-start-line="165" selection-start-column="84" selection-end-line="165" selection-end-column="84" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/myHome/zhc/bin/android-sdk-linux/sources/android-28/android/widget/SpinnerAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="491">
-          <caret line="42" column="26" selection-start-line="42" selection-start-column="26" selection-end-line="42" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/myHome/zhc/bin/android-sdk-linux/sources/android-28/android/widget/ArrayAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="134" column="43" selection-start-line="134" selection-start-column="43" selection-end-line="134" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="294" column="31" selection-start-line="294" selection-start-column="31" selection-end-line="294" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1973#2006#0" expanded="true" />
-            <element signature="e#3779#3820#0" expanded="true" />
-            <element signature="e#3932#3955#0" expanded="true" />
-            <element signature="e#6818#6855#0" expanded="true" />
-            <element signature="e#7198#7235#0" expanded="true" />
-            <element signature="e#7568#7612#0" expanded="true" />
-            <element signature="e#8416#8434#0" expanded="true" />
-            <element signature="e#9282#9300#0" expanded="true" />
-            <element signature="e#10087#10105#0" expanded="true" />
-            <element signature="e#10581#10599#0" expanded="true" />
-            <element signature="e#12324#12339#0" expanded="true" />
-            <element signature="e#12385#12400#0" expanded="true" />
-            <element signature="e#14099#14114#0" expanded="true" />
-            <element signature="e#14871#14889#0" expanded="true" />
-            <element signature="e#15534#15571#0" expanded="true" />
-            <element signature="e#16249#16269#0" expanded="true" />
-            <element signature="e#16937#16967#0" expanded="true" />
-            <element signature="e#16982#17012#0" expanded="true" />
-            <element signature="e#17015#17045#0" expanded="true" />
-            <element signature="e#17258#17280#0" expanded="true" />
-            <element signature="e#17434#17446#0" expanded="true" />
-            <element signature="e#18810#18843#0" expanded="true" />
-            <element signature="e#19499#19517#0" expanded="true" />
-            <element signature="e#19954#19974#0" expanded="true" />
-            <element signature="e#20129#20150#0" expanded="true" />
-            <element signature="e#20777#20797#0" expanded="true" />
-            <element signature="e#20812#20832#0" expanded="true" />
-            <element signature="e#20835#20855#0" expanded="true" />
-            <element signature="e#22857#22898#0" expanded="true" />
-            <element signature="e#24561#24592#0" expanded="true" />
-            <element signature="e#25239#25278#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="441">
@@ -1190,13 +1089,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="147" selection-start-line="147" selection-end-line="147" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/pi/Pi.java">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1219,17 +1111,6 @@
           <caret line="206" column="36" selection-start-line="206" selection-start-column="36" selection-end-line="206" selection-end-column="36" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1670#1681#0" expanded="true" />
-            <element signature="e#1717#1732#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1282,9 +1163,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/viewtest/AView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -1311,16 +1189,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
           <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="56" column="32" selection-start-line="56" selection-start-column="32" selection-end-line="56" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1354,13 +1222,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" column="1992" selection-start-line="3" selection-start-column="1992" selection-end-line="3" selection-end-column="1992" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ViewWithExtras.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="63">
@@ -1375,21 +1236,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="12" column="46" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/adapter_layout.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21">
+          <caret line="1" column="58" selection-start-line="1" selection-start-column="58" selection-end-line="1" selection-end-column="58" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="447">
+        <state relative-caret-position="4074">
           <caret line="221" column="56" selection-start-line="221" selection-start-column="56" selection-end-line="221" selection-end-column="56" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1927#1938#0" expanded="true" />
-            <element signature="e#2804#2819#0" expanded="true" />
-            <element signature="e#4288#4314#0" expanded="true" />
-            <element signature="e#4390#4413#0" expanded="true" />
-            <element signature="e#5066#5103#0" expanded="true" />
-            <element signature="e#8427#8466#0" expanded="true" />
-            <element signature="e#9552#9578#0" expanded="true" />
-            <element signature="e#9993#10015#0" expanded="true" />
-            <element signature="e#11698#11720#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1401,138 +1268,225 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/Settings.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="2" column="31" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="394" column="18" selection-start-line="394" selection-start-column="18" selection-end-line="394" selection-end-column="18" />
+        <state relative-caret-position="17">
+          <caret line="189" column="4" selection-start-line="189" selection-start-column="4" selection-end-line="189" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4793#4860#0" expanded="true" />
-            <element signature="e#5612#5679#0" expanded="true" />
-            <element signature="e#10225#10266#0" expanded="true" />
-            <element signature="e#12033#12034#0" expanded="true" />
-            <element signature="e#12066#12067#0" expanded="true" />
-            <element signature="e#12176#12206#0" expanded="true" />
-            <element signature="e#12701#12730#0" expanded="true" />
-            <element signature="e#17267#17287#0" expanded="true" />
-            <element signature="e#17319#17350#0" expanded="true" />
-            <element signature="e#17409#17430#0" expanded="true" />
-            <element signature="e#17462#17494#0" expanded="true" />
-            <element signature="e#17543#17569#0" expanded="true" />
-            <element signature="e#17785#17816#0" expanded="true" />
-            <element signature="e#17850#17882#0" expanded="true" />
-            <element signature="e#20899#20915#0" expanded="true" />
-            <element signature="e#20963#20990#0" expanded="true" />
-            <element signature="e#21285#21305#0" expanded="true" />
-            <element signature="e#21353#21384#0" expanded="true" />
-            <element signature="e#22344#22345#0" expanded="true" />
-            <element signature="e#22439#22440#0" expanded="true" />
-            <element signature="e#23272#23293#0" expanded="true" />
-            <element signature="e#23341#23373#0" expanded="true" />
-            <element signature="e#23525#23545#0" expanded="true" />
-            <element signature="e#23593#23624#0" expanded="true" />
-            <element signature="e#23995#24020#0" expanded="true" />
-            <element signature="e#24313#24337#0" expanded="true" />
-            <element signature="e#25544#25572#0" expanded="true" />
-            <element signature="e#28336#28355#0" expanded="true" />
-            <element signature="e#29101#29140#0" expanded="true" />
-            <element signature="e#30444#30468#0" expanded="true" />
-            <element signature="e#32105#32136#0" expanded="true" />
-            <element signature="e#32543#32580#0" expanded="true" />
-            <element signature="e#32653#32690#0" expanded="true" />
-            <element signature="e#33053#33086#0" expanded="true" />
-            <element signature="e#33124#33160#0" expanded="true" />
-            <element signature="e#34085#34118#0" expanded="true" />
-            <element signature="e#34156#34192#0" expanded="true" />
-            <element signature="e#35554#35589#0" expanded="true" />
-            <element signature="e#35607#35641#0" expanded="true" />
-            <element signature="e#36821#36832#0" expanded="true" />
-            <element signature="e#37333#37377#0" expanded="true" />
-            <element signature="e#37522#37537#0" expanded="true" />
-            <element signature="e#37584#37618#0" expanded="true" />
-            <element signature="e#40869#40891#0" expanded="true" />
-            <element signature="e#42163#42184#0" expanded="true" />
-            <element signature="e#42202#42223#0" expanded="true" />
-            <element signature="e#42241#42261#0" expanded="true" />
-            <element signature="e#42279#42299#0" expanded="true" />
-            <element signature="e#42317#42341#0" expanded="true" />
-            <element signature="e#42840#42873#0" expanded="true" />
-            <element signature="e#44366#44391#0" expanded="true" />
-            <element signature="e#44700#44754#0" expanded="true" />
-            <element signature="e#44907#44935#0" expanded="true" />
-            <element signature="e#44973#45000#0" expanded="true" />
-            <element signature="e#45038#45059#0" expanded="true" />
-            <element signature="e#45097#45119#0" expanded="true" />
-            <element signature="e#45505#45532#0" expanded="true" />
-            <element signature="e#45584#45611#0" expanded="true" />
-            <element signature="e#45663#45719#0" expanded="true" />
-            <element signature="e#45771#45828#0" expanded="true" />
-            <element signature="e#46056#46108#0" expanded="true" />
-            <element signature="e#46165#46176#0" expanded="true" />
-            <element signature="e#46936#46955#0" expanded="true" />
-            <element signature="e#47088#47114#0" expanded="true" />
-            <element signature="e#47307#47322#0" expanded="true" />
-            <element signature="e#48015#48026#0" expanded="true" />
-            <element signature="e#48386#48420#0" expanded="true" />
-            <element signature="e#48585#48607#0" expanded="true" />
-            <element signature="e#48808#48823#0" expanded="true" />
-            <element signature="e#48882#48905#0" expanded="true" />
-            <element signature="e#50619#50637#0" expanded="true" />
-            <element signature="e#51230#51269#0" expanded="true" />
-            <element signature="e#51728#51739#0" expanded="true" />
-            <element signature="e#52249#52283#0" expanded="true" />
-            <element signature="e#52475#52497#0" expanded="true" />
-            <element signature="e#52629#52644#0" expanded="true" />
-            <element signature="e#52703#52726#0" expanded="true" />
-            <element signature="e#53829#53851#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="12" column="46" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="46" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="4" column="34" selection-start-line="4" selection-start-column="34" selection-end-line="4" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/adapter_layout.xml">
-      <provider editor-type-id="android-designer2" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="1" column="58" selection-start-line="1" selection-start-column="58" selection-end-line="1" selection-end-column="58" />
+        <state relative-caret-position="147">
+          <caret line="7" column="51" selection-start-line="7" selection-start-column="51" selection-end-line="7" selection-end-column="51" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/viewtest/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="3" column="38" selection-start-line="3" selection-start-column="38" selection-end-line="3" selection-end-column="38" />
+        <state relative-caret-position="168">
+          <caret line="8" column="11" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/Settings.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/set_app_theme_activity.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="182" column="34" lean-forward="true" selection-start-line="182" selection-start-column="34" selection-end-line="182" selection-end-column="34" />
+        <state relative-caret-position="126">
+          <caret line="6" column="41" selection-start-line="6" selection-start-column="41" selection-end-line="6" selection-end-column="41" />
+          <folding>
+            <element signature="e#330#343#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="483">
+          <caret line="102" column="21" selection-start-line="102" selection-start-column="16" selection-end-line="102" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7258#7271#0" expanded="true" />
+            <element signature="e#2777#2797#0" expanded="true" />
+            <element signature="e#2815#2835#0" expanded="true" />
+            <element signature="e#2853#2867#0" expanded="true" />
+            <element signature="e#2885#2910#0" expanded="true" />
+            <element signature="e#2928#2959#0" expanded="true" />
+            <element signature="e#2977#3005#0" expanded="true" />
+            <element signature="e#3023#3037#0" expanded="true" />
+            <element signature="e#3055#3089#0" expanded="true" />
+            <element signature="e#3107#3117#0" expanded="true" />
+            <element signature="e#3135#3153#0" expanded="true" />
+            <element signature="e#3171#3189#0" expanded="true" />
+            <element signature="e#4780#4820#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/shape.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="5" column="29" selection-start-line="5" selection-start-column="29" selection-end-line="5" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/myHome/zhc/bin/android-sdk-linux/sources/android-28/android/app/ActivityThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="1636" column="85" lean-forward="true" selection-start-line="1636" selection-start-column="85" selection-end-line="1636" selection-end-column="85" />
+          <folding>
+            <element signature="e#204755#204756#0" expanded="true" />
+            <element signature="e#204810#204811#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/myHome/zhc/bin/android-sdk-linux/sources/android-28/android/app/Activity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="5585" column="26" selection-start-line="5585" selection-start-column="26" selection-end-line="5585" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/theme/SetTheme.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/floating_board_activity.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="25" column="43" selection-start-line="25" selection-start-column="29" selection-end-line="25" selection-end-column="43" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="55" column="113" lean-forward="true" selection-start-line="55" selection-start-column="113" selection-end-line="55" selection-end-column="113" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequester.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PermissionRequesterInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="60" column="9" selection-start-line="60" selection-start-column="9" selection-end-line="60" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="534" column="149" selection-start-line="534" selection-start-column="149" selection-end-line="534" selection-end-column="149" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/RGB.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="42">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="14" column="41" selection-start-line="14" selection-start-column="41" selection-end-line="14" selection-end-column="41" />
+        </state>
+      </provider>
+      <provider editor-type-id="android-manifest" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/ColorUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="66" column="44" lean-forward="true" selection-start-line="66" selection-start-column="44" selection-end-line="66" selection-end-column="44" />
+          <folding>
+            <element signature="e#31#60#0" expanded="true" />
+            <element signature="e#1925#1926#0" expanded="true" />
+            <element signature="e#1997#1998#0" expanded="true" />
+            <element signature="e#2751#2752#0" expanded="true" />
+            <element signature="e#2823#2824#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="16" column="27" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="97" column="55" lean-forward="true" selection-start-line="97" selection-start-column="55" selection-end-line="97" selection-end-column="55" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2785#2824#0" expanded="true" />
+            <element signature="e#4775#4804#0" expanded="true" />
+            <element signature="e#5571#5582#0" expanded="true" />
+            <element signature="e#5672#5687#0" expanded="true" />
+            <element signature="e#6470#6471#0" expanded="true" />
+            <element signature="e#6514#6515#0" expanded="true" />
+            <element signature="e#7440#7441#0" expanded="true" />
+            <element signature="e#7484#7485#0" expanded="true" />
+            <element signature="e#8905#8906#0" expanded="true" />
+            <element signature="e#8949#8950#0" expanded="true" />
+            <element signature="e#10369#10370#0" expanded="true" />
+            <element signature="e#10413#10414#0" expanded="true" />
+            <element signature="e#11579#11580#0" expanded="true" />
+            <element signature="e#11649#11650#0" expanded="true" />
+            <element signature="e#12609#12610#0" expanded="true" />
+            <element signature="e#12649#12650#0" expanded="true" />
           </folding>
         </state>
       </provider>
