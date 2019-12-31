@@ -1,6 +1,8 @@
 package pers.zhc.tools.utils;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+import android.graphics.Color;
+
+@SuppressWarnings({"unused"})
 public class ColorUtils {
     private int[] colors;
     private float startPos, endPos;
@@ -43,15 +45,42 @@ public class ColorUtils {
         }
     }
 
-    public static RGB parseRGB(int color) {
+    private static RGB parseRGB(int color) {
         int red = (color & 0xff0000) >> 16;
         int green = (color & 0x00ff00) >> 8;
         int blue = (color & 0x0000ff);
         return new RGB(red, green, blue);
     }
 
+    private static String get2Hex(int i) {
+        String s = Integer.toHexString(i);
+        if (s.length() == 1) return "0" + s;
+        return s;
+    }
+
+    public static String getHexString(int color) {
+        int red = (color & 0xff0000) >> 16;
+        int green = (color & 0x00ff00) >> 8;
+        int blue = (color & 0x0000ff);
+        return "#" + get2Hex(red).toUpperCase() +
+                get2Hex(green).toUpperCase() +
+                get2Hex(blue).toUpperCase();
+    }
+
+    public static void colorHexToHSV(float[] hsv, String hex) {
+        String a = hex.substring(1, 3);
+        String b = hex.substring(3, 5);
+        String c = hex.substring(5, 7);
+        int color = parseColorInt(Integer.parseInt(a, 16), Integer.parseInt(b, 16), Integer.parseInt(c, 16));
+        Color.colorToHSV(color, hsv);
+    }
+
     private static int parseColorInt(RGB rgb) {
         return 0xff000000 | (rgb.r << 16) | (rgb.g << 8) | rgb.b;
+    }
+
+    private static int parseColorInt(int r, int g, int b) {
+        return 0xff000000 | (r << 16) | (g << 8) | b;
     }
 
     public static int invertColor(int color) {
@@ -64,12 +93,3 @@ public class ColorUtils {
     }
 }
 
-class RGB {
-    int r, g, b;
-
-    RGB(int r, int g, int b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-    }
-}
