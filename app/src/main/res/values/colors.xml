@@ -10,4 +10,6 @@
     <color name="s2">#CEFFFC</color>
     <color name="transparent">#00000000</color>
     <color name="hint_color">#FF9A9A</color>
+    <color name="start">#7DC387</color>
+    <color name="end">#DBE9EA</color>
 </resources>
