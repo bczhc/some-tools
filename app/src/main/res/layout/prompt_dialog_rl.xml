@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@id/title"
+              />
+    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
+              tools:ignore="Autofill,LabelFor,TextFields"
+              android:layout_below="@id/title"
+              android:id="@+id/et"
+    />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:id="@+id/positive"
+            android:layout_alignParentEnd="true"
+            android:text="@string/ok"
+            android:background="@android:color/background_light"
+            android:layout_below="@id/et"
+    />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/positive"
+            android:id="@+id/negative"
+            android:layout_toStartOf="@id/positive"
+            android:text="@string/cancel"
+            android:background="@android:color/background_light"
+            android:layout_below="@id/et"
+    />
+</RelativeLayout>
