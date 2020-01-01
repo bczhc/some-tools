@@ -4,6 +4,7 @@ package pers.zhc.tools.floatingboard;
 //import android.annotation.SuppressLint;import android.content.Context;import android.graphics.Canvas;import android.graphics.LinearGradient;import android.graphics.Paint;import android.support.annotation.NonNull;import android.util.AttributeSet;import android.view.View;import android.view.ViewGroup;import android.widget.LinearLayout;import android.widget.RelativeLayout;class HSVColorPickerRL extends RelativeLayout { private int width = 0, height = 0;private Context context;HSVColorPickerRL(@NonNull Context context) { super(context); }public HSVColorPickerRL(Context context, AttributeSet attrs) { super(context, attrs);this.context = context; }private void init() { LinearLayout ll = new LinearLayout(context);ll.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));ll.setOrientation(LinearLayout.VERTICAL);HView hView = new HView(context);LinearLayout[] hsvLLs = new LinearLayout[3];LinearLayout.LayoutParams hsvLL_LP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1);for (int i = 0; i < hsvLLs.length; i++) { hsvLLs[i] = new LinearLayout(context);hsvLLs[i].setLayoutParams(hsvLL_LP); }hsvLLs[0].addView(hView);this.addView(ll); }@Override protected void onLayout(boolean changed, int l, int t, int r, int b) { super.onLayout(changed, l, t, r, b);width = r - l;height = b - t;init(); }class HView extends View { private int hW, hH;private Paint hPaint;private int[] hColors;public HView(Context context) { super(context); }public HView(Context context, AttributeSet attrs) { super(context, attrs); }private void hInit() { hPaint = new Paint();hColors = new int[]{0xFFFF0000, 0xFFFF00FF, 0xFF0000FF, 0xFF00FFFF, 0xFF00FF00, 0xFFFFFF00, 0xFFFF0000};invalidate(); }@Override protected void onDraw(Canvas canvas) {/*            super.onDraw(canvas);*/@SuppressLint("DrawAllocation") LinearGradient lg = new LinearGradient(0F, 0F, hW, hH, hColors, null, LinearGradient.TileMode.CLAMP);hPaint.setShader(lg);canvas.drawRect(0,0,hW,hH,hPaint); }@Override protected void onLayout(boolean changed, int left, int top, int right, int bottom) { super.onLayout(changed, left, top, right, bottom);hW = right - left;hH = top - bottom;hInit(); }}}
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,10 +14,13 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.ColorUtils;
+import pers.zhc.tools.utils.DialogUtil;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
 
@@ -72,6 +76,28 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         tv.setBackgroundColor(Color.WHITE);
         tv.setWidth(width / 2);
         tv.setHeight(height / 12);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            tv.setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
+        }
+        tv.setOnClickListener(v -> {
+            AlertDialog.Builder adb = new AlertDialog.Builder(context);
+            EditText editText = new EditText(context);
+            int color = this.getColor();
+            String hexString = ColorUtils.getHexString(color);
+            editText.setText(hexString);
+            adb.setView(editText);
+            adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                String s = editText.getText().toString();
+                ColorUtils.colorHexToHSV(this.hsv, s);
+                invalidateAllView();
+            });
+            adb.setNegativeButton(R.string.cancel, (dialog, which) -> {
+            });
+            adb.setTitle(R.string.please_enter_color_hex);
+            AlertDialog ad = adb.create();
+            DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            ad.show();
+        });
         barLL.addView(tv);
         vv = new View(context);
         vv.setLayoutParams(new ViewGroup.LayoutParams(width / 2, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -280,9 +306,13 @@ abstract class HSVColorPickerRL extends RelativeLayout {
 //            new Thread(() -> hsvAView[finalI].postInvalidate()).start();
             view.invalidate();
         }
-        int color = Color.HSVToColor(alpha, hsv);
+        int color = this.getColor();
         vv.setBackgroundColor(color);
         onPickedAction(color);
+    }
+
+    private int getColor() {
+        return Color.HSVToColor(this.alpha, this.hsv);
     }
 
     private float setCurrentX(int i) {
