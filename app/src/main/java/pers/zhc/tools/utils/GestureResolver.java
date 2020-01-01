@@ -29,6 +29,18 @@ public class GestureResolver {
 
 
             {
+                float midX = (x1 + x2) / 2;
+                float midY = (y1 + y2) / 2;
+                if (lastX == -1 && lastY == -1) {
+                    lastX = midX;
+                    lastY = midY;
+                } else {
+                    this.gestureInterface.onTwoPointScroll(midX - lastX, midY - lastY, event);
+                }
+                this.lastX = midX;
+                this.lastY = midY;
+            }
+            {
                 float distance = getDistance(x1, x2, y1, y2);
                 if (firstDistance == -1) {
                     firstDistance = distance;
@@ -41,18 +53,6 @@ public class GestureResolver {
                 midPointY = (y1 + y2) / 2;
                 this.gestureInterface.onTwoPointZoom(firstMidPointX, firstMidPointY, midPointX, midPointY, firstDistance, distance, distance / firstDistance, distance / lastDistance, event);
                 lastDistance = distance;
-            }
-            {
-                float midX = (x1 + x2) / 2;
-                float midY = (y1 + y2) / 2;
-                if (lastX == -1 && lastY == -1) {
-                    lastX = midX;
-                    lastY = midY;
-                } else {
-                    this.gestureInterface.onTwoPointScroll(midX - lastX, midY - lastY, event);
-                }
-                this.lastX = midX;
-                this.lastY = midY;
             }
 
 

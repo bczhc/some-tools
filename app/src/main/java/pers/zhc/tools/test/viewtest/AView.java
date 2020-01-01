@@ -32,7 +32,7 @@ public class AView extends View {
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
         mPaint2 = new Paint();
-        mPaint2.setColor(Color.YELLOW);
+        mPaint2.setColor(Color.GREEN);
         this.mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         this.mCanvas = new Canvas(mBitmap);
         mBitmapPaint = new Paint();
@@ -41,7 +41,6 @@ public class AView extends View {
 
             @Override
             public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
-//                mCanvas.translate(distanceX / scale, distanceY / scale);
                 realX = distanceX / scale;
                 realY = distanceY / scale;
                 transX += distanceX;
@@ -52,10 +51,14 @@ public class AView extends View {
             @Override
             public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float pScale, MotionEvent event) {
                 AView.this.scale *= pScale;
-                mCanvas.scale(pScale, pScale, firstMidPointX + transX / scale, firstMidPointY + transY / scale);
+                float px = midPointX - transX;
+                float py = midPointY - transY;
+                mCanvas.scale(pScale, pScale, px, py);
+                mCanvas.drawCircle(px, py, 30, mPaint2);
             }
         });
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
