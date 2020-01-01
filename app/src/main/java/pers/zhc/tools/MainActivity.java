@@ -17,6 +17,7 @@ import pers.zhc.tools.floatingboard.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.test.S;
+import pers.zhc.tools.theme.SetTheme;
 import pers.zhc.tools.toast.AToast;
 import pers.zhc.u.common.ReadIS;
 
@@ -85,7 +86,8 @@ public class MainActivity extends BaseActivity {
                 R.string.notes,
                 R.string.fourier_series_in_complex,
                 R.string.s,
-                R.string.view_test
+                R.string.view_test,
+                R.string.set_theme
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -97,7 +99,8 @@ public class MainActivity extends BaseActivity {
                 Document.class,
                 EpicyclesEdit.class,
                 S.class,
-                pers.zhc.tools.test.viewtest.MainActivity.class
+                pers.zhc.tools.test.viewtest.MainActivity.class,
+                SetTheme.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

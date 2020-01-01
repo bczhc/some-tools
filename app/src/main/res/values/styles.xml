@@ -1,12 +1,20 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="BaseTheme" parent="android:Theme.DeviceDefault.Light.NoActionBar"/>
     <style name="AppTheme" parent="BaseTheme">
         <!-- Customize your theme here. -->
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:colorPrimary" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorAccent</item>
     </style>
     <style name="AppThemeNotTranslucent" parent="BaseTheme">
         <!-- Customize your theme here. -->
         <item name="android:windowIsTranslucent">false</item>
+    </style>
+    <style name="AppThemeWithBGColor">
+        <item name="android:colorPrimary" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorAccent</item>
+        <item name="android:background">@drawable/shape</item>
     </style>
 </resources>

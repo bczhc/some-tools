@@ -145,5 +145,8 @@
     <string name="velocity_ascending_order">速度（e指数上t的系数大小）升序</string>
     <string name="velocity_descending_order">速度（e指数上t的系数大小）降序</string>
     <string name="save">保存</string>
+    <string name="set_theme">设置主题</string>
+    <string name="set">设置</string>
+    <string name="please_enter_color_hex">请输入颜色十六进制</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
