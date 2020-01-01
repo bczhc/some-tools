@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/jni_help_cpp.dir/jni_help.cpp.o  -o jni_help_cpp 
