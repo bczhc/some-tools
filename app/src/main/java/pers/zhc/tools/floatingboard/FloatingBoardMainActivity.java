@@ -2,21 +2,10 @@ package pers.zhc.tools.floatingboard;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.graphics.Point;
+import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
@@ -27,24 +16,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.text.Selection;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.SeekBar;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,8 +25,8 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.tools.utils.PromptDialog;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.common.MultipartUploader;
@@ -65,12 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static pers.zhc.tools.utils.ColorUtils.invertColor;
 import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
@@ -747,14 +715,13 @@ public class FloatingBoardMainActivity extends BaseActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    double pow = Math.pow(1.07D, ((double) progress));
+                    double pow = Math.pow(1.07D, progress);
                     if (checked[0] == 1) {
                         pv.setStrokeWidth((float) ((int) pow));
-                        tv.setText(String.valueOf(((int) pow)));
                     } else {
                         pv.setEraserStrokeWidth((float) pow);
-                        tv.setText(String.valueOf(((int) pow)));
                     }
+                    tv.setText(String.valueOf(((int) pow)));
                     strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
                     strokeWatchView.change(((float) pow), pv.getColor());
                 }
@@ -775,7 +742,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
             float w = checkedId == 1 ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
             strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) w), ((int) w)));
             strokeWatchView.change(w, pv.getColor());
-            tv.setText(String.format(getString(R.string.tv), String.valueOf(((int) w))));
+            tv.setText(String.format(getString(R.string.tv), (int) w));
             sb.setProgress((int) (Math.log(w) / Math.log(1.07D)));
         });
         mainLL.addView(barLL);
@@ -891,9 +858,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     },
                     v -> {
-                        EditText et = getSelectedET_currentMills();
-                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                        PromptDialog promptDialog = new PromptDialog(this, R.string.type_file_name, R.string.ok, (dialog, et) -> {
                             pv.closePathRecoderOS();
                             File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
                             pv.saveImg(imageFile);
@@ -902,11 +867,10 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             pv.setOS(currentInternalPathFile, true);
                             moreOptionsDialog.dismiss();
-                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                        }).setTitle(R.string.type_file_name).setView(et).create();
-                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
-                        alertDialog.show();
+                        }, R.string.cancel, (dialog, et) -> {
+                        });
+                        setDialogAttr(promptDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        promptDialog.show();
                     },
                     v -> {
                         Dialog dialog = new Dialog(this);
@@ -937,9 +901,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     },
                     v -> {
-                        EditText et = getSelectedET_currentMills();
-                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                        PromptDialog promptDialog = new PromptDialog(this, R.string.type_file_name, R.string.ok, (dialog, et) -> {
                             File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
                             try {
                                 FileU.FileCopy(currentInternalPathFile, pathFile);
@@ -951,11 +913,10 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                 new Thread(() -> uploadPaths(this)).start();
                             } else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             moreOptionsDialog.dismiss();
-                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                        }).setTitle(R.string.type_file_name).setView(et).create();
-                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        DialogUtil.setAlertDialogWithEditText_auto_show_softInput(alertDialog, this);
-                        alertDialog.show();
+                        }, R.string.cancel, (dialog, et) -> {
+                        });
+                        setDialogAttr(promptDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        promptDialog.show();
                     },
                     v -> pv.resetTransform()
             };
@@ -970,10 +931,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
         moreOptionsDialog.show();
     }
 
-    private EditText getSelectedET_currentMills() {
+    public static EditText getSelectedET_currentMills(Context ctx, EditText et) {
         @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        EditText et = new EditText(this);
-        et.setText(String.format(getString(R.string.tv), format));
+        et.setText(String.format(ctx.getString(R.string.tv), format));
         Selection.selectAll(et.getText());
         return et;
     }
