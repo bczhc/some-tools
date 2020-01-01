@@ -45,13 +45,24 @@
                                 <PersistentState>
                                   <option name="children">
                                     <map>
+                                      <entry key="backgroundImage">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="scalingPercent" value="113" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                       <entry key="foregroundImage">
                                         <value>
                                           <PersistentState>
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="scalingPercent" value="90" />
+                                                <entry key="scalingPercent" value="94" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -64,7 +75,8 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="$PROJECT_DIR$/app/src/main/res/drawable/ic_zhc_logo.xml" />
+                                      <entry key="backgroundImage" value="$PROJECT_DIR$/../../../../Downloads/transparent.png" />
+                                      <entry key="foregroundImage" value="$PROJECT_DIR$/app/src/main/res/drawable/ic_zhc_logo_500x500.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -150,8 +162,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_zhc_logo" />
-                            <entry key="sourceFile" value="/media/zhc/ACD05634D05604CC/Users/bczhc/Pictures/zhc-logo.svg" />
+                            <entry key="outputName" value="ic_zhc_logo_500x500" />
+                            <entry key="sourceFile" value="/media/zhc/ACD05634D05604CC/Users/bczhc/Pictures/zhc-logo-500x500.svg" />
                           </map>
                         </option>
                       </PersistentState>
