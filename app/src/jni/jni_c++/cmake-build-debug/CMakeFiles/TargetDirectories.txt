@@ -1,0 +1,3 @@
+/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir
+/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/edit_cache.dir
