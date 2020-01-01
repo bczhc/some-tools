@@ -25,8 +25,8 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
-import pers.zhc.tools.utils.PromptDialog;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.common.MultipartUploader;
@@ -858,7 +858,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     },
                     v -> {
-                        PromptDialog promptDialog = new PromptDialog(this, R.string.type_file_name, R.string.ok, (dialog, et) -> {
+                        EditText et = getSelectedET_currentMills(this, new EditText(this));
+                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                             pv.closePathRecoderOS();
                             File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
                             pv.saveImg(imageFile);
@@ -867,10 +869,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             pv.setOS(currentInternalPathFile, true);
                             moreOptionsDialog.dismiss();
-                        }, R.string.cancel, (dialog, et) -> {
-                        });
-                        setDialogAttr(promptDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        promptDialog.show();
+                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        }).setTitle(R.string.type_file_name).setView(et).create();
+                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
+                        alertDialog.show();
                     },
                     v -> {
                         Dialog dialog = new Dialog(this);
@@ -901,7 +904,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     },
                     v -> {
-                        PromptDialog promptDialog = new PromptDialog(this, R.string.type_file_name, R.string.ok, (dialog, et) -> {
+                        EditText et = getSelectedET_currentMills(this, new EditText(this));
+                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                             File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
                             try {
                                 FileU.FileCopy(currentInternalPathFile, pathFile);
@@ -913,10 +918,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                 new Thread(() -> uploadPaths(this)).start();
                             } else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             moreOptionsDialog.dismiss();
-                        }, R.string.cancel, (dialog, et) -> {
-                        });
-                        setDialogAttr(promptDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        promptDialog.show();
+                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        }).setTitle(R.string.type_file_name).setView(et).create();
+                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
+                        alertDialog.show();
                     },
                     v -> pv.resetTransform()
             };
