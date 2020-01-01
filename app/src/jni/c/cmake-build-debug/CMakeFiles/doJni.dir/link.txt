@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/doJni.dir/codecs/doJNI.c.o  -o doJni 

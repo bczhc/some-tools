@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Project"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="jni_help_c">
+				<Option output="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/jni_help_c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 jni_help_c"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="jni_help_c/fast">
+				<Option output="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/jni_help_c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 jni_help_c/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="zhc_c">
+				<Option output="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/zhc_c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 zhc_c"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="zhc_c/fast">
+				<Option output="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/zhc_c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 zhc_c/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="jni_help_cpp">
+				<Option output="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/jni_help_cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 jni_help_cpp"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="jni_help_cpp/fast">
+				<Option output="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/jni_help_cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 jni_help_cpp/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="zhc_cpp">
+				<Option output="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/zhc_cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 zhc_cpp"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="zhc_cpp/fast">
+				<Option output="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/zhc_cpp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/8"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/8"/>
+					<Add directory="/usr/include/c++/8/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 zhc_cpp/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_help.c">
+			<Option target="jni_help_c"/>
+		</Unit>
+		<Unit filename="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_help.cpp">
+			<Option target="jni_help_cpp"/>
+		</Unit>
+		<Unit filename="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_help.h">
+			<Option target="jni_help_c"/>
+		</Unit>
+		<Unit filename="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.c">
+			<Option target="zhc_c"/>
+		</Unit>
+		<Unit filename="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.cpp">
+			<Option target="zhc_cpp"/>
+		</Unit>
+		<Unit filename="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.h">
+			<Option target="zhc_c"/>
+		</Unit>
+		<Unit filename="/home/zhc/code/code/Android/QMCFLAC/app/src/jni/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

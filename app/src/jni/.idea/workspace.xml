@@ -4,8 +4,8 @@
     <generated>
       <config projectName="Project" targetName="zhc_cpp" />
       <config projectName="Project" targetName="zhc_c" />
-      <config projectName="Project" targetName="jni_help_c" />
       <config projectName="Project" targetName="jni_help_cpp" />
+      <config projectName="Project" targetName="jni_help_c" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -15,23 +15,284 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/5.1.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/assetWizardSettings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/feature_tests.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/feature_tests.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/cmake-build-debug/jni.cbp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.15.3/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.15.3/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.cxx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_c.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_c.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_c.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_c.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_c.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_c.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_c.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_cpp.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_cpp.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_cpp.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_cpp.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_cpp.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_cpp.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/jni_help_cpp.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_c.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_c.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_c.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_c.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_c.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_c.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_c.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_cpp.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_cpp.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_cpp.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_cpp.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_cpp.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_cpp.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/zhc_cpp.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/Project.cbp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/feature_tests.cxx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/Project.cbp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jni_c++/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/ic_launcher-web.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/drawable/ic_fb.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/drawable/ic_launcher_foreground.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/drawable/ic_zhc_logo.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/values/ic_launcher_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/liba.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libfb_tools.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/c/codecs/qmcLib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/c/verification/verify.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/c/verification/verify.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/zhc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/zhc.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/c/codecs/Base128Lib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/c/codecs/Base128Lib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/c/codecs/doJNI.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/c/codecs/doJNI.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/c/codecs/kwm.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/c/codecs/kwm.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/c/codecs/qmcLib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/doJNI/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/fb_tools/c/floatingboard/fb_tools.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/fb_tools/c/floatingboard/fb_tools.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/fb_tools/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/fb_tools/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/fb_tools/zhc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/fb_tools/zhc.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_c++/pi/pi.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_c++/pi/pi.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/liba.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libfb_tools.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/c/codecs/qmcLib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/c/verification/verify.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/c/verification/verify.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/zhc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/zhc.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/c/codecs/Base128Lib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/c/codecs/Base128Lib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/c/codecs/doJNI.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/c/codecs/doJNI.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/c/codecs/kwm.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/c/codecs/kwm.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/c/codecs/qmcLib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/doJNI/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/fb_tools/c/floatingboard/fb_tools.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/fb_tools/c/floatingboard/fb_tools.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/fb_tools/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/fb_tools/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/fb_tools/zhc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/fb_tools/zhc.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_c++/pi/pi.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_c++/pi/pi.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/liba.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/libfb_tools.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/a/c/codecs/qmcLib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/a/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/a/c/verification/verify.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/a/c/verification/verify.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/a/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/a/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/a/zhc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/a/zhc.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/c/codecs/Base128Lib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/c/codecs/Base128Lib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/c/codecs/doJNI.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/c/codecs/doJNI.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/c/codecs/kwm.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/c/codecs/kwm.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/c/codecs/qmcLib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/doJNI/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/fb_tools/c/floatingboard/fb_tools.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/fb_tools/c/floatingboard/fb_tools.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/fb_tools/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/fb_tools/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/fb_tools/zhc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/fb_tools/zhc.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_c++/pi/pi.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_c++/pi/pi.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/liba.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/libfb_tools.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/c/codecs/qmcLib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/c/verification/verify.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/c/verification/verify.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/zhc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/zhc.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/c/codecs/Base128Lib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/c/codecs/Base128Lib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/c/codecs/doJNI.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/c/codecs/doJNI.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/c/codecs/kwm.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/c/codecs/kwm.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/c/codecs/qmcLib.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/doJNI/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/fb_tools/c/floatingboard/fb_tools.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/fb_tools/c/floatingboard/fb_tools.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/fb_tools/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/fb_tools/jni_help.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/fb_tools/zhc.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/fb_tools/zhc.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_c++/pi/pi.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_c++/pi/pi.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_help.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_help.o.d" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../app.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingboard/PaintView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/S.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/S.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-hdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-mdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-xhdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-xxhdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/mipmap-xxxhdpi/ic_launcher_round.png" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
-    <ignored path="$PROJECT_DIR$/cmake2/cmake-build-debug/" />
-    <ignored path="$PROJECT_DIR$/jni_c++/cmake-build-debug/" />
-    <ignored path="$PROJECT_DIR$/c/cmake-build-debug/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,9 +302,6 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
-  <component name="FileEditorManager">
-    <leaf />
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -94,52 +352,6 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/QMC.c" />
-        <option value="$PROJECT_DIR$/com_zhc_base128_JNI.h" />
-        <option value="/usr/include/jni.h" />
-        <option value="$PROJECT_DIR$/qmcLib.h" />
-        <option value="$PROJECT_DIR$/test/qmc_test.c" />
-        <option value="$PROJECT_DIR$/Base128Lib.c" />
-        <option value="$PROJECT_DIR$/Base128Lib.h" />
-        <option value="$PROJECT_DIR$/qmcLib.c" />
-        <option value="$PROJECT_DIR$/pi.h" />
-        <option value="$PROJECT_DIR$/pi.cpp" />
-        <option value="$PROJECT_DIR$/cmake2/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/jni_c++/pi.h" />
-        <option value="$PROJECT_DIR$/doJNI.c" />
-        <option value="$PROJECT_DIR$/jni_c++/s.cpp" />
-        <option value="$PROJECT_DIR$/jni_c++/com_zhc_tools_pi_PiJNI.h" />
-        <option value="$PROJECT_DIR$/jni_c++/pi.cpp" />
-        <option value="$PROJECT_DIR$/com_zhc_JNI.h" />
-        <option value="$PROJECT_DIR$/kwm.c" />
-        <option value="$PROJECT_DIR$/jni_c++/verification/verify.cpp" />
-        <option value="$PROJECT_DIR$/c/zhc.c" />
-        <option value="$PROJECT_DIR$/zhc.c" />
-        <option value="$PROJECT_DIR$/zhc.h" />
-        <option value="$PROJECT_DIR$/c/codecs/com_zhc_JNI.h" />
-        <option value="$PROJECT_DIR$/jni_c++/pi/com_zhc_tools_pi_PiJNI.h" />
-        <option value="$PROJECT_DIR$/jni_c++/pi/pi.cpp" />
-        <option value="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingboard_JNI.h" />
-        <option value="$PROJECT_DIR$/c/floatingboard/fb_tools.c" />
-        <option value="$PROJECT_DIR$/Application.mk" />
-        <option value="$PROJECT_DIR$/c/codecs/qmcLib.c" />
-        <option value="$PROJECT_DIR$/c/codecs/qmcLib.h" />
-        <option value="$PROJECT_DIR$/jni_help.h" />
-        <option value="$PROJECT_DIR$/c/verification/verify.c" />
-        <option value="$PROJECT_DIR$/jni_c++/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/c/codecs/doJNI.c" />
-        <option value="$PROJECT_DIR$/c/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/jni_help.c" />
-        <option value="$PROJECT_DIR$/Android.mk" />
-        <option value="$PROJECT_DIR$/zhc.cpp" />
-        <option value="$PROJECT_DIR$/jni_help.cpp" />
-      </list>
-    </option>
-  </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-15" />
@@ -147,50 +359,16 @@
     <option name="width" value="1525" />
     <option name="height" value="725" />
   </component>
+  <component name="ProjectId" id="1VlsrdxAQagObPq5hfWFLJ2szyK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator currentView="Scope" currentSubView="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope" proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane" />
-      <pane id="Scope">
-        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
-          <expand>
-            <path>
-              <item name="jni" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="$PROJECT_DIR$" type="442cc68d:ScopeViewTreeModel$RootNode" />
-            </path>
-            <path>
-              <item name="jni" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="$PROJECT_DIR$" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="c" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="jni" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="$PROJECT_DIR$" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="c" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="codecs" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="jni" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="$PROJECT_DIR$" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="jni_c++" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="jni" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="$PROJECT_DIR$" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="jni_c++" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="pi" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -214,18 +392,6 @@
       <recent name="$PROJECT_DIR$/codecs" />
       <recent name="C:\code\code\Android\QMCFLAC\app\src\jni" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="CMake Application.jni_help_c">
     <configuration name="jni_help_c" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="jni_help_c" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="jni_help_c">
@@ -254,6 +420,18 @@
       <item itemvalue="CMake Application.zhc_c" />
       <item itemvalue="CMake Application.zhc_cpp" />
     </list>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -296,60 +474,9 @@
       <workItem from="1570019598706" duration="1124000" />
       <workItem from="1576379243758" duration="674000" />
       <workItem from="1576915681579" duration="598000" />
+      <workItem from="1577839223374" duration="243000" />
     </task>
     <servers />
-  </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="131305000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28792736" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.5382096" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3995633" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3286026" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.32969433" />
-      <window_info anchor="bottom" id="CMake" order="10" visible="true" weight="0.29605263" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.32969433" />
-      <window_info anchor="bottom" id="Version Control" order="12" weight="0.37663755" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="right" id="make" order="4" />
-    </layout>
-    <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2596154" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32969433" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3231441" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3995633" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3286026" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.32969433" />
-      <window_info anchor="bottom" id="CMake" order="10" weight="0.5305677" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.32969433" />
-      <window_info anchor="bottom" id="Version Control" order="12" weight="0.37663755" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -462,236 +589,5 @@
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/com_zhc_base128_JNI.h" />
-    <entry file="file://$PROJECT_DIR$/Base128.c" />
-    <entry file="file://$PROJECT_DIR$/test/qmc_test.c" />
-    <entry file="file:///usr/include/stdio.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="147" column="11" selection-start-line="147" selection-start-column="11" selection-end-line="147" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pi.cpp" />
-    <entry file="file://$PROJECT_DIR$/cmake2/CMakeLists.txt" />
-    <entry file="file://$PROJECT_DIR$/pi.h" />
-    <entry file="file://$PROJECT_DIR$/Base128Lib.h" />
-    <entry file="file://$PROJECT_DIR$/jni_c++/pi.h" />
-    <entry file="file://$PROJECT_DIR$/qmcLib.h" />
-    <entry file="file://$PROJECT_DIR$/codecs/jni_c++/zhc.cpp" />
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" />
-    <entry file="file://$PROJECT_DIR$/codecs/jni_c++/CMakeLists.txt" />
-    <entry file="file://$PROJECT_DIR$/jni_c++/s.cpp" />
-    <entry file="file://$PROJECT_DIR$/codecs/jni_c++/com_zhc_tools_pi_PiJNI.h" />
-    <entry file="file://$PROJECT_DIR$/codecs/jni_c++/pi.cpp" />
-    <entry file="file://$PROJECT_DIR$/com_zhc_JNI.h" />
-    <entry file="file://$PROJECT_DIR$/Base128Lib.c" />
-    <entry file="file://$PROJECT_DIR$/qmcLib.c" />
-    <entry file="file://$PROJECT_DIR$/kwm.c" />
-    <entry file="file://$PROJECT_DIR$/doJNI.c" />
-    <entry file="file://$PROJECT_DIR$/jni_c++/zhc.h" />
-    <entry file="file://$PROJECT_DIR$/c/codecs/Base128Lib.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/codecs/Base128Lib.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/zhc.c" />
-    <entry file="file://$PROJECT_DIR$/zhc.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="683">
-          <caret line="132" column="45" lean-forward="true" selection-start-line="132" selection-start-column="45" selection-end-line="132" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/stdlib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="458">
-          <caret line="575" column="9" selection-start-line="575" selection-start-column="9" selection-end-line="575" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jni_c++/pi/zhc.cpp" />
-    <entry file="file://$PROJECT_DIR$/c/codecs/com_zhc_JNI.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="22" column="28" lean-forward="true" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/gcc/x86_64-linux-gnu/8/include/stddef.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="402" column="19" lean-forward="true" selection-start-line="402" selection-start-column="19" selection-end-line="402" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jni_c++/pi/com_zhc_tools_pi_PiJNI.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/verification/com_zhc_tools_floatingboard_JNI.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="83" lean-forward="true" selection-start-line="17" selection-start-column="83" selection-end-line="17" selection-end-column="83" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/x86_64-linux-gnu/bits/types.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="36" column="20" lean-forward="true" selection-start-line="36" selection-start-column="20" selection-end-line="36" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/x86_64-linux-gnu/bits/stdint-intn.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="15" column="21" lean-forward="true" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/include/jni.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="31" column="22" selection-start-line="31" selection-start-column="17" selection-end-line="31" selection-end-column="22" />
-          <folding>
-            <element signature="e#828#847#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Application.mk">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/codecs/qmcLib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="43" selection-start-line="43" selection-end-line="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jni_help.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
-          <folding>
-            <element signature="e#111#127#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/verification/verify.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="323" column="12" lean-forward="true" selection-start-line="323" selection-start-column="12" selection-end-line="323" selection-end-column="12" />
-          <folding>
-            <element signature="e#38#60#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/codecs/qmcLib.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="6" column="18" lean-forward="true" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/floatingboard/fb_tools.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="17" column="13" lean-forward="true" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding>
-            <element signature="e#38#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jni_c++/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="28" selection-start-column="28" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jni_c++/pi/pi.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
-          <folding>
-            <element signature="e#37#72#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/codecs/doJNI.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="419">
-          <caret line="30" column="13" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
-          <folding>
-            <element signature="e#125#144#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/c/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/zhc.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="128" column="5" selection-start-line="128" selection-start-column="5" selection-end-line="128" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jni_help.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" column="21" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/zhc.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="70" column="33" selection-start-line="70" selection-start-column="33" selection-end-line="70" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jni_help.cpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Android.mk">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="25" column="3" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
   </component>
 </project>
