@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.text.Selection;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -97,6 +98,8 @@ abstract class HSVColorPickerRL extends RelativeLayout {
             AlertDialog ad = adb.create();
             DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             ad.show();
+            Selection.selectAll(editText.getText());
+            DialogUtil.setADWithET_autoShowSoftKeyboard(editText, ad);
         });
         barLL.addView(tv);
         vv = new View(context);
@@ -292,11 +295,11 @@ abstract class HSVColorPickerRL extends RelativeLayout {
     }
 
     private int limitValue(int value, int min, int max) {
-        return value < min ? min : (value > max ? max : value);
+        return value < min ? min : (Math.min(value, max));
     }
 
     private float limitValue(float value, float min, float max) {
-        return value < min ? min : (value > max ? max : value);
+        return value < min ? min : (Math.min(value, max));
     }
 
     private void invalidateAllView() {
