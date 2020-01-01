@@ -38,20 +38,9 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PromptDialog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/prompt_dialog_rl.xml" afterDir="false" />
+    <list default="true" id="6afe0caf-979f-48a6-9469-6dbf2dcc4af4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_fb.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_fb.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_zhc_logo_500x500.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_zhc_logo_500x500.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/s_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/s_activity.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -595,10 +584,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="187" y="90" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1577857378242" />
-    <state x="716" y="286" key="FileChooserDialogImpl" timestamp="1577859324830">
+    <state x="716" y="286" key="FileChooserDialogImpl" timestamp="1577860354944">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="716" y="286" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1577859324830" />
+    <state x="716" y="286" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1577860354944" />
     <state x="716" y="314" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1577847952709" />
     <state width="1874" height="315" key="GridCell.Tab.0.bottom" timestamp="1577859339020">
       <screen x="0" y="0" width="1920" height="1050" />
