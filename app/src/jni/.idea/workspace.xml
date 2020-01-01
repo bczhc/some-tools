@@ -353,12 +353,6 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-15" />
-    <option name="y" value="-15" />
-    <option name="width" value="1525" />
-    <option name="height" value="725" />
-  </component>
   <component name="ProjectId" id="1VlsrdxAQagObPq5hfWFLJ2szyK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -474,7 +468,7 @@
       <workItem from="1570019598706" duration="1124000" />
       <workItem from="1576379243758" duration="674000" />
       <workItem from="1576915681579" duration="598000" />
-      <workItem from="1577839223374" duration="598000" />
+      <workItem from="1577839223374" duration="612000" />
     </task>
     <servers />
   </component>
