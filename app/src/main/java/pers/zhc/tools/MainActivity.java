@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity {
         new Thread(() -> {
             JSONObject jsonObject = null;
             try {
-                URL url = new URL("http://235m82e811.imwork.net/tools_app/i.zhc");
+                URL url = new URL(Infos.zhcUrlString + "/tools_app/i.zhc");
                 InputStream inputStream = url.openStream();
                 StringBuilder sb = new StringBuilder();
                 new ReadIS(inputStream, "utf-8").read(sb::append);
