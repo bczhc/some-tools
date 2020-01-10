@@ -9,7 +9,9 @@ import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
+import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.u.common.MultipartUploader;
 
 import java.io.*;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -19,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * UncaughtException处理类,当程序发生Uncaught异常的时候,有该类来接管程序,并记录发送错误报告.
@@ -27,13 +30,13 @@ import java.util.Map;
  */
 @SuppressWarnings("ALL")
 public class CrashHandler implements UncaughtExceptionHandler {
+    private CountDownLatch cdl = new CountDownLatch(2);
 
     public static final String TAG = "CrashHandler";
-
-    // 系统默认的UncaughtException处理类
-    private Thread.UncaughtExceptionHandler mDefaultHandler;
     // CrashHandler实例
     private static CrashHandler INSTANCE = new CrashHandler();
+    // 系统默认的UncaughtException处理类
+    private Thread.UncaughtExceptionHandler mDefaultHandler;
     // 程序的Context对象
     private Context mContext;
     // 用来存储设备信息和异常信息
@@ -78,14 +81,17 @@ public class CrashHandler implements UncaughtExceptionHandler {
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
             try {
+                cdl.await();
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                Log.e(TAG, "error: ", e);
             }
-            // 退出程序
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
+            exitProcess();
         }
+    }
+
+    private void exitProcess() {
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
     }
 
     /**
@@ -99,14 +105,12 @@ public class CrashHandler implements UncaughtExceptionHandler {
             return false;
         }
         // 使用Toast来显示异常信息
-        new Thread() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                Toast.makeText(mContext, mContext.getString(R.string.crash_sorry_toast_information), Toast.LENGTH_LONG).show();
-                Looper.loop();
-            }
-        }.start();
+        new Thread(() -> {
+            Looper.prepare();
+            Toast.makeText(mContext, mContext.getString(R.string.crash_sorry_toast_information), Toast.LENGTH_LONG).show();
+            Looper.loop();
+            cdl.countDown();
+        }).start();
         // 收集设备参数信息
         collectDeviceInfo(mContext);
         // 保存日志文件
@@ -150,7 +154,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * @param ex
      * @return 返回文件名称, 便于将文件传送到服务器
      */
-    private String saveCrashInfo2File(Throwable ex) {
+    private void saveCrashInfo2File(Throwable ex) {
 
         StringBuffer sb = new StringBuffer();
         for (Map.Entry<String, String> entry : infos.entrySet()) {
@@ -170,25 +174,44 @@ public class CrashHandler implements UncaughtExceptionHandler {
         printWriter.close();
         String result = writer.toString();
         sb.append(result);
+        String infos = sb.toString();
+        long timestamp = System.currentTimeMillis();
+        String time = formatter.format(new Date());
+        String fileName = "crash-" + time + "-" + timestamp + ".log";
+        String path = Environment.getExternalStorageDirectory().toString() + File.separatorChar
+                + mContext.getString(R.string.some_tools_app) + File.separatorChar + mContext.getString(R.string.crash);
+        File file = new File(path + File.separatorChar + fileName);
         try {
-            long timestamp = System.currentTimeMillis();
-            String time = formatter.format(new Date());
-            String fileName = "crash-" + time + "-" + timestamp + ".log";
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                String path = Environment.getExternalStorageDirectory().toString() + File.separatorChar
-                        + mContext.getString(R.string.some_tools_app) + File.separatorChar + mContext.getString(R.string.crash);
                 File dir = new File(path);
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                FileOutputStream fos = new FileOutputStream(path + File.separatorChar + fileName);
-                fos.write(sb.toString().getBytes());
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(infos.getBytes());
                 fos.close();
             }
-            return fileName;
+            new Thread(() -> {
+                //upload crash log to server
+                try {
+                    byte[] fileNameBytes = file.getName().getBytes();
+                    byte[] headBytes = new byte[fileNameBytes.length + 1];
+                    for (int i = 0; i < fileNameBytes.length; i++) {
+                        headBytes[i] = fileNameBytes[i];
+                    }
+                    InputStream is = new FileInputStream(file);
+                    MultipartUploader.formUpload(BaseActivity.Infos.zhcUrlString + "/tools_app/crash_report.zhc", headBytes, is);
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Looper.prepare();
+                Toast.makeText(mContext, R.string.upload_crash_report_done, Toast.LENGTH_SHORT).show();
+                Looper.loop();
+                cdl.countDown();
+            }).start();
         } catch (Exception e) {
             Log.e(TAG, "an error occured while writing file...", e);
         }
-        return null;
     }
 }

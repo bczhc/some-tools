@@ -38,11 +38,14 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="加入非捕捉的异常（可以导致崩溃的那种）收集报告">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" afterDir="false" />
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="崩溃报告上传至服务器">
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -145,6 +148,7 @@
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="device.picker.selection" value="A02AECP82AWGY" />
+    <property name="extract.method.default.visibility" value="private" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/libs" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -182,7 +186,7 @@
       <option name="PM_INSTALL_OPTIONS" value="" />
       <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
       <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="specific_activity" />
+      <option name="MODE" value="default_activity" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
       <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
@@ -509,7 +513,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578644804024</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="加入非捕捉的异常（可以导致崩溃的那种）收集报告">
+      <created>1578646185550</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1578646185550</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -568,7 +579,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="自定义函数（绘制）傅里叶级数展开&#10;fb:v and wP" />
     <MESSAGE value="自定义函数（绘制）傅里叶级数展开增加设定绘画面板周期x,y、函数绘制x,y轴长度" />
     <MESSAGE value="重写傅里叶级数展开的函数生成，还差双指缩放，但是感觉莫名的卡" />
     <MESSAGE value="傅里叶本轮绘制准备差不多了" />
@@ -593,7 +603,8 @@
     <MESSAGE value="修复：悬浮画板输入调整线条粗细下面预览View不更新&#10;悬浮画板：LayoutParams不共用，但是依然没有找到画板在绘画模式隐藏再显示闪退的bug原因并修复。" />
     <MESSAGE value="悬浮画板导入图片输入数值加入数学表达式解析计算" />
     <MESSAGE value="悬浮画板 画板变换后重置变换按钮" />
-    <option name="LAST_COMMIT_MESSAGE" value="悬浮画板 画板变换后重置变换按钮" />
+    <MESSAGE value="加入非捕捉的异常（可以导致崩溃的那种）收集报告" />
+    <option name="LAST_COMMIT_MESSAGE" value="加入非捕捉的异常（可以导致崩溃的那种）收集报告" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="188" width="800" height="683" key="#Plugins" timestamp="1578635718864">
@@ -601,10 +612,10 @@
     </state>
     <state x="555" y="188" key="#Plugins/0.0.1920.1050@0.0.1920.1050" timestamp="1578635718864" />
     <state x="555" y="216" width="800" height="683" key="#Plugins/0.27.1920.1053@0.27.1920.1053" timestamp="1577838986647" />
-    <state x="659" y="247" width="602" height="555" key="#app" timestamp="1577867959739">
+    <state x="659" y="247" width="602" height="555" key="#app" timestamp="1578648824739">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="659" y="247" width="602" height="555" key="#app/0.0.1920.1050@0.0.1920.1050" timestamp="1577867959739" />
+    <state x="659" y="247" width="602" height="555" key="#app/0.0.1920.1050@0.0.1920.1050" timestamp="1578648824739" />
     <state x="419" y="180" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577881140529">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -633,14 +644,14 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="544" y="280" key="AndroidCreateResourceFileDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578640726677" />
-    <state x="751" y="337" key="AndroidCreateXmlResourceDialog" timestamp="1578645772851">
+    <state x="751" y="337" key="AndroidCreateXmlResourceDialog" timestamp="1578648087734">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="751" y="337" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578645772851" />
-    <state x="479" y="118" width="951" height="823" key="CommitChangelistDialog2" timestamp="1578646125757">
+    <state x="751" y="337" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578648087734" />
+    <state x="479" y="118" width="951" height="823" key="CommitChangelistDialog2" timestamp="1578649533110">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="479" y="118" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1578646125757" />
+    <state x="479" y="118" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533110" />
     <state x="479" y="145" width="951" height="823" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1577849049071" />
     <state x="187" y="90" width="1536" height="840" key="DiffContextDialog" timestamp="1577884050711">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -651,42 +662,42 @@
     </state>
     <state x="716" y="286" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1578637594918" />
     <state x="716" y="314" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1577847952709" />
-    <state width="1874" height="286" key="GridCell.Tab.0.bottom" timestamp="1578639662652">
+    <state width="1874" height="193" key="GridCell.Tab.0.bottom" timestamp="1578649533145">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="286" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578639662652" />
+    <state width="1874" height="193" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533145" />
     <state width="1874" height="190" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343264" />
-    <state width="1874" height="286" key="GridCell.Tab.0.center" timestamp="1578639662651">
+    <state width="1874" height="193" key="GridCell.Tab.0.center" timestamp="1578649533144">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="286" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578639662651" />
+    <state width="1874" height="193" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533144" />
     <state width="1874" height="190" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343259" />
-    <state width="1874" height="286" key="GridCell.Tab.0.left" timestamp="1578639662650">
+    <state width="1874" height="193" key="GridCell.Tab.0.left" timestamp="1578649533143">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="286" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578639662650" />
+    <state width="1874" height="193" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533143" />
     <state width="1874" height="190" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343259" />
-    <state width="1874" height="286" key="GridCell.Tab.0.right" timestamp="1578639662651">
+    <state width="1874" height="193" key="GridCell.Tab.0.right" timestamp="1578649533144">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="286" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578639662651" />
+    <state width="1874" height="193" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533144" />
     <state width="1874" height="190" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343260" />
-    <state width="1874" height="193" key="GridCell.Tab.1.bottom" timestamp="1577883359713">
+    <state width="1874" height="193" key="GridCell.Tab.1.bottom" timestamp="1578649533150">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1577883359713" />
-    <state width="1874" height="193" key="GridCell.Tab.1.center" timestamp="1577883359711">
+    <state width="1874" height="193" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533150" />
+    <state width="1874" height="193" key="GridCell.Tab.1.center" timestamp="1578649533148">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1577883359711" />
-    <state width="1874" height="193" key="GridCell.Tab.1.left" timestamp="1577883359709">
+    <state width="1874" height="193" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533148" />
+    <state width="1874" height="193" key="GridCell.Tab.1.left" timestamp="1578649533146">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1577883359709" />
-    <state width="1874" height="193" key="GridCell.Tab.1.right" timestamp="1577883359712">
+    <state width="1874" height="193" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533146" />
+    <state width="1874" height="193" key="GridCell.Tab.1.right" timestamp="1578649533149">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1577883359712" />
+    <state width="1874" height="193" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533149" />
     <state x="747" y="459" key="ReplaceDuplicatesPrompt" timestamp="1577878410157">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -700,20 +711,20 @@
     </state>
     <state x="682" y="163" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1577882492936" />
     <state x="682" y="190" width="947" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1577840304657" />
-    <state x="555" y="261" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578644805365">
+    <state x="555" y="261" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578646186841">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1578644805365" />
+    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1578646186841" />
     <state x="555" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1577841129696" />
     <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1577857958183">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1577857958183" />
     <state x="100" y="127" width="1720" height="853" key="com.android.tools.idea.avdmanager.AvdListDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1577850071598" />
-    <state x="483" y="123" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1578641933158">
+    <state x="483" y="123" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1578649316044">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="483" y="123" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1578641933158" />
+    <state x="483" y="123" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1578649316044" />
     <state x="483" y="150" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1577851038540" />
     <state x="704" y="442" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578644030371">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -723,27 +734,31 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="100" y="100" width="1720" height="850" key="dock-window-1/0.0.1920.1050@0.0.1920.1050" timestamp="1577869773563" />
-    <state x="694" y="291" width="652" height="477" key="extract.method.dialog" timestamp="1577878408349">
+    <state x="694" y="291" width="652" height="477" key="extract.method.dialog" timestamp="1578648533483">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="694" y="291" width="652" height="477" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1577878408349" />
-    <state x="595" y="256" width="773" height="538" key="find.popup" timestamp="1578645158757">
+    <state x="694" y="291" width="652" height="477" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578648533483" />
+    <state x="595" y="256" width="773" height="538" key="find.popup" timestamp="1578648247262">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="595" y="256" width="773" height="538" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578645158757" />
+    <state x="595" y="256" width="773" height="538" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578648247262" />
     <state x="595" y="284" width="730" height="538" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1577851500161" />
     <state x="611" y="316" key="git4idea.merge.GitPullDialog" timestamp="1578644043707">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="611" y="316" key="git4idea.merge.GitPullDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578644043707" />
+    <state x="609" y="243" width="700" height="530" key="recent.locations.popup" timestamp="1578648446746">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="609" y="243" width="700" height="530" key="recent.locations.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578648446746" />
     <state x="652" y="141" key="refactoring.ChangeSignatureDialog" timestamp="1577866288768">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="652" y="141" key="refactoring.ChangeSignatureDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1577866288768" />
-    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup" timestamp="1578645460553">
+    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup" timestamp="1578649497568">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578645460553" />
+    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578649497568" />
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1577851484323" />
   </component>
   <component name="XDebuggerManager">
