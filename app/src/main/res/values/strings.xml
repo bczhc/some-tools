@@ -149,5 +149,8 @@
     <string name="set">设置</string>
     <string name="please_enter_color_hex">请输入颜色十六进制</string>
     <string name="math_expression_evaluation_test">数学表达式解析测试</string>
+    <string name="crash">crash</string>
+    <string name="some_tools_app">some-tools-app</string>
+    <string name="crash_sorry_toast_information">很抱歉,程序出现异常,即将退出.</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
