@@ -21,6 +21,7 @@ import android.widget.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
@@ -45,6 +46,7 @@ import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingBoardMainActivity extends BaseActivity {
+    static Map<Long, Activity> longMainActivityMap;//memory leak??
     private WindowManager wm = null;
     private LinearLayout ll;
     private PaintView pv;
@@ -56,9 +58,86 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private View globalOnTouchListenerFloatingView;
     private File currentInternalPathFile = null;
     private Runnable importPathFileDoneAction;
-    static Map<Long, Activity> longMainActivityMap;//memory leak??
     private long currentInstanceMills;
     private TextView[] childTVs;
+
+    private static void uploadPaths(Context context) {
+        try {
+            InputStream is = new URL("http://235m82e811.imwork.net/upload/list.zhc?can=").openStream();
+            if (is.read() != 1) {
+                is.close();
+                return;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<String> stringList = new ArrayList<>();
+        try {
+            URL getListURL = new URL("http://235m82e811.imwork.net/upload/list.zhc");
+            InputStream is = getListURL.openStream();
+            StringBuilder sb = new StringBuilder();
+            new ReadIS(is, "UTF-8").read(sb::append);
+            String s = sb.toString();
+            System.out.println("sb.toString() = " + s);
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                JSONArray jsonArray = jsonObject.getJSONArray("files");
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    stringList.add(object.getString("md5"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File pathDir = new File(Environment.getExternalStorageDirectory().toString() + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
+        File[] listFiles = pathDir.listFiles();
+        if (listFiles != null)
+            for (File file : listFiles) {
+                if (file.isDirectory()) continue;
+                try {
+                    String fileMd5String = Digest.getFileMd5String(file);
+                    if (!listStringContain(stringList, fileMd5String)) {
+                        InputStream is = new FileInputStream(file);
+                        byte[] headInformation = null;
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("name", file.getName());
+                            headInformation = jsonObject.toString().getBytes();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (headInformation == null)
+                            headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
+                        byte[] headBytes = new byte[headInformation.length + 1];
+                        System.arraycopy(headInformation, 0, headBytes, 0, headInformation.length);
+                        MultipartUploader.formUpload("http://235m82e811.imwork.net/upload/upload.zhc", headBytes, is);
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+    }
+
+    private static boolean listStringContain(List<String> list, String s) {
+        for (String s1 : list) {
+            if (s.equals(s1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static EditText getSelectedET_currentMills(Context ctx, EditText et) {
+        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        et.setText(String.format(ctx.getString(R.string.tv), format));
+        Selection.selectAll(et.getText());
+        return et;
+    }
 
     @SuppressLint("UseSparseArrays")
     @Override
@@ -182,77 +261,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
         new Thread(() -> uploadPaths(this)).start();
     }
 
-    private static void uploadPaths(Context context) {
-        try {
-            InputStream is = new URL("http://235m82e811.imwork.net/upload/list.zhc?can=").openStream();
-            if (is.read() != 1) {
-                is.close();
-                return;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<String> stringList = new ArrayList<>();
-        try {
-            URL getListURL = new URL("http://235m82e811.imwork.net/upload/list.zhc");
-            InputStream is = getListURL.openStream();
-            StringBuilder sb = new StringBuilder();
-            new ReadIS(is, "UTF-8").read(sb::append);
-            String s = sb.toString();
-            System.out.println("sb.toString() = " + s);
-            try {
-                JSONObject jsonObject = new JSONObject(s);
-                JSONArray jsonArray = jsonObject.getJSONArray("files");
-                int length = jsonArray.length();
-                for (int i = 0; i < length; i++) {
-                    JSONObject object = jsonArray.getJSONObject(i);
-                    stringList.add(object.getString("md5"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File pathDir = new File(Environment.getExternalStorageDirectory().toString() + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
-        File[] listFiles = pathDir.listFiles();
-        if (listFiles != null)
-            for (File file : listFiles) {
-                if (file.isDirectory()) continue;
-                try {
-                    String fileMd5String = Digest.getFileMd5String(file);
-                    if (!listStringContain(stringList, fileMd5String)) {
-                        InputStream is = new FileInputStream(file);
-                        byte[] headInformation = null;
-                        try {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("name", file.getName());
-                            headInformation = jsonObject.toString().getBytes();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        if (headInformation == null)
-                            headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
-                        byte[] headBytes = new byte[headInformation.length + 1];
-                        System.arraycopy(headInformation, 0, headBytes, 0, headInformation.length);
-                        MultipartUploader.formUpload("http://235m82e811.imwork.net/upload/upload.zhc", headBytes, is);
-                        is.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-    }
-
-    private static boolean listStringContain(List<String> list, String s) {
-        for (String s1 : list) {
-            if (s.equals(s1)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -280,7 +288,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
             }
         });
     }
-
 
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
@@ -809,10 +816,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                     .setPositiveButton(R.string.ok, (dialog1, which) -> {
                                         try {
                                             pv.importImage(imageBitmap,
-                                                    Float.parseFloat(editTexts[0].getText().toString())
-                                                    , Float.parseFloat(editTexts[1].getText().toString())
-                                                    , Integer.parseInt(editTexts[2].getText().toString())
-                                                    , Integer.parseInt(editTexts[3].getText().toString()));
+                                                    ((float) new Expression(editTexts[0].getText().toString()).calculate()),
+                                                    ((float) new Expression(editTexts[1].getText().toString()).calculate()),
+                                                    ((int) new Expression(editTexts[2].getText().toString()).calculate()),
+                                                    ((int) new Expression(editTexts[3].getText().toString()).calculate())
+                                            );
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                             Toast.makeText(this, R.string.type_error, Toast.LENGTH_SHORT).show();
@@ -906,13 +914,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
         moreOptionsDialog.setContentView(sv);
         moreOptionsDialog.setCanceledOnTouchOutside(true);
         moreOptionsDialog.show();
-    }
-
-    public static EditText getSelectedET_currentMills(Context ctx, EditText et) {
-        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        et.setText(String.format(ctx.getString(R.string.tv), format));
-        Selection.selectAll(et.getText());
-        return et;
     }
 
     private void setFilePickerDialog(Dialog dialog, FilePickerRL filePickerRL) {

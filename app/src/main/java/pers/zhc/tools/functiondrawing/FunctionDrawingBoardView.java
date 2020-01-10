@@ -20,6 +20,8 @@ public class FunctionDrawingBoardView extends View {
     private Path mPath;
     private int width, height;
     private FFMap funInf;
+    private float lastX, lastY;
+    private float haveStrokedWidth = 0;
 
     FunctionDrawingBoardView(Context context, int[] r) {
         super(context);
@@ -35,9 +37,6 @@ public class FunctionDrawingBoardView extends View {
         xLength = r[0];
         yLength = r[1];
     }
-
-    private float lastX, lastY;
-    private float haveStrokedWidth = 0;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override

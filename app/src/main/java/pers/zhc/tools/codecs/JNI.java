@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.widget.TextView;
 
 public class JNI {
+    static {
+        System.loadLibrary("doJNI");
+    }
+
     private TextView tv;
     private Activity activity;
 
     JNI(TextView tv, Activity activity) {
         this.tv = tv;
         this.activity = activity;
-    }
-
-    static {
-        System.loadLibrary("doJNI");
     }
 
     /**

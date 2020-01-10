@@ -4,6 +4,11 @@ import android.view.MotionEvent;
 
 public class GestureResolver {
     private GestureInterface gestureInterface;
+    private float lastX = -1, lastY = -1;
+    private float lastDistance = -1;
+    private float firstDistance = -1;
+    private float firstMidPointX;
+    private float firstMidPointY;
 
     public GestureResolver(GestureInterface gestureInterface) {
         this.gestureInterface = gestureInterface;
@@ -12,12 +17,6 @@ public class GestureResolver {
     private float getDistance(float x1, float x2, float y1, float y2) {
         return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
-
-    private float lastX = -1, lastY = -1;
-    private float lastDistance = -1;
-    private float firstDistance = -1;
-    private float firstMidPointX;
-    private float firstMidPointY;
 
     public void onTouch(MotionEvent event) {
         int pointerCount = event.getPointerCount();

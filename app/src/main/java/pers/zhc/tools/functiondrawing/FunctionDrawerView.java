@@ -27,6 +27,9 @@ public class FunctionDrawerView extends View {
     private MathFunctionInterface f;
     private float scaleX = 1;
     private float scaleY = 1;
+    private boolean first2Down = false;
+    private double firstDistance;
+
 
     FunctionDrawerView(Context context, double xLength, double yLength) {
         super(context);
@@ -98,7 +101,6 @@ public class FunctionDrawerView extends View {
         es = Executors.newCachedThreadPool();
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         canvasHalfWidth = (int) ((canvasWidth = getWidth()) / 2F);
@@ -139,9 +141,6 @@ public class FunctionDrawerView extends View {
         xCenter = canvasHalfWidthWithOffset;
         yCenter = canvasHalfHeightWithOffset;
     }
-
-    private boolean first2Down = false;
-    private double firstDistance;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override

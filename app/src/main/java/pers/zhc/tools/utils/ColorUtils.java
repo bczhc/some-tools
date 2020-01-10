@@ -13,38 +13,6 @@ public class ColorUtils {
         this.endPos = endPosition;
     }
 
-    int getColor(float pos) throws Exception {
-        float perAreaWidth = (endPos - startPos) / (colors.length - 1);
-        int area = (int) ((pos - startPos) / perAreaWidth) + (((pos - startPos) % perAreaWidth) > 0 ? 1 : 0);
-//        System.out.println("area = " + area);
-        int color;
-        try {
-            color = new TwoColor(colors[area - 1], colors[area], 0F, perAreaWidth).getColor((pos - startPos) % perAreaWidth);
-        } catch (Exception e) {
-            throw new Exception(e.toString());
-        }
-        return color;
-    }
-
-    private class TwoColor {
-        private RGB rgb1, rgb2;
-        private float sP, eP;
-
-        private TwoColor(int color1, int color2, float sP, float eP) {
-            this.sP = sP;
-            this.eP = eP;
-            rgb1 = parseRGB(color1);
-            rgb2 = parseRGB(color2);
-        }
-
-        private int getColor(float pos) {
-            float R = ((rgb2.r - rgb1.r) / (eP - sP)) * pos + rgb1.r - sP * (rgb2.r - rgb1.r) / (eP - sP);
-            float G = ((rgb2.g - rgb1.g) / (eP - sP)) * pos + rgb1.g - sP * (rgb2.g - rgb1.g) / (eP - sP);
-            float B = ((rgb2.b - rgb1.b) / (eP - sP)) * pos + rgb1.b - sP * (rgb2.b - rgb1.b) / (eP - sP);
-            return parseColorInt(new RGB(((int) R), ((int) G), ((int) B)));
-        }
-    }
-
     private static RGB parseRGB(int color) {
         int red = (color & 0xff0000) >> 16;
         int green = (color & 0x00ff00) >> 8;
@@ -90,6 +58,38 @@ public class ColorUtils {
         return Color.HSVToColor(HSV);*/
         RGB rgb = parseRGB(color);
         return parseColorInt(new RGB(255 - rgb.r, 255 - rgb.g, 255 - rgb.b));
+    }
+
+    int getColor(float pos) throws Exception {
+        float perAreaWidth = (endPos - startPos) / (colors.length - 1);
+        int area = (int) ((pos - startPos) / perAreaWidth) + (((pos - startPos) % perAreaWidth) > 0 ? 1 : 0);
+//        System.out.println("area = " + area);
+        int color;
+        try {
+            color = new TwoColor(colors[area - 1], colors[area], 0F, perAreaWidth).getColor((pos - startPos) % perAreaWidth);
+        } catch (Exception e) {
+            throw new Exception(e.toString());
+        }
+        return color;
+    }
+
+    private class TwoColor {
+        private RGB rgb1, rgb2;
+        private float sP, eP;
+
+        private TwoColor(int color1, int color2, float sP, float eP) {
+            this.sP = sP;
+            this.eP = eP;
+            rgb1 = parseRGB(color1);
+            rgb2 = parseRGB(color2);
+        }
+
+        private int getColor(float pos) {
+            float R = ((rgb2.r - rgb1.r) / (eP - sP)) * pos + rgb1.r - sP * (rgb2.r - rgb1.r) / (eP - sP);
+            float G = ((rgb2.g - rgb1.g) / (eP - sP)) * pos + rgb1.g - sP * (rgb2.g - rgb1.g) / (eP - sP);
+            float B = ((rgb2.b - rgb1.b) / (eP - sP)) * pos + rgb1.b - sP * (rgb2.b - rgb1.b) / (eP - sP);
+            return parseColorInt(new RGB(((int) R), ((int) G), ((int) B)));
+        }
     }
 }
 
