@@ -101,6 +101,7 @@ public class PaintView extends View {
             mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             backgroundBitmap = Bitmap.createBitmap(mBitmap);
             mCanvas = new Canvas(mBitmap);
+            mCanvas.save();
             mBackgroundCanvas = new Canvas(backgroundBitmap);
             //抗锯齿
             mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
@@ -465,6 +466,11 @@ public class PaintView extends View {
     }
 
     void resetTransform() {
+        mCanvas.restore();
+        mCanvas.drawColor(Color.TRANSPARENT);
+        for (PathBean pathBean : this.undoList) {
+            mCanvas.drawPath(pathBean.path, pathBean.paint);
+        }
         invalidate();
     }
 
