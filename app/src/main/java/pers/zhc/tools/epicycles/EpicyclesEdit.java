@@ -86,9 +86,9 @@ public class EpicyclesEdit extends BaseActivity {
             s2 = s2.equals("") ? "0" : s2;
             String s3 = et_c_im.getText().toString();
             s3 = s3.equals("") ? "0" : s3;
-            EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Double.valueOf(s1)
-                    , new ComplexValue(Double.valueOf(s2)
-                    , Double.valueOf(s3)));
+            EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Double.parseDouble(s1)
+                    , new ComplexValue(Double.parseDouble(s2)
+                    , Double.parseDouble(s3)));
             TextView tv = new TextView(this);
             setTV(tv, aEpicycle);
             String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
@@ -228,13 +228,13 @@ public class EpicyclesEdit extends BaseActivity {
         for (EpicyclesSequence.AEpicycle epicycle : EpicyclesEdit.epicyclesSequence.epicycles) {
             String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
                     getString(R.string.left_parenthesis)
-                    , String.valueOf(epicycle.c.re), getString(R.string.add)
-                    , String.valueOf(epicycle.c.im), getString(R.string.i)
+                    , epicycle.c.re, getString(R.string.add)
+                    , epicycle.c.im, getString(R.string.i)
                     , getString(R.string.right_parenthesis)
                     , getString(R.string.e)
                     , getString(R.string.caret)
                     , getString(R.string.left_parenthesis)
-                    , String.valueOf(epicycle.n), getString(R.string.i)
+                    , epicycle.n, getString(R.string.i)
                     , getString(R.string.t)
                     , getString(R.string.right_parenthesis));
             TextView tv = new TextView(this);

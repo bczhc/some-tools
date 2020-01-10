@@ -21,7 +21,6 @@ class JNIMain {
      * @param savedConfig savedConfig
      * @return status 0
      */
-    @SuppressWarnings("Duplicates")
     int JNI_Decode(String f, String dF, int dT, TextView tv, Activity activity, List<List<String>> savedConfig) {
         switch (dT) {
             case 0:
