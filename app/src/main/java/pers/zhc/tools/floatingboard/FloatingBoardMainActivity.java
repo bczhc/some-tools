@@ -63,7 +63,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
 
     private static void uploadPaths(Context context) {
         try {
-            InputStream is = new URL("http://235m82e811.imwork.net/upload/list.zhc?can=").openStream();
+            InputStream is = new URL(Infos.zhcUrlString + "/upload/list.zhc?can=").openStream();
             if (is.read() != 1) {
                 is.close();
                 return;
@@ -73,7 +73,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
         }
         List<String> stringList = new ArrayList<>();
         try {
-            URL getListURL = new URL("http://235m82e811.imwork.net/upload/list.zhc");
+            URL getListURL = new URL(Infos.zhcUrlString + "/upload/list.zhc");
             InputStream is = getListURL.openStream();
             StringBuilder sb = new StringBuilder();
             new ReadIS(is, "UTF-8").read(sb::append);
@@ -114,7 +114,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
                         byte[] headBytes = new byte[headInformation.length + 1];
                         System.arraycopy(headInformation, 0, headBytes, 0, headInformation.length);
-                        MultipartUploader.formUpload("http://235m82e811.imwork.net/upload/upload.zhc", headBytes, is);
+                        MultipartUploader.formUpload(Infos.zhcUrlString + "/upload/upload.zhc", headBytes, is);
                         is.close();
                     }
                 } catch (IOException e) {

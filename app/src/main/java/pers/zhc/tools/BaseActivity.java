@@ -13,7 +13,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class BaseActivity extends Activity {
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +82,7 @@ public class BaseActivity extends Activity {
 
     protected byte ckV() {
         try {
-            URLConnection urlConnection = new URL("http://235m82e811.imwork.net/i.zhc?t=tools_v").openConnection();
+            URLConnection urlConnection = new URL(Infos.zhcUrlString + "/i.zhc?t=tools_v").openConnection();
             InputStream is = urlConnection.getInputStream();
             byte[] b = new byte[urlConnection.getContentLength()];
             System.out.println("is.read(b) = " + is.read(b));
@@ -92,5 +91,9 @@ public class BaseActivity extends Activity {
 
         }
         return 1;
+    }
+
+    public static class Infos {
+        public static String zhcUrlString = "http://235m82e811.imwork.net";
     }
 }
