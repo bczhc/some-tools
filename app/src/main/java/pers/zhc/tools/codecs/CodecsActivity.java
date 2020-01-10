@@ -34,6 +34,7 @@ import static android.widget.Toast.makeText;
 import static pers.zhc.tools.utils.Common.showException;
 
 public class CodecsActivity extends BaseActivity {
+    String[] jsonData = null;
     private TextView mainTv;
     private String f = null;
     private File folder = null;
@@ -48,18 +49,17 @@ public class CodecsActivity extends BaseActivity {
     private List<List<String>> savedConfig;
     private File file = null;
     private String[] spinnerData = null;
-    String[] jsonData = null;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        new PermissionRequester(this::D).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 13);
-    }
 
     @SuppressWarnings("WeakerAccess")
     public CodecsActivity() {
         System.out.println("new CodecsActivity");
         this.latch = new CountDownLatch(1);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        new PermissionRequester(this::D).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 13);
     }
 
     @Override
@@ -290,7 +290,7 @@ public class CodecsActivity extends BaseActivity {
 
     private void setTSpinner() {
         Spinner dT = findViewById(R.id.dT);
-        SpinnerAdapter adapter = new ArrayAdapter<>(this,  R.layout.adapter_layout
+        SpinnerAdapter adapter = new ArrayAdapter<>(this, R.layout.adapter_layout
                 , this.spinnerData);
         dT.setAdapter(adapter);
         dT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

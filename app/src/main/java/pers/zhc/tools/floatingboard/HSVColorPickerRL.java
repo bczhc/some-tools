@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.text.Selection;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -97,6 +98,8 @@ abstract class HSVColorPickerRL extends RelativeLayout {
             AlertDialog ad = adb.create();
             DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             ad.show();
+            Selection.selectAll(editText.getText());
+            DialogUtil.setADWithET_autoShowSoftKeyboard(editText, ad);
         });
         barLL.addView(tv);
         vv = new View(context);
@@ -113,6 +116,39 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         }
         this.addView(ll);
     }
+
+    private int limitValue(int value, int min, int max) {
+        return value < min ? min : (Math.min(value, max));
+    }
+
+    private float limitValue(float value, float min, float max) {
+        return value < min ? min : (Math.min(value, max));
+    }
+
+    private void invalidateAllView() {
+        for (View view : hsvAView) {
+//            if (i == notDrawIndex) continue;
+//            int finalI = i;
+//            new Thread(() -> hsvAView[finalI].postInvalidate()).start();
+            view.invalidate();
+        }
+        int color = this.getColor();
+        vv.setBackgroundColor(color);
+        onPickedAction(color);
+    }
+
+    private int getColor() {
+        return Color.HSVToColor(this.alpha, this.hsv);
+    }
+
+    private float setCurrentX(int i) {
+        if (i == 1 || i == 2) return currentXPos[i] = hsv[i] * width;
+        if (i == 0) return currentXPos[0] = hsv[0] * ((float) width) / 360F;
+        if (i == 3) return currentXPos[3] = alpha * ((float) width) / 255F;
+        return 0;
+    }
+
+    abstract void onPickedAction(int color);
 
     private class HView extends View {
         private int hW, hH;
@@ -290,37 +326,4 @@ abstract class HSVColorPickerRL extends RelativeLayout {
             return true;
         }
     }
-
-    private int limitValue(int value, int min, int max) {
-        return value < min ? min : (value > max ? max : value);
-    }
-
-    private float limitValue(float value, float min, float max) {
-        return value < min ? min : (value > max ? max : value);
-    }
-
-    private void invalidateAllView() {
-        for (View view : hsvAView) {
-//            if (i == notDrawIndex) continue;
-//            int finalI = i;
-//            new Thread(() -> hsvAView[finalI].postInvalidate()).start();
-            view.invalidate();
-        }
-        int color = this.getColor();
-        vv.setBackgroundColor(color);
-        onPickedAction(color);
-    }
-
-    private int getColor() {
-        return Color.HSVToColor(this.alpha, this.hsv);
-    }
-
-    private float setCurrentX(int i) {
-        if (i == 1 || i == 2) return currentXPos[i] = hsv[i] * width;
-        if (i == 0) return currentXPos[0] = hsv[0] * ((float) width) / 360F;
-        if (i == 3) return currentXPos[3] = alpha * ((float) width) / 255F;
-        return 0;
-    }
-
-    abstract void onPickedAction(int color);
 }

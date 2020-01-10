@@ -23,14 +23,16 @@ import static pers.zhc.tools.utils.Common.showException;
 
 @SuppressLint("ViewConstructor")
 public class FilePickerRL extends RelativeLayout {
-    private final File initialPath;
-    private final Runnable cancelAction;
-    private final OnPickedResultActionInterface pickedResultAction;
-    private Toast notHavePermissionAccessToast = null;
     @SuppressWarnings("unused")
     public static int TYPE_PICK_FILE = 1;
     @SuppressWarnings("unused")
     public static int TYPE_PICK_FOLDER = 2;
+    private final File initialPath;
+    private final Runnable cancelAction;
+    private final OnPickedResultActionInterface pickedResultAction;
+    private final int[] justPicked = new int[]{-1};
+    public String result;
+    private Toast notHavePermissionAccessToast = null;
     private String resultString = "";
     private TextView pathView;
     private File currentPath;
@@ -38,14 +40,8 @@ public class FilePickerRL extends RelativeLayout {
     private LinearLayout.LayoutParams lp;
     private int grey = Color.parseColor("#DCDCDC");
     private int white = Color.WHITE;
-    private final int[] justPicked = new int[]{-1};
     private int type;
-    public String result;
     private Activity ctx;
-
-    public interface OnPickedResultActionInterface {
-        void result(String s);
-    }
 
     public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath, Runnable cancelAction, OnPickedResultActionInterface pickedResultAction) {
         super(context);
@@ -57,7 +53,6 @@ public class FilePickerRL extends RelativeLayout {
         init();
     }
 
-    @SuppressWarnings("Duplicates")
     private void init() {
         View view = View.inflate(ctx, R.layout.file_picker_rl_activity, null);
         this.addView(view);
@@ -122,12 +117,6 @@ public class FilePickerRL extends RelativeLayout {
             fillViews(listFiles, lp, grey, justPicked, ll);
         }).start();
     }
-
-    /*@Override
-    public void onBackPressed() {
-        if (currentPath.equals(new File("/"))) finish();
-        else previous();
-    }*/
 
     @SuppressLint("ClickableViewAccessibility")
     private void fillViews(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor,
@@ -210,6 +199,12 @@ public class FilePickerRL extends RelativeLayout {
         }).start();
     }
 
+    /*@Override
+    public void onBackPressed() {
+        if (currentPath.equals(new File("/"))) finish();
+        else previous();
+    }*/
+
     private void extractM1(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor, TextView[] textViews,
                            int i) {
         textViews[i] = new TextView(ctx);
@@ -245,5 +240,9 @@ public class FilePickerRL extends RelativeLayout {
         } catch (Exception e) {
             showException(e, ctx);
         }
+    }
+
+    public interface OnPickedResultActionInterface {
+        void result(String s);
     }
 }
