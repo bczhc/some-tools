@@ -12,12 +12,13 @@ import pers.zhc.u.math.util.ComplexValue;
 
 public class ComplexGraphDrawingView extends View {
 
+    static ComplexFunction complexFunction;
     private float width;
     private float height;
     private Paint mCoPaint;
     private Paint mPaint;
     private Path mPath;
-    static ComplexFunction complexFunction;
+    private boolean instanceFirst = true;
 
     public ComplexGraphDrawingView(Context context) {
         super(context);
@@ -35,8 +36,6 @@ public class ComplexGraphDrawingView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         if (complexFunction == null) complexFunction = new ComplexFunction();
     }
-
-    private boolean instanceFirst = true;
 
     @Override
     protected void onDraw(Canvas canvas) {

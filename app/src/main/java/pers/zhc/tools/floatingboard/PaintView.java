@@ -25,6 +25,7 @@ public class PaintView extends View {
     private final int height;
     private final int width;
     private final Paint zP;
+    boolean isEraserMode;
     private OutputStream os;
     private Paint mPaint;
     private Path mPath;
@@ -36,7 +37,6 @@ public class PaintView extends View {
     //使用LinkedList 模拟栈，来保存 Path
     private LinkedList<PathBean> undoList;
     private LinkedList<PathBean> redoList;
-    boolean isEraserMode;
     private JNI jni = new JNI();
     private Context ctx;
     private Bitmap backgroundBitmap;
@@ -49,14 +49,6 @@ public class PaintView extends View {
         init();
     }*/
 
-    void setOS(File file, boolean append) {
-        try {
-            os = new FileOutputStream(file, append);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
         ctx = context;
@@ -66,6 +58,14 @@ public class PaintView extends View {
         init();
         zP = new Paint();
         zP.setColor(Color.parseColor("#5000ff00"));
+    }
+
+    void setOS(File file, boolean append) {
+        try {
+            os = new FileOutputStream(file, append);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /***
@@ -128,12 +128,12 @@ public class PaintView extends View {
         }
     }
 
-    void setStrokeWidth(float width) {
-        mPaint.setStrokeWidth(width);
-    }
-
     float getStrokeWidth() {
         return this.mPaint.getStrokeWidth();
+    }
+
+    void setStrokeWidth(float width) {
+        mPaint.setStrokeWidth(width);
     }
 
     int getColor() {
@@ -257,32 +257,6 @@ public class PaintView extends View {
         postInvalidate();
     }
 
-    private class FloatPoint {
-        private float x, y;
-
-        FloatPoint(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        FloatPoint() {
-        }
-    }
-
-    private class MyPoint {
-        private FloatPoint p1, p2;
-
-        private MyPoint() {
-            p1 = new FloatPoint();
-            p2 = new FloatPoint();
-        }
-
-        private FloatPoint getMidPoint() {
-            return new FloatPoint((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-        }
-    }
-
-
     /**
      * 触摸事件 触摸绘制
      */
@@ -306,7 +280,6 @@ public class PaintView extends View {
         invalidate();
         return true;
     }
-
 
     /**
      * 关闭流
@@ -342,20 +315,6 @@ public class PaintView extends View {
             setMeasuredDimension(wSpecSize, 200);
         }
     }
-
-    /**
-     * 路径对象
-     */
-    class PathBean {
-        Path path;
-        Paint paint;
-
-        PathBean(Path path, Paint paint) {
-            this.path = path;
-            this.paint = paint;
-        }
-    }
-
 
     void closePathRecoderOS() {
         closeStream(os);
@@ -480,12 +439,12 @@ public class PaintView extends View {
         }
     }
 
-    void setEraserStrokeWidth(float w) {
-        eraserPaint.setStrokeWidth(w);
-    }
-
     float getEraserStrokeWidth() {
         return eraserPaint.getStrokeWidth();
+    }
+
+    void setEraserStrokeWidth(float w) {
+        eraserPaint.setStrokeWidth(w);
     }
 
     void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
@@ -507,5 +466,43 @@ public class PaintView extends View {
 
     void resetTransform() {
         invalidate();
+    }
+
+    private class FloatPoint {
+        private float x, y;
+
+        FloatPoint(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        FloatPoint() {
+        }
+    }
+
+    private class MyPoint {
+        private FloatPoint p1, p2;
+
+        private MyPoint() {
+            p1 = new FloatPoint();
+            p2 = new FloatPoint();
+        }
+
+        private FloatPoint getMidPoint() {
+            return new FloatPoint((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+        }
+    }
+
+    /**
+     * 路径对象
+     */
+    class PathBean {
+        Path path;
+        Paint paint;
+
+        PathBean(Path path, Paint paint) {
+            this.path = path;
+            this.paint = paint;
+        }
     }
 }

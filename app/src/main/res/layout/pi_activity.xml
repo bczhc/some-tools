@@ -11,7 +11,6 @@
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
               android:inputType="numberDecimal" tools:ignore="Autofill,LabelFor"
               android:id="@+id/pi_et"
-              android:layout_below="@id/tv"
               android:layout_marginLeft="30sp"
               android:layout_marginRight="30sp"
               android:layout_marginTop="30sp"
