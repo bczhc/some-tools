@@ -4,6 +4,11 @@ import android.view.MotionEvent;
 
 public class GestureResolver {
     private GestureInterface gestureInterface;
+    private float lastX = -1, lastY = -1;
+    private float lastDistance = -1;
+    private float firstDistance = -1;
+    private float firstMidPointX;
+    private float firstMidPointY;
 
     public GestureResolver(GestureInterface gestureInterface) {
         this.gestureInterface = gestureInterface;
@@ -12,12 +17,6 @@ public class GestureResolver {
     private float getDistance(float x1, float x2, float y1, float y2) {
         return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
-
-    private float lastX = -1, lastY = -1;
-    private float lastDistance = -1;
-    private float firstDistance = -1;
-    private float firstMidPointX;
-    private float firstMidPointY;
 
     public void onTouch(MotionEvent event) {
         int pointerCount = event.getPointerCount();
@@ -28,6 +27,18 @@ public class GestureResolver {
             float y2 = event.getY(1);
 
 
+            {
+                float midX = (x1 + x2) / 2;
+                float midY = (y1 + y2) / 2;
+                if (lastX == -1 && lastY == -1) {
+                    lastX = midX;
+                    lastY = midY;
+                } else {
+                    this.gestureInterface.onTwoPointScroll(midX - lastX, midY - lastY, event);
+                }
+                this.lastX = midX;
+                this.lastY = midY;
+            }
             {
                 float distance = getDistance(x1, x2, y1, y2);
                 if (firstDistance == -1) {
@@ -41,18 +52,6 @@ public class GestureResolver {
                 midPointY = (y1 + y2) / 2;
                 this.gestureInterface.onTwoPointZoom(firstMidPointX, firstMidPointY, midPointX, midPointY, firstDistance, distance, distance / firstDistance, distance / lastDistance, event);
                 lastDistance = distance;
-            }
-            {
-                float midX = (x1 + x2) / 2;
-                float midY = (y1 + y2) / 2;
-                if (lastX == -1 && lastY == -1) {
-                    lastX = midX;
-                    lastY = midY;
-                } else {
-                    this.gestureInterface.onTwoPointScroll(midX - lastX, midY - lastY, event);
-                }
-                this.lastX = midX;
-                this.lastY = midY;
             }
 
 

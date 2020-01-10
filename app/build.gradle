@@ -6,8 +6,8 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 30
-        versionName "4.6.0.1_201912🐸29_"
+        versionCode 20200110
+        versionName "4.6.1.1_20200110"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -20,6 +20,7 @@ android {
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
+        return true
     }
     sourceSets {
         main {
@@ -32,4 +33,5 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'src/libs')
     implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
 }

@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 
 @SuppressLint("ViewConstructor")
 class EpicyclesView extends View {
+    static double T = 2 * Math.PI, omega = 2 * Math.PI / T;
     private final EpicyclesSequence epicyclesSequence;
     private int canvasWidth = 0;
     private int canvasHeight = 0;
@@ -34,13 +35,26 @@ class EpicyclesView extends View {
     private CoordinateDouble lastLineToPoint;
     private Path mPath;
     private double t;
-    static double T = 2 * Math.PI, omega = 2 * Math.PI / T;
     private boolean pathMove = true;
 
     EpicyclesView(Context context, EpicyclesSequence epicyclesSequence) {
         super(context);
         this.epicyclesSequence = epicyclesSequence;
         init(context);
+    }
+
+    public static double getT() {
+        return EpicyclesView.T;
+    }
+
+    public static void setT(double T) {
+        EpicyclesView.T = T;
+        EpicyclesView.omega = 2 * Math.PI / T;
+    }
+
+    @SuppressWarnings("unused")
+    public static double getOmega() {
+        return EpicyclesView.omega;
     }
 
     private void init(Context context) {
@@ -120,6 +134,14 @@ class EpicyclesView extends View {
         scale(50D);
     }
 
+    /*private CoordinateDouble rectCoordinateToCanvasCoordinate(CoordinateDouble coordinateDouble) {
+        return new CoordinateDouble(coordinateDouble.x + canvasWidth / 2D, -coordinateDouble.y + canvasHeight / 2D);
+    }
+
+    private CoordinateDouble canvasCoordinateToRectCoordinate(double x, double y) {
+        return new CoordinateDouble(x - canvasWidth / 2D, -y + canvasHeight / 2D);
+    }*/
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (canvasWidth == 0 && canvasHeight == 0) {
@@ -132,7 +154,9 @@ class EpicyclesView extends View {
         }
         render(canvas);
     }
-
+    /*private CoordinateDouble eComplexPower(ComplexValue complexValue, double e_pow_i_num) {
+//        return new CoordinateDouble(Math.cos(e_pow_i_num) * complexValue.)
+    }*/
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -150,20 +174,9 @@ class EpicyclesView extends View {
         return new CoordinateDouble((x + reOffset) + canvasWidth / 2D, -y + imOffset + canvasHeight / 2D);
     }
 
-    /*private CoordinateDouble rectCoordinateToCanvasCoordinate(CoordinateDouble coordinateDouble) {
-        return new CoordinateDouble(coordinateDouble.x + canvasWidth / 2D, -coordinateDouble.y + canvasHeight / 2D);
-    }
-
-    private CoordinateDouble canvasCoordinateToRectCoordinate(double x, double y) {
-        return new CoordinateDouble(x - canvasWidth / 2D, -y + canvasHeight / 2D);
-    }*/
-
     private CoordinateDouble canvasCoordinateToRectCoordinate(CoordinateDouble coordinateDouble) {
         return new CoordinateDouble(coordinateDouble.x - canvasWidth / 2D - reOffset, -coordinateDouble.y + canvasHeight / 2D + imOffset);
     }
-    /*private CoordinateDouble eComplexPower(ComplexValue complexValue, double e_pow_i_num) {
-//        return new CoordinateDouble(Math.cos(e_pow_i_num) * complexValue.)
-    }*/
 
     private double getComplexArg(double re, double im) {
         if (re > 0) return Math.atan(im / re);
@@ -234,19 +247,5 @@ class EpicyclesView extends View {
         }
         t += .1F;
         canvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
-    }
-
-    public static double getT() {
-        return EpicyclesView.T;
-    }
-
-    public static void setT(double T) {
-        EpicyclesView.T = T;
-        EpicyclesView.omega = 2 * Math.PI / T;
-    }
-
-    @SuppressWarnings("unused")
-    public static double getOmega() {
-        return EpicyclesView.omega;
     }
 }

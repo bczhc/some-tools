@@ -53,7 +53,7 @@ public class EpicyclesTest extends BaseActivity {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                epicyclesView.scale(((double) progress));
+                epicyclesView.scale(progress);
             }
 
             @Override

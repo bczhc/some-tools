@@ -8,6 +8,7 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import pers.zhc.tools.R;
 
 import java.util.Objects;
@@ -36,5 +37,12 @@ public class DialogUtil {
         setDialogAttr(ad, false, width, height, application_overlay);
         ad.setCanceledOnTouchOutside(true);
         return ad;
+    }
+
+    public static void setADWithET_autoShowSoftKeyboard(EditText editText, Dialog ad) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        Objects.requireNonNull(ad.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 }

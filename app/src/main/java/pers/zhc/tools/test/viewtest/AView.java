@@ -2,10 +2,7 @@ package pers.zhc.tools.test.viewtest;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.*;
 import android.view.MotionEvent;
 import android.view.View;
 import pers.zhc.tools.utils.GestureResolver;
@@ -32,30 +29,48 @@ public class AView extends View {
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
         mPaint2 = new Paint();
-        mPaint2.setColor(Color.YELLOW);
+        mPaint2.setColor(Color.GREEN);
         this.mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         this.mCanvas = new Canvas(mBitmap);
         mBitmapPaint = new Paint();
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
+            PointF midPoint = new PointF();
             private float realX, realY;
+            private float realTransX, realTransY;
 
             @Override
             public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
-//                mCanvas.translate(distanceX / scale, distanceY / scale);
                 realX = distanceX / scale;
                 realY = distanceY / scale;
                 transX += distanceX;
                 transY += distanceY;
                 mCanvas.translate(realX, realY);
+                realTransX += realX;
+                realTransY += realY;
             }
 
             @Override
             public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float pScale, MotionEvent event) {
                 AView.this.scale *= pScale;
-                mCanvas.scale(pScale, pScale, firstMidPointX + transX / scale, firstMidPointY + transY / scale);
+                scaleWithPivot(midPoint, midPointX - transX, midPointY - transY, width / 2F + realTransX, height / 2F + realTransY, scale, true);
+                float px = midPoint.x;
+                float py = midPoint.y;
+                mCanvas.scale(pScale, pScale, px, py);
+                mCanvas.drawCircle(px, py, 30, mPaint2);
             }
         });
     }
+
+    private void scaleWithPivot(PointF destPointF, float x, float y, float px, float py, float scale, boolean reverse) {
+        if (reverse) {
+            destPointF.x = scale * (x - px) + px;
+            destPointF.y = scale * (y - py) + py;
+        } else {
+            destPointF.x = (x - px) / scale + px;
+            destPointF.y = (y - py) / scale + py;
+        }
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {

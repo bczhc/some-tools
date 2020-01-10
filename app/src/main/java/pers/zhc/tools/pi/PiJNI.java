@@ -4,13 +4,12 @@ package pers.zhc.tools.pi;
 import android.widget.EditText;
 
 class PiJNI {
-    StringBuilder sb;
-    EditText o = null;
-
     static {
         System.loadLibrary("pi");
     }
 
+    StringBuilder sb;
+    EditText o = null;
 
     /**
      * 生成Pi

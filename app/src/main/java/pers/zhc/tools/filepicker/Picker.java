@@ -22,11 +22,12 @@ import static pers.zhc.tools.utils.Common.showException;
 
 public class Picker extends BaseActivity {
     public static String result = null;
-    private Toast notHavePermissionAccessToast = null;
     @SuppressWarnings("unused")
     public static int PICK_FILE = 1;
     @SuppressWarnings("unused")
     public static int PICK_FOLDER = 2;
+    private final int[] justPicked = new int[]{-1};
+    private Toast notHavePermissionAccessToast = null;
     private String resultString = "";
     private TextView pathView;
     private File currentPath;
@@ -34,7 +35,6 @@ public class Picker extends BaseActivity {
     private LinearLayout.LayoutParams lp;
     private int grey = Color.parseColor("#DCDCDC");
     private int white = Color.WHITE;
-    private final int[] justPicked = new int[]{-1};
     private int option = 1;
 
     @Override
@@ -49,7 +49,6 @@ public class Picker extends BaseActivity {
         if (requestCode == 33 && grantResults[0] == 0) D();
     }
 
-    @SuppressWarnings("Duplicates")
     private void D() {
         Intent intent = getIntent();
         this.option = intent.getIntExtra("option", 0);
