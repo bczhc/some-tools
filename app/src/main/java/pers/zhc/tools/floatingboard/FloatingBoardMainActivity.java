@@ -21,12 +21,13 @@ import android.widget.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
-import pers.zhc.tools.utils.PromptDialog;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.common.MultipartUploader;
@@ -45,6 +46,7 @@ import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingBoardMainActivity extends BaseActivity {
+    static Map<Long, Activity> longMainActivityMap;//memory leak??
     private WindowManager wm = null;
     private LinearLayout ll;
     private PaintView pv;
@@ -52,13 +54,90 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private Bitmap icon;
     private int height;
     private int TVsColor = Color.WHITE, textsColor = Color.GRAY;
-    private boolean whetherTextsColorIsInverted_isChecked = false;
+    private boolean invertColorChecked = false;
     private View globalOnTouchListenerFloatingView;
     private File currentInternalPathFile = null;
     private Runnable importPathFileDoneAction;
-    static Map<Long, Activity> longMainActivityMap;//memory leak??
     private long currentInstanceMills;
     private TextView[] childTVs;
+
+    private static void uploadPaths(Context context) {
+        try {
+            InputStream is = new URL(Infos.zhcUrlString + "/upload/list.zhc?can=").openStream();
+            if (is.read() != 1) {
+                is.close();
+                return;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<String> stringList = new ArrayList<>();
+        try {
+            URL getListURL = new URL(Infos.zhcUrlString + "/upload/list.zhc");
+            InputStream is = getListURL.openStream();
+            StringBuilder sb = new StringBuilder();
+            new ReadIS(is, "UTF-8").read(sb::append);
+            String s = sb.toString();
+            System.out.println("sb.toString() = " + s);
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                JSONArray jsonArray = jsonObject.getJSONArray("files");
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    stringList.add(object.getString("md5"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File pathDir = new File(Environment.getExternalStorageDirectory().toString() + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
+        File[] listFiles = pathDir.listFiles();
+        if (listFiles != null)
+            for (File file : listFiles) {
+                if (file.isDirectory()) continue;
+                try {
+                    String fileMd5String = Digest.getFileMd5String(file);
+                    if (!listStringContain(stringList, fileMd5String)) {
+                        InputStream is = new FileInputStream(file);
+                        byte[] headInformation = null;
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("name", file.getName());
+                            headInformation = jsonObject.toString().getBytes();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (headInformation == null)
+                            headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
+                        byte[] headBytes = new byte[headInformation.length + 1];
+                        System.arraycopy(headInformation, 0, headBytes, 0, headInformation.length);
+                        MultipartUploader.formUpload(Infos.zhcUrlString + "/upload/upload.zhc", headBytes, is);
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+    }
+
+    private static boolean listStringContain(List<String> list, String s) {
+        for (String s1 : list) {
+            if (s.equals(s1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static EditText getSelectedET_currentMills(Context ctx, EditText et) {
+        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        et.setText(String.format(ctx.getString(R.string.tv), format));
+        Selection.selectAll(et.getText());
+        return et;
+    }
 
     @SuppressLint("UseSparseArrays")
     @Override
@@ -182,77 +261,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
         new Thread(() -> uploadPaths(this)).start();
     }
 
-    private static void uploadPaths(Context context) {
-        try {
-            InputStream is = new URL("http://235m82e811.imwork.net/upload/list.zhc?can=").openStream();
-            if (is.read() != 1) {
-                is.close();
-                return;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<String> stringList = new ArrayList<>();
-        try {
-            URL getListURL = new URL("http://235m82e811.imwork.net/upload/list.zhc");
-            InputStream is = getListURL.openStream();
-            StringBuilder sb = new StringBuilder();
-            new ReadIS(is, "UTF-8").read(sb::append);
-            String s = sb.toString();
-            System.out.println("sb.toString() = " + s);
-            try {
-                JSONObject jsonObject = new JSONObject(s);
-                JSONArray jsonArray = jsonObject.getJSONArray("files");
-                int length = jsonArray.length();
-                for (int i = 0; i < length; i++) {
-                    JSONObject object = jsonArray.getJSONObject(i);
-                    stringList.add(object.getString("md5"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File pathDir = new File(Environment.getExternalStorageDirectory().toString() + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
-        File[] listFiles = pathDir.listFiles();
-        if (listFiles != null)
-            for (File file : listFiles) {
-                if (file.isDirectory()) continue;
-                try {
-                    String fileMd5String = Digest.getFileMd5String(file);
-                    if (!listStringContain(stringList, fileMd5String)) {
-                        InputStream is = new FileInputStream(file);
-                        byte[] headInformation = null;
-                        try {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("name", file.getName());
-                            headInformation = jsonObject.toString().getBytes();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        if (headInformation == null)
-                            headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
-                        byte[] headBytes = new byte[headInformation.length + 1];
-                        System.arraycopy(headInformation, 0, headBytes, 0, headInformation.length);
-                        MultipartUploader.formUpload("http://235m82e811.imwork.net/upload/upload.zhc", headBytes, is);
-                        is.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-    }
-
-    private static boolean listStringContain(List<String> list, String s) {
-        for (String s1 : list) {
-            if (s.equals(s1)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -281,7 +289,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
         });
     }
 
-
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
         pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -308,11 +315,8 @@ public class FloatingBoardMainActivity extends BaseActivity {
         lp2.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE/* | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL*/;
         ll = new LinearLayout(this);
-        LinearLayout.LayoutParams ll_lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        LinearLayout.LayoutParams childTV_lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, /*ViewGroup.LayoutParams.WRAP_CONTENT*/(int) (height / strings.length * .7));
-        childTV_lp.setMargins(0, 0, 0, 5);
         ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setLayoutParams(ll_lp);
+        ll.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         ImageView iv = new ImageView(this);
         InputStream inputStream = getResources().openRawResource(R.raw.db);
         icon = BitmapFactory.decodeStream(inputStream);
@@ -377,34 +381,10 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
 //                int finalI1 = i;
-                childTVs[i] = new TextView(this) {
-//                    private float firstX, firstY;
-
-                    @Override
-                    public boolean onTouchEvent(MotionEvent event) {
-                        /*float x = event.getX();
-                        float y = event.getY();
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                firstX = x;
-                                firstY = y;
-                                break;
-                            case MotionEvent.ACTION_MOVE:
-                                if (x == firstX && y == firstY) {
-                                    childTVs[finalI1].setBackgroundColor(Color.YELLOW);
-                                } else {
-                                    childTVs[finalI1].setBackgroundColor(Color.WHITE);
-                                }
-                                break;
-                            case MotionEvent.ACTION_UP:
-                                childTVs[finalI1].setBackgroundColor(Color.WHITE);
-                                break;
-                        }
-                        return true;*/
-                        return super.onTouchEvent(event);
-                    }
-                };
-                childTVs[i].setLayoutParams(childTV_lp);
+                childTVs[i] = new TextView(this);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (height / strings.length * .7));
+                layoutParams.setMargins(0, 0, 0, 5);
+                childTVs[i].setLayoutParams(layoutParams);
                 childTVs[i].setText(strings[i]);
                 childTVs[i].setBackgroundColor(TVsColor);
                 childTVs[i].setTextColor(textsColor);
@@ -494,7 +474,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                     new LinearLayout(this),
                                     new LinearLayout(this)
                             };
-                            LinearLayout.LayoutParams cLLChildLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                             Button TVsColorBtn = new Button(this);
                             TVsColorBtn.setText(R.string.control_panel_color);
                             TVsColorBtn.setOnClickListener(v2 -> {
@@ -506,7 +485,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                         for (TextView childTV : childTVs) {
                                             TVsColor = color;
                                             childTV.setBackgroundColor(TVsColor);
-                                            if (whetherTextsColorIsInverted_isChecked)
+                                            if (invertColorChecked)
                                                 childTV.setTextColor(textsColor = invertColor(TVsColor));
                                         }
                                     }
@@ -515,7 +494,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                 TVsColorDialog.show();
                             });
                             Button textsColorBtn = new Button(this);
-                            textsColorBtn.setEnabled(!this.whetherTextsColorIsInverted_isChecked);
+                            textsColorBtn.setEnabled(!this.invertColorChecked);
                             textsColorBtn.setOnClickListener(v2 -> {
                                 Dialog textsColorDialog = new Dialog(FloatingBoardMainActivity.this);
                                 setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
@@ -523,7 +502,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                     @Override
                                     void onPickedAction(int color) {
                                         for (TextView childTV : childTVs) {
-                                            if (!whetherTextsColorIsInverted_isChecked) textsColor = color;
+                                            if (!invertColorChecked) textsColor = color;
                                             childTV.setTextColor(textsColor);
                                         }
                                     }
@@ -533,21 +512,20 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             });
                             textsColorBtn.setText(R.string.text_color);
                             Switch whetherTextColorIsInverted = new Switch(this);
-                            whetherTextColorIsInverted.setChecked(whetherTextsColorIsInverted_isChecked);
+                            whetherTextColorIsInverted.setChecked(invertColorChecked);
                             whetherTextColorIsInverted.setOnCheckedChangeListener((buttonView, isChecked) -> {
                                 textsColorBtn.setEnabled(!isChecked);
-                                whetherTextsColorIsInverted_isChecked = isChecked;
+                                invertColorChecked = isChecked;
                                 for (TextView childTV : childTVs) {
                                     childTV.setTextColor(textsColor = invertColor(TVsColor));
                                 }
                             });
                             whetherTextColorIsInverted.setText(R.string.whether_text_color_is_inverted);
-                            whetherTextColorIsInverted.setLayoutParams(cLLChildLP);
-                            TVsColorBtn.setLayoutParams(cLLChildLP);
-                            textsColorBtn.setLayoutParams(cLLChildLP);
-                            LinearLayout.LayoutParams LLsLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1F);
+                            whetherTextColorIsInverted.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                            TVsColorBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                            textsColorBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                             for (LinearLayout layout : linearLayouts) {
-                                layout.setLayoutParams(LLsLP);
+                                layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1F));
                                 cLL.addView(layout);
                             }
                             linearLayouts[0].addView(TVsColorBtn);
@@ -590,7 +568,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
         FloatingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
     }
 
-    @SuppressWarnings("Duplicates")
     private void hide() {
         wm.removeViewImmediate(ll);
         NotificationManager nm = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
@@ -612,7 +589,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
             intent.setAction("pers.zhc.tools.START_FB");
             intent.setPackage(getPackageName());
             intent.putExtra("mills", currentInstanceMills);
-            PendingIntent pi = PendingIntent.getBroadcast(this, ((int) (System.currentTimeMillis() - this.currentInstanceMills)), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pi = getPendingIntent(intent);
             nb.setContentIntent(pi);
             Notification build = nb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
@@ -628,12 +605,16 @@ public class FloatingBoardMainActivity extends BaseActivity {
             intent.setAction("pers.zhc.tools.START_FB");
             intent.putExtra("mills", currentInstanceMills);
             intent.setPackage(getPackageName());
-            PendingIntent pi = PendingIntent.getBroadcast(this, ((int) (System.currentTimeMillis() - this.currentInstanceMills)), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pi = getPendingIntent(intent);
             ncb.setContentIntent(pi);
             Notification build = ncb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
             nm.notify(((int) (System.currentTimeMillis() - this.currentInstanceMills)), build);
         }
+    }
+
+    private PendingIntent getPendingIntent(Intent intent) {
+        return PendingIntent.getBroadcast(this, ((int) (System.currentTimeMillis() - this.currentInstanceMills)), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private void changeStrokeWidth() {
@@ -714,17 +695,15 @@ public class FloatingBoardMainActivity extends BaseActivity {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    double pow = Math.pow(1.07D, progress);
-                    if (checked[0] == 1) {
-                        pv.setStrokeWidth((float) ((int) pow));
-                    } else {
-                        pv.setEraserStrokeWidth((float) pow);
-                    }
-                    tv.setText(String.valueOf(((int) pow)));
-                    strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
-                    strokeWatchView.change(((float) pow), pv.getColor());
+                double pow = Math.pow(1.07D, progress);
+                if (checked[0] == 1) {
+                    pv.setStrokeWidth((float) ((int) pow));
+                } else {
+                    pv.setEraserStrokeWidth((float) pow);
                 }
+                tv.setText(String.valueOf(((int) pow)));
+                strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
+                strokeWatchView.change(((float) pow), pv.getColor());
             }
 
             @Override
@@ -786,7 +765,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 R.string.reset_transform
         };
         Button[] buttons = new Button[textsRes.length];
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new Button(this);
             buttons[i].setText(textsRes[i]);
@@ -838,10 +816,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                     .setPositiveButton(R.string.ok, (dialog1, which) -> {
                                         try {
                                             pv.importImage(imageBitmap,
-                                                    Float.parseFloat(editTexts[0].getText().toString())
-                                                    , Float.parseFloat(editTexts[1].getText().toString())
-                                                    , Integer.parseInt(editTexts[2].getText().toString())
-                                                    , Integer.parseInt(editTexts[3].getText().toString()));
+                                                    ((float) new Expression(editTexts[0].getText().toString()).calculate()),
+                                                    ((float) new Expression(editTexts[1].getText().toString()).calculate()),
+                                                    ((int) new Expression(editTexts[2].getText().toString()).calculate()),
+                                                    ((int) new Expression(editTexts[3].getText().toString()).calculate())
+                                            );
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                             Toast.makeText(this, R.string.type_error, Toast.LENGTH_SHORT).show();
@@ -858,7 +837,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     },
                     v -> {
-                        PromptDialog promptDialog = new PromptDialog(this, R.string.type_file_name, R.string.ok, (dialog, et) -> {
+                        EditText et = getSelectedET_currentMills(this, new EditText(this));
+                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                             pv.closePathRecoderOS();
                             File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
                             pv.saveImg(imageFile);
@@ -867,10 +848,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             pv.setOS(currentInternalPathFile, true);
                             moreOptionsDialog.dismiss();
-                        }, R.string.cancel, (dialog, et) -> {
-                        });
-                        setDialogAttr(promptDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        promptDialog.show();
+                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        }).setTitle(R.string.type_file_name).setView(et).create();
+                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
+                        alertDialog.show();
                     },
                     v -> {
                         Dialog dialog = new Dialog(this);
@@ -901,7 +883,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     },
                     v -> {
-                        PromptDialog promptDialog = new PromptDialog(this, R.string.type_file_name, R.string.ok, (dialog, et) -> {
+                        EditText et = getSelectedET_currentMills(this, new EditText(this));
+                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                             File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
                             try {
                                 FileU.FileCopy(currentInternalPathFile, pathFile);
@@ -913,29 +897,23 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                 new Thread(() -> uploadPaths(this)).start();
                             } else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                             moreOptionsDialog.dismiss();
-                        }, R.string.cancel, (dialog, et) -> {
-                        });
-                        setDialogAttr(promptDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        promptDialog.show();
+                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        }).setTitle(R.string.type_file_name).setView(et).create();
+                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
+                        alertDialog.show();
                     },
                     v -> pv.resetTransform()
             };
             buttons[i].setOnClickListener(onClickListeners[i]);
         }
         ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setLayoutParams(layoutParams);
+        ll.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         sv.addView(ll);
         moreOptionsDialog.setContentView(sv);
         moreOptionsDialog.setCanceledOnTouchOutside(true);
         moreOptionsDialog.show();
-    }
-
-    public static EditText getSelectedET_currentMills(Context ctx, EditText et) {
-        @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        et.setText(String.format(ctx.getString(R.string.tv), format));
-        Selection.selectAll(et.getText());
-        return et;
     }
 
     private void setFilePickerDialog(Dialog dialog, FilePickerRL filePickerRL) {

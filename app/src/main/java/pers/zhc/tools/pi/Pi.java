@@ -50,7 +50,7 @@ public class Pi extends BaseActivity {
                         this.isGenerating = false;
                         piJNI.o.setText(String.format(this.getResources().getString(R.string.piTV), piJNI.sb.toString()));
 //                        System.out.println("PiJNI.ints = " + Arrays.toString(PiJNI.ints));
-                        timeTV.setText(String.format(getResources().getString(R.string.tv_millis), String.valueOf(eM - sM)));
+                        timeTV.setText(String.format(getResources().getString(R.string.tv_millis), (eM - sM)));
                     });
                 });
                 es[0].shutdown();

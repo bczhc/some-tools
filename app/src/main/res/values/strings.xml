@@ -40,7 +40,7 @@
     <string name="copying_success">复制成功</string>
     <string name="html_content">html内容</string>
     <string name="put_in_clipboard">放入剪切板</string>
-    <string name="tv_millis" translatable="false">%1$sms</string>
+    <string name="tv_millis" translatable="false">%1$loms</string>
     <string name="some_codecs">some-codecs</string>
     <string name="type_html_code">输入HTML代码</string>
     <string name="piTV" translatable="false">3.%1$s</string>
@@ -148,5 +148,10 @@
     <string name="set_theme">设置主题</string>
     <string name="set">设置</string>
     <string name="please_enter_color_hex">请输入颜色十六进制</string>
+    <string name="math_expression_evaluation_test">数学表达式解析测试</string>
+    <string name="crash">crash</string>
+    <string name="some_tools_app">some-tools-app</string>
+    <string name="crash_sorry_toast_information">很抱歉,程序出现异常，正在上传崩溃报告</string>
+    <string name="upload_crash_report_done">上传崩溃报告成功</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
