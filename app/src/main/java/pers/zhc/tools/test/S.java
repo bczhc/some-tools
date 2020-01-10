@@ -12,7 +12,7 @@ public class S extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         MediaPlayer mediaPlayer = new MediaPlayer();
         try {
             mediaPlayer.setDataSource("/storage/64AC-1C0E/Android/data/com.youku.phone/files/youku/offlinedata/XNTUxMDQ1Nzk2/youku.m3u8");

@@ -48,7 +48,7 @@ public class FunctionDrawing extends BaseActivity {
         fs = new FourierSeries(intent.getIntExtra("FS_T", 30)) {
             @Override
             public double f_f(double x) {
-                return ((double) FunctionDrawingBoard.functionInterface.f(((float) x)));
+                return FunctionDrawingBoard.functionInterface.f(((float) x));
             }
         };
         fs.definite.n = 20000;
