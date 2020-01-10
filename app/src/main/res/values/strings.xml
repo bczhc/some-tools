@@ -153,5 +153,6 @@
     <string name="some_tools_app">some-tools-app</string>
     <string name="crash_sorry_toast_information">很抱歉,程序出现异常，正在上传崩溃报告</string>
     <string name="upload_crash_report_done">上传崩溃报告成功</string>
+    <string name="sensor_test">传感器测试</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
