@@ -38,14 +38,14 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="崩溃报告上传至服务器">
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="传感器测试">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/SensorTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/sensor_test_activity.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/codecs/CodecsActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -101,8 +101,8 @@
         <option value="Kotlin File" />
         <option value="valueResourceFile" />
         <option value="resourceFile" />
-        <option value="layoutResourceFile" />
         <option value="Class" />
+        <option value="layoutResourceFile" />
       </list>
     </option>
   </component>
@@ -121,7 +121,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="remote_temp" />
+        <entry key="$PROJECT_DIR$" value="floatingDrawingBoard" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -316,6 +316,7 @@
       <workItem from="1578635433258" duration="285000" />
       <workItem from="1578637542881" duration="1716000" />
       <workItem from="1578639652726" duration="3470000" />
+      <workItem from="1578676413160" duration="1576000" />
     </task>
     <task id="LOCAL-00001" summary="修复文字错误&#10;文字横排，大小适应">
       <created>1567869315028</created>
@@ -640,18 +641,18 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="551" y="369" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1050@0.0.1920.1050" timestamp="1578642912429" />
-    <state x="544" y="280" key="AndroidCreateResourceFileDialog" timestamp="1578640726677">
+    <state x="544" y="280" key="AndroidCreateResourceFileDialog" timestamp="1578677961815">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="544" y="280" key="AndroidCreateResourceFileDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578640726677" />
-    <state x="751" y="337" key="AndroidCreateXmlResourceDialog" timestamp="1578648087734">
+    <state x="544" y="280" key="AndroidCreateResourceFileDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578677961815" />
+    <state x="751" y="337" key="AndroidCreateXmlResourceDialog" timestamp="1578677467629">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="751" y="337" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578648087734" />
-    <state x="479" y="118" width="951" height="823" key="CommitChangelistDialog2" timestamp="1578649533110">
+    <state x="751" y="337" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578677467629" />
+    <state x="479" y="118" width="951" height="823" key="CommitChangelistDialog2" timestamp="1578678049644">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="479" y="118" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1578649533110" />
+    <state x="479" y="118" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1578678049644" />
     <state x="479" y="145" width="951" height="823" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1577849049071" />
     <state x="187" y="90" width="1536" height="840" key="DiffContextDialog" timestamp="1577884050711">
       <screen x="0" y="0" width="1920" height="1050" />
