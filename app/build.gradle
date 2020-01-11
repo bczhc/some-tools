@@ -28,10 +28,12 @@ android {
             jniLibs.srcDirs = ['src/libs']
         }
     }
+    return true
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'src/libs')
+    //noinspection GradleCompatible
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
 }
