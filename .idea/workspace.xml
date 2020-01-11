@@ -29,8 +29,8 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="error" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
@@ -38,14 +38,21 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="传感器测试">
-      <change afterPath="$PROJECT_DIR$/app/src/libs/java-1.7.jar" afterDir="false" />
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="崩溃后弹框处理&#10;typo">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/ids.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/zhc.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/java-1.7.jar" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/zhc.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/s_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/s_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/sensor_test_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/sensor_test_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,10 +105,10 @@
         <option value="layoutResourceFile_vertical" />
         <option value="Interface" />
         <option value="Kotlin File" />
-        <option value="valueResourceFile" />
         <option value="resourceFile" />
         <option value="Class" />
         <option value="layoutResourceFile" />
+        <option value="valueResourceFile" />
       </list>
     </option>
   </component>
@@ -159,20 +166,20 @@
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="pers.zhc.tools.floatingboard" />
+      <recent name="pers.zhc.tools.utils" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="pers.zhc.tools" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/libs" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/raw" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="pers.zhc.tools.test.viewtest" />
       <recent name="pers.zhc.tools.test.epicycles_test" />
     </key>
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="pers.zhc.tools.floatingboard" />
-      <recent name="pers.zhc.tools.utils" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/libs" />
+      <recent name="$PROJECT_DIR$/app/src/main/res/raw" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">
@@ -316,7 +323,9 @@
       <workItem from="1578637542881" duration="1716000" />
       <workItem from="1578639652726" duration="3470000" />
       <workItem from="1578676413160" duration="3439000" />
-      <workItem from="1578699972072" duration="2711000" />
+      <workItem from="1578699972072" duration="3803000" />
+      <workItem from="1578729633936" duration="9334000" />
+      <workItem from="1578739155251" duration="1633000" />
     </task>
     <task id="LOCAL-00001" summary="修复文字错误&#10;文字横排，大小适应">
       <created>1567869315028</created>
@@ -528,7 +537,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578678514694</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="崩溃报告上传成功后自动退出应用">
+      <created>1578702924459</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1578702924459</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -587,7 +603,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="重写傅里叶级数展开的函数生成，还差双指缩放，但是感觉莫名的卡" />
     <MESSAGE value="傅里叶本轮绘制准备差不多了" />
     <MESSAGE value="本轮绘制基本功能实现" />
     <MESSAGE value="本轮 缩放（非手势式）、移动" />
@@ -612,7 +627,8 @@
     <MESSAGE value="悬浮画板 画板变换后重置变换按钮" />
     <MESSAGE value="加入非捕捉的异常（可以导致崩溃的那种）收集报告" />
     <MESSAGE value="传感器测试" />
-    <option name="LAST_COMMIT_MESSAGE" value="传感器测试" />
+    <MESSAGE value="崩溃报告上传成功后自动退出应用" />
+    <option name="LAST_COMMIT_MESSAGE" value="崩溃报告上传成功后自动退出应用" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="188" width="800" height="683" key="#Plugins" timestamp="1578635718864">
@@ -652,87 +668,87 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="544" y="280" key="AndroidCreateResourceFileDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578677961815" />
-    <state x="751" y="337" key="AndroidCreateXmlResourceDialog" timestamp="1578677467629">
+    <state x="751" y="337" width="418" height="379" key="AndroidCreateXmlResourceDialog" timestamp="1578739202053">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="751" y="337" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578677467629" />
-    <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2" timestamp="1578700849413">
+    <state x="751" y="337" width="418" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578739202053" />
+    <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2" timestamp="1578739793766">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1578700849413" />
+    <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1578739793766" />
     <state x="479" y="145" width="951" height="823" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1577849049071" />
     <state x="187" y="90" width="1536" height="840" key="DiffContextDialog" timestamp="1578702874349">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="187" y="90" width="1536" height="840" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578702874349" />
-    <state x="716" y="286" key="FileChooserDialogImpl" timestamp="1578637594918">
+    <state x="716" y="286" key="FileChooserDialogImpl" timestamp="1578731047893">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="716" y="286" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1578637594918" />
+    <state x="716" y="286" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1578731047893" />
     <state x="716" y="314" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1577847952709" />
-    <state width="1874" height="193" key="GridCell.Tab.0.bottom" timestamp="1578702431835">
+    <state width="1874" height="251" key="GridCell.Tab.0.bottom" timestamp="1578740185199">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578702431835" />
+    <state width="1874" height="251" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578740185199" />
     <state width="1874" height="190" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343264" />
-    <state width="1874" height="193" key="GridCell.Tab.0.center" timestamp="1578702431835">
+    <state width="1874" height="251" key="GridCell.Tab.0.center" timestamp="1578740185199">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578702431835" />
+    <state width="1874" height="251" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578740185199" />
     <state width="1874" height="190" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343259" />
-    <state width="1874" height="193" key="GridCell.Tab.0.left" timestamp="1578702431834">
+    <state width="1874" height="251" key="GridCell.Tab.0.left" timestamp="1578740185198">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578702431834" />
+    <state width="1874" height="251" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578740185198" />
     <state width="1874" height="190" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343259" />
-    <state width="1874" height="193" key="GridCell.Tab.0.right" timestamp="1578702431835">
+    <state width="1874" height="251" key="GridCell.Tab.0.right" timestamp="1578740185199">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578702431835" />
+    <state width="1874" height="251" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578740185199" />
     <state width="1874" height="190" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343260" />
-    <state width="1874" height="193" key="GridCell.Tab.1.bottom" timestamp="1578702431836">
+    <state width="1874" height="245" key="GridCell.Tab.1.bottom" timestamp="1578738538828">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578702431836" />
-    <state width="1874" height="193" key="GridCell.Tab.1.center" timestamp="1578702431835">
+    <state width="1874" height="245" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578738538828" />
+    <state width="1874" height="245" key="GridCell.Tab.1.center" timestamp="1578738538826">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578702431835" />
-    <state width="1874" height="193" key="GridCell.Tab.1.left" timestamp="1578702431835">
+    <state width="1874" height="245" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578738538826" />
+    <state width="1874" height="245" key="GridCell.Tab.1.left" timestamp="1578738538826">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578702431835" />
-    <state width="1874" height="193" key="GridCell.Tab.1.right" timestamp="1578702431835">
+    <state width="1874" height="245" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578738538826" />
+    <state width="1874" height="245" key="GridCell.Tab.1.right" timestamp="1578738538828">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="193" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578702431835" />
+    <state width="1874" height="245" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578738538828" />
     <state x="747" y="459" key="ReplaceDuplicatesPrompt" timestamp="1577878410157">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="747" y="459" key="ReplaceDuplicatesPrompt/0.0.1920.1050@0.0.1920.1050" timestamp="1577878410157" />
-    <state x="695" y="238" width="528" height="579" key="RollbackChangesDialog" timestamp="1578702875137">
+    <state x="695" y="238" width="528" height="579" key="RollbackChangesDialog" timestamp="1578740631838">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="695" y="238" width="528" height="579" key="RollbackChangesDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578702875137" />
+    <state x="695" y="238" width="528" height="579" key="RollbackChangesDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578740631838" />
     <state x="682" y="163" width="947" height="737" key="SettingsEditor" timestamp="1577882492936">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="682" y="163" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1577882492936" />
     <state x="682" y="190" width="947" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1577840304657" />
-    <state x="555" y="261" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578699235444">
+    <state x="555" y="261" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578739415912">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1578699235444" />
+    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1578739415912" />
     <state x="555" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1577841129696" />
-    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1577857958183">
+    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1578724992248">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1577857958183" />
+    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578724992248" />
     <state x="100" y="127" width="1720" height="853" key="com.android.tools.idea.avdmanager.AvdListDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1577850071598" />
-    <state x="483" y="123" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1578649316044">
+    <state x="483" y="123" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1578740388695">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="483" y="123" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1578649316044" />
+    <state x="483" y="123" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1578740388695" />
     <state x="483" y="150" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1577851038540" />
     <state x="704" y="442" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578644030371">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -746,10 +762,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="694" y="291" width="652" height="477" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578648533483" />
-    <state x="595" y="256" width="773" height="538" key="find.popup" timestamp="1578702889025">
+    <state x="595" y="256" width="773" height="538" key="find.popup" timestamp="1578740790868">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="595" y="256" width="773" height="538" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578702889025" />
+    <state x="595" y="256" width="773" height="538" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578740790868" />
     <state x="595" y="284" width="730" height="538" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1577851500161" />
     <state x="611" y="316" key="git4idea.merge.GitPullDialog" timestamp="1578699168760">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -763,10 +779,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="652" y="141" key="refactoring.ChangeSignatureDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1577866288768" />
-    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup" timestamp="1578702451190">
+    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup" timestamp="1578740642276">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578702451190" />
+    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578740642276" />
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1577851484323" />
   </component>
   <component name="XDebuggerManager">

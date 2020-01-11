@@ -1,14 +1,24 @@
 package pers.zhc.tools.utils;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.*;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.u.common.FileMultipartUploader;
@@ -28,13 +38,12 @@ import java.util.concurrent.CountDownLatch;
  *
  * @author user
  */
-@SuppressWarnings("ALL")
 public class CrashHandler implements UncaughtExceptionHandler {
-    private CountDownLatch cdl = new CountDownLatch(2);
-
     public static final String TAG = "CrashHandler";
     // CrashHandler实例
+    @SuppressLint("StaticFieldLeak")
     private static CrashHandler INSTANCE = new CrashHandler();
+    private CountDownLatch cdl = new CountDownLatch(2);
     // 系统默认的UncaughtException处理类
     private Thread.UncaughtExceptionHandler mDefaultHandler;
     // 程序的Context对象
@@ -43,6 +52,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     private Map<String, String> infos = new HashMap<>();
 
     // 用于格式化日期,作为日志文件名的一部分
+    @SuppressLint("SimpleDateFormat")
     private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
     /**
@@ -61,7 +71,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     /**
      * 初始化
      *
-     * @param context
+     * @param context c
      */
     public void init(Context context) {
         mContext = context;
@@ -82,8 +92,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         } else {
             try {
                 cdl.await();
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
             exitProcess();
         }
@@ -97,7 +106,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     /**
      * 自定义错误处理,收集错误信息 发送错误报告等操作均在此完成.
      *
-     * @param ex
+     * @param ex e
      * @return true:如果处理了该异常信息;否则返回false.
      */
     private boolean handleException(Throwable ex) {
@@ -121,7 +130,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     /**
      * 收集设备参数信息
      *
-     * @param ctx
+     * @param ctx c
      */
     public void collectDeviceInfo(Context ctx) {
         try {
@@ -129,12 +138,16 @@ public class CrashHandler implements UncaughtExceptionHandler {
             PackageInfo pi = pm.getPackageInfo(ctx.getPackageName(), PackageManager.GET_ACTIVITIES);
             if (pi != null) {
                 String versionName = pi.versionName == null ? "null" : pi.versionName;
-                String versionCode = pi.versionCode + "";
+                String versionCode;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                    versionCode = pi.getLongVersionCode() + "";
+                } else //noinspection deprecation
+                    versionCode = pi.versionCode + "";
                 infos.put("versionName", versionName);
                 infos.put("versionCode", versionCode);
             }
         } catch (NameNotFoundException e) {
-            Log.e(TAG, "an error occured when collect package info", e);
+            Log.e(TAG, "an error occurred when collect package info", e);
         }
         Field[] fields = Build.class.getDeclaredFields();
         for (Field field : fields) {
@@ -143,7 +156,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 infos.put(field.getName(), field.get(null).toString());
                 Log.d(TAG, field.getName() + ": " + field.get(null));
             } catch (Exception e) {
-                Log.e(TAG, "an error occured when collect crash info", e);
+                Log.e(TAG, "an error occurred when collect crash info", e);
             }
         }
     }
@@ -151,16 +164,16 @@ public class CrashHandler implements UncaughtExceptionHandler {
     /**
      * 保存错误信息到文件中
      *
-     * @param ex
+     * @param ex e
      * @return 返回文件名称, 便于将文件传送到服务器
      */
     private void saveCrashInfo2File(Throwable ex) {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : infos.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            sb.append(key + "=" + value + "\n");
+            sb.append(key).append("=").append(value).append("\n");
         }
 
         Writer writer = new StringWriter();
@@ -185,7 +198,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 File dir = new File(path);
                 if (!dir.exists()) {
-                    dir.mkdirs();
+                    System.out.println(dir.mkdirs());
                 }
                 FileOutputStream fos = new FileOutputStream(file);
                 fos.write(infos.getBytes());
@@ -193,19 +206,98 @@ public class CrashHandler implements UncaughtExceptionHandler {
             }
             new Thread(() -> {
                 //upload crash log to server
-                try {
-                    byte[] fileNameBytes = file.getName().getBytes();
-                    FileMultipartUploader.upload(BaseActivity.Infos.zhcUrlString + "/tools_app/crash_report.zhc", file);
-                    Looper.prepare();
-                    Toast.makeText(mContext, R.string.upload_crash_report_done, Toast.LENGTH_SHORT).show();
-                    cdl.countDown();
-                    Looper.loop();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                //dialog
+                Point point = new Point();
+                ((Activity) mContext).getWindowManager().getDefaultDisplay().getSize(point);
+                int width = point.x;
+                int height = point.y;
+                Looper.prepare();
+                Dialog dialog = new Dialog(mContext);
+                ScrollView sv = new ScrollView(mContext);
+                TextView tv = new TextView(mContext);
+                tv.setText(result);
+                tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                sv.addView(tv);
+                RelativeLayout bar = new RelativeLayout(mContext);
+                bar.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                TextView barL = new TextView(mContext);
+                TextView barR = new TextView(mContext);
+                barR.setText(mContext.getString(R.string.please_choose));
+                bar.setId(R.id.bar);
+                barL.setText(R.string.crash_bar);
+                barL.setTextSize(20);
+                barL.setId(R.id.bar_l);
+                barR.setTextSize(20);
+                RelativeLayout.LayoutParams barR_lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                barR_lp.addRule(RelativeLayout.RIGHT_OF, R.id.bar_l);
+                barR_lp.setMargins(10, 0, 0, 0);
+                barR.setLayoutParams(barR_lp);
+                RelativeLayout ll = new RelativeLayout(mContext);
+                ll.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                bar.addView(barL);
+                bar.addView(barR);
+                ll.addView(bar);
+                LinearLayout bottomButtonLL = new LinearLayout(mContext);
+                bottomButtonLL.setId(R.id.ll_bottom);
+                RelativeLayout.LayoutParams sv_rl_lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                sv_rl_lp.addRule(RelativeLayout.ABOVE, R.id.ll_bottom);
+                sv_rl_lp.addRule(RelativeLayout.BELOW, R.id.bar);
+                sv.setLayoutParams(sv_rl_lp);
+                ll.addView(sv);
+                bottomButtonLL.setOrientation(LinearLayout.HORIZONTAL);
+                RelativeLayout.LayoutParams bb_lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                bb_lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                bottomButtonLL.setLayoutParams(bb_lp);
+                Button[] buttons = new Button[]{
+                        new Button(mContext),
+                        new Button(mContext)
+                };
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.setCancelable(true);
+                View.OnClickListener[] listeners = new View.OnClickListener[]{
+                        v -> this.cdl.countDown(),
+                        v -> {
+                            barR.setTextColor(Color.BLUE);
+                            barR.setText(R.string.uploading);
+                            Handler handler = new Handler();
+                            new Thread(() -> {
+                                try {
+                                    FileMultipartUploader.upload(BaseActivity.Infos.zhcUrlString + "/tools_app/crash_report.zhc", file);
+                                    handler.post(() -> {
+                                        barR.setTextColor(ContextCompat.getColor(mContext, R.color.done_green));
+                                        barR.setText(R.string.upload_done);
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    handler.post(() -> {
+                                        barR.setText(R.string.upload_failed);
+                                        barR.setTextColor(Color.RED);
+                                    });
+                                }
+                            }).start();
+                        }
+                };
+                int[] strRes = new int[]{
+                        R.string.exit,
+                        R.string.upload_crash_report
+                };
+                for (int i = 0; i < buttons.length; i++) {
+                    bottomButtonLL.addView(buttons[i]);
+                    buttons[i].setOnClickListener(listeners[i]);
+                    buttons[i].setText(strRes[i]);
+                    buttons[i].setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
                 }
+                ll.addView(bottomButtonLL);
+                boolean permission = (PackageManager.PERMISSION_GRANTED ==
+                        ContextCompat.checkSelfPermission(mContext, Manifest.permission.SYSTEM_ALERT_WINDOW)
+                );
+                DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, permission);
+                dialog.setContentView(ll, new ViewGroup.LayoutParams(((int) (((float) width) * .8)), ((int) (((float) height) * .8))));
+                dialog.show();
+                Looper.loop();
             }).start();
         } catch (Exception e) {
-            Log.e(TAG, "an error occured while writing file...", e);
+            Log.e(TAG, "an error occurred while writing file...", e);
         }
     }
 }
