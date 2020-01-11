@@ -11,7 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
-import pers.zhc.u.common.MultipartUploader;
+import pers.zhc.u.common.FileMultipartUploader;
 
 import java.io.*;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -108,8 +108,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
         new Thread(() -> {
             Looper.prepare();
             Toast.makeText(mContext, mContext.getString(R.string.crash_sorry_toast_information), Toast.LENGTH_LONG).show();
-            Looper.loop();
             cdl.countDown();
+            Looper.loop();
         }).start();
         // 收集设备参数信息
         collectDeviceInfo(mContext);
@@ -195,20 +195,14 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 //upload crash log to server
                 try {
                     byte[] fileNameBytes = file.getName().getBytes();
-                    byte[] headBytes = new byte[fileNameBytes.length + 1];
-                    for (int i = 0; i < fileNameBytes.length; i++) {
-                        headBytes[i] = fileNameBytes[i];
-                    }
-                    InputStream is = new FileInputStream(file);
-                    MultipartUploader.formUpload(BaseActivity.Infos.zhcUrlString + "/tools_app/crash_report.zhc", headBytes, is);
-                    is.close();
+                    FileMultipartUploader.upload(BaseActivity.Infos.zhcUrlString + "/tools_app/crash_report.zhc", file);
+                    Looper.prepare();
+                    Toast.makeText(mContext, R.string.upload_crash_report_done, Toast.LENGTH_SHORT).show();
+                    cdl.countDown();
+                    Looper.loop();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Looper.prepare();
-                Toast.makeText(mContext, R.string.upload_crash_report_done, Toast.LENGTH_SHORT).show();
-                Looper.loop();
-                cdl.countDown();
             }).start();
         } catch (Exception e) {
             Log.e(TAG, "an error occured while writing file...", e);
