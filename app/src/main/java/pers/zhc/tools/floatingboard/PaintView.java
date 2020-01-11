@@ -219,15 +219,31 @@ public class PaintView extends View {
      * 保存到指定的文件夹中
      */
     void saveImg(File f) {
+        Toast toast = Toast.makeText(ctx, R.string.saving, Toast.LENGTH_SHORT);
+        toast.show();
+        Toast toast2 = Toast.makeText(ctx, R.string.saving_success, Toast.LENGTH_SHORT);
         //保存图片
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(f);
-            if (mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)) {
-                fileOutputStream.flush();
-            }
+            FileOutputStream finalFileOutputStream = fileOutputStream;
+            new Thread(() -> {
+                if (mBitmap.compress(Bitmap.CompressFormat.PNG, 100, finalFileOutputStream)) {
+                    try {
+                        finalFileOutputStream.flush();
+                    } catch (IOException e) {
+                        Common.showException(e, (Activity) ctx);
+                    }
+                }
+                ((Activity) ctx).runOnUiThread(() -> {
+                    toast.cancel();
+                    toast2.cancel();
+                    toast2.show();
+                });
+            }).start();
         } catch (IOException e) {
             e.printStackTrace();
+            Common.showException(e, (Activity) ctx);
         } finally {
             closeStream(fileOutputStream);
         }
