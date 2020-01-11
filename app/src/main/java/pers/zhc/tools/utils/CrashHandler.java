@@ -165,7 +165,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
      * 保存错误信息到文件中
      *
      * @param ex e
-     * @return 返回文件名称, 便于将文件传送到服务器
      */
     private void saveCrashInfo2File(Throwable ex) {
 
@@ -288,7 +287,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                     buttons[i].setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
                 }
                 ll.addView(bottomButtonLL);
-                boolean permission = (PackageManager.PERMISSION_GRANTED ==
+                boolean permission = (PackageManager.PERMISSION_GRANTED !=
                         ContextCompat.checkSelfPermission(mContext, Manifest.permission.SYSTEM_ALERT_WINDOW)
                 );
                 DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, permission);
