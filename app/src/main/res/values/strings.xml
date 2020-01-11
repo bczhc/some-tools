@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">悬浮画板</string>
+    <string name="app_name">tools</string>
     <string name="tv" translatable="false">%1$s</string>
     <string name="progress_tv" translatable="false">%1$f%%</string>
     <string name="select_file_or_directory">选择文件/目录</string>
@@ -161,5 +161,6 @@
     <string name="uploading">正在上传</string>
     <string name="upload_done">上传完成</string>
     <string name="please_choose">请选择…</string>
+    <string name="saving">正在保存</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
