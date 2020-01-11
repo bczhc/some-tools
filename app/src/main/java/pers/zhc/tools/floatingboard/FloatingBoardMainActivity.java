@@ -112,9 +112,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                         }
                         if (headInformation == null)
                             headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
-                        byte[] headBytes = new byte[headInformation.length + 1];
-                        System.arraycopy(headInformation, 0, headBytes, 0, headInformation.length);
-                        MultipartUploader.formUpload(Infos.zhcUrlString + "/upload/upload.zhc", headBytes, is);
+                        MultipartUploader.formUpload(Infos.zhcUrlString + "/upload/upload.zhc", headInformation, is);
                         is.close();
                     }
                 } catch (IOException e) {

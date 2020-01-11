@@ -18,6 +18,7 @@ import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.test.MathExpressionEvaluationTest;
 import pers.zhc.tools.test.S;
+import pers.zhc.tools.test.SensorTest;
 import pers.zhc.tools.theme.SetTheme;
 import pers.zhc.tools.toast.AToast;
 import pers.zhc.u.common.ReadIS;
@@ -89,7 +90,8 @@ public class MainActivity extends BaseActivity {
                 R.string.s,
                 R.string.view_test,
                 R.string.set_theme,
-                R.string.math_expression_evaluation_test
+                R.string.math_expression_evaluation_test,
+                R.string.sensor_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -103,7 +105,8 @@ public class MainActivity extends BaseActivity {
                 S.class,
                 pers.zhc.tools.test.viewtest.MainActivity.class,
                 SetTheme.class,
-                MathExpressionEvaluationTest.class
+                MathExpressionEvaluationTest.class,
+                SensorTest.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
