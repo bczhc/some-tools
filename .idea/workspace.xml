@@ -38,11 +38,30 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="修merge。。">
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher_background.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_background.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_background.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher_background.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_background.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/ic_launcher-web.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/ic_launcher-web.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_launcher_foreground.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_launcher_foreground.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -534,14 +553,7 @@
       <option name="project" value="LOCAL" />
       <updated>1578702924459</updated>
     </task>
-    <task id="LOCAL-00032" summary="清单中启动activity为悬浮画板">
-      <created>1578741063495</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1578741063495</updated>
-    </task>
-    <option name="localTasksCounter" value="33" />
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -580,6 +592,11 @@
               </RecentGroup>
               <RecentGroup>
                 <option name="FILTER_VALUES">
+                  <option value="master" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
                   <option value="HEAD" />
                 </option>
               </RecentGroup>
@@ -600,6 +617,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="傅里叶本轮绘制准备差不多了" />
     <MESSAGE value="本轮绘制基本功能实现" />
     <MESSAGE value="本轮 缩放（非手势式）、移动" />
     <MESSAGE value="傅里叶级数展开复平面中图像绘制+普通函数解析，未完成绘制函数。但目前好像改了周期就会乱套" />
@@ -624,8 +642,7 @@
     <MESSAGE value="加入非捕捉的异常（可以导致崩溃的那种）收集报告" />
     <MESSAGE value="传感器测试" />
     <MESSAGE value="崩溃报告上传成功后自动退出应用" />
-    <MESSAGE value="清单中启动activity为悬浮画板" />
-    <option name="LAST_COMMIT_MESSAGE" value="清单中启动activity为悬浮画板" />
+    <option name="LAST_COMMIT_MESSAGE" value="崩溃报告上传成功后自动退出应用" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="188" width="800" height="683" key="#Plugins" timestamp="1578635718864">
@@ -669,39 +686,39 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="751" y="337" width="418" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578739202053" />
-    <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2" timestamp="1578741925812">
+    <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2" timestamp="1578742957965">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1578741925812" />
+    <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1578742957965" />
     <state x="479" y="145" width="951" height="823" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1577849049071" />
-    <state x="187" y="90" width="1536" height="840" key="DiffContextDialog" timestamp="1578702874349">
+    <state x="187" y="90" width="1536" height="840" key="DiffContextDialog" timestamp="1578742692628">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="187" y="90" width="1536" height="840" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578702874349" />
-    <state x="716" y="286" key="FileChooserDialogImpl" timestamp="1578741604003">
+    <state x="187" y="90" width="1536" height="840" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1578742692628" />
+    <state x="716" y="286" key="FileChooserDialogImpl" timestamp="1578742585448">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="716" y="286" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1578741604003" />
+    <state x="716" y="286" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1578742585448" />
     <state x="716" y="314" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1577847952709" />
-    <state width="1874" height="227" key="GridCell.Tab.0.bottom" timestamp="1578741926083">
+    <state width="1874" height="225" key="GridCell.Tab.0.bottom" timestamp="1578742615662">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="227" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578741926083" />
+    <state width="1874" height="225" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1578742615662" />
     <state width="1874" height="190" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343264" />
-    <state width="1874" height="227" key="GridCell.Tab.0.center" timestamp="1578741926083">
+    <state width="1874" height="225" key="GridCell.Tab.0.center" timestamp="1578742615662">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="227" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578741926083" />
+    <state width="1874" height="225" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1578742615662" />
     <state width="1874" height="190" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343259" />
-    <state width="1874" height="227" key="GridCell.Tab.0.left" timestamp="1578741926082">
+    <state width="1874" height="225" key="GridCell.Tab.0.left" timestamp="1578742615662">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="227" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578741926082" />
+    <state width="1874" height="225" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1578742615662" />
     <state width="1874" height="190" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343259" />
-    <state width="1874" height="227" key="GridCell.Tab.0.right" timestamp="1578741926083">
+    <state width="1874" height="225" key="GridCell.Tab.0.right" timestamp="1578742615662">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state width="1874" height="227" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578741926083" />
+    <state width="1874" height="225" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1578742615662" />
     <state width="1874" height="190" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1577851343260" />
     <state width="1874" height="245" key="GridCell.Tab.1.bottom" timestamp="1578738538828">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -732,10 +749,10 @@
     </state>
     <state x="682" y="163" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1577882492936" />
     <state x="682" y="190" width="947" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1577840304657" />
-    <state x="555" y="261" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578741068341">
+    <state x="555" y="261" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1578742959905">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1578741068341" />
+    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1578742959905" />
     <state x="555" y="289" width="800" height="535" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1577841129696" />
     <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1578724992248">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -776,10 +793,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="652" y="141" key="refactoring.ChangeSignatureDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1577866288768" />
-    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup" timestamp="1578741796573">
+    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup" timestamp="1578740956304">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578741796573" />
+    <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1578740956304" />
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1577851484323" />
   </component>
   <component name="XDebuggerManager">
