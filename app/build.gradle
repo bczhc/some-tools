@@ -22,11 +22,9 @@ android {
         targetCompatibility 1.8
         return true
     }
-    sourceSets {
-        main {
-            jni.srcDirs = ['src/jni']
-            jniLibs.srcDirs = ['src/libs']
-        }
+    sourceSets.main {
+        jni.srcDirs = ['src/jni']
+        jniLibs.srcDirs = ['src/libs']
     }
     return true
 }
