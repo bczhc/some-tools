@@ -816,17 +816,18 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                     .setTitle(R.string.set__top__left__scaled_width__scaled_height)
                                     .setPositiveButton(R.string.ok, (dialog1, which) -> {
                                         try {
-                                            pv.importImage(imageBitmap,
-                                                    ((float) new Expression(editTexts[0].getText().toString()).calculate()),
-                                                    ((float) new Expression(editTexts[1].getText().toString()).calculate()),
-                                                    ((int) new Expression(editTexts[2].getText().toString()).calculate()),
-                                                    ((int) new Expression(editTexts[3].getText().toString()).calculate())
-                                            );
+                                            double c1 = (float) new Expression(editTexts[0].getText().toString()).calculate();
+                                            double c2 = (float) new Expression(editTexts[1].getText().toString()).calculate();
+                                            double c3 = new Expression(editTexts[2].getText().toString()).calculate();
+                                            double c4 = new Expression(editTexts[3].getText().toString()).calculate();
+                                            if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4))
+                                                throw new Exception("math expression invalid");
+                                                pv.importImage(imageBitmap, ((float) c1), ((float) c2), ((int) c3), ((int) c4));
+                                            Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                             Toast.makeText(this, R.string.type_error, Toast.LENGTH_SHORT).show();
                                         }
-                                        Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
                                         moreOptionsDialog.dismiss();
                                     })
                                     .setNegativeButton(R.string.cancel, (dialog1, which) -> {
