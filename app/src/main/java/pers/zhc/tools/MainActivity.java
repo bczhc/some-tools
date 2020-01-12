@@ -2,6 +2,9 @@ package pers.zhc.tools;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
@@ -25,6 +28,8 @@ import pers.zhc.u.common.ReadIS;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends BaseActivity {
@@ -74,6 +79,26 @@ public class MainActivity extends BaseActivity {
                 return false;
             });
         } else init();
+    }
+
+    private void shortcut(int[] texts, Class<?>[] classes) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+            ShortcutManager sm = getSystemService(ShortcutManager.class);
+            List<ShortcutInfo> infoList = new ArrayList<>();
+            for (int i = 0; i < classes.length; i++) {
+                ShortcutInfo.Builder builder = new ShortcutInfo.Builder(this, "shortcut_id" + i);
+                Intent intent = new Intent(this, classes[i]);
+                intent.setAction(Intent.ACTION_VIEW);
+                ShortcutInfo shortcutInfo = builder.setShortLabel(getString(texts[i]))
+                        .setLongLabel(getString(texts[i]))
+                        .setIcon(Icon.createWithResource(this, R.drawable.ic_zhc_logo))
+                        .setIntent(intent).build();
+                infoList.add(shortcutInfo);
+            }
+            if (sm != null) {
+                sm.setDynamicShortcuts(infoList);
+            }
+        }
     }
 
     private void init() {
@@ -131,7 +156,6 @@ public class MainActivity extends BaseActivity {
                 runOnUiThread(() -> {
                     try {
                         String mainActivityText = finalJsonObject.getString("MainActivityText");
-                        if (mainActivityText == null) return;
                         TextView tv = new TextView(this);
                         tv.setText(getString(R.string.tv, mainActivityText));
                         ll.addView(tv);
@@ -161,25 +185,7 @@ public class MainActivity extends BaseActivity {
             }
             mainTextLatch.countDown();
         }).start();
-        /*Button btn1 = findViewById(R.id.gen_pi);
-        btn1.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setClass(this, Pi.class);
-            startActivity(intent);
-        });
-        Button btn2 = findViewById(R.id.toast);
-        btn2.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setClass(this, AToast.class);
-            startActivity(intent);
-        });
-        Button btn3 = findViewById(R.id.clipboard);
-        btn3.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setClass(this, Clip.class);
-            startActivity(intent);
-        });*/
-
+        shortcut(texts, classes);
     }
 
     @Override
