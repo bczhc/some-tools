@@ -13,10 +13,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.DialogUtil;
@@ -98,12 +95,20 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             AlertDialog.Builder adb = new AlertDialog.Builder(context);
             EditText editText = new EditText(context);
             int color = this.getColor();
-            String hexString = ColorUtils.getHexString(color);
+            String hexString = ColorUtils.getHexString(color, true);
             editText.setText(hexString);
             adb.setView(editText);
             adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                 String s = editText.getText().toString();
-                ColorUtils.colorHexToHSV(this.hsv, s);
+                int parseColor;
+                try {
+                    parseColor = Color.parseColor(s);
+                    Color.colorToHSV(parseColor, this.hsv);
+                    this.alpha = Color.alpha(parseColor);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, R.string.please_type_correct_value, Toast.LENGTH_SHORT).show();
+                }
                 setInvertedColor(true);
             });
             adb.setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -135,11 +140,11 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         setInvertedColor(false);
     }
 
-    private int limitValue(int value, int min, int max) {
+    protected static int limitValue(int value, int min, int max) {
         return value < min ? min : (Math.min(value, max));
     }
 
-    private float limitValue(float value, float min, float max) {
+    private static float limitValue(float value, float min, float max) {
         return value < min ? min : (Math.min(value, max));
     }
 
