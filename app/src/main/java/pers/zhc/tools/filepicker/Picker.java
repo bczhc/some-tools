@@ -8,11 +8,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.widget.*;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.PermissionRequester;
 
 import java.io.File;
@@ -56,7 +56,7 @@ public class Picker extends BaseActivity {
         intent.getBooleanExtra("ioResult", false);
         setContentView(R.layout.file_picker_activity);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        this.currentPath = path == null ? Environment.getExternalStorageDirectory() : new File(path);
+        this.currentPath = path == null ? new File(Common.getExternalStoragePath(this)) : new File(path);
 //        this.currentPath = new File("/storage/emulated/0");
         lp.setMargins(2, 10, 10, 0);
         Button cancel = findViewById(R.id.cancel);
@@ -244,7 +244,10 @@ public class Picker extends BaseActivity {
     private void previous() {
         try {
             File parentFile = this.currentPath.getParentFile();
-            File[] listFiles = parentFile.listFiles();
+            File[] listFiles = new File[0];
+            if (parentFile != null) {
+                listFiles = parentFile.listFiles();
+            }
             fillViews(listFiles, lp, grey, justPicked, ll);
             this.currentPath = parentFile;
         } catch (Exception e) {

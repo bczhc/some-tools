@@ -84,6 +84,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     /**
      * 当UncaughtException发生时会转入该函数来处理
      */
+    @SuppressWarnings("NullableProblems")
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
         if (!handleException(ex) && mDefaultHandler != null) {
@@ -153,8 +154,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
         for (Field field : fields) {
             try {
                 field.setAccessible(true);
-                infos.put(field.getName(), field.get(null).toString());
-                Log.d(TAG, field.getName() + ": " + field.get(null));
+                Object o = field.get(null);
+                if (o != null) {
+                    infos.put(field.getName(), o.toString());
+                }
+                Log.d(TAG, field.getName() + ": " + o);
             } catch (Exception e) {
                 Log.e(TAG, "an error occurred when collect crash info", e);
             }
@@ -190,7 +194,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
         long timestamp = System.currentTimeMillis();
         String time = formatter.format(new Date());
         String fileName = "crash-" + time + "-" + timestamp + ".log";
-        String path = Environment.getExternalStorageDirectory().toString() + File.separatorChar
+        String path;
+        path = Common.getExternalStoragePath(mContext) + File.separatorChar
                 + mContext.getString(R.string.some_tools_app) + File.separatorChar + mContext.getString(R.string.crash);
         File file = new File(path + File.separatorChar + fileName);
         try {
