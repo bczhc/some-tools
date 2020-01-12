@@ -89,7 +89,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
             adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                 String s = editText.getText().toString();
                 ColorUtils.colorHexToHSV(this.hsv, s);
-                invertColor();
+                setInvertedColor(true);
             });
             adb.setNegativeButton(R.string.cancel, (dialog, which) -> {
             });
@@ -114,6 +114,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
             ll.addView(linearLayouts[i]);
         }
         this.addView(ll);
+        setInvertedColor(false);
     }
 
     private int limitValue(int value, int min, int max) {
@@ -188,14 +189,9 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             hsv[0] = limitValue(event.getX() * 360F / ((float) hW), 0, 360);
-            invertColor();
+            setInvertedColor(true);
             return true;
         }
-    }
-
-    private void invertColor() {
-        oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
-        invalidateAllView();
     }
 
     private class SView extends View {
@@ -327,5 +323,10 @@ abstract class HSVColorPickerRL extends RelativeLayout {
             invalidateAllView();
             return true;
         }
+    }
+
+    private void setInvertedColor(boolean invalidate) {
+        oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
+        if (invalidate) invalidateAllView();
     }
 }
