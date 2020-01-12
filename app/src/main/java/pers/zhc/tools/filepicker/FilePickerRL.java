@@ -7,7 +7,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -57,7 +56,7 @@ public class FilePickerRL extends RelativeLayout {
         View view = View.inflate(ctx, R.layout.file_picker_rl_activity, null);
         this.addView(view);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        this.currentPath = initialPath == null ? Environment.getExternalStorageDirectory() : initialPath;
+        this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
 //        this.currentPath = new File("/storage/emulated/0");
         lp.setMargins(2, 10, 10, 0);
         Button cancel = findViewById(R.id.cancel);
@@ -234,7 +233,10 @@ public class FilePickerRL extends RelativeLayout {
         }
         try {
             File parentFile = this.currentPath.getParentFile();
-            File[] listFiles = parentFile.listFiles();
+            File[] listFiles = new File[0];
+            if (parentFile != null) {
+                listFiles = parentFile.listFiles();
+            }
             fillViews(listFiles, lp, grey, justPicked, ll);
             this.currentPath = parentFile;
         } catch (Exception e) {
