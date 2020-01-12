@@ -465,20 +465,15 @@ public class PaintView extends View {
     }
 
     void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
-        try {
-            System.gc();
-            Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
-            mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
-            if (backgroundBitmap == null) {
-                Toast.makeText(ctx, ctx.getString(R.string.importing_failed), Toast.LENGTH_SHORT).show();
-            } else {
-                mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
-            }
-            invalidate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(ctx, ctx.getString(R.string.importing_failed) + "\n" + e.toString(), Toast.LENGTH_SHORT).show();
+        System.gc();
+        Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
+        mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
+        if (backgroundBitmap == null) {
+            Toast.makeText(ctx, ctx.getString(R.string.importing_failed), Toast.LENGTH_SHORT).show();
+        } else {
+            mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         }
+        invalidate();
     }
 
     void resetTransform() {

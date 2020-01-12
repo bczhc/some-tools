@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -256,8 +257,12 @@ public class CrashHandler implements UncaughtExceptionHandler {
                         new Button(mContext),
                         new Button(mContext)
                 };
+                dialog.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) this.cdl.countDown();
+                    return true;
+                });
                 dialog.setCanceledOnTouchOutside(false);
-                dialog.setCancelable(true);
+                dialog.setCancelable(false);
                 View.OnClickListener[] listeners = new View.OnClickListener[]{
                         v -> this.cdl.countDown(),
                         v -> {
@@ -296,6 +301,12 @@ public class CrashHandler implements UncaughtExceptionHandler {
                         ContextCompat.checkSelfPermission(mContext, Manifest.permission.SYSTEM_ALERT_WINDOW)
                 );
                 DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, permission);
+                ll.setFocusable(true);
+                ll.setFocusableInTouchMode(true);
+                ll.setOnKeyListener((v, keyCode, event) -> {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) this.cdl.countDown();
+                    return true;
+                });
                 dialog.setContentView(ll, new ViewGroup.LayoutParams(((int) (((float) width) * .8)), ((int) (((float) height) * .8))));
                 dialog.show();
                 Looper.loop();
