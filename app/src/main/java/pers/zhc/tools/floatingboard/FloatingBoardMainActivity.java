@@ -10,7 +10,6 @@ import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -93,7 +92,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        File pathDir = new File(Environment.getExternalStorageDirectory().toString() + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
+        File pathDir = new File(Common.getExternalStoragePath(context) + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
         File[] listFiles = pathDir.listFiles();
         if (listFiles != null)
             for (File file : listFiles) {
@@ -178,7 +177,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
         Button clearPathBtn = findViewById(R.id.clear_path_btn);
         final float[] cachesSize = {0F};
         if (currentInternalPathDir.exists()) {
-            for (File file : currentInternalPathDir.listFiles()) {
+            File[] listFiles = currentInternalPathDir.listFiles();
+            for (int i = 0, listFilesLength = listFiles != null ? listFiles.length : 0; i < listFilesLength; i++) {
+                File file = listFiles[i];
                 cachesSize[0] += file.length();
             }
         }
@@ -186,7 +187,8 @@ public class FloatingBoardMainActivity extends BaseActivity {
         clearPathBtn.setOnClickListener(v -> {
             FileU fileU = new FileU();
             if (currentInternalPathDir.exists()) {
-                for (File file : currentInternalPathDir.listFiles()) {
+                File[] listFiles = currentInternalPathDir.listFiles();
+                for (File file : listFiles != null ? listFiles : new File[0]) {
                     if (!FloatingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(fileU.getFileName(file.getName())))) {
                         System.out.println("file.delete() = " + file.delete());
                     }
@@ -194,7 +196,8 @@ public class FloatingBoardMainActivity extends BaseActivity {
             }
             cachesSize[0] = 0;
             if (currentInternalPathDir.exists()) {
-                for (File file : currentInternalPathDir.listFiles()) {
+                File[] listFiles = currentInternalPathDir.listFiles();
+                for (File file : listFiles != null ? listFiles : new File[0]) {
                     cachesSize[0] += file.length();
                 }
             }
@@ -420,7 +423,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             /*dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                                     , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));*/
                             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            HSVColorPickerRL hsvColorPickerRL = new HSVColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4))) {
+                            HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), 1) {
                                 @Override
                                 void onPickedAction(int color) {
                                     pv.setPaintColor(color);
@@ -477,7 +480,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             TVsColorBtn.setOnClickListener(v2 -> {
                                 Dialog TVsColorDialog = new Dialog(FloatingBoardMainActivity.this);
                                 setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                                HSVColorPickerRL TVsColorPicker = new HSVColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4))) {
+                                HSVAColorPickerRL TVsColorPicker = new HSVAColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4)), 2) {
                                     @Override
                                     void onPickedAction(int color) {
                                         for (TextView childTV : childTVs) {
@@ -496,7 +499,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             textsColorBtn.setOnClickListener(v2 -> {
                                 Dialog textsColorDialog = new Dialog(FloatingBoardMainActivity.this);
                                 setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                                HSVColorPickerRL textsColorPicker = new HSVColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4))) {
+                                HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), 3) {
                                     @Override
                                     void onPickedAction(int color) {
                                         for (TextView childTV : childTVs) {
@@ -577,7 +580,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
             nc.setBypassDnd(true);
             nc.enableLights(false);
             nc.enableLights(false);
-            nm.createNotificationChannel(nc);
+            Objects.requireNonNull(nm).createNotificationChannel(nc);
             Notification.Builder nb = new Notification.Builder(this, "channel1");
             nb.setSmallIcon(Icon.createWithBitmap(icon))
                     .setContentTitle(getString(R.string.drawing_board))
@@ -607,7 +610,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
             ncb.setContentIntent(pi);
             Notification build = ncb.build();
             build.flags = Notification.FLAG_AUTO_CANCEL;
-            nm.notify(((int) (System.currentTimeMillis() - this.currentInstanceMills)), build);
+            Objects.requireNonNull(nm).notify(((int) (System.currentTimeMillis() - this.currentInstanceMills)), build);
         }
     }
 
@@ -767,7 +770,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
             buttons[i] = new Button(this);
             buttons[i].setText(textsRes[i]);
             ll.addView(buttons[i]);
-            File d = new File(Environment.getExternalStorageDirectory().toString() + File.separator + getString(R.string.drawing_board));
+            File d = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
             if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
             File pathDir = new File(d.toString() + File.separator + "path");
             if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
