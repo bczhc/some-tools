@@ -84,13 +84,15 @@ public class MainActivity extends BaseActivity {
     private void shortcut(int[] texts, Class<?>[] classes) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
             ShortcutManager sm = getSystemService(ShortcutManager.class);
+            int[] choice = {0, 4, 7};
+            if (sm != null && choice.length > sm.getMaxShortcutCountPerActivity()) return;
             List<ShortcutInfo> infoList = new ArrayList<>();
-            for (int i = 0; i < classes.length; i++) {
+            for (int i = 0; i < choice.length; i++) {
                 ShortcutInfo.Builder builder = new ShortcutInfo.Builder(this, "shortcut_id" + i);
-                Intent intent = new Intent(this, classes[i]);
+                Intent intent = new Intent(this, classes[choice[i]]);
                 intent.setAction(Intent.ACTION_VIEW);
-                ShortcutInfo shortcutInfo = builder.setShortLabel(getString(texts[i]))
-                        .setLongLabel(getString(texts[i]))
+                ShortcutInfo shortcutInfo = builder.setShortLabel(getString(texts[choice[i]]))
+                        .setLongLabel(getString(texts[choice[i]]))
                         .setIcon(Icon.createWithResource(this, R.drawable.ic_zhc_logo))
                         .setIntent(intent).build();
                 infoList.add(shortcutInfo);
