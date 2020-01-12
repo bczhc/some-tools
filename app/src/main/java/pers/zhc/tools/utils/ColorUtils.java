@@ -32,10 +32,14 @@ public class ColorUtils {
         return s;
     }
 
-    public static String getHexString(int color) {
+    public static String getHexString(int color, boolean alpha) {
         int red = (color & 0xff0000) >> 16;
         int green = (color & 0x00ff00) >> 8;
         int blue = (color & 0x0000ff);
+        if (alpha) return "#" + get2Hex(Color.alpha(color)).toUpperCase()
+                + get2Hex(red).toUpperCase() +
+                get2Hex(green).toUpperCase() +
+                get2Hex(blue).toUpperCase();
         return "#" + get2Hex(red).toUpperCase() +
                 get2Hex(green).toUpperCase() +
                 get2Hex(blue).toUpperCase();
