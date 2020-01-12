@@ -23,7 +23,6 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.DialogUtil;
 
-import static pers.zhc.tools.utils.ColorUtils.invertColor;
 
 @SuppressWarnings("SameParameterValue")
 @SuppressLint("ViewConstructor")
@@ -90,7 +89,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
             adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                 String s = editText.getText().toString();
                 ColorUtils.colorHexToHSV(this.hsv, s);
-                invalidateAllView();
+                invertColor();
             });
             adb.setNegativeButton(R.string.cancel, (dialog, which) -> {
             });
@@ -189,11 +188,14 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             hsv[0] = limitValue(event.getX() * 360F / ((float) hW), 0, 360);
-            oppositeColorPaint.setColor(invertColor(Color.HSVToColor(255, hsv)));
-//            System.out.println("color = " + color);
-            invalidateAllView();
+            invertColor();
             return true;
         }
+    }
+
+    private void invertColor() {
+        oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
+        invalidateAllView();
     }
 
     private class SView extends View {
@@ -234,7 +236,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             hsv[1] = limitValue(event.getX() / ((float) sW), 0, 1F);
-            oppositeColorPaint.setColor(invertColor(Color.HSVToColor(255, hsv)));
+            oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
         }
@@ -278,7 +280,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             hsv[2] = limitValue(event.getX() / ((float) vW), 0, 1);
-            oppositeColorPaint.setColor(invertColor(Color.HSVToColor(255, hsv)));
+            oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
         }
@@ -321,7 +323,7 @@ abstract class HSVColorPickerRL extends RelativeLayout {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             alpha = limitValue((int) (event.getX() / ((float) aW) * 255), 0, 255);
-            oppositeColorPaint.setColor(invertColor(Color.HSVToColor(255, hsv)));
+            oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
         }
