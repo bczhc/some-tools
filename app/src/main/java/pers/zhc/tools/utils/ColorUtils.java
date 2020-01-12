@@ -20,6 +20,12 @@ public class ColorUtils {
         return new RGB(red, green, blue);
     }
 
+    public static float getH(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        return hsv[0];
+    }
+
     private static String get2Hex(int i) {
         String s = Integer.toHexString(i);
         if (s.length() == 1) return "0" + s;
@@ -73,7 +79,7 @@ public class ColorUtils {
         return color;
     }
 
-    private class TwoColor {
+    private static class TwoColor {
         private RGB rgb1, rgb2;
         private float sP, eP;
 
