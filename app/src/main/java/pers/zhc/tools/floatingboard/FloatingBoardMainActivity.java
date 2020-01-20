@@ -59,6 +59,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private Runnable importPathFileDoneAction;
     private long currentInstanceMills;
     private TextView[] childTVs;
+    private HSVAColorPickerRL.Position[] positions = new HSVAColorPickerRL.Position[3];
 
     private static void uploadPaths(Context context) {
         try {
@@ -423,10 +424,11 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             /*dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                                     , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));*/
                             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), 1) {
+                            HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), positions[0]) {
                                 @Override
-                                void onPickedAction(int color) {
+                                void onPickedAction(int color, Position position) {
                                     pv.setPaintColor(color);
+                                    positions[0] = position;
                                 }
                             };
                             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
@@ -480,15 +482,16 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             TVsColorBtn.setOnClickListener(v2 -> {
                                 Dialog TVsColorDialog = new Dialog(FloatingBoardMainActivity.this);
                                 setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                                HSVAColorPickerRL TVsColorPicker = new HSVAColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4)), 2) {
+                                HSVAColorPickerRL TVsColorPicker = new HSVAColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4)), positions[1]) {
                                     @Override
-                                    void onPickedAction(int color) {
+                                    void onPickedAction(int color, Position position) {
                                         for (TextView childTV : childTVs) {
                                             TVsColor = color;
                                             childTV.setBackgroundColor(TVsColor);
                                             if (invertColorChecked)
                                                 childTV.setTextColor(textsColor = invertColor(TVsColor));
                                         }
+                                        positions[1] = position;
                                     }
                                 };
                                 TVsColorDialog.setContentView(TVsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
@@ -499,13 +502,14 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             textsColorBtn.setOnClickListener(v2 -> {
                                 Dialog textsColorDialog = new Dialog(FloatingBoardMainActivity.this);
                                 setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                                HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), 3) {
+                                HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), positions[2]) {
                                     @Override
-                                    void onPickedAction(int color) {
+                                    void onPickedAction(int color, Position position) {
                                         for (TextView childTV : childTVs) {
                                             if (!invertColorChecked) textsColor = color;
                                             childTV.setTextColor(textsColor);
                                         }
+                                        positions[2] = position;
                                     }
                                 };
                                 textsColorDialog.setContentView(textsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
@@ -822,7 +826,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                             double c4 = new Expression(editTexts[3].getText().toString()).calculate();
                                             if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4))
                                                 throw new Exception("math expression invalid");
-                                                pv.importImage(imageBitmap, ((float) c1), ((float) c2), ((int) c3), ((int) c4));
+                                            pv.importImage(imageBitmap, ((float) c1), ((float) c2), ((int) c3), ((int) c4));
                                             Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
                                         } catch (Exception e) {
                                             e.printStackTrace();
