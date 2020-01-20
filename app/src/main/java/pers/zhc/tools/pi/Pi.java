@@ -91,7 +91,9 @@ public class Pi extends BaseActivity {
         btn.setOnLongClickListener(v -> {
             ClipboardManager cm = ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE));
             ClipData cd = ClipData.newPlainText("Pi", piJNI.sb.toString());
-            cm.setPrimaryClip(cd);
+            if (cm != null) {
+                cm.setPrimaryClip(cd);
+            } else Toast.makeText(this, "null", Toast.LENGTH_SHORT).show();
             Toast.makeText(this, R.string.copying_success, Toast.LENGTH_SHORT).show();
             return true;
         });
