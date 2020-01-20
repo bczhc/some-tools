@@ -7,8 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.text.Selection;
-import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,31 +32,28 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     private float[] currentXPos = new float[4];
     private Paint oppositeColorPaint;
     private float lW = 1.5F;
+    private Position position;
+
     /**
-     * 用于查找到保存上一次退出时的颜色
+     * @param context      ctx
+     * @param initialColor initialColor
+     * @param width        w
+     * @param height       h
+     * @param position     位置，用于设置各个色条位置以确定颜色
      */
-    private int id;
-
-    static SparseArray<Position> colorMap;
-
-    static {
-        colorMap = new SparseArray<>();
-    }
-
-    protected HSVAColorPickerRL(Context context, int initialColor, int width, int height, int id) {
+    protected HSVAColorPickerRL(Context context, int initialColor, int width, int height, @Nullable Position position) {
         super(context);
         this.width = width;
         this.height = height;
         this.context = context;
-        this.id = id;
         oppositeColorPaint = new Paint();
-        if (colorMap.get(id) == null) {
+        this.position = position;
+        if (position == null) {
             alpha = initialColor >>> 24;
             Color.colorToHSV(initialColor, hsv);
-            Position position = new Position();
+            position = new Position();
             Color.colorToHSV(initialColor, position.positions);
             position.positions[3] = alpha;
-            colorMap.put(id, position);
         }
         for (int i = 0; i < 4; i++) {
             setCurrentX(i);
@@ -134,7 +131,6 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             ll.addView(linearLayouts[i]);
         }
         this.addView(ll);
-        Position position = colorMap.get(id);
         System.arraycopy(position.positions, 0, this.hsv, 0, hsv.length);
         alpha = ((int) position.positions[3]);
         setInvertedColor(false);
@@ -157,7 +153,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         }
         int color = this.getColor();
         vv.setBackgroundColor(color);
-        onPickedAction(color);
+        onPickedAction(color, this.position);
     }
 
     private int getColor() {
@@ -171,7 +167,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         return 0;
     }
 
-    abstract void onPickedAction(int color);
+    abstract void onPickedAction(int color, Position position);
 
     private class HView extends View {
         private int hW, hH;
@@ -210,7 +206,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            hsv[0] = (HSVAColorPickerRL.colorMap.get(id).positions[0] = limitValue(event.getX() * 360F / ((float) hW), 0, 360));
+            hsv[0] = (HSVAColorPickerRL.this.position.positions[0] = limitValue(event.getX() * 360F / ((float) hW), 0, 360));
             setInvertedColor(true);
             return true;
         }
@@ -253,7 +249,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            hsv[1] = (HSVAColorPickerRL.colorMap.get(id).positions[1] = limitValue(event.getX() / ((float) sW), 0, 1F));
+            hsv[1] = (HSVAColorPickerRL.this.position.positions[1] = limitValue(event.getX() / ((float) sW), 0, 1F));
             oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
@@ -297,7 +293,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            hsv[2] = (HSVAColorPickerRL.colorMap.get(id).positions[2] = limitValue(event.getX() / ((float) vW), 0, 1));
+            hsv[2] = (HSVAColorPickerRL.this.position.positions[2] = limitValue(event.getX() / ((float) vW), 0, 1));
             oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
@@ -341,7 +337,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             alpha = limitValue((int) (event.getX() / ((float) aW) * 255), 0, 255);
-            HSVAColorPickerRL.colorMap.get(id).positions[3] = alpha;
+            HSVAColorPickerRL.this.position.positions[3] = alpha;
             oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
@@ -353,7 +349,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         if (invalidate) invalidateAllView();
     }
 
-    private static class Position {
+    static class Position {
         float[] positions;
 
         public Position() {
