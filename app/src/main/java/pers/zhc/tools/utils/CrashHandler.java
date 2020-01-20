@@ -1,6 +1,5 @@
 package pers.zhc.tools.utils;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -14,6 +13,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -39,7 +39,8 @@ import java.util.concurrent.CountDownLatch;
  *
  * @author user
  */
-public class CrashHandler implements UncaughtExceptionHandler {
+@SuppressLint("Registered")
+public class CrashHandler extends BaseActivity implements UncaughtExceptionHandler {
     public static final String TAG = "CrashHandler";
     // CrashHandler实例
     @SuppressLint("StaticFieldLeak")
@@ -271,7 +272,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                             Handler handler = new Handler();
                             new Thread(() -> {
                                 try {
-                                    FileMultipartUploader.upload(BaseActivity.Infos.zhcUrlString + "/tools_app/crash_report.zhc", file);
+                                    FileMultipartUploader.upload(Infos.zhcUrlString + "/tools_app/crash_report.zhc", file);
                                     handler.post(() -> {
                                         barR.setTextColor(ContextCompat.getColor(mContext, R.color.done_green));
                                         barR.setText(R.string.upload_done);
@@ -297,9 +298,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
                     buttons[i].setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
                 }
                 ll.addView(bottomButtonLL);
-                boolean permission = (PackageManager.PERMISSION_GRANTED !=
-                        ContextCompat.checkSelfPermission(mContext, Manifest.permission.SYSTEM_ALERT_WINDOW)
-                );
+                boolean permission = false;
+                if (Build.VERSION.SDK_INT >= 23) {
+                    permission = Settings.canDrawOverlays(this);
+                }
+                System.out.println("permission = " + permission);
                 DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, permission);
                 ll.setFocusable(true);
                 ll.setFocusableInTouchMode(true);
