@@ -39,8 +39,7 @@ import java.util.concurrent.CountDownLatch;
  *
  * @author user
  */
-@SuppressLint("Registered")
-public class CrashHandler extends BaseActivity implements UncaughtExceptionHandler {
+public class CrashHandler implements UncaughtExceptionHandler {
     public static final String TAG = "CrashHandler";
     // CrashHandler实例
     @SuppressLint("StaticFieldLeak")
@@ -272,7 +271,7 @@ public class CrashHandler extends BaseActivity implements UncaughtExceptionHandl
                             Handler handler = new Handler();
                             new Thread(() -> {
                                 try {
-                                    FileMultipartUploader.upload(Infos.zhcUrlString + "/tools_app/crash_report.zhc", file);
+                                    FileMultipartUploader.upload(BaseActivity.Infos.zhcUrlString + "/tools_app/crash_report.zhc", file);
                                     handler.post(() -> {
                                         barR.setTextColor(ContextCompat.getColor(mContext, R.color.done_green));
                                         barR.setText(R.string.upload_done);
@@ -300,7 +299,7 @@ public class CrashHandler extends BaseActivity implements UncaughtExceptionHandl
                 ll.addView(bottomButtonLL);
                 boolean permission = false;
                 if (Build.VERSION.SDK_INT >= 23) {
-                    permission = Settings.canDrawOverlays(this);
+                    permission = Settings.canDrawOverlays(mContext);
                 }
                 System.out.println("permission = " + permission);
                 DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, permission);
@@ -315,7 +314,7 @@ public class CrashHandler extends BaseActivity implements UncaughtExceptionHandl
                 Looper.loop();
             }).start();
         } catch (Exception e) {
-            Log.e(TAG, "an error occurred while writing file...", e);
+            e.printStackTrace();
         }
     }
 }
