@@ -27,6 +27,7 @@ import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.common.MultipartUploader;
@@ -272,7 +273,12 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private void setBtn() {
         startFW = findViewById(R.id.start_f_w);
         startFW.setText(R.string.start_floating_window);
+        setStartBtn();
+    }
+
+    private void setStartBtn() {
         startFW.setOnClickListener(v -> {
+            ToastUtils.show(this, R.string.floating_board);
             if (Build.VERSION.SDK_INT >= 23) {
                 if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -372,7 +378,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 childTVs[6].setText(R.string.drawing_mode);
                 strings[6] = getString(R.string.drawing_mode);
             }
-            Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
+            ToastUtils.show(this, R.string.importing_success);
         };
         iv.setOnClickListener(v -> {
             System.out.println("click");
@@ -399,7 +405,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 int finalI = i;
                 childTVs[i].setOnClickListener(v1 -> {
                     ckV();
-                    //                    Toast.makeText(this, "click: " + finalI, Toast.LENGTH_SHORT).show();
                     switch (finalI) {
                         case 0:
                             ll.removeAllViews();
@@ -573,6 +578,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
         new Thread(() -> uploadPaths(this)).start();
         FloatingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
         this.startFW.setText(R.string.start_floating_window);
+        setStartBtn();
     }
 
     private void hide() {
@@ -796,7 +802,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             EditText[] editTexts = new EditText[4];
                             Bitmap imageBitmap;
                             if ((imageBitmap = BitmapFactory.decodeFile(s)) == null) {
-                                Toast.makeText(this, R.string.importing_failed, Toast.LENGTH_SHORT).show();
+                                ToastUtils.show(this, R.string.importing_failed);
                                 return;
                             }
                             int imageBitmapWidth = imageBitmap.getWidth();
@@ -829,10 +835,10 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                             if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4))
                                                 throw new Exception("math expression invalid");
                                             pv.importImage(imageBitmap, ((float) c1), ((float) c2), ((int) c3), ((int) c4));
-                                            Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
+                                            ToastUtils.show(this, R.string.importing_success);
                                         } catch (Exception e) {
                                             e.printStackTrace();
-                                            Toast.makeText(this, R.string.type_error, Toast.LENGTH_SHORT).show();
+                                            ToastUtils.show(this, R.string.type_error);
                                         }
                                         moreOptionsDialog.dismiss();
                                     })
@@ -852,8 +858,8 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
                             pv.saveImg(imageFile);
                             if (imageFile.exists())
-                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + imageDir.toString() + File.separator + et.getText().toString() + ".png", Toast.LENGTH_SHORT).show();
-                            else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                                ToastUtils.show(this, getString(R.string.saving_success) + "\n" + imageDir.toString() + File.separator + et.getText().toString() + ".png");
+                            else ToastUtils.show(this, R.string.saving_failed);
                             pv.setOS(currentInternalPathFile, true);
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -901,9 +907,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
                                 e.printStackTrace();
                             }
                             if (pathFile.exists()) {
-                                Toast.makeText(this, getString(R.string.saving_success) + "\n" + pathFile.toString(), Toast.LENGTH_SHORT).show();
+                                ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
                                 new Thread(() -> uploadPaths(this)).start();
-                            } else Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                            } else ToastUtils.show(this, R.string.saving_failed);
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                         }).setTitle(R.string.type_file_name).setView(et).create();
