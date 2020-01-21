@@ -16,16 +16,14 @@ import android.widget.*;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.Picker;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtil;
-import pers.zhc.tools.utils.DisplayUtil;
-import pers.zhc.tools.utils.ViewWithExtras;
+import pers.zhc.tools.utils.*;
 import pers.zhc.u.FileU;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -100,7 +98,7 @@ public class Document extends BaseActivity {
                 break;
             case 51:
                 if (data != null) {
-                    File file = new File(data.getStringExtra("result"));
+                    File file = new File(Objects.requireNonNull(data.getStringExtra("result")));
                     try {
                         FileU.FileCopy(file, dbFile, true);
                     } catch (IOException e) {
@@ -108,8 +106,8 @@ public class Document extends BaseActivity {
                         Common.showException(e, this);
                         return;
                     }
-                    if (file.exists()) Toast.makeText(this, R.string.importing_success, Toast.LENGTH_SHORT).show();
-                    else Toast.makeText(this, R.string.copying_failed, Toast.LENGTH_SHORT).show();
+                    if (file.exists()) ToastUtils.show(this, R.string.importing_success);
+                    else ToastUtils.show(this, R.string.copying_failed);
                     setSVViews();
                 }
                 break;
@@ -123,7 +121,7 @@ public class Document extends BaseActivity {
                         File destFile = new File(destFileDir + File.separator + dbName);
                         FileU.FileCopy(file, destFile);
                         if (destFile.exists())
-                            Toast.makeText(this, getString(R.string.exporting_success) + "\n" + destFile.getCanonicalPath(), Toast.LENGTH_SHORT).show();
+                            ToastUtils.show(this, getString(R.string.exporting_success) + "\n" + destFile.getCanonicalPath());
                     } catch (IOException e) {
                         Common.showException(e, this);
                     }

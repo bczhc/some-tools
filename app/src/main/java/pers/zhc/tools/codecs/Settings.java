@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.ToastUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -21,8 +22,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static android.widget.Toast.LENGTH_SHORT;
-import static android.widget.Toast.makeText;
 import static pers.zhc.tools.utils.Common.showException;
 import static pers.zhc.tools.utils.DisplayUtil.px2sp;
 
@@ -198,7 +197,7 @@ public class Settings extends BaseActivity {
                 this.saved = this.o.solveJSON(this.savedJSONText);
             } catch (JSONException e) {
                 e.printStackTrace();
-                this.runOnUiThread(() -> makeText(this, this.getString(R.string.json_solve_error) + e.toString(), LENGTH_SHORT).show());
+                this.runOnUiThread(() -> ToastUtils.show(this, this.getString(R.string.json_solve_error) + e.toString()));
                 try {
                     OutputStream os = new FileOutputStream(file, false);
                     os.close();

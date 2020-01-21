@@ -13,10 +13,14 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.tools.utils.ToastUtils;
 
 
 @SuppressWarnings("SameParameterValue")
@@ -59,6 +63,14 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             setCurrentX(i);
         }
         init();
+    }
+
+    protected static int limitValue(int value, int min, int max) {
+        return value < min ? min : (Math.min(value, max));
+    }
+
+    private static float limitValue(float value, float min, float max) {
+        return value < min ? min : (Math.min(value, max));
     }
 
     private void init() {
@@ -104,7 +116,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
                     this.alpha = Color.alpha(parseColor);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(context, R.string.please_type_correct_value, Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(context, R.string.please_type_correct_value);
                 }
                 setInvertedColor(true);
             });
@@ -136,14 +148,6 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         setInvertedColor(false);
     }
 
-    protected static int limitValue(int value, int min, int max) {
-        return value < min ? min : (Math.min(value, max));
-    }
-
-    private static float limitValue(float value, float min, float max) {
-        return value < min ? min : (Math.min(value, max));
-    }
-
     private void invalidateAllView() {
         for (View view : hsvAView) {
 //            if (i == notDrawIndex) continue;
@@ -168,6 +172,19 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     }
 
     abstract void onPickedAction(int color, Position position);
+
+    private void setInvertedColor(boolean invalidate) {
+        oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
+        if (invalidate) invalidateAllView();
+    }
+
+    static class Position {
+        float[] positions;
+
+        public Position() {
+            positions = new float[4];
+        }
+    }
 
     private class HView extends View {
         private int hW, hH;
@@ -300,6 +317,10 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         }
     }
 
+    /*private static void turn2Position(Position dest, int color) {
+
+    }*/
+
     private class AView extends View {
         private int aW, aH;
         private Paint aPaint;
@@ -341,23 +362,6 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
-        }
-    }
-
-    private void setInvertedColor(boolean invalidate) {
-        oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
-        if (invalidate) invalidateAllView();
-    }
-
-    /*private static void turn2Position(Position dest, int color) {
-
-    }*/
-
-    static class Position {
-        float[] positions;
-
-        public Position() {
-            positions = new float[4];
         }
     }
 }

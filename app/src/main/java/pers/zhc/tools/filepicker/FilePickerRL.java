@@ -13,6 +13,7 @@ import android.widget.*;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.Documents;
 
 import java.io.File;
@@ -31,7 +32,6 @@ public class FilePickerRL extends RelativeLayout {
     private final OnPickedResultActionInterface pickedResultAction;
     private final int[] justPicked = new int[]{-1};
     public String result;
-    private Toast notHavePermissionAccessToast = null;
     private String resultString = "";
     private TextView pathView;
     private File currentPath;
@@ -135,11 +135,7 @@ public class FilePickerRL extends RelativeLayout {
             try {
                 length = listFiles.length;
             } catch (Exception e) {
-                ctx.runOnUiThread(() -> {
-                    if (notHavePermissionAccessToast != null) notHavePermissionAccessToast.cancel();
-                    notHavePermissionAccessToast = Toast.makeText(ctx, R.string.no_access, Toast.LENGTH_SHORT);
-                    notHavePermissionAccessToast.show();
-                });
+                ctx.runOnUiThread(() -> ToastUtils.show(ctx, R.string.no_access));
                 e.printStackTrace();
             }
             textViews = new TextView[length];
