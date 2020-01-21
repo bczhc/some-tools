@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity {
                 intent.setAction(Intent.ACTION_VIEW);
                 ShortcutInfo shortcutInfo = builder.setShortLabel(getString(texts[choice[i]]))
                         .setLongLabel(getString(texts[choice[i]]))
-                        .setIcon(Icon.createWithResource(this, R.drawable.ic_zhc_logo))
+                        .setIcon(Icon.createWithResource(this, R.drawable.ic_launcher_foreground))
                         .setIntent(intent).build();
                 infoList.add(shortcutInfo);
             }

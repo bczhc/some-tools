@@ -5,9 +5,9 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.ToastUtils;
 
 public class AToast extends BaseActivity {
     @Override
@@ -18,7 +18,7 @@ public class AToast extends BaseActivity {
         EditText et = findViewById(R.id.toast_et);
         btn.setOnClickListener(v -> {
             Editable text = et.getText();
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+            ToastUtils.show(this, text);
         });
     }
 

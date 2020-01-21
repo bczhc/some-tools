@@ -9,11 +9,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.tools.utils.ToastUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +31,6 @@ public class Picker extends BaseActivity {
     @SuppressWarnings("unused")
     public static int PICK_FOLDER = 2;
     private final int[] justPicked = new int[]{-1};
-    private Toast notHavePermissionAccessToast = null;
     private String resultString = "";
     private TextView pathView;
     private File currentPath;
@@ -146,11 +149,7 @@ public class Picker extends BaseActivity {
             try {
                 length = listFiles.length;
             } catch (Exception e) {
-                runOnUiThread(() -> {
-                    if (notHavePermissionAccessToast != null) notHavePermissionAccessToast.cancel();
-                    notHavePermissionAccessToast = Toast.makeText(this, R.string.no_access, Toast.LENGTH_SHORT);
-                    notHavePermissionAccessToast.show();
-                });
+                runOnUiThread(() -> ToastUtils.show(this, R.string.no_access));
                 e.printStackTrace();
             }
             textViews = new TextView[length];

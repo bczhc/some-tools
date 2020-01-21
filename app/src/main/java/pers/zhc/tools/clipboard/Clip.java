@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.ToastUtils;
+
+import java.util.Objects;
 
 public class Clip extends BaseActivity {
     @Override
@@ -23,9 +25,9 @@ public class Clip extends BaseActivity {
             ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
                 ClipData cd = ClipData.newHtmlText("", getString(R.string.html_content), s);
-                cm.setPrimaryClip(cd);
-                Toast.makeText(this, getString(R.string.copying_success), Toast.LENGTH_SHORT).show();
-            } else Toast.makeText(this, getString(R.string.html_clipboard_unsupported), Toast.LENGTH_SHORT).show();
+                Objects.requireNonNull(cm).setPrimaryClip(cd);
+                ToastUtils.show(this, getString(R.string.copying_success));
+            } else ToastUtils.show(this, getString(R.string.html_clipboard_unsupported));
         });
     }
 
