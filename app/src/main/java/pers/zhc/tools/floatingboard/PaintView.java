@@ -7,9 +7,9 @@ import android.graphics.*;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
@@ -219,9 +219,8 @@ public class PaintView extends View {
      * 保存到指定的文件夹中
      */
     void saveImg(File f) {
-        Toast toast = Toast.makeText(ctx, R.string.saving, Toast.LENGTH_SHORT);
-        toast.show();
-        Toast toast2 = Toast.makeText(ctx, R.string.saving_success, Toast.LENGTH_SHORT);
+        ToastUtils.show(ctx, R.string.saving);
+        ToastUtils.show(ctx, R.string.saving_success);
         //保存图片
         FileOutputStream fileOutputStream = null;
         try {
@@ -235,11 +234,6 @@ public class PaintView extends View {
                         Common.showException(e, (Activity) ctx);
                     }
                 }
-                ((Activity) ctx).runOnUiThread(() -> {
-                    toast.cancel();
-                    toast2.cancel();
-                    toast2.show();
-                });
             }).start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -469,7 +463,7 @@ public class PaintView extends View {
         Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
         mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
         if (backgroundBitmap == null) {
-            Toast.makeText(ctx, ctx.getString(R.string.importing_failed), Toast.LENGTH_SHORT).show();
+            ToastUtils.show(ctx, ctx.getString(R.string.importing_failed));
         } else {
             mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         }

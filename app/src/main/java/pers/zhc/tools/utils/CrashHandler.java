@@ -118,7 +118,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         // 使用Toast来显示异常信息
         new Thread(() -> {
             Looper.prepare();
-            Toast.makeText(mContext, mContext.getString(R.string.crash_sorry_toast_information), Toast.LENGTH_LONG).show();
+            ToastUtils.show(mContext, mContext.getString(R.string.crash_sorry_toast_information));
             cdl.countDown();
             Looper.loop();
         }).start();
