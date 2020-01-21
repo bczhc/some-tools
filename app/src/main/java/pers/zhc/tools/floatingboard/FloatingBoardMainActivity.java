@@ -62,6 +62,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private TextView[] childTVs;
     private HSVAColorPickerRL.Position[] positions = new HSVAColorPickerRL.Position[3];
     private Button startFW;
+    private String[] strings;
+    private WindowManager.LayoutParams lp;
+    private WindowManager.LayoutParams lp2;
 
     private static void uploadPaths(Context context) {
         try {
@@ -301,8 +304,8 @@ public class FloatingBoardMainActivity extends BaseActivity {
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
         pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        WindowManager.LayoutParams lp2 = new WindowManager.LayoutParams();
+        lp = new WindowManager.LayoutParams();
+        lp2 = new WindowManager.LayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             lp2.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
@@ -314,7 +317,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
         }
         lp.format = PixelFormat.RGBA_8888;
         lp2.format = PixelFormat.RGBA_8888;
-        String[] strings = getResources().getStringArray(R.array.btn_string);
+        strings = getResources().getStringArray(R.array.btn_string);
         lp.width = width;
         lp.height = height;
         lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -412,17 +415,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                             wm.updateViewLayout(ll, lp2);
                             break;
                         case 1:
-                            if (lp.flags == (WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)) {
-                                lp.flags = 0;
-                                wm.updateViewLayout(pv, lp);
-                                childTVs[finalI].setText(R.string.drawing);
-                                strings[1] = getString(R.string.drawing);
-                            } else {
-                                lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
-                                wm.updateViewLayout(pv, lp);
-                                childTVs[finalI].setText(R.string.controlling);
-                                strings[1] = getString(R.string.controlling);
-                            }
+                            toggleDrawAndControlMode();
                             break;
                         case 2:
                             Dialog dialog = new Dialog(this);
@@ -572,6 +565,20 @@ public class FloatingBoardMainActivity extends BaseActivity {
             wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
     }
 
+    void toggleDrawAndControlMode() {
+        if (lp.flags == (WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)) {
+            lp.flags = 0;
+            wm.updateViewLayout(pv, lp);
+            childTVs[1].setText(R.string.drawing);
+            strings[1] = getString(R.string.drawing);
+        } else {
+            lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+            wm.updateViewLayout(pv, lp);
+            childTVs[1].setText(R.string.controlling);
+            strings[1] = getString(R.string.controlling);
+        }
+    }
+
     private void exit() {
         stopFloatingWindow();
 //                                unregisterReceiver(notificationClickReceiver);
@@ -602,6 +609,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
             intent.setAction("pers.zhc.tools.START_FB");
             intent.setPackage(getPackageName());
             intent.putExtra("mills", currentInstanceMills);
+            boolean isDrawMode = this.childTVs[1].getText().equals(getString(R.string.drawing_mode));
+            intent.putExtra("isDrawMode", isDrawMode);
+            System.out.println("isDrawMode = " + isDrawMode);
             PendingIntent pi = getPendingIntent(intent);
             nb.setContentIntent(pi);
             Notification build = nb.build();
@@ -615,6 +625,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
                     .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
             Intent intent = new Intent();
+            boolean isDrawMode = this.childTVs[1].getText().equals(getString(R.string.drawing_mode));
+            intent.putExtra("isDrawMode", isDrawMode);
+            System.out.println("isDrawMode = " + isDrawMode);
             intent.setAction("pers.zhc.tools.START_FB");
             intent.putExtra("mills", currentInstanceMills);
             intent.setPackage(getPackageName());
