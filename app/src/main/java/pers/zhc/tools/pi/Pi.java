@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.ToastUtils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,7 +56,7 @@ public class Pi extends BaseActivity {
                 es[0].shutdown();
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                ToastUtils.show(this, e.toString());
             }
             /*CountDownLatch[] latches = new CountDownLatch[]{
                     new CountDownLatch(1),
@@ -93,8 +93,8 @@ public class Pi extends BaseActivity {
             ClipData cd = ClipData.newPlainText("Pi", piJNI.sb.toString());
             if (cm != null) {
                 cm.setPrimaryClip(cd);
-            } else Toast.makeText(this, "null", Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, R.string.copying_success, Toast.LENGTH_SHORT).show();
+            } else ToastUtils.show(this, "null");
+            ToastUtils.show(this, R.string.copying_success);
             return true;
         });
     }

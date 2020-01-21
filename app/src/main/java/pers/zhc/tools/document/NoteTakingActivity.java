@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.Documents;
 
 public class NoteTakingActivity extends Document {
@@ -41,7 +41,7 @@ public class NoteTakingActivity extends Document {
                 cv.put("content", content_et.getText().toString());
                 try {
                     db.insertOrThrow("doc", null, cv);
-                    Toast.makeText(this, R.string.recording_success, Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(this, R.string.recording_success);
                 } catch (SQLException e) {
                     Common.showException(e, this);
                 }
@@ -53,7 +53,7 @@ public class NoteTakingActivity extends Document {
                     values.put("title", title_et.getText().toString());
                     values.put("content", content_et.getText().toString());
                     db.update("doc", values, "t=?", new String[]{String.valueOf(mills)});
-                    Toast.makeText(this, R.string.updating_success, Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(this, R.string.updating_success);
                 } catch (Exception e) {
                     Common.showException(e, this);
                 }
