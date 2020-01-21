@@ -60,6 +60,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private long currentInstanceMills;
     private TextView[] childTVs;
     private HSVAColorPickerRL.Position[] positions = new HSVAColorPickerRL.Position[3];
+    private Button startFW;
 
     private static void uploadPaths(Context context) {
         try {
@@ -269,7 +270,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
     }
 
     private void setBtn() {
-        Button startFW = findViewById(R.id.start_f_w);
+        startFW = findViewById(R.id.start_f_w);
         startFW.setText(R.string.start_floating_window);
         startFW.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= 23) {
@@ -571,6 +572,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
 //                                unregisterReceiver(notificationClickReceiver);
         new Thread(() -> uploadPaths(this)).start();
         FloatingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
+        this.startFW.setText(R.string.start_floating_window);
     }
 
     private void hide() {
