@@ -38,12 +38,9 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="fix issue #25 on github">
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/HSVColorPickerRL.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -350,7 +347,7 @@
       <workItem from="1579484221043" duration="2666000" />
       <workItem from="1579492872095" duration="693000" />
       <workItem from="1579495483338" duration="1614000" />
-      <workItem from="1579578021708" duration="2357000" />
+      <workItem from="1579578021708" duration="2657000" />
     </task>
     <task id="LOCAL-00001" summary="修复文字错误&#10;文字横排，大小适应">
       <created>1567869315028</created>
@@ -618,7 +615,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579507366533</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="fix issue #25 on github">
+      <created>1579581320252</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1579581320252</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TodoView">
@@ -658,7 +662,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="``GestureResolver" />
     <MESSAGE value="本轮绘制贝塞尔改lineTo&#10;#悬浮画板。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。" />
     <MESSAGE value="本轮编辑：小改按钮布局、增加本轮序列排序" />
     <MESSAGE value="View test: scroll" />
@@ -683,9 +686,14 @@
     <MESSAGE value="fix issue #26 on github" />
     <MESSAGE value="fix issue #30 on github" />
     <MESSAGE value="#25" />
-    <option name="LAST_COMMIT_MESSAGE" value="#25" />
+    <MESSAGE value="fix issue #25 on github" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix issue #25 on github" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="318" y="68" key="#Notifications" timestamp="1579581379607">
+      <screen x="0" y="0" width="1449" height="815" />
+    </state>
+    <state x="318" y="68" key="#Notifications/0.0.1449.815@0.0.1449.815" timestamp="1579581379607" />
     <state x="555" y="188" width="800" height="683" key="#Plugins" timestamp="1579492937727" />
     <state x="555" y="188" key="#Plugins/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="555" y="216" width="800" height="683" key="#Plugins/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
@@ -716,10 +724,10 @@
     <state x="751" y="365" width="418" height="379" key="AndroidCreateXmlResourceDialog" timestamp="1579492937743" />
     <state x="751" y="337" width="418" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="751" y="365" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2" timestamp="1579578701256">
+    <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2" timestamp="1579581309806">
       <screen x="0" y="0" width="1449" height="815" />
     </state>
-    <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579578701256" />
+    <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579581309806" />
     <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="479" y="145" width="951" height="823" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
     <state width="399" height="466" key="DebuggerActiveHint" timestamp="1579505476240">
@@ -799,10 +807,10 @@
     <state x="682" y="190" width="947" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
     <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog" timestamp="1579492937743" />
     <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="587" y="95" width="800" height="720" key="Vcs.Push.Dialog.v2" timestamp="1579511938956">
+    <state x="587" y="95" width="800" height="720" key="Vcs.Push.Dialog.v2" timestamp="1579581365036">
       <screen x="0" y="0" width="1449" height="815" />
     </state>
-    <state x="587" y="95" key="Vcs.Push.Dialog.v2/0.0.1449.815@0.0.1449.815" timestamp="1579511938956" />
+    <state x="587" y="95" key="Vcs.Push.Dialog.v2/0.0.1449.815@0.0.1449.815" timestamp="1579581365036" />
     <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="587" y="217" width="800" height="720" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
     <state x="694" y="282" width="522" height="533" key="VcsDiffUtil.ChangesDialog" timestamp="1579504740102">
@@ -863,7 +871,7 @@
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java</url>
-          <line>828</line>
+          <line>830</line>
           <option name="timeStamp" value="26" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
@@ -878,12 +886,12 @@
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java</url>
-          <line>796</line>
+          <line>798</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java</url>
-          <line>799</line>
+          <line>801</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
