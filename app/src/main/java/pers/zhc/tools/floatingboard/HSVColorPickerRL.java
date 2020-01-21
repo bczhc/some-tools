@@ -51,9 +51,9 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         if (position == null) {
             alpha = initialColor >>> 24;
             Color.colorToHSV(initialColor, hsv);
-            position = new Position();
-            Color.colorToHSV(initialColor, position.positions);
-            position.positions[3] = alpha;
+            this.position = new Position();
+            Color.colorToHSV(initialColor, this.position.positions);
+            this.position.positions[3] = alpha;
         }
         for (int i = 0; i < 4; i++) {
             setCurrentX(i);
@@ -348,6 +348,10 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
         if (invalidate) invalidateAllView();
     }
+
+    /*private static void turn2Position(Position dest, int color) {
+
+    }*/
 
     static class Position {
         float[] positions;
