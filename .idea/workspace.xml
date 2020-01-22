@@ -39,18 +39,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +117,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="z" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -761,18 +750,18 @@
       <screen x="0" y="0" width="1449" height="815" />
     </state>
     <state width="399" height="466" key="DebuggerActiveHint/0.0.1449.815@0.0.1449.815" timestamp="1579505476240" />
-    <state x="79" y="54" width="1172" height="681" key="DiffContextDialog" timestamp="1579684260523">
+    <state x="79" y="54" width="1172" height="681" key="DiffContextDialog" timestamp="1579684499396">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="84" y="30" width="1243" height="749" key="DiffContextDialog/0.0.1449.815@0.0.1449.815" timestamp="1579590994185" />
     <state x="187" y="90" width="1536" height="840" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state x="79" y="54" width="1172" height="681" key="DiffContextDialog/0.27.1366.741@0.27.1366.741" timestamp="1579684260523" />
+    <state x="79" y="54" width="1172" height="681" key="DiffContextDialog/0.27.1366.741@0.27.1366.741" timestamp="1579684499396" />
     <state x="187" y="117" width="1536" height="843" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="716" y="105" width="424" height="663" key="FileChooserDialogImpl" timestamp="1579684009853">
+    <state x="716" y="105" width="424" height="663" key="FileChooserDialogImpl" timestamp="1579684390144">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="716" y="286" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state x="716" y="105" width="424" height="663" key="FileChooserDialogImpl/0.27.1366.741@0.27.1366.741" timestamp="1579684009853" />
+    <state x="716" y="105" width="424" height="663" key="FileChooserDialogImpl/0.27.1366.741@0.27.1366.741" timestamp="1579684390144" />
     <state x="716" y="314" width="498" height="628" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
     <state x="779" y="457" key="GitRewordDialog" timestamp="1579508174735">
       <screen x="0" y="0" width="1449" height="815" />
@@ -829,13 +818,16 @@
     <state x="695" y="266" width="528" height="579" key="RollbackChangesDialog" timestamp="1579492937743" />
     <state x="695" y="238" width="528" height="579" key="RollbackChangesDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="695" y="266" key="RollbackChangesDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="206" y="27" width="1024" height="741" key="SettingsEditor" timestamp="1579684007282">
+    <state x="206" y="27" width="1024" height="741" key="SettingsEditor" timestamp="1579684392067">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="682" y="163" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state x="206" y="27" width="1024" height="741" key="SettingsEditor/0.27.1366.741@0.27.1366.741" timestamp="1579684007282" />
+    <state x="206" y="27" width="1024" height="741" key="SettingsEditor/0.27.1366.741@0.27.1366.741" timestamp="1579684392067" />
     <state x="682" y="190" width="947" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog" timestamp="1579492937743" />
+    <state x="0" y="27" width="1366" height="741" key="ShowDiffWithBranchDialog" timestamp="1579684499396">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="0" y="27" width="1366" height="741" key="ShowDiffWithBranchDialog/0.27.1366.741@0.27.1366.741" timestamp="1579684499396" />
     <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
     <state x="587" y="95" width="800" height="720" key="Vcs.Push.Dialog.v2" timestamp="1579581706571">
       <screen x="0" y="0" width="1449" height="815" />
@@ -852,10 +844,10 @@
     <state x="100" y="127" width="1720" height="853" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1579492937743" />
     <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="100" y="127" width="1720" height="853" key="com.android.tools.idea.avdmanager.AvdListDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="100" y="127" width="1166" height="541" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1579683863888">
+    <state x="100" y="127" width="1166" height="541" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1579684429937">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
-    <state x="100" y="127" width="1166" height="541" key="com.intellij.dvcs.ui.CompareBranchesDialog/0.27.1366.741@0.27.1366.741" timestamp="1579683863888" />
+    <state x="100" y="127" width="1166" height="541" key="com.intellij.dvcs.ui.CompareBranchesDialog/0.27.1366.741@0.27.1366.741" timestamp="1579684429937" />
     <state x="66" y="57" width="1301" height="698" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1579507647968">
       <screen x="0" y="0" width="1449" height="815" />
     </state>
@@ -902,12 +894,12 @@
     <state x="652" y="141" key="refactoring.ChangeSignatureDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="624" y="252" key="run.anything.popup" timestamp="1579492937743" />
     <state x="624" y="252" key="run.anything.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="587" y="262" width="672" height="617" key="search.everywhere.popup" timestamp="1579684062386">
+    <state x="587" y="262" width="672" height="617" key="search.everywhere.popup" timestamp="1579684384373">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.0.1449.815@0.0.1449.815" timestamp="1579597070884" />
     <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state x="587" y="262" width="672" height="617" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1579684062386" />
+    <state x="587" y="262" width="672" height="617" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1579684384373" />
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
   </component>
   <component name="XDebuggerManager">
