@@ -61,7 +61,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private long currentInstanceMills;
     private TextView[] childTVs;
     private HSVAColorPickerRL.Position[] positions = new HSVAColorPickerRL.Position[3];
-    private Button startFW;
+    private Switch fbSwitch;
     private String[] strings;
     private WindowManager.LayoutParams lp;
     private WindowManager.LayoutParams lp2;
@@ -276,9 +276,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
         }
         this.iv = new ImageView(this);
         this.iv.setImageBitmap(icon);
-        float proportionX = ((float) 75) / ((float) 720);
-        float proportionY = ((float) 75) / ((float) 1360);
-        this.iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
+//        float proportionX = ((float) 75) / ((float) 720);
+//        float proportionY = ((float) 75) / ((float) 1360);
+//        this.iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
         smallViewOnTouchListener = new View.OnTouchListener() {
             private int lastRawX, lastRawY, paramX, paramY;
             private float lastX, lastY;
@@ -312,43 +312,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
             }
         };
         iv.setOnTouchListener(smallViewOnTouchListener);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    private void setBtn() {
-        startFW = findViewById(R.id.start_f_w);
-        startFW.setText(R.string.start_floating_window);
-        setStartBtn();
-    }
-
-    private void setStartBtn() {
-        startFW.setOnClickListener(v -> {
-            ToastUtils.show(this, R.string.floating_board);
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, 4444);
-                } else {
-                    stopFloatingWindow();
-                    startFW.setText(R.string.stop_floating_window);
-                    startFW.setOnClickListener(v1 -> {
-                        stopFloatingWindow();
-                        setBtn();
-                    });
-                    startFloatingWindow(true, true);
-//                    moveTaskToBack(true);
-                }
-            }
-        });
-    }
-
-    @SuppressLint({"ClickableViewAccessibility"})
-    void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
         pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         lp = new WindowManager.LayoutParams();
         lp2 = new WindowManager.LayoutParams();
@@ -363,17 +326,16 @@ public class FloatingBoardMainActivity extends BaseActivity {
         }
         lp.format = PixelFormat.RGBA_8888;
         lp2.format = PixelFormat.RGBA_8888;
-        lp.width = width;
-        lp.height = height;
-        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        if (addPV) wm.addView(pv, lp);
+        lp.width = this.width;
+        lp.height = this.height;
         lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         lp2.width = /*(int) (width * proportionX)*/WindowManager.LayoutParams.WRAP_CONTENT;
         lp2.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE/* | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL*/;
+        lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         fbLL = new LinearLayout(this);
         fbLL.setOrientation(LinearLayout.VERTICAL);
         fbLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        System.gc();
         InputStream inputStream = getResources().openRawResource(R.raw.db);
         icon = BitmapFactory.decodeStream(inputStream);
         try {
@@ -560,13 +522,26 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 fbLL.addView(linearLayout);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void setBtn() {
+        fbSwitch = findViewById(R.id.f_b_switch);
+        fbSwitch.setText(R.string.start_floating_window);
+        setStartBtn();
+    }
+
+    private void setStartBtn() {
+    }
+
+    @SuppressLint({"ClickableViewAccessibility"})
+    void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
         fbLL.addView(iv);
-        wm.addView(fbLL, lp2);
-        if (addGlobalTL) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
-        } else
-            //noinspection deprecation
-            wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
+        this.wm.addView(fbLL, lp2);
     }
 
     void toggleDrawAndControlMode() {
@@ -584,12 +559,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
     }
 
     private void exit() {
-        stopFloatingWindow();
-//                                unregisterReceiver(notificationClickReceiver);
-        new Thread(() -> uploadPaths(this)).start();
-        FloatingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
-        this.startFW.setText(R.string.start_floating_window);
-        setStartBtn();
+
     }
 
     private void hide() {
