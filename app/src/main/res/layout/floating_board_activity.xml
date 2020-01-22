@@ -10,15 +10,9 @@
             android:id="@+id/f_b_switch"
             android:layout_centerHorizontal="true"
     />
-    <Switch android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_below="@id/f_b_switch"
-            android:text="@string/not_be_killed"
-            android:id="@+id/not_be_killed"
-            android:layout_alignRight="@id/f_b_switch"
-            android:layout_alignEnd="@id/f_b_switch"/>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/clear_application_caches"
-            android:layout_below="@id/not_be_killed"
+            android:layout_below="@id/f_b_switch"
             android:layout_centerHorizontal="true"
             android:id="@+id/clear_path_btn"
     />
