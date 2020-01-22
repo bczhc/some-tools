@@ -219,7 +219,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
         getWindowManager().getDefaultDisplay().getSize(point);
         width = point.x;
         height = point.y;
-        Switch notBeKilledSwitch = findViewById(R.id.not_be_killed);
         globalOnTouchListenerFloatingView = new View(this) {
             @SuppressLint("ClickableViewAccessibility")
             @Override
@@ -233,40 +232,14 @@ public class FloatingBoardMainActivity extends BaseActivity {
         globalOnTouchListenerFloatingView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
         View keepNotBeingKilledView = new View(this);
         keepNotBeingKilledView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
-        notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//            notBeKilled = isChecked;
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, 4444);
-                } else {
-                    if (isChecked) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            wm.addView(keepNotBeingKilledView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
-                        } else
-                            //noinspection deprecation
-                            wm.addView(keepNotBeingKilledView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
-                    } else try {
-                        wm.removeViewImmediate(keepNotBeingKilledView);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+
 //        RelativeLayout rl = findViewById(R.id.main);
         pv = new PaintView(this, width, height, currentInternalPathFile);
         pv.setStrokeWidth(10F);
         pv.setEraserStrokeWidth(10F);
         pv.setPaintColor(Color.RED);
         wm = (WindowManager) this.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        setBtn();
-        Intent intent = getIntent();
-        int a = intent.getIntExtra("a", 0);
-        if (a == 1) {
-            startFloatingWindow(true, true);
-        }
+        setSwitch();
         new Thread(() -> uploadPaths(this)).start();
         strings = getResources().getStringArray(R.array.btn_string);
         childTVs = new TextView[strings.length];
@@ -529,17 +502,33 @@ public class FloatingBoardMainActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private void setBtn() {
+    private void setSwitch() {
         fbSwitch = findViewById(R.id.f_b_switch);
-        fbSwitch.setText(R.string.start_floating_window);
-        setStartBtn();
+        fbSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                new CheckOverlayPermission() {
+                    @Override
+                    void have() {
+                        startFloatingWindow(true);
+                    }
+
+                    @Override
+                    void notHave() {
+                        fbSwitch.setChecked(false);
+                    }
+                };
+            } else stopFloatingWindow();
+        });
     }
 
     private void setStartBtn() {
     }
 
     @SuppressLint({"ClickableViewAccessibility"})
-    void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
+    void startFloatingWindow(boolean addPV) {
+        if (addPV) {
+            wm.addView(pv, lp);
+        }
         fbLL.addView(iv);
         this.wm.addView(fbLL, lp2);
     }
@@ -935,5 +924,20 @@ public class FloatingBoardMainActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 23 && grantResults[0] == 0) saveAction();
+    }
+
+    private abstract class CheckOverlayPermission {
+        abstract void have();
+
+        abstract void notHave();
+
+        public CheckOverlayPermission() {
+            if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 4444);
+                notHave();
+            } else have();
+        }
     }
 }
