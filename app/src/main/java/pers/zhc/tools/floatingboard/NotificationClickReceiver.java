@@ -19,7 +19,7 @@ public class NotificationClickReceiver extends BroadcastReceiver {
                     activity.toggleDrawAndControlMode();
                 }
                 activity.startFloatingWindow(false, false);
-//                activity.toggleDrawAndControlMode();
+                activity.toggleDrawAndControlMode();
             }
         }
     }

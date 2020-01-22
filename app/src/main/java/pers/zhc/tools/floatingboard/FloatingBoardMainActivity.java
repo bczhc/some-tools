@@ -48,7 +48,7 @@ import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 public class FloatingBoardMainActivity extends BaseActivity {
     static Map<Long, Activity> longMainActivityMap;//memory leak??
     private WindowManager wm = null;
-    private LinearLayout ll;
+    private LinearLayout fbLL;
     private PaintView pv;
     private int width;
     private Bitmap icon;
@@ -65,6 +65,8 @@ public class FloatingBoardMainActivity extends BaseActivity {
     private String[] strings;
     private WindowManager.LayoutParams lp;
     private WindowManager.LayoutParams lp2;
+    private ImageView iv;
+    private View.OnTouchListener smallViewOnTouchListener;
 
     private static void uploadPaths(Context context) {
         try {
@@ -266,6 +268,50 @@ public class FloatingBoardMainActivity extends BaseActivity {
             startFloatingWindow(true, true);
         }
         new Thread(() -> uploadPaths(this)).start();
+        strings = getResources().getStringArray(R.array.btn_string);
+        childTVs = new TextView[strings.length];
+        for (int i = 0; i < this.childTVs.length; i++) {
+            this.childTVs[i] = new TextView(this);
+            this.childTVs[i].setOnTouchListener(smallViewOnTouchListener);
+        }
+        this.iv = new ImageView(this);
+        this.iv.setImageBitmap(icon);
+        float proportionX = ((float) 75) / ((float) 720);
+        float proportionY = ((float) 75) / ((float) 1360);
+        this.iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
+        smallViewOnTouchListener = new View.OnTouchListener() {
+            private int lastRawX, lastRawY, paramX, paramY;
+            private float lastX, lastY;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                float x = event.getX();
+                float y = event.getY();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        lastRawX = (int) event.getRawX();
+                        lastRawY = (int) event.getRawY();
+                        lastX = event.getX();
+                        lastY = event.getY();
+                        paramX = lp2.x;
+                        paramY = lp2.y;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        int dx = (int) event.getRawX() - lastRawX;
+                        int dy = (int) event.getRawY() - lastRawY;
+                        lp2.x = paramX + dx;
+                        lp2.y = paramY + dy;
+                        // 更新悬浮窗位置
+                        wm.updateViewLayout(fbLL, lp2);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (Math.abs(lastX - x) < 1 && Math.abs(lastY - y) < 1) v.performClick();
+                        break;
+                }
+                return true;
+            }
+        };
+        iv.setOnTouchListener(smallViewOnTouchListener);
     }
 
     @Override
@@ -317,7 +363,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
         }
         lp.format = PixelFormat.RGBA_8888;
         lp2.format = PixelFormat.RGBA_8888;
-        strings = getResources().getStringArray(R.array.btn_string);
         lp.width = width;
         lp.height = height;
         lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -326,53 +371,15 @@ public class FloatingBoardMainActivity extends BaseActivity {
         lp2.width = /*(int) (width * proportionX)*/WindowManager.LayoutParams.WRAP_CONTENT;
         lp2.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE/* | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL*/;
-        ll = new LinearLayout(this);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ImageView iv = new ImageView(this);
+        fbLL = new LinearLayout(this);
+        fbLL.setOrientation(LinearLayout.VERTICAL);
+        fbLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         InputStream inputStream = getResources().openRawResource(R.raw.db);
         icon = BitmapFactory.decodeStream(inputStream);
         try {
             inputStream.close();
         } catch (IOException ignored) {
         }
-        iv.setImageBitmap(icon);
-        float proportionX = ((float) 75) / ((float) 720);
-        float proportionY = ((float) 75) / ((float) 1360);
-        iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
-        View.OnTouchListener smallViewOnTouchListener = new View.OnTouchListener() {
-            private int lastRawX, lastRawY, paramX, paramY;
-            private float lastX, lastY;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float x = event.getX();
-                float y = event.getY();
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        lastRawX = (int) event.getRawX();
-                        lastRawY = (int) event.getRawY();
-                        lastX = event.getX();
-                        lastY = event.getY();
-                        paramX = lp2.x;
-                        paramY = lp2.y;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        int dx = (int) event.getRawX() - lastRawX;
-                        int dy = (int) event.getRawY() - lastRawY;
-                        lp2.x = paramX + dx;
-                        lp2.y = paramY + dy;
-                        // 更新悬浮窗位置
-                        wm.updateViewLayout(ll, lp2);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (Math.abs(lastX - x) < 1 && Math.abs(lastY - y) < 1) v.performClick();
-                        break;
-                }
-                return true;
-            }
-        };
-        childTVs = new TextView[strings.length];
         importPathFileDoneAction = () -> {
             if (pv.isEraserMode) {
                 childTVs[6].setText(R.string.eraser_mode);
@@ -385,7 +392,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
         };
         iv.setOnClickListener(v -> {
             System.out.println("click");
-            ll.removeAllViews();
+            fbLL.removeAllViews();
             if (pv.isEraserMode) {
                 strings[6] = getString(R.string.eraser_mode);
             } else strings[6] = getString(R.string.drawing_mode);
@@ -393,7 +400,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 LinearLayout linearLayout = new LinearLayout(this);
                 linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
 //                int finalI1 = i;
-                childTVs[i] = new TextView(this);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (height / strings.length * .7));
                 layoutParams.setMargins(0, 0, 0, 5);
                 childTVs[i].setLayoutParams(layoutParams);
@@ -410,9 +416,9 @@ public class FloatingBoardMainActivity extends BaseActivity {
                     ckV();
                     switch (finalI) {
                         case 0:
-                            ll.removeAllViews();
-                            ll.addView(iv);
-                            wm.updateViewLayout(ll, lp2);
+                            fbLL.removeAllViews();
+                            fbLL.addView(iv);
+                            wm.updateViewLayout(fbLL, lp2);
                             break;
                         case 1:
                             toggleDrawAndControlMode();
@@ -549,15 +555,13 @@ public class FloatingBoardMainActivity extends BaseActivity {
                     }
                     System.out.println("i = " + finalI);
                 });
-                childTVs[i].setOnTouchListener(smallViewOnTouchListener);
                 linearLayout.setGravity(Gravity.CENTER);
                 linearLayout.addView(childTVs[i]);
-                ll.addView(linearLayout);
+                fbLL.addView(linearLayout);
             }
         });
-        iv.setOnTouchListener(smallViewOnTouchListener);
-        ll.addView(iv);
-        wm.addView(ll, lp2);
+        fbLL.addView(iv);
+        wm.addView(fbLL, lp2);
         if (addGlobalTL) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
         } else
@@ -589,7 +593,8 @@ public class FloatingBoardMainActivity extends BaseActivity {
     }
 
     private void hide() {
-        wm.removeViewImmediate(ll);
+        if (this.childTVs[1].getText().equals(getString(R.string.drawing_mode))) toggleDrawAndControlMode();
+        wm.removeViewImmediate(fbLL);
         NotificationManager nm = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
         String date = SimpleDateFormat.getDateTimeInstance().format(new Date(this.currentInstanceMills));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -758,7 +763,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
 
     private void stopFloatingWindow() {
         try {
-            wm.removeViewImmediate(ll);
+            wm.removeViewImmediate(fbLL);
         } catch (Exception ignored) {
         }
         try {
