@@ -36,28 +36,27 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     private float[] currentXPos = new float[4];
     private Paint oppositeColorPaint;
     private float lW = 1.5F;
-    private Position position;
+    private float[] resultHSVA = new float[4];
 
     /**
      * @param context      ctx
      * @param initialColor initialColor
      * @param width        w
      * @param height       h
-     * @param position     位置，用于设置各个色条位置以确定颜色
+     * @param hsva         HSVA
      */
-    protected HSVAColorPickerRL(Context context, int initialColor, int width, int height, @Nullable Position position) {
+    protected HSVAColorPickerRL(Context context, int initialColor, int width, int height, @Nullable float[] hsva) {
         super(context);
         this.width = width;
         this.height = height;
         this.context = context;
         oppositeColorPaint = new Paint();
-        this.position = position;
-        if (position == null) {
+        if (hsva == null) {
             alpha = initialColor >>> 24;
             Color.colorToHSV(initialColor, hsv);
-            this.position = new Position();
-            Color.colorToHSV(initialColor, this.position.positions);
-            this.position.positions[3] = alpha;
+        } else {
+            this.alpha = (int) hsva[3];
+            System.arraycopy(hsva, 0, this.hsv, 0, 3);
         }
         for (int i = 0; i < 4; i++) {
             setCurrentX(i);
@@ -114,11 +113,11 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
                     parseColor = Color.parseColor(s);
                     Color.colorToHSV(parseColor, this.hsv);
                     this.alpha = Color.alpha(parseColor);
+                    setInvertedColor(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                     ToastUtils.show(context, R.string.please_type_correct_value);
                 }
-                setInvertedColor(true);
             });
             adb.setNegativeButton(R.string.cancel, (dialog, which) -> {
             });
@@ -143,8 +142,6 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             ll.addView(linearLayouts[i]);
         }
         this.addView(ll);
-        System.arraycopy(position.positions, 0, this.hsv, 0, hsv.length);
-        alpha = ((int) position.positions[3]);
         setInvertedColor(false);
     }
 
@@ -157,33 +154,30 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         }
         int color = this.getColor();
         vv.setBackgroundColor(color);
-        onPickedAction(color, this.position);
+        System.arraycopy(this.hsv, 0, resultHSVA, 0, 3);
+        resultHSVA[3] = alpha;
+        onPickedAction(color, resultHSVA);
     }
 
     private int getColor() {
         return Color.HSVToColor(this.alpha, this.hsv);
     }
 
+    /**
+     * @param i index
+     * @return pos
+     */
     private float setCurrentX(int i) {
-        if (i == 1 || i == 2) return currentXPos[i] = hsv[i] * width;
         if (i == 0) return currentXPos[0] = hsv[0] * ((float) width) / 360F;
         if (i == 3) return currentXPos[3] = alpha * ((float) width) / 255F;
-        return 0;
+        return currentXPos[i] = hsv[i] * width;
     }
 
-    abstract void onPickedAction(int color, Position position);
+    abstract void onPickedAction(int color, float[] hsva);
 
     private void setInvertedColor(boolean invalidate) {
         oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
         if (invalidate) invalidateAllView();
-    }
-
-    static class Position {
-        float[] positions;
-
-        public Position() {
-            positions = new float[4];
-        }
     }
 
     private class HView extends View {
@@ -223,7 +217,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            hsv[0] = (HSVAColorPickerRL.this.position.positions[0] = limitValue(event.getX() * 360F / ((float) hW), 0, 360));
+            hsv[0] = limitValue(event.getX() * 360F / ((float) hW), 0, 360);
             setInvertedColor(true);
             return true;
         }
@@ -266,7 +260,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            hsv[1] = (HSVAColorPickerRL.this.position.positions[1] = limitValue(event.getX() / ((float) sW), 0, 1F));
+            hsv[1] = limitValue(event.getX() / ((float) sW), 0, 1F);
             oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
@@ -310,7 +304,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouchEvent(MotionEvent event) {
-            hsv[2] = (HSVAColorPickerRL.this.position.positions[2] = limitValue(event.getX() / ((float) vW), 0, 1));
+            hsv[2] = limitValue(event.getX() / ((float) vW), 0, 1);
             oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
@@ -358,10 +352,19 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             alpha = limitValue((int) (event.getX() / ((float) aW) * 255), 0, 255);
-            HSVAColorPickerRL.this.position.positions[3] = alpha;
             oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
             invalidateAllView();
             return true;
         }
     }
+
+    /*private void colorToThisPosition(Position dest, @ColorInt int color) {
+        int alpha = Color.alpha(color);
+        float[] c = new float[3];
+        Color.colorToHSV(color, c);
+        dest.positions[0] = c[0] * width / 360F;
+        dest.positions[1] = c[1] * width;
+        dest.positions[2] = c[2] * width;
+        dest.positions[3] = alpha * width / 255F;
+    }*/
 }
