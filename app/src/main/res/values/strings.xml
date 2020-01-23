@@ -63,7 +63,7 @@
     <string name="text_color">文字颜色</string>
     <string name="whether_text_color_is_inverted">是否文字颜色反相</string>
     <string name="not_be_killed">防杀进程</string>
-    <string name="floating_board">悬浮画板</string>
+    <string name="floating_drawing_board">悬浮画板</string>
     <string name="whether_to_clear">是否清空</string>
     <string name="whether_to_hide">是否隐藏</string>
     <string name="whether_to_exit">是否退出</string>
@@ -162,5 +162,6 @@
     <string name="upload_done">上传完成</string>
     <string name="please_choose">请选择…</string>
     <string name="saving">正在保存</string>
+    <string name="floating_board">悬浮窗</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

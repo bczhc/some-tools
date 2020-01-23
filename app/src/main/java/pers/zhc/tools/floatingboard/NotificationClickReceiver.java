@@ -14,7 +14,7 @@ public class NotificationClickReceiver extends BroadcastReceiver {
             long mills = intent.getLongExtra("mills", 0);
             FloatingBoardMainActivity activity = (FloatingBoardMainActivity) FloatingBoardMainActivity.longMainActivityMap.get(mills);
             if (activity != null) {
-                activity.startFloatingWindow(false, false);
+                activity.recover();
             }
         }
     }
