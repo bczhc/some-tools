@@ -493,7 +493,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 new CheckOverlayPermission() {
                     @Override
                     void have() {
-                        startFloatingWindow(true);
+                        startFloatingWindow();
                     }
 
                     @Override
@@ -506,13 +506,13 @@ public class FloatingBoardMainActivity extends BaseActivity {
     }
 
     @SuppressLint({"ClickableViewAccessibility"})
-    void startFloatingWindow(boolean addPV) {
-        if (addPV) {
-            wm.addView(pv, lp);
-        }
+    void startFloatingWindow() {
+        wm.addView(pv, lp);
         fbLL.addView(iv);
         this.wm.addView(fbLL, lp2);
     }
+
+
 
     void toggleDrawAndControlMode() {
         if (lp.flags == (WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)) {
@@ -532,10 +532,10 @@ public class FloatingBoardMainActivity extends BaseActivity {
         stopFloatingWindow();
         new Thread(() -> uploadPaths(this)).start();
         FloatingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
+        this.fbSwitch.setChecked(false);
     }
 
     private void hide() {
-        if (this.childTVs[1].getText().equals(getString(R.string.drawing_mode))) toggleDrawAndControlMode();
         wm.removeViewImmediate(fbLL);
         NotificationManager nm = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
         String date = SimpleDateFormat.getDateTimeInstance().format(new Date(this.currentInstanceMills));
@@ -572,9 +572,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
                     .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
             Intent intent = new Intent();
-            boolean isDrawMode = this.childTVs[1].getText().equals(getString(R.string.drawing_mode));
-            intent.putExtra("isDrawMode", isDrawMode);
-            System.out.println("isDrawMode = " + isDrawMode);
             intent.setAction("pers.zhc.tools.START_FB");
             intent.putExtra("mills", currentInstanceMills);
             intent.setPackage(getPackageName());
@@ -908,6 +905,10 @@ public class FloatingBoardMainActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 23 && grantResults[0] == 0) saveAction();
+    }
+
+    public void recover() {
+        this.wm.addView(fbLL, lp2);
     }
 
     private abstract class CheckOverlayPermission {
