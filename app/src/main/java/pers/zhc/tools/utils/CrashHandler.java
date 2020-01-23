@@ -190,6 +190,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         }
         printWriter.close();
         String result = writer.toString();
+        System.out.println(result);
         sb.append(result);
         String infos = sb.toString();
         long timestamp = System.currentTimeMillis();

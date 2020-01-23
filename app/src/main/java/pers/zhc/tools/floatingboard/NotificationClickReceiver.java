@@ -14,12 +14,7 @@ public class NotificationClickReceiver extends BroadcastReceiver {
             long mills = intent.getLongExtra("mills", 0);
             FloatingBoardMainActivity activity = (FloatingBoardMainActivity) FloatingBoardMainActivity.longMainActivityMap.get(mills);
             if (activity != null) {
-                boolean isDrawMode = intent.getBooleanExtra("isDrawMode", false);
-                if (isDrawMode) {
-                    activity.toggleDrawAndControlMode();
-                }
-                activity.startFloatingWindow(false, false);
-//                activity.toggleDrawAndControlMode();
+                activity.recover();
             }
         }
     }
