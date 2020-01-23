@@ -24,10 +24,7 @@ import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtil;
-import pers.zhc.tools.utils.PermissionRequester;
-import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.*;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.common.MultipartUploader;
@@ -41,30 +38,29 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static pers.zhc.tools.utils.ColorUtils.invertColor;
-import static pers.zhc.tools.utils.DialogUtil.createConfirmationAD;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingBoardMainActivity extends BaseActivity {
     static Map<Long, Activity> longMainActivityMap;//memory leak??
     private WindowManager wm = null;
-    private LinearLayout ll;
+    private LinearLayout fbLL;
     private PaintView pv;
     private int width;
     private Bitmap icon;
     private int height;
     private int TVsColor = Color.WHITE, textsColor = Color.GRAY;
     private boolean invertColorChecked = false;
-    private View globalOnTouchListenerFloatingView;
     private File currentInternalPathFile = null;
     private Runnable importPathFileDoneAction;
     private long currentInstanceMills;
     private TextView[] childTVs;
-    private HSVAColorPickerRL.Position[] positions = new HSVAColorPickerRL.Position[3];
-    private Button startFW;
+    private float[][] hsvaFloats = new float[3][0];
+    private Switch fbSwitch;
     private String[] strings;
     private WindowManager.LayoutParams lp;
     private WindowManager.LayoutParams lp2;
+    private ImageView iv;
+    private LinearLayout optionsLL;
 
     private static void uploadPaths(Context context) {
         try {
@@ -209,6 +205,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
             }
             clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
         });
+        Arrays.fill(hsvaFloats, null);
         Point point = new Point();
         /*//noinspection deprecation
         width = this.getWindowManager().getDefaultDisplay().getWidth();
@@ -217,130 +214,21 @@ public class FloatingBoardMainActivity extends BaseActivity {
         getWindowManager().getDefaultDisplay().getSize(point);
         width = point.x;
         height = point.y;
-        Switch notBeKilledSwitch = findViewById(R.id.not_be_killed);
-        globalOnTouchListenerFloatingView = new View(this) {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public boolean onTouchEvent(MotionEvent event) {
-                System.out.println("event.getAction() = " + event.getAction());
-                System.out.println("event.getX() = " + event.getX());
-                System.out.println("event.getY() = " + event.getY());
-                return true;
-            }
-        };
-        globalOnTouchListenerFloatingView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
         View keepNotBeingKilledView = new View(this);
         keepNotBeingKilledView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
-        notBeKilledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//            notBeKilled = isChecked;
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, 4444);
-                } else {
-                    if (isChecked) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            wm.addView(keepNotBeingKilledView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
-                        } else
-                            //noinspection deprecation
-                            wm.addView(keepNotBeingKilledView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGB_888));
-                    } else try {
-                        wm.removeViewImmediate(keepNotBeingKilledView);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+
 //        RelativeLayout rl = findViewById(R.id.main);
         pv = new PaintView(this, width, height, currentInternalPathFile);
         pv.setStrokeWidth(10F);
         pv.setEraserStrokeWidth(10F);
         pv.setPaintColor(Color.RED);
         wm = (WindowManager) this.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        setBtn();
-        Intent intent = getIntent();
-        int a = intent.getIntExtra("a", 0);
-        if (a == 1) {
-            startFloatingWindow(true, true);
-        }
+        setSwitch();
         new Thread(() -> uploadPaths(this)).start();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    private void setBtn() {
-        startFW = findViewById(R.id.start_f_w);
-        startFW.setText(R.string.start_floating_window);
-        setStartBtn();
-    }
-
-    private void setStartBtn() {
-        startFW.setOnClickListener(v -> {
-            ToastUtils.show(this, R.string.floating_board);
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, 4444);
-                } else {
-                    stopFloatingWindow();
-                    startFW.setText(R.string.stop_floating_window);
-                    startFW.setOnClickListener(v1 -> {
-                        stopFloatingWindow();
-                        setBtn();
-                    });
-                    startFloatingWindow(true, true);
-//                    moveTaskToBack(true);
-                }
-            }
-        });
-    }
-
-    @SuppressLint({"ClickableViewAccessibility"})
-    void startFloatingWindow(boolean addPV, boolean addGlobalTL) {
-        pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        lp = new WindowManager.LayoutParams();
-        lp2 = new WindowManager.LayoutParams();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            lp2.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        } else {
-            //noinspection deprecation
-            lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-            //noinspection deprecation
-            lp2.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        }
-        lp.format = PixelFormat.RGBA_8888;
-        lp2.format = PixelFormat.RGBA_8888;
         strings = getResources().getStringArray(R.array.btn_string);
-        lp.width = width;
-        lp.height = height;
-        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        if (addPV) wm.addView(pv, lp);
-        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        lp2.width = /*(int) (width * proportionX)*/WindowManager.LayoutParams.WRAP_CONTENT;
-        lp2.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE/* | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL*/;
-        ll = new LinearLayout(this);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ImageView iv = new ImageView(this);
-        InputStream inputStream = getResources().openRawResource(R.raw.db);
-        icon = BitmapFactory.decodeStream(inputStream);
-        try {
-            inputStream.close();
-        } catch (IOException ignored) {
-        }
-        iv.setImageBitmap(icon);
-        float proportionX = ((float) 75) / ((float) 720);
-        float proportionY = ((float) 75) / ((float) 1360);
-        iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
-        View.OnTouchListener smallViewOnTouchListener = new View.OnTouchListener() {
+        childTVs = new TextView[strings.length];
+        // 更新悬浮窗位置
+        View.OnTouchListener moveTouchListener = new View.OnTouchListener() {
             private int lastRawX, lastRawY, paramX, paramY;
             private float lastX, lastY;
 
@@ -363,7 +251,7 @@ public class FloatingBoardMainActivity extends BaseActivity {
                         lp2.x = paramX + dx;
                         lp2.y = paramY + dy;
                         // 更新悬浮窗位置
-                        wm.updateViewLayout(ll, lp2);
+                        wm.updateViewLayout(fbLL, lp2);
                         break;
                     case MotionEvent.ACTION_UP:
                         if (Math.abs(lastX - x) < 1 && Math.abs(lastY - y) < 1) v.performClick();
@@ -372,7 +260,36 @@ public class FloatingBoardMainActivity extends BaseActivity {
                 return true;
             }
         };
-        childTVs = new TextView[strings.length];
+        pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        lp = new WindowManager.LayoutParams();
+        lp2 = new WindowManager.LayoutParams();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            lp2.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            //noinspection deprecation
+            lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            //noinspection deprecation
+            lp2.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        }
+        lp.format = PixelFormat.RGBA_8888;
+        lp2.format = PixelFormat.RGBA_8888;
+        lp.width = this.width;
+        lp.height = this.height;
+        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        lp2.width = /*(int) (width * proportionX)*/WindowManager.LayoutParams.WRAP_CONTENT;
+        lp2.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        fbLL = new LinearLayout(this);
+        fbLL.setOrientation(LinearLayout.VERTICAL);
+        fbLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        System.gc();
+        InputStream inputStream = getResources().openRawResource(R.raw.db);
+        icon = BitmapFactory.decodeStream(inputStream);
+        try {
+            inputStream.close();
+        } catch (IOException ignored) {
+        }
         importPathFileDoneAction = () -> {
             if (pv.isEraserMode) {
                 childTVs[6].setText(R.string.eraser_mode);
@@ -383,187 +300,219 @@ public class FloatingBoardMainActivity extends BaseActivity {
             }
             ToastUtils.show(this, R.string.importing_success);
         };
+        this.optionsLL = new LinearLayout(this);
+        optionsLL.setOrientation(LinearLayout.VERTICAL);
+        optionsLL.setGravity(Gravity.CENTER);
+        optionsLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        iv = new ImageView(this);
+        float proportionX = ((float) 75) / ((float) 720);
+        float proportionY = ((float) 75) / ((float) 1360);
+        this.iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
+//        iv.setImageBitmap(icon);
+        iv.setImageIcon(Icon.createWithResource(this, R.drawable.ic_fb));
+        iv.setOnTouchListener(moveTouchListener);
         iv.setOnClickListener(v -> {
-            System.out.println("click");
-            ll.removeAllViews();
-            if (pv.isEraserMode) {
-                strings[6] = getString(R.string.eraser_mode);
-            } else strings[6] = getString(R.string.drawing_mode);
-            for (int i = 0; i < strings.length; i++) {
-                LinearLayout linearLayout = new LinearLayout(this);
-                linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
-//                int finalI1 = i;
-                childTVs[i] = new TextView(this);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (height / strings.length * .7));
-                layoutParams.setMargins(0, 0, 0, 5);
-                childTVs[i].setLayoutParams(layoutParams);
-                childTVs[i].setText(strings[i]);
-                childTVs[i].setBackgroundColor(TVsColor);
-                childTVs[i].setTextColor(textsColor);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-                    childTVs[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
-                    childTVs[i].setGravity(Gravity.CENTER);
-                } else childTVs[i].setTextSize(20F);
-                int finalI = i;
-                childTVs[i].setOnClickListener(v1 -> {
-                    ckV();
-                    switch (finalI) {
-                        case 0:
-                            ll.removeAllViews();
-                            ll.addView(iv);
-                            wm.updateViewLayout(ll, lp2);
-                            break;
-                        case 1:
-                            toggleDrawAndControlMode();
-                            break;
-                        case 2:
-                            Dialog dialog = new Dialog(this);
-                            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
-                            /*dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-                                    , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));*/
-                            setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), positions[0]) {
-                                @Override
-                                void onPickedAction(int color, Position position) {
-                                    pv.setPaintColor(color);
-                                    positions[0] = position;
-                                }
-                            };
-                            setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            dialog.setContentView(hsvColorPickerRL);
-                            dialog.show();
-                            break;
-                        case 3:
-                            changeStrokeWidth();
-                            break;
-                        case 4:
-                            pv.undo();
-                            break;
-                        case 5:
-                            pv.redo();
-                            break;
-                        case 6:
-                            if (pv.isEraserMode) {
-                                pv.setEraserMode(false);
-                                childTVs[finalI].setText(R.string.drawing_mode);
-                                strings[6] = getString(R.string.drawing_mode);
-                            } else {
-                                pv.setEraserMode(true);
-                                childTVs[finalI].setText(R.string.eraser_mode);
-                                strings[6] = getString(R.string.eraser_mode);
-                            }
-                            break;
-                        case 7:
-                            createConfirmationAD(this, (dialog1, which) -> {
-                                pv.clearAll();
-                                pv.clearTouchRecordOSContent();
-                            }, (dialog1, which) -> {
-                            }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
-                            break;
-                        case 8:
-                            createConfirmationAD(this, (dialog1, which) -> hide(), (dialog1, which) -> {
-                            }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
-                            break;
-                        case 9:
-                            Dialog c = new Dialog(this);
-                            setDialogAttr(c, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            LinearLayout cLL = new LinearLayout(this);
-                            cLL.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                            cLL.setOrientation(LinearLayout.VERTICAL);
-                            LinearLayout[] linearLayouts = new LinearLayout[]{
-                                    new LinearLayout(this),
-                                    new LinearLayout(this),
-                                    new LinearLayout(this)
-                            };
-                            Button TVsColorBtn = new Button(this);
-                            TVsColorBtn.setText(R.string.control_panel_color);
-                            TVsColorBtn.setOnClickListener(v2 -> {
-                                Dialog TVsColorDialog = new Dialog(FloatingBoardMainActivity.this);
-                                setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                                HSVAColorPickerRL TVsColorPicker = new HSVAColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4)), positions[1]) {
-                                    @Override
-                                    void onPickedAction(int color, Position position) {
-                                        for (TextView childTV : childTVs) {
-                                            TVsColor = color;
-                                            childTV.setBackgroundColor(TVsColor);
-                                            if (invertColorChecked)
-                                                childTV.setTextColor(textsColor = invertColor(TVsColor));
-                                        }
-                                        positions[1] = position;
-                                    }
-                                };
-                                TVsColorDialog.setContentView(TVsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
-                                TVsColorDialog.show();
-                            });
-                            Button textsColorBtn = new Button(this);
-                            textsColorBtn.setEnabled(!this.invertColorChecked);
-                            textsColorBtn.setOnClickListener(v2 -> {
-                                Dialog textsColorDialog = new Dialog(FloatingBoardMainActivity.this);
-                                setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                                HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), positions[2]) {
-                                    @Override
-                                    void onPickedAction(int color, Position position) {
-                                        for (TextView childTV : childTVs) {
-                                            if (!invertColorChecked) textsColor = color;
-                                            childTV.setTextColor(textsColor);
-                                        }
-                                        positions[2] = position;
-                                    }
-                                };
-                                textsColorDialog.setContentView(textsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
-                                textsColorDialog.show();
-                            });
-                            textsColorBtn.setText(R.string.text_color);
-                            Switch whetherTextColorIsInverted = new Switch(this);
-                            whetherTextColorIsInverted.setChecked(invertColorChecked);
-                            whetherTextColorIsInverted.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                                textsColorBtn.setEnabled(!isChecked);
-                                invertColorChecked = isChecked;
-                                for (TextView childTV : childTVs) {
-                                    childTV.setTextColor(textsColor = invertColor(TVsColor));
-                                }
-                            });
-                            whetherTextColorIsInverted.setText(R.string.whether_text_color_is_inverted);
-                            whetherTextColorIsInverted.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                            TVsColorBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                            textsColorBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                            for (LinearLayout layout : linearLayouts) {
-                                layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1F));
-                                cLL.addView(layout);
-                            }
-                            linearLayouts[0].addView(TVsColorBtn);
-                            linearLayouts[1].addView(textsColorBtn);
-                            linearLayouts[2].addView(whetherTextColorIsInverted);
-                            c.setContentView(cLL);
-                            c.show();
-                            break;
-                        case 10:
-                            new PermissionRequester(this::saveAction).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 23);
-                            break;
-                        case 11:
-                            createConfirmationAD(this, (dialog1, which) -> exit(), (dialog1, which) -> {
-                            }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
-//                            pv.scaleCanvas((float) (width * 2), ((float) (height * 2)));
-                            break;
-                    }
-                    System.out.println("i = " + finalI);
-                });
-                childTVs[i].setOnTouchListener(smallViewOnTouchListener);
-                linearLayout.setGravity(Gravity.CENTER);
-                linearLayout.addView(childTVs[i]);
-                ll.addView(linearLayout);
-            }
+            fbLL.removeAllViews();
+            fbLL.addView(optionsLL);
         });
-        iv.setOnTouchListener(smallViewOnTouchListener);
-        ll.addView(iv);
-        wm.addView(ll, lp2);
-        if (addGlobalTL) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
-        } else
-            //noinspection deprecation
-            wm.addView(globalOnTouchListenerFloatingView, new WindowManager.LayoutParams(0, 0, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, PixelFormat.RGB_888));
+        for (int i = 0; i < strings.length; i++) {
+            childTVs[i] = new TextView(this);
+            LinearLayout smallLL = new LinearLayout(this);
+            smallLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (height / strings.length * .7));
+            layoutParams.setMargins(0, 0, 0, 5);
+            childTVs[i].setLayoutParams(layoutParams);
+            childTVs[i].setText(strings[i]);
+            childTVs[i].setBackgroundColor(TVsColor);
+            childTVs[i].setTextColor(textsColor);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                childTVs[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
+                childTVs[i].setGravity(Gravity.CENTER);
+            } else childTVs[i].setTextSize(20F);
+            int finalI = i;
+            childTVs[i].setOnClickListener(v1 -> {
+                ckV();
+                switch (finalI) {
+                    case 0:
+                        fbLL.removeAllViews();
+                        fbLL.addView(iv);
+                        wm.updateViewLayout(fbLL, lp2);
+                        break;
+                    case 1:
+                        toggleDrawAndControlMode();
+                        break;
+                    case 2:
+                        Dialog dialog = new Dialog(this);
+                        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
+                        dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                                , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
+                        setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+                        HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0]) {
+                            @Override
+                            void onPickedAction(int color, float[] hsva) {
+                                pv.setPaintColor(color);
+                                hsvaFloats[0] = hsva;
+                            }
+                        };
+                        setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+                        dialog.setContentView(hsvColorPickerRL);
+                        dialog.show();
+                        break;
+                    case 3:
+                        changeStrokeWidth();
+                        break;
+                    case 4:
+                        pv.undo();
+                        break;
+                    case 5:
+                        pv.redo();
+                        break;
+                    case 6:
+                        if (pv.isEraserMode) {
+                            pv.setEraserMode(false);
+                            childTVs[finalI].setText(R.string.drawing_mode);
+                            strings[6] = getString(R.string.drawing_mode);
+                        } else {
+                            pv.setEraserMode(true);
+                            childTVs[finalI].setText(R.string.eraser_mode);
+                            strings[6] = getString(R.string.eraser_mode);
+                        }
+                        break;
+                    case 7:
+                        DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
+                            pv.clearAll();
+                            pv.clearTouchRecordOSContent();
+                        }, (dialog1, which) -> {
+                        }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
+                        break;
+                    case 8:
+                        DialogUtil.createConfirmationAD(this, (dialog1, which) -> hide(), (dialog1, which) -> {
+                        }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
+                        break;
+                    case 9:
+                        Dialog c = new Dialog(this);
+                        setDialogAttr(c, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+                        LinearLayout cLL = new LinearLayout(this);
+                        cLL.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        cLL.setOrientation(LinearLayout.VERTICAL);
+                        LinearLayout[] linearLayouts = new LinearLayout[]{
+                                new LinearLayout(this),
+                                new LinearLayout(this),
+                                new LinearLayout(this)
+                        };
+                        Button TVsColorBtn = new Button(this);
+                        TVsColorBtn.setText(R.string.control_panel_color);
+                        TVsColorBtn.setOnClickListener(v2 -> {
+                            Dialog TVsColorDialog = new Dialog(FloatingBoardMainActivity.this);
+                            setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+                            HSVAColorPickerRL TVsColorPicker = new HSVAColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1]) {
+                                @Override
+                                void onPickedAction(int color, float[] hsva) {
+                                    for (TextView childTV : childTVs) {
+                                        TVsColor = color;
+                                        childTV.setBackgroundColor(TVsColor);
+                                        if (invertColorChecked)
+                                            childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
+                                    }
+                                    hsvaFloats[1] = hsva;
+                                }
+                            };
+                            TVsColorDialog.setContentView(TVsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
+                            TVsColorDialog.show();
+                        });
+                        Button textsColorBtn = new Button(this);
+                        textsColorBtn.setEnabled(!this.invertColorChecked);
+                        textsColorBtn.setOnClickListener(v2 -> {
+                            Dialog textsColorDialog = new Dialog(FloatingBoardMainActivity.this);
+                            setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+                            HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2]) {
+                                @Override
+                                void onPickedAction(int color, float[] hsva) {
+                                    for (TextView childTV : childTVs) {
+                                        if (!invertColorChecked) textsColor = color;
+                                        childTV.setTextColor(textsColor);
+                                    }
+                                    hsvaFloats[2] = hsva;
+                                }
+                            };
+                            textsColorDialog.setContentView(textsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
+                            textsColorDialog.show();
+                        });
+                        textsColorBtn.setText(R.string.text_color);
+                        Switch whetherTextColorIsInverted = new Switch(this);
+                        whetherTextColorIsInverted.setChecked(invertColorChecked);
+                        whetherTextColorIsInverted.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                            textsColorBtn.setEnabled(!isChecked);
+                            invertColorChecked = isChecked;
+                            for (TextView childTV : childTVs) {
+                                childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
+                            }
+                        });
+                        whetherTextColorIsInverted.setText(R.string.whether_text_color_is_inverted);
+                        whetherTextColorIsInverted.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        TVsColorBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        textsColorBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        for (LinearLayout layout : linearLayouts) {
+                            layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1F));
+                            cLL.addView(layout);
+                        }
+                        linearLayouts[0].addView(TVsColorBtn);
+                        linearLayouts[1].addView(textsColorBtn);
+                        linearLayouts[2].addView(whetherTextColorIsInverted);
+                        c.setContentView(cLL);
+                        c.show();
+                        break;
+                    case 10:
+                        new PermissionRequester(this::saveAction).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 23);
+                        break;
+                    case 11:
+                        DialogUtil.createConfirmationAD(this, (dialog1, which) -> exit(), (dialog1, which) -> {
+                        }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
+//                            pv.scaleCanvas((float) (width * 2), ((float) (height * 2)));
+                        break;
+                }
+                System.out.println("i = " + finalI);
+            });
+            smallLL.setGravity(Gravity.CENTER);
+            childTVs[i].setOnTouchListener(moveTouchListener);
+            smallLL.addView(childTVs[i]);
+            optionsLL.addView(smallLL);
+        }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void setSwitch() {
+        fbSwitch = findViewById(R.id.f_b_switch);
+        fbSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                new CheckOverlayPermission() {
+                    @Override
+                    void have() {
+                        startFloatingWindow();
+                    }
+
+                    @Override
+                    void notHave() {
+                        fbSwitch.setChecked(false);
+                    }
+                };
+            } else stopFloatingWindow();
+        });
+    }
+
+    @SuppressLint({"ClickableViewAccessibility"})
+    void startFloatingWindow() {
+        wm.addView(pv, lp);
+        fbLL.addView(iv);
+        this.wm.addView(fbLL, lp2);
+    }
+
+
 
     void toggleDrawAndControlMode() {
         if (lp.flags == (WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)) {
@@ -581,15 +530,13 @@ public class FloatingBoardMainActivity extends BaseActivity {
 
     private void exit() {
         stopFloatingWindow();
-//                                unregisterReceiver(notificationClickReceiver);
         new Thread(() -> uploadPaths(this)).start();
         FloatingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
-        this.startFW.setText(R.string.start_floating_window);
-        setStartBtn();
+        this.fbSwitch.setChecked(false);
     }
 
     private void hide() {
-        wm.removeViewImmediate(ll);
+        wm.removeViewImmediate(fbLL);
         NotificationManager nm = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
         String date = SimpleDateFormat.getDateTimeInstance().format(new Date(this.currentInstanceMills));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -625,9 +572,6 @@ public class FloatingBoardMainActivity extends BaseActivity {
                     .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
             Intent intent = new Intent();
-            boolean isDrawMode = this.childTVs[1].getText().equals(getString(R.string.drawing_mode));
-            intent.putExtra("isDrawMode", isDrawMode);
-            System.out.println("isDrawMode = " + isDrawMode);
             intent.setAction("pers.zhc.tools.START_FB");
             intent.putExtra("mills", currentInstanceMills);
             intent.setPackage(getPackageName());
@@ -757,16 +701,17 @@ public class FloatingBoardMainActivity extends BaseActivity {
     }
 
     private void stopFloatingWindow() {
+        fbLL.removeAllViews();
         try {
-            wm.removeViewImmediate(ll);
+            wm.removeViewImmediate(fbLL);
+        } catch (Exception ignored) {
+        }
+        try {
+            wm.removeViewImmediate(iv);
         } catch (Exception ignored) {
         }
         try {
             wm.removeViewImmediate(pv);
-        } catch (Exception ignored) {
-        }
-        try {
-            wm.removeViewImmediate(globalOnTouchListenerFloatingView);
         } catch (Exception ignored) {
         }
     }
@@ -960,5 +905,24 @@ public class FloatingBoardMainActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 23 && grantResults[0] == 0) saveAction();
+    }
+
+    public void recover() {
+        this.wm.addView(fbLL, lp2);
+    }
+
+    private abstract class CheckOverlayPermission {
+        abstract void have();
+
+        abstract void notHave();
+
+        public CheckOverlayPermission() {
+            if (!Settings.canDrawOverlays(FloatingBoardMainActivity.this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 4444);
+                notHave();
+            } else have();
+        }
     }
 }
