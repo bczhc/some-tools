@@ -7,17 +7,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import pers.zhc.tools.utils.CrashHandler;
+import pers.zhc.tools.utils.ExternalJNI;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
 public class BaseActivity extends Activity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
+        ExternalJNI.ex(this);
     }
 
     File getVFile(Context ctx) {
@@ -96,4 +99,5 @@ public class BaseActivity extends Activity {
     public static class Infos {
         public static String zhcUrlString = "http://bczhc.free.idcfengye.com";
     }
+
 }
