@@ -55,7 +55,7 @@ public class BaseActivity extends Activity {
      *                   而对于其他配置的更改，则系统会onDestroy()当前Activity，然后重启一个新的Activity实例。
      */
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@SuppressWarnings("NullableProblems") Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         String TAG = "onConfigurationChanged";
         // 检测屏幕的方向：纵向或横向
@@ -94,6 +94,6 @@ public class BaseActivity extends Activity {
     }
 
     public static class Infos {
-        public static String zhcUrlString = "http://235m82e811.imwork.net";
+        public static String zhcUrlString = "http://bczhc.free.idcfengye.com";
     }
 }
