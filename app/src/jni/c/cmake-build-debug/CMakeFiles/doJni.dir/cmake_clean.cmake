@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/doJni.dir/codecs/doJNI.c.o"
-  "doJni.pdb"
   "doJni"
+  "doJni.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
