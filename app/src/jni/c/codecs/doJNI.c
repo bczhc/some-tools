@@ -5,7 +5,7 @@
 //
 
 #include "qmcLib.h"
-#include "com_zhc_JNI.h"
+#include "pers_zhc_JNI.h"
 #include "Base128Lib.h"
 #include "kwm.h"
 #include "../../jni_help.h"
