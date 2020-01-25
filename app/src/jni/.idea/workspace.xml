@@ -316,53 +316,12 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CMakeLists.txt" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>in</find>
-      <find>*d</find>
-      <find>const char *d</find>
-      <find>6)</find>
-      <find>[106,122,115,118,71,84,52,104,49,103,61,61,0,0]</find>
-      <find>lOG</find>
-      <find>Log(</find>
-      <find>free</find>
-      <find>b128</find>
-      <find>Size +</find>
-      <find>*Dest 2</find>
-      <find>ee</find>
-      <find>size</find>
-      <find>ee(</find>
-      <find>LogA</find>
-      <find>r1[</find>
-      <find>ss =</find>
-      <find>*Dest 1</find>
-      <find>Dest 2</find>
-      <find>LogArr(</find>
-      <find>^\ *LogArr\(</find>
-      <find>Log\(</find>
-      <find>Java_com_zhc_tools_codecs_JNI</find>
-      <find>com_</find>
-      <find>com/z</find>
-      <find>zhc/</find>
-      <find>Log</find>
-      <find>logarr</find>
-      <find>log</find>
-      <find>log(</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>Java_pers_zhc_tools_codecs_JNI</replace>
-    </replaceStrings>
-    <dirStrings>
-      <dir>$PROJECT_DIR$/</dir>
-    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
@@ -381,25 +340,27 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/c" />
-      <recent name="$PROJECT_DIR$/jni_c++/verification" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/jni_c++/pi" />
-      <recent name="$PROJECT_DIR$/codecs/jni_c++" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/jni_c++" />
       <recent name="$PROJECT_DIR$/c" />
       <recent name="$PROJECT_DIR$/codecs" />
       <recent name="C:\code\code\Android\QMCFLAC\app\src\jni" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/c" />
+      <recent name="$PROJECT_DIR$/jni_c++/verification" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/jni_c++/pi" />
+      <recent name="$PROJECT_DIR$/codecs/jni_c++" />
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.jni_help_c">
@@ -521,6 +482,10 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
+    <state x="178" y="27" width="999" height="741" key="CommitChangelistDialog2" timestamp="1579958940410">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="178" y="27" width="999" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1579958940410" />
     <state x="100" y="127" width="1166" height="541" key="DiffContextDialog" timestamp="1579851297037">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -529,6 +494,10 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="164" y="31" width="1037" height="737" key="SettingsEditor/0.27.1366.741@0.27.1366.741" timestamp="1579851212262" />
+    <state x="100" y="127" width="1166" height="541" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1579958934313">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="100" y="127" width="1166" height="541" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.27.1366.741@0.27.1366.741" timestamp="1579958934313" />
     <state x="337" y="225" key="com.intellij.ide.util.TipDialog" timestamp="1579851196081">
       <screen x="0" y="27" width="1366" height="741" />
     </state>

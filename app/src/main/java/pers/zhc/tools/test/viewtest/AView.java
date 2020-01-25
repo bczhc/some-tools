@@ -2,15 +2,16 @@ package pers.zhc.tools.test.viewtest;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
 import pers.zhc.tools.utils.GestureResolver;
 
 @SuppressLint("ViewConstructor")
 public class AView extends View {
-    private Paint mPaint;
-    private Paint mPaint2;
     private Bitmap bitmap;
     private Canvas mCanvas;
     private Bitmap mBitmap;
@@ -18,7 +19,8 @@ public class AView extends View {
     private Paint mBitmapPaint;
     private GestureResolver gestureResolver;
     private float scale = 1;
-    private float transX, transY;
+    private float screenTransX, screenTransY;
+    private float canvasTransX, canvasTransY;
 
     AView(Context context, Bitmap bitmap) {
         super(context);
@@ -26,42 +28,33 @@ public class AView extends View {
     }
 
     private void init() {
-        mPaint = new Paint();
+        Paint mPaint = new Paint();
         mPaint.setColor(Color.RED);
-        mPaint2 = new Paint();
+        Paint mPaint2 = new Paint();
         mPaint2.setColor(Color.GREEN);
         this.mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         this.mCanvas = new Canvas(mBitmap);
         mBitmapPaint = new Paint();
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
-            PointF midPoint = new PointF();
-            private float realX, realY;
-            private float realTransX, realTransY;
-
+            //            PointF midPoint = new PointF();
+//            private float realX, realY;
             @Override
             public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
-                realX = distanceX / scale;
-                realY = distanceY / scale;
-                transX += distanceX;
-                transY += distanceY;
-                mCanvas.translate(realX, realY);
-                realTransX += realX;
-                realTransY += realY;
+                screenTransX += distanceX;
+                screenTransY += distanceY;
+                canvasTransX = distanceX / scale;
+                canvasTransY = distanceY / scale;
             }
 
             @Override
-            public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float pScale, MotionEvent event) {
-                AView.this.scale *= pScale;
-                scaleWithPivot(midPoint, midPointX - transX, midPointY - transY, width / 2F + realTransX, height / 2F + realTransY, scale, true);
-                float px = midPoint.x;
-                float py = midPoint.y;
-                mCanvas.scale(pScale, pScale, px, py);
-                mCanvas.drawCircle(px, py, 30, mPaint2);
+            public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
+                AView.this.scale *= dScale;
+                mCanvas.scale(dScale, dScale, midPointX - canvasTransX, midPointY - canvasTransY);
             }
         });
     }
 
-    private void scaleWithPivot(PointF destPointF, float x, float y, float px, float py, float scale, boolean reverse) {
+    /*private void scaleWithPivot(PointF destPointF, float x, float y, float px, float py, float scale, boolean reverse) {
         if (reverse) {
             destPointF.x = scale * (x - px) + px;
             destPointF.y = scale * (y - py) + py;
@@ -69,7 +62,7 @@ public class AView extends View {
             destPointF.x = (x - px) / scale + px;
             destPointF.y = (y - py) / scale + py;
         }
-    }
+    }*/
 
 
     @Override
@@ -87,9 +80,10 @@ public class AView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        this.gestureResolver.onTouch(event);
+        mCanvas.translate(canvasTransX, canvasTransY);
         mCanvas.drawBitmap(this.bitmap, 0, 0, mBitmapPaint);
         invalidate();
-        this.gestureResolver.onTouch(event);
         return true;
     }
 }
