@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.u.FileU;
 
@@ -18,27 +19,20 @@ public class ExternalJNI {
     private static String downloadURL;
     private static String abi;
 
-    private static void checkAndFetch(Context ctx) {
+    private static void fetch(Context ctx) throws IOException {
         System.out.println("download remote libs");
         System.out.println("abi = " + abi);
-        try {
-            File libsDir = new File(ctx.getFilesDir(), "libs");
-            if (!libsDir.exists()) System.out.println("libsDir.mkdirs() = " + libsDir.mkdirs());
-            File file = new File(libsDir, "libex1.so");
-            HttpURLConnection connection = (HttpURLConnection) new URL(downloadURL).openConnection();
-            boolean check = check(downloadURL, file);
-            if (connection.getResponseCode() == 200) {
-                if (!check) {
-                    InputStream is = connection.getInputStream();
-                    OutputStream os = new FileOutputStream(file);
-                    FileU.StreamWrite(is, os);
-                    os.close();
-                    is.close();
-                    System.out.println("done");
-                } else System.out.println("remote is same as local");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        File libsDir = new File(ctx.getFilesDir(), "libs");
+        if (!libsDir.exists()) System.out.println("libsDir.mkdirs() = " + libsDir.mkdirs());
+        File file = new File(libsDir, "libex1.so");
+        HttpURLConnection connection = (HttpURLConnection) new URL(downloadURL).openConnection();
+        if (connection.getResponseCode() == 200) {
+            InputStream is = connection.getInputStream();
+            OutputStream os = new FileOutputStream(file, false);
+            FileU.StreamWrite(is, os);
+            os.close();
+            is.close();
+            System.out.println("done");
         }
     }
 
@@ -73,7 +67,7 @@ public class ExternalJNI {
 
     private static boolean check(String downloadURL, File localFile) {
         try {
-            InputStream md5IS = new URL(downloadURL + "?md5").openStream();
+            InputStream md5IS = new URL(downloadURL + "&md5").openStream();
             InputStreamReader isr = new InputStreamReader(md5IS);
             BufferedReader br = new BufferedReader(isr);
             String md5 = br.readLine();
@@ -93,21 +87,37 @@ public class ExternalJNI {
 
     @SuppressLint("UnsafeDynamicallyLoadedCode")
     public static void ex(Activity activity) {
-        abi = getABI();
-        downloadURL = BaseActivity.Infos.zhcUrlString
-                + "/tools_app/jni.zhc?abi=" + abi + "&name=libex1.so";
-        File libsDir = new File(activity.getFilesDir(), "libs");
-        if (!libsDir.exists()) System.out.println("libsDir.mkdirs() = " + libsDir.mkdirs());
-        File file = new File(libsDir, "libex1.so");
+        Handler handler = new Handler();
         new Thread(() -> {
-            checkAndFetch(activity);
+            abi = getABI();
+            downloadURL = BaseActivity.Infos.zhcUrlString
+                    + "/tools_app/jni.zhc?abi=" + abi + "&name=libex1.so";
+            File libsDir = new File(activity.getFilesDir(), "libs");
+            if (!libsDir.exists()) System.out.println("libsDir.mkdirs() = " + libsDir.mkdirs());
+            File file = new File(libsDir, "libex1.so");
+            boolean check;
+            if (!file.exists()) {
+                check = false;
+            } else check = check(downloadURL, file);
             try {
-                System.load(file.getCanonicalPath());
+                if (!check) fetch(activity);
+                if (file.exists()) try {
+                    System.load(file.getCanonicalPath());
+                    System.out.println("load remote lib");
+                    handler.post(() -> {
+                        try {
+                            ex1(activity);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.load(file.getAbsolutePath());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-                System.load(file.getAbsolutePath());
             }
-            ex1(activity);
         }).start();
     }
 }
