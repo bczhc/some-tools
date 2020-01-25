@@ -12,7 +12,7 @@
             android:supportsRtl="true"
             android:hardwareAccelerated="true"
             android:extractNativeLibs="false" tools:targetApi="m">
-        <receiver android:name=".floatingboard.NotificationClickReceiver"
+        <receiver android:name=".floatingdrawing.NotificationClickReceiver"
                   android:exported="true"
                   android:enabled="true" tools:ignore="ExportedReceiver">
             <intent-filter>
@@ -41,7 +41,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.floatingboard.FloatingBoardMainActivity"
+        <activity android:name="pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         >
@@ -209,6 +209,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".test.SensorTest"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".test.InputEvent"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         >

@@ -83,10 +83,10 @@ public class GestureResolver {
          * @param firstDistance  最开始两点之间的距离
          * @param distance       现在的距离
          * @param scale          与最开始的缩放比例
-         * @param pScale         与上一次触摸的缩放比例
+         * @param dScale         与上一次触摸的缩放比例
          * @param event          事件
          */
         void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY,
-                            float firstDistance, float distance, float scale, float pScale, MotionEvent event);
+                            float firstDistance, float distance, float scale, float dScale, MotionEvent event);
     }
 }

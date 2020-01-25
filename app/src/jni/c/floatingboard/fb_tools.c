@@ -3,11 +3,11 @@
 //
 
 #include <stddef.h>
-#include "../verification/com_zhc_tools_floatingboard_JNI.h"
+#include "../verification/com_zhc_tools_floatingdrawing_JNI.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingboard_JNI_floatToByteArray
+JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_floatToByteArray
         (JNIEnv *env, jobject obj, jfloat a) {
     JNIEnv e = *env;
     float f = (float) a;
@@ -21,7 +21,7 @@ JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingboard_JNI_floatToByteAr
     return (jbyteArray) r;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingboard_JNI_intToByteArray
+JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_intToByteArray
         (JNIEnv *env, jobject obj, jint j) {
     JNIEnv e = *env;
     int i = (int) j;
@@ -35,7 +35,7 @@ JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingboard_JNI_intToByteArra
     return (jbyteArray) r;
 }
 
-JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingboard_JNI_byteArrayToFloat
+JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToFloat
         (JNIEnv *env, jobject obj, jbyteArray bytes) {
     JNIEnv e = *env;
     jbyte b[4];
@@ -44,7 +44,7 @@ JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingboard_JNI_byteArrayToFloat
     return (jfloat) r;
 }
 
-JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_byteArrayToInt
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToInt
         (JNIEnv *env, jobject obj, jbyteArray bytes) {
     JNIEnv e = *env;
     jbyte b[4];

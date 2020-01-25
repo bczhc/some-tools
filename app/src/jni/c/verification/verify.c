@@ -3,7 +3,7 @@
 //
 
 #include "../../zhc.h"
-#include "./com_zhc_tools_floatingboard_JNI.h"
+#include "./com_zhc_tools_floatingdrawing_JNI.h"
 #include "../codecs/qmcLib.h"
 #include <stdio.h>
 #include "jni.h"
@@ -246,7 +246,7 @@ void ee(char **Dest, const char *s, JNIEnv *env) {
 //    LogArr(env, "b128Dest-", b128Dest, b128DestSize);
 }
 
-JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_mG
         (JNIEnv *env, jobject obj, jobject ctx, jstring iStr) {
     JNIEnv e = *env;
     jclass DateClass = e->FindClass(env, "java/util/Date");
