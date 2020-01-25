@@ -1,1 +1,1 @@
-/usr/bin/c++  -g  -rdynamic CMakeFiles/pi.dir/pi/pi.o  -o pi 
+/usr/bin/c++  -g   CMakeFiles/pi.dir/pi/pi.cpp.o  -o pi 
