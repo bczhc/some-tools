@@ -90,7 +90,7 @@ long long getFileSize(FILE *fp) {
 int getIntegerLen(const int x) {
     int n = x;
     int r = 0;
-    while (1) {
+    while (true) {
         int b = n / 10;
         r++;
         n = b;
@@ -102,7 +102,7 @@ int getIntegerLen(const int x) {
 int getLongLen(const long x) {
     long n = x;
     int r = 0;
-    while (1) {
+    while (true) {
         long b = n / 10;
         r++;
         n = b;
@@ -114,7 +114,7 @@ int getLongLen(const long x) {
 void Scanf(char **Dest) {
     char c;
     int i = 1;
-    while (1) {
+    while (true) {
         scanf("%c", &c);
         *Dest = (char *) realloc(*Dest, (size_t) i);
         if (c == 0x0A) {
@@ -127,7 +127,7 @@ void Scanf(char **Dest) {
 }
 
 void strcpyAndCat_auto(char **Dest, const char *cpy_s, const char *cat_s) {
-    *Dest = NULL;
+    *Dest = nullptr;
     int cpy_s_len = strlen(cpy_s);
     int cat_s_len = strlen(cat_s);
     size_t size = cpy_s_len + cat_s_len + 1;
@@ -138,7 +138,7 @@ void strcpyAndCat_auto(char **Dest, const char *cpy_s, const char *cat_s) {
 }
 
 void strcat_auto(char **sourceDest, const char *cat_s) {
-    if (*sourceDest == NULL) {
+    if (*sourceDest == nullptr) {
         *sourceDest = (char *) malloc(1);
         (*sourceDest)[0] = 0;
     }
@@ -153,7 +153,7 @@ void strcat_auto(char **sourceDest, const char *cat_s) {
 }
 
 void charToCharPtr(char **Dest, const char c) {
-    *Dest = NULL;
+    *Dest = nullptr;
     *Dest = (char *) malloc((size_t) 2);
     (*Dest)[0] = c;
 }
@@ -172,7 +172,7 @@ usi strInStrCount(int **Dest, const char *string, const char *s) {
     usi c = 0;
     usi stringL = strlen(string), sL = strlen(s);
     usi forI = stringL - sL + 1;
-    *Dest = NULL;
+    *Dest = nullptr;
     if (stringL < sL) {
 //        free((void *) forI);
         return 0;
