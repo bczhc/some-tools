@@ -15,11 +15,11 @@ extern "C" {
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_mG
         (JNIEnv *, jobject, jobject, jstring);
 
-JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_floatToByteArray
-        (JNIEnv *, jobject, jfloat);
+JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_floatToByteArray
+        (JNIEnv *, jobject, jbyteArray, jfloat);
 
-JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_intToByteArray
-        (JNIEnv *env, jobject obj, jint j);
+JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_intToByteArray
+        (JNIEnv *env, jobject obj, jbyteArray, jint j);
 
 JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToFloat
         (JNIEnv *env, jobject obj, jbyteArray bytes);
