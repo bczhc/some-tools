@@ -24,7 +24,6 @@ public class PaintView extends View {
     private final File internalPathFile;
     private final int height;
     private final int width;
-    private final Paint zP;
     boolean isEraserMode;
     private OutputStream os;
     private Paint mPaint;
@@ -41,6 +40,8 @@ public class PaintView extends View {
     private Context ctx;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
+    private byte[] touchData = new byte[26];
+    private byte[][] tempBytes = new byte[6][4];
 
 
 
@@ -56,7 +57,7 @@ public class PaintView extends View {
         this.width = width;
         this.height = height;
         init();
-        zP = new Paint();
+        Paint zP = new Paint();
         zP.setColor(Color.parseColor("#5000ff00"));
     }
 
@@ -386,20 +387,18 @@ public class PaintView extends View {
     }
 
     private void onTouchAction(int motionAction, float x, float y, int pointCount) {
-        byte[][] bytes = new byte[6][4];
-        bytes[0] = jni.floatToByteArray(x);
-        bytes[1] = jni.floatToByteArray(y);
-        bytes[2] = jni.intToByteArray(getColor());
-        bytes[3] = jni.floatToByteArray(getStrokeWidth());
-        bytes[4] = jni.intToByteArray(motionAction);
-        bytes[5] = jni.floatToByteArray(getEraserStrokeWidth());
-        byte[] data = new byte[26];
-        for (int i = 0; i < bytes.length; i++) {
-            System.arraycopy(bytes[i], 0, data, 4 * i, bytes[i].length);
+        jni.floatToByteArray(tempBytes[0], x);
+        jni.floatToByteArray(tempBytes[1], y);
+        jni.intToByteArray(tempBytes[2], getColor());
+        jni.floatToByteArray(tempBytes[3], getStrokeWidth());
+        jni.intToByteArray(tempBytes[4], motionAction);
+        jni.floatToByteArray(tempBytes[5], getEraserStrokeWidth());
+        for (int i = 0; i < tempBytes.length; i++) {
+            System.arraycopy(tempBytes[i], 0, touchData, 4 * i, tempBytes[i].length);
         }
         try {
-            data[24] = (byte) (isEraserMode ? 1 : 0);
-            os.write(data);
+            touchData[24] = (byte) (isEraserMode ? 1 : 0);
+            os.write(touchData);
             os.flush();
         } catch (IOException e) {
             Common.showException(e, (Activity) ctx);
@@ -479,7 +478,7 @@ public class PaintView extends View {
         invalidate();
     }
 
-    private class FloatPoint {
+    private static class FloatPoint {
         private float x, y;
 
         FloatPoint(float x, float y) {
@@ -507,7 +506,7 @@ public class PaintView extends View {
     /**
      * 路径对象
      */
-    class PathBean {
+    static class PathBean {
         Path path;
         Paint paint;
 
