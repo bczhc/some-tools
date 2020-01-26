@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named cpu
+# Target rules for targets named getevent
 
 # Build rule for target.
-cpu: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 cpu
-.PHONY : cpu
+getevent: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 getevent
+.PHONY : getevent
 
 # fast build rule for target.
-cpu/fast:
-	$(MAKE) -f CMakeFiles/cpu.dir/build.make CMakeFiles/cpu.dir/build
-.PHONY : cpu/fast
+getevent/fast:
+	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/build
+.PHONY : getevent/fast
 
 #=============================================================================
 # Target rules for targets named verification
@@ -203,33 +203,6 @@ codecs/qmcLib.c.s:
 	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/codecs/qmcLib.c.s
 .PHONY : codecs/qmcLib.c.s
 
-cpu/CpuFeatures.o: cpu/CpuFeatures.c.o
-
-.PHONY : cpu/CpuFeatures.o
-
-# target to build an object file
-cpu/CpuFeatures.c.o:
-	$(MAKE) -f CMakeFiles/cpu.dir/build.make CMakeFiles/cpu.dir/cpu/CpuFeatures.c.o
-.PHONY : cpu/CpuFeatures.c.o
-
-cpu/CpuFeatures.i: cpu/CpuFeatures.c.i
-
-.PHONY : cpu/CpuFeatures.i
-
-# target to preprocess a source file
-cpu/CpuFeatures.c.i:
-	$(MAKE) -f CMakeFiles/cpu.dir/build.make CMakeFiles/cpu.dir/cpu/CpuFeatures.c.i
-.PHONY : cpu/CpuFeatures.c.i
-
-cpu/CpuFeatures.s: cpu/CpuFeatures.c.s
-
-.PHONY : cpu/CpuFeatures.s
-
-# target to generate assembly for a file
-cpu/CpuFeatures.c.s:
-	$(MAKE) -f CMakeFiles/cpu.dir/build.make CMakeFiles/cpu.dir/cpu/CpuFeatures.c.s
-.PHONY : cpu/CpuFeatures.c.s
-
 floatingboard/fb_tools.o: floatingboard/fb_tools.c.o
 
 .PHONY : floatingboard/fb_tools.o
@@ -256,6 +229,33 @@ floatingboard/fb_tools.s: floatingboard/fb_tools.c.s
 floatingboard/fb_tools.c.s:
 	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/floatingboard/fb_tools.c.s
 .PHONY : floatingboard/fb_tools.c.s
+
+getevent/geteventV2.o: getevent/geteventV2.c.o
+
+.PHONY : getevent/geteventV2.o
+
+# target to build an object file
+getevent/geteventV2.c.o:
+	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/getevent/geteventV2.c.o
+.PHONY : getevent/geteventV2.c.o
+
+getevent/geteventV2.i: getevent/geteventV2.c.i
+
+.PHONY : getevent/geteventV2.i
+
+# target to preprocess a source file
+getevent/geteventV2.c.i:
+	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/getevent/geteventV2.c.i
+.PHONY : getevent/geteventV2.c.i
+
+getevent/geteventV2.s: getevent/geteventV2.c.s
+
+.PHONY : getevent/geteventV2.s
+
+# target to generate assembly for a file
+getevent/geteventV2.c.s:
+	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/getevent/geteventV2.c.s
+.PHONY : getevent/geteventV2.c.s
 
 home/zhc/code/some-tools/app/src/jni/zhc.o: home/zhc/code/some-tools/app/src/jni/zhc.c.o
 
@@ -319,7 +319,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... cpu"
+	@echo "... getevent"
 	@echo "... verification"
 	@echo "... doJni"
 	@echo "... codecs/doJNI.o"
@@ -328,12 +328,12 @@ help:
 	@echo "... codecs/qmcLib.o"
 	@echo "... codecs/qmcLib.i"
 	@echo "... codecs/qmcLib.s"
-	@echo "... cpu/CpuFeatures.o"
-	@echo "... cpu/CpuFeatures.i"
-	@echo "... cpu/CpuFeatures.s"
 	@echo "... floatingboard/fb_tools.o"
 	@echo "... floatingboard/fb_tools.i"
 	@echo "... floatingboard/fb_tools.s"
+	@echo "... getevent/geteventV2.o"
+	@echo "... getevent/geteventV2.i"
+	@echo "... getevent/geteventV2.s"
 	@echo "... home/zhc/code/some-tools/app/src/jni/zhc.o"
 	@echo "... home/zhc/code/some-tools/app/src/jni/zhc.i"
 	@echo "... home/zhc/code/some-tools/app/src/jni/zhc.s"

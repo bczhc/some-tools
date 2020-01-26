@@ -6,5 +6,5 @@ C_FLAGS = -g   -std=gnu99
 
 C_DEFINES = 
 
-C_INCLUDES = 
+C_INCLUDES = -I/home/zhc/bin/android-sdk-linux/ndk/21.0.6113669/sysroot/usr/include 
 

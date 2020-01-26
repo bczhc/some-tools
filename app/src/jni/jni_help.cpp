@@ -11,14 +11,16 @@ void Log(JNIEnv *env, const char *tag, const char *s) {
         strcat_auto(&R, s);
         printf("%s\n", R);
     } else {
-        JNIEnv e = *env;
-        jstring str = e.NewStringUTF(s);
+        jstring str = env->NewStringUTF(s);
         char *T = nullptr;
         strcpyAndCat_auto(&T, "jniLog ", tag);
-        jstring tagS = e.NewStringUTF(T);
-        jclass mClass = e.FindClass("android/util/Log");
-        jmethodID mid = e.GetStaticMethodID(mClass, "d", "(Ljava/lang/String;Ljava/lang/String;)I");
-        e.CallStaticIntMethod(mClass, mid, tagS, str);
+        jstring tagS = env->NewStringUTF(T);
+        jclass mClass = env->FindClass("android/util/Log");
+        jmethodID mid = env->GetStaticMethodID(mClass, "d", "(Ljava/lang/String;Ljava/lang/String;)I");
+        env->CallStaticIntMethod(mClass, mid, tagS, str);
+        env->DeleteLocalRef(str);
+        env->DeleteLocalRef(tagS);
+        env->DeleteLocalRef(mClass);
     }
 }
 

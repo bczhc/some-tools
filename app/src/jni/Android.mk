@@ -24,3 +24,10 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := fb_tools
 LOCAL_SRC_FILES := ./c/floatingboard/fb_tools.c jni_help.c ./zhc.c
 include $(BUILD_SHARED_LIBRARY)
+
+
+include $(CLEAR_VARS)
+LOCAL_LDLIBS    := -lm -llog
+LOCAL_MODULE    := JNIGetEventCtrl
+LOCAL_SRC_FILES := ./c/getevent/geteventV2.c
+include $(BUILD_SHARED_LIBRARY)
