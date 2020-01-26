@@ -15,27 +15,21 @@
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
       <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/c/floatingboard/fb_tools.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/floatingboard/fb_tools.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/c/verification/verify.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/verification/verify.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingdrawing_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingdrawing_JNI.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libfb_tools.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/JNI.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/JNI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libfb_tools.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/c/verification/verify.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/a/c/verification/verify.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/fb_tools/c/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/fb_tools/c/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/liba.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libfb_tools.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/c/verification/verify.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/a/c/verification/verify.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/fb_tools/c/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/fb_tools/c/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/liba.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../obj/local/x86/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libfb_tools.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/a/c/verification/verify.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/a/c/verification/verify.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/fb_tools/c/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/fb_tools/c/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/liba.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libfb_tools.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/c/verification/verify.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/a/c/verification/verify.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/fb_tools/c/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/fb_tools/c/floatingboard/fb_tools.o" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
