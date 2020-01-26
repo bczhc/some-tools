@@ -9,7 +9,6 @@
 
 
 #include <jni.h>
-#include <stddef.h>
 #include "zhc.h"
 
 void Log(JNIEnv *env, const char *tag, const char *s);

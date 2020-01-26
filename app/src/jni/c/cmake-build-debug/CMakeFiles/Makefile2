@@ -53,14 +53,14 @@ CMAKE_BINARY_DIR = /home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/cpu.dir/all
+all: CMakeFiles/getevent.dir/all
 all: CMakeFiles/verification.dir/all
 all: CMakeFiles/doJni.dir/all
 
 .PHONY : all
 
 # The main recursive "clean" target.
-clean: CMakeFiles/cpu.dir/clean
+clean: CMakeFiles/getevent.dir/clean
 clean: CMakeFiles/verification.dir/clean
 clean: CMakeFiles/doJni.dir/clean
 
@@ -72,31 +72,31 @@ preinstall:
 .PHONY : preinstall
 
 #=============================================================================
-# Target rules for target CMakeFiles/cpu.dir
+# Target rules for target CMakeFiles/getevent.dir
 
 # All Build rule for target.
-CMakeFiles/cpu.dir/all:
-	$(MAKE) -f CMakeFiles/cpu.dir/build.make CMakeFiles/cpu.dir/depend
-	$(MAKE) -f CMakeFiles/cpu.dir/build.make CMakeFiles/cpu.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target cpu"
-.PHONY : CMakeFiles/cpu.dir/all
+CMakeFiles/getevent.dir/all:
+	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/depend
+	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=3,4 "Built target getevent"
+.PHONY : CMakeFiles/getevent.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/cpu.dir/rule: cmake_check_build_system
+CMakeFiles/getevent.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/cpu.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/getevent.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/cpu.dir/rule
+.PHONY : CMakeFiles/getevent.dir/rule
 
 # Convenience name for target.
-cpu: CMakeFiles/cpu.dir/rule
+getevent: CMakeFiles/getevent.dir/rule
 
-.PHONY : cpu
+.PHONY : getevent
 
 # clean rule for target.
-CMakeFiles/cpu.dir/clean:
-	$(MAKE) -f CMakeFiles/cpu.dir/build.make CMakeFiles/cpu.dir/clean
-.PHONY : CMakeFiles/cpu.dir/clean
+CMakeFiles/getevent.dir/clean:
+	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/clean
+.PHONY : CMakeFiles/getevent.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/verification.dir
@@ -132,7 +132,7 @@ CMakeFiles/verification.dir/clean:
 CMakeFiles/doJni.dir/all:
 	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/depend
 	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=3,4 "Built target doJni"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target doJni"
 .PHONY : CMakeFiles/doJni.dir/all
 
 # Build rule for subdir invocation for target.

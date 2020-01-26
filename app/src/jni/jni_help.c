@@ -19,6 +19,9 @@ void Log(JNIEnv *env, const char *tag, const char *s) {
         jclass mClass = e->FindClass(env, "android/util/Log");
         jmethodID mid = e->GetStaticMethodID(env, mClass, "d", "(Ljava/lang/String;Ljava/lang/String;)I");
         e->CallStaticIntMethod(env, mClass, mid, tagS, str);
+        e->DeleteLocalRef(env, str);
+        e->DeleteLocalRef(env, tagS);
+        e->DeleteLocalRef(env, mClass);
     }
 }
 

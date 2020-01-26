@@ -19,6 +19,7 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_codecs_JNI_qmcDecode
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
     jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
+    e->DeleteLocalRef(env, mClass);
     const char *f1 = e->GetStringUTFChars(env, f, (jboolean *) 0);
     const char *f2 = e->GetStringUTFChars(env, dF, (jboolean *) 0);
     char *sQ = NULL;
@@ -43,6 +44,7 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_codecs_JNI_kwmDecode
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
     jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
+    e->DeleteLocalRef(env, mClass);
     const char *fN = e->GetStringUTFChars(env, f, (jboolean *) 0);
     const char *dFN = e->GetStringUTFChars(env, dF, (jboolean *) 0);
     int stt;
@@ -60,6 +62,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1encode
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
     jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
+    e->DeleteLocalRef(env, mClass);
     const char *FileName = (*env)->GetStringUTFChars(env, f1, (jboolean *) NULL);
     const char *DestFileName = (*env)->GetStringUTFChars(env, f2, (jboolean *) NULL);
     char upperCaseD1[strlen(FileName) + 1], upperCaseD2[strlen(DestFileName) + 1];
@@ -83,6 +86,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1decode
     JNIEnv e = *env;
     jclass mClass = e->GetObjectClass(env, obj);
     jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
+    e->DeleteLocalRef(env, mClass);
     const char *FileName = (*env)->GetStringUTFChars(env, f1, (jboolean *) NULL);
     const char *DestFileName = (*env)->GetStringUTFChars(env, f2, (jboolean *) NULL);
     char upperCaseD1[strlen(FileName) + 1], upperCaseD2[strlen(DestFileName) + 1];

@@ -44,7 +44,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/cpu.dir/DependInfo.cmake"
+  "CMakeFiles/getevent.dir/DependInfo.cmake"
   "CMakeFiles/verification.dir/DependInfo.cmake"
   "CMakeFiles/doJni.dir/DependInfo.cmake"
   )
