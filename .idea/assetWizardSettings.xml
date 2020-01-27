@@ -74,7 +74,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundImage" value="$PROJECT_DIR$/app/src/main/res/drawable/transparent.xml" />
-                                      <entry key="foregroundImage" value="$PROJECT_DIR$/app/src/main/res/drawable/ic_zhc_logo_500x500.xml" />
+                                      <entry key="foregroundImage" value="$PROJECT_DIR$/app/src/main/res/raw/db.png" />
                                       <entry key="generateRoundIcon" value="false" />
                                       <entry key="legacyIconShape" value="NONE" />
                                       <entry key="webIconShape" value="NONE" />
