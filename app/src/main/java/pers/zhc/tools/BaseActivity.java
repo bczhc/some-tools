@@ -97,7 +97,7 @@ public class BaseActivity extends Activity {
     }
 
     public static class Infos {
-        public static String zhcUrlString = "http://bczhc.free.idcfengye.com";
+        public static String zhcUrlString = "http://bczhc.free.qydev.com/";
     }
 
 }
