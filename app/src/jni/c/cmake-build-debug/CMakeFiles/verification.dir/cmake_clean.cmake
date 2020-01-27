@@ -1,10 +1,10 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/verification.dir/verification/verify.c.o"
-  "CMakeFiles/verification.dir/home/zhc/code/code/Android/QMCFLAC/app/src/jni/zhc.c.o"
   "CMakeFiles/verification.dir/codecs/qmcLib.c.o"
   "CMakeFiles/verification.dir/floatingboard/fb_tools.c.o"
-  "verification.pdb"
+  "CMakeFiles/verification.dir/home/zhc/code/some-tools/app/src/jni/zhc.c.o"
+  "CMakeFiles/verification.dir/verification/verify.c.o"
   "verification"
+  "verification.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

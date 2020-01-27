@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/input_pen.dir/motionevent/input_pen.cpp.o  -o input_pen 

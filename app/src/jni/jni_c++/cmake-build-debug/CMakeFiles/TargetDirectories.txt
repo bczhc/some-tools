@@ -1,3 +1,7 @@
-/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir
-/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/zhc/code/some-tools/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/zhc/code/some-tools/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/input_pen.dir
+/home/zhc/code/some-tools/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir
+/home/zhc/code/some-tools/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/JNIHelper.dir
+/home/zhc/code/some-tools/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/android_native_app_glue.dir
+/home/zhc/code/some-tools/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir
+/home/zhc/code/some-tools/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/edit_cache.dir

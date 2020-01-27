@@ -25,8 +25,6 @@ public class GestureResolver {
             float y1 = event.getY(0);
             float x2 = event.getX(1);
             float y2 = event.getY(1);
-
-
             {
                 float midX = (x1 + x2) / 2;
                 float midY = (y1 + y2) / 2;
@@ -53,8 +51,6 @@ public class GestureResolver {
                 this.gestureInterface.onTwoPointZoom(firstMidPointX, firstMidPointY, midPointX, midPointY, firstDistance, distance, distance / firstDistance, distance / lastDistance, event);
                 lastDistance = distance;
             }
-
-
         } else {
             lastX = -1;
             lastY = -1;
@@ -83,10 +79,10 @@ public class GestureResolver {
          * @param firstDistance  最开始两点之间的距离
          * @param distance       现在的距离
          * @param scale          与最开始的缩放比例
-         * @param pScale         与上一次触摸的缩放比例
+         * @param dScale         与上一次触摸的缩放比例
          * @param event          事件
          */
         void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY,
-                            float firstDistance, float distance, float scale, float pScale, MotionEvent event);
+                            float firstDistance, float distance, float scale, float dScale, MotionEvent event);
     }
 }

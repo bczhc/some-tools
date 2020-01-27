@@ -2,10 +2,9 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="Project" targetName="zhc_cpp" />
-      <config projectName="Project" targetName="zhc_c" />
-      <config projectName="Project" targetName="jni_help_c" />
-      <config projectName="Project" targetName="jni_help_cpp" />
+      <config projectName="jni" targetName="verification" />
+      <config projectName="jni" targetName="doJni" />
+      <config projectName="jni" targetName="getevent" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -15,9 +14,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,50 +33,13 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>in</find>
-      <find>*d</find>
-      <find>const char *d</find>
-      <find>6)</find>
-      <find>[106,122,115,118,71,84,52,104,49,103,61,61,0,0]</find>
-      <find>lOG</find>
-      <find>Log(</find>
-      <find>free</find>
-      <find>b128</find>
-      <find>Size +</find>
-      <find>*Dest 2</find>
-      <find>ee</find>
-      <find>size</find>
-      <find>ee(</find>
-      <find>LogA</find>
-      <find>r1[</find>
-      <find>ss =</find>
-      <find>*Dest 1</find>
-      <find>Dest 2</find>
-      <find>LogArr(</find>
-      <find>^\ *LogArr\(</find>
-      <find>Log\(</find>
-      <find>Java_com_zhc_tools_codecs_JNI</find>
-      <find>com_</find>
-      <find>com/z</find>
-      <find>zhc/</find>
-      <find>Log</find>
-      <find>logarr</find>
-      <find>log</find>
-      <find>log(</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>Java_pers_zhc_tools_codecs_JNI</replace>
-    </replaceStrings>
-    <dirStrings>
-      <dir>$PROJECT_DIR$/</dir>
-    </dirStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="0-Debug-getevent" />
+  </component>
   <component name="ProjectId" id="1VlsrdxAQagObPq5hfWFLJ2szyK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -92,12 +53,21 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/c/getevent" />
+      <recent name="$PROJECT_DIR$/jni_c++" />
+      <recent name="$PROJECT_DIR$/c" />
+      <recent name="$PROJECT_DIR$/codecs" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/c" />
       <recent name="$PROJECT_DIR$/jni_c++/verification" />
@@ -105,40 +75,27 @@
       <recent name="$PROJECT_DIR$/jni_c++/pi" />
       <recent name="$PROJECT_DIR$/codecs/jni_c++" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/jni_c++" />
-      <recent name="$PROJECT_DIR$/c" />
-      <recent name="$PROJECT_DIR$/codecs" />
-      <recent name="C:\code\code\Android\QMCFLAC\app\src\jni" />
-    </key>
   </component>
-  <component name="RunManager" selected="CMake Application.jni_help_c">
-    <configuration name="jni_help_c" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="jni_help_c" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="jni_help_c">
+  <component name="RunManager" selected="CMake Application.doJni">
+    <configuration name="doJni" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="jni" TARGET_NAME="doJni" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="jni" RUN_TARGET_NAME="doJni">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="jni_help_cpp" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="jni_help_cpp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="jni_help_cpp">
+    <configuration name="getevent" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="jni" TARGET_NAME="getevent" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="jni" RUN_TARGET_NAME="getevent">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="zhc_c" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="zhc_c" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="zhc_c">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="zhc_cpp" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="zhc_cpp" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="zhc_cpp">
+    <configuration name="verification" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="jni" TARGET_NAME="verification" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="jni" RUN_TARGET_NAME="verification">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application.jni_help_c" />
-      <item itemvalue="CMake Application.jni_help_cpp" />
-      <item itemvalue="CMake Application.zhc_c" />
-      <item itemvalue="CMake Application.zhc_cpp" />
+      <item itemvalue="CMake Application.doJni" />
+      <item itemvalue="CMake Application.getevent" />
+      <item itemvalue="CMake Application.verification" />
     </list>
   </component>
   <component name="ServiceViewManager">
@@ -196,6 +153,8 @@
       <workItem from="1576915681579" duration="598000" />
       <workItem from="1577839223374" duration="612000" />
       <workItem from="1578727676986" duration="251000" />
+      <workItem from="1579851186502" duration="669000" />
+      <workItem from="1579861204501" duration="10000" />
     </task>
     <servers />
   </component>
@@ -228,6 +187,40 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="178" y="27" width="999" height="741" key="CommitChangelistDialog2" timestamp="1580008641115">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="178" y="27" width="999" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580008641115" />
+    <state x="100" y="127" width="1166" height="541" key="DiffContextDialog" timestamp="1580006834842">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="100" y="127" width="1166" height="541" key="DiffContextDialog/0.27.1366.741@0.27.1366.741" timestamp="1580006834842" />
+    <state x="164" y="31" width="1037" height="737" key="SettingsEditor" timestamp="1579851212262">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="164" y="31" width="1037" height="737" key="SettingsEditor/0.27.1366.741@0.27.1366.741" timestamp="1579851212262" />
+    <state x="100" y="127" width="1166" height="541" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1579958934313">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="100" y="127" width="1166" height="541" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.27.1366.741@0.27.1366.741" timestamp="1579958934313" />
+    <state x="337" y="225" key="com.intellij.ide.util.TipDialog" timestamp="1579851196081">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="337" y="225" key="com.intellij.ide.util.TipDialog/0.27.1366.741@0.27.1366.741" timestamp="1579851196081" />
+    <state x="206" y="27" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1579959394299">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="206" y="27" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1366.741@0.27.1366.741" timestamp="1579959394299" />
+    <state x="13" y="35" width="1297" height="715" key="find.popup" timestamp="1580008144441">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="13" y="35" width="1297" height="715" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1580008144441" />
+    <state x="346" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1580007171441">
+      <screen x="0" y="27" width="1366" height="741" />
+    </state>
+    <state x="346" y="89" width="672" height="678" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1580007171441" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
