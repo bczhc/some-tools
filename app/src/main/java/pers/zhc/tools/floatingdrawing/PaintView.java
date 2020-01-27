@@ -471,6 +471,7 @@ public class PaintView extends View {
 
     void resetTransform() {
         mCanvas.restore();
+        mCanvas.save();
         mCanvas.drawColor(Color.TRANSPARENT);
         for (PathBean pathBean : this.undoList) {
             mCanvas.drawPath(pathBean.path, pathBean.paint);
