@@ -839,7 +839,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         EditText et = getSelectedET_currentMills(this, new EditText(this));
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
                         AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
-                            pv.closePathRecoderOS();
+                            pv.closePathRecorderOS();
                             File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
                             pv.saveImg(imageFile);
                             if (imageFile.exists())
@@ -943,10 +943,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private abstract class CheckOverlayPermission {
-        abstract void have();
-
-        abstract void notHave();
-
         public CheckOverlayPermission() {
             if (!Settings.canDrawOverlays(FloatingDrawingBoardMainActivity.this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -955,5 +951,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 notHave();
             } else have();
         }
+
+        abstract void have();
+
+        abstract void notHave();
     }
 }

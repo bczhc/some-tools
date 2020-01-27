@@ -42,11 +42,17 @@ public class MyCanvas extends Canvas {
         return startPointY;
     }
 
-    public void invertTranslateX(float canvasTransX, float canvasTransY) {
+    public void invertTranslate(float canvasTransX, float canvasTransY) {
         translate(canvasTransX / this.scale, canvasTransY / this.scale);
     }
 
     public void invertScale(float canvasScale, float canvasPX, float canvasPY) {
         scale(canvasScale, (canvasPX - startPointX) / this.scale, (canvasPY - startPointY) / this.scale);
+    }
+
+    public void reset() {
+        this.startPointX = 0;
+        this.startPointY = 0;
+        this.scale = 1F;
     }
 }
