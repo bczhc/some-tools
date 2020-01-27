@@ -15,6 +15,8 @@ public class MyCanvas extends Canvas {
     @Override
     public void translate(float dx, float dy) {
         super.translate(dx, dy);
+        this.startPointX += dx * scale;
+        this.startPointY += dy * scale;
     }
 
     public void scale(float scale) {
@@ -23,8 +25,9 @@ public class MyCanvas extends Canvas {
     }
 
     public void scale(float scale, float px, float py) {
-        super.scale(scale, scale, px, py);
-        this.scale *= scale;
+        this.translate(px, py);
+        this.scale(scale);
+        this.translate(-px, -py);
     }
 
     public float getScale() {
@@ -37,5 +40,13 @@ public class MyCanvas extends Canvas {
 
     public float getStartPointY() {
         return startPointY;
+    }
+
+    public void invertTranslateX(float canvasTransX, float canvasTransY) {
+        translate(canvasTransX / this.scale, canvasTransY / this.scale);
+    }
+
+    public void invertScale(float canvasScale, float canvasPX, float canvasPY) {
+        scale(canvasScale, (canvasPX - startPointX) / this.scale, (canvasPY - startPointY) / this.scale);
     }
 }
