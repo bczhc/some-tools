@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/jni_help.cpp" "/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles/jni_help_cpp.dir/jni_help.cpp.o"
+  "/home/zhc/code/some-tools/app/src/jni/jni_help.cpp" "/home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles/jni_help_cpp.dir/jni_help.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

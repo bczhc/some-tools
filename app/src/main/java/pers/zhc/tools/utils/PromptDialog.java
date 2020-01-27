@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import pers.zhc.tools.R;
 
-import static pers.zhc.tools.floatingboard.FloatingBoardMainActivity.getSelectedET_currentMills;
+import static pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity.getSelectedET_currentMills;
 
 @SuppressWarnings("unused")
 public class PromptDialog extends Dialog {

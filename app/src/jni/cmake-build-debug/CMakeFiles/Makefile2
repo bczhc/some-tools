@@ -35,19 +35,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/zhc/bin/clion-2019.3.2/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /home/zhc/bin/clion-2019.3.3/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /home/zhc/bin/clion-2019.3.2/bin/cmake/linux/bin/cmake -E remove -f
+RM = /home/zhc/bin/clion-2019.3.3/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/zhc/code/code/Android/QMCFLAC/app/src/jni
+CMAKE_SOURCE_DIR = /home/zhc/code/some-tools/app/src/jni
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug
+CMAKE_BINARY_DIR = /home/zhc/code/some-tools/app/src/jni/cmake-build-debug
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -80,14 +80,14 @@ preinstall:
 CMakeFiles/jni_help_c.dir/all:
 	$(MAKE) -f CMakeFiles/jni_help_c.dir/build.make CMakeFiles/jni_help_c.dir/depend
 	$(MAKE) -f CMakeFiles/jni_help_c.dir/build.make CMakeFiles/jni_help_c.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target jni_help_c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target jni_help_c"
 .PHONY : CMakeFiles/jni_help_c.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/jni_help_c.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/jni_help_c.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/jni_help_c.dir/rule
 
 # Convenience name for target.
@@ -107,14 +107,14 @@ CMakeFiles/jni_help_c.dir/clean:
 CMakeFiles/zhc_c.dir/all:
 	$(MAKE) -f CMakeFiles/zhc_c.dir/build.make CMakeFiles/zhc_c.dir/depend
 	$(MAKE) -f CMakeFiles/zhc_c.dir/build.make CMakeFiles/zhc_c.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=5,6 "Built target zhc_c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=5,6 "Built target zhc_c"
 .PHONY : CMakeFiles/zhc_c.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/zhc_c.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/zhc_c.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/zhc_c.dir/rule
 
 # Convenience name for target.
@@ -134,14 +134,14 @@ CMakeFiles/zhc_c.dir/clean:
 CMakeFiles/jni_help_cpp.dir/all:
 	$(MAKE) -f CMakeFiles/jni_help_cpp.dir/build.make CMakeFiles/jni_help_cpp.dir/depend
 	$(MAKE) -f CMakeFiles/jni_help_cpp.dir/build.make CMakeFiles/jni_help_cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=3,4 "Built target jni_help_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=3,4 "Built target jni_help_cpp"
 .PHONY : CMakeFiles/jni_help_cpp.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/jni_help_cpp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/jni_help_cpp.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/jni_help_cpp.dir/rule
 
 # Convenience name for target.
@@ -161,14 +161,14 @@ CMakeFiles/jni_help_cpp.dir/clean:
 CMakeFiles/zhc_cpp.dir/all:
 	$(MAKE) -f CMakeFiles/zhc_cpp.dir/build.make CMakeFiles/zhc_cpp.dir/depend
 	$(MAKE) -f CMakeFiles/zhc_cpp.dir/build.make CMakeFiles/zhc_cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=7,8 "Built target zhc_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles --progress-num=7,8 "Built target zhc_cpp"
 .PHONY : CMakeFiles/zhc_cpp.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/zhc_cpp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/zhc_cpp.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/QMCFLAC/app/src/jni/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/zhc_cpp.dir/rule
 
 # Convenience name for target.
