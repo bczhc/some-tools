@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
-import pers.zhc.tools.BuildConfig;
 
 import java.util.Objects;
 
