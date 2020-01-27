@@ -61,6 +61,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private WindowManager.LayoutParams lp2;
     private ImageView iv;
     private LinearLayout optionsLL;
+    private int fbMeasuredWidth, fbMeasuredHeight;
 
     private static void uploadPaths(Context context) {
         try {
@@ -144,6 +145,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
         init();
+
         if (longMainActivityMap == null) {
             longMainActivityMap = new HashMap<>();
         }
@@ -231,6 +233,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         View.OnTouchListener moveTouchListener = new View.OnTouchListener() {
             private int lastRawX, lastRawY, paramX, paramY;
             private float lastX, lastY;
+            private float lastDX, lastDY;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -248,8 +251,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     case MotionEvent.ACTION_MOVE:
                         int dx = (int) event.getRawX() - lastRawX;
                         int dy = (int) event.getRawY() - lastRawY;
-                        lp2.x = paramX + dx;
-                        lp2.y = paramY + dy;
+                        int lp2_x = paramX + dx;
+                        int lp2_y = paramY + dy;
+                        int constrainX, constrainY;
+                        constrainX = lp2_x - HSVAColorPickerRL.limitValue(lp2_x, ((int) (-width / 2F + fbMeasuredWidth / 2F)), ((int) (width / 2F - fbMeasuredWidth / 2F)));
+                        constrainY = lp2_y - HSVAColorPickerRL.limitValue(lp2_y, ((int) (-height / 2F + fbMeasuredHeight / 2F)), ((int) (height / 2F - fbMeasuredHeight / 2F)));
+                        if (constrainX == 0) lp2.x = lp2_x;
+                        else paramX -= constrainX;
+                        if (constrainY == 0) lp2.y = lp2_y;
+                        else paramY -= constrainY;
                         // 更新悬浮窗位置
                         wm.updateViewLayout(fbLL, lp2);
                         break;
@@ -314,6 +324,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         iv.setOnClickListener(v -> {
             fbLL.removeAllViews();
             fbLL.addView(optionsLL);
+            measureFB_LL();
         });
         for (int i = 0; i < strings.length; i++) {
             childTVs[i] = new TextView(this);
@@ -337,6 +348,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     case 0:
                         fbLL.removeAllViews();
                         fbLL.addView(iv);
+                        measureFB_LL();
                         wm.updateViewLayout(fbLL, lp2);
                         break;
                     case 1:
@@ -481,6 +493,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
     }
 
+    private void measureFB_LL() {
+        int mode = View.MeasureSpec.UNSPECIFIED;
+        fbLL.measure(mode, mode);
+        fbMeasuredWidth = fbLL.getMeasuredWidth();
+        fbMeasuredHeight = fbLL.getMeasuredHeight();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -510,6 +529,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         try {
             wm.addView(pv, lp);
             fbLL.addView(iv);
+            measureFB_LL();
             this.wm.addView(fbLL, lp2);
         } catch (Exception e) {
             e.printStackTrace();
