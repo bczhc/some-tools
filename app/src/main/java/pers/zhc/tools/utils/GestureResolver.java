@@ -25,8 +25,6 @@ public class GestureResolver {
             float y1 = event.getY(0);
             float x2 = event.getX(1);
             float y2 = event.getY(1);
-
-
             {
                 float midX = (x1 + x2) / 2;
                 float midY = (y1 + y2) / 2;
@@ -53,8 +51,6 @@ public class GestureResolver {
                 this.gestureInterface.onTwoPointZoom(firstMidPointX, firstMidPointY, midPointX, midPointY, firstDistance, distance, distance / firstDistance, distance / lastDistance, event);
                 lastDistance = distance;
             }
-
-
         } else {
             lastX = -1;
             lastY = -1;

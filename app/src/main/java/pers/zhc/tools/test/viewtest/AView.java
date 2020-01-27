@@ -38,7 +38,7 @@ public class AView extends View {
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
-                mCanvas.invertTranslateX(distanceX, distanceY);
+                mCanvas.invertTranslate(distanceX, distanceY);
             }
 
             @Override

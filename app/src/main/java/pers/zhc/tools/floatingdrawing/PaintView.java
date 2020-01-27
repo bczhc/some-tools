@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
@@ -29,7 +30,7 @@ public class PaintView extends View {
     private Paint mPaint;
     private Path mPath;
     private Paint eraserPaint;
-    private Canvas mCanvas;
+    private MyCanvas mCanvas;
     private Bitmap mBitmap;
     private float mLastX, mLastY;//上次的坐标
     private Paint mBitmapPaint;
@@ -42,13 +43,7 @@ public class PaintView extends View {
     private Canvas mBackgroundCanvas;
     private byte[] touchData = new byte[26];
     private byte[][] tempBytes = new byte[6][4];
-
-
-
-    /*public PaintView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }*/
+    private GestureResolver gestureResolver;
 
     PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -101,7 +96,7 @@ public class PaintView extends View {
             System.gc();
             mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             backgroundBitmap = Bitmap.createBitmap(mBitmap);
-            mCanvas = new Canvas(mBitmap);
+            mCanvas = new MyCanvas(mBitmap);
             mCanvas.save();
             mBackgroundCanvas = new Canvas(backgroundBitmap);
             //抗锯齿
@@ -112,6 +107,22 @@ public class PaintView extends View {
 
         undoList = new LinkedList<>();
         redoList = new LinkedList<>();
+        this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
+            @Override
+            public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent event) {
+                mPath = null;
+                mCanvas.invertTranslate(distanceX, distanceY);
+                mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
+                refreshCanvas();
+            }
+
+            @Override
+            public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
+                mPath = null;
+                mCanvas.invertScale(dScale, midPointX, midPointY);
+                refreshCanvas();
+            }
+        });
     }
 
     /**
@@ -124,6 +135,9 @@ public class PaintView extends View {
             if (null != mPath) {//显示实时正在绘制的path轨迹
                 if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
                 else {
+                    float mCanvasScale = mCanvas.getScale();
+                    canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
+                    canvas.scale(mCanvasScale, mCanvasScale);
                     canvas.drawPath(mPath, mPaint);
                 }
             }
@@ -275,20 +289,8 @@ public class PaintView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        onTouchAction(event.getAction(), event.getX(), event.getY(), event.getPointerCount());
-        if (event.getPointerCount() == 2) {
-            /*mPath = null;
-            mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            mCanvas.scale(scaleC, scaleC, scalePointX + finalTranslateX, scalePointY + finalTranslateY);
-            finalScale *= scaleC;
-            mCanvas.translate(finalTranslateX, finalTranslateY);
-            for (PathBean pathBean : undoList) {
-                mCanvas.drawPath(pathBean.path, pathBean.paint);
-            }
-            mCanvas.drawRect(0, 0, width, height, zP);
-//            mCanvas.scale(1 / finalScale, 1 / finalScale, scalePointX, scalePointY);
-            mCanvas.translate(-finalTranslateX, -finalTranslateY);*/
-        }
+        gestureResolver.onTouch(event);
+        onTouchAction(event.getAction(), event.getX(), event.getY());
         invalidate();
         return true;
     }
@@ -328,7 +330,7 @@ public class PaintView extends View {
         }
     }
 
-    void closePathRecoderOS() {
+    void closePathRecorderOS() {
         closeStream(os);
     }
 
@@ -372,7 +374,7 @@ public class PaintView extends View {
                             setEraserStrokeWidth(eraserStrokeWidth);
                             setPaintColor(color);
                             setStrokeWidth(strokeWidth);
-                            onTouchAction(motionAction, x, y, 1);
+                            onTouchAction(motionAction, x, y);
                             floatValueInterface.f(((float) haveRead) / ((float) length) * 100F);
                             break;
                     }
@@ -386,7 +388,12 @@ public class PaintView extends View {
         es.shutdown();
     }
 
-    private void onTouchAction(int motionAction, float x, float y, int pointCount) {
+    private void onTouchAction(int motionAction, float x, float y) {
+        float startPointX = mCanvas.getStartPointX();
+        float startPointY = mCanvas.getStartPointY();
+        float canvasScale = mCanvas.getScale();
+        x = (x - startPointX) / canvasScale;
+        y = (y - startPointY) / canvasScale;
         jni.floatToByteArray(tempBytes[0], x);
         jni.floatToByteArray(tempBytes[1], y);
         jni.intToByteArray(tempBytes[2], getColor());
@@ -473,35 +480,17 @@ public class PaintView extends View {
         mCanvas.restore();
         mCanvas.save();
         mCanvas.drawColor(Color.TRANSPARENT);
+        mCanvas.reset();
+        refreshCanvas();
+    }
+
+    private void refreshCanvas() {
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         for (PathBean pathBean : this.undoList) {
             mCanvas.drawPath(pathBean.path, pathBean.paint);
         }
         invalidate();
-    }
-
-    private static class FloatPoint {
-        private float x, y;
-
-        FloatPoint(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        FloatPoint() {
-        }
-    }
-
-    private class MyPoint {
-        private FloatPoint p1, p2;
-
-        private MyPoint() {
-            p1 = new FloatPoint();
-            p2 = new FloatPoint();
-        }
-
-        private FloatPoint getMidPoint() {
-            return new FloatPoint((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-        }
     }
 
     /**
