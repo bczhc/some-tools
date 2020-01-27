@@ -20,10 +20,6 @@ public class AView extends View {
     private Paint mBitmapPaint;
     private GestureResolver gestureResolver;
     private float scale = 1;
-    private float screenTransX, screenTransY;
-    private float canvasTransX, canvasTransY;
-    private float actualTransX, actualTransY;
-    private Paint mPaint2;
 
     AView(Context context, Bitmap bitmap) {
         super(context);
@@ -33,7 +29,7 @@ public class AView extends View {
     private void init() {
         Paint mPaint = new Paint();
         mPaint.setColor(Color.RED);
-        mPaint2 = new Paint();
+        Paint mPaint2 = new Paint();
         mPaint2.setColor(Color.GREEN);
         mPaint2.setStrokeWidth(5);
         this.mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -42,35 +38,15 @@ public class AView extends View {
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
-                screenTransX += distanceX;
-                screenTransY += distanceY;
-                canvasTransX = distanceX / scale;
-                canvasTransY = distanceY / scale;
-                actualTransX = distanceX * scale;
-                actualTransY = distanceY * scale;
+                mCanvas.invertTranslateX(distanceX, distanceY);
             }
 
             @Override
             public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
-                AView.this.scale *= dScale;
-                float pivotY = midPointY;
-                float pivotX = midPointX;
-                mCanvas.scale(dScale, dScale, pivotX, pivotY);
-                mCanvas.drawCircle(pivotX, pivotY, 30, mPaint2);
+                 mCanvas.invertScale(dScale, midPointX, midPointY);
             }
         });
     }
-
-    /*private void scaleWithPivot(PointF destPointF, float x, float y, float px, float py, float scale, boolean reverse) {
-        if (reverse) {
-            destPointF.x = scale * (x - px) + px;
-            destPointF.y = scale * (y - py) + py;
-        } else {
-            destPointF.x = (x - px) / scale + px;
-            destPointF.y = (y - py) / scale + py;
-        }
-    }*/
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -88,7 +64,6 @@ public class AView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         this.gestureResolver.onTouch(event);
-        mCanvas.translate(canvasTransX, canvasTransY);
         mCanvas.drawBitmap(this.bitmap, 0, 0, mBitmapPaint);
         invalidate();
         return true;
