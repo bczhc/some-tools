@@ -507,9 +507,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow() {
-        wm.addView(pv, lp);
-        fbLL.addView(iv);
-        this.wm.addView(fbLL, lp2);
+        try {
+            wm.addView(pv, lp);
+            fbLL.addView(iv);
+            this.wm.addView(fbLL, lp2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -535,7 +539,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void hide() {
-        wm.removeViewImmediate(fbLL);
+        try {
+            wm.removeViewImmediate(fbLL);
+        } catch (IllegalArgumentException e) {
+            Common.showException(e, this);
+        }
         NotificationManager nm = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
         String date = SimpleDateFormat.getDateTimeInstance().format(new Date(this.currentInstanceMills));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -907,7 +915,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     public void recover() {
-        this.wm.addView(fbLL, lp2);
+        try {
+            this.wm.addView(fbLL, lp2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private abstract class CheckOverlayPermission {
