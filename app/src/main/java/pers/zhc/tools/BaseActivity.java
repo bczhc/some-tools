@@ -7,17 +7,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import pers.zhc.tools.utils.CrashHandler;
+import pers.zhc.tools.utils.ExternalJNI;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
 public class BaseActivity extends Activity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
+        ExternalJNI.ex(this);
     }
 
     File getVFile(Context ctx) {
@@ -55,7 +58,7 @@ public class BaseActivity extends Activity {
      *                   而对于其他配置的更改，则系统会onDestroy()当前Activity，然后重启一个新的Activity实例。
      */
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@SuppressWarnings("NullableProblems") Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         String TAG = "onConfigurationChanged";
         // 检测屏幕的方向：纵向或横向
@@ -94,6 +97,7 @@ public class BaseActivity extends Activity {
     }
 
     public static class Infos {
-        public static String zhcUrlString = "http://235m82e811.imwork.net";
+        public static String zhcUrlString = "http://bczhc.free.qydev.com/";
     }
+
 }

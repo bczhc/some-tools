@@ -15,10 +15,11 @@ import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.epicycles.EpicyclesEdit;
-import pers.zhc.tools.floatingboard.FloatingBoardMainActivity;
-import pers.zhc.tools.floatingboard.JNI;
+import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
+import pers.zhc.tools.floatingdrawing.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
+import pers.zhc.tools.test.InputEvent;
 import pers.zhc.tools.test.MathExpressionEvaluationTest;
 import pers.zhc.tools.test.S;
 import pers.zhc.tools.test.SensorTest;
@@ -118,14 +119,15 @@ public class MainActivity extends BaseActivity {
                 R.string.view_test,
                 R.string.set_theme,
                 R.string.math_expression_evaluation_test,
-                R.string.sensor_test
+                R.string.sensor_test,
+                R.string.input_event
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
                 Pi.class,
                 AToast.class,
                 Clip.class,
-                FloatingBoardMainActivity.class,
+                FloatingDrawingBoardMainActivity.class,
                 FunctionDrawingBoard.class,
                 Document.class,
                 EpicyclesEdit.class,
@@ -133,7 +135,8 @@ public class MainActivity extends BaseActivity {
                 pers.zhc.tools.test.viewtest.MainActivity.class,
                 SetTheme.class,
                 MathExpressionEvaluationTest.class,
-                SensorTest.class
+                SensorTest.class,
+                InputEvent.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

@@ -3,7 +3,7 @@
 //
 
 #include "../../zhc.h"
-#include "./com_zhc_tools_floatingboard_JNI.h"
+#include "./com_zhc_tools_floatingdrawing_JNI.h"
 #include "../codecs/qmcLib.h"
 #include <stdio.h>
 #include "jni.h"
@@ -246,18 +246,22 @@ void ee(char **Dest, const char *s, JNIEnv *env) {
 //    LogArr(env, "b128Dest-", b128Dest, b128DestSize);
 }
 
-JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_mG
         (JNIEnv *env, jobject obj, jobject ctx, jstring iStr) {
     JNIEnv e = *env;
     jclass DateClass = e->FindClass(env, "java/util/Date");
     jmethodID DateMId = e->GetMethodID(env, DateClass, "<init>", "()V");
     jobject DateObj = e->NewObject(env, DateClass, DateMId);
+    e->DeleteLocalRef(env, DateClass);
     jclass sdfClass = e->FindClass(env, "java/text/SimpleDateFormat");
     jmethodID sdfMId = e->GetMethodID(env, sdfClass, "<init>", "(Ljava/lang/String;)V");
     jobject sdfObj = e->NewObject(env, sdfClass, sdfMId, e->NewStringUTF(env, "yyMMdd"));
     jmethodID sdfFormatMId = e->GetMethodID(env, sdfClass, "format", "(Ljava/util/Date;)Ljava/lang/String;");
+    e->DeleteLocalRef(env, sdfClass);
     jobject strObj = e->CallObjectMethod(env, sdfObj, sdfFormatMId, DateObj);
+    e->DeleteLocalRef(env, sdfObj);
     const char *d = e->GetStringUTFChars(env, (jstring) strObj, (jboolean *) 0);
+    e->DeleteLocalRef(env, strObj);
 //    Log(env, R);
 //    Log(env, d);
     jclass ctxClass = e->GetObjectClass(env, ctx);
@@ -316,6 +320,7 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
             jclass RClass = e->FindClass(env, "pers/zhc/tools/R$layout");
             jfieldID f = e->GetStaticFieldID(env, RClass, "tools_activity_main", "I");
             jint cI = e->GetStaticIntField(env, RClass, f);
+            e->DeleteLocalRef(env, RClass);
 //            Log(env, "sCV...");
             e->CallVoidMethod(env, ctx, sCMId, cI);
 //            Log(env, "sCVOk");
@@ -326,6 +331,7 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
             jclass RClass = e->FindClass(env, "pers/zhc/tools/R$layout");
             jfieldID f = e->GetStaticFieldID(env, RClass, "v_f_activity", "I");
             jint cI = e->GetStaticIntField(env, RClass, f);
+            e->DeleteLocalRef(env, RClass);
             //            Log(env, "sCV...");
             e->CallVoidMethod(env, ctx, sCMId, cI);
             Log(env, "vF", "不支持了，高中……");
@@ -334,6 +340,7 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingboard_JNI_mG
     }
     free(r);
     free(rr);
+    e->DeleteLocalRef(env, ctxClass);
     return 2;
 }
 

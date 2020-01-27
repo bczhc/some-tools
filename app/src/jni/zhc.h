@@ -6,11 +6,19 @@
 #ifndef C99_ZHC_H
 #define C99_ZHC_H
 
+#ifdef __cplusplus
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
+#else
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
+#endif
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 #ifndef ARR_len

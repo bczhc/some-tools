@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/MotionEvent.dir/motionevent/MotionEvent.cpp.o  -o MotionEvent 
