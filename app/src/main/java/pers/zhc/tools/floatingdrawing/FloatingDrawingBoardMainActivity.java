@@ -233,7 +233,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         View.OnTouchListener moveTouchListener = new View.OnTouchListener() {
             private int lastRawX, lastRawY, paramX, paramY;
             private float lastX, lastY;
-            private float lastDX, lastDY;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -494,7 +493,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void measureFB_LL() {
-        int mode = View.MeasureSpec.UNSPECIFIED;
+        int mode = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         fbLL.measure(mode, mode);
         fbMeasuredWidth = fbLL.getMeasuredWidth();
         fbMeasuredHeight = fbLL.getMeasuredHeight();
@@ -621,7 +620,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         mainLL.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
         LinearLayout barLL = new LinearLayout(this);
         RadioGroup rg = new RadioGroup(this);
-        barLL.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+        barLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         barLL.setOrientation(LinearLayout.HORIZONTAL);
         RadioButton[] radioButtons = new RadioButton[2];
         int[] strRes = new int[]{
@@ -638,7 +637,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         rg.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
         barLL.addView(rg);
         LinearLayout ll = new LinearLayout(this);
-        StrokeWatchView strokeWatchView = new StrokeWatchView(this, width, height);
+        StrokeWatchView strokeWatchView = new StrokeWatchView(this);
+        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         SeekBar sb = new SeekBar(this);
         TextView tv = new TextView(this);
         tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -652,7 +652,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 try {
                     int edit = Integer.parseInt(et.getText().toString());
                     double a = Math.log(edit) / Math.log(1.07D);
-                    strokeWatchView.change(((float) edit), pv.getColor());
+                    strokeWatchView.change(((float) edit * pv.getCanvas().getScale()), pv.getColor());
                     sb.setProgress((int) a);
                     if (checked[0] == 1)
                         pv.setStrokeWidth(((float) edit));
@@ -670,14 +670,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             ad.show();
         });
-        /*sb.setProgress(((int) (Math.log((double) pv.getStrokeWidth()) / Math.log(1.07D))));
-        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(sb.getProgress(), sb.getProgress()));
-        strokeWatchView.change((float) Math.pow(1.07D, (double) sb.getProgress()), pv.getColor());
-        tv.setText(String.valueOf((int) Math.pow(1.07D, (double) sb.getProgress())));*/
         double pow = pv.getStrokeWidth();
         pv.setStrokeWidth((float) ((int) pow));
-        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
-        strokeWatchView.change(((float) pow), pv.getColor());
+        strokeWatchView.change(((float) pow * pv.getCanvas().getScale()), pv.getColor());
         tv.setText(String.valueOf((int) pow));
         sb.setProgress((int) (Math.log(pow) / Math.log(1.07D)));
         sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -699,8 +694,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     pv.setEraserStrokeWidth((float) pow);
                 }
                 tv.setText(String.valueOf(((int) pow)));
-                strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
-                strokeWatchView.change(((float) pow), pv.getColor());
+                strokeWatchView.change(((float) pow * pv.getCanvas().getScale()), pv.getColor());
             }
 
             @Override
@@ -716,8 +710,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         rg.setOnCheckedChangeListener((group, checkedId) -> {
             checked[0] = checkedId;
             float w = checkedId == 1 ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
-            strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) w), ((int) w)));
-            strokeWatchView.change(w, pv.getColor());
+            strokeWatchView.change(w * pv.getCanvas().getScale(), pv.getColor());
             tv.setText(String.format(getString(R.string.tv), (int) w));
             sb.setProgress((int) (Math.log(w) / Math.log(1.07D)));
         });

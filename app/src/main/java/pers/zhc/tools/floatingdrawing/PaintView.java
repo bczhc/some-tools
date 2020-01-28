@@ -133,13 +133,11 @@ public class PaintView extends View {
         if (mBitmap != null) {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
             if (null != mPath) {//显示实时正在绘制的path轨迹
+                float mCanvasScale = mCanvas.getScale();
+                canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
+                canvas.scale(mCanvasScale, mCanvasScale);
                 if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
-                else {
-                    float mCanvasScale = mCanvas.getScale();
-                    canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
-                    canvas.scale(mCanvasScale, mCanvasScale);
-                    canvas.drawPath(mPath, mPaint);
-                }
+                else canvas.drawPath(mPath, mPaint);
             }
         }
     }
@@ -491,6 +489,10 @@ public class PaintView extends View {
             mCanvas.drawPath(pathBean.path, pathBean.paint);
         }
         invalidate();
+    }
+
+    MyCanvas getCanvas() {
+        return mCanvas;
     }
 
     /**
