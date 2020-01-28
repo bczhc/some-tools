@@ -835,9 +835,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             pv.closePathRecorderOS();
                             File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
                             pv.saveImg(imageFile);
-                            if (imageFile.exists())
-                                ToastUtils.show(this, getString(R.string.saving_success) + "\n" + imageDir.toString() + File.separator + et.getText().toString() + ".png");
-                            else ToastUtils.show(this, R.string.saving_failed);
                             pv.setOS(currentInternalPathFile, true);
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
