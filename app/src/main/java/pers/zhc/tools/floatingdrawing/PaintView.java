@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
@@ -241,27 +242,27 @@ public class PaintView extends View {
      */
     void saveImg(File f) {
         ToastUtils.show(ctx, R.string.saving);
-        ToastUtils.show(ctx, R.string.saving_success);
+        Handler handler = new Handler();
         //保存图片
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(f);
-            FileOutputStream finalFileOutputStream = fileOutputStream;
-            new Thread(() -> {
-                if (mBitmap.compress(Bitmap.CompressFormat.PNG, 100, finalFileOutputStream)) {
-                    try {
-                        finalFileOutputStream.flush();
-                    } catch (IOException e) {
-                        Common.showException(e, (Activity) ctx);
-                    }
+        final FileOutputStream[] fileOutputStream = {null};
+        new Thread(() -> {
+            try {
+                fileOutputStream[0] = new FileOutputStream(f);
+                if (mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream[0])) {
+                    fileOutputStream[0].flush();
                 }
-            }).start();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Common.showException(e, (Activity) ctx);
-        } finally {
-            closeStream(fileOutputStream);
-        }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Common.showException(e, (Activity) ctx);
+            } finally {
+                closeStream(fileOutputStream[0]);
+            }
+            handler.post(() -> {
+                if (f.exists())
+                    ToastUtils.show(ctx, ctx.getString(R.string.saving_success) + "\n" + f.toString());
+                else ToastUtils.show(ctx, R.string.saving_failed);
+            });
+        }).start();
     }
 
     /**
