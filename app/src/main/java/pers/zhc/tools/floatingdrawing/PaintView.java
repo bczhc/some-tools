@@ -44,7 +44,6 @@ public class PaintView extends View {
     private byte[] touchData = new byte[26];
     private byte[][] tempBytes = new byte[6][4];
     private GestureResolver gestureResolver;
-    private Bitmap transBitmap;
 
     PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -120,26 +119,16 @@ public class PaintView extends View {
 
             @Override
             public void onTwoPointsUp() {
-                transBitmap = null;
-                redrawCanvas();
             }
 
             @Override
             public void onTwoPointsDown() {
                 mPath = null;
-                if (transBitmap == null) {
-                    transBitmap = Bitmap.createBitmap(mBitmap);
-                    MyCanvas c = new MyCanvas(transBitmap);
-                    c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                    c.invertTranslate(-mCanvas.getStartPointX(), -mCanvas.getStartPointY());
-                    c.invertScale(1 / mCanvas.getScale(), 0, 0);
-                    c.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-                }
             }
 
             @Override
             public void onTwoPointPress() {
-                redrawBitmap();
+                redrawCanvas();
             }
         });
     }
@@ -151,7 +140,7 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas) {
         if (mBitmap != null) {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-            if (null != mPath) {//显示实时正在绘制的path轨迹
+            if (mPath != null) {//显示实时正在绘制的path轨迹
                 float mCanvasScale = mCanvas.getScale();
                 canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
                 canvas.scale(mCanvasScale, mCanvasScale);
@@ -504,12 +493,6 @@ public class PaintView extends View {
         for (PathBean pathBean : this.undoList) {
             mCanvas.drawPath(pathBean.path, pathBean.paint);
         }
-        invalidate();
-    }
-
-    private void redrawBitmap() {
-        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        mCanvas.drawBitmap(transBitmap, 0F, 0F, mBitmapPaint);
         invalidate();
     }
 
