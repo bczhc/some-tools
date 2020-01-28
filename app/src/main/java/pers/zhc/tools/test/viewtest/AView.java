@@ -37,13 +37,28 @@ public class AView extends View {
         mBitmapPaint = new Paint();
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
-            public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
+            public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
                 mCanvas.invertTranslate(distanceX, distanceY);
             }
 
             @Override
-            public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
+            public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
                  mCanvas.invertScale(dScale, midPointX, midPointY);
+            }
+
+            @Override
+            public void onTwoPointsUp() {
+
+            }
+
+            @Override
+            public void onTwoPointPress() {
+
+            }
+
+            @Override
+            public void onTwoPointsDown() {
+
             }
         });
     }

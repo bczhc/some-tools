@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 public class MyCanvas extends Canvas {
     private float scale = 1F;
     private float startPointX, startPointY;
+    private float savedScale, savedStartPointX, savedStartPointY;
 
     public MyCanvas(@NonNull Bitmap bitmap) {
         super(bitmap);
@@ -51,8 +52,21 @@ public class MyCanvas extends Canvas {
     }
 
     public void reset() {
-        this.startPointX = 0;
-        this.startPointY = 0;
-        this.scale = 1F;
+        this.scale(1 / scale);
+        this.translate(-startPointX, -startPointY);
+    }
+
+    @Override
+    public int save() {
+        savedStartPointX = startPointX;
+        savedStartPointY = startPointY;
+        savedScale = scale;
+        return 0;
+    }
+
+    @Override
+    public void restore() {
+        scale(savedScale / scale);
+        translate(savedStartPointX - startPointX, savedStartPointY - startPointY);
     }
 }

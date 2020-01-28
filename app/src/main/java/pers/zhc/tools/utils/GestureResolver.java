@@ -18,6 +18,8 @@ public class GestureResolver {
         return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
+    private boolean twoPointsDown = false;
+
     public void onTouch(MotionEvent event) {
         int pointerCount = event.getPointerCount();
         if (pointerCount == 2) {
@@ -32,7 +34,7 @@ public class GestureResolver {
                     lastX = midX;
                     lastY = midY;
                 } else {
-                    this.gestureInterface.onTwoPointScroll(midX - lastX, midY - lastY, event);
+                    this.gestureInterface.onTwoPointsScroll(midX - lastX, midY - lastY, event);
                 }
                 this.lastX = midX;
                 this.lastY = midY;
@@ -48,14 +50,21 @@ public class GestureResolver {
                 float midPointX, midPointY;
                 midPointX = (x1 + x2) / 2;
                 midPointY = (y1 + y2) / 2;
-                this.gestureInterface.onTwoPointZoom(firstMidPointX, firstMidPointY, midPointX, midPointY, firstDistance, distance, distance / firstDistance, distance / lastDistance, event);
+                this.gestureInterface.onTwoPointsZoom(firstMidPointX, firstMidPointY, midPointX, midPointY, firstDistance, distance, distance / firstDistance, distance / lastDistance, event);
                 lastDistance = distance;
             }
+            if (!twoPointsDown) gestureInterface.onTwoPointsDown();
+            twoPointsDown = true;
+            gestureInterface.onTwoPointPress();
         } else {
-            lastX = -1;
-            lastY = -1;
-            firstDistance = -1;
-            lastDistance = -1;
+            if (twoPointsDown) {
+                twoPointsDown = false;
+                lastX = -1;
+                lastY = -1;
+                firstDistance = -1;
+                lastDistance = -1;
+                gestureInterface.onTwoPointsUp();
+            }
         }
     }
 
@@ -67,7 +76,7 @@ public class GestureResolver {
          * @param distanceY y方向的变化（与上一次触摸的y距离）
          * @param event     事件
          */
-        void onTwoPointScroll(float distanceX, float distanceY, MotionEvent event);
+        void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event);
 
         /**
          * 两个点的缩放
@@ -82,7 +91,22 @@ public class GestureResolver {
          * @param dScale         与上一次触摸的缩放比例
          * @param event          事件
          */
-        void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY,
-                            float firstDistance, float distance, float scale, float dScale, MotionEvent event);
+        void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY,
+                             float firstDistance, float distance, float scale, float dScale, MotionEvent event);
+
+        /**
+         * It will be invoked when two points change to one point or no point.
+         */
+        void onTwoPointsUp();
+
+        /**
+         * It will be invoked when two points press down the first time.
+         */
+        void onTwoPointsDown();
+
+        /**
+         * It will be invoked when two points press down.
+         */
+        void onTwoPointPress();
     }
 }
