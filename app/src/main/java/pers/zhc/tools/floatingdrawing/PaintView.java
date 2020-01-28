@@ -44,6 +44,7 @@ public class PaintView extends View {
     private byte[] touchData = new byte[26];
     private byte[][] tempBytes = new byte[6][4];
     private GestureResolver gestureResolver;
+    private Bitmap transBitmap;
 
     PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -97,7 +98,6 @@ public class PaintView extends View {
             mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             backgroundBitmap = Bitmap.createBitmap(mBitmap);
             mCanvas = new MyCanvas(mBitmap);
-            mCanvas.save();
             mBackgroundCanvas = new Canvas(backgroundBitmap);
             //抗锯齿
             mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
@@ -109,18 +109,37 @@ public class PaintView extends View {
         redoList = new LinkedList<>();
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
-            public void onTwoPointScroll(float distanceX, float distanceY, MotionEvent event) {
-                mPath = null;
+            public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
                 mCanvas.invertTranslate(distanceX, distanceY);
-                mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
-                refreshCanvas();
             }
 
             @Override
-            public void onTwoPointZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
-                mPath = null;
+            public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
                 mCanvas.invertScale(dScale, midPointX, midPointY);
-                refreshCanvas();
+            }
+
+            @Override
+            public void onTwoPointsUp() {
+                transBitmap = null;
+                redrawCanvas();
+            }
+
+            @Override
+            public void onTwoPointsDown() {
+                mPath = null;
+                if (transBitmap == null) {
+                    transBitmap = Bitmap.createBitmap(mBitmap);
+                    MyCanvas c = new MyCanvas(transBitmap);
+                    c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                    c.invertTranslate(-mCanvas.getStartPointX(), -mCanvas.getStartPointY());
+                    c.invertScale(1 / mCanvas.getScale(), 0, 0);
+                    c.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+                }
+            }
+
+            @Override
+            public void onTwoPointPress() {
+                redrawBitmap();
             }
         });
     }
@@ -475,19 +494,22 @@ public class PaintView extends View {
     }
 
     void resetTransform() {
-        mCanvas.restore();
-        mCanvas.save();
-        mCanvas.drawColor(Color.TRANSPARENT);
         mCanvas.reset();
-        refreshCanvas();
+        redrawCanvas();
     }
 
-    private void refreshCanvas() {
+    private void redrawCanvas() {
         mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         for (PathBean pathBean : this.undoList) {
             mCanvas.drawPath(pathBean.path, pathBean.paint);
         }
+        invalidate();
+    }
+
+    private void redrawBitmap() {
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        mCanvas.drawBitmap(transBitmap, 0F, 0F, mBitmapPaint);
         invalidate();
     }
 
