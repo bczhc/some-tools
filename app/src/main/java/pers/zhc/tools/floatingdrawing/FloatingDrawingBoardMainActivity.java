@@ -864,6 +864,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 //                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
                             TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
                             pv.importPathFile(new File(s), () -> {
+                                this.hsvaFloats[0] = null;
                                 runOnUiThread(importPathFileDoneAction);
                                 importPathFileProgressDialog.dismiss();
                             }, aFloat -> runOnUiThread(() -> {

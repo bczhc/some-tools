@@ -40,8 +40,19 @@
   <component name="ChangeListManager">
     <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="restore to before #44 (on github)">
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher_background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher_background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_background.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png" beforeDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -125,7 +136,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="21505f61f40510dd0f95965bffa4e33274811cba" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -286,10 +297,10 @@
     </configuration>
     <list>
       <item itemvalue="Android App.app" />
+      <item itemvalue="Android App.some-tools.app" />
       <item itemvalue="Groovy.build" />
       <item itemvalue="Kotlin.pers.zhc.tools.test.viewtest.SKt" />
       <item itemvalue="Node.js.a.js" />
-      <item itemvalue="Android App.some-tools.app" />
     </list>
     <recent_temporary>
       <list>
@@ -1010,33 +1021,33 @@
     <state x="779" y="457" key="GitRewordDialog/0.0.1449.815@0.0.1449.815" timestamp="1579508174735" />
     <state x="273" y="376" width="964" height="198" key="GitRewordDialog/0.27.1366.741@0.27.1366.741" timestamp="1580202716970" />
     <state x="779" y="457" key="GitRewordDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state width="1312" height="467" key="GridCell.Tab.0.bottom" timestamp="1580213916999">
+    <state width="1312" height="144" key="GridCell.Tab.0.bottom" timestamp="1580219100505">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.bottom/0.0.1449.815@0.0.1449.815" timestamp="1579592173845" />
     <state width="1874" height="225" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state width="1312" height="467" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1580213916999" />
+    <state width="1312" height="144" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1580219100505" />
     <state width="1874" height="225" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state width="1312" height="467" key="GridCell.Tab.0.center" timestamp="1580213916999">
+    <state width="1312" height="144" key="GridCell.Tab.0.center" timestamp="1580219100504">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.center/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1874" height="225" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state width="1312" height="467" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1580213916999" />
+    <state width="1312" height="144" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1580219100504" />
     <state width="1874" height="225" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state width="1312" height="467" key="GridCell.Tab.0.left" timestamp="1580213916998">
+    <state width="1312" height="144" key="GridCell.Tab.0.left" timestamp="1580219100504">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.left/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1874" height="225" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state width="1312" height="467" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1580213916998" />
+    <state width="1312" height="144" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1580219100504" />
     <state width="1874" height="225" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state width="1312" height="467" key="GridCell.Tab.0.right" timestamp="1580213916999">
+    <state width="1312" height="144" key="GridCell.Tab.0.right" timestamp="1580219100505">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.right/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1874" height="225" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state width="1312" height="467" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1580213916999" />
+    <state width="1312" height="144" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1580219100505" />
     <state width="1874" height="225" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
     <state width="1312" height="152" key="GridCell.Tab.1.bottom" timestamp="1580196464683">
       <screen x="0" y="27" width="1366" height="741" />
