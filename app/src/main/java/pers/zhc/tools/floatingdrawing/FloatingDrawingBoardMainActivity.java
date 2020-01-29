@@ -650,13 +650,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                 try {
-                    int edit = Integer.parseInt(et.getText().toString());
+                    float edit = Float.parseFloat(et.getText().toString());
                     double a = Math.log(edit) / Math.log(1.07D);
-                    strokeWatchView.change(((float) edit * pv.getCanvas().getScale()), pv.getColor());
+                    strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getColor());
                     sb.setProgress((int) a);
                     if (checked[0] == 1)
-                        pv.setStrokeWidth(((float) edit));
-                    else pv.setEraserStrokeWidth(((float) edit));
+                        pv.setStrokeWidth(edit);
+                    else pv.setEraserStrokeWidth((edit));
                     tv.setText(getString(R.string.tv, String.valueOf(edit)));
                 } catch (Exception e) {
                     Common.showException(e, this);
@@ -670,10 +670,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             ad.show();
         });
-        double pow = pv.getStrokeWidth();
-        pv.setStrokeWidth((float) ((int) pow));
-        strokeWatchView.change(((float) pow * pv.getCanvas().getScale()), pv.getColor());
-        tv.setText(String.valueOf((int) pow));
+        float pow = pv.getStrokeWidth();
+        strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
+        tv.setText(String.valueOf(pow));
         sb.setProgress((int) (Math.log(pow) / Math.log(1.07D)));
         sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         sb.setMax(100);
@@ -687,14 +686,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                double pow = Math.pow(1.07D, progress);
+                float pow = (float) Math.pow(1.07D, progress);
                 if (checked[0] == 1) {
-                    pv.setStrokeWidth((float) ((int) pow));
+                    pv.setStrokeWidth(pow);
                 } else {
-                    pv.setEraserStrokeWidth((float) pow);
+                    pv.setEraserStrokeWidth(pow);
                 }
-                tv.setText(String.valueOf(((int) pow)));
-                strokeWatchView.change(((float) pow * pv.getCanvas().getScale()), pv.getColor());
+                tv.setText(String.valueOf((pow)));
+                strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
             }
 
             @Override
@@ -711,7 +710,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             checked[0] = checkedId;
             float w = checkedId == 1 ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
             strokeWatchView.change(w * pv.getCanvas().getScale(), pv.getColor());
-            tv.setText(String.format(getString(R.string.tv), (int) w));
+            tv.setText(String.format(getString(R.string.tv), w));
             sb.setProgress((int) (Math.log(w) / Math.log(1.07D)));
         });
         mainLL.addView(barLL);
