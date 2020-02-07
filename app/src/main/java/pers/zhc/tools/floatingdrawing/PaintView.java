@@ -47,6 +47,7 @@ public class PaintView extends View {
     private GestureResolver gestureResolver;
     private List<byte[]> savedData = null;
     private byte[] data = null;
+    private boolean importingPath = false;
 
     PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -155,12 +156,14 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas) {
         if (mBitmap != null) {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-            if (mPath != null) {//显示实时正在绘制的path轨迹
-                float mCanvasScale = mCanvas.getScale();
-                canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
-                canvas.scale(mCanvasScale, mCanvasScale);
-                if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
-                else canvas.drawPath(mPath, mPaint);
+            if (!importingPath) {
+                if (mPath != null) {//显示实时正在绘制的path轨迹
+                    float mCanvasScale = mCanvas.getScale();
+                    canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
+                    canvas.scale(mCanvasScale, mCanvasScale);
+                    if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
+                    else canvas.drawPath(mPath, mPaint);
+                }
             }
         }
     }
@@ -357,6 +360,7 @@ public class PaintView extends View {
 
     void importPathFile(File f, Runnable d, @Documents.Nullable ValueInterface<Float> floatValueInterface) {
         Handler handler = new Handler();
+        importingPath = true;
         new Thread(() -> {
             try {
                 RandomAccessFile raf = new RandomAccessFile(f, "r");
@@ -407,6 +411,7 @@ public class PaintView extends View {
                         }
                     }
                     d.run();
+                    importingPath = false;
                     raf.close();
                     return;
                 }
@@ -458,6 +463,7 @@ public class PaintView extends View {
                 e.printStackTrace();
             }
             d.run();
+            importingPath = false;
         }).start();
     }
 
