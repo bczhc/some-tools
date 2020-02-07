@@ -182,7 +182,7 @@ public class PaintView extends View {
      */
     void undo() {
         data = new byte[12];
-        jni.intToByteArray(data, 3, 0);
+        jni.intToByteArray(data, 4, 0);
         try {
             os.write(data);
             os.flush();
@@ -209,7 +209,7 @@ public class PaintView extends View {
      */
     void redo() {
         data = new byte[12];
-        jni.intToByteArray(data, 4, 0);
+        jni.intToByteArray(data, 5, 0);
         try {
             os.write(data);
             os.flush();
@@ -406,9 +406,8 @@ public class PaintView extends View {
                                 break;
                         }
                     }
-                    raf.close();
                     d.run();
-
+                    raf.close();
                     return;
                 }
                 long length = f.length(), read = 0L;
@@ -421,40 +420,40 @@ public class PaintView extends View {
                     lastP1 = p1;
                     p1 = jni.byteArrayToInt(bytes, 0);
                     switch (p1) {
-                        case 3:
+                        case 4:
                             undo();
                             break;
-                        case 4:
+                        case 5:
                             redo();
                             break;
                         case 1:
+                        case 2:
                             strokeWidth = jni.byteArrayToFloat(bytes, 4);
                             color = jni.byteArrayToInt(bytes, 8);
-                            if (color == Color.TRANSPARENT) setEraserStrokeWidth(strokeWidth);
-                            else {
+                            setEraserMode(p1 == 2);
+                            if (isEraserMode) {
+                                setEraserStrokeWidth(strokeWidth);
+                            } else {
                                 setStrokeWidth(strokeWidth);
                                 setPaintColor(color);
                             }
                             break;
-                        case 2:
+                        case 3:
                             if (x != -1 && y != -1) onTouchAction(MotionEvent.ACTION_UP, x, y);
                             break;
                         case 0:
                             x = jni.byteArrayToFloat(bytes, 4);
                             y = jni.byteArrayToFloat(bytes, 8);
-                            if (lastP1 == 1) {
-                                onTouchAction(MotionEvent.ACTION_DOWN
-                                        , x
-                                        , y);
+                            if (lastP1 == 1 || lastP1 == 2) {
+                                onTouchAction(MotionEvent.ACTION_DOWN, x, y);
                             }
-                            onTouchAction(MotionEvent.ACTION_MOVE
-                                    , x
-                                    , y);
+                            onTouchAction(MotionEvent.ACTION_MOVE, x, y);
                             break;
                     }
                     read += 12;
                     floatValueInterface.f(((float) read) * 100F / ((float) length));
                 }
+                raf.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -477,7 +476,7 @@ public class PaintView extends View {
                 mPath.moveTo(mLastX, mLastY);
                 savedData = new ArrayList<>();
                 data = new byte[12];
-                jni.intToByteArray(data, 1, 0);
+                jni.intToByteArray(data, isEraserMode ? 2 : 1, 0);
                 jni.floatToByteArray(data, mPaintRef.getStrokeWidth(), 4);
                 jni.intToByteArray(data, mPaintRef.getColor(), 8);
                 savedData.add(data);
@@ -498,7 +497,7 @@ public class PaintView extends View {
                 }
                 if (savedData != null) {
                     data = new byte[12];
-                    jni.intToByteArray(data, 2, 0);
+                    jni.intToByteArray(data, 3, 0);
                     savedData.add(data);
                     data = new byte[12];//多写一个move的操作
                     jni.floatToByteArray(data, x, 4);
@@ -529,10 +528,11 @@ public class PaintView extends View {
                     一条笔迹或一个操作记录记录长度为12字节
                     byte b[12];(length=12)
                     4+4+4
-                    b[0]: 标记，路径开始为1，路径结束为2，路径中为0；撤销为3，恢复为4。(int)
+                    b[0]: 标记，绘画路径开始为1，橡皮擦路径开始为2，路径结束为3，路径中为0；撤销为4，恢复为5。(int)
                     如果标记为1，排列结构：标记(int)+笔迹宽度(float)+颜色(int)
+                    如果标记为2，排列结构：标记(int)+橡皮擦宽度(float)+TRANSPARENT(int)
                     如果标记为0，排列结构：标记(int)+x坐标(float)+y坐标(float)
-                    如果标记为2、3或4，则后8字节忽略。
+                    如果标记为3、4或5，则后8字节忽略。
                      */
                 }
                 if (savedData != null) {
