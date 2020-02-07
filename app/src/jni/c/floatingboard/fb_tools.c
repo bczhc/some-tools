@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_floatToByteArray
-        (JNIEnv *env, jobject obj, jbyteArray dst, jfloat a) {
+        (JNIEnv *env, jobject obj, jbyteArray dst, jfloat a, jint offset) {
     JNIEnv e = *env;
     float f = (float) a;
     char *c = (char *) &f;
@@ -17,11 +17,11 @@ JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_floatToByteArray
     R[1] = c[1];
     R[2] = c[2];
     R[3] = c[3];
-    e->SetByteArrayRegion(env, dst, 0, 4, R);
+    e->SetByteArrayRegion(env, dst, offset, 4, R);
 }
 
 JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_intToByteArray
-        (JNIEnv *env, jobject obj, jbyteArray dst, jint j) {
+        (JNIEnv *env, jobject obj, jbyteArray dst, jint j, jint offset) {
     JNIEnv e = *env;
     int i = (int) j;
     char *c = (char *) &i;
@@ -30,23 +30,23 @@ JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_intToByteArray
     R[1] = c[1];
     R[2] = c[2];
     R[3] = c[3];
-    e->SetByteArrayRegion(env, dst, 0, 4, R);
+    e->SetByteArrayRegion(env, dst, offset, 4, R);
 }
 
 JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToFloat
-        (JNIEnv *env, jobject obj, jbyteArray bytes) {
+        (JNIEnv *env, jobject obj, jbyteArray bytes, jint offset) {
     JNIEnv e = *env;
     jbyte b[4];
-    e->GetByteArrayRegion(env, bytes, 0, 4, b);
+    e->GetByteArrayRegion(env, bytes, offset, 4, b);
     float r = *((float *) b);
     return (jfloat) r;
 }
 
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToInt
-        (JNIEnv *env, jobject obj, jbyteArray bytes) {
+        (JNIEnv *env, jobject obj, jbyteArray bytes, jint offset) {
     JNIEnv e = *env;
     jbyte b[4];
-    e->GetByteArrayRegion(env, bytes, 0, 4, b);
+    e->GetByteArrayRegion(env, bytes, offset, 4, b);
     int r = *((int *) b);
     return (jint) r;
 }

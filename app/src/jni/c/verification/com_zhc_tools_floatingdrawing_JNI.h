@@ -16,16 +16,16 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_mG
         (JNIEnv *, jobject, jobject, jstring);
 
 JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_floatToByteArray
-        (JNIEnv *, jobject, jbyteArray, jfloat);
+        (JNIEnv *, jobject, jbyteArray, jfloat, jint);
 
 JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_intToByteArray
-        (JNIEnv *env, jobject obj, jbyteArray, jint j);
+        (JNIEnv *env, jobject obj, jbyteArray, jint j, jint);
 
 JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToFloat
-        (JNIEnv *env, jobject obj, jbyteArray bytes);
+        (JNIEnv *env, jobject obj, jbyteArray bytes, jint);
 
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToInt
-        (JNIEnv *env, jobject obj, jbyteArray bytes);
+        (JNIEnv *env, jobject obj, jbyteArray bytes, jint);
 
 #ifdef __cplusplus
 }

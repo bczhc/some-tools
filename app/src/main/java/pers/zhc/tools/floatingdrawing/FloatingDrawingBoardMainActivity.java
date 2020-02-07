@@ -62,6 +62,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private ImageView iv;
     private LinearLayout optionsLL;
     private int fbMeasuredWidth, fbMeasuredHeight;
+    private File fbDir;
 
     private static void uploadPaths(Context context) {
         try {
@@ -759,11 +760,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             buttons[i] = new Button(this);
             buttons[i].setText(textsRes[i]);
             ll.addView(buttons[i]);
-            File d = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
-            if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
-            File pathDir = new File(d.toString() + File.separator + "path");
+            fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
+            if (!fbDir.exists()) System.out.println("d.mkdir() = " + fbDir.mkdir());
+            File pathDir = new File(fbDir.toString() + File.separator + "path");
             if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
-            File imageDir = new File(d.toString() + File.separator + "image");
+            File imageDir = new File(fbDir.toString() + File.separator + "image");
             if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                     v -> {
@@ -945,5 +946,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         abstract void have();
 
         abstract void notHave();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        System.out.println("kill...");
+        /*File d = new File(fbDir, "killed");
+        if (!d.exists()) System.out.println("d.mkdirs() = " + d.mkdirs());
+        this.pv.saveImg(new File(d, this.currentInstanceMills + ".png"));*/
     }
 }
