@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/zhc/bin/clion-2019.3.3/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /home/zhc/bin/clion-2019.3.2/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /home/zhc/bin/clion-2019.3.3/bin/cmake/linux/bin/cmake -E remove -f
+RM = /home/zhc/bin/clion-2019.3.2/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/zhc/code/some-tools/app/src/jni/c
+CMAKE_SOURCE_DIR = /home/zhc/code/code/Android/some-tools/app/src/jni/c
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug
+CMAKE_BINARY_DIR = /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/zhc/bin/clion-2019.3.3/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/home/zhc/bin/clion-2019.3.2/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -70,7 +70,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/zhc/bin/clion-2019.3.3/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/home/zhc/bin/clion-2019.3.2/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles /home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -257,32 +257,32 @@ getevent/geteventV2.c.s:
 	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/getevent/geteventV2.c.s
 .PHONY : getevent/geteventV2.c.s
 
-home/zhc/code/some-tools/app/src/jni/zhc.o: home/zhc/code/some-tools/app/src/jni/zhc.c.o
+home/zhc/code/code/Android/some-tools/app/src/jni/zhc.o: home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o
 
-.PHONY : home/zhc/code/some-tools/app/src/jni/zhc.o
+.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.o
 
 # target to build an object file
-home/zhc/code/some-tools/app/src/jni/zhc.c.o:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/home/zhc/code/some-tools/app/src/jni/zhc.c.o
-.PHONY : home/zhc/code/some-tools/app/src/jni/zhc.c.o
+home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o:
+	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o
+.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o
 
-home/zhc/code/some-tools/app/src/jni/zhc.i: home/zhc/code/some-tools/app/src/jni/zhc.c.i
+home/zhc/code/code/Android/some-tools/app/src/jni/zhc.i: home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.i
 
-.PHONY : home/zhc/code/some-tools/app/src/jni/zhc.i
+.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.i
 
 # target to preprocess a source file
-home/zhc/code/some-tools/app/src/jni/zhc.c.i:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/home/zhc/code/some-tools/app/src/jni/zhc.c.i
-.PHONY : home/zhc/code/some-tools/app/src/jni/zhc.c.i
+home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.i:
+	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.i
+.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.i
 
-home/zhc/code/some-tools/app/src/jni/zhc.s: home/zhc/code/some-tools/app/src/jni/zhc.c.s
+home/zhc/code/code/Android/some-tools/app/src/jni/zhc.s: home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.s
 
-.PHONY : home/zhc/code/some-tools/app/src/jni/zhc.s
+.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.s
 
 # target to generate assembly for a file
-home/zhc/code/some-tools/app/src/jni/zhc.c.s:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/home/zhc/code/some-tools/app/src/jni/zhc.c.s
-.PHONY : home/zhc/code/some-tools/app/src/jni/zhc.c.s
+home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.s:
+	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.s
+.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.s
 
 verification/verify.o: verification/verify.c.o
 
@@ -334,9 +334,9 @@ help:
 	@echo "... getevent/geteventV2.o"
 	@echo "... getevent/geteventV2.i"
 	@echo "... getevent/geteventV2.s"
-	@echo "... home/zhc/code/some-tools/app/src/jni/zhc.o"
-	@echo "... home/zhc/code/some-tools/app/src/jni/zhc.i"
-	@echo "... home/zhc/code/some-tools/app/src/jni/zhc.s"
+	@echo "... home/zhc/code/code/Android/some-tools/app/src/jni/zhc.o"
+	@echo "... home/zhc/code/code/Android/some-tools/app/src/jni/zhc.i"
+	@echo "... home/zhc/code/code/Android/some-tools/app/src/jni/zhc.s"
 	@echo "... verification/verify.o"
 	@echo "... verification/verify.i"
 	@echo "... verification/verify.s"

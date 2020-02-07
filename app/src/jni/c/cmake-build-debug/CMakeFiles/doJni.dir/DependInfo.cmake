@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/zhc/code/some-tools/app/src/jni/c/codecs/doJNI.c" "/home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/codecs/doJNI.c.o"
+  "/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/doJNI.c" "/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/codecs/doJNI.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
