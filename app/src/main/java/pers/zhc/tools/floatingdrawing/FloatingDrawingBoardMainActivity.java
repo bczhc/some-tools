@@ -62,6 +62,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private ImageView iv;
     private LinearLayout optionsLL;
     private int fbMeasuredWidth, fbMeasuredHeight;
+    private File fbDir;
 
     private static void uploadPaths(Context context) {
         try {
@@ -233,7 +234,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         View.OnTouchListener moveTouchListener = new View.OnTouchListener() {
             private int lastRawX, lastRawY, paramX, paramY;
             private float lastX, lastY;
-            private float lastDX, lastDY;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -494,7 +494,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void measureFB_LL() {
-        int mode = View.MeasureSpec.UNSPECIFIED;
+        int mode = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         fbLL.measure(mode, mode);
         fbMeasuredWidth = fbLL.getMeasuredWidth();
         fbMeasuredHeight = fbLL.getMeasuredHeight();
@@ -621,7 +621,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         mainLL.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
         LinearLayout barLL = new LinearLayout(this);
         RadioGroup rg = new RadioGroup(this);
-        barLL.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+        barLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         barLL.setOrientation(LinearLayout.HORIZONTAL);
         RadioButton[] radioButtons = new RadioButton[2];
         int[] strRes = new int[]{
@@ -638,7 +638,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         rg.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
         barLL.addView(rg);
         LinearLayout ll = new LinearLayout(this);
-        StrokeWatchView strokeWatchView = new StrokeWatchView(this, width, height);
+        StrokeWatchView strokeWatchView = new StrokeWatchView(this);
+        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         SeekBar sb = new SeekBar(this);
         TextView tv = new TextView(this);
         tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -650,13 +651,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                 try {
-                    int edit = Integer.parseInt(et.getText().toString());
+                    float edit = Float.parseFloat(et.getText().toString());
                     double a = Math.log(edit) / Math.log(1.07D);
-                    strokeWatchView.change(((float) edit), pv.getColor());
+                    strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getColor());
                     sb.setProgress((int) a);
                     if (checked[0] == 1)
-                        pv.setStrokeWidth(((float) edit));
-                    else pv.setEraserStrokeWidth(((float) edit));
+                        pv.setStrokeWidth(edit);
+                    else pv.setEraserStrokeWidth((edit));
                     tv.setText(getString(R.string.tv, String.valueOf(edit)));
                 } catch (Exception e) {
                     Common.showException(e, this);
@@ -670,15 +671,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             ad.show();
         });
-        /*sb.setProgress(((int) (Math.log((double) pv.getStrokeWidth()) / Math.log(1.07D))));
-        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(sb.getProgress(), sb.getProgress()));
-        strokeWatchView.change((float) Math.pow(1.07D, (double) sb.getProgress()), pv.getColor());
-        tv.setText(String.valueOf((int) Math.pow(1.07D, (double) sb.getProgress())));*/
-        double pow = pv.getStrokeWidth();
-        pv.setStrokeWidth((float) ((int) pow));
-        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
-        strokeWatchView.change(((float) pow), pv.getColor());
-        tv.setText(String.valueOf((int) pow));
+        float pow = pv.getStrokeWidth();
+        strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
+        tv.setText(String.valueOf(pow));
         sb.setProgress((int) (Math.log(pow) / Math.log(1.07D)));
         sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         sb.setMax(100);
@@ -692,15 +687,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                double pow = Math.pow(1.07D, progress);
+                float pow = (float) Math.pow(1.07D, progress);
                 if (checked[0] == 1) {
-                    pv.setStrokeWidth((float) ((int) pow));
+                    pv.setStrokeWidth(pow);
                 } else {
-                    pv.setEraserStrokeWidth((float) pow);
+                    pv.setEraserStrokeWidth(pow);
                 }
-                tv.setText(String.valueOf(((int) pow)));
-                strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) pow), ((int) pow)));
-                strokeWatchView.change(((float) pow), pv.getColor());
+                tv.setText(String.valueOf((pow)));
+                strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
             }
 
             @Override
@@ -716,9 +710,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         rg.setOnCheckedChangeListener((group, checkedId) -> {
             checked[0] = checkedId;
             float w = checkedId == 1 ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
-            strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(((int) w), ((int) w)));
-            strokeWatchView.change(w, pv.getColor());
-            tv.setText(String.format(getString(R.string.tv), (int) w));
+            strokeWatchView.change(w * pv.getCanvas().getScale(), pv.getColor());
+            tv.setText(String.format(getString(R.string.tv), w));
             sb.setProgress((int) (Math.log(w) / Math.log(1.07D)));
         });
         mainLL.addView(barLL);
@@ -767,11 +760,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             buttons[i] = new Button(this);
             buttons[i].setText(textsRes[i]);
             ll.addView(buttons[i]);
-            File d = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
-            if (!d.exists()) System.out.println("d.mkdir() = " + d.mkdir());
-            File pathDir = new File(d.toString() + File.separator + "path");
+            fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
+            if (!fbDir.exists()) System.out.println("d.mkdir() = " + fbDir.mkdir());
+            File pathDir = new File(fbDir.toString() + File.separator + "path");
             if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
-            File imageDir = new File(d.toString() + File.separator + "image");
+            File imageDir = new File(fbDir.toString() + File.separator + "image");
             if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                     v -> {
@@ -842,9 +835,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             pv.closePathRecorderOS();
                             File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
                             pv.saveImg(imageFile);
-                            if (imageFile.exists())
-                                ToastUtils.show(this, getString(R.string.saving_success) + "\n" + imageDir.toString() + File.separator + et.getText().toString() + ".png");
-                            else ToastUtils.show(this, R.string.saving_failed);
                             pv.setOS(currentInternalPathFile, true);
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -871,6 +861,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 //                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
                             TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
                             pv.importPathFile(new File(s), () -> {
+                                this.hsvaFloats[0] = null;
                                 runOnUiThread(importPathFileDoneAction);
                                 importPathFileProgressDialog.dismiss();
                             }, aFloat -> runOnUiThread(() -> {
@@ -955,5 +946,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         abstract void have();
 
         abstract void notHave();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        System.out.println("kill...");
+        /*File d = new File(fbDir, "killed");
+        if (!d.exists()) System.out.println("d.mkdirs() = " + d.mkdirs());
+        this.pv.saveImg(new File(d, this.currentInstanceMills + ".png"));*/
     }
 }

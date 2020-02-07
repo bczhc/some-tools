@@ -11,12 +11,12 @@ public class JNI {
 
     public native int mG(Context mainActivity, String key);
 
-    native void floatToByteArray(@Size(value = 4) byte[] dest, float f);
+    public native void floatToByteArray(@Size(min = 4) byte[] dest, float f, int offset);
 
-    native void intToByteArray(@Size(value = 4) byte[] dest, int i);
+    public native void intToByteArray(@Size(min = 4) byte[] dest, int i, int offset);
 
-    native float byteArrayToFloat(@Size(value = 4) byte[] bytes);
+    public native float byteArrayToFloat(@Size(min = 4) byte[] bytes, int offset);
 
-    native int byteArrayToInt(@Size(value = 4) byte[] bytes);
+    public native int byteArrayToInt(@Size(min = 4) byte[] bytes, int offset);
 }
 

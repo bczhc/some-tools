@@ -1,5 +1,6 @@
 package pers.zhc.tools;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import pers.zhc.tools.utils.CrashHandler;
 import pers.zhc.tools.utils.ExternalJNI;
+import pers.zhc.tools.utils.PermissionRequester;
 
 import java.io.*;
 import java.net.URL;
@@ -21,6 +23,8 @@ public class BaseActivity extends Activity {
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
         ExternalJNI.ex(this);
+        new PermissionRequester(() -> {
+        }).requestPermission(this, Manifest.permission.INTERNET, 43);
     }
 
     File getVFile(Context ctx) {
@@ -97,7 +101,7 @@ public class BaseActivity extends Activity {
     }
 
     public static class Infos {
-        public static String zhcUrlString = "http://bczhc.free.qydev.com/";
+        public static String zhcUrlString = "http://bczhc.free.idcfengye.com";
     }
 
 }
