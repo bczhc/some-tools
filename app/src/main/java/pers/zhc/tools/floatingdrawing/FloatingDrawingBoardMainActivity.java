@@ -62,7 +62,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private ImageView iv;
     private LinearLayout optionsLL;
     private int fbMeasuredWidth, fbMeasuredHeight;
-    private File fbDir;
 
     private static void uploadPaths(Context context) {
         try {
@@ -760,7 +759,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             buttons[i] = new Button(this);
             buttons[i].setText(textsRes[i]);
             ll.addView(buttons[i]);
-            fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
+            File fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
             if (!fbDir.exists()) System.out.println("d.mkdir() = " + fbDir.mkdir());
             File pathDir = new File(fbDir.toString() + File.separator + "path");
             if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());

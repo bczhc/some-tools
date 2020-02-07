@@ -12,11 +12,13 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,8 +62,18 @@ public class PaintView extends View {
     void setOS(File file, boolean append) {
         try {
             os = new FileOutputStream(file, append);
+            try {
+                byte[] headInfo = "path ver 2.0".getBytes();
+                if (headInfo.length != 12) {
+                    Common.showException(new Exception("native error"), (Activity) ctx);
+                }
+                os.write(headInfo);
+                os.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Common.showException(e, (Activity) ctx);
         }
     }
 
@@ -344,16 +356,68 @@ public class PaintView extends View {
     }
 
     void importPathFile(File f, Runnable d, @Documents.Nullable ValueInterface<Float> floatValueInterface) {
+        Handler handler = new Handler();
         new Thread(() -> {
             try {
-                InputStream is = new FileInputStream(f);
+                RandomAccessFile raf = new RandomAccessFile(f, "r");
+                byte[] head = new byte[12];
+                raf.read(head);
+                raf.seek(0);
+                byte[] cmp = "path ver 2.0".getBytes();
+                if (!Arrays.equals(head, cmp)) {
+                    handler.post(() -> ToastUtils.show(ctx, R.string.import_old));
+                    long length = f.length(), haveRead = 0L;
+                    byte[] bytes = new byte[26];
+                    byte[] bytes_4 = new byte[4];
+                    while (raf.read(bytes) != -1) {
+                        haveRead += 26L;
+                        switch (bytes[25]) {
+                            case 1:
+                                undo();
+                                System.out.println("undo!");
+                                break;
+                            case 2:
+                                redo();
+                                System.out.println("redo!");
+                                break;
+                            default:
+                                System.arraycopy(bytes, 0, bytes_4, 0, 4);
+                                float x = jni.byteArrayToFloat(bytes_4, 0);
+                                System.arraycopy(bytes, 4, bytes_4, 0, 4);
+                                float y = jni.byteArrayToFloat(bytes_4, 0);
+                                System.arraycopy(bytes, 8, bytes_4, 0, 4);
+                                int color = jni.byteArrayToInt(bytes_4, 0);
+                                System.arraycopy(bytes, 12, bytes_4, 0, 4);
+                                float strokeWidth = jni.byteArrayToFloat(bytes_4, 0);
+                                System.arraycopy(bytes, 16, bytes_4, 0, 4);
+                                int motionAction = jni.byteArrayToInt(bytes_4, 0);
+                                System.arraycopy(bytes, 20, bytes_4, 0, 4);
+                                float eraserStrokeWidth = jni.byteArrayToFloat(bytes_4, 0);
+                                if (motionAction != 0 && motionAction != 1 && motionAction != 2)
+                                    motionAction = Random.ran_sc(0, 2);
+                                if (strokeWidth <= 0) strokeWidth = Random.ran_sc(1, 800);
+                                if (eraserStrokeWidth <= 0) eraserStrokeWidth = Random.ran_sc(1, 800);
+                                setEraserMode(bytes[24] == 1);
+                                setEraserStrokeWidth(eraserStrokeWidth);
+                                setPaintColor(color);
+                                setStrokeWidth(strokeWidth);
+                                onTouchAction(motionAction, x, y);
+                                floatValueInterface.f(((float) haveRead) / ((float) length) * 100F);
+                                break;
+                        }
+                    }
+                    raf.close();
+                    d.run();
+
+                    return;
+                }
                 long length = f.length(), read = 0L;
                 byte[] bytes = new byte[12];
                 int color;
                 float strokeWidth;
                 int lastP1, p1 = -1;
                 float x = -1, y = -1;
-                while (is.read(bytes) != -1) {
+                while (raf.read(bytes) != -1) {
                     lastP1 = p1;
                     p1 = jni.byteArrayToInt(bytes, 0);
                     switch (p1) {
