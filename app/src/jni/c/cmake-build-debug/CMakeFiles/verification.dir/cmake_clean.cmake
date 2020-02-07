@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/verification.dir/codecs/qmcLib.c.o"
   "CMakeFiles/verification.dir/floatingboard/fb_tools.c.o"
-  "CMakeFiles/verification.dir/home/zhc/code/some-tools/app/src/jni/zhc.c.o"
+  "CMakeFiles/verification.dir/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o"
   "CMakeFiles/verification.dir/verification/verify.c.o"
   "verification"
   "verification.pdb"

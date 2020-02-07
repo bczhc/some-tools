@@ -14,8 +14,77 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
+      <change afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libJNIGetEventCtrl.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libpi.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libJNIGetEventCtrl.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libdoJNI.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libfb_tools.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libpi.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86/libJNIGetEventCtrl.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86/liba.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86/libdoJNI.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86/libfb_tools.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86/libpi.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86_64/libJNIGetEventCtrl.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86_64/libdoJNI.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86_64/libfb_tools.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86_64/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../app.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/cpu.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/cpu.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/cpu.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/cpu.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/cpu.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/cpu.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/cpu.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/verification.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/jni.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/jni.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/floatingboard/fb_tools.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/floatingboard/fb_tools.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingdrawing_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingdrawing_JNI.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libpi.so" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,6 +224,7 @@
       <workItem from="1578727676986" duration="251000" />
       <workItem from="1579851186502" duration="669000" />
       <workItem from="1579861204501" duration="10000" />
+      <workItem from="1581067248024" duration="1064000" />
     </task>
     <servers />
   </component>

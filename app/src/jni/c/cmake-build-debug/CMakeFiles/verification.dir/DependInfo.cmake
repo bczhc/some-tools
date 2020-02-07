@@ -4,10 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/zhc/code/some-tools/app/src/jni/c/codecs/qmcLib.c" "/home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/codecs/qmcLib.c.o"
-  "/home/zhc/code/some-tools/app/src/jni/c/floatingboard/fb_tools.c" "/home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/floatingboard/fb_tools.c.o"
-  "/home/zhc/code/some-tools/app/src/jni/zhc.c" "/home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/home/zhc/code/some-tools/app/src/jni/zhc.c.o"
-  "/home/zhc/code/some-tools/app/src/jni/c/verification/verify.c" "/home/zhc/code/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/verification/verify.c.o"
+  "/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/qmcLib.c" "/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/codecs/qmcLib.c.o"
+  "/home/zhc/code/code/Android/some-tools/app/src/jni/c/floatingboard/fb_tools.c" "/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/floatingboard/fb_tools.c.o"
+  "/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c" "/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o"
+  "/home/zhc/code/code/Android/some-tools/app/src/jni/c/verification/verify.c" "/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/verification/verify.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
