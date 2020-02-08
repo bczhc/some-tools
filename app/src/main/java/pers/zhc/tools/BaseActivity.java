@@ -14,17 +14,27 @@ import pers.zhc.tools.utils.PermissionRequester;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseActivity extends Activity {
+    public App app = new App();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        app.addActivity(this);
         super.onCreate(savedInstanceState);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
         ExternalJNI.ex(this);
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, 43);
+    }
+
+    @Override
+    protected void onDestroy() {
+        app.removeActivity(this);
+        super.onDestroy();
     }
 
     File getVFile(Context ctx) {
@@ -102,6 +112,32 @@ public class BaseActivity extends Activity {
 
     public static class Infos {
         public static String zhcUrlString = "http://bczhc.free.idcfengye.com";
+        public static Class<?> launcherClass = MainActivity.class;
     }
 
+    public static class App {
+        private List<Activity> activities;
+
+        App() {
+            activities = new ArrayList<>();
+        }
+
+        void addActivity(Activity activity) {
+            if (!activities.contains(activity)) {
+                activities.add(activity);
+            }
+        }
+
+        void removeActivity(Activity activity) {
+            activities.remove(activity);
+        }
+
+        public void removeAllActivities() {
+            for (Activity activity : activities) {
+                if (activity != null) {
+                    activity.finish();
+                }
+            }
+        }
+    }
 }
