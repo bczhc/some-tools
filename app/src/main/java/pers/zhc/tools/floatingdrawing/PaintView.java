@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
-import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
@@ -48,6 +47,10 @@ public class PaintView extends View {
     private List<byte[]> savedData = null;
     private byte[] data = null;
     private boolean importingPath = false;
+    private boolean isLockingStroke = false;
+    private float lockedStrokeWidth = 0F;
+    private float lockedEraserStrokeWidth;
+    private float scaleWhenLocked = 1F;
 
     PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -130,6 +133,7 @@ public class PaintView extends View {
             @Override
             public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
                 mCanvas.invertScale(dScale, midPointX, midPointY);
+                setCurrentStrokeWidthWithLockedStrokeWidth();
             }
 
             @Override
@@ -676,6 +680,36 @@ public class PaintView extends View {
         return mPaintRef.getStrokeWidth();
     }
 
+    public boolean isLockingStroke() {
+        return this.isLockingStroke;
+    }
+
+    void bitmapResolution(Point point) {
+        point.x = mBitmap.getWidth();
+        point.y = mBitmap.getHeight();
+    }
+
+    void setLockStrokeMode(boolean mode) {
+        this.isLockingStroke = mode;
+    }
+
+    void lockStroke() {
+        if (isLockingStroke) {
+            this.lockedStrokeWidth = getStrokeWidth();
+            this.lockedEraserStrokeWidth = getEraserStrokeWidth();
+            this.scaleWhenLocked = mCanvas.getScale();
+            setCurrentStrokeWidthWithLockedStrokeWidth();
+        }
+    }
+
+    void setCurrentStrokeWidthWithLockedStrokeWidth() {
+        if (isLockingStroke) {
+            float mCanvasScale = mCanvas.getScale();
+            setStrokeWidth(lockedStrokeWidth * scaleWhenLocked / mCanvasScale);
+            setEraserStrokeWidth(lockedEraserStrokeWidth * scaleWhenLocked / mCanvasScale);
+        }
+    }
+
     /**
      * 路径对象
      */
@@ -687,10 +721,5 @@ public class PaintView extends View {
             this.path = path;
             this.paint = paint;
         }
-    }
-
-    void bitmapResolution(Point point) {
-        point.x = mBitmap.getWidth();
-        point.y = mBitmap.getHeight();
     }
 }
