@@ -165,5 +165,19 @@
     <string name="floating_board">悬浮窗</string>
     <string name="input_event">输入事件</string>
     <string name="import_old">使用旧path格式导入</string>
+    <string name="final_resolution_is">最终分辨率为%1$d*%2$d</string>
+    <string name="please_enter_multiple">请输入倍数</string>
+    <string name="one">1</string>
+    <string name="read_error">读取错误</string>
+    <string name="import_old_2_0">使用2.0版本path导入</string>
+    <string name="import_2_1">使用2.1版本path导入</string>
+    <string name="write_error">写入错误</string>
+    <string name="concat">%1$s%2$s</string>
+    <string name="native_file_not_exist">内部文件不存在</string>
+    <string name="file_name">文件名</string>
+    <string name="file_name_is">文件名：</string>
+    <string name="image_size_px_is">图片大小：(px)</string>
+    <string name="asterisk">*</string>
+    <string name="restart_application">重启应用</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
+import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
@@ -18,7 +19,6 @@ import pers.zhc.u.common.Documents;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,6 +47,7 @@ public class PaintView extends View {
     private GestureResolver gestureResolver;
     private List<byte[]> savedData = null;
     private byte[] data = null;
+    private boolean importingPath = false;
 
     PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -63,7 +64,7 @@ public class PaintView extends View {
         try {
             os = new FileOutputStream(file, append);
             try {
-                byte[] headInfo = "path ver 2.0".getBytes();
+                byte[] headInfo = "path ver 2.1".getBytes();
                 if (headInfo.length != 12) {
                     Common.showException(new Exception("native error"), (Activity) ctx);
                 }
@@ -155,12 +156,14 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas) {
         if (mBitmap != null) {
             canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-            if (mPath != null) {//显示实时正在绘制的path轨迹
-                float mCanvasScale = mCanvas.getScale();
-                canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
-                canvas.scale(mCanvasScale, mCanvasScale);
-                if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
-                else canvas.drawPath(mPath, mPaint);
+            if (!importingPath) {
+                if (mPath != null) {//显示实时正在绘制的path轨迹
+                    float mCanvasScale = mCanvas.getScale();
+                    canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
+                    canvas.scale(mCanvasScale, mCanvasScale);
+                    if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
+                    else canvas.drawPath(mPath, mPaint);
+                }
             }
         }
     }
@@ -181,8 +184,8 @@ public class PaintView extends View {
      * 撤销操作
      */
     void undo() {
-        data = new byte[12];
-        jni.intToByteArray(data, 4, 0);
+        data = new byte[9];
+        data[0] = (byte) 0xC1;
         try {
             os.write(data);
             os.flush();
@@ -208,8 +211,8 @@ public class PaintView extends View {
      * 恢复操作
      */
     void redo() {
-        data = new byte[12];
-        jni.intToByteArray(data, 5, 0);
+        data = new byte[9];
+        data[0] = (byte) 0xC2;
         try {
             os.write(data);
             os.flush();
@@ -253,17 +256,25 @@ public class PaintView extends View {
     }
 
     /**
-     * 保存到指定的文件夹中
+     * 导出图片
      */
-    void saveImg(File f) {
-        ToastUtils.show(ctx, R.string.saving);
+    void exportImg(File f, int exportedWidth, int exportHeight) {
         Handler handler = new Handler();
+        ToastUtils.show(ctx, R.string.saving);
+        System.gc();
+        Bitmap exportedBitmap = Bitmap.createBitmap(exportedWidth, exportHeight, Bitmap.Config.ARGB_8888);
+        MyCanvas myCanvas = new MyCanvas(exportedBitmap);
+        myCanvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
+        myCanvas.scale(mCanvas.getScale() * exportedWidth / width);
+        for (PathBean pathBean : undoList) {
+            myCanvas.drawPath(pathBean.path, pathBean.paint);
+        }
         //保存图片
         final FileOutputStream[] fileOutputStream = {null};
         new Thread(() -> {
             try {
                 fileOutputStream[0] = new FileOutputStream(f);
-                if (mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream[0])) {
+                if (exportedBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream[0])) {
                     fileOutputStream[0].flush();
                 }
             } catch (IOException e) {
@@ -271,6 +282,7 @@ public class PaintView extends View {
                 Common.showException(e, (Activity) ctx);
             } finally {
                 closeStream(fileOutputStream[0]);
+                System.gc();
             }
             handler.post(() -> {
                 if (f.exists())
@@ -355,110 +367,192 @@ public class PaintView extends View {
         closeStream(os);
     }
 
+    /**
+     * 导入路径
+     *
+     * @param f                   路径文件
+     * @param d                   完成接口
+     * @param floatValueInterface 进度接口
+     *                            路径存储结构：
+     *                            一条笔迹或一个操作记录记录长度为9字节
+     *                            byte b[9];(length=9)
+     *                            1+4+4
+     *                            b[0]: 标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2；
+     *                            \ 按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；
+     *                            \ 撤销为0xC1，恢复为0xC2。(byte)
+     *                            如果标记为0xA1，排列结构：标记(int)+笔迹宽度(float)+颜色(int)
+     *                            如果标记为0xA2，排列结构：标记(int)+橡皮擦宽度(float)+TRANSPARENT(int)
+     *                            如果标记为0xB1或0xB2或0xB3，排列结构：标记(int)+x坐标(float)+y坐标(float)
+     *                            如果标记为0xC1或0xC2，则后8字节忽略。
+     */
     void importPathFile(File f, Runnable d, @Documents.Nullable ValueInterface<Float> floatValueInterface) {
+        floatValueInterface.f(0F);
         Handler handler = new Handler();
-        new Thread(() -> {
+        importingPath = true;
+        Thread thread = new Thread(() -> {
+            RandomAccessFile raf = null;
             try {
-                RandomAccessFile raf = new RandomAccessFile(f, "r");
+                raf = new RandomAccessFile(f, "r");
                 byte[] head = new byte[12];
                 raf.read(head);
                 raf.seek(0);
-                byte[] cmp = "path ver 2.0".getBytes();
-                if (!Arrays.equals(head, cmp)) {
-                    handler.post(() -> ToastUtils.show(ctx, R.string.import_old));
-                    long length = f.length(), haveRead = 0L;
-                    byte[] bytes = new byte[26];
-                    byte[] bytes_4 = new byte[4];
-                    while (raf.read(bytes) != -1) {
-                        haveRead += 26L;
-                        switch (bytes[25]) {
-                            case 1:
-                                undo();
-                                System.out.println("undo!");
-                                break;
-                            case 2:
-                                redo();
-                                System.out.println("redo!");
-                                break;
-                            default:
-                                System.arraycopy(bytes, 0, bytes_4, 0, 4);
-                                float x = jni.byteArrayToFloat(bytes_4, 0);
-                                System.arraycopy(bytes, 4, bytes_4, 0, 4);
-                                float y = jni.byteArrayToFloat(bytes_4, 0);
-                                System.arraycopy(bytes, 8, bytes_4, 0, 4);
-                                int color = jni.byteArrayToInt(bytes_4, 0);
-                                System.arraycopy(bytes, 12, bytes_4, 0, 4);
-                                float strokeWidth = jni.byteArrayToFloat(bytes_4, 0);
-                                System.arraycopy(bytes, 16, bytes_4, 0, 4);
-                                int motionAction = jni.byteArrayToInt(bytes_4, 0);
-                                System.arraycopy(bytes, 20, bytes_4, 0, 4);
-                                float eraserStrokeWidth = jni.byteArrayToFloat(bytes_4, 0);
-                                if (motionAction != 0 && motionAction != 1 && motionAction != 2)
-                                    motionAction = Random.ran_sc(0, 2);
-                                if (strokeWidth <= 0) strokeWidth = Random.ran_sc(1, 800);
-                                if (eraserStrokeWidth <= 0) eraserStrokeWidth = Random.ran_sc(1, 800);
-                                setEraserMode(bytes[24] == 1);
-                                setEraserStrokeWidth(eraserStrokeWidth);
-                                setPaintColor(color);
-                                setStrokeWidth(strokeWidth);
-                                onTouchAction(motionAction, x, y);
-                                floatValueInterface.f(((float) haveRead) / ((float) length) * 100F);
-                                break;
-                        }
-                    }
-                    d.run();
-                    raf.close();
-                    return;
+                StringBuilder sb = new StringBuilder();
+                for (byte b : head) {
+                    sb.append((char) b);
                 }
-                long length = f.length(), read = 0L;
-                byte[] bytes = new byte[12];
+                String headString = sb.toString();
+                long length = f.length(), read;
+                byte[] bytes;
+                float x, y, strokeWidth;
                 int color;
-                float strokeWidth;
-                int lastP1, p1 = -1;
-                float x = -1, y = -1;
-                while (raf.read(bytes) != -1) {
-                    lastP1 = p1;
-                    p1 = jni.byteArrayToInt(bytes, 0);
-                    switch (p1) {
-                        case 4:
-                            undo();
-                            break;
-                        case 5:
-                            redo();
-                            break;
-                        case 1:
-                        case 2:
-                            strokeWidth = jni.byteArrayToFloat(bytes, 4);
-                            color = jni.byteArrayToInt(bytes, 8);
-                            setEraserMode(p1 == 2);
-                            if (isEraserMode) {
-                                setEraserStrokeWidth(strokeWidth);
-                            } else {
-                                setStrokeWidth(strokeWidth);
-                                setPaintColor(color);
+                switch (headString) {
+                    case "path ver 2.0":
+                        handler.post(() -> ToastUtils.show(ctx, R.string.import_old_2_0));
+                        raf.skipBytes(12);
+                        bytes = new byte[12];
+                        read = 0L;
+                        int lastP1, p1 = -1;
+                        x = -1;
+                        y = -1;
+                        while (raf.read(bytes) != -1) {
+                            lastP1 = p1;
+                            p1 = jni.byteArrayToInt(bytes, 0);
+                            switch (p1) {
+                                case 4:
+                                    undo();
+                                    break;
+                                case 5:
+                                    redo();
+                                    break;
+                                case 1:
+                                case 2:
+                                    strokeWidth = jni.byteArrayToFloat(bytes, 4);
+                                    color = jni.byteArrayToInt(bytes, 8);
+                                    setEraserMode(p1 == 2);
+                                    if (isEraserMode) {
+                                        setEraserStrokeWidth(strokeWidth);
+                                    } else {
+                                        setStrokeWidth(strokeWidth);
+                                        setPaintColor(color);
+                                    }
+                                    break;
+                                case 3:
+                                    if (x != -1 && y != -1) onTouchAction(MotionEvent.ACTION_UP, x, y);
+                                    break;
+                                case 0:
+                                    x = jni.byteArrayToFloat(bytes, 4);
+                                    y = jni.byteArrayToFloat(bytes, 8);
+                                    if (lastP1 == 1 || lastP1 == 2) {
+                                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                                    }
+                                    onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                                    break;
                             }
-                            break;
-                        case 3:
-                            if (x != -1 && y != -1) onTouchAction(MotionEvent.ACTION_UP, x, y);
-                            break;
-                        case 0:
-                            x = jni.byteArrayToFloat(bytes, 4);
-                            y = jni.byteArrayToFloat(bytes, 8);
-                            if (lastP1 == 1 || lastP1 == 2) {
-                                onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                            read += 12;
+                            floatValueInterface.f(((float) read) * 100F / ((float) length));
+                        }
+                        break;
+                    case "path ver 2.1":
+                        handler.post(() -> ToastUtils.show(ctx, R.string.import_2_1));
+                        raf.skipBytes(12);
+                        bytes = new byte[9];
+                        read = 0L;
+                        while (raf.read(bytes) != -1) {
+                            switch (bytes[0]) {
+                                case (byte) 0xA1:
+                                case (byte) 0xA2:
+                                    strokeWidth = jni.byteArrayToFloat(bytes, 1);
+                                    color = jni.byteArrayToInt(bytes, 5);
+                                    setEraserMode(bytes[0] == (byte) 0xA2);
+                                    mPaintRef.setColor(color);
+                                    mPaintRef.setStrokeWidth(strokeWidth);
+                                    break;
+                                case (byte) 0xB1:
+                                    x = jni.byteArrayToFloat(bytes, 1);
+                                    y = jni.byteArrayToFloat(bytes, 5);
+                                    onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                                    break;
+                                case (byte) 0xB3:
+                                    x = jni.byteArrayToFloat(bytes, 1);
+                                    y = jni.byteArrayToFloat(bytes, 5);
+                                    onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                                    break;
+                                case (byte) 0xB2:
+                                    x = jni.byteArrayToFloat(bytes, 1);
+                                    y = jni.byteArrayToFloat(bytes, 5);
+                                    onTouchAction(MotionEvent.ACTION_UP, x, y);
+                                    break;
+                                case (byte) 0xC1:
+                                    undo();
+                                    break;
+                                case (byte) 0xC2:
+                                    redo();
+                                    break;
                             }
-                            onTouchAction(MotionEvent.ACTION_MOVE, x, y);
-                            break;
-                    }
-                    read += 12;
-                    floatValueInterface.f(((float) read) * 100F / ((float) length));
+                            read += 9;
+                            floatValueInterface.f(((float) read) * 100F / ((float) length));
+                        }
+                        break;
+                    default:
+                        handler.post(() -> ToastUtils.show(ctx, R.string.import_old));
+                        bytes = new byte[26];
+                        byte[] bytes_4 = new byte[4];
+                        read = 0L;
+                        while (raf.read(bytes) != -1) {
+                            read += 26L;
+                            switch (bytes[25]) {
+                                case 1:
+                                    undo();
+                                    System.out.println("undo!");
+                                    break;
+                                case 2:
+                                    redo();
+                                    System.out.println("redo!");
+                                    break;
+                                default:
+                                    System.arraycopy(bytes, 0, bytes_4, 0, 4);
+                                    x = jni.byteArrayToFloat(bytes_4, 0);
+                                    System.arraycopy(bytes, 4, bytes_4, 0, 4);
+                                    y = jni.byteArrayToFloat(bytes_4, 0);
+                                    System.arraycopy(bytes, 8, bytes_4, 0, 4);
+                                    color = jni.byteArrayToInt(bytes_4, 0);
+                                    System.arraycopy(bytes, 12, bytes_4, 0, 4);
+                                    strokeWidth = jni.byteArrayToFloat(bytes_4, 0);
+                                    System.arraycopy(bytes, 16, bytes_4, 0, 4);
+                                    int motionAction = jni.byteArrayToInt(bytes_4, 0);
+                                    System.arraycopy(bytes, 20, bytes_4, 0, 4);
+                                    float eraserStrokeWidth = jni.byteArrayToFloat(bytes_4, 0);
+                                    if (motionAction != 0 && motionAction != 1 && motionAction != 2)
+                                        motionAction = Random.ran_sc(0, 2);
+                                    if (strokeWidth <= 0) strokeWidth = Random.ran_sc(1, 800);
+                                    if (eraserStrokeWidth <= 0) eraserStrokeWidth = Random.ran_sc(1, 800);
+                                    setEraserMode(bytes[24] == 1);
+                                    setEraserStrokeWidth(eraserStrokeWidth);
+                                    setPaintColor(color);
+                                    setStrokeWidth(strokeWidth);
+                                    onTouchAction(motionAction, x, y);
+                                    floatValueInterface.f(((float) read) / ((float) length) * 100F);
+                                    break;
+                            }
+                        }
+                        importingPath = false;
+                        break;
                 }
-                raf.close();
+                d.run();
             } catch (IOException e) {
-                e.printStackTrace();
+                handler.post(() -> ToastUtils.show(ctx, R.string.read_error));
+            } finally {
+                if (raf != null) {
+                    try {
+                        raf.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            d.run();
-        }).start();
+            importingPath = false;
+        });
+        thread.start();
     }
 
     private void onTouchAction(int motionAction, float x, float y) {
@@ -475,14 +569,15 @@ public class PaintView extends View {
                 mLastY = y;
                 mPath.moveTo(mLastX, mLastY);
                 savedData = new ArrayList<>();
-                data = new byte[12];
-                jni.intToByteArray(data, isEraserMode ? 2 : 1, 0);
-                jni.floatToByteArray(data, mPaintRef.getStrokeWidth(), 4);
-                jni.intToByteArray(data, mPaintRef.getColor(), 8);
+                data = new byte[9];
+                data[0] = (byte) (isEraserMode ? 0xA2 : 0xA1);
+                jni.floatToByteArray(data, getStrokeWidthInUse(), 1);
+                jni.intToByteArray(data, mPaintRef.getColor(), 5);
                 savedData.add(data);
-                data = new byte[12];//再多写一个move的操作
-                jni.floatToByteArray(data, x, 4);
-                jni.floatToByteArray(data, y, 8);
+                data = new byte[9];
+                data[0] = (byte) 0xB1;
+                jni.floatToByteArray(data, x, 1);
+                jni.floatToByteArray(data, y, 5);
                 savedData.add(data);
                 break;
             case MotionEvent.ACTION_UP:
@@ -496,12 +591,10 @@ public class PaintView extends View {
                     mPath = null;
                 }
                 if (savedData != null) {
-                    data = new byte[12];
-                    jni.intToByteArray(data, 3, 0);
-                    savedData.add(data);
-                    data = new byte[12];//多写一个move的操作
-                    jni.floatToByteArray(data, x, 4);
-                    jni.floatToByteArray(data, y, 8);
+                    data = new byte[9];
+                    data[0] = (byte) 0xB2;
+                    jni.floatToByteArray(data, x, 1);
+                    jni.floatToByteArray(data, y, 5);
                     savedData.add(data);
                     try {
                         for (byte[] bytes : savedData) {
@@ -509,7 +602,7 @@ public class PaintView extends View {
                             os.flush();
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        ((Activity) ctx).runOnUiThread(() -> ToastUtils.show(ctx, R.string.write_error));
                     }
                 }
                 break;
@@ -523,22 +616,12 @@ public class PaintView extends View {
                     }
                     mLastX = x;
                     mLastY = y;
-                    /*
-                    路径存储结构：
-                    一条笔迹或一个操作记录记录长度为12字节
-                    byte b[12];(length=12)
-                    4+4+4
-                    b[0]: 标记，绘画路径开始为1，橡皮擦路径开始为2，路径结束为3，路径中为0；撤销为4，恢复为5。(int)
-                    如果标记为1，排列结构：标记(int)+笔迹宽度(float)+颜色(int)
-                    如果标记为2，排列结构：标记(int)+橡皮擦宽度(float)+TRANSPARENT(int)
-                    如果标记为0，排列结构：标记(int)+x坐标(float)+y坐标(float)
-                    如果标记为3、4或5，则后8字节忽略。
-                     */
                 }
                 if (savedData != null) {
-                    data = new byte[12];
-                    jni.floatToByteArray(data, x, 4);
-                    jni.floatToByteArray(data, y, 8);
+                    data = new byte[9];
+                    data[0] = (byte) 0xB3;
+                    jni.floatToByteArray(data, x, 1);
+                    jni.floatToByteArray(data, y, 5);
                     savedData.add(data);
                 }
                 break;
@@ -547,12 +630,8 @@ public class PaintView extends View {
     }
 
     void clearTouchRecordOSContent() {
-        try {
-            os.close();
-            setOS(internalPathFile, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        closePathRecorderOS();
+        setOS(internalPathFile, false);
     }
 
     float getEraserStrokeWidth() {
@@ -593,6 +672,10 @@ public class PaintView extends View {
         return mCanvas;
     }
 
+    public float getStrokeWidthInUse() {
+        return mPaintRef.getStrokeWidth();
+    }
+
     /**
      * 路径对象
      */
@@ -604,5 +687,10 @@ public class PaintView extends View {
             this.path = path;
             this.paint = paint;
         }
+    }
+
+    void bitmapResolution(Point point) {
+        point.x = mBitmap.getWidth();
+        point.y = mBitmap.getHeight();
     }
 }
