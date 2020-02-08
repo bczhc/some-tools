@@ -43,7 +43,7 @@ public class AView extends View {
 
             @Override
             public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
-                 mCanvas.invertScale(dScale, midPointX, midPointY);
+                mCanvas.invertScale(dScale, midPointX, midPointY);
             }
 
             @Override
