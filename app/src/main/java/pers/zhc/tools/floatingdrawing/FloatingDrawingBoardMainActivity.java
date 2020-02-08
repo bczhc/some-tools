@@ -676,6 +676,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     if (checked[0] == R.id.radio1)
                         pv.setStrokeWidth(edit);
                     else if (checked[0] == R.id.radio2) pv.setEraserStrokeWidth(edit);
+                    pv.lockStroke();
                     tv.setText(getString(R.string.tv, String.valueOf(edit)));
                 } catch (Exception e) {
                     Common.showException(e, this);
@@ -712,6 +713,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     } else {
                         pv.setEraserStrokeWidth(pow);
                     }
+                    pv.lockStroke();
                     tv.setText(String.valueOf((pow)));
                     strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
                 }
