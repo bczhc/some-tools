@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named getevent
+# Target rules for targets named bitmap
 
 # Build rule for target.
-getevent: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 getevent
-.PHONY : getevent
+bitmap: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 bitmap
+.PHONY : bitmap
 
 # fast build rule for target.
-getevent/fast:
-	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/build
-.PHONY : getevent/fast
+bitmap/fast:
+	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/build
+.PHONY : bitmap/fast
 
 #=============================================================================
 # Target rules for targets named verification
@@ -203,6 +203,33 @@ codecs/qmcLib.c.s:
 	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/codecs/qmcLib.c.s
 .PHONY : codecs/qmcLib.c.s
 
+floatingboard/bitmap.o: floatingboard/bitmap.c.o
+
+.PHONY : floatingboard/bitmap.o
+
+# target to build an object file
+floatingboard/bitmap.c.o:
+	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/floatingboard/bitmap.c.o
+.PHONY : floatingboard/bitmap.c.o
+
+floatingboard/bitmap.i: floatingboard/bitmap.c.i
+
+.PHONY : floatingboard/bitmap.i
+
+# target to preprocess a source file
+floatingboard/bitmap.c.i:
+	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/floatingboard/bitmap.c.i
+.PHONY : floatingboard/bitmap.c.i
+
+floatingboard/bitmap.s: floatingboard/bitmap.c.s
+
+.PHONY : floatingboard/bitmap.s
+
+# target to generate assembly for a file
+floatingboard/bitmap.c.s:
+	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/floatingboard/bitmap.c.s
+.PHONY : floatingboard/bitmap.c.s
+
 floatingboard/fb_tools.o: floatingboard/fb_tools.c.o
 
 .PHONY : floatingboard/fb_tools.o
@@ -229,33 +256,6 @@ floatingboard/fb_tools.s: floatingboard/fb_tools.c.s
 floatingboard/fb_tools.c.s:
 	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/floatingboard/fb_tools.c.s
 .PHONY : floatingboard/fb_tools.c.s
-
-getevent/geteventV2.o: getevent/geteventV2.c.o
-
-.PHONY : getevent/geteventV2.o
-
-# target to build an object file
-getevent/geteventV2.c.o:
-	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/getevent/geteventV2.c.o
-.PHONY : getevent/geteventV2.c.o
-
-getevent/geteventV2.i: getevent/geteventV2.c.i
-
-.PHONY : getevent/geteventV2.i
-
-# target to preprocess a source file
-getevent/geteventV2.c.i:
-	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/getevent/geteventV2.c.i
-.PHONY : getevent/geteventV2.c.i
-
-getevent/geteventV2.s: getevent/geteventV2.c.s
-
-.PHONY : getevent/geteventV2.s
-
-# target to generate assembly for a file
-getevent/geteventV2.c.s:
-	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/getevent/geteventV2.c.s
-.PHONY : getevent/geteventV2.c.s
 
 home/zhc/code/code/Android/some-tools/app/src/jni/zhc.o: home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o
 
@@ -319,7 +319,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... getevent"
+	@echo "... bitmap"
 	@echo "... verification"
 	@echo "... doJni"
 	@echo "... codecs/doJNI.o"
@@ -328,12 +328,12 @@ help:
 	@echo "... codecs/qmcLib.o"
 	@echo "... codecs/qmcLib.i"
 	@echo "... codecs/qmcLib.s"
+	@echo "... floatingboard/bitmap.o"
+	@echo "... floatingboard/bitmap.i"
+	@echo "... floatingboard/bitmap.s"
 	@echo "... floatingboard/fb_tools.o"
 	@echo "... floatingboard/fb_tools.i"
 	@echo "... floatingboard/fb_tools.s"
-	@echo "... getevent/geteventV2.o"
-	@echo "... getevent/geteventV2.i"
-	@echo "... getevent/geteventV2.s"
 	@echo "... home/zhc/code/code/Android/some-tools/app/src/jni/zhc.o"
 	@echo "... home/zhc/code/code/Android/some-tools/app/src/jni/zhc.i"
 	@echo "... home/zhc/code/code/Android/some-tools/app/src/jni/zhc.s"

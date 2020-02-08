@@ -37,14 +37,14 @@
 					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="getevent">
-				<Option output="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/getevent" prefix_auto="0" extension_auto="0"/>
+			<Target title="bitmap">
+				<Option output="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/bitmap" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/zhc/bin/android-sdk-linux/ndk/21.0.6113669/sysroot/usr/include"/>
+					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
@@ -52,20 +52,20 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 getevent"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 bitmap"/>
 					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="getevent/fast">
-				<Option output="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/getevent" prefix_auto="0" extension_auto="0"/>
+			<Target title="bitmap/fast">
+				<Option output="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/bitmap" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/zhc/bin/android-sdk-linux/ndk/21.0.6113669/sysroot/usr/include"/>
+					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
@@ -73,7 +73,7 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 getevent/fast"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 bitmap/fast"/>
 					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -86,7 +86,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/zhc/bin/android-sdk-linux/ndk/21.0.6113669/sysroot/usr/include"/>
+					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
@@ -107,7 +107,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/zhc/bin/android-sdk-linux/ndk/21.0.6113669/sysroot/usr/include"/>
+					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
@@ -128,7 +128,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/zhc/bin/android-sdk-linux/ndk/21.0.6113669/sysroot/usr/include"/>
+					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
@@ -149,7 +149,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/zhc/bin/android-sdk-linux/ndk/21.0.6113669/sysroot/usr/include"/>
+					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
@@ -173,11 +173,11 @@
 		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/qmcLib.h">
 			<Option target="verification"/>
 		</Unit>
+		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/floatingboard/bitmap.c">
+			<Option target="bitmap"/>
+		</Unit>
 		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/floatingboard/fb_tools.c">
 			<Option target="verification"/>
-		</Unit>
-		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/getevent/geteventV2.c">
-			<Option target="getevent"/>
 		</Unit>
 		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/verification/verify.c">
 			<Option target="verification"/>
