@@ -40,10 +40,355 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="悬浮画板：修复问题：颜色选成#00000000就是黑全透明的时候导出再导入会当成橡皮">
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="issue #54, path 2.1! #11: https://github.com/bczhc/some-tools/issues/11#issuecomment-573398759 （崩溃日志加入缓存）;">
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/Progress/1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/Progress/count.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/bitmap.dir/C.includecache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/bitmap.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/bitmap.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/bitmap.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/bitmap.dir/depend.internal" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/bitmap.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/bitmap.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/bitmap.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/bitmap.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/getevent.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/getevent.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/getevent.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/getevent.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/getevent.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/getevent.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/getevent.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/bitmap" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/floatingboard/bitmap.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/c/floatingboard/pers_zhc_tools_utils_BitmapUtil.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/3.15.3/CMakeCCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/3.15.3/CMakeSystem.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/a.out" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/pi.dir/DependInfo.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/pi.dir/build.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/pi.dir/cmake_clean.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/pi.dir/depend.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/pi.dir/flags.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/pi.dir/link.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/pi.dir/progress.make" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libbitmap.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libbitmap.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/libs/x86/libbitmap.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libbitmap.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/BitmapUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/export_image_view.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libbitmap.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/bitmap/c/floatingboard/bitmap.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/bitmap/c/floatingboard/bitmap.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/cpp/pi/pi.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/cpp/pi/pi.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libbitmap.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/bitmap/c/floatingboard/bitmap.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/bitmap/c/floatingboard/bitmap.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/cpp/pi/pi.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/cpp/pi/pi.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libbitmap.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/bitmap/c/floatingboard/bitmap.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/bitmap/c/floatingboard/bitmap.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/cpp/pi/pi.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/cpp/pi/pi.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libbitmap.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/bitmap/c/floatingboard/bitmap.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/bitmap/c/floatingboard/bitmap.o.d" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/cpp/pi/pi.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/cpp/pi/pi.o.d" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/Android.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/flags.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir/flags.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/jni.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/c/cmake-build-debug/jni.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/c/getevent/geteventV2.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.15.3/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.15.3/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/JNIHelper.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/JNIHelper.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/JNIHelper.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/JNIHelper.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/JNIHelper.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/JNIHelper.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/JNIHelper.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/MotionEvent.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/MotionEvent.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/MotionEvent.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/MotionEvent.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/MotionEvent.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/MotionEvent.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/MotionEvent.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/input_pen.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/input_pen.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/input_pen.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/input_pen.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/input_pen.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/input_pen.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/input_pen.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/pi.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/Project.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/Project.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/cmake-build-debug/cpp.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/cmake-build-debug/cpp.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/pi/com_zhc_tools_pi_PiJNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/pi/com_zhc_tools_pi_PiJNI.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/jni_c++/pi/pi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/pi/pi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libJNIGetEventCtrl.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libJNIGetEventCtrl.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libJNIGetEventCtrl.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libJNIGetEventCtrl.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/PromptDialog.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/ids.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/ids.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/verification/verify.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/verification/verify.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/verification/verify.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/verification/verify.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/Base128Lib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/doJNI.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/doJNI.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/doJNI.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/doJNI.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/kwm.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/kwm.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/verification/verify.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/verification/verify.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/verification/verify.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/verification/verify.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/Base128Lib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/doJNI.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/doJNI.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/doJNI.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/doJNI.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/kwm.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/kwm.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/verification/verify.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/verification/verify.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/verification/verify.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/verification/verify.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/Base128Lib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/doJNI.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/doJNI.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/doJNI.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/doJNI.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/kwm.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/kwm.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/liba.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/liba.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libdoJNI.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libdoJNI.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libfb_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libfb_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/verification/verify.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/verification/verify.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/verification/verify.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/verification/verify.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/Base128Lib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/doJNI.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/doJNI.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/doJNI.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/doJNI.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/kwm.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/kwm.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/qmcLib.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/jni_help.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o.d" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -100,12 +445,12 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="layoutResourceFile_vertical" />
         <option value="Interface" />
         <option value="Kotlin File" />
         <option value="resourceFile" />
         <option value="layoutResourceFile" />
         <option value="valueResourceFile" />
+        <option value="layoutResourceFile_vertical" />
         <option value="Class" />
       </list>
     </option>
@@ -906,7 +1251,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix issue #25 on github" />
     <MESSAGE value="fix issue #18 on github" />
     <MESSAGE value="#1" />
     <MESSAGE value="icon" />
@@ -931,7 +1275,8 @@
     <MESSAGE value="fix issue #40 on github" />
     <MESSAGE value="fix issue #37 on github" />
     <MESSAGE value="悬浮画板：导入路径，兼容旧版本path" />
-    <option name="LAST_COMMIT_MESSAGE" value="悬浮画板：导入路径，兼容旧版本path" />
+    <MESSAGE value="issue #54, path 2.1!" />
+    <option name="LAST_COMMIT_MESSAGE" value="issue #54, path 2.1!" />
   </component>
   <component name="WindowStateProjectService">
     <state x="318" y="68" key="#Notifications" timestamp="1579581379607">
@@ -985,30 +1330,31 @@
     <state x="551" y="397" width="681" height="339" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
     <state x="544" y="280" key="AndroidCreateResourceFileDialog" timestamp="1579492937743" />
     <state x="544" y="280" key="AndroidCreateResourceFileDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state x="751" y="365" width="495" height="384" key="AndroidCreateXmlResourceDialog" timestamp="1581076032242">
+    <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog" timestamp="1581137159995">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="751" y="337" width="418" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state x="751" y="365" width="495" height="384" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581076032242" />
-    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2" timestamp="1581078384411">
+    <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581137159995" />
+    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2" timestamp="1581159225606">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579597961330" />
     <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1580967234611" />
     <state x="53" y="27" width="1146" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580272692340" />
-    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1581078384411" />
-    <state width="525" height="424" key="DebuggerActiveHint" timestamp="1580220907047">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1581159225606" />
+    <state width="738" height="603" key="DebuggerActiveHint" timestamp="1581157351197">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="399" height="466" key="DebuggerActiveHint/0.0.1449.815@0.0.1449.815" timestamp="1579505476240" />
     <state width="525" height="424" key="DebuggerActiveHint/0.27.1366.741@0.27.1366.741" timestamp="1580220907047" />
-    <state x="187" y="117" width="1536" height="843" key="DiffContextDialog" timestamp="1581075882944">
+    <state width="738" height="603" key="DebuggerActiveHint/0.27.1920.1053@0.27.1920.1053" timestamp="1581157351197" />
+    <state x="187" y="117" width="1536" height="843" key="DiffContextDialog" timestamp="1581147997253">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="84" y="30" width="1243" height="749" key="DiffContextDialog/0.0.1449.815@0.0.1449.815" timestamp="1579590994185" />
     <state x="187" y="90" width="1536" height="840" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="79" y="54" width="1172" height="681" key="DiffContextDialog/0.27.1366.741@0.27.1366.741" timestamp="1580272688407" />
-    <state x="187" y="117" width="1536" height="843" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581075882944" />
+    <state x="187" y="117" width="1536" height="843" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581147997253" />
     <state x="716" y="314" width="542" height="635" key="FileChooserDialogImpl" timestamp="1580969969526">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -1025,62 +1371,62 @@
     <state x="779" y="457" key="GitRewordDialog/0.0.1449.815@0.0.1449.815" timestamp="1579508174735" />
     <state x="273" y="376" width="964" height="198" key="GitRewordDialog/0.27.1366.741@0.27.1366.741" timestamp="1580202716970" />
     <state x="779" y="457" key="GitRewordDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state width="1870" height="17" key="GridCell.Tab.0.bottom" timestamp="1581078569614">
+    <state width="1860" height="309" key="GridCell.Tab.0.bottom" timestamp="1581157620836">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.bottom/0.0.1449.815@0.0.1449.815" timestamp="1579592173845" />
     <state width="1874" height="225" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="127" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
-    <state width="1870" height="17" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1581078569614" />
-    <state width="1870" height="17" key="GridCell.Tab.0.center" timestamp="1581078569613">
+    <state width="1860" height="309" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620836" />
+    <state width="1860" height="309" key="GridCell.Tab.0.center" timestamp="1581157620835">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.center/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1874" height="225" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="127" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1580267310682" />
-    <state width="1870" height="17" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1581078569613" />
-    <state width="1870" height="17" key="GridCell.Tab.0.left" timestamp="1581078569613">
+    <state width="1860" height="309" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620835" />
+    <state width="1860" height="309" key="GridCell.Tab.0.left" timestamp="1581157620835">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.left/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1874" height="225" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="127" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1580267310681" />
-    <state width="1870" height="17" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1581078569613" />
-    <state width="1870" height="17" key="GridCell.Tab.0.right" timestamp="1581078569613">
+    <state width="1860" height="309" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620835" />
+    <state width="1860" height="309" key="GridCell.Tab.0.right" timestamp="1581157620836">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.right/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1874" height="225" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="127" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
-    <state width="1870" height="17" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1581078569613" />
-    <state width="1312" height="209" key="GridCell.Tab.1.bottom" timestamp="1580266414243">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state width="1860" height="309" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620836" />
+    <state width="1860" height="309" key="GridCell.Tab.1.bottom" timestamp="1581157620837">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="549" key="GridCell.Tab.1.bottom/0.0.1449.815@0.0.1449.815" timestamp="1579581123708" />
     <state width="1874" height="245" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="209" key="GridCell.Tab.1.bottom/0.27.1366.741@0.27.1366.741" timestamp="1580266414243" />
-    <state width="1874" height="282" key="GridCell.Tab.1.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state width="1312" height="209" key="GridCell.Tab.1.center" timestamp="1580266414242">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state width="1860" height="309" key="GridCell.Tab.1.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620837" />
+    <state width="1860" height="309" key="GridCell.Tab.1.center" timestamp="1581157620836">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="549" key="GridCell.Tab.1.center/0.0.1449.815@0.0.1449.815" timestamp="1579581123708" />
     <state width="1874" height="245" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="209" key="GridCell.Tab.1.center/0.27.1366.741@0.27.1366.741" timestamp="1580266414242" />
-    <state width="1874" height="282" key="GridCell.Tab.1.center/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state width="1312" height="209" key="GridCell.Tab.1.left" timestamp="1580266414241">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state width="1860" height="309" key="GridCell.Tab.1.center/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620836" />
+    <state width="1860" height="309" key="GridCell.Tab.1.left" timestamp="1581157620836">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="549" key="GridCell.Tab.1.left/0.0.1449.815@0.0.1449.815" timestamp="1579581123708" />
     <state width="1874" height="245" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="209" key="GridCell.Tab.1.left/0.27.1366.741@0.27.1366.741" timestamp="1580266414241" />
-    <state width="1874" height="282" key="GridCell.Tab.1.left/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state width="1312" height="209" key="GridCell.Tab.1.right" timestamp="1580266414242">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state width="1860" height="309" key="GridCell.Tab.1.left/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620836" />
+    <state width="1860" height="309" key="GridCell.Tab.1.right" timestamp="1581157620836">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="549" key="GridCell.Tab.1.right/0.0.1449.815@0.0.1449.815" timestamp="1579581123708" />
     <state width="1874" height="245" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="209" key="GridCell.Tab.1.right/0.27.1366.741@0.27.1366.741" timestamp="1580266414242" />
-    <state width="1874" height="282" key="GridCell.Tab.1.right/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
+    <state width="1860" height="309" key="GridCell.Tab.1.right/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620836" />
     <state width="1312" height="275" key="GridCell.Tab.2.bottom" timestamp="1580110132076">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1130,6 +1476,10 @@
     <state x="682" y="190" width="1086" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1580968423685" />
     <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog" timestamp="1579492937743" />
     <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
+    <state width="712" height="655" key="SwitcherDM" timestamp="1581135994021">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="712" height="655" key="SwitcherDM/0.27.1920.1053@0.27.1920.1053" timestamp="1581135994021" />
     <state x="459" y="102" width="427" height="606" key="VCS.ChangeListViewerDialog" timestamp="1579772681713">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1145,16 +1495,17 @@
     <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="553" y="113" width="800" height="538" key="Vcs.Push.Dialog.v2/0.27.1366.741@0.27.1366.741" timestamp="1580221845054" />
     <state x="587" y="217" width="800" height="720" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1581078816417" />
-    <state x="694" y="290" width="427" height="533" key="VcsDiffUtil.ChangesDialog" timestamp="1581075883093">
+    <state x="694" y="290" width="427" height="533" key="VcsDiffUtil.ChangesDialog" timestamp="1581147997197">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="694" y="282" key="VcsDiffUtil.ChangesDialog/0.0.1449.815@0.0.1449.815" timestamp="1579504740102" />
     <state x="654" y="235" width="427" height="533" key="VcsDiffUtil.ChangesDialog/0.27.1366.741@0.27.1366.741" timestamp="1580024747207" />
-    <state x="694" y="290" width="522" height="533" key="VcsDiffUtil.ChangesDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581075883093" />
-    <state width="683" height="370" key="XDebugger.FullValuePopup" timestamp="1580220619038">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="694" y="290" width="522" height="533" key="VcsDiffUtil.ChangesDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581147997197" />
+    <state width="960" height="526" key="XDebugger.FullValuePopup" timestamp="1581150650760">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="683" height="370" key="XDebugger.FullValuePopup/0.27.1366.741@0.27.1366.741" timestamp="1580220619038" />
+    <state width="960" height="526" key="XDebugger.FullValuePopup/0.27.1920.1053@0.27.1920.1053" timestamp="1581150650760" />
     <state x="104" y="132" width="1148" height="538" key="caller.chooser.dialog" timestamp="1580213879051">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1164,16 +1515,17 @@
     </state>
     <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="100" y="127" width="1720" height="853" key="com.android.tools.idea.avdmanager.AvdListDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1580979597396" />
-    <state x="100" y="127" width="1156" height="548" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1580210345154">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="141" y="169" width="1615" height="786" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1581134015628">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="100" y="127" width="1156" height="548" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.27.1366.741@0.27.1366.741" timestamp="1580210345154" />
-    <state x="62" y="79" width="1227" height="635" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1580211462409">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="141" y="169" width="1615" height="786" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581134015628" />
+    <state x="100" y="127" width="1720" height="853" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1581133995219">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="66" y="57" width="1301" height="698" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1449.815@0.0.1449.815" timestamp="1579507647968" />
     <state x="62" y="79" width="1227" height="635" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.27.1366.741@0.27.1366.741" timestamp="1580211462409" />
-    <state x="100" y="127" width="1720" height="853" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
+    <state x="100" y="127" width="1720" height="853" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581133995219" />
     <state x="483" y="150" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581075898485">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -1185,11 +1537,12 @@
     </state>
     <state x="704" y="442" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="704" y="442" width="457" height="175" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.27.1366.741@0.27.1366.741" timestamp="1580016172451" />
-    <state x="252" y="159" width="1008" height="529" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1580125639310">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="354" y="215" width="1329" height="647" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1581157629842">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="267" y="145" width="916" height="601" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1449.815@0.0.1449.815" timestamp="1579505929508" />
     <state x="252" y="159" width="1008" height="529" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.1366.741@0.27.1366.741" timestamp="1580125639310" />
+    <state x="354" y="215" width="1329" height="647" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.1920.1053@0.27.1920.1053" timestamp="1581157629842" />
     <state x="100" y="100" width="1720" height="850" key="dock-window-1" timestamp="1579492937743" />
     <state x="100" y="100" width="1720" height="850" key="dock-window-1/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="409" y="228" width="538" height="346" key="edit.logcat.filter.dialog.dimensions" timestamp="1579962596546">
@@ -1202,13 +1555,13 @@
     <state x="694" y="291" width="652" height="477" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="636" y="163" key="extract.method.dialog/0.27.1366.741@0.27.1366.741" timestamp="1580109656807" />
     <state x="694" y="319" width="652" height="507" key="extract.method.dialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="140" y="61" width="1120" height="673" key="find.popup" timestamp="1580221246864">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="595" y="284" width="981" height="716" key="find.popup" timestamp="1581137711032">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="149" y="37" width="1187" height="740" key="find.popup/0.0.1449.815@0.0.1449.815" timestamp="1579594271434" />
     <state x="595" y="256" width="773" height="538" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="140" y="61" width="1120" height="673" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221246864" />
-    <state x="595" y="284" width="781" height="538" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
+    <state x="595" y="284" width="981" height="716" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581137711032" />
     <state x="409" y="106" width="537" height="589" key="git4idea.branch.GitSmartOperationDialog" timestamp="1580127099669">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1243,83 +1596,46 @@
     </state>
     <state x="624" y="252" key="run.anything.popup/0.27.1366.741@0.27.1366.741" timestamp="1580204748923" />
     <state x="624" y="252" key="run.anything.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="587" y="262" width="672" height="617" key="search.everywhere.popup" timestamp="1580221238206">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup" timestamp="1581137548280">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.0.1449.815@0.0.1449.815" timestamp="1579597070884" />
     <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="587" y="262" width="672" height="617" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221238206" />
-    <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
+    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581137548280" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/floatingboard/HSVAColorPickerRL.java</url>
-          <line>242</line>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java</url>
-          <line>777</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java</url>
-          <line>261</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java</url>
-          <line>309</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java</url>
-          <line>745</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/floatingboard/FloatingBoardMainActivity.java</url>
-          <line>748</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/MainActivity.java</url>
-          <line>117</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java</url>
-          <line>300</line>
-          <option name="timeStamp" value="32" />
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
+          <line>670</line>
+          <option name="timeStamp" value="65" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/floatingboard/HSVAColorPickerRL.java</url>
-          <line>54</line>
-          <option name="timeStamp" value="34" />
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
+          <line>684</line>
+          <option name="timeStamp" value="66" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/../../../zhc2/code/some-tools/app/src/main/java/pers/zhc/tools/floatingboard/HSVAColorPickerRL.java</url>
-          <line>55</line>
-          <option name="timeStamp" value="35" />
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
+          <line>705</line>
+          <option name="timeStamp" value="67" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java</url>
-          <line>261</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java</url>
-          <line>267</line>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java</url>
-          <line>437</line>
-          <option name="timeStamp" value="51" />
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
+          <line>724</line>
+          <option name="timeStamp" value="68" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="app">
+        <watch expression="checked[0] == R.id.radio1" language="JAVA" custom="pers.zhc.tools.R" />
+        <watch expression="checked[0] == R.id.radio2" language="JAVA" custom="pers.zhc.tools.R" />
+        <watch expression="pv.getStrokeWidth()" language="JAVA" />
+        <watch expression="pv.getEraserStrokeWidth()" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

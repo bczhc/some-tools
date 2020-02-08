@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/JNIHelper.dir/motionevent/JNIHelper.cpp.o  -o JNIHelper 

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.text.InputType;
 import android.text.Selection;
 import android.util.TypedValue;
 import android.view.*;
@@ -30,10 +31,7 @@ import pers.zhc.u.FileU;
 import pers.zhc.u.common.MultipartUploader;
 import pers.zhc.u.common.ReadIS;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -132,11 +130,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         return false;
     }
 
-    public static EditText getSelectedET_currentMills(Context ctx, EditText et) {
+    public static void setSelectedET_currentMills(Context ctx, EditText et) {
         @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         et.setText(String.format(ctx.getString(R.string.tv), format));
         Selection.selectAll(et.getText());
-        return et;
     }
 
     @SuppressLint("UseSparseArrays")
@@ -149,7 +146,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         if (longMainActivityMap == null) {
             longMainActivityMap = new HashMap<>();
         }
-        longMainActivityMap.put(currentInstanceMills, this);
     }
 
     @Override
@@ -180,30 +176,39 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         currentInternalPathFile = new File(currentInternalPathDir.getPath() + File.separatorChar + currentInstanceMills + ".path");
         Button clearPathBtn = findViewById(R.id.clear_path_btn);
         final float[] cachesSize = {0F};
+        File[] pathFiles = currentInternalPathDir.listFiles();
         if (currentInternalPathDir.exists()) {
-            File[] listFiles = currentInternalPathDir.listFiles();
-            for (int i = 0, listFilesLength = listFiles != null ? listFiles.length : 0; i < listFilesLength; i++) {
-                File file = listFiles[i];
+            for (int i = 0, listFilesLength = pathFiles != null ? pathFiles.length : 0; i < listFilesLength; i++) {
+                File file = pathFiles[i];
                 cachesSize[0] += file.length();
             }
         }
         clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
         clearPathBtn.setOnClickListener(v -> {
             FileU fileU = new FileU();
-            if (currentInternalPathDir.exists()) {
-                File[] listFiles = currentInternalPathDir.listFiles();
-                for (File file : listFiles != null ? listFiles : new File[0]) {
+            if (pathFiles == null) {
+                ToastUtils.show(this, R.string.read_error);
+                return;
+            }
+            List<File> listFiles = new ArrayList<>();
+            Collections.addAll(listFiles, pathFiles);
+            File crashPath = new File(Common.getExternalStoragePath(this) + File.separatorChar
+                    + this.getString(R.string.some_tools_app) + File.separatorChar + this.getString(R.string.crash));
+            File[] crashFiles = crashPath.listFiles();
+            if (crashFiles != null) {
+                Collections.addAll(listFiles, crashFiles);
+            } else ToastUtils.show(this, R.string.read_error);
+            for (File file : listFiles) {
+                try {
                     if (!FloatingDrawingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(fileU.getFileName(file.getName())))) {
                         System.out.println("file.delete() = " + file.delete());
                     }
+                } catch (NumberFormatException ignored) {
                 }
             }
             cachesSize[0] = 0;
-            if (currentInternalPathDir.exists()) {
-                File[] listFiles = currentInternalPathDir.listFiles();
-                for (File file : listFiles != null ? listFiles : new File[0]) {
-                    cachesSize[0] += file.length();
-                }
+            for (File file : pathFiles) {
+                cachesSize[0] += file.length();
             }
             clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
         });
@@ -525,6 +530,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow() {
+        if (!longMainActivityMap.containsKey(currentInstanceMills)) {
+            longMainActivityMap.put(currentInstanceMills, this);
+        }
         try {
             wm.addView(pv, lp);
             fbLL.addView(iv);
@@ -555,6 +563,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         new Thread(() -> uploadPaths(this)).start();
         FloatingDrawingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
         this.fbSwitch.setChecked(false);
+        pv.closePathRecorderOS();
     }
 
     private void hide() {
@@ -621,19 +630,20 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         LinearLayout barLL = new LinearLayout(this);
         RadioGroup rg = new RadioGroup(this);
         barLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        barLL.setOrientation(LinearLayout.HORIZONTAL);
+        barLL.setOrientation(LinearLayout.VERTICAL);
         RadioButton[] radioButtons = new RadioButton[2];
+        int[] ids = new int[]{R.id.radio1, R.id.radio2};
         int[] strRes = new int[]{
                 R.string.drawing_paint_stroke_width,
                 R.string.eraser_paint_stroke_width
         };
         for (int i = 0; i < radioButtons.length; i++) {
             radioButtons[i] = new RadioButton(this);
-            if (i == 0) radioButtons[0].setChecked(true);
             radioButtons[i].setText(strRes[i]);
-            radioButtons[i].setId(i + 1);
+            radioButtons[i].setId(ids[i]);
             rg.addView(radioButtons[i]);
         }
+        radioButtons[pv.isEraserMode ? 1 : 0].setChecked(true);
         rg.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
         barLL.addView(rg);
         LinearLayout ll = new LinearLayout(this);
@@ -643,7 +653,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         TextView tv = new TextView(this);
         tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         tv.setTextSize(20F);
-        final int[] checked = {1};
+        final int[] checked = {pv.isEraserMode ? R.id.radio2 : R.id.radio1};
         tv.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
@@ -654,9 +664,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     double a = Math.log(edit) / Math.log(1.07D);
                     strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getColor());
                     sb.setProgress((int) a);
-                    if (checked[0] == 1)
+                    if (checked[0] == R.id.radio1)
                         pv.setStrokeWidth(edit);
-                    else pv.setEraserStrokeWidth((edit));
+                    else if (checked[0] == R.id.radio2) pv.setEraserStrokeWidth(edit);
                     tv.setText(getString(R.string.tv, String.valueOf(edit)));
                 } catch (Exception e) {
                     Common.showException(e, this);
@@ -670,7 +680,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             ad.show();
         });
-        float pow = pv.getStrokeWidth();
+        float pow = pv.getStrokeWidthInUse();
         strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
         tv.setText(String.valueOf(pow));
         sb.setProgress((int) (Math.log(pow) / Math.log(1.07D)));
@@ -686,14 +696,16 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float pow = (float) Math.pow(1.07D, progress);
-                if (checked[0] == 1) {
-                    pv.setStrokeWidth(pow);
-                } else {
-                    pv.setEraserStrokeWidth(pow);
+                if (fromUser) {
+                    float pow = (float) Math.pow(1.07D, progress);
+                    if (checked[0] == R.id.radio1) {
+                        pv.setStrokeWidth(pow);
+                    } else {
+                        pv.setEraserStrokeWidth(pow);
+                    }
+                    tv.setText(String.valueOf((pow)));
+                    strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
                 }
-                tv.setText(String.valueOf((pow)));
-                strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
             }
 
             @Override
@@ -708,10 +720,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         });
         rg.setOnCheckedChangeListener((group, checkedId) -> {
             checked[0] = checkedId;
-            float w = checkedId == 1 ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
-            strokeWatchView.change(w * pv.getCanvas().getScale(), pv.getColor());
-            tv.setText(String.format(getString(R.string.tv), w));
-            sb.setProgress((int) (Math.log(w) / Math.log(1.07D)));
+            float strokeWidth = (checkedId == R.id.radio1) ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
+            strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getColor());
+            tv.setText(String.format(getString(R.string.tv), strokeWidth));
+            sb.setProgress((int) (Math.log(strokeWidth) / Math.log(1.07D)));
         });
         mainLL.addView(barLL);
         mainLL.addView(ll);
@@ -782,8 +794,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 ToastUtils.show(this, R.string.importing_failed);
                                 return;
                             }
-                            int imageBitmapWidth = imageBitmap.getWidth();
-                            int imageBitmapHeight = imageBitmap.getHeight();
+                            Point point = new Point();
+                            BitmapUtil.getBitmapResolution(imageBitmap, point);
+                            int imageBitmapWidth = point.x;
+                            int imageBitmapHeight = point.y;
                             infoTV.setText(String.format(getString(R.string.board_w_h_info_and_bitmap_w_h_info), width, height, "\n", imageBitmapWidth, imageBitmapHeight));
                             int[] hintRes = new int[]{
                                     R.string.left_starting_point,
@@ -828,19 +842,39 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     },
                     v -> {
-                        EditText et = getSelectedET_currentMills(this, new EditText(this));
+                        LinearLayout linearLayout = View.inflate(this, R.layout.export_image_view, null)
+                                .findViewById(R.id.root);
+                        EditText fileNameET = linearLayout.findViewById(R.id.file_name);
+                        setSelectedET_currentMills(fileNameET.getContext(), fileNameET);
+                        EditText widthET = linearLayout.findViewById(R.id.width);
+                        EditText heightET = linearLayout.findViewById(R.id.height);
+                        Point point = new Point();
+                        pv.bitmapResolution(point);
+                        final int[] imageW = {point.x};
+                        final int[] imageH = {point.y};
+                        widthET.setText(String.valueOf(point.x));
+                        heightET.setText(String.valueOf(point.y));
+                        widthET.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                        heightET.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
-                            pv.closePathRecorderOS();
-                            File imageFile = new File(imageDir.toString() + File.separator + et.getText().toString() + ".png");
-                            pv.saveImg(imageFile);
-                            pv.setOS(currentInternalPathFile, true);
-                            moreOptionsDialog.dismiss();
-                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                        }).setTitle(R.string.type_file_name).setView(et).create();
-                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
-                        alertDialog.show();
+                        AlertDialog ad = adb.setTitle(R.string.export_image)
+                                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                    try {
+                                        Expression expression = new Expression();
+                                        expression.setExpressionString(widthET.getText().toString());
+                                        imageW[0] = ((int) expression.calculate());
+                                        expression.setExpressionString(heightET.getText().toString());
+                                        imageH[0] = ((int) expression.calculate());
+                                    } catch (Exception e) {
+                                        ToastUtils.show(this, R.string.please_type_correct_value);
+                                    }
+                                    File imageFile = new File(imageDir.toString() + File.separator + fileNameET.getText().toString() + ".png");
+                                    pv.exportImg(imageFile, imageW[0], imageH[0]);
+                                }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                                }).setView(linearLayout).create();
+                        DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setADWithET_autoShowSoftKeyboard(fileNameET, ad);
+                        ad.show();
                     },
                     v -> {
                         Dialog dialog = new Dialog(this);
@@ -872,11 +906,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     },
                     v -> {
-                        EditText et = getSelectedET_currentMills(this, new EditText(this));
+                        EditText et = new EditText(this);
+                        setSelectedET_currentMills(this, et);
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
                         AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                             File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
                             try {
+                                if (!currentInternalPathFile.exists()) {
+                                    throw new FileNotFoundException(getString(R.string.native_file_not_exist));
+                                }
                                 FileU.FileCopy(currentInternalPathFile, pathFile);
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -884,7 +922,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             if (pathFile.exists()) {
                                 ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
                                 new Thread(() -> uploadPaths(this)).start();
-                            } else ToastUtils.show(this, R.string.saving_failed);
+                            } else
+                                ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
                             moreOptionsDialog.dismiss();
                         }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                         }).setTitle(R.string.type_file_name).setView(et).create();
