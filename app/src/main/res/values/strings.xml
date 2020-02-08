@@ -178,5 +178,6 @@
     <string name="file_name_is">文件名：</string>
     <string name="image_size_px_is">图片大小：(px)</string>
     <string name="asterisk">*</string>
+    <string name="restart_application">重启应用</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

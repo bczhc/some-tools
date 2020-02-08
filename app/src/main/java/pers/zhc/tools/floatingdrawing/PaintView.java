@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
+import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
