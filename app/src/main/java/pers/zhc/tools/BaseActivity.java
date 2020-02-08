@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.utils.CrashHandler;
 import pers.zhc.tools.utils.ExternalJNI;
 import pers.zhc.tools.utils.PermissionRequester;
@@ -112,7 +113,7 @@ public class BaseActivity extends Activity {
 
     public static class Infos {
         public static String zhcUrlString = "http://bczhc.free.idcfengye.com";
-        public static Class<?> launcherClass = MainActivity.class;
+        public static Class<?> launcherClass = FloatingDrawingBoardMainActivity.class;
     }
 
     public static class App {
