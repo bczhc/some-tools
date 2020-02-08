@@ -42,11 +42,12 @@
   <component name="ChangeListManager">
     <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -318,7 +319,7 @@
         <item itemvalue="Kotlin.pers.zhc.tools.test.viewtest.SKt" />
         <item itemvalue="Groovy.build" />
         <item itemvalue="Application.FloatingDrawingBoardMainActivity" />
-        <item itemvalue="Application.FloatingDrawingBoardMainActivity" />
+        <item itemvalue="Node.js.a.js" />
       </list>
     </recent_temporary>
   </component>
@@ -1185,12 +1186,12 @@
     <state x="66" y="57" width="1301" height="698" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1449.815@0.0.1449.815" timestamp="1579507647968" />
     <state x="62" y="79" width="1227" height="635" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.27.1366.741@0.27.1366.741" timestamp="1580211462409" />
     <state x="100" y="127" width="1720" height="853" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581133995219" />
-    <state x="483" y="150" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581075898485">
+    <state x="483" y="150" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581163632021">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="483" y="123" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="280" y="27" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1366.741@0.27.1366.741" timestamp="1580272136230" />
-    <state x="483" y="150" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581075898485" />
+    <state x="483" y="150" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581163632021" />
     <state x="704" y="442" width="457" height="175" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1580016172451">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1214,13 +1215,13 @@
     <state x="694" y="291" width="652" height="477" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="636" y="163" key="extract.method.dialog/0.27.1366.741@0.27.1366.741" timestamp="1580109656807" />
     <state x="694" y="319" width="652" height="507" key="extract.method.dialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="595" y="284" width="981" height="716" key="find.popup" timestamp="1581137711032">
+    <state x="595" y="284" width="994" height="716" key="find.popup" timestamp="1581163523669">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="149" y="37" width="1187" height="740" key="find.popup/0.0.1449.815@0.0.1449.815" timestamp="1579594271434" />
     <state x="595" y="256" width="773" height="538" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="140" y="61" width="1120" height="673" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221246864" />
-    <state x="595" y="284" width="981" height="716" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581137711032" />
+    <state x="595" y="284" width="994" height="716" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581163523669" />
     <state x="409" y="106" width="537" height="589" key="git4idea.branch.GitSmartOperationDialog" timestamp="1580127099669">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1255,13 +1256,13 @@
     </state>
     <state x="624" y="252" key="run.anything.popup/0.27.1366.741@0.27.1366.741" timestamp="1580204748923" />
     <state x="624" y="252" key="run.anything.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup" timestamp="1581159474411">
+    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup" timestamp="1581163316880">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.0.1449.815@0.0.1449.815" timestamp="1579597070884" />
     <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="587" y="262" width="672" height="617" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221238206" />
-    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581159474411" />
+    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581163316880" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
