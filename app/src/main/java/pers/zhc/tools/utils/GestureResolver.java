@@ -9,6 +9,7 @@ public class GestureResolver {
     private float firstDistance = -1;
     private float firstMidPointX;
     private float firstMidPointY;
+    private boolean twoPointsDown = false;
 
     public GestureResolver(GestureInterface gestureInterface) {
         this.gestureInterface = gestureInterface;
@@ -17,8 +18,6 @@ public class GestureResolver {
     private float getDistance(float x1, float x2, float y1, float y2) {
         return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
-
-    private boolean twoPointsDown = false;
 
     public void onTouch(MotionEvent event) {
         int pointerCount = event.getPointerCount();

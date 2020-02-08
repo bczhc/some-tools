@@ -141,7 +141,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
-        new PermissionRequester(() -> {}).requestPermission(this, Manifest.permission.INTERNET, 53);
+        new PermissionRequester(() -> {
+        }).requestPermission(this, Manifest.permission.INTERNET, 53);
         init();
         if (longMainActivityMap == null) {
             longMainActivityMap = new HashMap<>();
@@ -646,6 +647,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         radioButtons[pv.isEraserMode ? 1 : 0].setChecked(true);
         rg.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
         barLL.addView(rg);
+        CheckBox lockStrokeCB = new CheckBox(this);
+        lockStrokeCB.setText(R.string.lock_stroke);
+        lockStrokeCB.setChecked(pv.isLockingStroke());
+        lockStrokeCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            pv.setLockStrokeMode(isChecked);
+            pv.lockStroke();
+        });
+        barLL.addView(lockStrokeCB);
         LinearLayout ll = new LinearLayout(this);
         StrokeWatchView strokeWatchView = new StrokeWatchView(this);
         strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -972,6 +981,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        System.out.println("kill...");
+        /*File d = new File(fbDir, "killed");
+        if (!d.exists()) System.out.println("d.mkdirs() = " + d.mkdirs());
+        this.pv.saveImg(new File(d, this.currentInstanceMills + ".png"));*/
+    }
+
     private abstract class CheckOverlayPermission {
         public CheckOverlayPermission() {
             if (!Settings.canDrawOverlays(FloatingDrawingBoardMainActivity.this)) {
@@ -985,14 +1003,5 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         abstract void have();
 
         abstract void notHave();
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        System.out.println("kill...");
-        /*File d = new File(fbDir, "killed");
-        if (!d.exists()) System.out.println("d.mkdirs() = " + d.mkdirs());
-        this.pv.saveImg(new File(d, this.currentInstanceMills + ".png"));*/
     }
 }
