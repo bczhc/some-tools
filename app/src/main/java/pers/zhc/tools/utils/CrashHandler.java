@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -96,11 +97,18 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 cdl.await();
             } catch (InterruptedException ignored) {
             }
-            exitProcess();
+            ((BaseActivity) mContext).app.removeAllActivities();
+            restartProcess();
         }
     }
 
-    private void exitProcess() {
+    private void restartProcess() {
+//        android.os.Process.killProcess(android.os.Process.myPid());
+//        System.exit(1);
+        // 重新启动应用
+        Intent intent = new Intent(mContext, BaseActivity.Infos.launcherClass);
+        mContext.startActivity(intent);
+        // 退出程序
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(1);
     }
@@ -288,7 +296,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                         }
                 };
                 int[] strRes = new int[]{
-                        R.string.exit,
+                        R.string.restart_application,
                         R.string.upload_crash_report
                 };
                 for (int i = 0; i < buttons.length; i++) {
