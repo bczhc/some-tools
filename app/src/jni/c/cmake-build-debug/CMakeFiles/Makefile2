@@ -53,14 +53,14 @@ CMAKE_BINARY_DIR = /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-bu
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/getevent.dir/all
+all: CMakeFiles/bitmap.dir/all
 all: CMakeFiles/verification.dir/all
 all: CMakeFiles/doJni.dir/all
 
 .PHONY : all
 
 # The main recursive "clean" target.
-clean: CMakeFiles/getevent.dir/clean
+clean: CMakeFiles/bitmap.dir/clean
 clean: CMakeFiles/verification.dir/clean
 clean: CMakeFiles/doJni.dir/clean
 
@@ -72,31 +72,31 @@ preinstall:
 .PHONY : preinstall
 
 #=============================================================================
-# Target rules for target CMakeFiles/getevent.dir
+# Target rules for target CMakeFiles/bitmap.dir
 
 # All Build rule for target.
-CMakeFiles/getevent.dir/all:
-	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/depend
-	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=3,4 "Built target getevent"
-.PHONY : CMakeFiles/getevent.dir/all
+CMakeFiles/bitmap.dir/all:
+	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/depend
+	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target bitmap"
+.PHONY : CMakeFiles/bitmap.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/getevent.dir/rule: cmake_check_build_system
+CMakeFiles/bitmap.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/getevent.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/bitmap.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/getevent.dir/rule
+.PHONY : CMakeFiles/bitmap.dir/rule
 
 # Convenience name for target.
-getevent: CMakeFiles/getevent.dir/rule
+bitmap: CMakeFiles/bitmap.dir/rule
 
-.PHONY : getevent
+.PHONY : bitmap
 
 # clean rule for target.
-CMakeFiles/getevent.dir/clean:
-	$(MAKE) -f CMakeFiles/getevent.dir/build.make CMakeFiles/getevent.dir/clean
-.PHONY : CMakeFiles/getevent.dir/clean
+CMakeFiles/bitmap.dir/clean:
+	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/clean
+.PHONY : CMakeFiles/bitmap.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/verification.dir
@@ -132,7 +132,7 @@ CMakeFiles/verification.dir/clean:
 CMakeFiles/doJni.dir/all:
 	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/depend
 	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target doJni"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=3,4 "Built target doJni"
 .PHONY : CMakeFiles/doJni.dir/all
 
 # Build rule for subdir invocation for target.
