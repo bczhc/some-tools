@@ -141,8 +141,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
+        new PermissionRequester(() -> {}).requestPermission(this, Manifest.permission.INTERNET, 53);
         init();
-
         if (longMainActivityMap == null) {
             longMainActivityMap = new HashMap<>();
         }
@@ -480,7 +480,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         c.show();
                         break;
                     case 10:
-                        new PermissionRequester(this::saveAction).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 23);
+                        moreOptions();
                         break;
                     case 11:
                         DialogUtil.createConfirmationAD(this, (dialog1, which) -> exit(), (dialog1, which) -> {
@@ -753,7 +753,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         overridePendingTransition(0, R.anim.slide_out_bottom);
     }
 
-    private void saveAction() {
+    private void moreOptions() {
         Dialog moreOptionsDialog = new Dialog(this);
         ScrollView sv = new ScrollView(this);
         sv.setLayoutParams(new ScrollView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -778,7 +778,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             File imageDir = new File(fbDir.toString() + File.separator + "image");
             if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
-                    v -> {
+                    v0 -> new PermissionRequester(() -> {
+
                         Dialog dialog = new Dialog(this);
                         dialog.setCanceledOnTouchOutside(false);
                         dialog.setCancelable(false);
@@ -840,8 +841,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             importImageOptionsDialog.show();
                         });
                         setFilePickerDialog(dialog, filePickerRL);
-                    },
-                    v -> {
+                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
+                    v1 -> new PermissionRequester(() -> {
                         LinearLayout linearLayout = View.inflate(this, R.layout.export_image_view, null)
                                 .findViewById(R.id.root);
                         EditText fileNameET = linearLayout.findViewById(R.id.file_name);
@@ -875,8 +876,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         DialogUtil.setADWithET_autoShowSoftKeyboard(fileNameET, ad);
                         ad.show();
-                    },
-                    v -> {
+                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
+                    v2 -> new PermissionRequester(() -> {
                         Dialog dialog = new Dialog(this);
                         dialog.setCanceledOnTouchOutside(false);
                         dialog.setCancelable(false);
@@ -904,8 +905,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             moreOptionsDialog.dismiss();
                         });
                         setFilePickerDialog(dialog, filePickerRL);
-                    },
-                    v -> {
+                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
+                    v3 -> new PermissionRequester(() -> {
                         EditText et = new EditText(this);
                         setSelectedET_currentMills(this, et);
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -930,7 +931,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
                         alertDialog.show();
-                    },
+                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
                     v -> pv.resetTransform()
             };
             buttons[i].setOnClickListener(onClickListeners[i]);
@@ -960,7 +961,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 23 && grantResults[0] == 0) saveAction();
+        if (requestCode == 23 && grantResults[0] == 0) moreOptions();
     }
 
     public void recover() {
