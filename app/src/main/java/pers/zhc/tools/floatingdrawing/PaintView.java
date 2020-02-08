@@ -659,6 +659,7 @@ public class PaintView extends View {
     }
 
     void resetTransform() {
+        setCurrentStrokeWidthWithLockedStrokeWidth();
         mCanvas.reset();
         redrawCanvas();
     }
