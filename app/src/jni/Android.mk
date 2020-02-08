@@ -10,7 +10,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := pi
-LOCAL_SRC_FILES := ./jni_c++/pi/pi.cpp ./zhc.cpp ./jni_help.cpp
+LOCAL_SRC_FILES := ./cpp/pi/pi.cpp ./zhc.cpp ./jni_help.cpp
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -27,7 +27,7 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
-LOCAL_LDLIBS    := -lm -llog
-LOCAL_MODULE    := JNIGetEventCtrl
-LOCAL_SRC_FILES := ./c/getevent/geteventV2.c
+LOCAL_SRC_FILES	:= ./c/floatingboard/bitmap.c
+LOCAL_LDLIBS += -ljnigraphics
+LOCAL_MODULE	:= bitmap
 include $(BUILD_SHARED_LIBRARY)
