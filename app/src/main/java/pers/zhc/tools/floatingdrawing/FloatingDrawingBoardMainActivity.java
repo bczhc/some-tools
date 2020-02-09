@@ -536,12 +536,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (isChecked) {
                 new CheckOverlayPermission() {
                     @Override
-                    void have() {
+                    void granted() {
                         startFloatingWindow();
                     }
 
                     @Override
-                    void notHave() {
+                    void denied() {
                         fbSwitch.setChecked(false);
                     }
                 };
@@ -1010,13 +1010,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, 4444);
-                notHave();
-            } else have();
+                denied();
+            } else granted();
         }
 
-        abstract void have();
+        abstract void granted();
 
-        abstract void notHave();
+        abstract void denied();
     }
 
     @Override

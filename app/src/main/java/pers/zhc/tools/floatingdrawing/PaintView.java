@@ -7,6 +7,8 @@ import android.graphics.*;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
@@ -22,7 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SuppressLint("ViewConstructor")
-public class PaintView extends View {
+public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+    private Canvas surfaceCanvas;
+    private SurfaceHolder mSurfaceHolder;
+    private boolean isDrawing = false;
     private final File internalPathFile;
     private final int height;
     private final int width;
@@ -52,8 +57,9 @@ public class PaintView extends View {
     private float lockedEraserStrokeWidth;
     private float scaleWhenLocked = 1F;
 
-    PaintView(Context context, int width, int height, File internalPathFile) {
+    public PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
+        surfaceInit();
         ctx = context;
         this.internalPathFile = internalPathFile;
         this.width = width;
@@ -63,8 +69,20 @@ public class PaintView extends View {
         zP.setColor(Color.parseColor("#5000ff00"));
     }
 
-    void setOS(File file, boolean append) {
-        long length = file.length();
+    private void surfaceInit() {
+        mSurfaceHolder = getHolder();
+        mSurfaceHolder.addCallback(this);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+        setZOrderOnTop(true);
+        mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);
+    }
+
+    public void setOS(File file, boolean append) {
+        long length = 0L;
+        if (file.exists()) {
+            length = file.length();
+        }
         if (!append) length = 0L;
         try {
             os = new FileOutputStream(file, append);
@@ -156,25 +174,6 @@ public class PaintView extends View {
         });
     }
 
-    /**
-     * 绘制
-     */
-    @Override
-    protected void onDraw(Canvas canvas) {
-        if (mBitmap != null) {
-            canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-            if (!importingPath) {
-                if (mPath != null) {//显示实时正在绘制的path轨迹
-                    float mCanvasScale = mCanvas.getScale();
-                    canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
-                    canvas.scale(mCanvasScale, mCanvasScale);
-                    if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
-                    else canvas.drawPath(mPath, mPaint);
-                }
-            }
-        }
-    }
-
     float getStrokeWidth() {
         return this.mPaint.getStrokeWidth();
     }
@@ -210,7 +209,6 @@ public class PaintView extends View {
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
             }
-            postInvalidate();
         }
     }
 
@@ -230,7 +228,6 @@ public class PaintView extends View {
             PathBean pathBean = redoList.removeLast();
             mCanvas.drawPath(pathBean.path, pathBean.paint);
             undoList.add(pathBean);
-            postInvalidate();
         }
     }
 
@@ -321,7 +318,6 @@ public class PaintView extends View {
      */
     private void clearPaint() {
         mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        postInvalidate();
     }
 
     /**
@@ -633,7 +629,6 @@ public class PaintView extends View {
                 }
                 break;
         }
-        postInvalidate();
     }
 
     void clearTouchRecordOSContent() {
@@ -658,7 +653,6 @@ public class PaintView extends View {
         } else {
             mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         }
-        invalidate();
     }
 
     void resetTransform() {
@@ -673,7 +667,6 @@ public class PaintView extends View {
         for (PathBean pathBean : this.undoList) {
             mCanvas.drawPath(pathBean.path, pathBean.paint);
         }
-        invalidate();
     }
 
     MyCanvas getCanvas() {
@@ -714,8 +707,55 @@ public class PaintView extends View {
         }
     }
 
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        isDrawing = true;
+        new Thread(this).start();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        isDrawing = false;
+    }
+
+    @Override
+    public void run() {
+        while (isDrawing) {
+            drawing();
+        }
+    }
+
+    private void drawing() {
+        try {
+            surfaceCanvas = mSurfaceHolder.lockCanvas();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (surfaceCanvas != null) {
+            surfaceCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            if (mBitmap != null) {
+                surfaceCanvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
+                if (!importingPath) {
+                    if (mPath != null) {//显示实时正在绘制的path轨迹
+                        float mCanvasScale = mCanvas.getScale();
+                        surfaceCanvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
+                        surfaceCanvas.scale(mCanvasScale, mCanvasScale);
+                        if (isEraserMode) surfaceCanvas.drawPath(mPath, eraserPaint);
+                        else surfaceCanvas.drawPath(mPath, mPaint);
+                    }
+                }
+            }
+            mSurfaceHolder.unlockCanvasAndPost(surfaceCanvas);
+        }
+    }
+
     /**
-     * 路径对象
+     * 路径集合
      */
     static class PathBean {
         Path path;
