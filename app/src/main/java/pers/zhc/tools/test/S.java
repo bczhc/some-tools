@@ -9,35 +9,23 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.floatingdrawing.MyCanvas;
-import pers.zhc.tools.floatingdrawing.PaintView;
-
-import java.io.File;
 
 public class S extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Point point = new Point();
-        this.getWindowManager().getDefaultDisplay().getSize(point);
-        int width = point.x, height = point.y;
-        File file = new File("/storage/emulated/0/z.path");
-        PaintView paintView = new PaintView(this, width, height, file);
-        paintView.setOS(file, false);
-        setContentView(paintView);
+        MySurfaceView mySurfaceView = new MySurfaceView(this);
+        setContentView(mySurfaceView);
     }
 }
 
 class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+
     private SurfaceHolder mSurfaceHolder;
-    private Canvas surfaceCanvas;
-    private boolean isDrawing;
     private Paint mPaint;
-    private Path mPath = null;
-    private Bitmap mBitmap;
-    private int width, height;
-    private Paint mBitmapPaint;
-    private MyCanvas mCanvas;
+    private float mPrevX;
+    private float mPrevY;
+    private Path mPath;
 
     public MySurfaceView(Context context) {
         super(context);
@@ -52,19 +40,12 @@ class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runna
         mPaint = new Paint();
         mPaint.setStrokeWidth(10F);
         mPaint.setColor(Color.RED);
-        mBitmapPaint = new Paint();
+        setZOrderOnTop(true);
+        mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        this.isDrawing = true;
-        width = getWidth();
-        height = getHeight();
-        if (mBitmap == null) {
-            mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        }
-        mCanvas = new MyCanvas(mBitmap);
-        new Thread(this).start();
     }
 
     @Override
@@ -74,44 +55,36 @@ class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runna
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        this.isDrawing = false;
     }
 
     @Override
     public void run() {
-        while (isDrawing) {
-            drawing();
-        }
-    }
-
-    private void drawing() {
-        try {
-            surfaceCanvas = mSurfaceHolder.lockCanvas();
-        } catch (Exception ignored) {
-
-        }
-        if (surfaceCanvas != null) {
-            surfaceCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            surfaceCanvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-            mSurfaceHolder.unlockCanvasAndPost(surfaceCanvas);
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX(), y = event.getY();
-        switch (event.getAction()) {
+        int action = event.getAction();
+        float x = event.getX();
+        float y = event.getY();
+        switch (action) {
             case MotionEvent.ACTION_DOWN:
+                mPrevX = x;
+                mPrevY = y;
                 mPath = new Path();
-                mPath.moveTo(x, y);
+                mPath.moveTo(x, y);//将 Path 起始坐标设为手指按下屏幕的坐标
                 break;
             case MotionEvent.ACTION_MOVE:
-                mPath.lineTo(x, y);
+                Canvas canvas = mSurfaceHolder.lockCanvas();
+//                restorePreAction(canvas);//首先恢复之前绘制的内容
+                mPath.quadTo(mPrevX, mPrevY, (x + mPrevX) / 2, (y + mPrevY) / 2);
+                //绘制贝塞尔曲线，也就是光滑的曲线，如果此处使用 lineTo 方法滑出的曲线会有折角
+                mPrevX = x;
+                mPrevY = y;
+                canvas.drawPath(mPath, mPaint);
+                mSurfaceHolder.unlockCanvasAndPost(canvas);
                 break;
             case MotionEvent.ACTION_UP:
-                mCanvas.drawPath(mPath, mPaint);
-                mPath = null;
                 break;
         }
         return true;
