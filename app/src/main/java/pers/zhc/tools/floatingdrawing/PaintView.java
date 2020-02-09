@@ -606,7 +606,9 @@ public class PaintView extends View {
                             os.flush();
                         }
                     } catch (IOException e) {
-                        ((Activity) ctx).runOnUiThread(() -> ToastUtils.show(ctx, R.string.write_error));
+                        ((Activity) ctx).runOnUiThread(() -> ToastUtils.show(ctx
+                                , ctx.getString(R.string.concat, ctx.getString(R.string.write_error)
+                                        , "\n" + e.toString())));
                     }
                 }
                 break;
@@ -662,6 +664,7 @@ public class PaintView extends View {
         setCurrentStrokeWidthWithLockedStrokeWidth();
         mCanvas.reset();
         redrawCanvas();
+        setCurrentStrokeWidthWithLockedStrokeWidth();
     }
 
     private void redrawCanvas() {
