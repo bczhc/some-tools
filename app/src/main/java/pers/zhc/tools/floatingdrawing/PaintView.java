@@ -138,7 +138,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             //抗锯齿
             mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
             //背景色
-//                mCanvas.drawColor(Color.WHITE);
         });
 
         undoList = new SynchronisedList<>();
@@ -204,10 +203,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             if (backgroundBitmap != null) {
                 mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
             }
-            for (PathBean pb : undoList) {
-                mCanvas.drawPath(pb.path, pb.paint);
+            if (!importingPath) {
+                for (PathBean pb : undoList) {
+                    mCanvas.drawPath(pb.path, pb.paint);
+                }
+                drawing();
             }
-            drawing();
         }
     }
 
@@ -227,7 +228,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             PathBean pathBean = redoList.removeLast();
             mCanvas.drawPath(pathBean.path, pathBean.paint);
             undoList.add(pathBean);
-            drawing();
+            if (!importingPath) drawing();
         }
     }
 
@@ -457,9 +458,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                         }
                         break;
                     case "path ver 2.1":
+                        int bufferSize = 2304; //512 * 9
                         handler.post(() -> ToastUtils.show(ctx, R.string.import_2_1));
                         raf.skipBytes(12);
-                        byte[] buffer = new byte[1152];//128 * 9
+                        byte[] buffer = new byte[bufferSize];
                         int bufferRead;
                         read = 0L;
                         while ((bufferRead = raf.read(buffer)) != -1) {
@@ -496,10 +498,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                         redo();
                                         break;
                                 }
+                                read += 9L;
+                                floatValueInterface.f(((float) read) * 100F / ((float) length));
                             }
-                            read += 1152;
-//                            floatValueInterface.f(((float) read) * 100F / ((float) length));
-                            System.out.println("((float) read) / ((float) length) = " + ((float) read) / ((float) length));
                         }
                         break;
                     default:
@@ -544,7 +545,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     break;
                             }
                         }
-                        importingPath = false;
                         break;
                 }
                 d.run();
@@ -558,8 +558,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                         e.printStackTrace();
                     }
                 }
+                importingPath = false;
+                redrawCanvas();
+                drawing();
             }
-            importingPath = false;
         });
         thread.start();
     }
@@ -591,7 +593,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
-                    mCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
+                    if (!importingPath)
+                        mCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
@@ -730,6 +733,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void drawing() {
+        if (importingPath) {
+            return;
+        }
         Canvas canvas = null;
         try {
             canvas = mSurfaceHolder.lockCanvas();
