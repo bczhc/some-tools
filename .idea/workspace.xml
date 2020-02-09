@@ -29,9 +29,9 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="pers." />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value=") read" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
     <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
   </component>
   <component name="ArtifactsWorkspaceSettings">
@@ -40,9 +40,18 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="issue #59: https://github.com/bczhc/some-tools/issues/59#issue-562021518 (2)">
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="issue #52">
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/layer_layout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/jar_libs/zhc.jar" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/jar_libs/zhc.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/export_image_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/export_image_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/floating_board_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/floating_board_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -104,8 +113,8 @@
         <option value="resourceFile" />
         <option value="layoutResourceFile" />
         <option value="valueResourceFile" />
-        <option value="layoutResourceFile_vertical" />
         <option value="Class" />
+        <option value="layoutResourceFile_vertical" />
       </list>
     </option>
   </component>
@@ -117,7 +126,7 @@
   </component>
   <component name="Git.Rebase.Settings">
     <option name="SHOW_TAGS" value="true" />
-    <option name="ONTO" value="HEAD~3" />
+    <option name="ONTO" value="HEAD~2" />
   </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
@@ -127,7 +136,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="floatingDrawingBoard" />
+        <entry key="$PROJECT_DIR$" value="3311db3eeeaed00dd5b4f2be7b0188108f8fdb2a" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -166,7 +175,7 @@
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1579492145744" />
     <property name="device.picker.selection" value="A02AECP82AWGY" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../d/lanzou/lanzouh5" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/jar_libs" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
@@ -182,21 +191,21 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="pers.zhc.tools.floatingboard" />
-      <recent name="pers.zhc.tools.utils" />
-    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="pers.zhc.tools" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="pers.zhc.tools.test.viewtest" />
-      <recent name="pers.zhc.tools.test.epicycles_test" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/src/main/jar_libs" />
       <recent name="$PROJECT_DIR$/app/src/libs" />
       <recent name="$PROJECT_DIR$/app/src/main/res/raw" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="pers.zhc.tools.test.viewtest" />
+      <recent name="pers.zhc.tools.test.epicycles_test" />
+    </key>
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="pers.zhc.tools.floatingboard" />
+      <recent name="pers.zhc.tools.utils" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">
@@ -433,27 +442,7 @@
       <workItem from="1580978942165" duration="7577000" />
       <workItem from="1581063582518" duration="8767000" />
       <workItem from="1581159061499" duration="2199000" />
-    </task>
-    <task id="LOCAL-00012" summary="傅里叶级数展开复平面中图像绘制+普通函数解析，未完成绘制函数。但目前好像改了周期就会乱套">
-      <created>1569950737165</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1569950737165</updated>
-    </task>
-    <task id="LOCAL-00013" summary="傅里叶级数展开-时而成功时而不成功（多线程关系未检查）&#10;另外应避免频繁使Android GC（未检查）&#10;jni整合jni_help">
-      <created>1570034429344</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1570034429344</updated>
-    </task>
-    <task id="LOCAL-00014" summary="修复傅里叶解析的函数的解析bug：解析函数传入的周期T不正确（顺序错误：在设置T语句之前）&#10;有频繁GC！&#10;换绘制函数解析方法：按照模">
-      <created>1570321583169</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1570321583169</updated>
+      <workItem from="1581240340376" duration="9704000" />
     </task>
     <task id="LOCAL-00015" summary="傅里叶函数解析 但是目前需要比较大工作量才能比较有形地画出图像，不知是否最优化。&#10;修复求模错误&#10;频繁GC！">
       <created>1570322996730</created>
@@ -777,7 +766,28 @@
       <option name="project" value="LOCAL" />
       <updated>1581167606548</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="issue #11: https://github.com/bczhc/some-tools/issues/11#issuecomment-573398759">
+      <created>1581229421064</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1581229421064</updated>
+    </task>
+    <task id="LOCAL-00062" summary="issue #11: https://github.com/bczhc/some-tools/issues/11#issuecomment-573398759">
+      <created>1581229709276</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1581229709277</updated>
+    </task>
+    <task id="LOCAL-00063" summary="SurfaceView优化（会闪）">
+      <created>1581245582242</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1581245582243</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -906,8 +916,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="icon" />
-    <MESSAGE value="cv大法，JNI底层getevent，但是有依赖链接库的问题，未完成，C++层有误" />
     <MESSAGE value="perf: jni: DeleteLocalRef to avoid jni local table overflow" />
     <MESSAGE value="修复上一次的一些错误: JNI New的对象返回Java层不需要回收，否则返回不了，并且返回的对象就会交给Java层进行回收" />
     <MESSAGE value="perf: jni: DeleteLocalRef to avoid jni local table overflow.. Later fix.. JNI New的对象返回Java层不需要回收，否则返回不了，并且返回的对象就会交给Java层进行回收" />
@@ -931,7 +939,9 @@
     <MESSAGE value="issue #54, path 2.1!" />
     <MESSAGE value="issue #54, #58. path 2.1! #11: https://github.com/bczhc/some-tools/issues/11#issuecomment-573398759 （崩溃日志加入缓存）;" />
     <MESSAGE value="issue #11: https://github.com/bczhc/some-tools/issues/11#issue-544996397 (1.)" />
-    <option name="LAST_COMMIT_MESSAGE" value="issue #11: https://github.com/bczhc/some-tools/issues/11#issue-544996397 (1.)" />
+    <MESSAGE value="issue #11: https://github.com/bczhc/some-tools/issues/11#issuecomment-573398759" />
+    <MESSAGE value="SurfaceView优化（会闪）" />
+    <option name="LAST_COMMIT_MESSAGE" value="SurfaceView优化（会闪）" />
   </component>
   <component name="WindowStateProjectService">
     <state x="318" y="68" key="#Notifications" timestamp="1579581379607">
@@ -957,11 +967,11 @@
     <state x="282" y="84" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1366.741@0.27.1366.741" timestamp="1580113051211" />
     <state x="933" y="270" width="424" height="591" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1579492937743" />
     <state x="933" y="270" width="424" height="591" key="#com.intellij.ide.macro.MacrosDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="768" y="266" width="427" height="582" key="#com.intellij.ide.util.MemberChooser" timestamp="1581160739563">
+    <state x="768" y="266" width="460" height="589" key="#com.intellij.ide.util.MemberChooser" timestamp="1581243002134">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="768" y="176" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/0.27.1366.741@0.27.1366.741" timestamp="1580272652640" />
-    <state x="768" y="266" width="427" height="582" key="#com.intellij.ide.util.MemberChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581160739563" />
+    <state x="768" y="266" width="460" height="589" key="#com.intellij.ide.util.MemberChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581243002134" />
     <state x="653" y="254" width="524" height="514" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1580124552756">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -985,31 +995,31 @@
     <state x="551" y="397" width="681" height="339" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
     <state x="544" y="280" key="AndroidCreateResourceFileDialog" timestamp="1579492937743" />
     <state x="544" y="280" key="AndroidCreateResourceFileDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog" timestamp="1581165666907">
+    <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog" timestamp="1581257879930">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="751" y="337" width="418" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
-    <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581165666907" />
-    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2" timestamp="1581216665514">
+    <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581257879930" />
+    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2" timestamp="1581259223743">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579597961330" />
     <state x="479" y="118" width="940" height="821" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1580967234611" />
     <state x="53" y="27" width="1146" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580272692340" />
-    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1581216665514" />
-    <state width="738" height="603" key="DebuggerActiveHint" timestamp="1581157351197">
+    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1581259223743" />
+    <state width="1053" height="603" key="DebuggerActiveHint" timestamp="1581244776569">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="399" height="466" key="DebuggerActiveHint/0.0.1449.815@0.0.1449.815" timestamp="1579505476240" />
     <state width="525" height="424" key="DebuggerActiveHint/0.27.1366.741@0.27.1366.741" timestamp="1580220907047" />
-    <state width="738" height="603" key="DebuggerActiveHint/0.27.1920.1053@0.27.1920.1053" timestamp="1581157351197" />
-    <state x="187" y="117" width="1536" height="843" key="DiffContextDialog" timestamp="1581147997253">
+    <state width="1053" height="603" key="DebuggerActiveHint/0.27.1920.1053@0.27.1920.1053" timestamp="1581244776569" />
+    <state x="187" y="117" width="1536" height="843" key="DiffContextDialog" timestamp="1581252979466">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="84" y="30" width="1243" height="749" key="DiffContextDialog/0.0.1449.815@0.0.1449.815" timestamp="1579590994185" />
     <state x="187" y="90" width="1536" height="840" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="79" y="54" width="1172" height="681" key="DiffContextDialog/0.27.1366.741@0.27.1366.741" timestamp="1580272688407" />
-    <state x="187" y="117" width="1536" height="843" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581147997253" />
+    <state x="187" y="117" width="1536" height="843" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581252979466" />
     <state x="716" y="314" width="542" height="635" key="FileChooserDialogImpl" timestamp="1580969969526">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -1026,62 +1036,62 @@
     <state x="779" y="457" key="GitRewordDialog/0.0.1449.815@0.0.1449.815" timestamp="1579508174735" />
     <state x="273" y="376" width="964" height="198" key="GitRewordDialog/0.27.1366.741@0.27.1366.741" timestamp="1580202716970" />
     <state x="779" y="457" key="GitRewordDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state width="1858" height="135" key="GridCell.Tab.0.bottom" timestamp="1581168058770">
+    <state width="1858" height="174" key="GridCell.Tab.0.bottom" timestamp="1581259208935">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.bottom/0.0.1449.815@0.0.1449.815" timestamp="1579592173845" />
     <state width="1874" height="225" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="127" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
-    <state width="1858" height="135" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1581168058770" />
-    <state width="1858" height="135" key="GridCell.Tab.0.center" timestamp="1581168058770">
+    <state width="1858" height="174" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1581259208935" />
+    <state width="1858" height="174" key="GridCell.Tab.0.center" timestamp="1581259208934">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.center/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1874" height="225" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="127" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1580267310682" />
-    <state width="1858" height="135" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1581168058770" />
-    <state width="1858" height="135" key="GridCell.Tab.0.left" timestamp="1581168058770">
+    <state width="1858" height="174" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1581259208934" />
+    <state width="1858" height="174" key="GridCell.Tab.0.left" timestamp="1581259208934">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.left/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1874" height="225" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="127" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1580267310681" />
-    <state width="1858" height="135" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1581168058770" />
-    <state width="1858" height="135" key="GridCell.Tab.0.right" timestamp="1581168058770">
+    <state width="1858" height="174" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1581259208934" />
+    <state width="1858" height="174" key="GridCell.Tab.0.right" timestamp="1581259208935">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.right/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1874" height="225" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="127" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
-    <state width="1858" height="135" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1581168058770" />
-    <state width="1860" height="309" key="GridCell.Tab.1.bottom" timestamp="1581157620837">
+    <state width="1858" height="174" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1581259208935" />
+    <state width="1858" height="237" key="GridCell.Tab.1.bottom" timestamp="1581254991568">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="549" key="GridCell.Tab.1.bottom/0.0.1449.815@0.0.1449.815" timestamp="1579581123708" />
     <state width="1874" height="245" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="209" key="GridCell.Tab.1.bottom/0.27.1366.741@0.27.1366.741" timestamp="1580266414243" />
-    <state width="1860" height="309" key="GridCell.Tab.1.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620837" />
-    <state width="1860" height="309" key="GridCell.Tab.1.center" timestamp="1581157620836">
+    <state width="1858" height="237" key="GridCell.Tab.1.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1581254991568" />
+    <state width="1858" height="237" key="GridCell.Tab.1.center" timestamp="1581254991567">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="549" key="GridCell.Tab.1.center/0.0.1449.815@0.0.1449.815" timestamp="1579581123708" />
     <state width="1874" height="245" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="209" key="GridCell.Tab.1.center/0.27.1366.741@0.27.1366.741" timestamp="1580266414242" />
-    <state width="1860" height="309" key="GridCell.Tab.1.center/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620836" />
-    <state width="1860" height="309" key="GridCell.Tab.1.left" timestamp="1581157620836">
+    <state width="1858" height="237" key="GridCell.Tab.1.center/0.27.1920.1053@0.27.1920.1053" timestamp="1581254991567" />
+    <state width="1858" height="237" key="GridCell.Tab.1.left" timestamp="1581254991566">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="549" key="GridCell.Tab.1.left/0.0.1449.815@0.0.1449.815" timestamp="1579581123708" />
     <state width="1874" height="245" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="209" key="GridCell.Tab.1.left/0.27.1366.741@0.27.1366.741" timestamp="1580266414241" />
-    <state width="1860" height="309" key="GridCell.Tab.1.left/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620836" />
-    <state width="1860" height="309" key="GridCell.Tab.1.right" timestamp="1581157620836">
+    <state width="1858" height="237" key="GridCell.Tab.1.left/0.27.1920.1053@0.27.1920.1053" timestamp="1581254991566" />
+    <state width="1858" height="237" key="GridCell.Tab.1.right" timestamp="1581254991567">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="549" key="GridCell.Tab.1.right/0.0.1449.815@0.0.1449.815" timestamp="1579581123708" />
     <state width="1874" height="245" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state width="1312" height="209" key="GridCell.Tab.1.right/0.27.1366.741@0.27.1366.741" timestamp="1580266414242" />
-    <state width="1860" height="309" key="GridCell.Tab.1.right/0.27.1920.1053@0.27.1920.1053" timestamp="1581157620836" />
+    <state width="1858" height="237" key="GridCell.Tab.1.right/0.27.1920.1053@0.27.1920.1053" timestamp="1581254991567" />
     <state width="1312" height="275" key="GridCell.Tab.2.bottom" timestamp="1580110132076">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1109,12 +1119,12 @@
     <state x="747" y="487" width="418" height="147" key="ReplaceDuplicatesPrompt" timestamp="1579492937743" />
     <state x="747" y="459" key="ReplaceDuplicatesPrompt/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="747" y="487" width="418" height="147" key="ReplaceDuplicatesPrompt/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="695" y="189" width="528" height="579" key="RollbackChangesDialog" timestamp="1580211294834">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="695" y="266" width="763" height="716" key="RollbackChangesDialog" timestamp="1581252980039">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="695" y="238" width="528" height="579" key="RollbackChangesDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="695" y="189" key="RollbackChangesDialog/0.27.1366.741@0.27.1366.741" timestamp="1580211294834" />
-    <state x="695" y="266" key="RollbackChangesDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
+    <state x="695" y="266" width="763" height="716" key="RollbackChangesDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581252980039" />
     <state x="381" y="257" width="603" height="287" key="ScreenshotRecorder.Options.Dimensions" timestamp="1579961829453">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1123,12 +1133,12 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="100" y="27" width="1155" height="741" key="ScreenshotViewer.Dimensions/0.27.1366.741@0.27.1366.741" timestamp="1579960899064" />
-    <state x="682" y="190" width="1086" height="737" key="SettingsEditor" timestamp="1580968423685">
+    <state x="682" y="175" width="1135" height="905" key="SettingsEditor" timestamp="1581252673108">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="682" y="163" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="228" y="27" width="1024" height="741" key="SettingsEditor/0.27.1366.741@0.27.1366.741" timestamp="1580201147481" />
-    <state x="682" y="190" width="1086" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1580968423685" />
+    <state x="682" y="175" width="1135" height="905" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1581252673108" />
     <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog" timestamp="1579492937743" />
     <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
     <state width="712" height="655" key="SwitcherDM" timestamp="1581135994021">
@@ -1143,24 +1153,24 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="525" y="307" width="306" height="187" key="VCS.ChangelistChooser/0.27.1366.741@0.27.1366.741" timestamp="1580210147076" />
-    <state x="587" y="217" width="800" height="538" key="Vcs.Push.Dialog.v2" timestamp="1581167714090">
+    <state x="587" y="217" width="800" height="538" key="Vcs.Push.Dialog.v2" timestamp="1581229739722">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="587" y="95" key="Vcs.Push.Dialog.v2/0.0.1449.815@0.0.1449.815" timestamp="1579581706571" />
     <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="553" y="113" width="800" height="538" key="Vcs.Push.Dialog.v2/0.27.1366.741@0.27.1366.741" timestamp="1580221845054" />
-    <state x="587" y="217" width="800" height="720" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1581167714090" />
-    <state x="694" y="290" width="427" height="533" key="VcsDiffUtil.ChangesDialog" timestamp="1581147997197">
+    <state x="587" y="217" width="800" height="720" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1581229739722" />
+    <state x="694" y="290" width="427" height="533" key="VcsDiffUtil.ChangesDialog" timestamp="1581250700929">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="694" y="282" key="VcsDiffUtil.ChangesDialog/0.0.1449.815@0.0.1449.815" timestamp="1579504740102" />
     <state x="654" y="235" width="427" height="533" key="VcsDiffUtil.ChangesDialog/0.27.1366.741@0.27.1366.741" timestamp="1580024747207" />
-    <state x="694" y="290" width="522" height="533" key="VcsDiffUtil.ChangesDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581147997197" />
-    <state width="960" height="526" key="XDebugger.FullValuePopup" timestamp="1581150650760">
+    <state x="694" y="290" width="522" height="533" key="VcsDiffUtil.ChangesDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581250700929" />
+    <state width="960" height="526" key="XDebugger.FullValuePopup" timestamp="1581244783704">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="683" height="370" key="XDebugger.FullValuePopup/0.27.1366.741@0.27.1366.741" timestamp="1580220619038" />
-    <state width="960" height="526" key="XDebugger.FullValuePopup/0.27.1920.1053@0.27.1920.1053" timestamp="1581150650760" />
+    <state width="960" height="526" key="XDebugger.FullValuePopup/0.27.1920.1053@0.27.1920.1053" timestamp="1581244783704" />
     <state x="104" y="132" width="1148" height="538" key="caller.chooser.dialog" timestamp="1580213879051">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1181,42 +1191,42 @@
     <state x="66" y="57" width="1301" height="698" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1449.815@0.0.1449.815" timestamp="1579507647968" />
     <state x="62" y="79" width="1227" height="635" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.27.1366.741@0.27.1366.741" timestamp="1580211462409" />
     <state x="100" y="127" width="1720" height="853" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581133995219" />
-    <state x="483" y="150" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581163632021">
+    <state x="483" y="150" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581250491734">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="483" y="123" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="280" y="27" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1366.741@0.27.1366.741" timestamp="1580272136230" />
-    <state x="483" y="150" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581163632021" />
+    <state x="483" y="150" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581250491734" />
     <state x="704" y="442" width="457" height="175" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1580016172451">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="704" y="442" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="704" y="442" width="457" height="175" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.27.1366.741@0.27.1366.741" timestamp="1580016172451" />
-    <state x="354" y="215" width="1329" height="647" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1581157629842">
+    <state x="354" y="215" width="1329" height="647" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1581244724161">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="267" y="145" width="916" height="601" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1449.815@0.0.1449.815" timestamp="1579505929508" />
     <state x="252" y="159" width="1008" height="529" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.1366.741@0.27.1366.741" timestamp="1580125639310" />
-    <state x="354" y="215" width="1329" height="647" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.1920.1053@0.27.1920.1053" timestamp="1581157629842" />
+    <state x="354" y="215" width="1329" height="647" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.1920.1053@0.27.1920.1053" timestamp="1581244724161" />
     <state x="100" y="100" width="1720" height="850" key="dock-window-1" timestamp="1579492937743" />
     <state x="100" y="100" width="1720" height="850" key="dock-window-1/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="409" y="228" width="538" height="346" key="edit.logcat.filter.dialog.dimensions" timestamp="1579962596546">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="409" y="228" width="538" height="346" key="edit.logcat.filter.dialog.dimensions/0.27.1366.741@0.27.1366.741" timestamp="1579962596546" />
-    <state x="636" y="163" width="652" height="507" key="extract.method.dialog" timestamp="1580109656807">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="694" y="319" width="652" height="548" key="extract.method.dialog" timestamp="1581256241043">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="694" y="291" width="652" height="477" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="636" y="163" key="extract.method.dialog/0.27.1366.741@0.27.1366.741" timestamp="1580109656807" />
-    <state x="694" y="319" width="652" height="507" key="extract.method.dialog/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="595" y="284" width="994" height="716" key="find.popup" timestamp="1581216677383">
+    <state x="694" y="319" width="652" height="548" key="extract.method.dialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581256241043" />
+    <state x="595" y="284" width="994" height="716" key="find.popup" timestamp="1581222635084">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="149" y="37" width="1187" height="740" key="find.popup/0.0.1449.815@0.0.1449.815" timestamp="1579594271434" />
     <state x="595" y="256" width="773" height="538" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="140" y="61" width="1120" height="673" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221246864" />
-    <state x="595" y="284" width="994" height="716" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581216677383" />
+    <state x="595" y="284" width="994" height="716" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581222635084" />
     <state x="409" y="106" width="537" height="589" key="git4idea.branch.GitSmartOperationDialog" timestamp="1580127099669">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1226,14 +1236,16 @@
     </state>
     <state x="611" y="316" key="git4idea.merge.GitPullDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="516" y="185" width="655" height="446" key="git4idea.merge.GitPullDialog/0.27.1366.741@0.27.1366.741" timestamp="1580016104772" />
-    <state x="396" y="251" width="563" height="342" key="git4idea.rebase.GitRebaseDialog" timestamp="1580129558374">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="557" y="345" width="794" height="493" key="git4idea.rebase.GitRebaseDialog" timestamp="1581229855668">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="396" y="251" width="563" height="342" key="git4idea.rebase.GitRebaseDialog/0.27.1366.741@0.27.1366.741" timestamp="1580129558374" />
-    <state x="608" y="159" width="515" height="518" key="git4idea.rebase.GitRebaseEditor" timestamp="1580129566879">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="557" y="345" width="794" height="493" key="git4idea.rebase.GitRebaseDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581229855668" />
+    <state x="855" y="215" width="515" height="518" key="git4idea.rebase.GitRebaseEditor" timestamp="1581229869951">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="608" y="159" width="515" height="518" key="git4idea.rebase.GitRebaseEditor/0.27.1366.741@0.27.1366.741" timestamp="1580129566879" />
+    <state x="855" y="215" key="git4idea.rebase.GitRebaseEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1581229869951" />
     <state x="490" y="302" width="376" height="198" key="git4idea.rebase.GitUnstructuredEditor" timestamp="1580128004080">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1251,36 +1263,41 @@
     </state>
     <state x="624" y="252" key="run.anything.popup/0.27.1366.741@0.27.1366.741" timestamp="1580204748923" />
     <state x="624" y="252" key="run.anything.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1579492937743" />
-    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup" timestamp="1581171175945">
+    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup" timestamp="1581257605668">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.0.1449.815@0.0.1449.815" timestamp="1579597070884" />
     <state x="623" y="231" width="672" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="587" y="262" width="672" height="617" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221238206" />
-    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581171175945" />
+    <state x="623" y="259" width="928" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581257605668" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
-          <line>680</line>
-          <option name="timeStamp" value="65" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
-          <line>694</line>
-          <option name="timeStamp" value="66" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
-          <line>716</line>
-          <option name="timeStamp" value="67" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
-          <line>735</line>
+          <line>763</line>
           <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java</url>
+          <line>746</line>
+          <option name="timeStamp" value="85" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java</url>
+          <line>744</line>
+          <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java</url>
+          <line>61</line>
+          <option name="timeStamp" value="94" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="95" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

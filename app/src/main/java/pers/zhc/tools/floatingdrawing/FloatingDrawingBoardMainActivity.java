@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.InputType;
 import android.text.Selection;
@@ -60,6 +61,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private ImageView iv;
     private LinearLayout optionsLL;
     private int fbMeasuredWidth, fbMeasuredHeight;
+    private String internalPathDir = null;
 
     private static void uploadPaths(Context context) {
         try {
@@ -138,9 +140,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     @SuppressLint("UseSparseArrays")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey("internalPathFile")) {
+                String lastInternalPath = savedInstanceState.getString("internalPathFile");
+                ToastUtils.show(this, getString(R.string.tv, lastInternalPath));
+            }
+        }
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, 53);
         init();
@@ -170,48 +178,30 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         //        NotificationClickReceiver notificationClickReceiver = new NotificationClickReceiver();
 //        registerReceiver(this.notificationClickReceiver, new IntentFilter("pers.zhc.tools.START_SERVICE"));
         currentInstanceMills = System.currentTimeMillis();
-        File currentInternalPathDir = new File(getFilesDir().getPath() + File.separatorChar + "path");
+        internalPathDir = getFilesDir().getPath() + File.separatorChar + "path";
+        File currentInternalPathDir = new File(internalPathDir);
         if (!currentInternalPathDir.exists()) {
             System.out.println("currentInternalPathDir.mkdirs() = " + currentInternalPathDir.mkdirs());
         }
         currentInternalPathFile = new File(currentInternalPathDir.getPath() + File.separatorChar + currentInstanceMills + ".path");
         Button clearPathBtn = findViewById(R.id.clear_path_btn);
-        final float[] cachesSize = {0F};
-        File[] pathFiles = currentInternalPathDir.listFiles();
-        if (currentInternalPathDir.exists()) {
-            for (int i = 0, listFilesLength = pathFiles != null ? pathFiles.length : 0; i < listFilesLength; i++) {
-                File file = pathFiles[i];
-                cachesSize[0] += file.length();
-            }
-        }
-        clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
+        final float[] cacheSize = {0F};
+        ArrayList<File> fileList = new ArrayList<>();
+        cacheSize[0] = getCacheFilesSize(fileList);
+        clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
         clearPathBtn.setOnClickListener(v -> {
-            FileU fileU = new FileU();
-            if (pathFiles == null) {
-                ToastUtils.show(this, R.string.read_error);
-                return;
+            for (File file : fileList) {
+                System.out.println("file.delete() = " + file.delete());
             }
-            List<File> listFiles = new ArrayList<>();
-            Collections.addAll(listFiles, pathFiles);
-            File crashPath = new File(Common.getExternalStoragePath(this) + File.separatorChar
-                    + this.getString(R.string.some_tools_app) + File.separatorChar + this.getString(R.string.crash));
-            File[] crashFiles = crashPath.listFiles();
-            if (crashFiles != null) {
-                Collections.addAll(listFiles, crashFiles);
-            } else ToastUtils.show(this, R.string.read_error);
-            for (File file : listFiles) {
-                try {
-                    if (!FloatingDrawingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(fileU.getFileName(file.getName())))) {
-                        System.out.println("file.delete() = " + file.delete());
-                    }
-                } catch (NumberFormatException ignored) {
-                }
-            }
-            cachesSize[0] = 0;
-            for (File file : pathFiles) {
-                cachesSize[0] += file.length();
-            }
-            clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
+            fileList.clear();
+            cacheSize[0] = getCacheFilesSize(fileList);
+            clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
+        });
+        clearPathBtn.setOnLongClickListener(v -> {
+            fileList.clear();
+            cacheSize[0] = getCacheFilesSize(fileList);
+            clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
+            return true;
         });
         Arrays.fill(hsvaFloats, null);
         Point point = new Point();
@@ -224,8 +214,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         height = point.y;
         View keepNotBeingKilledView = new View(this);
         keepNotBeingKilledView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
-
-//        RelativeLayout rl = findViewById(R.id.main);
         pv = new PaintView(this, width, height, currentInternalPathFile);
         pv.setStrokeWidth(10F);
         pv.setEraserStrokeWidth(10F);
@@ -496,6 +484,45 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             smallLL.addView(childTVs[i]);
             optionsLL.addView(smallLL);
         }
+        Button readCacheFileBtn = findViewById(R.id.open_cache_path_file);
+        readCacheFileBtn.setOnClickListener(v -> {
+            if (!fbSwitch.isChecked()) {
+                fbSwitch.setChecked(true);
+            }
+            importPath(null, new File(internalPathDir));
+        });
+    }
+
+    private long getCacheFilesSize(@Nullable ArrayList<File> fileList) {
+        if (fileList == null) return 0;
+        long cacheSize = 0L;
+        File[] listFiles = null;
+        if (internalPathDir != null) {
+            listFiles = new File(internalPathDir).listFiles();
+        }
+        if (listFiles != null) {
+            for (File file : listFiles) {
+                try {
+                    if (FloatingDrawingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(file.getName()))) {
+                        continue;
+                    }
+                } catch (NumberFormatException ignored) {
+                }
+                fileList.add(file);
+            }
+        }
+        File crashPath = new File(Common.getExternalStoragePath(this) + File.separatorChar
+                + this.getString(R.string.some_tools_app) + File.separatorChar + this.getString(R.string.crash));
+        File[] crashFiles = crashPath.listFiles();
+        if (crashFiles != null) {
+            fileList.addAll(Arrays.asList(crashFiles));
+        }
+        for (File file : fileList) {
+            if (file != null) {
+                cacheSize += file.length();
+            }
+        }
+        return cacheSize;
     }
 
     private void measureFB_LL() {
@@ -516,12 +543,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (isChecked) {
                 new CheckOverlayPermission() {
                     @Override
-                    void have() {
+                    void granted() {
                         startFloatingWindow();
                     }
 
                     @Override
-                    void notHave() {
+                    void denied() {
                         fbSwitch.setChecked(false);
                     }
                 };
@@ -531,6 +558,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow() {
+        pv.setOS(currentInternalPathFile, true);
         if (!longMainActivityMap.containsKey(currentInstanceMills)) {
             longMainActivityMap.put(currentInstanceMills, this);
         }
@@ -775,7 +803,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 R.string.export_image,
                 R.string.import_path,
                 R.string.export_path,
-                R.string.reset_transform
+                R.string.reset_transform,
+                R.string.layer
         };
         Button[] buttons = new Button[textsRes.length];
         for (int i = 0; i < buttons.length; i++) {
@@ -854,7 +883,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
                     v1 -> new PermissionRequester(() -> {
-                        LinearLayout linearLayout = View.inflate(this, R.layout.export_image_view, null)
+                        LinearLayout linearLayout = View.inflate(this, R.layout.export_image_layout, null)
                                 .findViewById(R.id.root);
                         EditText fileNameET = linearLayout.findViewById(R.id.file_name);
                         setSelectedET_currentMills(fileNameET.getContext(), fileNameET);
@@ -888,35 +917,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         DialogUtil.setADWithET_autoShowSoftKeyboard(fileNameET, ad);
                         ad.show();
                     }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
-                    v2 -> new PermissionRequester(() -> {
-                        Dialog dialog = new Dialog(this);
-                        dialog.setCanceledOnTouchOutside(false);
-                        dialog.setCancelable(false);
-                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
-                            dialog.dismiss();
-                            Dialog importPathFileProgressDialog = new Dialog(this);
-                            setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                            importPathFileProgressDialog.setCanceledOnTouchOutside(false);
-                            RelativeLayout progressRL = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
-                            progressRL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                            importPathFileProgressDialog.show();
-                            importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
-                            TextView tv = progressRL.findViewById(R.id.progress_tv);
-                            tv.setText(R.string.importing);
-//                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
-                            TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
-                            pv.importPathFile(new File(s), () -> {
-                                this.hsvaFloats[0] = null;
-                                runOnUiThread(importPathFileDoneAction);
-                                importPathFileProgressDialog.dismiss();
-                            }, aFloat -> runOnUiThread(() -> {
-//                                progressBar.setProgress(aFloat.intValue());
-                                pTV.setText(getString(R.string.progress_tv, aFloat));
-                            }));
-                            moreOptionsDialog.dismiss();
-                        });
-                        setFilePickerDialog(dialog, filePickerRL);
-                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
+                    v2 -> importPath(moreOptionsDialog, pathDir),
                     v3 -> new PermissionRequester(() -> {
                         EditText et = new EditText(this);
                         setSelectedET_currentMills(this, et);
@@ -943,7 +944,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
                         alertDialog.show();
                     }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
-                    v -> pv.resetTransform()
+                    v4 -> pv.resetTransform(),
+                    v5 -> setLayer()
             };
             buttons[i].setOnClickListener(onClickListeners[i]);
         }
@@ -954,6 +956,50 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         moreOptionsDialog.setContentView(sv);
         moreOptionsDialog.setCanceledOnTouchOutside(true);
         moreOptionsDialog.show();
+    }
+
+    private void setLayer() {
+        Dialog dialog = new Dialog(this);
+        View view = View.inflate(this, R.layout.layer_layout, null);
+        LinearLayout linearLayout = view.findViewById(R.id.ll);
+        dialog.setContentView(view);
+        DialogUtil.setDialogAttr(dialog, false
+                , ((int) (width * .8F)), ((int) (height * .8F)), true);
+        dialog.show();
+    }
+
+    private void importPath(@Nullable Dialog moreOptionsDialog, File pathDir) {
+        new PermissionRequester(() -> {
+            Dialog dialog = new Dialog(this);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
+                dialog.dismiss();
+                Dialog importPathFileProgressDialog = new Dialog(this);
+                setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                importPathFileProgressDialog.setCanceledOnTouchOutside(false);
+                RelativeLayout progressRL = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
+                progressRL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                importPathFileProgressDialog.show();
+                importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
+                TextView tv = progressRL.findViewById(R.id.progress_tv);
+                tv.setText(R.string.importing);
+//                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
+                TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
+                pv.importPathFile(new File(s), () -> {
+                    this.hsvaFloats[0] = null;
+                    runOnUiThread(importPathFileDoneAction);
+                    importPathFileProgressDialog.dismiss();
+                }, aFloat -> runOnUiThread(() -> {
+//                                progressBar.setProgress(aFloat.intValue());
+                    pTV.setText(getString(R.string.progress_tv, aFloat));
+                }));
+                if (moreOptionsDialog != null) {
+                    moreOptionsDialog.dismiss();
+                }
+            });
+            setFilePickerDialog(dialog, filePickerRL);
+        }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43);
     }
 
     private void setFilePickerDialog(Dialog dialog, FilePickerRL filePickerRL) {
@@ -983,27 +1029,34 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        System.out.println("kill...");
-        /*File d = new File(fbDir, "killed");
-        if (!d.exists()) System.out.println("d.mkdirs() = " + d.mkdirs());
-        this.pv.saveImg(new File(d, this.currentInstanceMills + ".png"));*/
-    }
-
     private abstract class CheckOverlayPermission {
         public CheckOverlayPermission() {
             if (!Settings.canDrawOverlays(FloatingDrawingBoardMainActivity.this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, 4444);
-                notHave();
-            } else have();
+                denied();
+            } else granted();
         }
 
-        abstract void have();
+        abstract void granted();
 
-        abstract void notHave();
+        abstract void denied();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        System.out.println("kill...");
+        outState.putString("internalPathFile", currentInternalPathFile.getPath());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey("internalPathFile")) {
+            String lastInternalPath = savedInstanceState.getString("internalPathFile");
+            ToastUtils.show(this, getString(R.string.tv, lastInternalPath));
+        }
     }
 }
