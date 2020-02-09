@@ -180,5 +180,7 @@
     <string name="asterisk">*</string>
     <string name="restart_application">重启应用</string>
     <string name="lock_stroke">锁定笔刷</string>
+    <string name="open_cache_path_file">打开缓存路径文件</string>
+    <string name="layer">图层</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
