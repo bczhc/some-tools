@@ -64,17 +64,21 @@ public class PaintView extends View {
     }
 
     void setOS(File file, boolean append) {
+        long length = file.length();
+        if (!append) length = 0L;
         try {
             os = new FileOutputStream(file, append);
-            try {
-                byte[] headInfo = "path ver 2.1".getBytes();
-                if (headInfo.length != 12) {
-                    Common.showException(new Exception("native error"), (Activity) ctx);
+            if (length == 0L) {
+                try {
+                    byte[] headInfo = "path ver 2.1".getBytes();
+                    if (headInfo.length != 12) {
+                        Common.showException(new Exception("native error"), (Activity) ctx);
+                    }
+                    os.write(headInfo);
+                    os.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                os.write(headInfo);
-                os.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         } catch (FileNotFoundException e) {
             Common.showException(e, (Activity) ctx);
@@ -85,7 +89,6 @@ public class PaintView extends View {
      * 初始化
      */
     private void init() {
-        setOS(internalPathFile, true);
         setEraserMode(false);
         eraserPaint = new Paint();
         eraserPaint.setColor(Color.TRANSPARENT);
@@ -544,7 +547,7 @@ public class PaintView extends View {
                 }
                 d.run();
             } catch (IOException e) {
-                handler.post(() -> ToastUtils.show(ctx, R.string.read_error));
+                handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
             } finally {
                 if (raf != null) {
                     try {
@@ -606,9 +609,7 @@ public class PaintView extends View {
                             os.flush();
                         }
                     } catch (IOException e) {
-                        ((Activity) ctx).runOnUiThread(() -> ToastUtils.show(ctx
-                                , ctx.getString(R.string.concat, ctx.getString(R.string.write_error)
-                                        , "\n" + e.toString())));
+                        ((Activity) ctx).runOnUiThread(() -> ToastUtils.showError(ctx, R.string.write_error, e));
                     }
                 }
                 break;

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.InputType;
 import android.text.Selection;
@@ -138,9 +139,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     @SuppressLint("UseSparseArrays")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey("internalPathFile")) {
+                String lastInternalPath = savedInstanceState.getString("internalPathFile");
+                ToastUtils.show(this, getString(R.string.tv, lastInternalPath));
+            }
+        }
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, 53);
         init();
@@ -224,8 +231,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         height = point.y;
         View keepNotBeingKilledView = new View(this);
         keepNotBeingKilledView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
-
-//        RelativeLayout rl = findViewById(R.id.main);
         pv = new PaintView(this, width, height, currentInternalPathFile);
         pv.setStrokeWidth(10F);
         pv.setEraserStrokeWidth(10F);
@@ -531,6 +536,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow() {
+        pv.setOS(currentInternalPathFile, true);
         if (!longMainActivityMap.containsKey(currentInstanceMills)) {
             longMainActivityMap.put(currentInstanceMills, this);
         }
@@ -983,15 +989,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        System.out.println("kill...");
-        /*File d = new File(fbDir, "killed");
-        if (!d.exists()) System.out.println("d.mkdirs() = " + d.mkdirs());
-        this.pv.saveImg(new File(d, this.currentInstanceMills + ".png"));*/
-    }
-
     private abstract class CheckOverlayPermission {
         public CheckOverlayPermission() {
             if (!Settings.canDrawOverlays(FloatingDrawingBoardMainActivity.this)) {
@@ -1005,5 +1002,21 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         abstract void have();
 
         abstract void notHave();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        System.out.println("kill...");
+        outState.putString("internalPathFile", currentInternalPathFile.getPath());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey("internalPathFile")) {
+            String lastInternalPath = savedInstanceState.getString("internalPathFile");
+            ToastUtils.show(this, getString(R.string.tv, lastInternalPath));
+        }
     }
 }
