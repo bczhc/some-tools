@@ -484,6 +484,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             smallLL.addView(childTVs[i]);
             optionsLL.addView(smallLL);
         }
+        Button readCacheFileBtn = findViewById(R.id.open_cache_path_file);
+        readCacheFileBtn.setOnClickListener(v -> {
+            if (!fbSwitch.isChecked()) {
+                fbSwitch.setChecked(true);
+            }
+            importPath(null, new File(internalPathDir));
+        });
     }
 
     private long getCacheFilesSize(@Nullable ArrayList<File> fileList) {
@@ -796,7 +803,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 R.string.export_image,
                 R.string.import_path,
                 R.string.export_path,
-                R.string.reset_transform
+                R.string.reset_transform,
+                R.string.layer
         };
         Button[] buttons = new Button[textsRes.length];
         for (int i = 0; i < buttons.length; i++) {
@@ -875,7 +883,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         setFilePickerDialog(dialog, filePickerRL);
                     }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
                     v1 -> new PermissionRequester(() -> {
-                        LinearLayout linearLayout = View.inflate(this, R.layout.export_image_view, null)
+                        LinearLayout linearLayout = View.inflate(this, R.layout.export_image_layout, null)
                                 .findViewById(R.id.root);
                         EditText fileNameET = linearLayout.findViewById(R.id.file_name);
                         setSelectedET_currentMills(fileNameET.getContext(), fileNameET);
@@ -909,35 +917,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         DialogUtil.setADWithET_autoShowSoftKeyboard(fileNameET, ad);
                         ad.show();
                     }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
-                    v2 -> new PermissionRequester(() -> {
-                        Dialog dialog = new Dialog(this);
-                        dialog.setCanceledOnTouchOutside(false);
-                        dialog.setCancelable(false);
-                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
-                            dialog.dismiss();
-                            Dialog importPathFileProgressDialog = new Dialog(this);
-                            setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                            importPathFileProgressDialog.setCanceledOnTouchOutside(false);
-                            RelativeLayout progressRL = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
-                            progressRL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                            importPathFileProgressDialog.show();
-                            importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
-                            TextView tv = progressRL.findViewById(R.id.progress_tv);
-                            tv.setText(R.string.importing);
-//                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
-                            TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
-                            pv.importPathFile(new File(s), () -> {
-                                this.hsvaFloats[0] = null;
-                                runOnUiThread(importPathFileDoneAction);
-                                importPathFileProgressDialog.dismiss();
-                            }, aFloat -> runOnUiThread(() -> {
-//                                progressBar.setProgress(aFloat.intValue());
-                                pTV.setText(getString(R.string.progress_tv, aFloat));
-                            }));
-                            moreOptionsDialog.dismiss();
-                        });
-                        setFilePickerDialog(dialog, filePickerRL);
-                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
+                    v2 -> importPath(moreOptionsDialog, pathDir),
                     v3 -> new PermissionRequester(() -> {
                         EditText et = new EditText(this);
                         setSelectedET_currentMills(this, et);
@@ -964,7 +944,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
                         alertDialog.show();
                     }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
-                    v -> pv.resetTransform()
+                    v4 -> pv.resetTransform(),
+                    v5 -> setLayer()
             };
             buttons[i].setOnClickListener(onClickListeners[i]);
         }
@@ -975,6 +956,50 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         moreOptionsDialog.setContentView(sv);
         moreOptionsDialog.setCanceledOnTouchOutside(true);
         moreOptionsDialog.show();
+    }
+
+    private void setLayer() {
+        Dialog dialog = new Dialog(this);
+        View view = View.inflate(this, R.layout.layer_layout, null);
+        LinearLayout linearLayout = view.findViewById(R.id.ll);
+        dialog.setContentView(view);
+        DialogUtil.setDialogAttr(dialog, false
+                , ((int) (width * .8F)), ((int) (height * .8F)), true);
+        dialog.show();
+    }
+
+    private void importPath(@Nullable Dialog moreOptionsDialog, File pathDir) {
+        new PermissionRequester(() -> {
+            Dialog dialog = new Dialog(this);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
+                dialog.dismiss();
+                Dialog importPathFileProgressDialog = new Dialog(this);
+                setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                importPathFileProgressDialog.setCanceledOnTouchOutside(false);
+                RelativeLayout progressRL = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
+                progressRL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                importPathFileProgressDialog.show();
+                importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
+                TextView tv = progressRL.findViewById(R.id.progress_tv);
+                tv.setText(R.string.importing);
+//                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
+                TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
+                pv.importPathFile(new File(s), () -> {
+                    this.hsvaFloats[0] = null;
+                    runOnUiThread(importPathFileDoneAction);
+                    importPathFileProgressDialog.dismiss();
+                }, aFloat -> runOnUiThread(() -> {
+//                                progressBar.setProgress(aFloat.intValue());
+                    pTV.setText(getString(R.string.progress_tv, aFloat));
+                }));
+                if (moreOptionsDialog != null) {
+                    moreOptionsDialog.dismiss();
+                }
+            });
+            setFilePickerDialog(dialog, filePickerRL);
+        }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43);
     }
 
     private void setFilePickerDialog(Dialog dialog, FilePickerRL filePickerRL) {
