@@ -22,6 +22,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @SuppressLint("ViewConstructor")
 public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
@@ -35,8 +36,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private Path mPath;
     private Paint eraserPaint;
     private Paint mPaintRef = null;
-    private MyCanvas mCanvas;
-    private Bitmap mBitmap;
+    private Map<String, MyCanvas> canvasMap;
+    private Map<MyCanvas, Bitmap> bitmapMap;
+    private MyCanvas headCanvas;
+    private Bitmap headBitmap;
     private float mLastX, mLastY;//上次的坐标
     private Paint mBitmapPaint;
     //使用LinkedList 模拟栈，来保存 Path
@@ -131,12 +134,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             //获取PaintView的宽和高
             //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
             System.gc();
-            mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            backgroundBitmap = Bitmap.createBitmap(mBitmap);
-            mCanvas = new MyCanvas(mBitmap);
+            headBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            backgroundBitmap = Bitmap.createBitmap(headBitmap);
+            headCanvas = new MyCanvas(headBitmap);
             mBackgroundCanvas = new Canvas(backgroundBitmap);
             //抗锯齿
-            mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+            headCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
             //背景色
         });
 
@@ -145,12 +148,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
-                mCanvas.invertTranslate(distanceX, distanceY);
+                headCanvas.invertTranslate(distanceX, distanceY);
             }
 
             @Override
             public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
-                mCanvas.invertScale(dScale, midPointX, midPointY);
+                headCanvas.invertScale(dScale, midPointX, midPointY);
                 setCurrentStrokeWidthWithLockedStrokeWidth();
             }
 
@@ -199,13 +202,13 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             clearPaint();//清除之前绘制内容
             PathBean lastPb = undoList.removeLast();//将最后一个移除
             redoList.add(lastPb);//加入 恢复操作
-            //遍历，将Path重新绘制到 mCanvas
+            //遍历，将Path重新绘制到 headCanvas
             if (backgroundBitmap != null) {
-                mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
+                headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
             }
             if (!importingPath) {
                 for (PathBean pb : undoList) {
-                    mCanvas.drawPath(pb.path, pb.paint);
+                    headCanvas.drawPath(pb.path, pb.paint);
                 }
                 drawing();
             }
@@ -226,7 +229,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (!redoList.isEmpty()) {
             PathBean pathBean = redoList.removeLast();
-            mCanvas.drawPath(pathBean.path, pathBean.paint);
+            headCanvas.drawPath(pathBean.path, pathBean.paint);
             undoList.add(pathBean);
             if (!importingPath) drawing();
         }
@@ -269,8 +272,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         System.gc();
         Bitmap exportedBitmap = Bitmap.createBitmap(exportedWidth, exportHeight, Bitmap.Config.ARGB_8888);
         MyCanvas myCanvas = new MyCanvas(exportedBitmap);
-        myCanvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
-        myCanvas.scale(mCanvas.getScale() * exportedWidth / width);
+        myCanvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
+        myCanvas.scale(headCanvas.getScale() * exportedWidth / width);
         for (PathBean pathBean : undoList) {
             myCanvas.drawPath(pathBean.path, pathBean.paint);
         }
@@ -318,7 +321,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      * 直接绘制白色背景
      */
     private void clearPaint() {
-        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        headCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         drawing();
     }
 
@@ -567,9 +570,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void onTouchAction(int motionAction, float x, float y) {
-        float startPointX = mCanvas.getStartPointX();
-        float startPointY = mCanvas.getStartPointY();
-        float canvasScale = mCanvas.getScale();
+        float startPointX = headCanvas.getStartPointX();
+        float startPointY = headCanvas.getStartPointY();
+        float canvasScale = headCanvas.getScale();
         x = (x - startPointX) / canvasScale;
         y = (y - startPointY) / canvasScale;
         switch (motionAction) {
@@ -594,7 +597,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
                     if (!importingPath)
-                        mCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
+                        headCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
@@ -661,27 +664,27 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         if (backgroundBitmap == null) {
             ToastUtils.show(ctx, ctx.getString(R.string.importing_failed));
         } else {
-            mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
+            headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         }
         drawing();
     }
 
     void resetTransform() {
-        mCanvas.reset();
+        headCanvas.reset();
         redrawCanvas();
         setCurrentStrokeWidthWithLockedStrokeWidth();
     }
 
     private void redrawCanvas() {
-        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
+        headCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         for (PathBean pathBean : this.undoList) {
-            mCanvas.drawPath(pathBean.path, pathBean.paint);
+            headCanvas.drawPath(pathBean.path, pathBean.paint);
         }
     }
 
     MyCanvas getCanvas() {
-        return mCanvas;
+        return headCanvas;
     }
 
     public float getStrokeWidthInUse() {
@@ -693,8 +696,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     void bitmapResolution(Point point) {
-        point.x = mBitmap.getWidth();
-        point.y = mBitmap.getHeight();
+        point.x = headBitmap.getWidth();
+        point.y = headBitmap.getHeight();
     }
 
     void setLockStrokeMode(boolean mode) {
@@ -705,14 +708,14 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         if (isLockingStroke) {
             this.lockedStrokeWidth = getStrokeWidth();
             this.lockedEraserStrokeWidth = getEraserStrokeWidth();
-            this.scaleWhenLocked = mCanvas.getScale();
+            this.scaleWhenLocked = headCanvas.getScale();
             setCurrentStrokeWidthWithLockedStrokeWidth();
         }
     }
 
     void setCurrentStrokeWidthWithLockedStrokeWidth() {
         if (isLockingStroke) {
-            float mCanvasScale = mCanvas.getScale();
+            float mCanvasScale = headCanvas.getScale();
             setStrokeWidth(lockedStrokeWidth * scaleWhenLocked / mCanvasScale);
             setEraserStrokeWidth(lockedEraserStrokeWidth * scaleWhenLocked / mCanvasScale);
         }
@@ -744,12 +747,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (canvas != null) {
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            if (mBitmap != null) {
-                canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
+            if (headBitmap != null) {
+                canvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
                 if (!importingPath) {
                     if (mPath != null) {//显示实时正在绘制的path轨迹
-                        float mCanvasScale = mCanvas.getScale();
-                        canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
+                        float mCanvasScale = headCanvas.getScale();
+                        canvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
                         canvas.scale(mCanvasScale, mCanvasScale);
                         if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
                         else canvas.drawPath(mPath, mPaint);
@@ -787,5 +790,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 return super.removeLast();
             }
         }
+    }
+
+    void changeHead(String id) {
+        headCanvas = canvasMap.get(id);
+        headBitmap = bitmapMap.get(headCanvas);
     }
 }
