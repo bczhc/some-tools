@@ -61,6 +61,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private ImageView iv;
     private LinearLayout optionsLL;
     private int fbMeasuredWidth, fbMeasuredHeight;
+    private String internalPathDir = null;
 
     private static void uploadPaths(Context context) {
         try {
@@ -177,48 +178,30 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         //        NotificationClickReceiver notificationClickReceiver = new NotificationClickReceiver();
 //        registerReceiver(this.notificationClickReceiver, new IntentFilter("pers.zhc.tools.START_SERVICE"));
         currentInstanceMills = System.currentTimeMillis();
-        File currentInternalPathDir = new File(getFilesDir().getPath() + File.separatorChar + "path");
+        internalPathDir = getFilesDir().getPath() + File.separatorChar + "path";
+        File currentInternalPathDir = new File(internalPathDir);
         if (!currentInternalPathDir.exists()) {
             System.out.println("currentInternalPathDir.mkdirs() = " + currentInternalPathDir.mkdirs());
         }
         currentInternalPathFile = new File(currentInternalPathDir.getPath() + File.separatorChar + currentInstanceMills + ".path");
         Button clearPathBtn = findViewById(R.id.clear_path_btn);
-        final float[] cachesSize = {0F};
-        File[] pathFiles = currentInternalPathDir.listFiles();
-        if (currentInternalPathDir.exists()) {
-            for (int i = 0, listFilesLength = pathFiles != null ? pathFiles.length : 0; i < listFilesLength; i++) {
-                File file = pathFiles[i];
-                cachesSize[0] += file.length();
-            }
-        }
-        clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
+        final float[] cacheSize = {0F};
+        ArrayList<File> fileList = new ArrayList<>();
+        cacheSize[0] = getCacheFilesSize(fileList);
+        clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
         clearPathBtn.setOnClickListener(v -> {
-            FileU fileU = new FileU();
-            if (pathFiles == null) {
-                ToastUtils.show(this, R.string.read_error);
-                return;
+            for (File file : fileList) {
+                System.out.println("file.delete() = " + file.delete());
             }
-            List<File> listFiles = new ArrayList<>();
-            Collections.addAll(listFiles, pathFiles);
-            File crashPath = new File(Common.getExternalStoragePath(this) + File.separatorChar
-                    + this.getString(R.string.some_tools_app) + File.separatorChar + this.getString(R.string.crash));
-            File[] crashFiles = crashPath.listFiles();
-            if (crashFiles != null) {
-                Collections.addAll(listFiles, crashFiles);
-            } else ToastUtils.show(this, R.string.read_error);
-            for (File file : listFiles) {
-                try {
-                    if (!FloatingDrawingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(fileU.getFileName(file.getName())))) {
-                        System.out.println("file.delete() = " + file.delete());
-                    }
-                } catch (NumberFormatException ignored) {
-                }
-            }
-            cachesSize[0] = 0;
-            for (File file : pathFiles) {
-                cachesSize[0] += file.length();
-            }
-            clearPathBtn.setText(getString(R.string.clear_application_caches, cachesSize[0] / 1024F));
+            fileList.clear();
+            cacheSize[0] = getCacheFilesSize(fileList);
+            clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
+        });
+        clearPathBtn.setOnLongClickListener(v -> {
+            fileList.clear();
+            cacheSize[0] = getCacheFilesSize(fileList);
+            clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
+            return true;
         });
         Arrays.fill(hsvaFloats, null);
         Point point = new Point();
@@ -501,6 +484,38 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             smallLL.addView(childTVs[i]);
             optionsLL.addView(smallLL);
         }
+    }
+
+    private long getCacheFilesSize(@Nullable ArrayList<File> fileList) {
+        if (fileList == null) return 0;
+        long cacheSize = 0L;
+        File[] listFiles = null;
+        if (internalPathDir != null) {
+            listFiles = new File(internalPathDir).listFiles();
+        }
+        if (listFiles != null) {
+            for (File file : listFiles) {
+                try {
+                    if (FloatingDrawingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(file.getName()))) {
+                        continue;
+                    }
+                } catch (NumberFormatException ignored) {
+                }
+                fileList.add(file);
+            }
+        }
+        File crashPath = new File(Common.getExternalStoragePath(this) + File.separatorChar
+                + this.getString(R.string.some_tools_app) + File.separatorChar + this.getString(R.string.crash));
+        File[] crashFiles = crashPath.listFiles();
+        if (crashFiles != null) {
+            fileList.addAll(Arrays.asList(crashFiles));
+        }
+        for (File file : fileList) {
+            if (file != null) {
+                cacheSize += file.length();
+            }
+        }
+        return cacheSize;
     }
 
     private void measureFB_LL() {
