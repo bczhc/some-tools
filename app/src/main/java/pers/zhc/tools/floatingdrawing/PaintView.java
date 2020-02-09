@@ -24,10 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SuppressLint("ViewConstructor")
-public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
-    private Canvas surfaceCanvas;
+public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder mSurfaceHolder;
-    private boolean isDrawing = false;
     private final File internalPathFile;
     private final int height;
     private final int width;
@@ -42,8 +40,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
     private float mLastX, mLastY;//上次的坐标
     private Paint mBitmapPaint;
     //使用LinkedList 模拟栈，来保存 Path
-    private LinkedList<PathBean> undoList;
-    private LinkedList<PathBean> redoList;
+    private SynchronisedList<PathBean> undoList;
+    private SynchronisedList<PathBean> redoList;
     private JNI jni = new JNI();
     private Context ctx;
     private Bitmap backgroundBitmap;
@@ -143,8 +141,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
 //                mCanvas.drawColor(Color.WHITE);
         });
 
-        undoList = new LinkedList<>();
-        redoList = new LinkedList<>();
+        undoList = new SynchronisedList<>();
+        redoList = new SynchronisedList<>();
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
@@ -209,6 +207,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
             for (PathBean pb : undoList) {
                 mCanvas.drawPath(pb.path, pb.paint);
             }
+            drawing();
         }
     }
 
@@ -228,6 +227,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
             PathBean pathBean = redoList.removeLast();
             mCanvas.drawPath(pathBean.path, pathBean.paint);
             undoList.add(pathBean);
+            drawing();
         }
     }
 
@@ -318,6 +318,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
      */
     private void clearPaint() {
         mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        drawing();
     }
 
     /**
@@ -458,42 +459,47 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
                     case "path ver 2.1":
                         handler.post(() -> ToastUtils.show(ctx, R.string.import_2_1));
                         raf.skipBytes(12);
-                        bytes = new byte[9];
+                        byte[] buffer = new byte[1152];//128 * 9
+                        int bufferRead;
                         read = 0L;
-                        while (raf.read(bytes) != -1) {
-                            switch (bytes[0]) {
-                                case (byte) 0xA1:
-                                case (byte) 0xA2:
-                                    strokeWidth = jni.byteArrayToFloat(bytes, 1);
-                                    color = jni.byteArrayToInt(bytes, 5);
-                                    setEraserMode(bytes[0] == (byte) 0xA2);
-                                    mPaintRef.setColor(color);
-                                    mPaintRef.setStrokeWidth(strokeWidth);
-                                    break;
-                                case (byte) 0xB1:
-                                    x = jni.byteArrayToFloat(bytes, 1);
-                                    y = jni.byteArrayToFloat(bytes, 5);
-                                    onTouchAction(MotionEvent.ACTION_DOWN, x, y);
-                                    break;
-                                case (byte) 0xB3:
-                                    x = jni.byteArrayToFloat(bytes, 1);
-                                    y = jni.byteArrayToFloat(bytes, 5);
-                                    onTouchAction(MotionEvent.ACTION_MOVE, x, y);
-                                    break;
-                                case (byte) 0xB2:
-                                    x = jni.byteArrayToFloat(bytes, 1);
-                                    y = jni.byteArrayToFloat(bytes, 5);
-                                    onTouchAction(MotionEvent.ACTION_UP, x, y);
-                                    break;
-                                case (byte) 0xC1:
-                                    undo();
-                                    break;
-                                case (byte) 0xC2:
-                                    redo();
-                                    break;
+                        while ((bufferRead = raf.read(buffer)) != -1) {
+                            int a = bufferRead / 9;
+                            for (int i = 0; i < a; i++) {
+                                switch (buffer[i * 9]) {
+                                    case (byte) 0xA1:
+                                    case (byte) 0xA2:
+                                        strokeWidth = jni.byteArrayToFloat(buffer, 1 + i * 9);
+                                        color = jni.byteArrayToInt(buffer, 5 + i * 9);
+                                        setEraserMode(buffer[i * 9] == (byte) 0xA2);
+                                        mPaintRef.setColor(color);
+                                        mPaintRef.setStrokeWidth(strokeWidth);
+                                        break;
+                                    case (byte) 0xB1:
+                                        x = jni.byteArrayToFloat(buffer, 1 + i * 9);
+                                        y = jni.byteArrayToFloat(buffer, 5 + i * 9);
+                                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                                        break;
+                                    case (byte) 0xB3:
+                                        x = jni.byteArrayToFloat(buffer, 1 + i * 9);
+                                        y = jni.byteArrayToFloat(buffer, 5 + i * 9);
+                                        onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                                        break;
+                                    case (byte) 0xB2:
+                                        x = jni.byteArrayToFloat(buffer, 1 + i * 9);
+                                        y = jni.byteArrayToFloat(buffer, 5 + i * 9);
+                                        onTouchAction(MotionEvent.ACTION_UP, x, y);
+                                        break;
+                                    case (byte) 0xC1:
+                                        undo();
+                                        break;
+                                    case (byte) 0xC2:
+                                        redo();
+                                        break;
+                                }
                             }
-                            read += 9;
-                            floatValueInterface.f(((float) read) * 100F / ((float) length));
+                            read += 1152;
+//                            floatValueInterface.f(((float) read) * 100F / ((float) length));
+                            System.out.println("((float) read) / ((float) length) = " + ((float) read) / ((float) length));
                         }
                         break;
                     default:
@@ -629,6 +635,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
                 }
                 break;
         }
+        drawing();
     }
 
     void clearTouchRecordOSContent() {
@@ -653,6 +660,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
         } else {
             mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         }
+        drawing();
     }
 
     void resetTransform() {
@@ -709,8 +717,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        isDrawing = true;
-        new Thread(this).start();
     }
 
     @Override
@@ -720,37 +726,31 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        isDrawing = false;
-    }
 
-    @Override
-    public void run() {
-        while (isDrawing) {
-            drawing();
-        }
     }
 
     private void drawing() {
+        Canvas canvas = null;
         try {
-            surfaceCanvas = mSurfaceHolder.lockCanvas();
+            canvas = mSurfaceHolder.lockCanvas();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (surfaceCanvas != null) {
-            surfaceCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        if (canvas != null) {
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             if (mBitmap != null) {
-                surfaceCanvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
+                canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
                 if (!importingPath) {
                     if (mPath != null) {//显示实时正在绘制的path轨迹
                         float mCanvasScale = mCanvas.getScale();
-                        surfaceCanvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
-                        surfaceCanvas.scale(mCanvasScale, mCanvasScale);
-                        if (isEraserMode) surfaceCanvas.drawPath(mPath, eraserPaint);
-                        else surfaceCanvas.drawPath(mPath, mPaint);
+                        canvas.translate(mCanvas.getStartPointX(), mCanvas.getStartPointY());
+                        canvas.scale(mCanvasScale, mCanvasScale);
+                        if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
+                        else canvas.drawPath(mPath, mPaint);
                     }
                 }
             }
-            mSurfaceHolder.unlockCanvasAndPost(surfaceCanvas);
+            mSurfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
 
@@ -764,6 +764,22 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback, Ru
         PathBean(Path path, Paint paint) {
             this.path = path;
             this.paint = paint;
+        }
+    }
+
+    private static class SynchronisedList<T> extends LinkedList<T> {
+        @Override
+        public boolean add(T t) {
+            synchronized (this) {
+                return super.add(t);
+            }
+        }
+
+        @Override
+        public T removeLast() {
+            synchronized (this) {
+                return super.removeLast();
+            }
         }
     }
 }
