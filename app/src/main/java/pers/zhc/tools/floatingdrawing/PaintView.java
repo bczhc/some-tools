@@ -168,7 +168,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             }
 
             @Override
-            public void onTwoPointPress() {
+            public void onOnePointScroll(float distanceX, float distanceY, MotionEvent event) {
+
+            }
+
+            @Override
+            public void onTwoPointsPress() {
                 redrawCanvas();
             }
         });
