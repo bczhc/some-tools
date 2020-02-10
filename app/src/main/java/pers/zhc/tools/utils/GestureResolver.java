@@ -10,6 +10,7 @@ public class GestureResolver {
     private float firstMidPointX;
     private float firstMidPointY;
     private boolean twoPointsDown = false;
+    private float lastOnePointX = -1, lastOnePointY = -1;
 
     public GestureResolver(GestureInterface gestureInterface) {
         this.gestureInterface = gestureInterface;
@@ -54,7 +55,7 @@ public class GestureResolver {
             }
             if (!twoPointsDown) gestureInterface.onTwoPointsDown();
             twoPointsDown = true;
-            gestureInterface.onTwoPointPress();
+            gestureInterface.onTwoPointsPress();
         } else {
             if (twoPointsDown) {
                 twoPointsDown = false;
@@ -64,6 +65,21 @@ public class GestureResolver {
                 lastDistance = -1;
                 gestureInterface.onTwoPointsUp();
             }
+        }
+        if (pointerCount == 1) {
+            float x = event.getX();
+            float y = event.getY();
+            if (lastOnePointX == -1 && lastOnePointY == -1) {
+                lastOnePointX = x;
+                lastOnePointY = y;
+            } else {
+                this.gestureInterface.onOnePointScroll(x - lastOnePointX, y - lastOnePointY, event);
+            }
+            this.lastOnePointX = x;
+            this.lastOnePointY = y;
+        } else {
+            lastOnePointX = -1;
+            lastOnePointY = -1;
         }
     }
 
@@ -106,6 +122,15 @@ public class GestureResolver {
         /**
          * It will be invoked when two points press down.
          */
-        void onTwoPointPress();
+        void onTwoPointsPress();
+
+        /**
+         * 一个点的移动
+         *
+         * @param distanceX x方向的变化（与上一次触摸的x距离）
+         * @param distanceY y方向的变化（与上一次触摸的y距离）
+         * @param event     事件
+         */
+        void onOnePointScroll(float distanceX, float distanceY, MotionEvent event);
     }
 }
