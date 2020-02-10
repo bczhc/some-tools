@@ -143,6 +143,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
+        if (longMainActivityMap == null) {
+            longMainActivityMap = new HashMap<>();
+        }
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("internalPathFile")) {
                 String lastInternalPath = savedInstanceState.getString("internalPathFile");
@@ -152,9 +155,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, 53);
         init();
-        if (longMainActivityMap == null) {
-            longMainActivityMap = new HashMap<>();
-        }
     }
 
     @Override
@@ -187,22 +187,23 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         Button clearPathBtn = findViewById(R.id.clear_path_btn);
         final float[] cacheSize = {0F};
         ArrayList<File> fileList = new ArrayList<>();
-        cacheSize[0] = getCacheFilesSize(fileList);
-        clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
+        Runnable showAndSetCacheSize = () -> {
+            fileList.clear();
+            cacheSize[0] = getCacheFilesSize(fileList);
+            clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
+        };
         clearPathBtn.setOnClickListener(v -> {
+            showAndSetCacheSize.run();
             for (File file : fileList) {
                 System.out.println("file.delete() = " + file.delete());
             }
-            fileList.clear();
-            cacheSize[0] = getCacheFilesSize(fileList);
-            clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
+            showAndSetCacheSize.run();
         });
         clearPathBtn.setOnLongClickListener(v -> {
-            fileList.clear();
-            cacheSize[0] = getCacheFilesSize(fileList);
-            clearPathBtn.setText(getString(R.string.clear_application_caches, cacheSize[0] / 1024F));
+            showAndSetCacheSize.run();
             return true;
         });
+        clearPathBtn.performLongClick();
         Arrays.fill(hsvaFloats, null);
         Point point = new Point();
         /*//noinspection deprecation
@@ -503,7 +504,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         if (listFiles != null) {
             for (File file : listFiles) {
                 try {
-                    if (FloatingDrawingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(file.getName()))) {
+                    String fileName;
+                    String fileNameExtension = file.getName();
+                    if (!fileNameExtension.matches(".*\\..*")) fileName = fileNameExtension;
+                    else {
+                        int index = fileNameExtension.lastIndexOf('.');
+                        fileName = fileNameExtension.substring(0, index);
+                    }
+                    if (FloatingDrawingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(fileName))) {
                         continue;
                     }
                 } catch (NumberFormatException ignored) {
