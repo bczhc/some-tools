@@ -18,6 +18,10 @@ import pers.zhc.u.common.Documents;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.Collator;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Locale;
 
 import static pers.zhc.tools.utils.Common.showException;
 
@@ -41,6 +45,8 @@ public class FilePickerRL extends RelativeLayout {
     private int white = Color.WHITE;
     private int type;
     private Activity ctx;
+    private Collator stringComparator;
+    private Comparator<File> comparator;
 
     public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath, Runnable cancelAction, OnPickedResultActionInterface pickedResultAction) {
         super(context);
@@ -75,7 +81,7 @@ public class FilePickerRL extends RelativeLayout {
                     try {
                         dir = currentPath.getCanonicalPath();
                     } catch (IOException e) {
-                        Common.showException(e, ctx);
+                        showException(e, ctx);
                     }
                     result = dir;
                     break;
@@ -87,19 +93,24 @@ public class FilePickerRL extends RelativeLayout {
             AlertDialog.Builder ad = new AlertDialog.Builder(ctx);
             EditText et = new EditText(ctx);
             String s = pathView.getText().toString();
-            ctx.runOnUiThread(() -> et.setText(String.format("%s", s.equals("/storage/emulated") ? s + "/0" : s)));
+            ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.tv, s.equals("/storage/emulated") ? s + "/0" : s)));
             et.setLayoutParams(lp);
             AlertDialog alertDialog = ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
                         File f = new File(et.getText().toString());
                         if (f.isFile() && type == 1) {
                             try {
-                                result = f.getCanonicalPath();
+                                resultString = f.getCanonicalPath();
                             } catch (IOException e) {
                                 showException(e, ctx);
+                                resultString = f.getPath();
                             }
+                            ok.performClick();
                         } else {
                             File[] listFiles = f.listFiles();
+                            if (listFiles != null) {
+                                Arrays.sort(listFiles, comparator);
+                            }
                             this.currentPath = f;
                             fillViews(listFiles, lp, grey, justPicked, ll);
                         }
@@ -113,8 +124,13 @@ public class FilePickerRL extends RelativeLayout {
         this.ll = findViewById(R.id.ll);
         new Thread(() -> {
             File[] listFiles = currentPath.listFiles();
+            if (listFiles != null) {
+                Arrays.sort(listFiles, comparator);
+            }
             fillViews(listFiles, lp, grey, justPicked, ll);
         }).start();
+        stringComparator = Collator.getInstance(Locale.CHINA);
+        comparator = (o1, o2) -> stringComparator.compare(o1.getName(), o2.getName());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -169,6 +185,9 @@ public class FilePickerRL extends RelativeLayout {
                             } else {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = currentFile.listFiles();
+                                if (listFiles1 != null) {
+                                    Arrays.sort(listFiles1, comparator);
+                                }
                                 fillViews(listFiles1, lp, unselectedColor, justPicked, ll);
                             }
                         });
@@ -184,6 +203,9 @@ public class FilePickerRL extends RelativeLayout {
                             if (currentFile.isDirectory()) {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = currentFile.listFiles();
+                                if (listFiles1 != null) {
+                                    Arrays.sort(listFiles1, comparator);
+                                }
                                 fillViews(listFiles1, lp, unselectedColor, justPicked, ll);
                             }
                         });
@@ -203,6 +225,7 @@ public class FilePickerRL extends RelativeLayout {
     private void extractM1(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor, TextView[] textViews,
                            int i) {
         textViews[i] = new TextView(ctx);
+        textViews[i].setBackgroundResource(R.drawable.view_stroke);
         textViews[i].setTextSize(25);
         ctx.runOnUiThread(() -> textViews[i].setText(listFiles[i].isFile() ? listFiles[i].getName() : (listFiles[i].getName() + "/")));
         textViews[i].setLayoutParams(lp);
@@ -232,6 +255,9 @@ public class FilePickerRL extends RelativeLayout {
             File[] listFiles = new File[0];
             if (parentFile != null) {
                 listFiles = parentFile.listFiles();
+                if (listFiles != null) {
+                    Arrays.sort(listFiles, comparator);
+                }
             }
             fillViews(listFiles, lp, grey, justPicked, ll);
             this.currentPath = parentFile;

@@ -163,8 +163,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_fb" />
-                            <entry key="sourceFile" value="/media/zhc/ACD05634D05604CC/Users/bczhc/Pictures/fb.svg" />
+                            <entry key="outputName" value="ic_db" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/../../../../Downloads/db.svg" />
                           </map>
                         </option>
                       </PersistentState>
