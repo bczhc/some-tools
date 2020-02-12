@@ -313,7 +313,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         float proportionY = ((float) 75) / ((float) 1360);
         this.iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
 //        iv.setImageBitmap(icon);
-        iv.setImageIcon(Icon.createWithResource(this, R.drawable.ic_fb));
+        iv.setImageIcon(Icon.createWithResource(this, R.drawable.ic_db));
         iv.setOnTouchListener(moveTouchListener);
         iv.setOnClickListener(v -> {
             fbLL.removeAllViews();
