@@ -30,6 +30,14 @@ public class BaseActivity extends Activity {
         ExternalJNI.ex(this);
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, 43);
+        if (Infos.launcherClass.equals(this.getClass())) {
+            checkUpdate();
+        }
+    }
+
+    private void checkUpdate() {
+        System.out.println("check update...");
+
     }
 
     @Override
@@ -37,6 +45,7 @@ public class BaseActivity extends Activity {
         app.removeActivity(this);
         super.onDestroy();
     }
+
 
     File getVFile(Context ctx) {
         File filesDir = ctx.getFilesDir();

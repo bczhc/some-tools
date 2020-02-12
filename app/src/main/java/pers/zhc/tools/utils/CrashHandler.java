@@ -266,12 +266,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                         new Button(mContext),
                         new Button(mContext)
                 };
-                dialog.setOnKeyListener((v, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) this.cdl.countDown();
-                    return true;
-                });
                 dialog.setCanceledOnTouchOutside(false);
-                dialog.setCancelable(false);
                 View.OnClickListener[] listeners = new View.OnClickListener[]{
                         v -> this.cdl.countDown(),
                         v -> {
