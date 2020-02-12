@@ -183,5 +183,6 @@
     <string name="open_cache_path_file">打开缓存路径文件</string>
     <string name="layer">图层</string>
     <string name="surface_view_test">SurfaceViewTest</string>
+    <string name="drawing_board_name_is_">画板名：\"%1$s\"</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
