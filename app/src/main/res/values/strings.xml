@@ -33,7 +33,7 @@
     <string name="generate_pi">计算Pi</string>
     <string name="calc">计算</string>
     <string name="pi______type">输入小数点后位数：</string>
-    <string name="wait">请等待..</string>
+    <string name="please_wait">请等待…</string>
     <string name="toast" translatable="false">Toast</string>
     <string name="copy">复制</string>
     <string name="html_clipboard_unsupported">android版本不支持HTML放入剪切板</string>
@@ -184,5 +184,10 @@
     <string name="layer">图层</string>
     <string name="surface_view_test">SurfaceViewTest</string>
     <string name="drawing_board_name_is_">画板名：\"%1$s\"</string>
+    <string name="found_update_whether_to_install">发现更新，是否安装</string>
+    <string name="version_info">当前版本：%1$s(%2$d)\n最新版本：%3$s(%4$d)</string>
+    <string name="downloading">正在下载…</string>
+    <string name="apk">apk</string>
+    <string name="download_progress">%1$d/%2$d</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
