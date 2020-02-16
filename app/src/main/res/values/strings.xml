@@ -189,5 +189,6 @@
     <string name="downloading">正在下载…</string>
     <string name="apk">apk</string>
     <string name="download_progress">%1$d/%2$d</string>
+    <string name="can_not_import_itself">不能导入自己</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
