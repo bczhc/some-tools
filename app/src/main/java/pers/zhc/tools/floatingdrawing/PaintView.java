@@ -677,6 +677,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     void resetTransform() {
         headCanvas.reset();
         redrawCanvas();
+        drawing();
         setCurrentStrokeWidthWithLockedStrokeWidth();
     }
 

@@ -99,24 +99,36 @@ public class BaseActivity extends Activity {
                                         progressTV.setText(R.string.please_wait);
                                         downloadDialog.setContentView(rl);
                                         downloadDialog.setCanceledOnTouchOutside(false);
+                                        downloadDialog.setCancelable(true);
+                                        final OutputStream[] os = new OutputStream[1];
+                                        final InputStream[] downloadIS = new InputStream[1];
+                                        downloadDialog.setOnCancelListener(dialog1 -> {
+                                            try {
+                                                os[0].close();
+                                                downloadIS[0].close();
+                                            } catch (IOException | NullPointerException e) {
+                                                e.printStackTrace();
+                                            }
+                                            es.shutdownNow();
+                                        });
                                         downloadDialog.show();
                                         es.execute(() -> {
                                             try {
                                                 URL apkURL = new URL(appURL + "/" + apkFileName);
                                                 URLConnection urlConnection = apkURL.openConnection();
-                                                InputStream downloadIS = urlConnection.getInputStream();
+                                                downloadIS[0] = urlConnection.getInputStream();
                                                 File apkDir = new File(Common.getExternalStoragePath(this)
                                                         + File.separatorChar + getString(R.string.some_tools_app), getString(R.string.apk));
                                                 if (!apkDir.exists()) {
                                                     System.out.println("apkDir.mkdirs() = " + apkDir.mkdirs());
                                                 }
                                                 File apk = new File(apkDir, apkFileName);
-                                                OutputStream os = new FileOutputStream(apk, false);
+                                                os[0] = new FileOutputStream(apk, false);
                                                 int readLen;
                                                 long read = 0L;
                                                 byte[] buffer = new byte[1024];
-                                                while ((readLen = downloadIS.read(buffer)) != -1) {
-                                                    os.write(buffer, 0, readLen);
+                                                while ((readLen = downloadIS[0].read(buffer)) != -1) {
+                                                    os[0].write(buffer, 0, readLen);
                                                     read += readLen;
                                                     long finalRead = read;
                                                     runOnUiThread(() -> {
@@ -125,8 +137,6 @@ public class BaseActivity extends Activity {
                                                         pb.setProgress((int) (((double) finalRead) / ((double) finalFileSize) * 100D));
                                                     });
                                                 }
-                                                os.close();
-                                                downloadIS.close();
                                                 Common.installApk(this, apk);
                                             } catch (IOException e) {
                                                 e.printStackTrace();
