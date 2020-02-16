@@ -109,6 +109,7 @@ public class FilePickerRL extends RelativeLayout {
                     })
                     .setView(et).create();
             DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
             alertDialog.show();
         });
         this.ll = findViewById(R.id.ll);
