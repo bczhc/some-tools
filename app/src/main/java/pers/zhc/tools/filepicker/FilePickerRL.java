@@ -17,7 +17,6 @@ import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.Documents;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.Collator;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -77,12 +76,8 @@ public class FilePickerRL extends RelativeLayout {
                     result = resultString;
                     break;
                 case 2:
-                    String dir = null;
-                    try {
-                        dir = currentPath.getCanonicalPath();
-                    } catch (IOException e) {
-                        showException(e, ctx);
-                    }
+                    String dir;
+                    dir = currentPath.getAbsolutePath();
                     result = dir;
                     break;
             }
@@ -99,12 +94,7 @@ public class FilePickerRL extends RelativeLayout {
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
                         File f = new File(et.getText().toString());
                         if (f.isFile() && type == 1) {
-                            try {
-                                resultString = f.getCanonicalPath();
-                            } catch (IOException e) {
-                                showException(e, ctx);
-                                resultString = f.getPath();
-                            }
+                            resultString = f.getAbsolutePath();
                             ok.performClick();
                         } else {
                             File[] listFiles = f.listFiles();
@@ -139,13 +129,7 @@ public class FilePickerRL extends RelativeLayout {
         new Thread(() -> {
             justPicked[0] = -1;
             ctx.runOnUiThread(ll::removeAllViews);
-            ctx.runOnUiThread(() -> {
-                try {
-                    pathView.setText(String.format("%s", currentPath.getCanonicalFile()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            ctx.runOnUiThread(() -> pathView.setText(String.format("%s", currentPath.getAbsolutePath())));
             TextView[] textViews;
             int length = 0;
             try {
@@ -178,8 +162,8 @@ public class FilePickerRL extends RelativeLayout {
                                     }
                                 }
                                 try {
-                                    resultString = listFiles[justPicked[0]].getCanonicalPath();
-                                } catch (IOException | ArrayIndexOutOfBoundsException e) {
+                                    resultString = listFiles[justPicked[0]].getAbsolutePath();
+                                } catch (ArrayIndexOutOfBoundsException e) {
                                     showException(e, ctx);
                                 }
                             } else {

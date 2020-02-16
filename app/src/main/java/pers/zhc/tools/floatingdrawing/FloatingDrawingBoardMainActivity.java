@@ -827,7 +827,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                     v0 -> new PermissionRequester(() -> {
-
                         Dialog dialog = new Dialog(this);
                         dialog.setCanceledOnTouchOutside(false);
                         dialog.setCancelable(false);
@@ -908,17 +907,19 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
                         AlertDialog ad = adb.setTitle(R.string.export_image)
                                 .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                    try {
-                                        Expression expression = new Expression();
-                                        expression.setExpressionString(widthET.getText().toString());
-                                        imageW[0] = ((int) expression.calculate());
-                                        expression.setExpressionString(heightET.getText().toString());
-                                        imageH[0] = ((int) expression.calculate());
-                                    } catch (Exception e) {
-                                        ToastUtils.show(this, R.string.please_type_correct_value);
+                                    Expression expression = new Expression();
+                                    expression.setExpressionString(widthET.getText().toString());
+                                    imageW[0] = ((int) expression.calculate());
+                                    expression.setExpressionString(heightET.getText().toString());
+                                    imageH[0] = ((int) expression.calculate());
+                                    if (Double.isNaN(imageW[0]) || Double.isNaN(imageH[0]) || imageW[0] <= 0 || imageH[0] <= 0) {
+                                        ToastUtils.show(FloatingDrawingBoardMainActivity.this, R.string.please_type_correct_value);
+                                        moreOptionsDialog.dismiss();
+                                        return;
                                     }
                                     File imageFile = new File(imageDir.toString() + File.separator + fileNameET.getText().toString() + ".png");
                                     pv.exportImg(imageFile, imageW[0], imageH[0]);
+                                    moreOptionsDialog.dismiss();
                                 }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                                 }).setView(linearLayout).create();
                         DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -983,6 +984,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             dialog.setCancelable(false);
             FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
                 dialog.dismiss();
+                if (currentInternalPathFile.getAbsolutePath().equals(s)) {
+                    ToastUtils.show(this, R.string.can_not_import_itself);
+                    return;
+                }
                 Dialog importPathFileProgressDialog = new Dialog(this);
                 setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                 importPathFileProgressDialog.setCanceledOnTouchOutside(false);
@@ -992,14 +997,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
                 TextView tv = progressRL.findViewById(R.id.progress_tv);
                 tv.setText(R.string.importing);
-//                            ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
+                ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
                 TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
                 pv.importPathFile(new File(s), () -> {
                     this.hsvaFloats[0] = null;
                     runOnUiThread(importPathFileDoneAction);
                     importPathFileProgressDialog.dismiss();
                 }, aFloat -> runOnUiThread(() -> {
-//                                progressBar.setProgress(aFloat.intValue());
+                    progressBar.setProgress(aFloat.intValue());
                     pTV.setText(getString(R.string.progress_tv, aFloat));
                 }));
                 if (moreOptionsDialog != null) {
@@ -1037,21 +1042,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
     }
 
-    private abstract class CheckOverlayPermission {
-        public CheckOverlayPermission() {
-            if (!Settings.canDrawOverlays(FloatingDrawingBoardMainActivity.this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 4444);
-                denied();
-            } else granted();
-        }
-
-        abstract void granted();
-
-        abstract void denied();
-    }
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -1066,5 +1056,20 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             String lastInternalPath = savedInstanceState.getString("internalPathFile");
             ToastUtils.show(this, getString(R.string.tv, lastInternalPath));
         }
+    }
+
+    private abstract class CheckOverlayPermission {
+        public CheckOverlayPermission() {
+            if (!Settings.canDrawOverlays(FloatingDrawingBoardMainActivity.this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 4444);
+                denied();
+            } else granted();
+        }
+
+        abstract void granted();
+
+        abstract void denied();
     }
 }
