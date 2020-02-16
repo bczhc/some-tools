@@ -53,7 +53,7 @@ public class BaseActivity extends Activity {
             int versionCode = BuildConfig.VERSION_CODE;
             String versionName = BuildConfig.VERSION_NAME;
             try {
-                String appURL = Infos.zhcStaticWebUrlString + "/res/app/some-tools/debug";
+                String appURL = Infos.zhcStaticWebUrlString + "/res/app/" + getString(R.string.app_name) + "/debug";
                 URL jsonURL = new URL(appURL + "/output.json");
                 InputStream is = jsonURL.openStream();
                 StringBuilder sb = new StringBuilder();

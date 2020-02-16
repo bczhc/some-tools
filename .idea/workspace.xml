@@ -43,9 +43,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="issue #63">
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -915,12 +917,12 @@
     </state>
     <state x="481" y="112" key="#xdebugger.evaluate/0.0.1449.815@0.0.1449.815" timestamp="1579505659544" />
     <state x="453" y="129" key="#xdebugger.evaluate/0.27.1366.741@0.27.1366.741" timestamp="1580112816247" />
-    <state x="551" y="397" width="993" height="405" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1581833944259">
+    <state x="551" y="397" width="993" height="445" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1581841938902">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="551" y="397" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1449.815@0.0.1449.815" timestamp="1579593703413" />
     <state x="453" y="468" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1050@0.0.1920.1050" timestamp="1581320065942" />
-    <state x="551" y="397" width="993" height="405" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.27.1920.1053@0.27.1920.1053" timestamp="1581833944259" />
+    <state x="551" y="397" width="993" height="445" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.27.1920.1053@0.27.1920.1053" timestamp="1581841938902" />
     <state x="543" y="306" width="824" height="501" key="AndroidCreateResourceDirectoryDialog" timestamp="1581829402681">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -932,13 +934,13 @@
     </state>
     <state x="751" y="337" width="550" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1581777799813" />
     <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581832631784" />
-    <state x="0" y="27" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1581841476807">
+    <state x="0" y="27" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1581842509803">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579597961330" />
     <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1581493809885" />
     <state x="53" y="27" width="1146" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580272692340" />
-    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1581841476807" />
+    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1581842509803" />
     <state width="1053" height="588" key="DebuggerActiveHint" timestamp="1581838080058">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -969,34 +971,34 @@
     <state x="779" y="457" key="GitRewordDialog/0.0.1449.815@0.0.1449.815" timestamp="1579508174735" />
     <state x="273" y="376" width="964" height="198" key="GitRewordDialog/0.27.1366.741@0.27.1366.741" timestamp="1580202716970" />
     <state x="779" y="457" width="422" height="208" key="GitRewordDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581830084791" />
-    <state width="1852" height="180" key="GridCell.Tab.0.bottom" timestamp="1581838285064">
+    <state width="1852" height="116" key="GridCell.Tab.0.bottom" timestamp="1581843650341">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.bottom/0.0.1449.815@0.0.1449.815" timestamp="1579592173845" />
     <state width="1852" height="295" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1581776947711" />
     <state width="1312" height="127" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
-    <state width="1852" height="180" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1581838285064" />
-    <state width="1852" height="180" key="GridCell.Tab.0.center" timestamp="1581838285052">
+    <state width="1852" height="116" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1581843650341" />
+    <state width="1852" height="116" key="GridCell.Tab.0.center" timestamp="1581843650340">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.center/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1852" height="295" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1581776947711" />
     <state width="1312" height="127" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1580267310682" />
-    <state width="1852" height="180" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1581838285052" />
-    <state width="1852" height="180" key="GridCell.Tab.0.left" timestamp="1581838285051">
+    <state width="1852" height="116" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1581843650340" />
+    <state width="1852" height="116" key="GridCell.Tab.0.left" timestamp="1581843650339">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.left/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1852" height="295" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1581776947710" />
     <state width="1312" height="127" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1580267310681" />
-    <state width="1852" height="180" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1581838285051" />
-    <state width="1852" height="180" key="GridCell.Tab.0.right" timestamp="1581838285055">
+    <state width="1852" height="116" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1581843650339" />
+    <state width="1852" height="116" key="GridCell.Tab.0.right" timestamp="1581843650340">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.right/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1852" height="295" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1581776947711" />
     <state width="1312" height="127" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
-    <state width="1852" height="180" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1581838285055" />
+    <state width="1852" height="116" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1581843650340" />
     <state width="1852" height="180" key="GridCell.Tab.1.bottom" timestamp="1581838285078">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -1130,12 +1132,12 @@
     <state x="66" y="57" width="1301" height="698" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1449.815@0.0.1449.815" timestamp="1579507647968" />
     <state x="62" y="79" width="1227" height="635" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.27.1366.741@0.27.1366.741" timestamp="1580211462409" />
     <state x="100" y="127" width="1720" height="853" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581133995219" />
-    <state x="483" y="150" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581811298113">
+    <state x="483" y="150" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581843803684">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="483" y="61" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1581777375524" />
     <state x="280" y="27" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1366.741@0.27.1366.741" timestamp="1580272136230" />
-    <state x="483" y="150" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581811298113" />
+    <state x="483" y="150" width="944" height="813" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581843803684" />
     <state x="704" y="442" width="457" height="175" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1580016172451">
       <screen x="0" y="27" width="1366" height="741" />
     </state>

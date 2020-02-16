@@ -6,8 +6,9 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 20200207
-        versionName "6.0.0.0_20200208"
+        versionCode 202002151
+        def emoji = "\ud83d\udc22"
+        versionName "6.0.0.0_20200216_1$emoji"
 //        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
