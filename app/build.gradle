@@ -6,10 +6,16 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 202002151
+        def date = Date.newInstance()
+        def dateString = new SimpleDateFormat("yyyyMMdd").format(date)
+        def time = new SimpleDateFormat("HHmmss").format(date)
+        def which = 0
+        def verCode = Integer.parseInt(dateString + which)
+        def verString = "6.1.0.1"
         def emoji = "\ud83d\udc22"
-        versionName "6.0.0.0_20200216_1$emoji"
-//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        def verName = "${verString}_${dateString}${time}$emoji"
+        versionCode verCode
+        versionName verName
     }
     buildTypes {
         release {

@@ -18,7 +18,6 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.utils.*;
 import pers.zhc.u.common.ReadIS;
 
@@ -50,8 +49,8 @@ public class BaseActivity extends Activity {
     private void checkUpdate() {
         new Thread(() -> {
             System.out.println("check update...");
-            int versionCode = BuildConfig.VERSION_CODE;
-            String versionName = BuildConfig.VERSION_NAME;
+            int myVersionCode = BuildConfig.VERSION_CODE;
+            String myVersionName = BuildConfig.VERSION_NAME;
             try {
                 String appURL = Infos.zhcStaticWebUrlString + "/res/app/" + getString(R.string.app_name) + "/debug";
                 URL jsonURL = new URL(appURL + "/output.json");
@@ -61,20 +60,29 @@ public class BaseActivity extends Activity {
                 is.close();
                 JSONArray jsonArray = new JSONArray(sb.toString());
                 JSONObject jsonObject = jsonArray.getJSONObject(0).getJSONObject("apkData");
-                int apkVersionCode = jsonObject.getInt("versionCode");
-                String apkVersionName = jsonObject.getString("versionName");
-                String apkFileName = jsonObject.getString("outputFile");
+                int remoteVersionCode = jsonObject.getInt("versionCode");
+                String remoteVersionName = jsonObject.getString("versionName");
+                String remoteFileName = jsonObject.getString("outputFile");
                 long fileSize = -1;
                 if (jsonObject.has("length")) {
                     fileSize = jsonObject.getLong("length");
                 }
-                if (apkVersionCode > versionCode) {
+                boolean update = true;
+                try {
+                    String[] split = remoteVersionName.split("_");
+                    long remoteBuildTime = Long.parseLong(split[split.length - 1]);
+                    String[] split1 = myVersionName.split("_");
+                    long myBuildTIme = Long.parseLong(split1[split1.length - 1]);
+                    update = remoteBuildTime > myBuildTIme;
+                } catch (Exception ignored) {
+                }
+                if (update) {
                     long finalFileSize = fileSize;
                     runOnUiThread(() -> {
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
                         TextView tv = new TextView(this);
-                        tv.setText(getString(R.string.version_info, versionName, versionCode
-                                , apkVersionName, apkVersionCode));
+                        tv.setText(getString(R.string.version_info, myVersionName, myVersionCode
+                                , remoteVersionName, remoteVersionCode));
                         AlertDialog ad = adb.setTitle(R.string.found_update_whether_to_install)
                                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                                 })
@@ -103,18 +111,26 @@ public class BaseActivity extends Activity {
                                         final OutputStream[] os = new OutputStream[1];
                                         final InputStream[] downloadIS = new InputStream[1];
                                         downloadDialog.setOnCancelListener(dialog1 -> {
+                                            es.shutdownNow();
+                                            Thread thread = new Thread(() -> {
+                                                try {
+                                                    os[0].close();
+                                                    downloadIS[0].close();
+                                                } catch (IOException | NullPointerException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            });
+                                            thread.start();
                                             try {
-                                                os[0].close();
-                                                downloadIS[0].close();
-                                            } catch (IOException | NullPointerException e) {
+                                                thread.join();
+                                            } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
-                                            es.shutdownNow();
                                         });
                                         downloadDialog.show();
                                         es.execute(() -> {
                                             try {
-                                                URL apkURL = new URL(appURL + "/" + apkFileName);
+                                                URL apkURL = new URL(appURL + "/" + remoteFileName);
                                                 URLConnection urlConnection = apkURL.openConnection();
                                                 downloadIS[0] = urlConnection.getInputStream();
                                                 File apkDir = new File(Common.getExternalStoragePath(this)
@@ -122,7 +138,7 @@ public class BaseActivity extends Activity {
                                                 if (!apkDir.exists()) {
                                                     System.out.println("apkDir.mkdirs() = " + apkDir.mkdirs());
                                                 }
-                                                File apk = new File(apkDir, apkFileName);
+                                                File apk = new File(apkDir, remoteFileName);
                                                 os[0] = new FileOutputStream(apk, false);
                                                 int readLen;
                                                 long read = 0L;
@@ -137,7 +153,7 @@ public class BaseActivity extends Activity {
                                                         pb.setProgress((int) (((double) finalRead) / ((double) finalFileSize) * 100D));
                                                     });
                                                 }
-                                                Common.installApk(this, apk);
+                                                runOnUiThread(() -> Common.installApk(this, apk));
                                             } catch (IOException e) {
                                                 e.printStackTrace();
                                             } finally {
@@ -247,7 +263,7 @@ public class BaseActivity extends Activity {
         public static String zhcStaticWebUrlString = "http://bczhc.gitee.io/web";
         //        public static String zhcStaticWebUrlString = "http://bczhc.github.io";
 //        public static String zhcStaticWebUrlString = "https://gitee.com/bczhc/web/raw/master";
-        public static Class<?> launcherClass = FloatingDrawingBoardMainActivity.class;
+        public static Class<?> launcherClass = MainActivity.class;
     }
 
     public static class App {
