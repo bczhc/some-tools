@@ -111,13 +111,21 @@ public class BaseActivity extends Activity {
                                         final OutputStream[] os = new OutputStream[1];
                                         final InputStream[] downloadIS = new InputStream[1];
                                         downloadDialog.setOnCancelListener(dialog1 -> {
+                                            es.shutdownNow();
+                                            Thread thread = new Thread(() -> {
+                                                try {
+                                                    os[0].close();
+                                                    downloadIS[0].close();
+                                                } catch (IOException | NullPointerException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            });
+                                            thread.start();
                                             try {
-                                                os[0].close();
-                                                downloadIS[0].close();
-                                            } catch (IOException | NullPointerException e) {
+                                                thread.join();
+                                            } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
-                                            es.shutdownNow();
                                         });
                                         downloadDialog.show();
                                         es.execute(() -> {
@@ -145,7 +153,7 @@ public class BaseActivity extends Activity {
                                                         pb.setProgress((int) (((double) finalRead) / ((double) finalFileSize) * 100D));
                                                     });
                                                 }
-                                                Common.installApk(this, apk);
+                                                runOnUiThread(() -> Common.installApk(this, apk));
                                             } catch (IOException e) {
                                                 e.printStackTrace();
                                             } finally {
