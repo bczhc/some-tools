@@ -26,11 +26,11 @@ import java.util.Map;
 
 @SuppressLint("ViewConstructor")
 public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
-    private SurfaceHolder mSurfaceHolder;
     private final File internalPathFile;
     private final int height;
     private final int width;
     boolean isEraserMode;
+    private SurfaceHolder mSurfaceHolder;
     private OutputStream os;
     private Paint mPaint;
     private Path mPath;
@@ -277,7 +277,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         System.gc();
         Bitmap exportedBitmap = Bitmap.createBitmap(exportedWidth, exportHeight, Bitmap.Config.ARGB_8888);
         MyCanvas myCanvas = new MyCanvas(exportedBitmap);
-        myCanvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
+        myCanvas.translate(headCanvas.getStartPointX() * exportedWidth / width
+                , headCanvas.getStartPointY() * exportedWidth / width);
         myCanvas.scale(headCanvas.getScale() * exportedWidth / width);
         for (PathBean pathBean : undoList) {
             myCanvas.drawPath(pathBean.path, pathBean.paint);
@@ -769,6 +770,11 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    void changeHead(String id) {
+        headCanvas = canvasMap.get(id);
+        headBitmap = bitmapMap.get(headCanvas);
+    }
+
     /**
      * 路径集合
      */
@@ -796,10 +802,5 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 return super.removeLast();
             }
         }
-    }
-
-    void changeHead(String id) {
-        headCanvas = canvasMap.get(id);
-        headBitmap = bitmapMap.get(headCanvas);
     }
 }
