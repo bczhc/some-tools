@@ -663,43 +663,23 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void changeStrokeWidth() {
         Dialog mainDialog = new Dialog(this);
-        LinearLayout mainLL = new LinearLayout(this);
-        mainLL.setOrientation(LinearLayout.VERTICAL);
-        mainLL.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
-        LinearLayout barLL = new LinearLayout(this);
-        RadioGroup rg = new RadioGroup(this);
-        barLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        barLL.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout mainLL = View.inflate(this, R.layout.change_stroke_width_view, null).findViewById(R.id.ll);
+        RadioGroup rg = mainLL.findViewById(R.id.rg);
         RadioButton[] radioButtons = new RadioButton[2];
-        int[] ids = new int[]{R.id.radio1, R.id.radio2};
-        int[] strRes = new int[]{
-                R.string.drawing_paint_stroke_width,
-                R.string.eraser_paint_stroke_width
-        };
         for (int i = 0; i < radioButtons.length; i++) {
-            radioButtons[i] = new RadioButton(this);
-            radioButtons[i].setText(strRes[i]);
-            radioButtons[i].setId(ids[i]);
-            rg.addView(radioButtons[i]);
+            radioButtons[i] = (RadioButton) rg.getChildAt(i);
         }
         radioButtons[pv.isEraserMode ? 1 : 0].setChecked(true);
-        rg.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
-        barLL.addView(rg);
-        CheckBox lockStrokeCB = new CheckBox(this);
-        lockStrokeCB.setText(R.string.lock_stroke);
+        CheckBox lockStrokeCB = mainLL.findViewById(R.id.cb);
         lockStrokeCB.setChecked(pv.isLockingStroke());
         lockStrokeCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
             pv.setLockStrokeMode(isChecked);
             pv.lockStroke();
         });
-        barLL.addView(lockStrokeCB);
-        LinearLayout ll = new LinearLayout(this);
         StrokeWatchView strokeWatchView = new StrokeWatchView(this);
         strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        SeekBar sb = new SeekBar(this);
-        TextView tv = new TextView(this);
-        tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        tv.setTextSize(20F);
+        SeekBar sb = mainLL.findViewById(R.id.sb);
+        TextView tv = mainLL.findViewById(R.id.tv);
         final int[] checked = {pv.isEraserMode ? R.id.radio2 : R.id.radio1};
         tv.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -715,7 +695,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         pv.setStrokeWidth(edit);
                     else if (checked[0] == R.id.radio2) pv.setEraserStrokeWidth(edit);
                     pv.lockStroke();
-                    tv.setText(getString(R.string.tv, String.valueOf(edit)));
+                    tv.setText(getString(R.string.stroke_width_info, edit, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
                 } catch (Exception e) {
                     Common.showException(e, this);
                 }
@@ -729,19 +709,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             DialogUtil.setADWithET_autoShowSoftKeyboard(et, ad);
             ad.show();
         });
-        float pow = pv.getStrokeWidthInUse();
-        strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
-        tv.setText(String.valueOf(pow));
-        sb.setProgress((int) (Math.log(pow) / Math.log(1.07D)));
-        sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        float pvStrokeWidthInUse = pv.getStrokeWidthInUse();
+        strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getColor());
+        tv.setText(getString(R.string.stroke_width_info, pvStrokeWidthInUse, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
+        sb.setProgress((int) (Math.log(pvStrokeWidthInUse) / Math.log(1.07D)));
         sb.setMax(100);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        ll.addView(tv);
-        ll.addView(sb);
-        ll.addView(strokeWatchView);
-        ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
-        setDialogAttr(mainDialog, false, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        setDialogAttr(mainDialog, false, ((int) (((float) width) * .8F)), ViewGroup.LayoutParams.WRAP_CONTENT, true);
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -753,7 +726,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         pv.setEraserStrokeWidth(pow);
                     }
                     pv.lockStroke();
-                    tv.setText(String.valueOf((pow)));
+                    tv.setText(getString(R.string.stroke_width_info, pow, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
                     strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
                 }
             }
@@ -772,12 +745,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             checked[0] = checkedId;
             float strokeWidth = (checkedId == R.id.radio1) ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
             strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getColor());
-            tv.setText(String.format(getString(R.string.tv), strokeWidth));
+            tv.setText(getString(R.string.stroke_width_info, strokeWidth, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
             sb.setProgress((int) (Math.log(strokeWidth) / Math.log(1.07D)));
         });
-        mainLL.addView(barLL);
-        mainLL.addView(ll);
-        mainDialog.setContentView(mainLL);
+        mainLL.addView(strokeWatchView);
+        mainDialog.setContentView(mainLL, new ViewGroup.LayoutParams(((int) (((float) width) * .8F)), ViewGroup.LayoutParams.WRAP_CONTENT));
         mainDialog.show();
     }
 
@@ -974,7 +946,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private void setLayer() {
         Dialog dialog = new Dialog(this);
         View view = View.inflate(this, R.layout.layer_layout, null);
-        LinearLayout linearLayout = view.findViewById(R.id.ll);
+        @SuppressWarnings("unused") LinearLayout linearLayout = view.findViewById(R.id.ll);
         dialog.setContentView(view);
         DialogUtil.setDialogAttr(dialog, false
                 , ((int) (width * .8F)), ((int) (height * .8F)), true);
