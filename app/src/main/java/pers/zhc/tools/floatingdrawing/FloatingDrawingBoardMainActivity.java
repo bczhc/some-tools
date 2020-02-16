@@ -133,9 +133,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         return false;
     }
 
-    public static void setSelectedET_currentMills(Context ctx, EditText et) {
+    public static void setSelectedET_currentMills(EditText et) {
         @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        et.setText(String.format(ctx.getString(R.string.tv), format));
+        et.setText(String.format(et.getContext().getString(R.string.tv), format));
         Selection.selectAll(et.getText());
     }
 
@@ -726,6 +726,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
             } else //noinspection deprecation
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            DialogUtil.setADWithET_autoShowSoftKeyboard(et, ad);
             ad.show();
         });
         float pow = pv.getStrokeWidthInUse();
@@ -896,7 +897,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         LinearLayout linearLayout = View.inflate(this, R.layout.export_image_layout, null)
                                 .findViewById(R.id.root);
                         EditText fileNameET = linearLayout.findViewById(R.id.file_name);
-                        setSelectedET_currentMills(fileNameET.getContext(), fileNameET);
+                        setSelectedET_currentMills(fileNameET);
                         EditText widthET = linearLayout.findViewById(R.id.width);
                         EditText heightET = linearLayout.findViewById(R.id.height);
                         Point point = new Point();
@@ -932,7 +933,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     v2 -> importPath(moreOptionsDialog, pathDir),
                     v3 -> new PermissionRequester(() -> {
                         EditText et = new EditText(this);
-                        setSelectedET_currentMills(this, et);
+                        setSelectedET_currentMills(et);
                         AlertDialog.Builder adb = new AlertDialog.Builder(this);
                         AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
                             File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
