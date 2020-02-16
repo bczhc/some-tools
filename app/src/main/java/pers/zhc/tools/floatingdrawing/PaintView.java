@@ -741,7 +741,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    private void drawing() {
+    void drawing() {
         if (importingPath) {
             return;
         }

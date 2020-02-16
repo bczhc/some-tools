@@ -41,6 +41,7 @@ import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingDrawingBoardMainActivity extends BaseActivity {
     static Map<Long, Activity> longMainActivityMap;//memory leak??
+    boolean mainDrawingBoardNotDisplay = false;
     private WindowManager wm = null;
     private LinearLayout fbLL;
     private PaintView pv;
@@ -572,6 +573,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         try {
             wm.addView(pv, lp);
+            mainDrawingBoardNotDisplay = false;
             fbLL.addView(iv);
             measureFB_LL();
             this.wm.addView(fbLL, lp2);
@@ -790,6 +792,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         try {
             wm.removeViewImmediate(pv);
+            mainDrawingBoardNotDisplay = true;
         } catch (Exception ignored) {
         }
     }
@@ -1035,10 +1038,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     public void recover() {
-        try {
-            this.wm.addView(fbLL, lp2);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!this.mainDrawingBoardNotDisplay) {
+            try {
+                this.wm.addView(fbLL, lp2);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
