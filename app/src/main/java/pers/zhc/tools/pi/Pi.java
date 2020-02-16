@@ -40,7 +40,7 @@ public class Pi extends BaseActivity {
                 es[0] = Executors.newFixedThreadPool(1);
                 es[0].execute(() -> {
                     piJNI.sb = new StringBuilder();
-                    runOnUiThread(() -> tv.setText(R.string.wait));
+                    runOnUiThread(() -> tv.setText(R.string.please_wait));
                     this.isGenerating = true;
                     long sM = System.currentTimeMillis();
                     piJNI.gen(i);
