@@ -775,6 +775,14 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         headBitmap = bitmapMap.get(headCanvas);
     }
 
+    float getScale() {
+        return headCanvas.getScale();
+    }
+
+    float getZoomedStrokeWidthInUse() {
+        return getScale() * getStrokeWidthInUse();
+    }
+
     /**
      * 路径集合
      */
