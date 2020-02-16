@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
 
 android {
@@ -6,9 +8,16 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 20200207
-        versionName "6.0.0.0_20200208"
-//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        def date = Date.newInstance()
+        def dateString = new SimpleDateFormat("yyyyMMdd").format(date)
+        def time = new SimpleDateFormat("HHmmss").format(date)
+        def which = 2
+        def verCode = Integer.parseInt(dateString + which)
+        def verString = "6.1.0.1"
+        def emoji = "\ud83d\udc22"
+        def verName = "${verString}_${dateString}${time}_$emoji"
+        versionCode verCode
+        versionName verName
     }
     buildTypes {
         release {
