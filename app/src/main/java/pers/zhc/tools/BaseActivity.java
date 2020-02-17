@@ -70,9 +70,9 @@ public class BaseActivity extends Activity {
                 boolean update = true;
                 try {
                     String[] split = remoteVersionName.split("_");
-                    long remoteBuildTime = Long.parseLong(split[split.length - 1]);
+                    long remoteBuildTime = Long.parseLong(split[1]);
                     String[] split1 = myVersionName.split("_");
-                    long myBuildTIme = Long.parseLong(split1[split1.length - 1]);
+                    long myBuildTIme = Long.parseLong(split1[1]);
                     update = remoteBuildTime > myBuildTIme;
                 } catch (Exception ignored) {
                 }
