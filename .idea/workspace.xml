@@ -43,13 +43,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="下载更新，返回强制停止">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/change_stroke_width_view.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/ids.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/ids.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -172,7 +168,6 @@
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="qmcflac" />
-    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="profiling&#9;ACTION&#9;ProfilingActions&#10;sync&#9;ACTION&#9;Android.SyncProject&#10;mG&#9;PSI&#9;JAVA://pers.zhc.tools.floatingboard.JNI#mG&#10;show memory &#9;null&#9;null" />
@@ -271,6 +266,7 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.some-tools" />
         <item itemvalue="Gradle.some-tools" />
       </list>
     </recent_temporary>
@@ -400,13 +396,6 @@
       <workItem from="1581779409593" duration="4405000" />
       <workItem from="1581810375150" duration="1640000" />
       <workItem from="1581824978802" duration="14375000" />
-    </task>
-    <task id="LOCAL-00025" summary="app icon">
-      <created>1577860412828</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1577860412828</updated>
     </task>
     <task id="LOCAL-00026" summary="改回原来AlertDialog，找到新的在android pie上解决AlertDialog不自动弹出软键盘的方案，修复。">
       <created>1577866845437</created>
@@ -744,7 +733,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581847367500</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="版本名字有了更多随机emoji！！！">
+      <created>1581918752412</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1581918752412</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -873,8 +869,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="issue #43 on github, override StrokeWatchView onMeasure(), use forceLayout() refresh" />
-    <MESSAGE value="issue #43 on github, override StrokeWatchView onMeasure(), refresh with forceLayout()" />
     <MESSAGE value="issue #43 on github, fix issue #42 on github, override StrokeWatchView onMeasure(), refresh with forceLayout()." />
     <MESSAGE value="fix load broken .so library" />
     <MESSAGE value="fix load broken .so library; issue #44 on github" />
@@ -898,7 +892,9 @@
     <MESSAGE value="issue #66" />
     <MESSAGE value="issue #63" />
     <MESSAGE value="检测更新根据build时间" />
-    <option name="LAST_COMMIT_MESSAGE" value="检测更新根据build时间" />
+    <MESSAGE value="版本名字有了更多emoji！！！" />
+    <MESSAGE value="版本名字有了更多随机emoji！！！" />
+    <option name="LAST_COMMIT_MESSAGE" value="版本名字有了更多随机emoji！！！" />
   </component>
   <component name="WindowStateProjectService">
     <state x="318" y="68" key="#Notifications" timestamp="1579581379607">
@@ -930,6 +926,10 @@
     <state x="768" y="238" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1581476166603" />
     <state x="768" y="176" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/0.27.1366.741@0.27.1366.741" timestamp="1580272652640" />
     <state x="768" y="266" width="460" height="589" key="#com.intellij.ide.util.MemberChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581243002134" />
+    <state x="534" y="246" key="#com.intellij.refactoring.move.moveInstanceMethod.MoveInstanceMethodDialog" timestamp="1581918848582">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="534" y="246" key="#com.intellij.refactoring.move.moveInstanceMethod.MoveInstanceMethodDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1581918848582" />
     <state x="653" y="254" width="524" height="514" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1580124552756">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -962,11 +962,11 @@
     </state>
     <state x="751" y="337" width="550" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1581777799813" />
     <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581848985071" />
-    <state x="0" y="27" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1581853956511">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1581928114320">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579597961330" />
-    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1581493809885" />
+    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1581928114320" />
     <state x="53" y="27" width="1146" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580272692340" />
     <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1581853956511" />
     <state width="1053" height="588" key="DebuggerActiveHint" timestamp="1581847084259">
@@ -1125,11 +1125,11 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="525" y="307" width="306" height="187" key="VCS.ChangelistChooser/0.27.1366.741@0.27.1366.741" timestamp="1580210147076" />
-    <state x="587" y="217" width="800" height="538" key="Vcs.Push.Dialog.v2" timestamp="1581847375336">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="555" y="261" width="800" height="538" key="Vcs.Push.Dialog.v2" timestamp="1581918786333">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="587" y="95" key="Vcs.Push.Dialog.v2/0.0.1449.815@0.0.1449.815" timestamp="1579581706571" />
-    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1581328622995" />
+    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1581918786333" />
     <state x="553" y="113" width="800" height="538" key="Vcs.Push.Dialog.v2/0.27.1366.741@0.27.1366.741" timestamp="1580221845054" />
     <state x="587" y="217" width="800" height="720" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1581847375336" />
     <state x="694" y="290" width="427" height="533" key="VcsDiffUtil.ChangesDialog" timestamp="1581250700929">
@@ -1157,8 +1157,8 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="100" y="127" width="1720" height="853" key="com.intellij.dvcs.ui.CompareBranchesDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581844907111" />
-    <state x="141" y="169" width="1615" height="786" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1581134015628">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="141" y="169" width="1615" height="786" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1581918607644">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="100" y="127" width="1156" height="548" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.27.1366.741@0.27.1366.741" timestamp="1580210345154" />
     <state x="141" y="169" width="1615" height="786" maximized="true" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581134015628" />
