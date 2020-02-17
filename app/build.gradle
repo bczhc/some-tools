@@ -2,22 +2,58 @@ import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
 
+static ran_sc(int min, int max) {
+    double ran_sc_db = Math.round(Math.random() * (max - min)) + min
+    return (int) ran_sc_db
+}
+
+static unicodeHexToString(int[] hex) {
+    StringBuilder sb = StringBuilder.newInstance()
+    for (c in hex) {
+        sb.append(c as char)
+    }
+    return sb.toString()
+}
+
+
+static gVersion() {
+    def date = Date.newInstance()
+    def dateString = new SimpleDateFormat("yyyyMMdd").format(date)
+    def time = new SimpleDateFormat("HHmmss").format(date)
+    def which = 2
+    def verString = "6.1.0.1"
+    def emoji = ranEmoji()
+    return [
+            Integer.parseInt(dateString + which),
+            "${verString}_${dateString}${time}_$emoji"
+    ]
+}
+
+static ranEmoji() {
+    def emojiRange = [[0xE001, 0xE05A],
+                      [0xE101, 0xE15A],
+                      [0xE201, 0xE253],
+                      [0xE301, 0xE34D],
+                      [0xE401, 0xE44C],
+                      [0xE501, 0xE537]]
+    def index = ran_sc(0, 5)
+    def hexArrLen = ran_sc(10, 20)
+    def hex = []
+    for (int i = 0; i < hexArrLen; i++) {
+        hex[i] = ran_sc(emojiRange[index][0], emojiRange[index][1])
+    }
+    return unicodeHexToString(hex as int[])
+}
+
 android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 29
-        def date = Date.newInstance()
-        def dateString = new SimpleDateFormat("yyyyMMdd").format(date)
-        def time = new SimpleDateFormat("HHmmss").format(date)
-        def which = 2
-        def verCode = Integer.parseInt(dateString + which)
-        def verString = "6.1.0.1"
-        def emoji = "\ud83d\udc22"
-        def verName = "${verString}_${dateString}${time}_$emoji"
-        versionCode verCode
-        versionName verName
+        def verInfo = gVersion()
+        versionCode (verInfo[0] as int)
+        versionName (verInfo[1] as String)
     }
     buildTypes {
         release {
@@ -43,6 +79,5 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
-    implementation 'com.github.bumptech.glide:glide:4.4.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
+//    implementation 'com.github.bumptech.glide:glide:4.4.0'
 }
