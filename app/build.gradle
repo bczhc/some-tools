@@ -7,10 +7,14 @@ static ran_sc(int min, int max) {
     return (int) ran_sc_db
 }
 
-static unicodeHexToString(int[] hex) {
+static unicodeHexToString(int[] code) {
     StringBuilder sb = StringBuilder.newInstance()
-    for (c in hex) {
-        sb.append(c as char)
+    for (c in code) {
+        if (c > 0xFFFF && c < 0x110000) {
+            sb.append((Math.floor((c - 0x10000) / 0x400) + 0xD800) as char)
+                    .append(((c - 0x10000) % 0x400 + 0xDC00) as char)
+        } else
+            sb.append(c as char)
     }
     return sb.toString()
 }
@@ -25,19 +29,14 @@ static gVersion() {
     def emoji = ranEmoji()
     return [
             Integer.parseInt(dateString + which),
-            "${verString}_${dateString}${time}_$emoji"
+            "${verString}_${dateString}${time}_\n$emoji"
     ]
 }
 
 static ranEmoji() {
-    def emojiRange = [[0xE001, 0xE05A],
-                      [0xE101, 0xE15A],
-                      [0xE201, 0xE253],
-                      [0xE301, 0xE34D],
-                      [0xE401, 0xE44C],
-                      [0xE501, 0xE537]]
-    def index = ran_sc(0, 5)
-    def hexArrLen = ran_sc(10, 20)
+    def emojiRange = [[0x1F000, 0x1F6FF]]
+    def index = ran_sc(0, emojiRange.size() - 1)
+    def hexArrLen = ran_sc(5, 10)
     def hex = []
     for (int i = 0; i < hexArrLen; i++) {
         hex[i] = ran_sc(emojiRange[index][0], emojiRange[index][1])
@@ -52,8 +51,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 29
         def verInfo = gVersion()
-        versionCode (verInfo[0] as int)
-        versionName (verInfo[1] as String)
+        versionCode(verInfo[0] as int)
+        versionName(verInfo[1] as String)
     }
     buildTypes {
         release {
