@@ -7,6 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.Icon;
+import android.hardware.display.DisplayManager;
+import android.media.ImageReader;
+import android.media.projection.MediaProjection;
+import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -154,7 +158,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             }
         }
         new PermissionRequester(() -> {
-        }).requestPermission(this, Manifest.permission.INTERNET, 53);
+        }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
         init();
     }
 
@@ -394,8 +398,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
                         break;
                     case 8:
-                        DialogUtil.createConfirmationAD(this, (dialog1, which) -> hide(), (dialog1, which) -> {
-                        }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
+                        pickScreenColor();
                         break;
                     case 9:
                         Dialog c = new Dialog(this);
@@ -493,6 +496,50 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             }
             importPath(null, new File(internalPathDir));
         });
+    }
+
+    private void pickScreenColor() {
+        boolean b = requestCaptureScreen();
+        if (!b) {
+            ToastUtils.show(this, R.string.request_permission_error);
+            return;
+        }
+    }
+
+    private boolean requestCaptureScreen() {
+        MediaProjectionManager mpm = (MediaProjectionManager) getApplicationContext().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+        if (mpm == null) {
+            return false;
+        }
+        Intent screenCaptureIntent = mpm.createScreenCaptureIntent();
+        startActivityForResult(screenCaptureIntent, RequestCode.REQUEST_CAPTURE_SCREEN);
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCode.REQUEST_CAPTURE_SCREEN) {
+            if (resultCode == RESULT_OK) {
+                showScreenColorPicker();
+            } else ToastUtils.show(this, R.string.please_grant_permission);
+        }
+    }
+
+    private void showScreenColorPicker() {
+        MediaProjectionManager mpm = (MediaProjectionManager) getApplicationContext().getSystemService(MEDIA_PROJECTION_SERVICE);
+        if (mpm != null) {
+            Intent intent = new Intent();
+            MediaProjection mp = mpm.getMediaProjection(RESULT_OK, intent);
+            Point point = new Point();
+            getWindowManager().getDefaultDisplay().getSize(point);
+            int width = point.x;
+            int height = point.y;
+            int dpi = (int) getResources().getDisplayMetrics().density;
+            ImageReader ir = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 2);
+            mp.createVirtualDisplay("ScreenCapture", width, height, dpi
+                    , DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, ir.getSurface(), null, null);
+        }
     }
 
     private long getCacheFilesSize(@Nullable ArrayList<File> fileList) {
@@ -788,150 +835,159 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 R.string.import_path,
                 R.string.export_path,
                 R.string.reset_transform,
-                R.string.layer
+                R.string.manage_layer,
+                R.string.hide_panel
+        };
+        File fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
+        if (!fbDir.exists()) System.out.println("d.mkdir() = " + fbDir.mkdir());
+        File pathDir = new File(fbDir.toString() + File.separator + "path");
+        if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
+        File imageDir = new File(fbDir.toString() + File.separator + "image");
+        if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
+        View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
+                v0 -> new PermissionRequester(() -> {
+                    Dialog dialog = new Dialog(this);
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.setCancelable(false);
+                    FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, imageDir, dialog::dismiss, s -> {
+                        dialog.dismiss();
+                        AlertDialog.Builder importImageOptionsDialogBuilder = new AlertDialog.Builder(this);
+                        LinearLayout linearLayout = new LinearLayout(this);
+                        linearLayout.setOrientation(LinearLayout.VERTICAL);
+                        TextView infoTV = new TextView(this);
+                        EditText[] editTexts = new EditText[4];
+                        Bitmap imageBitmap;
+                        if ((imageBitmap = BitmapFactory.decodeFile(s)) == null) {
+                            ToastUtils.show(this, R.string.importing_failed);
+                            return;
+                        }
+                        Point point = new Point();
+                        BitmapUtil.getBitmapResolution(imageBitmap, point);
+                        int imageBitmapWidth = point.x;
+                        int imageBitmapHeight = point.y;
+                        infoTV.setText(String.format(getString(R.string.board_w_h_info_and_bitmap_w_h_info), width, height, "\n", imageBitmapWidth, imageBitmapHeight));
+                        int[] hintRes = new int[]{
+                                R.string.left_starting_point,
+                                R.string.top_starting_point,
+                                R.string.scaled_width,
+                                R.string.scaled_height,
+                        };
+                        for (int j = 0; j < editTexts.length; j++) {
+                            editTexts[j] = new EditText(this);
+                            editTexts[j].setHint(hintRes[j]);
+                            linearLayout.addView(editTexts[j]);
+                        }
+                        editTexts[0].setText(getString(R.string.tv, "0"));
+                        editTexts[1].setText(getString(R.string.tv, "0"));
+                        editTexts[2].setText(getString(R.string.tv, String.valueOf(imageBitmapWidth)));
+                        editTexts[3].setText(getString(R.string.tv, String.valueOf(imageBitmapHeight)));
+                        linearLayout.addView(infoTV);
+                        AlertDialog importImageOptionsDialog = importImageOptionsDialogBuilder.setView(linearLayout)
+                                .setTitle(R.string.set__top__left__scaled_width__scaled_height)
+                                .setPositiveButton(R.string.ok, (dialog1, which) -> {
+                                    try {
+                                        double c1 = (float) new Expression(editTexts[0].getText().toString()).calculate();
+                                        double c2 = (float) new Expression(editTexts[1].getText().toString()).calculate();
+                                        double c3 = new Expression(editTexts[2].getText().toString()).calculate();
+                                        double c4 = new Expression(editTexts[3].getText().toString()).calculate();
+                                        if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4))
+                                            throw new Exception("math expression invalid");
+                                        pv.importImage(imageBitmap, ((float) c1), ((float) c2), ((int) c3), ((int) c4));
+                                        ToastUtils.show(this, R.string.importing_success);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        ToastUtils.show(this, R.string.type_error);
+                                    }
+                                    moreOptionsDialog.dismiss();
+                                })
+                                .setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                                })
+                                .create();
+                        setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        importImageOptionsDialog.show();
+                    });
+                    setFilePickerDialog(dialog, filePickerRL);
+                }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
+                v1 -> new PermissionRequester(() -> {
+                    LinearLayout linearLayout = View.inflate(this, R.layout.export_image_layout, null)
+                            .findViewById(R.id.root);
+                    EditText fileNameET = linearLayout.findViewById(R.id.file_name);
+                    setSelectedET_currentMills(fileNameET);
+                    EditText widthET = linearLayout.findViewById(R.id.width);
+                    EditText heightET = linearLayout.findViewById(R.id.height);
+                    Point point = new Point();
+                    pv.bitmapResolution(point);
+                    final int[] imageW = {point.x};
+                    final int[] imageH = {point.y};
+                    widthET.setText(String.valueOf(point.x));
+                    heightET.setText(String.valueOf(point.y));
+                    widthET.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    heightET.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                    AlertDialog ad = adb.setTitle(R.string.export_image)
+                            .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                Expression expression = new Expression();
+                                expression.setExpressionString(widthET.getText().toString());
+                                imageW[0] = ((int) expression.calculate());
+                                expression.setExpressionString(heightET.getText().toString());
+                                imageH[0] = ((int) expression.calculate());
+                                if (Double.isNaN(imageW[0]) || Double.isNaN(imageH[0]) || imageW[0] <= 0 || imageH[0] <= 0) {
+                                    ToastUtils.show(FloatingDrawingBoardMainActivity.this, R.string.please_type_correct_value);
+                                    moreOptionsDialog.dismiss();
+                                    return;
+                                }
+                                File imageFile = new File(imageDir.toString() + File.separator + fileNameET.getText().toString() + ".png");
+                                pv.exportImg(imageFile, imageW[0], imageH[0]);
+                                moreOptionsDialog.dismiss();
+                            }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                            }).setView(linearLayout).create();
+                    DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    DialogUtil.setADWithET_autoShowSoftKeyboard(fileNameET, ad);
+                    ad.show();
+                }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
+                v2 -> importPath(moreOptionsDialog, pathDir),
+                v3 -> new PermissionRequester(() -> {
+                    EditText et = new EditText(this);
+                    setSelectedET_currentMills(et);
+                    AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                    AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                        File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
+                        try {
+                            if (!currentInternalPathFile.exists()) {
+                                throw new FileNotFoundException(getString(R.string.native_file_not_exist));
+                            }
+                            FileU.FileCopy(currentInternalPathFile, pathFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (pathFile.exists()) {
+                            ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
+                            new Thread(() -> uploadPaths(this)).start();
+                        } else
+                            ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
+                        moreOptionsDialog.dismiss();
+                    }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    }).setTitle(R.string.type_file_name).setView(et).create();
+                    setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
+                    alertDialog.show();
+                }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
+                v4 -> pv.resetTransform(),
+                v5 -> setLayer(),
+                v6 -> DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
+                    hide();
+                    moreOptionsDialog.dismiss();
+                }, (dialog1, which) -> {
+                }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show()
         };
         Button[] buttons = new Button[textsRes.length];
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new Button(this);
             buttons[i].setText(textsRes[i]);
             ll.addView(buttons[i]);
-            File fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
-            if (!fbDir.exists()) System.out.println("d.mkdir() = " + fbDir.mkdir());
-            File pathDir = new File(fbDir.toString() + File.separator + "path");
-            if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
-            File imageDir = new File(fbDir.toString() + File.separator + "image");
-            if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
-            View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
-                    v0 -> new PermissionRequester(() -> {
-                        Dialog dialog = new Dialog(this);
-                        dialog.setCanceledOnTouchOutside(false);
-                        dialog.setCancelable(false);
-                        FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, imageDir, dialog::dismiss, s -> {
-                            dialog.dismiss();
-                            AlertDialog.Builder importImageOptionsDialogBuilder = new AlertDialog.Builder(this);
-                            LinearLayout linearLayout = new LinearLayout(this);
-                            linearLayout.setOrientation(LinearLayout.VERTICAL);
-                            TextView infoTV = new TextView(this);
-                            EditText[] editTexts = new EditText[4];
-                            Bitmap imageBitmap;
-                            if ((imageBitmap = BitmapFactory.decodeFile(s)) == null) {
-                                ToastUtils.show(this, R.string.importing_failed);
-                                return;
-                            }
-                            Point point = new Point();
-                            BitmapUtil.getBitmapResolution(imageBitmap, point);
-                            int imageBitmapWidth = point.x;
-                            int imageBitmapHeight = point.y;
-                            infoTV.setText(String.format(getString(R.string.board_w_h_info_and_bitmap_w_h_info), width, height, "\n", imageBitmapWidth, imageBitmapHeight));
-                            int[] hintRes = new int[]{
-                                    R.string.left_starting_point,
-                                    R.string.top_starting_point,
-                                    R.string.scaled_width,
-                                    R.string.scaled_height,
-                            };
-                            for (int j = 0; j < editTexts.length; j++) {
-                                editTexts[j] = new EditText(this);
-                                editTexts[j].setHint(hintRes[j]);
-                                linearLayout.addView(editTexts[j]);
-                            }
-                            editTexts[0].setText(getString(R.string.tv, "0"));
-                            editTexts[1].setText(getString(R.string.tv, "0"));
-                            editTexts[2].setText(getString(R.string.tv, String.valueOf(imageBitmapWidth)));
-                            editTexts[3].setText(getString(R.string.tv, String.valueOf(imageBitmapHeight)));
-                            linearLayout.addView(infoTV);
-                            AlertDialog importImageOptionsDialog = importImageOptionsDialogBuilder.setView(linearLayout)
-                                    .setTitle(R.string.set__top__left__scaled_width__scaled_height)
-                                    .setPositiveButton(R.string.ok, (dialog1, which) -> {
-                                        try {
-                                            double c1 = (float) new Expression(editTexts[0].getText().toString()).calculate();
-                                            double c2 = (float) new Expression(editTexts[1].getText().toString()).calculate();
-                                            double c3 = new Expression(editTexts[2].getText().toString()).calculate();
-                                            double c4 = new Expression(editTexts[3].getText().toString()).calculate();
-                                            if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4))
-                                                throw new Exception("math expression invalid");
-                                            pv.importImage(imageBitmap, ((float) c1), ((float) c2), ((int) c3), ((int) c4));
-                                            ToastUtils.show(this, R.string.importing_success);
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            ToastUtils.show(this, R.string.type_error);
-                                        }
-                                        moreOptionsDialog.dismiss();
-                                    })
-                                    .setNegativeButton(R.string.cancel, (dialog1, which) -> {
-                                    })
-                                    .create();
-                            setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                            importImageOptionsDialog.show();
-                        });
-                        setFilePickerDialog(dialog, filePickerRL);
-                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
-                    v1 -> new PermissionRequester(() -> {
-                        LinearLayout linearLayout = View.inflate(this, R.layout.export_image_layout, null)
-                                .findViewById(R.id.root);
-                        EditText fileNameET = linearLayout.findViewById(R.id.file_name);
-                        setSelectedET_currentMills(fileNameET);
-                        EditText widthET = linearLayout.findViewById(R.id.width);
-                        EditText heightET = linearLayout.findViewById(R.id.height);
-                        Point point = new Point();
-                        pv.bitmapResolution(point);
-                        final int[] imageW = {point.x};
-                        final int[] imageH = {point.y};
-                        widthET.setText(String.valueOf(point.x));
-                        heightET.setText(String.valueOf(point.y));
-                        widthET.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                        heightET.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        AlertDialog ad = adb.setTitle(R.string.export_image)
-                                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                    Expression expression = new Expression();
-                                    expression.setExpressionString(widthET.getText().toString());
-                                    imageW[0] = ((int) expression.calculate());
-                                    expression.setExpressionString(heightET.getText().toString());
-                                    imageH[0] = ((int) expression.calculate());
-                                    if (Double.isNaN(imageW[0]) || Double.isNaN(imageH[0]) || imageW[0] <= 0 || imageH[0] <= 0) {
-                                        ToastUtils.show(FloatingDrawingBoardMainActivity.this, R.string.please_type_correct_value);
-                                        moreOptionsDialog.dismiss();
-                                        return;
-                                    }
-                                    File imageFile = new File(imageDir.toString() + File.separator + fileNameET.getText().toString() + ".png");
-                                    pv.exportImg(imageFile, imageW[0], imageH[0]);
-                                    moreOptionsDialog.dismiss();
-                                }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                                }).setView(linearLayout).create();
-                        DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        DialogUtil.setADWithET_autoShowSoftKeyboard(fileNameET, ad);
-                        ad.show();
-                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
-                    v2 -> importPath(moreOptionsDialog, pathDir),
-                    v3 -> new PermissionRequester(() -> {
-                        EditText et = new EditText(this);
-                        setSelectedET_currentMills(et);
-                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
-                            File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
-                            try {
-                                if (!currentInternalPathFile.exists()) {
-                                    throw new FileNotFoundException(getString(R.string.native_file_not_exist));
-                                }
-                                FileU.FileCopy(currentInternalPathFile, pathFile);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            if (pathFile.exists()) {
-                                ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
-                                new Thread(() -> uploadPaths(this)).start();
-                            } else
-                                ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
-                            moreOptionsDialog.dismiss();
-                        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                        }).setTitle(R.string.type_file_name).setView(et).create();
-                        setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
-                        alertDialog.show();
-                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43),
-                    v4 -> pv.resetTransform(),
-                    v5 -> setLayer()
-            };
             buttons[i].setOnClickListener(onClickListeners[i]);
         }
         ll.setOrientation(LinearLayout.VERTICAL);
@@ -988,7 +1044,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 }
             });
             setFilePickerDialog(dialog, filePickerRL);
-        }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 43);
+        }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     private void setFilePickerDialog(Dialog dialog, FilePickerRL filePickerRL) {
@@ -1041,7 +1098,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (!Settings.canDrawOverlays(FloatingDrawingBoardMainActivity.this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 4444);
+                startActivityForResult(intent, RequestCode.REQUEST_OVERLAY);
                 denied();
             } else granted();
         }

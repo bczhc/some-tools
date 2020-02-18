@@ -56,7 +56,7 @@ public class EpicyclesEdit extends BaseActivity {
             intent.putExtra("T", Double.valueOf(s2));
             intent.putExtra("epicycles_count", Integer.valueOf(s3));
             intent.putExtra("thread_num", Integer.valueOf(s4));
-            startActivityForResult(intent, 71);
+            startActivityForResult(intent, RequestCode.START_ACTIVITY);
         });
         randomBtn.setOnClickListener(v -> {
             EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Math.random() * 30, new ComplexValue(Math.random() * 10, Math.random() * 10));
@@ -217,7 +217,7 @@ public class EpicyclesEdit extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == 71) {
+        if (requestCode == RequestCode.START_ACTIVITY) {
             reListEpicycles();
         }
         super.onActivityResult(requestCode, resultCode, data);

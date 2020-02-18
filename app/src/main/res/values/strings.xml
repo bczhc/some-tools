@@ -191,5 +191,9 @@
     <string name="download_progress">%1$d/%2$d</string>
     <string name="can_not_import_itself">不能导入自己</string>
     <string name="stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
+    <string name="manage_layer">管理图层</string>
+    <string name="hide_panel">隐藏面板</string>
+    <string name="request_permission_error">请求权限出错</string>
+    <string name="please_grant_permission">请同意权限</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
