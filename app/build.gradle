@@ -29,14 +29,14 @@ static gVersion() {
     def emoji = ranEmoji()
     return [
             Integer.parseInt(dateString + which),
-            "${verString}_${dateString}${time}_\n$emoji"
+            "${verString}_${dateString}${time}_$emoji"
     ]
 }
 
 static ranEmoji() {
     def emojiRange = [[0x1F000, 0x1F6FF]]
     def index = ran_sc(0, emojiRange.size() - 1)
-    def hexArrLen = ran_sc(5, 10)
+    def hexArrLen = ran_sc(2, 4)
     def hex = []
     for (int i = 0; i < hexArrLen; i++) {
         hex[i] = ran_sc(emojiRange[index][0], emojiRange[index][1])
