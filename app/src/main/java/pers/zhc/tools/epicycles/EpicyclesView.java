@@ -5,7 +5,8 @@ import android.content.Context;
 import android.graphics.*;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import pers.zhc.tools.floatingdrawing.MyCanvas;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
@@ -14,7 +15,7 @@ import pers.zhc.u.math.util.CoordinateDouble;
 import java.util.List;
 
 @SuppressLint("ViewConstructor")
-class EpicyclesView extends View implements Runnable {
+class EpicyclesView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
     static double T = 2 * Math.PI, omega = 2 * Math.PI / T;
     private final EpicyclesSequence epicyclesSequence;
     private int canvasWidth = -1;
@@ -34,6 +35,8 @@ class EpicyclesView extends View implements Runnable {
     private double t;
     private boolean pathMove = true;
     private GestureResolver gestureResolver;
+    private SurfaceHolder mSurfaceHolder;
+    private boolean drawing = true;
 
     EpicyclesView(Context context, EpicyclesSequence epicyclesSequence) {
         super(context);
@@ -67,6 +70,10 @@ class EpicyclesView extends View implements Runnable {
     }
 
     private void init(Context context) {
+        mSurfaceHolder = this.getHolder();
+        mSurfaceHolder.addCallback(this);
+        mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);
+        setZOrderOnTop(true);
         mBitmapPaint = new Paint();
         mCoPaint = new Paint();
         mCoPaint.setStyle(Paint.Style.STROKE);
@@ -176,7 +183,6 @@ class EpicyclesView extends View implements Runnable {
             mEpicyclesCanvas = new MyCanvas(mEpicyclesBitmap);
             mEpicyclesCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
         }
-        canvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -190,7 +196,6 @@ class EpicyclesView extends View implements Runnable {
         }
         gestureResolver.onTouch(event);
         gd.onTouchEvent(event);
-        invalidate();
         return true;
     }
 
@@ -213,10 +218,11 @@ class EpicyclesView extends View implements Runnable {
 
     @Override
     public void run() {
-        //noinspection InfiniteLoopStatement
-        while (true) {
+        while (drawing) {
+            Canvas canvas = mSurfaceHolder.lockCanvas();
             render();
-            postInvalidate();
+            canvas.drawBitmap(mEpicyclesBitmap, 0, 0, mBitmapPaint);
+            mSurfaceHolder.unlockCanvasAndPost(canvas);
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
@@ -257,5 +263,20 @@ class EpicyclesView extends View implements Runnable {
             }
         }
         t += .1F;
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        drawing = true;
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        drawing = false;
     }
 }

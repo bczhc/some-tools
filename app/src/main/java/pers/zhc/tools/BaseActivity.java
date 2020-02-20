@@ -86,7 +86,7 @@ public class BaseActivity extends Activity {
                         AlertDialog ad = adb.setTitle(R.string.found_update_whether_to_install)
                                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                                 })
-                                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                .setPositiveButton(R.string.confirm, (dialog, which) -> {
                                     ExecutorService es = Executors.newCachedThreadPool();//使用线程池，目的是为了可以终止下载线程
                                     new PermissionRequester(() -> {
                                         Dialog downloadDialog = new Dialog(this);

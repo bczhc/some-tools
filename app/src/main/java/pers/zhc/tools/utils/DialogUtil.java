@@ -33,7 +33,7 @@ public class DialogUtil {
 
     public static AlertDialog createConfirmationAD(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId, int width, int height, boolean application_overlay) {
         AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
-        AlertDialog ad = adb.setPositiveButton(R.string.ok, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId).create();
+        AlertDialog ad = adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId).create();
         setDialogAttr(ad, false, width, height, application_overlay);
         ad.setCanceledOnTouchOutside(true);
         return ad;
