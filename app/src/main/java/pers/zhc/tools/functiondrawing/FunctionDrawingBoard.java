@@ -84,7 +84,7 @@ public class FunctionDrawingBoard extends BaseActivity {
             setContentView(functionDrawingBoardView);
             dialog.dismiss();
         });
-        sbm.setText(R.string.ok);
+        sbm.setText(R.string.confirm);
         ll.addView(sbm);
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();

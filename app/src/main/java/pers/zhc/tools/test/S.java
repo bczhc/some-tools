@@ -62,9 +62,9 @@ class AStroke extends View {
                 mPath.lineTo(x, y);
                 break;
             case MotionEvent.ACTION_UP:
-                mPath = null;
                 break;
         }
+        invalidate();
         return true;
     }
 }
