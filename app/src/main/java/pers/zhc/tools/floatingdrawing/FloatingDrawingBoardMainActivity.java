@@ -284,15 +284,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             lp2.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         } else {
             //noinspection deprecation
-            lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
             //noinspection deprecation
-            lp2.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+            lp2.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
         }
         lp.format = PixelFormat.RGBA_8888;
         lp2.format = PixelFormat.RGBA_8888;
         lp.width = this.width;
         lp.height = this.height;
-        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         lp2.width = /*(int) (width * proportionX)*/WindowManager.LayoutParams.WRAP_CONTENT;
         lp2.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -683,13 +683,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
 
     void toggleDrawAndControlMode() {
-        if (lp.flags == (WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)) {
-            lp.flags = 0;
+        if (lp.flags == (WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)) {
+            lp.flags = WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
             wm.updateViewLayout(pv, lp);
             childTVs[1].setText(R.string.drawing);
             strings[1] = getString(R.string.drawing);
         } else {
-            lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+            lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
             wm.updateViewLayout(pv, lp);
             childTVs[1].setText(R.string.controlling);
             strings[1] = getString(R.string.controlling);
@@ -804,7 +804,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
             } else //noinspection deprecation
-                Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
             DialogUtil.setADWithET_autoShowSoftKeyboard(et, ad);
             ad.show();
         });

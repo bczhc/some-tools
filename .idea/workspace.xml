@@ -42,26 +42,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="下载更新，返回强制停止">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/root.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/root.xml" afterDir="false" />
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/jar_libs/zhcSingle.jar" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/jar_libs/zhcSingle.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/EpicyclesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/HSVAColorPickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/HSVAColorPickerRL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/NotificationClickReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/NotificationClickReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/S.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/S.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/DialogUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -173,8 +155,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="AnalyzeApkAction.lastApkPath" value="$PROJECT_DIR$/../../z/base.apk" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="192.168.31.61:5555" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-02-16T07:15:20.449Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="A02AECP82AWGY" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-02-20T14:49:45.550Z" />
     <property name="ExportApk.ApkPath" value="$PROJECT_DIR$/app" />
     <property name="ExportApk.BuildType" value="release" />
     <property name="ExportApk.BuildVariants" value="debug" />
@@ -421,21 +403,7 @@
       <workItem from="1582115870519" duration="1652000" />
       <workItem from="1582178410439" duration="6033000" />
       <workItem from="1582185494469" duration="6784000" />
-      <workItem from="1582195911915" duration="1039000" />
-    </task>
-    <task id="LOCAL-00026" summary="改回原来AlertDialog，找到新的在android pie上解决AlertDialog不自动弹出软键盘的方案，修复。">
-      <created>1577866845437</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1577866845437</updated>
-    </task>
-    <task id="LOCAL-00027" summary="修复：悬浮画板输入调整线条粗细下面预览View不更新&#10;悬浮画板：LayoutParams不共用，但是依然没有找到画板在绘画模式隐藏再显示闪退的bug原因并修复。">
-      <created>1577880723444</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1577880723446</updated>
+      <workItem from="1582195911915" duration="5262000" />
     </task>
     <task id="LOCAL-00028" summary="悬浮画板 画板变换后重置变换按钮">
       <created>1578644804024</created>
@@ -766,7 +734,21 @@
       <option name="project" value="LOCAL" />
       <updated>1581918752412</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="悬浮画板：取色截图调试中……；笔记：内容显示在100字符内">
+      <created>1582197108047</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1582197108048</updated>
+    </task>
+    <task id="LOCAL-00076" summary="        悬浮画板：悬浮窗低API用FLAG_SYSTEM_ERROR代替FLAG_SYSTEM_ALERT">
+      <created>1582211310711</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1582211310711</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -895,9 +877,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="issue #43 on github, fix issue #42 on github, override StrokeWatchView onMeasure(), refresh with forceLayout()." />
-    <MESSAGE value="fix load broken .so library" />
-    <MESSAGE value="fix load broken .so library; issue #44 on github" />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="fix issue #40 on github" />
     <MESSAGE value="fix issue #37 on github" />
     <MESSAGE value="悬浮画板：导入路径，兼容旧版本path" />
@@ -920,7 +900,10 @@
     <MESSAGE value="检测更新根据build时间" />
     <MESSAGE value="版本名字有了更多emoji！！！" />
     <MESSAGE value="版本名字有了更多随机emoji！！！" />
-    <option name="LAST_COMMIT_MESSAGE" value="版本名字有了更多随机emoji！！！" />
+    <MESSAGE value="悬浮画板：取色截图调试中……；笔记：内容显示在100字符内" />
+    <MESSAGE value="        悬浮画板：悬浮窗低API用FLAG_SYSTEM_ERROR代替FLAG_SYSTEM_ALERT" />
+    <MESSAGE value="悬浮画板：悬浮窗低API用FLAG_SYSTEM_ERROR代替FLAG_SYSTEM_ALERT" />
+    <option name="LAST_COMMIT_MESSAGE" value="        悬浮画板：悬浮窗低API用FLAG_SYSTEM_ERROR代替FLAG_SYSTEM_ALERT" />
   </component>
   <component name="WindowStateProjectService">
     <state x="318" y="68" key="#Notifications" timestamp="1579581379607">
@@ -989,11 +972,11 @@
     </state>
     <state x="751" y="337" width="550" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1582034732094" />
     <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581848985071" />
-    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1581928114320">
+    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1582211310446">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579597961330" />
-    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1581928114320" />
+    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1582211310446" />
     <state x="53" y="27" width="1146" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580272692340" />
     <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1581853956511" />
     <state width="1053" height="588" key="DebuggerActiveHint" timestamp="1582189210005">
@@ -1020,10 +1003,11 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="0" y="150" width="1356" height="508" key="FileDocumentManager.FileCacheConflict/0.27.1366.741@0.27.1366.741" timestamp="1580127189706" />
-    <state x="779" y="457" width="422" height="208" key="GitRewordDialog" timestamp="1581830084791">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="0" y="0" width="1920" height="1050" key="GitRewordDialog" timestamp="1582211323302">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="779" y="457" key="GitRewordDialog/0.0.1449.815@0.0.1449.815" timestamp="1579508174735" />
+    <state x="0" y="0" width="1920" height="1050" key="GitRewordDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1582211323302" />
     <state x="273" y="376" width="964" height="198" key="GitRewordDialog/0.27.1366.741@0.27.1366.741" timestamp="1580202716970" />
     <state x="779" y="457" width="422" height="208" key="GitRewordDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581830084791" />
     <state width="1852" height="181" key="GridCell.Tab.0.bottom" timestamp="1582190380254">
@@ -1152,11 +1136,11 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="525" y="307" width="306" height="187" key="VCS.ChangelistChooser/0.27.1366.741@0.27.1366.741" timestamp="1580210147076" />
-    <state x="555" y="261" width="800" height="538" key="Vcs.Push.Dialog.v2" timestamp="1581918786333">
+    <state x="555" y="261" width="800" height="538" key="Vcs.Push.Dialog.v2" timestamp="1582211334382">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="587" y="95" key="Vcs.Push.Dialog.v2/0.0.1449.815@0.0.1449.815" timestamp="1579581706571" />
-    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1581918786333" />
+    <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1582211334382" />
     <state x="553" y="113" width="800" height="538" key="Vcs.Push.Dialog.v2/0.27.1366.741@0.27.1366.741" timestamp="1580221845054" />
     <state x="587" y="217" width="800" height="720" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1581847375336" />
     <state x="694" y="290" width="427" height="533" key="VcsDiffUtil.ChangesDialog" timestamp="1581250700929">
@@ -1175,10 +1159,10 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="104" y="132" width="1148" height="538" key="caller.chooser.dialog/0.27.1366.741@0.27.1366.741" timestamp="1580213879051" />
-    <state x="100" y="127" width="1720" height="853" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1582185605594">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1582208657803">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
+    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1582208657803" />
     <state x="100" y="127" width="1720" height="853" key="com.android.tools.idea.avdmanager.AvdListDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1582185605594" />
     <state x="100" y="127" width="1720" height="853" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1581844907111">
       <screen x="0" y="27" width="1920" height="1053" />
@@ -1206,11 +1190,11 @@
     </state>
     <state x="704" y="442" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1050@0.0.1920.1050" timestamp="1582032201790" />
     <state x="704" y="442" width="457" height="175" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.27.1366.741@0.27.1366.741" timestamp="1580016172451" />
-    <state x="354" y="215" width="1329" height="647" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1582186152862">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="354" y="187" width="1329" height="647" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1582211166097">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="267" y="145" width="916" height="601" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1449.815@0.0.1449.815" timestamp="1579505929508" />
-    <state x="354" y="187" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1050@0.0.1920.1050" timestamp="1581320930869" />
+    <state x="354" y="187" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1050@0.0.1920.1050" timestamp="1582211166097" />
     <state x="252" y="159" width="1008" height="529" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.1366.741@0.27.1366.741" timestamp="1580125639310" />
     <state x="354" y="215" width="1329" height="647" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.1920.1053@0.27.1920.1053" timestamp="1582186152862" />
     <state x="100" y="100" width="1720" height="850" key="dock-window-1" timestamp="1579492937743" />
@@ -1225,11 +1209,11 @@
     <state x="694" y="291" width="652" height="477" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1579492937743" />
     <state x="636" y="163" key="extract.method.dialog/0.27.1366.741@0.27.1366.741" timestamp="1580109656807" />
     <state x="694" y="319" width="652" height="548" key="extract.method.dialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581256241043" />
-    <state x="595" y="284" width="994" height="782" key="find.popup" timestamp="1582185414134">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="595" y="256" width="1113" height="782" key="find.popup" timestamp="1582211806877">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="149" y="37" width="1187" height="740" key="find.popup/0.0.1449.815@0.0.1449.815" timestamp="1579594271434" />
-    <state x="595" y="256" width="1113" height="782" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1582034720233" />
+    <state x="595" y="256" width="1113" height="782" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1582211806877" />
     <state x="140" y="61" width="1120" height="673" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221246864" />
     <state x="595" y="284" width="994" height="782" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1582185414134" />
     <state x="409" y="106" width="537" height="589" key="git4idea.branch.GitSmartOperationDialog" timestamp="1580127099669">
@@ -1278,21 +1262,5 @@
     <state x="623" y="231" width="928" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1582196424694" />
     <state x="587" y="262" width="672" height="617" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221238206" />
     <state x="623" y="259" width="928" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1582191550623" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
-          <line>526</line>
-          <option name="timeStamp" value="116" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java</url>
-          <line>534</line>
-          <option name="timeStamp" value="118" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

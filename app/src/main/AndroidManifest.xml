@@ -56,7 +56,7 @@
         </activity>
         <activity android:name="pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
+                  android:theme="@style/FB_AppTheme"
         >
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.VIEW"/>
