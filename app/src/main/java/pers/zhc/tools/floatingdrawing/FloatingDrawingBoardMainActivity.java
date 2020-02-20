@@ -8,12 +8,15 @@ import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.hardware.display.DisplayManager;
+import android.media.Image;
 import android.media.ImageReader;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,6 +41,7 @@ import pers.zhc.u.common.ReadIS;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -67,6 +71,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private LinearLayout optionsLL;
     private int fbMeasuredWidth, fbMeasuredHeight;
     private String internalPathDir = null;
+    private ImageReader ir;
+    private boolean capturing = false;
+    private Handler backgroundHandler;
 
     private static void uploadPaths(Context context) {
         try {
@@ -502,8 +509,51 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         boolean b = requestCaptureScreen();
         if (!b) {
             ToastUtils.show(this, R.string.request_permission_error);
+        }
+    }
+
+    private Handler getBackgroundHandler() {
+        if (backgroundHandler == null) {
+            HandlerThread backgroundThread =
+                    new HandlerThread("catwindow", android.os.Process
+                            .THREAD_PRIORITY_BACKGROUND);
+            backgroundThread.start();
+            backgroundHandler = new Handler(backgroundThread.getLooper());
+        }
+        return backgroundHandler;
+    }
+
+    private void captureScreen() {
+        if (capturing) {
             return;
         }
+        capturing = true;
+        final Image[] image = new Image[1];
+        ir.setOnImageAvailableListener(reader -> {
+            ir.setOnImageAvailableListener(null, null);
+            image[0] = ir.acquireLatestImage();
+            if (image[0] == null) {
+                capturing = false;
+                return;
+            }
+            int imageWidth = image[0].getWidth();
+            int imageHeight = image[0].getHeight();
+            Image.Plane plane = image[0].getPlanes()[0];
+            ByteBuffer buffer = plane.getBuffer();
+            int pixelStride = plane.getPixelStride();
+            int rowStride = plane.getRowStride();
+            int rowPaddingStride = rowStride - pixelStride * width;
+            int rowPadding = rowPaddingStride / pixelStride;
+            Bitmap recordBitmap = Bitmap.createBitmap(width + rowPadding, height, Bitmap.Config.ARGB_8888);
+            recordBitmap.copyPixelsFromBuffer(buffer);
+            Bitmap bitmap = Bitmap.createBitmap(recordBitmap, 0, 0, width, height);
+            String s = getString(R.string.ok) + bitmap;
+            ToastUtils.show(this, s);
+            System.out.println(s);
+            image[0].close();
+            capturing = false;
+        }, getBackgroundHandler());
+        System.out.println("image[0] = " + image[0]);
     }
 
     private boolean requestCaptureScreen() {
@@ -521,25 +571,27 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCode.REQUEST_CAPTURE_SCREEN) {
             if (resultCode == RESULT_OK) {
-                showScreenColorPicker();
+                initCapture(data.getExtras());
             } else ToastUtils.show(this, R.string.please_grant_permission);
         }
     }
 
-    private void showScreenColorPicker() {
+    private void initCapture(Bundle bundle) {
         MediaProjectionManager mpm = (MediaProjectionManager) getApplicationContext().getSystemService(MEDIA_PROJECTION_SERVICE);
         if (mpm != null) {
             Intent intent = new Intent();
+            intent.putExtras(bundle);
             MediaProjection mp = mpm.getMediaProjection(RESULT_OK, intent);
             Point point = new Point();
             getWindowManager().getDefaultDisplay().getSize(point);
             int width = point.x;
             int height = point.y;
             int dpi = (int) getResources().getDisplayMetrics().density;
-            ImageReader ir = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 2);
+            ir = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 2);
             mp.createVirtualDisplay("ScreenCapture", width, height, dpi
                     , DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, ir.getSurface(), null, null);
         }
+        captureScreen();
     }
 
     private long getCacheFilesSize(@Nullable ArrayList<File> fileList) {
@@ -732,7 +784,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
             et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+            adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                 try {
                     float edit = Float.parseFloat(et.getText().toString());
                     double a = Math.log(edit) / Math.log(1.07D);
@@ -884,7 +936,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         linearLayout.addView(infoTV);
                         AlertDialog importImageOptionsDialog = importImageOptionsDialogBuilder.setView(linearLayout)
                                 .setTitle(R.string.set__top__left__scaled_width__scaled_height)
-                                .setPositiveButton(R.string.ok, (dialog1, which) -> {
+                                .setPositiveButton(R.string.confirm, (dialog1, which) -> {
                                     try {
                                         double c1 = (float) new Expression(editTexts[0].getText().toString()).calculate();
                                         double c2 = (float) new Expression(editTexts[1].getText().toString()).calculate();
@@ -926,7 +978,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     heightET.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
                     AlertDialog ad = adb.setTitle(R.string.export_image)
-                            .setPositiveButton(R.string.ok, (dialog, which) -> {
+                            .setPositiveButton(R.string.confirm, (dialog, which) -> {
                                 Expression expression = new Expression();
                                 expression.setExpressionString(widthET.getText().toString());
                                 imageW[0] = ((int) expression.calculate());
@@ -952,7 +1004,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     EditText et = new EditText(this);
                     setSelectedET_currentMills(et);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                    AlertDialog alertDialog = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+                    AlertDialog alertDialog = adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                         File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
                         try {
                             if (!currentInternalPathFile.exists()) {

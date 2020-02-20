@@ -106,7 +106,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             String hexString = ColorUtils.getHexString(color, true);
             editText.setText(hexString);
             adb.setView(editText);
-            adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+            adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                 String s = editText.getText().toString();
                 int parseColor;
                 try {

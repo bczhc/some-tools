@@ -29,7 +29,7 @@ public class FunctionDrawing extends BaseActivity {
         tv.setOnClickListener(v -> {
             EditText et = new EditText(this);
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
-            AlertDialog ad = adb.setPositiveButton(R.string.ok, (dialog, which) -> {
+            AlertDialog ad = adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                 nNum = Integer.parseInt(et.getText().toString());
                 init();
             }).setNegativeButton(R.string.cancel, (dialog, which) -> {

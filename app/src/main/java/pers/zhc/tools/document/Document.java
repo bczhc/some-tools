@@ -49,7 +49,7 @@ public class Document extends BaseActivity {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
             adb.setTitle("请输入要删除的t_mills（*表示全部）")
-                    .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String s = et.getText().toString();
                         if (s.matches(".*\\*.*")) {
                             try {
@@ -214,7 +214,8 @@ public class Document extends BaseActivity {
                     for (int i = 1; i < 3; i++) {
                         LinearLayout smallLL = new LinearLayout(this);
                         String s = cursor.getString(i);
-                        setSmallTVExtracted(smallLL_LP4, ll.a, smallLL, s);
+                        int length = s.length();
+                        setSmallTVExtracted(smallLL_LP4, ll.a, smallLL, length > 100 ? (s.substring(0, 100) + "\n...") : s);
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         ll.a.setBackground(finalStroke);
