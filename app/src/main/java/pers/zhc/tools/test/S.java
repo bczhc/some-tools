@@ -2,6 +2,7 @@ package pers.zhc.tools.test;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,10 +16,11 @@ public class S extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        MySurfaceView mySurfaceView = new MySurfaceView(this);
-//        setContentView(mySurfaceView);
-        AStroke aStroke = new AStroke(this);
-        setContentView(aStroke);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, this.getClass()));
     }
 }
 

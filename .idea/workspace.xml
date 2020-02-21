@@ -43,13 +43,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="悬浮画板：可在Activity外申请屏幕捕捉权限，使用static定义Interface，不知道会不会出事，因为">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/RequestPermissionInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/NotificationClickReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/NotificationClickReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/RequestCaptureScreenActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/RequestCaptureScreenActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/S.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/test/S.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/utils/CrashHandler.java" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -274,6 +273,7 @@
         <item itemvalue="Gradle.some-tools" />
         <item itemvalue="Gradle.some-tools" />
         <item itemvalue="Gradle.some-tools" />
+        <item itemvalue="Gradle.some-tools" />
       </list>
     </recent_temporary>
   </component>
@@ -412,13 +412,6 @@
       <workItem from="1582185494469" duration="6784000" />
       <workItem from="1582195911915" duration="5371000" />
       <workItem from="1582251594910" duration="10615000" />
-    </task>
-    <task id="LOCAL-00029" summary="加入非捕捉的异常（可以导致崩溃的那种）收集报告">
-      <created>1578646185550</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1578646185550</updated>
     </task>
     <task id="LOCAL-00030" summary="传感器测试">
       <created>1578678514694</created>
@@ -756,7 +749,14 @@
       <option name="project" value="LOCAL" />
       <updated>1582211860931</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="issue #77 悬浮画板：可在Activity外申请屏幕捕捉权限，使用static定义Interface作为回调，不知道会不会出事，因为FLAG_ACTIVITY_NEW_TASK flag无法在调起它的Activity中收到回调……；">
+      <created>1582271264345</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1582271264345</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -886,7 +886,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="fix issue #40 on github" />
     <MESSAGE value="fix issue #37 on github" />
     <MESSAGE value="悬浮画板：导入路径，兼容旧版本path" />
     <MESSAGE value="issue #54, path 2.1!" />
@@ -911,7 +910,8 @@
     <MESSAGE value="悬浮画板：取色截图调试中……；笔记：内容显示在100字符内" />
     <MESSAGE value="        悬浮画板：悬浮窗低API用FLAG_SYSTEM_ERROR代替FLAG_SYSTEM_ALERT" />
     <MESSAGE value="悬浮画板：悬浮窗低API用FLAG_SYSTEM_ERROR代替FLAG_SYSTEM_ALERT" />
-    <option name="LAST_COMMIT_MESSAGE" value="悬浮画板：悬浮窗低API用FLAG_SYSTEM_ERROR代替FLAG_SYSTEM_ALERT" />
+    <MESSAGE value="issue #77 悬浮画板：可在Activity外申请屏幕捕捉权限，使用static定义Interface作为回调，不知道会不会出事，因为FLAG_ACTIVITY_NEW_TASK flag无法在调起它的Activity中收到回调……；" />
+    <option name="LAST_COMMIT_MESSAGE" value="issue #77 悬浮画板：可在Activity外申请屏幕捕捉权限，使用static定义Interface作为回调，不知道会不会出事，因为FLAG_ACTIVITY_NEW_TASK flag无法在调起它的Activity中收到回调……；" />
   </component>
   <component name="WindowStateProjectService">
     <state x="318" y="68" key="#Notifications" timestamp="1579581379607">
@@ -1144,13 +1144,13 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="525" y="307" width="306" height="187" key="VCS.ChangelistChooser/0.27.1366.741@0.27.1366.741" timestamp="1580210147076" />
-    <state x="555" y="261" width="800" height="538" key="Vcs.Push.Dialog.v2" timestamp="1582211334382">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="587" y="217" width="800" height="538" key="Vcs.Push.Dialog.v2" timestamp="1582271389931">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="587" y="95" key="Vcs.Push.Dialog.v2/0.0.1449.815@0.0.1449.815" timestamp="1579581706571" />
     <state x="555" y="261" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1582211334382" />
     <state x="553" y="113" width="800" height="538" key="Vcs.Push.Dialog.v2/0.27.1366.741@0.27.1366.741" timestamp="1580221845054" />
-    <state x="587" y="217" width="800" height="720" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1581847375336" />
+    <state x="587" y="217" width="800" height="720" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1582271389931" />
     <state x="694" y="290" width="427" height="533" key="VcsDiffUtil.ChangesDialog" timestamp="1581250700929">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>

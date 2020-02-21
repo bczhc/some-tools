@@ -48,7 +48,7 @@ import java.util.*;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingDrawingBoardMainActivity extends BaseActivity {
-    static Map<Long, Activity> longMainActivityMap;//memory leak??
+    static Map<Long, Runnable> longRunnableMap;//memory leak?? longActivityMap->longRunnableMap
     static RequestPermissionInterface requestPermissionInterface = null;
     boolean mainDrawingBoardNotDisplay = false;
     private WindowManager wm = null;
@@ -157,8 +157,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
-        if (longMainActivityMap == null) {
-            longMainActivityMap = new HashMap<>();
+        if (longRunnableMap == null) {
+            longRunnableMap = new HashMap<>();
         }
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("internalPathFile")) {
@@ -608,7 +608,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         int index = fileNameExtension.lastIndexOf('.');
                         fileName = fileNameExtension.substring(0, index);
                     }
-                    if (FloatingDrawingBoardMainActivity.longMainActivityMap.containsKey(Long.parseLong(fileName))) {
+                    if (FloatingDrawingBoardMainActivity.longRunnableMap.containsKey(Long.parseLong(fileName))) {
                         continue;
                     }
                 } catch (NumberFormatException ignored) {
@@ -664,8 +664,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow() {
         pv.setOS(currentInternalPathFile, true);
-        if (!longMainActivityMap.containsKey(currentInstanceMills)) {
-            longMainActivityMap.put(currentInstanceMills, this);
+        if (!longRunnableMap.containsKey(currentInstanceMills)) {
+            longRunnableMap.put(currentInstanceMills, this::recover);
         }
         try {
             wm.addView(pv, lp);
@@ -706,7 +706,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private void exit() {
         stopFloatingWindow();
         new Thread(() -> uploadPaths(this)).start();
-        FloatingDrawingBoardMainActivity.longMainActivityMap.remove(currentInstanceMills);
+        FloatingDrawingBoardMainActivity.longRunnableMap.remove(currentInstanceMills);
         this.fbSwitch.setChecked(false);
         pv.closePathRecorderOS();
     }
