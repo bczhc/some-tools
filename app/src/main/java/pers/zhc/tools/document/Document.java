@@ -179,7 +179,7 @@ public class Document extends BaseActivity {
                                         c.close();
                                         intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
                                         intent.putExtra("mills", mills);
-                                        startActivityForResult(intent, RequestCode.START_ACTIVITY_4);
+                                        startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
                                         dialog.dismiss();
                                         overridePendingTransition(R.anim.in_left_and_bottom, 0);
                                     },
