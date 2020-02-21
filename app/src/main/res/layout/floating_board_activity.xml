@@ -40,4 +40,13 @@
             android:background="@android:color/holo_green_light"
             android:id="@+id/small_btn"
     />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:layout_alignParentTop="true"
+              android:layout_alignParentLeft="true"
+              android:text="@string/check_for_update"
+              android:layout_below="@id/f_b_name"
+              android:layout_alignParentStart="true"
+              android:layout_margin="5sp"
+              android:id="@+id/check_for_update_tv"
+    />
 </RelativeLayout>

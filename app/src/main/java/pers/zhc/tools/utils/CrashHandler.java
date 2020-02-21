@@ -97,7 +97,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 cdl.await();
             } catch (InterruptedException ignored) {
             }
-            ((BaseActivity) mContext).app.removeAllActivities();
+            ((BaseActivity) mContext).app.finishAllActivities();
             restartProcess();
         }
     }
