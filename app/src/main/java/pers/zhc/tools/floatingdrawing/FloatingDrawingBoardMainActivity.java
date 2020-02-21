@@ -50,6 +50,7 @@ import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingDrawingBoardMainActivity extends BaseActivity {
     static Map<Long, Activity> longMainActivityMap;//memory leak??
+    static RequestPermissionInterface requestPermissionInterface = null;
     boolean mainDrawingBoardNotDisplay = false;
     private WindowManager wm = null;
     private LinearLayout fbLL;
@@ -513,6 +514,17 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             }
             importPath(null, new File(internalPathDir));
         });
+        requestPermissionInterface = (requestCode, resultCode, data) -> {
+            if (requestCode == RequestCode.REQUEST_CAPTURE_SCREEN) {
+                if (resultCode == RESULT_OK) {
+                    Bundle extras = data.getExtras();
+                    if (extras != null) {
+                        initCapture(extras);
+                    } else ToastUtils.show(this, R.string.request_permission_error);
+                } else ToastUtils.show(this, R.string.please_grant_permission);
+            }
+            startFloatingWindow();
+        };
     }
 
     private void pickScreenColor() {
@@ -520,18 +532,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, RequestCaptureScreenActivity.class);
-        startActivityForResult(intent, RequestCode.START_ACTIVITY);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCode.REQUEST_CAPTURE_SCREEN) {
-            startFloatingWindow();
-            if (resultCode == RESULT_OK) {
-                initCapture(data.getExtras());
-            } else ToastUtils.show(this, R.string.please_grant_permission);
-        }
+        startActivityForResult(intent, RequestCode.REQUEST_CAPTURE_SCREEN);
     }
 
     private Handler getBackgroundHandler() {

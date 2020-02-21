@@ -38,7 +38,10 @@ public class RequestCaptureScreenActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setResult(resultCode, data);
+        RequestPermissionInterface requestPermissionInterface = FloatingDrawingBoardMainActivity.requestPermissionInterface;
+        if (requestPermissionInterface != null) {
+            requestPermissionInterface.onRequestCallback(requestCode, resultCode, data);
+        }
         finish();
     }
 }
