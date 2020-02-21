@@ -196,5 +196,8 @@
     <string name="request_permission_error">请求权限出错</string>
     <string name="please_grant_permission">请同意权限</string>
     <string name="ok">ok</string>
+    <string name="check_for_update">检查更新</string>
+    <string name="acquire_service_failed">获取服务失败</string>
+    <string name="current_version_is_the_latest">当前已为最新版本</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
