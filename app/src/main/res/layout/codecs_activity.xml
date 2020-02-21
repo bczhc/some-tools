@@ -161,12 +161,12 @@
         </LinearLayout>
     </LinearLayout>
     <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
-        <Button android:layout_width="37dp"
-                android:layout_height="34dp"
+        <Button android:layout_width="32sp"
+                android:layout_height="25sp"
                 android:id="@+id/setting_btn"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:backgroundTint="@android:color/holo_green_light"
-                tools:targetApi="lollipop"/>
+                android:layout_margin="5sp"
+                android:background="@android:color/holo_green_light"/>
     </RelativeLayout>
 </RelativeLayout>

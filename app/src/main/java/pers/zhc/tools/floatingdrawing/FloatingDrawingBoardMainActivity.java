@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.MainActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.*;
@@ -156,6 +157,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
+        Button toToolsBtn = findViewById(R.id.small_btn);
+        toToolsBtn.setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
         if (longMainActivityMap == null) {
             longMainActivityMap = new HashMap<>();
         }

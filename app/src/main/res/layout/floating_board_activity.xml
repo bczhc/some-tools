@@ -31,4 +31,13 @@
               android:text="@string/drawing_board_name_is_"
               android:id="@+id/f_b_name"
     />
+    <Button android:layout_width="32sp"
+            android:layout_height="25sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="5sp"
+            android:background="@android:color/holo_green_light"
+            android:id="@+id/small_btn"
+    />
 </RelativeLayout>
