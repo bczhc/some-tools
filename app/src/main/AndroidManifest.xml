@@ -251,5 +251,16 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity android:name=".floatingdrawing.RequestCaptureScreenActivity"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppThemeTranslucent"
+                  android:launchMode="singleTask"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

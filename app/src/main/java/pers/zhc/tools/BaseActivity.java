@@ -268,7 +268,7 @@ public class BaseActivity extends Activity {
 
     public static class RequestCode {
         public static final int START_ACTIVITY_4 = 4;
-        public static final int START_ACTIVITY = 0;
+        public static final int START_ACTIVITY = 11;
         public static final int START_ACTIVITY_1 = 1;
         public static final int START_ACTIVITY_2 = 2;
         public static final int START_ACTIVITY_3 = 3;

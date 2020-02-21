@@ -29,4 +29,5 @@
         <item name="android:backgroundDimEnabled">true</item><!-- 模糊 -->
         <item name="android:windowSoftInputMode">stateAlwaysVisible</item><!--显示软键盘-->
     </style>
+    <style name="AppThemeTranslucent" parent="android:Theme.Translucent.NoTitleBar"/>
 </resources>
