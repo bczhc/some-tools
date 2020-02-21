@@ -41,11 +41,11 @@ public class BaseActivity extends Activity {
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
         if (Infos.launcherClass.equals(this.getClass())) {
-            checkUpdate();
+            checkForUpdate(null);
         }
     }
 
-    private void checkUpdate() {
+    protected void checkForUpdate(@Nullable CheckForUpdateResultInterface checkForUpdateResultInterface) {
         new Thread(() -> {
             System.out.println("check update...");
             int myVersionCode = BuildConfig.VERSION_CODE;
@@ -74,6 +74,9 @@ public class BaseActivity extends Activity {
                     long myBuildTIme = Long.parseLong(split1[1]);
                     update = remoteBuildTime > myBuildTIme;
                 } catch (Exception ignored) {
+                }
+                if (checkForUpdateResultInterface != null) {
+                    checkForUpdateResultInterface.onCheckForUpdateResult(update);
                 }
                 if (update) {
                     long finalFileSize = fileSize;
@@ -302,5 +305,9 @@ public class BaseActivity extends Activity {
                 }
             }
         }
+    }
+
+    protected interface CheckForUpdateResultInterface {
+        void onCheckForUpdateResult(boolean update);
     }
 }
