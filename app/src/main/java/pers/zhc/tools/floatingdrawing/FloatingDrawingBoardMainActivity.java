@@ -74,6 +74,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private ImageReader ir;
     private boolean capturing = false;
     private Handler backgroundHandler;
+    private boolean drawMode = false;
 
     private static void uploadPaths(Context context) {
         try {
@@ -292,10 +293,16 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         lp2.format = PixelFormat.RGBA_8888;
         lp.width = this.width;
         lp.height = this.height;
-        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        //noinspection deprecation
+        lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_FULLSCREEN
+                | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
         lp2.width = /*(int) (width * proportionX)*/WindowManager.LayoutParams.WRAP_CONTENT;
         lp2.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        //noinspection deprecation
+        lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
         fbLL = new LinearLayout(this);
         fbLL.setOrientation(LinearLayout.VERTICAL);
         fbLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -506,9 +513,21 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void pickScreenColor() {
-        boolean b = requestCaptureScreen();
-        if (!b) {
-            ToastUtils.show(this, R.string.request_permission_error);
+        stopFloatingWindow();
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setClass(this, RequestCaptureScreenActivity.class);
+        startActivityForResult(intent, RequestCode.START_ACTIVITY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCode.REQUEST_CAPTURE_SCREEN) {
+            startFloatingWindow();
+            if (resultCode == RESULT_OK) {
+                initCapture(data.getExtras());
+            } else ToastUtils.show(this, R.string.please_grant_permission);
         }
     }
 
@@ -536,17 +555,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 capturing = false;
                 return;
             }
-            int imageWidth = image[0].getWidth();
-            int imageHeight = image[0].getHeight();
             Image.Plane plane = image[0].getPlanes()[0];
             ByteBuffer buffer = plane.getBuffer();
             int pixelStride = plane.getPixelStride();
             int rowStride = plane.getRowStride();
             int rowPaddingStride = rowStride - pixelStride * width;
             int rowPadding = rowPaddingStride / pixelStride;
-            Bitmap recordBitmap = Bitmap.createBitmap(width + rowPadding, height, Bitmap.Config.ARGB_8888);
-            recordBitmap.copyPixelsFromBuffer(buffer);
-            Bitmap bitmap = Bitmap.createBitmap(recordBitmap, 0, 0, width, height);
+            Bitmap bitmap = Bitmap.createBitmap(width + rowPadding, height, Bitmap.Config.ARGB_8888);
+            bitmap.copyPixelsFromBuffer(buffer);
             String s = getString(R.string.ok) + bitmap;
             ToastUtils.show(this, s);
             System.out.println(s);
@@ -554,26 +570,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             capturing = false;
         }, getBackgroundHandler());
         System.out.println("image[0] = " + image[0]);
-    }
-
-    private boolean requestCaptureScreen() {
-        MediaProjectionManager mpm = (MediaProjectionManager) getApplicationContext().getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        if (mpm == null) {
-            return false;
-        }
-        Intent screenCaptureIntent = mpm.createScreenCaptureIntent();
-        startActivityForResult(screenCaptureIntent, RequestCode.REQUEST_CAPTURE_SCREEN);
-        return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCode.REQUEST_CAPTURE_SCREEN) {
-            if (resultCode == RESULT_OK) {
-                initCapture(data.getExtras());
-            } else ToastUtils.show(this, R.string.please_grant_permission);
-        }
     }
 
     private void initCapture(Bundle bundle) {
@@ -683,16 +679,26 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
 
     void toggleDrawAndControlMode() {
-        if (lp.flags == (WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)) {
-            lp.flags = WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-            wm.updateViewLayout(pv, lp);
-            childTVs[1].setText(R.string.drawing);
-            strings[1] = getString(R.string.drawing);
-        } else {
-            lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        if (drawMode) {
+            //noinspection deprecation
+            lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                    | WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                    | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
             wm.updateViewLayout(pv, lp);
             childTVs[1].setText(R.string.controlling);
             strings[1] = getString(R.string.controlling);
+            drawMode = false;
+        } else {
+            //noinspection deprecation
+            lp.flags = WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                    | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+            wm.updateViewLayout(pv, lp);
+            childTVs[1].setText(R.string.drawing);
+            strings[1] = getString(R.string.drawing);
+            drawMode = true;
         }
     }
 
