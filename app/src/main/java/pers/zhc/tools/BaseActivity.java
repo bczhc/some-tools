@@ -24,8 +24,7 @@ import pers.zhc.u.common.ReadIS;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -180,7 +179,7 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        app.removeActivity(this);
+        app.pop();
         super.onDestroy();
     }
 
@@ -280,23 +279,23 @@ public class BaseActivity extends Activity {
     }
 
     public static class App {
-        private List<Activity> activities;
+        private Stack<Activity> activities;
 
         App() {
-            activities = new ArrayList<>();
+            activities = new Stack<>();
         }
 
         void addActivity(Activity activity) {
             if (!activities.contains(activity)) {
-                activities.add(activity);
+                activities.push(activity);
             }
         }
 
-        void removeActivity(Activity activity) {
-            activities.remove(activity);
+        void pop() {
+            activities.pop();
         }
 
-        public void removeAllActivities() {
+        public void finishAllActivities() {
             for (Activity activity : activities) {
                 if (activity != null) {
                     activity.finish();
