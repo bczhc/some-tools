@@ -40,7 +40,7 @@ public class BaseActivity extends Activity {
         crashHandler.init(this);
         ExternalJNI.ex(this);
         new PermissionRequester(() -> {
-        }).requestPermission(this, Manifest.permission.INTERNET, 43);
+        }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
         if (Infos.launcherClass.equals(this.getClass())) {
             checkUpdate();
         }
@@ -86,7 +86,7 @@ public class BaseActivity extends Activity {
                         AlertDialog ad = adb.setTitle(R.string.found_update_whether_to_install)
                                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                                 })
-                                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                .setPositiveButton(R.string.confirm, (dialog, which) -> {
                                     ExecutorService es = Executors.newCachedThreadPool();//使用线程池，目的是为了可以终止下载线程
                                     new PermissionRequester(() -> {
                                         Dialog downloadDialog = new Dialog(this);
@@ -161,7 +161,7 @@ public class BaseActivity extends Activity {
                                             }
                                         });
                                         es.shutdown();
-                                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 63);
+                                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
                                 })
                                 .setView(tv).create();
                         DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
@@ -264,6 +264,18 @@ public class BaseActivity extends Activity {
         //        public static String zhcStaticWebUrlString = "http://bczhc.github.io";
 //        public static String zhcStaticWebUrlString = "https://gitee.com/bczhc/web/raw/master";
         public static Class<?> launcherClass = MainActivity.class;
+    }
+
+    public static class RequestCode {
+        public static final int START_ACTIVITY_4 = 4;
+        public static final int START_ACTIVITY = 11;
+        public static final int START_ACTIVITY_1 = 1;
+        public static final int START_ACTIVITY_2 = 2;
+        public static final int START_ACTIVITY_3 = 3;
+        public static final int REQUEST_PERMISSION_INTERNET = 5;
+        public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 6;
+        public static final int REQUEST_CAPTURE_SCREEN = 7;
+        public static final int REQUEST_OVERLAY = 8;
     }
 
     public static class App {

@@ -58,7 +58,8 @@ public class CodecsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new PermissionRequester(this::D).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 13);
+        new PermissionRequester(this::D).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
@@ -75,14 +76,14 @@ public class CodecsActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case 1:
+            case RequestCode.START_ACTIVITY_1:
                 if (data != null) {
                     String folder = data.getStringExtra("result");
                     System.out.println("folder = " + folder);
                     setF(folder);
                 }
                 break;
-            case 2:
+            case RequestCode.START_ACTIVITY_2:
                 if (data != null) {
                     try {
                         String path = data.getStringExtra("result");
@@ -96,7 +97,7 @@ public class CodecsActivity extends BaseActivity {
                     }
                 }
                 break;
-            case 3:
+            case RequestCode.START_ACTIVITY_3:
                 if (data != null) {
                     try {
                         this.savedConfig = this.solveJSON(data.getStringExtra("result"));
@@ -127,7 +128,7 @@ public class CodecsActivity extends BaseActivity {
             intent.putExtra("jsonText", this.jsonText);
             intent.putExtra("file", this.file);
             intent.setClass(this, Settings.class);
-            startActivityForResult(intent, 3);
+            startActivityForResult(intent, RequestCode.START_ACTIVITY_3);
         });
         sBtn.setOnLongClickListener(v -> {
             Intent intent = new Intent();
@@ -142,14 +143,14 @@ public class CodecsActivity extends BaseActivity {
             Intent intent = new Intent();
             intent.putExtra("option", Picker.PICK_FILE);
             intent.setClass(this, Picker.class);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
             overridePendingTransition(R.anim.in_left_and_bottom, 0);
         });
         pF.setOnLongClickListener(v -> {
             Intent intent = new Intent();
             intent.putExtra("option", Picker.PICK_FOLDER);
             intent.setClass(this, Picker.class);
-            startActivityForResult(intent, 2);
+            startActivityForResult(intent, RequestCode.START_ACTIVITY_2);
             overridePendingTransition(R.anim.in_left_and_bottom, 0);
             return true;
         });

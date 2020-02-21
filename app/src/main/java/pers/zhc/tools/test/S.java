@@ -8,14 +8,64 @@ import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import pers.zhc.tools.BaseActivity;
 
 public class S extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MySurfaceView mySurfaceView = new MySurfaceView(this);
-        setContentView(mySurfaceView);
+//        MySurfaceView mySurfaceView = new MySurfaceView(this);
+//        setContentView(mySurfaceView);
+        AStroke aStroke = new AStroke(this);
+        setContentView(aStroke);
+    }
+}
+
+class AStroke extends View {
+    private int width = -1, height = -1;
+    private Paint mPaint;
+    private Path mPath;
+
+
+    public AStroke(Context context) {
+        super(context);
+    }
+
+    private void init() {
+        mPaint = new Paint();
+        mPaint.setColor(Color.RED);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (width == -1 && height == -1) {
+            width = getWidth();
+            height = getHeight();
+            init();
+        }
+        if (mPath != null) {
+            canvas.drawPath(mPath, mPaint);
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX(), y = event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mPath = new Path();
+                mPath.moveTo(x, y);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mPath.lineTo(x, y);
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+        invalidate();
+        return true;
     }
 }
 

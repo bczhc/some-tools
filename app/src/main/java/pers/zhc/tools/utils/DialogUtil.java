@@ -26,14 +26,14 @@ public class DialogUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
             } else                                 //noinspection deprecation
-                window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT, 0, PixelFormat.RGB_888));
+                window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_SYSTEM_ERROR, 0, PixelFormat.RGB_888));
         }
         if (isTransparent) window.setBackgroundDrawableResource(R.color.transparent);
     }
 
     public static AlertDialog createConfirmationAD(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId, int width, int height, boolean application_overlay) {
         AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
-        AlertDialog ad = adb.setPositiveButton(R.string.ok, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId).create();
+        AlertDialog ad = adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId).create();
         setDialogAttr(ad, false, width, height, application_overlay);
         ad.setCanceledOnTouchOutside(true);
         return ad;

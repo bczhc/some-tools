@@ -41,7 +41,7 @@ public class Document extends BaseActivity {
         Button exportBtn = findViewById(R.id.export_btn);
         insertBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, NoteTakingActivity.class);
-            startActivityForResult(intent, 41);
+            startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
             overridePendingTransition(R.anim.in_left_and_bottom, 0);
         });
         Button deleteBtn = findViewById(R.id.delete_btn);
@@ -49,7 +49,7 @@ public class Document extends BaseActivity {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
             adb.setTitle("请输入要删除的t_mills（*表示全部）")
-                    .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String s = et.getText().toString();
                         if (s.matches(".*\\*.*")) {
                             try {
@@ -77,13 +77,13 @@ public class Document extends BaseActivity {
             Intent intent = new Intent();
             intent.setClass(this, Picker.class);
             intent.putExtra("option", Picker.PICK_FILE);
-            startActivityForResult(intent, 51);
+            startActivityForResult(intent, RequestCode.START_ACTIVITY_2);
         });
         exportBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.setClass(this, Picker.class);
             intent.putExtra("option", Picker.PICK_FOLDER);
-            startActivityForResult(intent, 61);
+            startActivityForResult(intent, RequestCode.START_ACTIVITY_3);
         });
         db = getDB(this);
         setSVViews();
@@ -93,10 +93,10 @@ public class Document extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case 41:
+            case RequestCode.START_ACTIVITY_1:
                 setSVViews();
                 break;
-            case 51:
+            case RequestCode.START_ACTIVITY_2:
                 if (data != null) {
                     File file = new File(Objects.requireNonNull(data.getStringExtra("result")));
                     try {
@@ -111,7 +111,7 @@ public class Document extends BaseActivity {
                     setSVViews();
                 }
                 break;
-            case 61:
+            case RequestCode.START_ACTIVITY_3:
                 if (data != null) {
                     String destFileDir = data.getStringExtra("result");
                     String dbPath = db.getPath();
@@ -179,7 +179,7 @@ public class Document extends BaseActivity {
                                         c.close();
                                         intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
                                         intent.putExtra("mills", mills);
-                                        startActivityForResult(intent, 41);
+                                        startActivityForResult(intent, RequestCode.START_ACTIVITY_4);
                                         dialog.dismiss();
                                         overridePendingTransition(R.anim.in_left_and_bottom, 0);
                                     },
@@ -214,7 +214,8 @@ public class Document extends BaseActivity {
                     for (int i = 1; i < 3; i++) {
                         LinearLayout smallLL = new LinearLayout(this);
                         String s = cursor.getString(i);
-                        setSmallTVExtracted(smallLL_LP4, ll.a, smallLL, s);
+                        int length = s.length();
+                        setSmallTVExtracted(smallLL_LP4, ll.a, smallLL, length > 100 ? (s.substring(0, 100) + "\n...") : s);
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         ll.a.setBackground(finalStroke);

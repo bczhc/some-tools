@@ -20,7 +20,7 @@
         <receiver android:name=".floatingdrawing.NotificationClickReceiver"
                   android:exported="true"
                   android:enabled="true" tools:ignore="ExportedReceiver">
-            <intent-filter>
+            <intent-filter android:priority="1000">
                 <action android:name="pers.zhc.tools.START_FB"/>
             </intent-filter>
         </receiver>
@@ -231,6 +231,17 @@
         <activity android:name=".test.SurfaceViewTest"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".floatingdrawing.RequestCaptureScreenActivity"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppThemeTranslucent"
+                  android:launchMode="singleTask"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

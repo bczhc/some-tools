@@ -91,7 +91,7 @@ public class FilePickerRL extends RelativeLayout {
             ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.tv, s.equals("/storage/emulated") ? s + "/0" : s)));
             et.setLayoutParams(lp);
             AlertDialog alertDialog = ad.setTitle(R.string.type_path)
-                    .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         File f = new File(et.getText().toString());
                         if (f.isFile() && type == 1) {
                             resultString = f.getAbsolutePath();
