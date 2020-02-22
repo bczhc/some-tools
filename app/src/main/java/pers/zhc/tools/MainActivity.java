@@ -20,6 +20,7 @@ import pers.zhc.tools.floatingdrawing.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.test.*;
+import pers.zhc.tools.test.service.ServiceActivity;
 import pers.zhc.tools.theme.SetTheme;
 import pers.zhc.tools.toast.AToast;
 import pers.zhc.u.common.ReadIS;
@@ -118,7 +119,8 @@ public class MainActivity extends BaseActivity {
                 R.string.math_expression_evaluation_test,
                 R.string.sensor_test,
                 R.string.input_event,
-                R.string.surface_view_test
+                R.string.surface_view_test,
+                R.string.serviceTest
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -135,7 +137,8 @@ public class MainActivity extends BaseActivity {
                 MathExpressionEvaluationTest.class,
                 SensorTest.class,
                 InputEvent.class,
-                SurfaceViewTest.class
+                SurfaceViewTest.class,
+                ServiceActivity.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
