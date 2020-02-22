@@ -5,21 +5,22 @@ import android.content.Context;
 import android.graphics.*;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.View;
 import pers.zhc.tools.floatingdrawing.MyCanvas;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
 import pers.zhc.u.math.util.CoordinateDouble;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @SuppressLint("ViewConstructor")
-class EpicyclesView extends SurfaceView implements Runnable, SurfaceHolder.Callback {
+class EpicyclesView extends View {
     static double T = 2 * Math.PI, omega = 2 * Math.PI / T;
     private final EpicyclesSequence epicyclesSequence;
-    private int canvasWidth = -1;
-    private int canvasHeight = -1;
+    private int canvasWidth = 0;
+    private int canvasHeight = 0;
     private Bitmap mEpicyclesBitmap;
     private MyCanvas mEpicyclesCanvas;
     private Paint mBitmapPaint;
@@ -28,6 +29,7 @@ class EpicyclesView extends SurfaceView implements Runnable, SurfaceHolder.Callb
     private Paint mVectorPaint;
     private Paint mPathPaint;
     private boolean b = true;
+    private ExecutorService es;
     private GestureDetector gd;
     private CoordinateDouble center;
     private CoordinateDouble lastLineToPoint;
@@ -35,8 +37,6 @@ class EpicyclesView extends SurfaceView implements Runnable, SurfaceHolder.Callb
     private double t;
     private boolean pathMove = true;
     private GestureResolver gestureResolver;
-    private SurfaceHolder mSurfaceHolder;
-    private boolean drawing = true;
 
     EpicyclesView(Context context, EpicyclesSequence epicyclesSequence) {
         super(context);
@@ -58,34 +58,24 @@ class EpicyclesView extends SurfaceView implements Runnable, SurfaceHolder.Callb
         return EpicyclesView.omega;
     }
 
-    private void setStrokeWidth() {
-        float canvasScale = mEpicyclesCanvas.getScale();
-        float lockedCoPaintStrokeWidth = 1F;
-        mCirclePaint.setStrokeWidth(lockedCoPaintStrokeWidth / canvasScale);
-        mCoPaint.setStrokeWidth(mCirclePaint.getStrokeWidth());
-        float lockedVectorPaintStrokeWidth = 2F;
-        mVectorPaint.setStrokeWidth(lockedVectorPaintStrokeWidth / canvasScale);
-        float lockedPathPaintStrokeWidth = 3F;
-        mPathPaint.setStrokeWidth(lockedPathPaintStrokeWidth / canvasScale);
-    }
-
     private void init(Context context) {
-        mSurfaceHolder = this.getHolder();
-        mSurfaceHolder.addCallback(this);
-        mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);
-        setZOrderOnTop(true);
         mBitmapPaint = new Paint();
         mCoPaint = new Paint();
+        mCoPaint.setStrokeWidth(1);
         mCoPaint.setStyle(Paint.Style.STROKE);
         mCoPaint.setColor(Color.GRAY);
         mCirclePaint = new Paint();
         mCirclePaint.setStyle(Paint.Style.STROKE);
+        mCirclePaint.setStrokeWidth(1);
         mCirclePaint.setColor(Color.GRAY);
         mVectorPaint = new Paint();
+        mVectorPaint.setStrokeWidth(2F);
         mVectorPaint.setStyle(Paint.Style.STROKE);
         mPathPaint = new Paint();
+        mPathPaint.setStrokeWidth(3F);
         mPathPaint.setColor(Color.RED);
         mPathPaint.setStyle(Paint.Style.STROKE);
+        es = Executors.newCachedThreadPool();
         gd = new GestureDetector(context, new GestureDetector.OnGestureListener() {
             @Override
             public boolean onDown(MotionEvent e) {
@@ -173,9 +163,20 @@ class EpicyclesView extends SurfaceView implements Runnable, SurfaceHolder.Callb
         center = new CoordinateDouble(0D, 0D);
     }
 
+    private void setStrokeWidth() {
+        float canvasScale = mEpicyclesCanvas.getScale();
+        float lockedCoPaintStrokeWidth = 1F;
+        mCirclePaint.setStrokeWidth(lockedCoPaintStrokeWidth / canvasScale);
+        mCoPaint.setStrokeWidth(mCirclePaint.getStrokeWidth());
+        float lockedVectorPaintStrokeWidth = 2F;
+        mVectorPaint.setStrokeWidth(lockedVectorPaintStrokeWidth / canvasScale);
+        float lockedPathPaintStrokeWidth = 3F;
+        mPathPaint.setStrokeWidth(lockedPathPaintStrokeWidth / canvasScale);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        if (canvasWidth == -1 && canvasHeight == -1) {
+        if (canvasWidth == 0 && canvasHeight == 0) {
             canvasWidth = getWidth();
             canvasHeight = getHeight();
             System.gc();
@@ -183,19 +184,23 @@ class EpicyclesView extends SurfaceView implements Runnable, SurfaceHolder.Callb
             mEpicyclesCanvas = new MyCanvas(mEpicyclesBitmap);
             mEpicyclesCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
         }
+        render(canvas);
     }
+    /*private CoordinateDouble eComplexPower(ComplexValue complexValue, double e_pow_i_num) {
+//        return new CoordinateDouble(Math.cos(e_pow_i_num) * complexValue.)
+    }*/
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (b) {
-                new Thread(this).start();
+                es.execute(this::run);
                 this.b = false;
             }
         }
-        gestureResolver.onTouch(event);
         gd.onTouchEvent(event);
+        gestureResolver.onTouch(event);
         return true;
     }
 
@@ -216,25 +221,29 @@ class EpicyclesView extends SurfaceView implements Runnable, SurfaceHolder.Callb
         return 0;
     }
 
-    @Override
-    public void run() {
-        while (drawing) {
-            Canvas canvas = mSurfaceHolder.lockCanvas();
-            render();
-            canvas.drawBitmap(mEpicyclesBitmap, 0, 0, mBitmapPaint);
-            mSurfaceHolder.unlockCanvasAndPost(canvas);
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    void shutdownES() {
+        es.shutdownNow();
     }
 
-    private void render() {
-        mEpicyclesCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+    private void run() {
+        es.execute(() -> {
+            //noinspection InfiniteLoopStatement
+            for (; ; ) {
+                postInvalidate();
+                try {
+                    Thread.sleep(0, 500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void render(Canvas canvas) {
         center.y = (center.x = 0);
         lastLineToPoint.x = (lastLineToPoint.y = 0);
+        mEpicyclesCanvas.drawColor(Color.WHITE);
+//            清空上一次bitmap上绘画的
         mEpicyclesCanvas.drawLine(0F, canvasHeight / 2F, canvasWidth, canvasHeight / 2F, mCoPaint);
         mEpicyclesCanvas.drawLine(canvasWidth / 2F, 0F, canvasWidth / 2F, canvasHeight, mCoPaint);
 //            画实轴和虚轴 无箭头
@@ -263,20 +272,6 @@ class EpicyclesView extends SurfaceView implements Runnable, SurfaceHolder.Callb
             }
         }
         t += .1F;
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        drawing = true;
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        drawing = false;
+        canvas.drawBitmap(mEpicyclesBitmap, 0F, 0F, mBitmapPaint);
     }
 }

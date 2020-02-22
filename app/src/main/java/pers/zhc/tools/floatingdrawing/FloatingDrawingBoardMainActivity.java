@@ -71,7 +71,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private WindowManager.LayoutParams lp2;
     private ImageView iv;
     private LinearLayout optionsLL;
-    private int fbMeasuredWidth, fbMeasuredHeight;
+    private FloatingViewOnTouchListener.ViewSpec fbMeasuredSpec;
     private String internalPathDir = null;
     private Handler backgroundHandler;
     private boolean drawMode = false;
@@ -80,6 +80,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private int dpi;
     private VirtualDisplay virtualDisplay = null;
     private boolean isCapturing = false;
+    private Intent captureScreenResultData = null;
 
     private static void uploadPaths(Context context) {
         try {
@@ -244,45 +245,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         strings = getResources().getStringArray(R.array.btn_string);
         childTVs = new TextView[strings.length];
         // 更新悬浮窗位置
-        View.OnTouchListener moveTouchListener = new View.OnTouchListener() {
-            private int lastRawX, lastRawY, paramX, paramY;
-            private float lastX, lastY;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float x = event.getX();
-                float y = event.getY();
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        lastRawX = (int) event.getRawX();
-                        lastRawY = (int) event.getRawY();
-                        lastX = event.getX();
-                        lastY = event.getY();
-                        paramX = lp2.x;
-                        paramY = lp2.y;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        int dx = (int) event.getRawX() - lastRawX;
-                        int dy = (int) event.getRawY() - lastRawY;
-                        int lp2_x = paramX + dx;
-                        int lp2_y = paramY + dy;
-                        int constrainX, constrainY;
-                        constrainX = lp2_x - HSVAColorPickerRL.limitValue(lp2_x, ((int) (-width / 2F + fbMeasuredWidth / 2F)), ((int) (width / 2F - fbMeasuredWidth / 2F)));
-                        constrainY = lp2_y - HSVAColorPickerRL.limitValue(lp2_y, ((int) (-height / 2F + fbMeasuredHeight / 2F)), ((int) (height / 2F - fbMeasuredHeight / 2F)));
-                        if (constrainX == 0) lp2.x = lp2_x;
-                        else paramX -= constrainX;
-                        if (constrainY == 0) lp2.y = lp2_y;
-                        else paramY -= constrainY;
-                        // 更新悬浮窗位置
-                        wm.updateViewLayout(fbLL, lp2);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (Math.abs(lastX - x) < 1 && Math.abs(lastY - y) < 1) v.performClick();
-                        break;
-                }
-                return true;
-            }
-        };
         pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         lp = new WindowManager.LayoutParams();
         lp2 = new WindowManager.LayoutParams();
@@ -344,12 +306,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         this.iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
 //        iv.setImageBitmap(icon);
         iv.setImageIcon(Icon.createWithResource(this, R.drawable.ic_db));
-        iv.setOnTouchListener(moveTouchListener);
         iv.setOnClickListener(v -> {
             fbLL.removeAllViews();
             fbLL.addView(optionsLL);
             measureFB_LL();
         });
+        this.fbMeasuredSpec = new FloatingViewOnTouchListener.ViewSpec();
+        FloatingViewOnTouchListener floatingViewOnTouchListener = new FloatingViewOnTouchListener(lp2, wm, fbLL, width, height, fbMeasuredSpec);
+        iv.setOnTouchListener(floatingViewOnTouchListener);
         for (int i = 0; i < strings.length; i++) {
             childTVs[i] = new TextView(this);
             LinearLayout smallLL = new LinearLayout(this);
@@ -360,6 +324,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             childTVs[i].setText(strings[i]);
             childTVs[i].setBackgroundColor(TVsColor);
             childTVs[i].setTextColor(textsColor);
+            childTVs[i].setOnTouchListener(floatingViewOnTouchListener);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                 childTVs[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
@@ -510,7 +475,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 System.out.println("i = " + finalI);
             });
             smallLL.setGravity(Gravity.CENTER);
-            childTVs[i].setOnTouchListener(moveTouchListener);
             smallLL.addView(childTVs[i]);
             optionsLL.addView(smallLL);
         }
@@ -525,7 +489,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (requestCode == RequestCode.REQUEST_CAPTURE_SCREEN) {
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
-                        setupProjection(data);
+                        captureScreenResultData = data;
+                        setupProjection();
                     } else ToastUtils.show(this, R.string.request_permission_error);
                 } else ToastUtils.show(this, R.string.please_grant_permission);
             }
@@ -539,10 +504,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }));
     }
 
-    private void setupProjection(Intent resultData) {
+    private void setupProjection() {
         mediaProjectionManager = (MediaProjectionManager) getApplicationContext().getSystemService(MEDIA_PROJECTION_SERVICE);
-        if (mediaProjectionManager != null) {
-            mediaProjection = mediaProjectionManager.getMediaProjection(RESULT_OK, resultData);
+        if (mediaProjectionManager != null && captureScreenResultData != null) {
+            mediaProjection = mediaProjectionManager.getMediaProjection(RESULT_OK, captureScreenResultData);
         } else ToastUtils.show(this, R.string.acquire_service_failed);
     }
 
@@ -608,8 +573,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             }
             ir.setOnImageAvailableListener(null, null);
         }, getBackgroundHandler());
-        virtualDisplay = mediaProjection.createVirtualDisplay("ScreenCapture", width, height, dpi
-                , DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, ir.getSurface(), null, null);
+        while (true) {
+            try {
+                virtualDisplay = mediaProjection.createVirtualDisplay("ScreenCapture", width, height, dpi
+                        , DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, ir.getSurface(), null, null);
+                break;
+            } catch (Exception ignored) {
+                setupProjection();
+            }
+        }
     }
 
     private void initCapture() {
@@ -663,8 +635,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private void measureFB_LL() {
         int mode = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         fbLL.measure(mode, mode);
-        fbMeasuredWidth = fbLL.getMeasuredWidth();
-        fbMeasuredHeight = fbLL.getMeasuredHeight();
+        fbMeasuredSpec.width = fbLL.getMeasuredWidth();
+        fbMeasuredSpec.height = fbLL.getMeasuredHeight();
     }
 
     @Override

@@ -13,13 +13,11 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.tools.utils.DisplayUtil;
 import pers.zhc.tools.utils.ToastUtils;
 
 
@@ -84,22 +82,21 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         LinearLayout.LayoutParams ll_lp = new LinearLayout.LayoutParams(width, height);
         ll.setLayoutParams(ll_lp);
         ll.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout barLL = new LinearLayout(context);
-        barLL.setLayoutParams(new LinearLayout.LayoutParams(width, height / 12));
-        barLL.setOrientation(LinearLayout.HORIZONTAL);
+        RelativeLayout barRL = new RelativeLayout(context);
+        barRL.setLayoutParams(new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
         TextView tv = new TextView(context);
+        tv.setText(R.string.h_s_v_a_color_picker);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             tv.setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
-        } else tv.setTextSize(25F);
-        tv.setText(R.string.h_s_v_a_color_picker);
-        tv.setBackgroundColor(Color.WHITE);
-        tv.setWidth(width / 2);
-        tv.setHeight(height / 12);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            tv.setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
+        } else {
+            float r = ((float) height) / 12;
+            tv.setTextSize(DisplayUtil.px2sp(context, r));
         }
-        tv.setOnClickListener(v -> {
+        tv.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        tv.setBackgroundColor(Color.WHITE);
+        tv.setId(R.id.tv);
+        barRL.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(context);
             EditText editText = new EditText(context);
             int color = this.getColor();
@@ -128,12 +125,15 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             Selection.selectAll(editText.getText());
             DialogUtil.setADWithET_autoShowSoftKeyboard(editText, ad);
         });
-        barLL.addView(tv);
+        barRL.addView(tv);
         vv = new View(context);
-        vv.setLayoutParams(new ViewGroup.LayoutParams(width / 2, ViewGroup.LayoutParams.MATCH_PARENT));
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.tv);
+        layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.tv);
+        vv.setLayoutParams(layoutParams);
         vv.setBackgroundColor(Color.HSVToColor(alpha, hsv));
-        barLL.addView(vv);
-        ll.addView(barLL);
+        barRL.addView(vv);
+        ll.addView(barRL);
         LinearLayout[] linearLayouts = new LinearLayout[hsvAView.length];
         for (int i = 0; i < linearLayouts.length; i++) {
             linearLayouts[i] = new LinearLayout(context);
