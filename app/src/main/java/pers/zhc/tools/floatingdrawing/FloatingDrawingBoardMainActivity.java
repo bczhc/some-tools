@@ -43,7 +43,6 @@ import pers.zhc.u.common.ReadIS;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -80,6 +79,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private MediaProjection mediaProjection = null;
     private int dpi;
     private VirtualDisplay virtualDisplay = null;
+    private boolean isCapturing = false;
 
     private static void uploadPaths(Context context) {
         try {
@@ -565,6 +565,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void captureScreen() {
+        if (isCapturing) {
+            ToastUtils.show(this, R.string.have_capture_task);
+            Log.d("d", "capturing...");
+            return;
+        }
+        isCapturing = true;
         ImageReader ir = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 1);
         ir.setOnImageAvailableListener(reader -> {
             Log.d("d", "callback! " + reader);
@@ -573,7 +579,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 image = reader.acquireLatestImage();
                 if (image != null) {
                     Log.d("d", "image! " + image);
-                    int width = image.getWidth();
+                    /*int width = image.getWidth();
                     int height = image.getHeight();
                     final Image.Plane plane = image.getPlanes()[0];
                     final ByteBuffer buffer = plane.getBuffer();
@@ -582,7 +588,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     int rowPadding = rowStride - pixelStride * width;
                     Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
                     bitmap.copyPixelsFromBuffer(buffer);
-                    image.close();
+                    image.close();*/
                     System.out.println("image = " + image);
                     ToastUtils.show(this, getString(R.string.ok) + image);
                 } else {
@@ -598,6 +604,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 if (virtualDisplay != null) {
                     virtualDisplay.release();
                 }
+                isCapturing = false;
             }
             ir.setOnImageAvailableListener(null, null);
         }, getBackgroundHandler());
