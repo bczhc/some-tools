@@ -200,5 +200,6 @@
     <string name="acquire_service_failed">获取服务失败</string>
     <string name="current_version_is_the_latest">当前已为最新版本</string>
     <string name="serviceTest">service_test</string>
+    <string name="have_capture_task">有截图任务中</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
