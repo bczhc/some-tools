@@ -2,25 +2,45 @@ package pers.zhc.tools.test;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.*;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
+import android.view.*;
 import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener;
+import pers.zhc.tools.floatingdrawing.ScreenColorPickerView;
+import pers.zhc.tools.utils.ToastUtils;
 
 public class S extends BaseActivity {
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(this, this.getClass()));
+        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE);
+        if (wm == null) {
+            ToastUtils.show(this, "wm is null");
+            return;
+        }
+        ScreenColorPickerView screenColorPickerView = new ScreenColorPickerView(this);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        //noinspection deprecation
+        lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        lp.format = PixelFormat.RGBA_8888;
+        Point point = new Point();
+        getWindowManager().getDefaultDisplay().getSize(point);
+        int screenWidth = point.x;
+        int screenHeight = point.y;
+        int wMode = View.MeasureSpec.makeMeasureSpec(screenWidth, View.MeasureSpec.EXACTLY);
+        int hMode = View.MeasureSpec.makeMeasureSpec(screenHeight, View.MeasureSpec.EXACTLY);
+        screenColorPickerView.measure(wMode, hMode);
+        int measuredWidth = screenColorPickerView.getMeasuredWidth();
+        int measuredHeight = screenColorPickerView.getMeasuredHeight();
+        FloatingViewOnTouchListener listener = new FloatingViewOnTouchListener(lp, wm, screenColorPickerView, screenWidth, screenHeight, new FloatingViewOnTouchListener.ViewSpec(measuredWidth, measuredHeight));
+        screenColorPickerView.setOnTouchListener(listener);
+        lp.width = screenWidth;
+        lp.height = screenHeight;
+        wm.addView(screenColorPickerView, lp);
     }
 }
 
