@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.hardware.display.DisplayManager;
+import android.hardware.display.VirtualDisplay;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.projection.MediaProjection;
@@ -49,8 +50,8 @@ import java.util.*;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingDrawingBoardMainActivity extends BaseActivity {
-    static Map<Long, Runnable> longRunnableMap;//memory leak?? longActivityMap->longRunnableMap
-    static RequestPermissionInterface requestPermissionInterface = null;
+    static Map<Long, Activity> longActivityMap;//memory leak?
+    RequestPermissionInterface requestPermissionInterface = null;
     boolean mainDrawingBoardNotDisplay = false;
     private WindowManager wm = null;
     private LinearLayout fbLL;
@@ -78,6 +79,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private MediaProjectionManager mediaProjectionManager = null;
     private MediaProjection mediaProjection = null;
     private int dpi;
+    private VirtualDisplay virtualDisplay = null;
+    private boolean isCapturing = false;
 
     private static void uploadPaths(Context context) {
         try {
@@ -159,10 +162,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
-        Button toToolsBtn = findViewById(R.id.small_btn);
-        toToolsBtn.setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
-        if (longRunnableMap == null) {
-            longRunnableMap = new HashMap<>();
+        if (longActivityMap == null) {
+            longActivityMap = new HashMap<>();
         }
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("internalPathFile")) {
@@ -565,39 +566,51 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void captureScreen() {
+        if (isCapturing) {
+            ToastUtils.show(this, R.string.have_capture_task);
+            Log.d("d", "capturing...");
+            return;
+        }
+        isCapturing = true;
         ImageReader ir = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 1);
         ir.setOnImageAvailableListener(reader -> {
             Log.d("d", "callback! " + reader);
-            Image image = reader.acquireLatestImage();
-            if (image != null) {
-                Log.d("d", "image! " + image);
-                image.close();
-            } else {
-                Log.d("d", "image is null.");
+            Image image = null;
+            try {
+                image = reader.acquireLatestImage();
+                if (image != null) {
+                    Log.d("d", "image! " + image);
+                    /*int width = image.getWidth();
+                    int height = image.getHeight();
+                    final Image.Plane plane = image.getPlanes()[0];
+                    final ByteBuffer buffer = plane.getBuffer();
+                    int pixelStride = plane.getPixelStride();
+                    int rowStride = plane.getRowStride();
+                    int rowPadding = rowStride - pixelStride * width;
+                    Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
+                    bitmap.copyPixelsFromBuffer(buffer);
+                    image.close();*/
+                    System.out.println("image = " + image);
+                    ToastUtils.show(this, getString(R.string.ok) + image);
+                } else {
+                    Log.d("d", "image is null.");
+                }
+            } catch (Exception e) {
+                Common.showException(e, this);
+            } finally {
+                if (image != null) {
+                    image.close();
+                }
+                ir.close();
+                if (virtualDisplay != null) {
+                    virtualDisplay.release();
+                }
+                isCapturing = false;
             }
+            ir.setOnImageAvailableListener(null, null);
         }, getBackgroundHandler());
-        mediaProjection.createVirtualDisplay("ScreenCapture", width, height, dpi
-                , DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY, ir.getSurface(), null, null);
-        /*ir.setOnImageAvailableListener(reader -> {
-            Image image = reader.acquireLatestImage();
-            if (image == null) {
-                capturing = false;
-                return;
-            }
-            int width = image.getWidth();
-            int height = image.getHeight();
-            final Image.Plane[] planes = image.getPlanes();
-            final ByteBuffer buffer = planes[0].getBuffer();
-            int pixelStride = planes[0].getPixelStride();
-            int rowStride = planes[0].getRowStride();
-            int rowPadding = rowStride - pixelStride * width;
-            Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
-            bitmap.copyPixelsFromBuffer(buffer);
-            image.close();
-            capturing = false;
-            System.out.println("image = " + image);
-            ToastUtils.show(this, getString(R.string.ok) + image);
-        }, getBackgroundHandler());*/
+        virtualDisplay = mediaProjection.createVirtualDisplay("ScreenCapture", width, height, dpi
+                , DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, ir.getSurface(), null, null);
     }
 
     private void initCapture() {
@@ -605,6 +618,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, RequestCaptureScreenActivity.class);
+        intent.putExtra("mills", this.currentInstanceMills);
         startActivityForResult(intent, RequestCode.REQUEST_CAPTURE_SCREEN);
     }
 
@@ -625,7 +639,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         int index = fileNameExtension.lastIndexOf('.');
                         fileName = fileNameExtension.substring(0, index);
                     }
-                    if (FloatingDrawingBoardMainActivity.longRunnableMap.containsKey(Long.parseLong(fileName))) {
+                    if (FloatingDrawingBoardMainActivity.longActivityMap.containsKey(Long.parseLong(fileName))) {
                         continue;
                     }
                 } catch (NumberFormatException ignored) {
@@ -681,8 +695,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow() {
         pv.setOS(currentInternalPathFile, true);
-        if (!longRunnableMap.containsKey(currentInstanceMills)) {
-            longRunnableMap.put(currentInstanceMills, this::recover);
+        if (!longActivityMap.containsKey(currentInstanceMills)) {
+            longActivityMap.put(currentInstanceMills, this);
         }
         try {
             wm.addView(pv, lp);
@@ -727,7 +741,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private void exit() {
         stopFloatingWindow();
         new Thread(() -> uploadPaths(this)).start();
-        FloatingDrawingBoardMainActivity.longRunnableMap.remove(currentInstanceMills);
+        FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMills);
         this.fbSwitch.setChecked(false);
         pv.closePathRecorderOS();
     }
