@@ -24,6 +24,12 @@
                 <action android:name="pers.zhc.tools.START_FB"/>
             </intent-filter>
         </receiver>
+        <service android:name=".test.service.MyService"
+                 android:process=":service"
+                 android:enabled="true"
+                 android:exported="true"
+                 android:icon="@drawable/ic_zhc_logo_500x500"
+                 android:label="s1" tools:ignore="ExportedService"/>
         <provider android:authorities="pers.zhc.tools.fileprovider"
                   android:name="android.support.v4.content.FileProvider"
                   android:exported="false"
@@ -254,7 +260,16 @@
         <activity android:name=".floatingdrawing.RequestCaptureScreenActivity"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppThemeTranslucent"
-                  android:launchMode="singleTask"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".test.service.ServiceActivity"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
