@@ -50,8 +50,8 @@ import java.util.*;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingDrawingBoardMainActivity extends BaseActivity {
-    static Map<Long, Runnable> longRunnableMap;//memory leak?? longActivityMap->longRunnableMap
-    static RequestPermissionInterface requestPermissionInterface = null;
+    static Map<Long, Activity> longActivityMap;//memory leak?
+    RequestPermissionInterface requestPermissionInterface = null;
     boolean mainDrawingBoardNotDisplay = false;
     private WindowManager wm = null;
     private LinearLayout fbLL;
@@ -161,8 +161,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.floating_board_activity);
-        if (longRunnableMap == null) {
-            longRunnableMap = new HashMap<>();
+        if (longActivityMap == null) {
+            longActivityMap = new HashMap<>();
         }
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("internalPathFile")) {
@@ -610,6 +610,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, RequestCaptureScreenActivity.class);
+        intent.putExtra("mills", this.currentInstanceMills);
         startActivityForResult(intent, RequestCode.REQUEST_CAPTURE_SCREEN);
     }
 
@@ -630,7 +631,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         int index = fileNameExtension.lastIndexOf('.');
                         fileName = fileNameExtension.substring(0, index);
                     }
-                    if (FloatingDrawingBoardMainActivity.longRunnableMap.containsKey(Long.parseLong(fileName))) {
+                    if (FloatingDrawingBoardMainActivity.longActivityMap.containsKey(Long.parseLong(fileName))) {
                         continue;
                     }
                 } catch (NumberFormatException ignored) {
@@ -686,8 +687,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow() {
         pv.setOS(currentInternalPathFile, true);
-        if (!longRunnableMap.containsKey(currentInstanceMills)) {
-            longRunnableMap.put(currentInstanceMills, this::recover);
+        if (!longActivityMap.containsKey(currentInstanceMills)) {
+            longActivityMap.put(currentInstanceMills, this);
         }
         try {
             wm.addView(pv, lp);
@@ -732,7 +733,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private void exit() {
         stopFloatingWindow();
         new Thread(() -> uploadPaths(this)).start();
-        FloatingDrawingBoardMainActivity.longRunnableMap.remove(currentInstanceMills);
+        FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMills);
         this.fbSwitch.setChecked(false);
         pv.closePathRecorderOS();
     }

@@ -13,9 +13,13 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ToastUtils;
 
 public class RequestCaptureScreenActivity extends Activity {
+    private long timeMills;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        timeMills = intent.getLongExtra("mills", 0L);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
@@ -38,10 +42,13 @@ public class RequestCaptureScreenActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        RequestPermissionInterface requestPermissionInterface = FloatingDrawingBoardMainActivity.requestPermissionInterface;
-        if (requestPermissionInterface != null) {
-            requestPermissionInterface.onRequestCallback(requestCode, resultCode, data);
-        }
+        FloatingDrawingBoardMainActivity activity = (FloatingDrawingBoardMainActivity) FloatingDrawingBoardMainActivity.longActivityMap.get(timeMills);
+        if (activity != null) {
+            RequestPermissionInterface requestPermissionInterface = activity.requestPermissionInterface;
+            if (requestPermissionInterface != null) {
+                requestPermissionInterface.onRequestCallback(requestCode, resultCode, data);
+            }
+        } else ToastUtils.show(this, R.string.native_error);
         finish();
     }
 }
