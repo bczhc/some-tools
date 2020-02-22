@@ -18,6 +18,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.utils.*;
 import pers.zhc.u.common.ReadIS;
 
@@ -265,7 +266,7 @@ public class BaseActivity extends Activity {
         public static String zhcStaticWebUrlString = "http://bczhc.gitee.io/web";
         //        public static String zhcStaticWebUrlString = "http://bczhc.github.io";
 //        public static String zhcStaticWebUrlString = "https://gitee.com/bczhc/web/raw/master";
-        public static Class<?> launcherClass = MainActivity.class;
+        public static Class<?> launcherClass = FloatingDrawingBoardMainActivity.class;
     }
 
     public static class RequestCode {

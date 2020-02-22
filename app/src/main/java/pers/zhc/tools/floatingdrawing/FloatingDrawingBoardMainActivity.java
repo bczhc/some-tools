@@ -538,6 +538,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 runOnUiThread(() -> ToastUtils.show(this, R.string.current_version_is_the_latest));
             }
         }));
+        findViewById(R.id.small_btn).setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
     }
 
     private void setupProjection(Intent resultData) {
