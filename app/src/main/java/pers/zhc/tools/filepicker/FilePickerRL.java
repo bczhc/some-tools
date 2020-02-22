@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -44,8 +45,6 @@ public class FilePickerRL extends RelativeLayout {
     private int white = Color.WHITE;
     private int type;
     private Activity ctx;
-    private Collator stringComparator;
-    private Comparator<File> comparator;
 
     public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath, Runnable cancelAction, OnPickedResultActionInterface pickedResultAction) {
         super(context);
@@ -98,9 +97,7 @@ public class FilePickerRL extends RelativeLayout {
                             ok.performClick();
                         } else {
                             File[] listFiles = f.listFiles();
-                            if (listFiles != null) {
-                                Arrays.sort(listFiles, comparator);
-                            }
+                            recombine(listFiles);
                             this.currentPath = f;
                             fillViews(listFiles, lp, grey, justPicked, ll);
                         }
@@ -115,13 +112,9 @@ public class FilePickerRL extends RelativeLayout {
         this.ll = findViewById(R.id.ll);
         new Thread(() -> {
             File[] listFiles = currentPath.listFiles();
-            if (listFiles != null) {
-                Arrays.sort(listFiles, comparator);
-            }
+            recombine(listFiles);
             fillViews(listFiles, lp, grey, justPicked, ll);
         }).start();
-        stringComparator = Collator.getInstance(Locale.CHINA);
-        comparator = (o1, o2) -> stringComparator.compare(o1.getName(), o2.getName());
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -170,9 +163,7 @@ public class FilePickerRL extends RelativeLayout {
                             } else {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = currentFile.listFiles();
-                                if (listFiles1 != null) {
-                                    Arrays.sort(listFiles1, comparator);
-                                }
+                                recombine(listFiles1);
                                 fillViews(listFiles1, lp, unselectedColor, justPicked, ll);
                             }
                         });
@@ -188,9 +179,7 @@ public class FilePickerRL extends RelativeLayout {
                             if (currentFile.isDirectory()) {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = currentFile.listFiles();
-                                if (listFiles1 != null) {
-                                    Arrays.sort(listFiles1, comparator);
-                                }
+                                recombine(listFiles1);
                                 fillViews(listFiles1, lp, unselectedColor, justPicked, ll);
                             }
                         });
@@ -240,14 +229,38 @@ public class FilePickerRL extends RelativeLayout {
             File[] listFiles = new File[0];
             if (parentFile != null) {
                 listFiles = parentFile.listFiles();
-                if (listFiles != null) {
-                    Arrays.sort(listFiles, comparator);
-                }
+                recombine(listFiles);
             }
             fillViews(listFiles, lp, grey, justPicked, ll);
             this.currentPath = parentFile;
         } catch (Exception e) {
             showException(e, ctx);
+        }
+    }
+
+    private void recombine(@Nullable File[] files) {
+        if (files != null) {
+            Collator stringComparator = Collator.getInstance(Locale.CHINA);
+            Comparator<File> comparator = (o1, o2) -> stringComparator.compare(o1.getName(), o2.getName());
+            Arrays.sort(files, comparator);
+            /*Comparator<File> extensionComparator = (o1, o2) -> {
+                boolean o1File = o1.isFile();
+                boolean o2File = o2.isFile();
+                if ((o1File && o2File) || (!o1File && !o2File)) return 0;
+                if (o1File) return 1;
+                return -1;
+            };*/
+            int length = files.length;
+            File tmp;
+            for (int i = 0; i < length; i++) {
+                if (files[i].isDirectory() && i != 0) {
+                    for (int j = i; j >= 0; --j) {
+                        tmp = files[i];
+                        files[i] = files[i - 1];
+                        files[i - 1] = tmp;
+                    }
+                }
+            }
         }
     }
 
