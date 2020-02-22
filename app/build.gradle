@@ -24,11 +24,10 @@ static gVersion() {
     def date = Date.newInstance()
     def dateString = new SimpleDateFormat("yyyyMMdd").format(date)
     def time = new SimpleDateFormat("HHmmss").format(date)
-    def which = 2
-    def verString = "6.1.0.1"
+    def verString = "6.1.1.2"
     def emoji = ranEmoji()
     return [
-            Integer.parseInt(dateString + which),
+            Integer.parseInt(dateString),
             "${verString}_${dateString}${time}_$emoji"
     ]
 }
