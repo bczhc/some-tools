@@ -24,17 +24,18 @@ import pers.zhc.tools.utils.ToastUtils;
 @SuppressWarnings("SameParameterValue")
 @SuppressLint("ViewConstructor")
 abstract class HSVAColorPickerRL extends RelativeLayout {
-    private float[] hsv = new float[3];
+    private final float[] hsv = new float[3];
     private int alpha;
-    private int width, height;
-    private Context context;
+    private final int width;
+    private final int height;
+    private final Context context;
     private View[] hsvAView;
     private View vv;
-    private float[][] temp = new float[4][4];
-    private float[] currentXPos = new float[4];
-    private Paint oppositeColorPaint;
-    private float lW = 1.5F;
-    private float[] resultHSVA = new float[4];
+    private final float[][] temp = new float[4][4];
+    private final float[] currentXPos = new float[4];
+    private final Paint oppositeColorPaint;
+    private final float lW = 1.5F;
+    private final float[] resultHSVA = new float[4];
 
     /**
      * @param context      ctx
@@ -181,7 +182,8 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     }
 
     private class HView extends View {
-        private int hW, hH;
+        private final int hW;
+        private final int hH;
         private Paint hPaint;
 
         HView(Context context, int width, int height) {
@@ -224,7 +226,8 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     }
 
     private class SView extends View {
-        private int sW, sH;
+        private final int sW;
+        private final int sH;
         private Paint sPaint;
 
         SView(Context context, int sW, int sH) {
@@ -268,7 +271,8 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     }
 
     private class VView extends View {
-        private int vW, vH;
+        private final int vW;
+        private final int vH;
         private Paint vPaint;
 
         VView(Context context, int vW, int vH) {
@@ -316,7 +320,8 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     }*/
 
     private class AView extends View {
-        private int aW, aH;
+        private final int aW;
+        private final int aH;
         private Paint aPaint;
 
         AView(Context context, int aW, int aH) {

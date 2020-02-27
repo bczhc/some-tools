@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ComplexFunction {
-    private List<ComplexValue> complexValueList;
+    private final List<ComplexValue> complexValueList;
 
     ComplexFunction() {
         complexValueList = new ArrayList<>();

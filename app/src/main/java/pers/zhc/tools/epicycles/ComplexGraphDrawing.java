@@ -109,7 +109,7 @@ public class ComplexGraphDrawing extends BaseActivity {
     }
 
     private static class SynchronizedPut {
-        private EpicyclesSequence sequence;
+        private final EpicyclesSequence sequence;
 
         public SynchronizedPut(EpicyclesSequence sequence) {
             this.sequence = sequence;

@@ -49,7 +49,7 @@ import java.util.*;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingDrawingBoardMainActivity extends BaseActivity {
-    static Map<Long, Activity> longActivityMap;//memory leak?
+    static Map<Long, Context> longActivityMap;//memory leak?
     RequestPermissionInterface requestPermissionInterface = null;
     boolean mainDrawingBoardNotDisplay = false;
     private WindowManager wm = null;
@@ -64,7 +64,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private Runnable importPathFileDoneAction;
     private long currentInstanceMills;
     private TextView[] childTVs;
-    private float[][] hsvaFloats = new float[3][0];
+    private final float[][] hsvaFloats = new float[3][0];
     private Switch fbSwitch;
     private String[] strings;
     private WindowManager.LayoutParams lp;
@@ -648,7 +648,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         fbSwitch = findViewById(R.id.f_b_switch);
         fbSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                new CheckOverlayPermission() {
+                new CheckOverlayPermission(this) {
                     @Override
                     void granted() {
                         startFloatingWindow();
@@ -1158,12 +1158,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
     }
 
-    private abstract class CheckOverlayPermission {
-        public CheckOverlayPermission() {
-            if (!Settings.canDrawOverlays(FloatingDrawingBoardMainActivity.this)) {
+
+    private static abstract class CheckOverlayPermission {
+        public CheckOverlayPermission(Activity activity) {
+            if (!Settings.canDrawOverlays(activity)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, RequestCode.REQUEST_OVERLAY);
+                        Uri.parse("package:" + activity.getPackageName()));
+                activity.startActivityForResult(intent, RequestCode.REQUEST_OVERLAY);
                 denied();
             } else granted();
         }

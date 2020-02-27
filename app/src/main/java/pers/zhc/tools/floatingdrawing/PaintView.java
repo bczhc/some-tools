@@ -45,8 +45,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     //使用LinkedList 模拟栈，来保存 Path
     private SynchronisedList<PathBean> undoList;
     private SynchronisedList<PathBean> redoList;
-    private JNI jni = new JNI();
-    private Context ctx;
+    private final JNI jni = new JNI();
+    private final Context ctx;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
     private GestureResolver gestureResolver;
@@ -787,8 +787,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      * 路径集合
      */
     static class PathBean {
-        Path path;
-        Paint paint;
+        final Path path;
+        final Paint paint;
 
         PathBean(Path path, Paint paint) {
             this.path = path;

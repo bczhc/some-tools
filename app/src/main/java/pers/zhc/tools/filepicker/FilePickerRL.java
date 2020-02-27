@@ -28,7 +28,7 @@ import static pers.zhc.tools.utils.Common.showException;
 @SuppressLint("ViewConstructor")
 public class FilePickerRL extends RelativeLayout {
     @SuppressWarnings("unused")
-    public static int TYPE_PICK_FILE = 1;
+    public static final int TYPE_PICK_FILE = 1;
     @SuppressWarnings("unused")
     public static int TYPE_PICK_FOLDER = 2;
     private final File initialPath;
@@ -41,10 +41,10 @@ public class FilePickerRL extends RelativeLayout {
     private File currentPath;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
-    private int grey = Color.parseColor("#DCDCDC");
-    private int white = Color.WHITE;
-    private int type;
-    private Activity ctx;
+    private final int grey = Color.parseColor("#DCDCDC");
+    private final int white = Color.WHITE;
+    private final int type;
+    private final Activity ctx;
 
     public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath, Runnable cancelAction, OnPickedResultActionInterface pickedResultAction) {
         super(context);
