@@ -9,7 +9,7 @@ import android.view.View;
 
 @SuppressLint("ViewConstructor")
 public class StrokeWatchView extends View {
-    private Paint mPaint;
+    private final Paint mPaint;
     private float strokeWidth;
 
     StrokeWatchView(Context context) {

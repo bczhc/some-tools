@@ -3,7 +3,7 @@ package pers.zhc.tools.utils;
 import android.view.MotionEvent;
 
 public class GestureResolver {
-    private GestureInterface gestureInterface;
+    private final GestureInterface gestureInterface;
     private float lastX = -1, lastY = -1;
     private float lastDistance = -1;
     private float firstDistance = -1;
@@ -131,6 +131,7 @@ public class GestureResolver {
          * @param distanceY y方向的变化（与上一次触摸的y距离）
          * @param event     事件
          */
+        @SuppressWarnings({"EmptyMethod", "unused"})
         void onOnePointScroll(float distanceX, float distanceY, MotionEvent event);
     }
 }

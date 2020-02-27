@@ -1,7 +1,9 @@
 package pers.zhc.tools.utils;
 
 public class RGB {
-    public int r, g, b;
+    public final int r;
+    public final int g;
+    public final int b;
 
     RGB(int r, int g, int b) {
         this.r = r;

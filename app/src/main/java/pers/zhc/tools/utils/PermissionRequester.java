@@ -6,7 +6,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 public class PermissionRequester {
-    private PermissionRequesterInterface requesterInterface;
+    private final PermissionRequesterInterface requesterInterface;
 
     public PermissionRequester(PermissionRequesterInterface permissionRequesterInterface) {
         this.requesterInterface = permissionRequesterInterface;

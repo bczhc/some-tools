@@ -43,7 +43,7 @@ public class CodecsActivity extends BaseActivity {
     private boolean isRunning = false;
     private Button dB = null;
     private int dT = 0;//qmc
-    private CountDownLatch latch;
+    private final CountDownLatch latch;
     private String jsonText;
     private List<List<String>> savedConfig;
     private File file = null;

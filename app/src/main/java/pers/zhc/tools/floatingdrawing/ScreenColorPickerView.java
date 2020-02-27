@@ -12,7 +12,6 @@ import android.view.View;
 
 public class ScreenColorPickerView extends View {
     private int width = -1, height = -1;
-    private Paint mPaint;
 
     public ScreenColorPickerView(Context context) {
         super(context);
@@ -32,7 +31,7 @@ public class ScreenColorPickerView extends View {
     }
 
     private void init() {
-        mPaint = new Paint();
+        Paint mPaint = new Paint();
         mPaint.setStrokeWidth(10F);
     }
 
