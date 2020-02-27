@@ -13,7 +13,7 @@ import pers.zhc.tools.utils.GestureResolver;
 
 @SuppressLint("ViewConstructor")
 public class AView extends View {
-    private Bitmap bitmap;
+    private final Bitmap bitmap;
     private MyCanvas mCanvas;
     private Bitmap mBitmap;
     private int width = 0, height = 0;

@@ -44,18 +44,18 @@ public class CrashHandler implements UncaughtExceptionHandler {
     public static final String TAG = "CrashHandler";
     // CrashHandler实例
     @SuppressLint("StaticFieldLeak")
-    private static CrashHandler INSTANCE = new CrashHandler();
-    private CountDownLatch cdl = new CountDownLatch(2);
+    private static final CrashHandler INSTANCE = new CrashHandler();
+    private final CountDownLatch cdl = new CountDownLatch(2);
     // 系统默认的UncaughtException处理类
     private Thread.UncaughtExceptionHandler mDefaultHandler;
     // 程序的Context对象
     private Context mContext;
     // 用来存储设备信息和异常信息
-    private Map<String, String> infos = new HashMap<>();
+    private final Map<String, String> infos = new HashMap<>();
 
     // 用于格式化日期,作为日志文件名的一部分
     @SuppressLint("SimpleDateFormat")
-    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+    private final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
     /**
      * 保证只有一个CrashHandler实例

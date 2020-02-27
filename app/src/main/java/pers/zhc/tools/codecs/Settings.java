@@ -26,11 +26,11 @@ import static pers.zhc.tools.utils.Common.showException;
 import static pers.zhc.tools.utils.DisplayUtil.px2sp;
 
 public class Settings extends BaseActivity {
-    private Intent r_intent = new Intent();
+    private final Intent r_intent = new Intent();
     private LinearLayout ll;
     private boolean haveChanged = false;
-    private CodecsActivity o = new CodecsActivity();
-    private String[] jsonText = new String[]{
+    private final CodecsActivity o = new CodecsActivity();
+    private final String[] jsonText = new String[]{
             "sourceExtension",
             "destExtension",
             "deleteOldFile"

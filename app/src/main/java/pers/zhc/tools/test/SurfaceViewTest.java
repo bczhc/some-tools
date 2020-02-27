@@ -135,10 +135,10 @@ class DemoSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private static class LoopThread extends Thread {
 
         final SurfaceHolder surfaceHolder;
-        Context context;
+        final Context context;
         boolean isRunning;
         float radius = 10f;
-        Paint paint;
+        final Paint paint;
 
         public LoopThread(SurfaceHolder surfaceHolder, Context context) {
 
