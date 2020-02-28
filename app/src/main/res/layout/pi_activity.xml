@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--<TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:text="@string/pi______type"
               android:textSize="20sp"
@@ -53,15 +53,14 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
-    <EditText android:layout_width="match_parent" android:layout_height="match_parent"
-              android:layout_marginBottom="10sp"
-              android:layout_marginLeft="10sp"
-              android:layout_marginRight="10sp"
-              android:layout_below="@id/rl1"
-              android:id="@+id/pi_out_et"
-              tools:ignore="Autofill,LabelFor,TextFields"
-              android:cursorVisible="false"
-              android:focusable="false"
-              android:gravity="top"
+    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
+                                         android:layout_marginBottom="10sp"
+                                         android:layout_marginLeft="10sp"
+                                         android:layout_marginRight="10sp"
+                                         android:layout_below="@id/rl1"
+                                         android:id="@+id/pi_out_et"
+                                         app:cursorVisible="false"
+                                         app:focusable="false"
+                                         app:gravity="top"
     />
 </RelativeLayout>
