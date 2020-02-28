@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ScrollEditText">
+        <attr name="gravity" format="flags">
+            <flag name="top" value="0"/>
+            <flag name="center" value="1"/>
+        </attr>
+        <attr name="hint" format="string"/>
+        <attr name="cursorVisible" format="boolean"/>
+        <attr name="focusable" format="boolean"/>
+        <attr name="text" format="string"/>
+    </declare-styleable>
+</resources>

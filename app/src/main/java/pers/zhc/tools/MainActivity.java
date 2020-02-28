@@ -23,6 +23,7 @@ import pers.zhc.tools.test.*;
 import pers.zhc.tools.test.service.ServiceActivity;
 import pers.zhc.tools.theme.SetTheme;
 import pers.zhc.tools.toast.AToast;
+import pers.zhc.tools.youdaoapi.YouDaoTranslate;
 import pers.zhc.u.common.ReadIS;
 
 import java.io.*;
@@ -120,7 +121,8 @@ public class MainActivity extends BaseActivity {
                 R.string.sensor_test,
                 R.string.input_event,
                 R.string.surface_view_test,
-                R.string.serviceTest
+                R.string.serviceTest,
+                R.string.you_dao_translate_interface_invoke
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -138,7 +140,8 @@ public class MainActivity extends BaseActivity {
                 SensorTest.class,
                 InputEvent.class,
                 SurfaceViewTest.class,
-                ServiceActivity.class
+                ServiceActivity.class,
+                YouDaoTranslate.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
