@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.ScrollEditText;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.Documents;
 
@@ -27,8 +28,8 @@ public class NoteTakingActivity extends Document {
         content = content == null ? getString(R.string.nul) : content;
         bottom_btn_string = bottom_btn_string == null || bottom_btn_string.equals("") ? getString(R.string.insert_record) : bottom_btn_string;
         SQLiteDatabase db = getDB(this);
-        EditText content_et = findViewById(R.id.doc_content_et);
         EditText title_et = findViewById(R.id.doc_title_et);
+        ScrollEditText content_et = findViewById(R.id.doc_content_et);
         Button insertBtn = findViewById(R.id.insert_record);
         content_et.setText(String.format(getString(R.string.tv), content));
         title_et.setText(String.format(getString(R.string.tv), title));
