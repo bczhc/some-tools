@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BaseActivity extends Activity {
-    public App app = new App();
+    public final App app = new App();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -262,11 +262,11 @@ public class BaseActivity extends Activity {
     }
 
     public static class Infos {
-        public static String zhcUrlString = "http://bczhc.free.idcfengye.com";
-        public static String zhcStaticWebUrlString = "http://bczhc.gitee.io/web";
+        public static final String zhcUrlString = "http://bczhc.free.idcfengye.com";
+        public static final String zhcStaticWebUrlString = "http://bczhc.gitee.io/web";
         //        public static String zhcStaticWebUrlString = "http://bczhc.github.io";
 //        public static String zhcStaticWebUrlString = "https://gitee.com/bczhc/web/raw/master";
-        public static Class<?> launcherClass = FloatingDrawingBoardMainActivity.class;
+        public static final Class<?> launcherClass = FloatingDrawingBoardMainActivity.class;
     }
 
     public static class RequestCode {
@@ -283,7 +283,7 @@ public class BaseActivity extends Activity {
     }
 
     public static class App {
-        private Stack<Activity> activities;
+        private final Stack<Activity> activities;
 
         App() {
             activities = new Stack<>();

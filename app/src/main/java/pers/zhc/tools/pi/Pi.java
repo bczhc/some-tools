@@ -6,10 +6,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.ScrollEditText;
 import pers.zhc.tools.utils.ToastUtils;
 
 import java.util.concurrent.ExecutorService;
@@ -24,7 +24,7 @@ public class Pi extends BaseActivity {
         setContentView(R.layout.pi_activity);
         PiJNI piJNI = new PiJNI();
         Button btn = findViewById(R.id.gen_pi);
-        EditText et = findViewById(R.id.pi_et);
+        ScrollEditText et = findViewById(R.id.pi_et);
         TextView timeTV = findViewById(R.id.time_tv);
         piJNI.o = findViewById(R.id.pi_out_et);
         final ExecutorService[] es = {Executors.newFixedThreadPool(1)};

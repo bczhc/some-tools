@@ -12,8 +12,8 @@ import pers.zhc.tools.utils.PermissionRequester;
 import java.io.File;
 
 public class Picker extends BaseActivity {
-    public static int PICK_FILE = 1;
-    public static int PICK_FOLDER = 2;
+    public static final int PICK_FILE = 1;
+    public static final int PICK_FOLDER = 2;
     private FilePickerRL filePickerRL;
 
     @Override

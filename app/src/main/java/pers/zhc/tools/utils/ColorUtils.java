@@ -4,8 +4,9 @@ import android.graphics.Color;
 
 @SuppressWarnings({"unused"})
 public class ColorUtils {
-    private int[] colors;
-    private float startPos, endPos;
+    private final int[] colors;
+    private final float startPos;
+    private final float endPos;
 
     ColorUtils(int[] colors, float startPosition, float endPosition) {
         this.colors = colors;
@@ -84,8 +85,10 @@ public class ColorUtils {
     }
 
     private static class TwoColor {
-        private RGB rgb1, rgb2;
-        private float sP, eP;
+        private final RGB rgb1;
+        private final RGB rgb2;
+        private final float sP;
+        private final float eP;
 
         private TwoColor(int color1, int color2, float sP, float eP) {
             this.sP = sP;

@@ -16,10 +16,11 @@ import pers.zhc.u.util.FFMap;
 public class FunctionDrawingBoardView extends View {
     private final int xLength;
     private final int yLength;
-    private Paint mPaint;
+    private final Paint mPaint;
     private Path mPath;
-    private int width, height;
-    private FFMap funInf;
+    private final int width;
+    private final int height;
+    private final FFMap funInf;
     private float lastX, lastY;
     private float haveStrokedWidth = 0;
 
@@ -61,9 +62,7 @@ public class FunctionDrawingBoardView extends View {
                 lastY = y;
                 float savedX = (x * xLength / width);
                 float hD2 = height / 2F;
-                if (y <= hD2) {
-                    funInf.put(savedX, (hD2 - y) * yLength / height);
-                } else funInf.put(savedX, (hD2 - y) * yLength / height);
+                funInf.put(savedX, (hD2 - y) * yLength / height);
                 break;
             case MotionEvent.ACTION_UP:
                 break;

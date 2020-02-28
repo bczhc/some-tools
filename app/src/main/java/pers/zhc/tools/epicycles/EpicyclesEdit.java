@@ -14,6 +14,7 @@ import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.Random;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
 import pers.zhc.u.math.util.ComplexValue;
@@ -40,23 +41,28 @@ public class EpicyclesEdit extends BaseActivity {
         EditText epicycles_count = findViewById(R.id.epicycles_count);
         EditText threadNum = findViewById(R.id.thread_num);
         drawGraphBtn.setOnClickListener(v -> {
-            ll.removeAllViews();
-            epicyclesSequence.epicycles.clear();
-            String s1 = definite_n.getText().toString();
-            String s2 = T.getText().toString();
-            String s3 = epicycles_count.getText().toString();
-            String s4 = threadNum.getText().toString();
-            ck(s1, s2, s3, s4, definite_n, T, epicycles_count, threadNum);
-            s1 = definite_n.getText().toString();
-            s2 = T.getText().toString();
-            s3 = epicycles_count.getText().toString();
-            s4 = threadNum.getText().toString();
-            Intent intent = new Intent(this, ComplexGraphDrawing.class);
-            intent.putExtra("definite_n", Integer.valueOf(s1));
-            intent.putExtra("T", Double.valueOf(s2));
-            intent.putExtra("epicycles_count", Integer.valueOf(s3));
-            intent.putExtra("thread_num", Integer.valueOf(s4));
-            startActivityForResult(intent, RequestCode.START_ACTIVITY);
+            try {
+                ll.removeAllViews();
+                epicyclesSequence.epicycles.clear();
+                String s1 = definite_n.getText().toString();
+                String s2 = T.getText().toString();
+                String s3 = epicycles_count.getText().toString();
+                String s4 = threadNum.getText().toString();
+                ck(s1, s2, s3, s4, definite_n, T, epicycles_count, threadNum);
+                s1 = definite_n.getText().toString();
+                s2 = T.getText().toString();
+                s3 = epicycles_count.getText().toString();
+                s4 = threadNum.getText().toString();
+                Intent intent = new Intent(this, ComplexGraphDrawing.class);
+                intent.putExtra("definite_n", Integer.parseInt(s1));
+                intent.putExtra("T", Double.parseDouble(s2));
+                intent.putExtra("epicycles_count", Integer.parseInt(s3));
+                intent.putExtra("thread_num", Integer.parseInt(s4));
+                startActivityForResult(intent, RequestCode.START_ACTIVITY);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                ToastUtils.show(this, R.string.please_type_correct_value);
+            }
         });
         randomBtn.setOnClickListener(v -> {
             EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Math.random() * 30, new ComplexValue(Math.random() * 10, Math.random() * 10));
@@ -80,40 +86,50 @@ public class EpicyclesEdit extends BaseActivity {
         });
         ll = findViewById(R.id.sc_ll);
         btn.setOnClickListener(v -> {
-            String s1 = et_n.getText().toString();
-            s1 = s1.equals("") ? "0" : s1;
-            String s2 = et_c_re.getText().toString();
-            s2 = s2.equals("") ? "0" : s2;
-            String s3 = et_c_im.getText().toString();
-            s3 = s3.equals("") ? "0" : s3;
-            EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Double.parseDouble(s1)
-                    , new ComplexValue(Double.parseDouble(s2)
-                    , Double.parseDouble(s3)));
-            TextView tv = new TextView(this);
-            setTV(tv, aEpicycle);
-            String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
-                    getString(R.string.left_parenthesis)
-                    , s2, getString(R.string.add)
-                    , s3, getString(R.string.i)
-                    , getString(R.string.right_parenthesis)
-                    , getString(R.string.e)
-                    , getString(R.string.caret)
-                    , getString(R.string.left_parenthesis)
-                    , s1, getString(R.string.i)
-                    , getString(R.string.t)
-                    , getString(R.string.right_parenthesis));
-            tv.setText(getString(R.string.tv, s));
-            ll.addView(tv);
-            epicyclesSequence.put(aEpicycle);
+            try {
+                String s1 = et_n.getText().toString();
+                s1 = s1.equals("") ? "0" : s1;
+                String s2 = et_c_re.getText().toString();
+                s2 = s2.equals("") ? "0" : s2;
+                String s3 = et_c_im.getText().toString();
+                s3 = s3.equals("") ? "0" : s3;
+                EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Double.parseDouble(s1)
+                        , new ComplexValue(Double.parseDouble(s2)
+                        , Double.parseDouble(s3)));
+                TextView tv = new TextView(this);
+                setTV(tv, aEpicycle);
+                String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
+                        getString(R.string.left_parenthesis)
+                        , s2, getString(R.string.add)
+                        , s3, getString(R.string.i)
+                        , getString(R.string.right_parenthesis)
+                        , getString(R.string.e)
+                        , getString(R.string.caret)
+                        , getString(R.string.left_parenthesis)
+                        , s1, getString(R.string.i)
+                        , getString(R.string.t)
+                        , getString(R.string.right_parenthesis));
+                tv.setText(getString(R.string.tv, s));
+                ll.addView(tv);
+                epicyclesSequence.put(aEpicycle);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                ToastUtils.show(this, R.string.please_type_correct_value);
+            }
         });
         start_btn.setOnClickListener(v -> {
-            Intent intent = new Intent(this, EpicyclesTest.class);
-            String s = T.getText().toString();
-            if (s.equals("")) T.setText(getString(R.string.tv, "50"));
-            s = T.getText().toString();
-            EpicyclesView.setT(Double.parseDouble(s));
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_bottom, 0);
+            try {
+                Intent intent = new Intent(this, EpicyclesTest.class);
+                String s = T.getText().toString();
+                if (s.equals("")) T.setText(getString(R.string.tv, "50"));
+                s = T.getText().toString();
+                EpicyclesView.setT(Double.parseDouble(s));
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_bottom, 0);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                ToastUtils.show(this, R.string.please_type_correct_value);
+            }
         });
         Button sortBtn = findViewById(R.id.sort);
         sortBtn.setOnClickListener(v -> {

@@ -19,8 +19,9 @@ public class FunctionDrawerView extends View {
     private Paint coordPaint;
     private float xOffset, yOffset;
     private GestureDetector gestureDetector;
-    private Context ctx;
-    private double xLength, yLength;
+    private final Context ctx;
+    private final double xLength;
+    private final double yLength;
     private float xCenter, yCenter;
     private Paint curvePaint;
     private ExecutorService es;
@@ -151,15 +152,15 @@ public class FunctionDrawerView extends View {
             float x2 = event.getX(1);
             float y1 = event.getY(0);
             float y2 = event.getY(1);
+            double firstDistance = Math.sqrt(Math.pow((x1 - x2), 2)) + Math.sqrt(Math.pow((y1 - y2), 2));
             if (!first2Down) {
-                firstDistance = Math.sqrt(Math.pow((x1 - x2), 2)) + Math.sqrt(Math.pow((y1 - y2), 2));
+                this.firstDistance = firstDistance;
             }
             first2Down = true;
-            double distance = Math.sqrt(Math.pow((x1 - x2), 2)) + Math.sqrt(Math.pow((y1 - y2), 2));
-//            float zoomPointX = (x1 + x2) / 2;
+            //            float zoomPointX = (x1 + x2) / 2;
 //            float zoomPointY = (y1 + y2) / 2;
-            scaleX *= distance / firstDistance;
-            scaleY *= distance / firstDistance;
+            scaleX *= firstDistance / this.firstDistance;
+            scaleY *= firstDistance / this.firstDistance;
         } else if (pointerCount == 1) {
             first2Down = false;
             gestureDetector.onTouchEvent(event);

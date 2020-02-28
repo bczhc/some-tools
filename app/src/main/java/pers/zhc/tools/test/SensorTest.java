@@ -11,6 +11,7 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class SensorTest extends BaseActivity {
     @Override
@@ -31,7 +32,7 @@ public class SensorTest extends BaseActivity {
 
             }
         };
-        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        Sensor sensor = Objects.requireNonNull(sensorManager).getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 }
