@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import pers.zhc.tools.R;
@@ -29,6 +30,9 @@ public class ScrollEditText extends ScrollView implements EditTextInterface {
     private void init(AttributeSet attrs) {
         Context ctx = getContext();
         editText = new EditText(ctx);
+        editText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//        editText.setWidth(0);
+//        editText.setHeight(0);
         TypedArray ta = ctx.obtainStyledAttributes(attrs, R.styleable.ScrollEditText);
         int gravity = ta.getInt(R.styleable.ScrollEditText_gravity, 1);
         switch (gravity) {
@@ -43,7 +47,13 @@ public class ScrollEditText extends ScrollView implements EditTextInterface {
                 break;
         }
         String hint = ta.getString(R.styleable.ScrollEditText_hint);
-        editText.setHint(hint);
+        String text = ta.getString(R.styleable.ScrollEditText_text);
+        if (hint != null) {
+            editText.setHint(hint);
+        }
+        if (text != null) {
+            editText.setText(text);
+        }
         editText.setCursorVisible(ta.getBoolean(R.styleable.ScrollEditText_cursorVisible, true));
         editText.setFocusable(ta.getBoolean(R.styleable.ScrollEditText_focusable, true));
         ta.recycle();
@@ -78,9 +88,12 @@ public class ScrollEditText extends ScrollView implements EditTextInterface {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int measuredWidth = getMeasuredWidth();
+        /*int measuredWidth = getMeasuredWidth();
         int measuredHeight = getMeasuredHeight();
-        editText.setWidth(measuredWidth);
-        editText.setHeight(measuredHeight);
+        if (editText.getWidth() == 0 && editText.getHeight() == 0) {
+            editText.setWidth(measuredWidth);
+            editText.setHeight(measuredHeight);
+        }*/
+//        editText.setHint(ctx.getString(R.string.tv, measuredWidth + " " + measuredHeight));
     }
 }

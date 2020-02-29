@@ -1,7 +1,7 @@
 package pers.zhc.tools.pi;
 
 
-import android.widget.EditText;
+import pers.zhc.tools.utils.ScrollEditText;
 
 class PiJNI {
     static {
@@ -9,7 +9,7 @@ class PiJNI {
     }
 
     StringBuilder sb;
-    EditText o = null;
+    ScrollEditText o = null;
 
     /**
      * 生成Pi
