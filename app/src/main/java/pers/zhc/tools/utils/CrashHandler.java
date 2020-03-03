@@ -20,12 +20,20 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.u.common.FileMultipartUploader;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -46,16 +54,15 @@ public class CrashHandler implements UncaughtExceptionHandler {
     @SuppressLint("StaticFieldLeak")
     private static final CrashHandler INSTANCE = new CrashHandler();
     private final CountDownLatch cdl = new CountDownLatch(2);
+    // 用来存储设备信息和异常信息
+    private final Map<String, String> infos = new HashMap<>();
+    // 用于格式化日期,作为日志文件名的一部分
+    @SuppressLint("SimpleDateFormat")
+    private final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
     // 系统默认的UncaughtException处理类
     private Thread.UncaughtExceptionHandler mDefaultHandler;
     // 程序的Context对象
     private Context mContext;
-    // 用来存储设备信息和异常信息
-    private final Map<String, String> infos = new HashMap<>();
-
-    // 用于格式化日期,作为日志文件名的一部分
-    @SuppressLint("SimpleDateFormat")
-    private final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
     /**
      * 保证只有一个CrashHandler实例
@@ -199,6 +206,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         printWriter.close();
         String result = writer.toString();
         System.out.println(result);
+        ex.printStackTrace();
         sb.append(result);
         String infos = sb.toString();
         long timestamp = System.currentTimeMillis();

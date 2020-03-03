@@ -31,6 +31,6 @@ public class ToastUtils {
 
     public static void showError(Context ctx, @StringRes int error_msg_resId, Exception e) {
         ToastUtils.show(ctx, ctx.getString(R.string.concat, ctx.getString(error_msg_resId)
-        , "\n" + e.toString()));
+                , "\n" + e.toString()));
     }
 }
