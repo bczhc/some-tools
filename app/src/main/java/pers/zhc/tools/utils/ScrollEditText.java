@@ -61,6 +61,12 @@ public class ScrollEditText extends ScrollView implements EditTextInterface {
     }
 
     @Override
+    public boolean callOnClick() {
+        editText.requestFocus();
+        return super.callOnClick();
+    }
+
+    @Override
     public Editable getText() {
         return editText.getText();
     }
@@ -95,5 +101,9 @@ public class ScrollEditText extends ScrollView implements EditTextInterface {
             editText.setHeight(measuredHeight);
         }*/
 //        editText.setHint(ctx.getString(R.string.tv, measuredWidth + " " + measuredHeight));
+    }
+
+    public EditText getEditText() {
+        return editText;
     }
 }

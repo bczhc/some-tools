@@ -136,9 +136,9 @@ class DemoSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
 
         final SurfaceHolder surfaceHolder;
         final Context context;
+        final Paint paint;
         boolean isRunning;
         float radius = 10f;
-        final Paint paint;
 
         public LoopThread(SurfaceHolder surfaceHolder, Context context) {
 

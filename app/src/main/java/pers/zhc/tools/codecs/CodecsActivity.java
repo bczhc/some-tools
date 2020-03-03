@@ -11,7 +11,13 @@ import android.support.annotation.StringRes;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.BaseActivity;
@@ -21,7 +27,14 @@ import pers.zhc.tools.filepicker.Picker;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +47,7 @@ import static android.view.View.VISIBLE;
 import static pers.zhc.tools.utils.Common.showException;
 
 public class CodecsActivity extends BaseActivity {
+    private final CountDownLatch latch;
     String[] jsonData = null;
     private TextView mainTv;
     private String f = null;
@@ -43,7 +57,6 @@ public class CodecsActivity extends BaseActivity {
     private boolean isRunning = false;
     private Button dB = null;
     private int dT = 0;//qmc
-    private final CountDownLatch latch;
     private String jsonText;
     private List<List<String>> savedConfig;
     private File file = null;

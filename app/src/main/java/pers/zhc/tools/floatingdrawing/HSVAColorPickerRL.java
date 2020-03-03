@@ -13,7 +13,10 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.DialogUtil;
@@ -25,17 +28,17 @@ import pers.zhc.tools.utils.ToastUtils;
 @SuppressLint("ViewConstructor")
 abstract class HSVAColorPickerRL extends RelativeLayout {
     private final float[] hsv = new float[3];
-    private int alpha;
     private final int width;
     private final int height;
     private final Context context;
-    private View[] hsvAView;
-    private View vv;
     private final float[][] temp = new float[4][4];
     private final float[] currentXPos = new float[4];
     private final Paint oppositeColorPaint;
     private final float lW = 1.5F;
     private final float[] resultHSVA = new float[4];
+    private int alpha;
+    private View[] hsvAView;
+    private View vv;
 
     /**
      * @param context      ctx
