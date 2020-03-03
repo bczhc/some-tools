@@ -48,7 +48,7 @@ public class Picker extends BaseActivity {
             setResult(3, r);
             finish();
             overridePendingTransition(0, R.anim.fade_out);
-        });
+        }, null);
         setContentView(filePickerRL);
     }
 

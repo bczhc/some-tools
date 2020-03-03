@@ -206,5 +206,7 @@
     <string name="to_translate_content">要翻译的内容</string>
     <string name="result">结果</string>
     <string name="translate_error">翻译出错</string>
+    <string name="invert_text_color">文字颜色反相</string>
+    <string name="follow_painting_color">跟随笔刷颜色</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

@@ -49,26 +49,31 @@ public class FilePickerRL extends RelativeLayout {
     private File currentPath;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
+    private EditText fileNameET;
 
-    public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath, Runnable cancelAction, OnPickedResultActionInterface pickedResultAction) {
+    public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath
+            , Runnable cancelAction, OnPickedResultActionInterface pickedResultAction
+            , @Nullable String initFileName) {
         super(context);
         this.ctx = (Activity) context;
         this.type = type;
         this.initialPath = initialPath;
         this.cancelAction = cancelAction;
         this.pickedResultAction = pickedResultAction;
-        init();
+        initFileName = initFileName == null ? "" : initFileName;
+        init(initFileName);
     }
 
-    private void init() {
+    private void init(String initFileName) {
         View view = View.inflate(ctx, R.layout.file_picker_rl_activity, null);
         this.addView(view);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
 //        this.currentPath = new File("/storage/emulated/0");
         lp.setMargins(2, 10, 10, 0);
-        EditText fileNameET = findViewById(R.id.file_name_et);
+        fileNameET = findViewById(R.id.file_name_et);
         fileNameET.clearFocus();
+        fileNameET.setText(initFileName);
         Button cancel = findViewById(R.id.cancel);
         Button ok = findViewById(R.id.pick);
         cancel.setOnClickListener(v -> {
