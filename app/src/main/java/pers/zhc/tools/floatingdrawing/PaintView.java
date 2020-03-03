@@ -71,6 +71,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private float lockedStrokeWidth = 0F;
     private float lockedEraserStrokeWidth;
     private float scaleWhenLocked = 1F;
+    private OnColorChangedCallback onColorChangedCallback = null;
 
     public PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -82,6 +83,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         init();
         Paint zP = new Paint();
         zP.setColor(Color.parseColor("#5000ff00"));
+    }
+
+    public void setOnColorChangedCallback(OnColorChangedCallback onColorChangedCallback) {
+        this.onColorChangedCallback = onColorChangedCallback;
     }
 
     private void surfaceInit() {
@@ -260,6 +265,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      */
     void setPaintColor(@ColorInt int color) {
         mPaint.setColor(color);
+        if (this.onColorChangedCallback != null) {
+            onColorChangedCallback.change(color);
+        }
     }
 
     /**
