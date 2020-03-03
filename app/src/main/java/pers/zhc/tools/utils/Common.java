@@ -29,8 +29,8 @@ public class Common {
     /**
      * 安装apk
      *
-     * @param context  ctx
-     * @param apk 本地apk
+     * @param context ctx
+     * @param apk     本地apk
      */
     public static void installApk(Context context, File apk) {
         Intent intent = new Intent(Intent.ACTION_VIEW);

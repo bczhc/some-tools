@@ -10,7 +10,11 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
@@ -35,16 +39,16 @@ public class FilePickerRL extends RelativeLayout {
     private final Runnable cancelAction;
     private final OnPickedResultActionInterface pickedResultAction;
     private final int[] justPicked = new int[]{-1};
+    private final int grey = Color.parseColor("#DCDCDC");
+    private final int white = Color.WHITE;
+    private final int type;
+    private final Activity ctx;
     public String result;
     private String resultString = "";
     private TextView pathView;
     private File currentPath;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
-    private final int grey = Color.parseColor("#DCDCDC");
-    private final int white = Color.WHITE;
-    private final int type;
-    private final Activity ctx;
 
     public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath, Runnable cancelAction, OnPickedResultActionInterface pickedResultAction) {
         super(context);
@@ -63,6 +67,8 @@ public class FilePickerRL extends RelativeLayout {
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
 //        this.currentPath = new File("/storage/emulated/0");
         lp.setMargins(2, 10, 10, 0);
+        EditText fileNameET = findViewById(R.id.file_name_et);
+        fileNameET.clearFocus();
         Button cancel = findViewById(R.id.cancel);
         Button ok = findViewById(R.id.pick);
         cancel.setOnClickListener(v -> {

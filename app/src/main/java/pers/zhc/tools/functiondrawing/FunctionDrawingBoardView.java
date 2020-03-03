@@ -17,10 +17,10 @@ public class FunctionDrawingBoardView extends View {
     private final int xLength;
     private final int yLength;
     private final Paint mPaint;
-    private Path mPath;
     private final int width;
     private final int height;
     private final FFMap funInf;
+    private Path mPath;
     private float lastX, lastY;
     private float haveStrokedWidth = 0;
 

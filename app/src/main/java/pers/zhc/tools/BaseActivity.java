@@ -18,10 +18,20 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import pers.zhc.tools.utils.*;
+import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.CrashHandler;
+import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.tools.utils.ExternalJNI;
+import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.u.common.ReadIS;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Stack;
@@ -260,6 +270,10 @@ public class BaseActivity extends Activity {
         return 1;
     }
 
+    protected interface CheckForUpdateResultInterface {
+        void onCheckForUpdateResult(boolean update);
+    }
+
     public static class Infos {
         public static final String zhcUrlString = "http://bczhc.free.idcfengye.com";
         public static final String zhcStaticWebUrlString = "http://bczhc.gitee.io/web";
@@ -305,9 +319,5 @@ public class BaseActivity extends Activity {
                 }
             }
         }
-    }
-
-    protected interface CheckForUpdateResultInterface {
-        void onCheckForUpdateResult(boolean update);
     }
 }

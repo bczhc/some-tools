@@ -6,17 +6,24 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.Picker;
-import pers.zhc.tools.utils.*;
+import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.tools.utils.DisplayUtil;
+import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.ViewWithExtras;
 import pers.zhc.u.FileU;
 
 import java.io.File;
@@ -48,7 +55,7 @@ public class Document extends BaseActivity {
         deleteBtn.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
-            adb.setTitle("请输入要删除的t_mills（*表示全部）")
+            adb.setTitle("请输入要删除的t_millisecond（*表示全部）")
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String s = et.getText().toString();
                         if (s.matches(".*\\*.*")) {
@@ -131,10 +138,6 @@ public class Document extends BaseActivity {
     }
 
     private void setSVViews() {
-        Drawable stroke = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            stroke = getDrawable(R.drawable.view_stroke);
-        }
         db = getDB(this);
         sv.removeAllViews();
         LinearLayout linearLayout = new LinearLayout(this);
@@ -149,7 +152,6 @@ public class Document extends BaseActivity {
         ExecutorService es = Executors.newCachedThreadPool();
         String[] sqliteOptions = getResources().getStringArray(R.array.sqlite_options);
         if (cursor.moveToFirst()) {
-            Drawable finalStroke = stroke;
             es.execute(() -> {
                 do {
                     ViewWithExtras<LinearLayout, Long> ll = new ViewWithExtras<>();
@@ -159,8 +161,8 @@ public class Document extends BaseActivity {
                     ll.a.setLayoutParams(ll_lp);
                     {//i = 0
                         LinearLayout smallLL = new LinearLayout(this);
-                        long mills = cursor.getLong(0);
-                        ll.extra = mills;
+                        long millisecond = cursor.getLong(0);
+                        ll.extra = millisecond;
                         ll.a.setOnClickListener(v -> {
                             Dialog dialog = new Dialog(this);
                             LinearLayout linearLayout1 = new LinearLayout(this);
@@ -172,13 +174,13 @@ public class Document extends BaseActivity {
                                     v1 -> {
                                         Intent intent = new Intent(this, NoteTakingActivity.class);
                                         intent.putExtra("origin", false);
-                                        Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + mills, null);
+                                        Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + millisecond, null);
                                         c.moveToFirst();
                                         intent.putExtra("title", c.getString(1));
                                         intent.putExtra("content", c.getString(2));
                                         c.close();
                                         intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
-                                        intent.putExtra("mills", mills);
+                                        intent.putExtra("millisecond", millisecond);
                                         startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
                                         dialog.dismiss();
                                         overridePendingTransition(R.anim.in_left_and_bottom, 0);
@@ -186,7 +188,7 @@ public class Document extends BaseActivity {
                                     v1 -> {
                                         AlertDialog confirmationAD = DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
                                             try {
-                                                db.execSQL("DELETE FROM doc WHERE t=" + mills);
+                                                db.execSQL("DELETE FROM doc WHERE t=" + millisecond);
                                             } catch (Exception e) {
                                                 Common.showException(e, this);
                                             }
@@ -207,7 +209,7 @@ public class Document extends BaseActivity {
                             dialog.setCanceledOnTouchOutside(true);
                             dialog.show();
                         });
-                        Date date = new Date(mills);
+                        Date date = new Date(millisecond);
                         String formatDate = SimpleDateFormat.getDateTimeInstance().format(date);
                         setSmallTVExtracted(smallLL_LP4, ll.a, smallLL, formatDate);
                     }
@@ -218,7 +220,7 @@ public class Document extends BaseActivity {
                         setSmallTVExtracted(smallLL_LP4, ll.a, smallLL, length > 100 ? (s.substring(0, 100) + "\n...") : s);
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        ll.a.setBackground(finalStroke);
+                        ll.a.setBackground(getDrawable(R.drawable.view_stroke));
                     }
                     runOnUiThread(() -> linearLayout.addView(ll.a));
                 } while (cursor.moveToNext());
@@ -258,6 +260,11 @@ public class Document extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
             Common.showException(e, ctx);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (database != null) {
+                database.disableWriteAheadLogging();
+            }
         }
         return database;
     }
