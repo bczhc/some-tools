@@ -123,6 +123,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private VirtualDisplay virtualDisplay = null;
     private boolean isCapturing = false;
     private Intent captureScreenResultData = null;
+    private boolean panelColorFollowPainting;
 
     private static void uploadPaths(Context context) {
         try {
@@ -278,6 +279,16 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         View keepNotBeingKilledView = new View(this);
         keepNotBeingKilledView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
         pv = new PaintView(this, width, height, currentInternalPathFile);
+        pv.setOnColorChangedCallback(color -> {
+            if (this.panelColorFollowPainting) {
+                float[] hsv = new float[3];
+                Color.colorToHSV(color, hsv);
+                float[] hsva = new float[4];
+                System.arraycopy(hsv, 0, hsva, 0, hsv.length);
+                hsva[3] = Color.alpha(color);
+                setPanelColor(color, hsva);
+            }
+        });
         pv.setStrokeWidth(10F);
         pv.setEraserStrokeWidth(10F);
         pv.setPaintColor(Color.RED);
@@ -434,36 +445,21 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         break;
                     case 9:
                         Dialog c = new Dialog(this);
-                        setDialogAttr(c, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                        LinearLayout cLL = new LinearLayout(this);
-                        cLL.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                        cLL.setOrientation(LinearLayout.VERTICAL);
-                        LinearLayout[] linearLayouts = new LinearLayout[]{
-                                new LinearLayout(this),
-                                new LinearLayout(this),
-                                new LinearLayout(this)
-                        };
-                        Button TVsColorBtn = new Button(this);
-                        TVsColorBtn.setText(R.string.control_panel_color);
-                        TVsColorBtn.setOnClickListener(v2 -> {
+                        View inflate = View.inflate(this, R.layout.panel_view, null);
+                        Button panelColorBtn = inflate.findViewById(R.id.panel_color);
+                        panelColorBtn.setOnClickListener(v2 -> {
                             Dialog TVsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
                             setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
                             HSVAColorPickerRL TVsColorPicker = new HSVAColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1]) {
                                 @Override
                                 void onPickedAction(int color, float[] hsva) {
-                                    for (TextView childTV : childTVs) {
-                                        TVsColor = color;
-                                        childTV.setBackgroundColor(TVsColor);
-                                        if (invertColorChecked)
-                                            childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
-                                    }
-                                    hsvaFloats[1] = hsva;
+                                    setPanelColor(color, hsva);
                                 }
                             };
                             TVsColorDialog.setContentView(TVsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
                             TVsColorDialog.show();
                         });
-                        Button textsColorBtn = new Button(this);
+                        Button textsColorBtn = inflate.findViewById(R.id.text_color);
                         textsColorBtn.setEnabled(!this.invertColorChecked);
                         textsColorBtn.setOnClickListener(v2 -> {
                             Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
@@ -482,7 +478,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             textsColorDialog.show();
                         });
                         textsColorBtn.setText(R.string.text_color);
-                        Switch whetherTextColorIsInverted = new Switch(this);
+                        Switch whetherTextColorIsInverted = inflate.findViewById(R.id.invert_text_color);
                         whetherTextColorIsInverted.setChecked(invertColorChecked);
                         whetherTextColorIsInverted.setOnCheckedChangeListener((buttonView, isChecked) -> {
                             textsColorBtn.setEnabled(!isChecked);
@@ -491,18 +487,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
                             }
                         });
-                        whetherTextColorIsInverted.setText(R.string.whether_text_color_is_inverted);
-                        whetherTextColorIsInverted.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                        TVsColorBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                        textsColorBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                        for (LinearLayout layout : linearLayouts) {
-                            layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1F));
-                            cLL.addView(layout);
-                        }
-                        linearLayouts[0].addView(TVsColorBtn);
-                        linearLayouts[1].addView(textsColorBtn);
-                        linearLayouts[2].addView(whetherTextColorIsInverted);
-                        c.setContentView(cLL);
+                        Switch followPaintingColor = inflate.findViewById(R.id.follow_painting_color);
+                        followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> this.panelColorFollowPainting = isChecked);
+                        c.setContentView(inflate);
+                        DialogUtil.setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
+                        , ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         c.show();
                         break;
                     case 10:
@@ -544,6 +533,16 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 runOnUiThread(() -> ToastUtils.show(this, R.string.current_version_is_the_latest));
             }
         }));
+    }
+
+    private void setPanelColor(int color, float[] hsva) {
+        for (TextView childTV : childTVs) {
+            TVsColor = color;
+            childTV.setBackgroundColor(TVsColor);
+            if (invertColorChecked)
+                childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
+        }
+        hsvaFloats[1] = hsva;
     }
 
     private void setupProjection() {
@@ -1012,7 +1011,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 .create();
                         setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         importImageOptionsDialog.show();
-                    });
+                    }, null);
                     setFilePickerDialog(dialog, filePickerRL);
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
@@ -1149,7 +1148,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 if (moreOptionsDialog != null) {
                     moreOptionsDialog.dismiss();
                 }
-            });
+            }, null);
             setFilePickerDialog(dialog, filePickerRL);
         }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
