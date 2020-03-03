@@ -15,13 +15,13 @@ import java.util.concurrent.Executors;
 
 @SuppressLint("ViewConstructor")
 public class FunctionDrawerView extends View {
+    private final Context ctx;
+    private final double xLength;
+    private final double yLength;
     private int canvasWidth, canvasHeight, canvasHalfWidth, canvasHalfHeight;
     private Paint coordPaint;
     private float xOffset, yOffset;
     private GestureDetector gestureDetector;
-    private final Context ctx;
-    private final double xLength;
-    private final double yLength;
     private float xCenter, yCenter;
     private Paint curvePaint;
     private ExecutorService es;
