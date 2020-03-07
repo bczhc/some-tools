@@ -490,6 +490,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         Switch followPaintingColor = inflate.findViewById(R.id.follow_painting_color);
                         followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> this.panelColorFollowPainting = isChecked);
                         c.setContentView(inflate);
+                        DialogUtil.setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
+                        , ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         c.show();
                         break;
                     case 10:
