@@ -11,5 +11,6 @@
                                          app:gravity="top"
                                          app:hint="@string/content"
                                          app:text="@string/content"
+                                         n1:fillViewport="true"
     />
 </LinearLayout>

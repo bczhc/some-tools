@@ -11,6 +11,7 @@
                                          app:gravity="top"
                                          android:id="@+id/content"
                                          android:layout_weight="1"
+                                         android:fillViewport="true"
     />
     <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent" android:layout_height="0sp"
                                          app:gravity="top"
@@ -18,5 +19,6 @@
                                          android:layout_weight="1"
                                          app:hint="@string/result"
                                          app:focusable="false"
+                                         android:fillViewport="true"
     />
 </LinearLayout>

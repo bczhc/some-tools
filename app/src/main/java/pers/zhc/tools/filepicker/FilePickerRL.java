@@ -102,7 +102,11 @@ public class FilePickerRL extends RelativeLayout {
             et.setLayoutParams(lp);
             AlertDialog alertDialog = ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
-                        File f = new File(et.getText().toString());
+                        String etText = et.getText().toString();
+                        if (etText.charAt(0) != '/') {
+                            etText = '/' + etText;
+                        }
+                        File f = new File(etText);
                         if (f.isFile() && type == 1) {
                             resultString = f.getAbsolutePath();
                             ok.performClick();

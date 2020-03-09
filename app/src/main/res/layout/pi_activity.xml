@@ -62,5 +62,6 @@
                                          app:cursorVisible="false"
                                          app:focusable="false"
                                          app:gravity="top"
+                                         android:fillViewport="true"
     />
 </RelativeLayout>
