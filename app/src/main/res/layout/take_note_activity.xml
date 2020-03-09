@@ -18,6 +18,7 @@
                                          android:id="@+id/doc_content_et"
                                          app:gravity="top"
                                          app:hint="@string/content"
+                                         android:fillViewport="true"
     />
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/ll_bottom" android:orientation="horizontal"
