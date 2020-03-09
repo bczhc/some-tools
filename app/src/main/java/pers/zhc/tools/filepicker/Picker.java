@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.WindowManager;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
@@ -19,6 +20,8 @@ public class Picker extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         new PermissionRequester(this::Do).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
@@ -45,7 +48,7 @@ public class Picker extends BaseActivity {
             setResult(3, r);
             finish();
             overridePendingTransition(0, R.anim.fade_out);
-        });
+        }, null);
         setContentView(filePickerRL);
     }
 

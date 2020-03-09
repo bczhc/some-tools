@@ -3,7 +3,16 @@ package pers.zhc.tools.floatingdrawing;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.Path;
+import android.graphics.PixelFormat;
+import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
@@ -18,7 +27,12 @@ import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +43,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private final File internalPathFile;
     private final int height;
     private final int width;
+    private final JNI jni = new JNI();
+    private final Context ctx;
     boolean isEraserMode;
     private SurfaceHolder mSurfaceHolder;
     private OutputStream os;
@@ -43,10 +59,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private float mLastX, mLastY;//上次的坐标
     private Paint mBitmapPaint;
     //使用LinkedList 模拟栈，来保存 Path
-    private SynchronisedList<PathBean> undoList;
-    private SynchronisedList<PathBean> redoList;
-    private final JNI jni = new JNI();
-    private final Context ctx;
+    private SynchronisedLinkedList<PathBean> undoList;
+    private SynchronisedLinkedList<PathBean> redoList;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
     private GestureResolver gestureResolver;
@@ -57,6 +71,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private float lockedStrokeWidth = 0F;
     private float lockedEraserStrokeWidth;
     private float scaleWhenLocked = 1F;
+    private OnColorChangedCallback onColorChangedCallback = null;
 
     public PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -68,6 +83,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         init();
         Paint zP = new Paint();
         zP.setColor(Color.parseColor("#5000ff00"));
+    }
+
+    public void setOnColorChangedCallback(OnColorChangedCallback onColorChangedCallback) {
+        this.onColorChangedCallback = onColorChangedCallback;
     }
 
     private void surfaceInit() {
@@ -143,8 +162,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             //背景色
         });
 
-        undoList = new SynchronisedList<>();
-        redoList = new SynchronisedList<>();
+        undoList = new SynchronisedLinkedList<>();
+        redoList = new SynchronisedLinkedList<>();
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
@@ -246,6 +265,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      */
     void setPaintColor(@ColorInt int color) {
         mPaint.setColor(color);
+        if (this.onColorChangedCallback != null) {
+            onColorChangedCallback.change(color);
+        }
     }
 
     /**
@@ -796,7 +818,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    private static class SynchronisedList<T> extends LinkedList<T> {
+    private static class SynchronisedLinkedList<T> extends LinkedList<T> {
         @Override
         public boolean add(T t) {
             synchronized (this) {

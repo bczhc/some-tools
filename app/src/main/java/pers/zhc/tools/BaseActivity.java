@@ -18,7 +18,6 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.utils.*;
 import pers.zhc.u.common.ReadIS;
 
@@ -261,6 +260,10 @@ public class BaseActivity extends Activity {
         return 1;
     }
 
+    protected interface CheckForUpdateResultInterface {
+        void onCheckForUpdateResult(boolean update);
+    }
+
     public static class Infos {
         public static final String zhcUrlString = "http://bczhc.free.idcfengye.com";
         public static final String zhcStaticWebUrlString = "http://bczhc.gitee.io/web";
@@ -306,9 +309,5 @@ public class BaseActivity extends Activity {
                 }
             }
         }
-    }
-
-    protected interface CheckForUpdateResultInterface {
-        void onCheckForUpdateResult(boolean update);
     }
 }

@@ -8,14 +8,24 @@ import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ToastUtils;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -27,8 +37,6 @@ import static pers.zhc.tools.utils.DisplayUtil.px2sp;
 
 public class Settings extends BaseActivity {
     private final Intent r_intent = new Intent();
-    private LinearLayout ll;
-    private boolean haveChanged = false;
     private final CodecsActivity o = new CodecsActivity();
     private final String[] jsonText = new String[]{
             "sourceExtension",
@@ -36,6 +44,8 @@ public class Settings extends BaseActivity {
             "deleteOldFile"
 
     };
+    private LinearLayout ll;
+    private boolean haveChanged = false;
     private List<List<View>> lists;
     private JSONObject json;
     private CountDownLatch latch;

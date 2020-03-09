@@ -10,7 +10,11 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
@@ -35,34 +39,41 @@ public class FilePickerRL extends RelativeLayout {
     private final Runnable cancelAction;
     private final OnPickedResultActionInterface pickedResultAction;
     private final int[] justPicked = new int[]{-1};
+    private final int grey = Color.parseColor("#DCDCDC");
+    private final int white = Color.WHITE;
+    private final int type;
+    private final Activity ctx;
     public String result;
     private String resultString = "";
     private TextView pathView;
     private File currentPath;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
-    private final int grey = Color.parseColor("#DCDCDC");
-    private final int white = Color.WHITE;
-    private final int type;
-    private final Activity ctx;
+    private EditText fileNameET;
 
-    public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath, Runnable cancelAction, OnPickedResultActionInterface pickedResultAction) {
+    public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath
+            , Runnable cancelAction, OnPickedResultActionInterface pickedResultAction
+            , @Nullable String initFileName) {
         super(context);
         this.ctx = (Activity) context;
         this.type = type;
         this.initialPath = initialPath;
         this.cancelAction = cancelAction;
         this.pickedResultAction = pickedResultAction;
-        init();
+        initFileName = initFileName == null ? "" : initFileName;
+        init(initFileName);
     }
 
-    private void init() {
+    private void init(String initFileName) {
         View view = View.inflate(ctx, R.layout.file_picker_rl_activity, null);
         this.addView(view);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
 //        this.currentPath = new File("/storage/emulated/0");
         lp.setMargins(2, 10, 10, 0);
+        fileNameET = findViewById(R.id.file_name_et);
+        fileNameET.clearFocus();
+        fileNameET.setText(initFileName);
         Button cancel = findViewById(R.id.cancel);
         Button ok = findViewById(R.id.pick);
         cancel.setOnClickListener(v -> {
@@ -91,7 +102,11 @@ public class FilePickerRL extends RelativeLayout {
             et.setLayoutParams(lp);
             AlertDialog alertDialog = ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
-                        File f = new File(et.getText().toString());
+                        String etText = et.getText().toString();
+                        if (etText.charAt(0) != '/') {
+                            etText = '/' + etText;
+                        }
+                        File f = new File(etText);
                         if (f.isFile() && type == 1) {
                             resultString = f.getAbsolutePath();
                             ok.performClick();

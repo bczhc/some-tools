@@ -19,7 +19,7 @@ public class NoteTakingActivity extends Document {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.take_note_activity);
         Intent intent = getIntent();
-        long mills = intent.getLongExtra("mills", 0);
+        long millisecond = intent.getLongExtra("millisecond", 0);
         String title = intent.getStringExtra("title");
         String content = intent.getStringExtra("content");
         String bottom_btn_string = intent.getStringExtra("bottom_btn_string");
@@ -53,7 +53,7 @@ public class NoteTakingActivity extends Document {
                     ContentValues values = new ContentValues();
                     values.put("title", title_et.getText().toString());
                     values.put("content", content_et.getText().toString());
-                    db.update("doc", values, "t=?", new String[]{String.valueOf(mills)});
+                    db.update("doc", values, "t=?", new String[]{String.valueOf(millisecond)});
                     ToastUtils.show(this, R.string.updating_success);
                 } catch (Exception e) {
                     Common.showException(e, this);
