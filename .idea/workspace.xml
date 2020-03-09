@@ -44,14 +44,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/OnColorChangedCallback.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/panel_view.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/Picker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/pi_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/pi_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/s_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/s_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/take_note_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/take_note_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/you_dao_activity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/you_dao_activity.xml" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +77,7 @@
     <expand />
     <select />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="A02AECP82AWGY" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_XL_API_28" />
   <component name="ExportToHTMLSettings">
     <option name="printScope" value="1" />
     <option name="PRINT_LINE_NUMBERS" value="true" />
@@ -441,13 +439,8 @@
       <workItem from="1583051248245" duration="2230000" />
       <workItem from="1583138506014" duration="3763000" />
       <workItem from="1583216429592" duration="12496000" />
-    </task>
-    <task id="LOCAL-00037" summary="fix issue #26 on github">
-      <created>1579506551925</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1579506551929</updated>
+      <workItem from="1583589373663" duration="214000" />
+      <workItem from="1583756453303" duration="1754000" />
     </task>
     <task id="LOCAL-00038" summary="fix issue #30 on github">
       <created>1579507366533</created>
@@ -785,7 +778,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583247695327</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="面板颜色跟随笔刷">
+      <created>1583589584897</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1583589584899</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -915,7 +915,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="本轮绘制手势处理，未完成本轮绘制线程问题" />
     <MESSAGE value="issue #11(3.); update README" />
     <MESSAGE value="issue #11: https://github.com/bczhc/some-tools/issues/11#issue-544996397(2.)" />
     <MESSAGE value="download update" />
@@ -940,7 +939,8 @@
     <MESSAGE value="issue #86" />
     <MESSAGE value="issue #102, #103 ；文件选择添加文件名输入框，还未完成" />
     <MESSAGE value="issue #102, #103 ；文件选择添加文件名输入框，还未完成" />
-    <option name="LAST_COMMIT_MESSAGE" value="issue #102, #103 ；文件选择添加文件名输入框，还未完成" />
+    <MESSAGE value="面板颜色跟随笔刷" />
+    <option name="LAST_COMMIT_MESSAGE" value="面板颜色跟随笔刷" />
   </component>
   <component name="WindowStateProjectService">
     <state x="318" y="68" key="#Notifications" timestamp="1579581379607">
@@ -1018,11 +1018,11 @@
     </state>
     <state x="751" y="337" width="550" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1583248509472" />
     <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1582340851587" />
-    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1583247694834">
+    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1583589584168">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579597961330" />
-    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1583247694834" />
+    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1583589584168" />
     <state x="53" y="27" width="1146" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580272692340" />
     <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1582339139014" />
     <state width="1053" height="602" key="DebuggerActiveHint" timestamp="1582806657757">
@@ -1262,11 +1262,11 @@
     <state x="694" y="291" width="661" height="572" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1582351227842" />
     <state x="636" y="163" key="extract.method.dialog/0.27.1366.741@0.27.1366.741" timestamp="1580109656807" />
     <state x="694" y="319" width="652" height="548" key="extract.method.dialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581256241043" />
-    <state x="89" y="1" width="1619" height="1037" key="find.popup" timestamp="1583248939360">
+    <state x="89" y="1" width="1619" height="1037" key="find.popup" timestamp="1583757827827">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="149" y="37" width="1187" height="740" key="find.popup/0.0.1449.815@0.0.1449.815" timestamp="1579594271434" />
-    <state x="89" y="1" width="1619" height="1037" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1583248939360" />
+    <state x="89" y="1" width="1619" height="1037" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1583757827827" />
     <state x="140" y="61" width="1120" height="673" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221246864" />
     <state x="595" y="284" width="994" height="782" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1582266215051" />
     <state x="575" y="139" width="537" height="589" key="git4idea.branch.GitSmartOperationDialog" timestamp="1582287012811">

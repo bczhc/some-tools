@@ -59,8 +59,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private float mLastX, mLastY;//上次的坐标
     private Paint mBitmapPaint;
     //使用LinkedList 模拟栈，来保存 Path
-    private SynchronisedList<PathBean> undoList;
-    private SynchronisedList<PathBean> redoList;
+    private SynchronisedLinkedList<PathBean> undoList;
+    private SynchronisedLinkedList<PathBean> redoList;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
     private GestureResolver gestureResolver;
@@ -162,8 +162,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             //背景色
         });
 
-        undoList = new SynchronisedList<>();
-        redoList = new SynchronisedList<>();
+        undoList = new SynchronisedLinkedList<>();
+        redoList = new SynchronisedLinkedList<>();
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
@@ -818,7 +818,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    private static class SynchronisedList<T> extends LinkedList<T> {
+    private static class SynchronisedLinkedList<T> extends LinkedList<T> {
         @Override
         public boolean add(T t) {
             synchronized (this) {
