@@ -2,6 +2,7 @@ package pers.zhc.tools.floatingdrawing;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +14,8 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -46,9 +49,18 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
      * @param width        w
      * @param height       h
      * @param hsva         HSVA
+     * @param dialog       防止dim
      */
-    protected HSVAColorPickerRL(Context context, int initialColor, int width, int height, @Nullable float[] hsva) {
+    protected HSVAColorPickerRL(Context context, int initialColor, int width, int height, @Nullable float[] hsva, @Nullable Dialog dialog) {
         super(context);
+        if (dialog != null) {
+            Window window = dialog.getWindow();
+            if (window != null) {
+                WindowManager.LayoutParams attributes = window.getAttributes();
+                attributes.dimAmount = 0F;
+                window.setAttributes(attributes);
+            }
+        }
         this.width = width;
         this.height = height;
         this.context = context;
@@ -124,7 +136,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             });
             adb.setTitle(R.string.please_enter_color_hex);
             AlertDialog ad = adb.create();
-            DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
             ad.show();
             Selection.selectAll(editText.getText());
             DialogUtil.setADWithET_autoShowSoftKeyboard(editText, ad);
