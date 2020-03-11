@@ -60,7 +60,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.MainActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.BitmapUtil;
@@ -403,7 +402,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                                 , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
                         setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                        HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0]) {
+                        HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
                             @Override
                             void onPickedAction(int color, float[] hsva) {
                                 pv.setPaintColor(color);
@@ -446,12 +445,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         break;
                     case 9:
                         Dialog c = new Dialog(this);
-                        View inflate = View.inflate(this, R.layout.panel_view, null);
+                        LinearLayout inflate = View.inflate(this, R.layout.panel_view, null).findViewById(R.id.ll);
                         Button panelColorBtn = inflate.findViewById(R.id.panel_color);
                         panelColorBtn.setOnClickListener(v2 -> {
                             Dialog TVsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
                             setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            HSVAColorPickerRL TVsColorPicker = new HSVAColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1]) {
+                            HSVAColorPickerRL TVsColorPicker = new HSVAColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1], TVsColorDialog) {
                                 @Override
                                 void onPickedAction(int color, float[] hsva) {
                                     setPanelColor(color, hsva);
@@ -465,7 +464,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         textsColorBtn.setOnClickListener(v2 -> {
                             Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
                             setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2]) {
+                            HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2], textsColorDialog) {
                                 @Override
                                 void onPickedAction(int color, float[] hsva) {
                                     for (TextView childTV : childTVs) {
@@ -492,7 +491,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> this.panelColorFollowPainting = isChecked);
                         c.setContentView(inflate);
                         DialogUtil.setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
-                        , ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                                , ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         c.show();
                         break;
                     case 10:
@@ -535,6 +534,16 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             }
         }));
         findViewById(R.id.small_btn).setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
+    }
+
+    private void setPanelColor(int color, float[] hsva) {
+        for (TextView childTV : childTVs) {
+            TVsColor = color;
+            childTV.setBackgroundColor(TVsColor);
+            if (invertColorChecked)
+                childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
+        }
+        hsvaFloats[1] = hsva;
     }
 
     private void setPanelColor(int color, float[] hsva) {
@@ -693,12 +702,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (isChecked) {
                 new CheckOverlayPermission(this) {
                     @Override
-                    void granted() {
+                    public void granted() {
                         startFloatingWindow();
                     }
 
                     @Override
-                    void denied() {
+                    public void denied() {
                         fbSwitch.setChecked(false);
                     }
                 };
@@ -1202,7 +1211,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
 
-    private static abstract class CheckOverlayPermission {
+    public static abstract class CheckOverlayPermission {
         public CheckOverlayPermission(Activity activity) {
             if (!Settings.canDrawOverlays(activity)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -1212,8 +1221,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             } else granted();
         }
 
-        abstract void granted();
+        public abstract void granted();
 
-        abstract void denied();
+        public abstract void denied();
     }
 }

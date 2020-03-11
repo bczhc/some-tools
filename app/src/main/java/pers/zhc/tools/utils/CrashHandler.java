@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -309,12 +308,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                     buttons[i].setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1F));
                 }
                 ll.addView(bottomButtonLL);
-                boolean permission = false;
-                if (Build.VERSION.SDK_INT >= 23) {
-                    permission = Settings.canDrawOverlays(mContext);
-                }
-                System.out.println("permission = " + permission);
-                DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, permission);
+                DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, null);
                 ll.setFocusable(true);
                 ll.setFocusableInTouchMode(true);
                 ll.setOnKeyListener((v, keyCode, event) -> {

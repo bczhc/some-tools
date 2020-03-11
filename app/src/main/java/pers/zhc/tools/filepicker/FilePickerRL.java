@@ -25,6 +25,8 @@ import java.io.File;
 import java.text.Collator;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import static pers.zhc.tools.utils.Common.showException;
@@ -72,7 +74,6 @@ public class FilePickerRL extends RelativeLayout {
 //        this.currentPath = new File("/storage/emulated/0");
         lp.setMargins(2, 10, 10, 0);
         fileNameET = findViewById(R.id.file_name_et);
-        fileNameET.clearFocus();
         fileNameET.setText(initFileName);
         Button cancel = findViewById(R.id.cancel);
         Button ok = findViewById(R.id.pick);
@@ -98,7 +99,7 @@ public class FilePickerRL extends RelativeLayout {
             AlertDialog.Builder ad = new AlertDialog.Builder(ctx);
             EditText et = new EditText(ctx);
             String s = pathView.getText().toString();
-            ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.tv, s.equals("/storage/emulated") ? s + "/0" : s)));
+            ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.tv, (s.equals("/storage/emulated") ? s + "/0" : s) + '/')));
             et.setLayoutParams(lp);
             AlertDialog alertDialog = ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
@@ -111,8 +112,7 @@ public class FilePickerRL extends RelativeLayout {
                             resultString = f.getAbsolutePath();
                             ok.performClick();
                         } else {
-                            File[] listFiles = f.listFiles();
-                            recombine(listFiles);
+                            File[] listFiles = getFileList(f);
                             this.currentPath = f;
                             fillViews(listFiles, lp, grey, justPicked, ll);
                         }
@@ -120,14 +120,13 @@ public class FilePickerRL extends RelativeLayout {
                     .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     })
                     .setView(et).create();
-            DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
             DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
             alertDialog.show();
         });
         this.ll = findViewById(R.id.ll);
         new Thread(() -> {
-            File[] listFiles = currentPath.listFiles();
-            recombine(listFiles);
+            File[] listFiles = getFileList(currentPath);
             fillViews(listFiles, lp, grey, justPicked, ll);
         }).start();
     }
@@ -177,8 +176,7 @@ public class FilePickerRL extends RelativeLayout {
                                 }
                             } else {
                                 this.currentPath = currentFile;
-                                File[] listFiles1 = currentFile.listFiles();
-                                recombine(listFiles1);
+                                File[] listFiles1 = getFileList(currentFile);
                                 fillViews(listFiles1, lp, unselectedColor, justPicked, ll);
                             }
                         });
@@ -193,8 +191,7 @@ public class FilePickerRL extends RelativeLayout {
                             File currentFile = listFiles[finalI];
                             if (currentFile.isDirectory()) {
                                 this.currentPath = currentFile;
-                                File[] listFiles1 = currentFile.listFiles();
-                                recombine(listFiles1);
+                                File[] listFiles1 = getFileList(currentFile);
                                 fillViews(listFiles1, lp, unselectedColor, justPicked, ll);
                             }
                         });
@@ -243,8 +240,7 @@ public class FilePickerRL extends RelativeLayout {
             File parentFile = this.currentPath.getParentFile();
             File[] listFiles = new File[0];
             if (parentFile != null) {
-                listFiles = parentFile.listFiles();
-                recombine(listFiles);
+                listFiles = getFileList(parentFile);
             }
             fillViews(listFiles, lp, grey, justPicked, ll);
             this.currentPath = parentFile;
@@ -253,30 +249,24 @@ public class FilePickerRL extends RelativeLayout {
         }
     }
 
-    private void recombine(@Nullable File[] files) {
-        if (files != null) {
-            Collator stringComparator = Collator.getInstance(Locale.CHINA);
-            Comparator<File> comparator = (o1, o2) -> stringComparator.compare(o1.getName(), o2.getName());
-            Arrays.sort(files, comparator);
-            /*Comparator<File> extensionComparator = (o1, o2) -> {
-                boolean o1File = o1.isFile();
-                boolean o2File = o2.isFile();
-                if ((o1File && o2File) || (!o1File && !o2File)) return 0;
-                if (o1File) return 1;
-                return -1;
-            };*/
-            int length = files.length;
-            File tmp;
-            for (int i = 0; i < length; i++) {
-                if (files[i].isDirectory() && i != 0) {
-                    for (int j = i; j >= 0; --j) {
-                        tmp = files[i];
-                        files[i] = files[i - 1];
-                        files[i - 1] = tmp;
-                    }
-                }
-            }
+    private File[] getFileList(File file) {
+        File[] files = file.listFiles();
+        List<File> fileList = new LinkedList<>();
+        List<File> dirList = new LinkedList<>();
+        Collator stringComparator = Collator.getInstance(Locale.CHINA);
+        Comparator<File> comparator = (o1, o2) -> stringComparator.compare(o1.getName(), o2.getName());
+        if (files == null) {
+            files = new File[0];
         }
+        Arrays.sort(files, comparator);
+        for (File f : files) {
+            if (f.isDirectory()) dirList.add(f);
+            else fileList.add(f);
+        }
+        List<File> r = new LinkedList<>();
+        r.addAll(dirList);
+        r.addAll(fileList);
+        return r.toArray(new File[0]);
     }
 
     public interface OnPickedResultActionInterface {

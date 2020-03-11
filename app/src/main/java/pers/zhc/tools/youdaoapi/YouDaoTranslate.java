@@ -1,7 +1,6 @@
 package pers.zhc.tools.youdaoapi;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,14 +10,12 @@ import android.widget.SpinnerAdapter;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ScrollEditText;
-import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.u.YouDao;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class YouDaoTranslate extends BaseActivity {
+    @SuppressWarnings("unused")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +37,7 @@ public class YouDaoTranslate extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String text = s.toString();
+                /*String text = s.toString();
                 Handler handler = new Handler();
                 new Thread(() -> {
                     try {
@@ -49,7 +46,7 @@ public class YouDaoTranslate extends BaseActivity {
                     } catch (IOException e) {
                         handler.post(() -> ToastUtils.showError(YouDaoTranslate.this, R.string.translate_error, e));
                     }
-                }).start();
+                }).start();*/
             }
         });
     }
