@@ -15,6 +15,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
+import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -26,6 +27,7 @@ import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
+import pers.zhc.u.util.ClockHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,7 +54,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private Path mPath;
     private Paint eraserPaint;
     private Paint mPaintRef = null;
+    @SuppressWarnings("unused")
     private Map<String, MyCanvas> canvasMap;
+    @SuppressWarnings("unused")
     private Map<MyCanvas, Bitmap> bitmapMap;
     private MyCanvas headCanvas;
     private Bitmap headBitmap;
@@ -421,8 +425,17 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      *                            如果标记为0xB1或0xB2或0xB3，排列结构：标记(int)+x坐标(float)+y坐标(float)
      *                            如果标记为0xC1或0xC2，则后8字节忽略。
      */
-    void importPathFile(File f, Runnable d, @Documents.Nullable ValueInterface<Float> floatValueInterface) {
-        floatValueInterface.f(0F);
+    void importPathFile(File f, Runnable d, @Nullable ValueInterface<Float> floatValueInterface) {
+        if (floatValueInterface != null) {
+            floatValueInterface.f(0F);
+        }
+        ClockHandler<Float> clockHandler = new ClockHandler<>(aFloat -> {
+            if (floatValueInterface != null && aFloat != null) {
+                floatValueInterface.f(aFloat);
+            }
+        }, 1);
+        ClockHandler.ParamReference<Float> paramReference = clockHandler.getParamReference();
+        clockHandler.start();
         Handler handler = new Handler();
         importingPath = true;
         Thread thread = new Thread(() -> {
@@ -485,7 +498,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     break;
                             }
                             read += 12;
-                            floatValueInterface.f(((float) read) * 100F / ((float) length));
+                            paramReference.param = ((float) read) * 100F / ((float) length);
                         }
                         break;
                     case "path ver 2.1":
@@ -530,7 +543,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                         break;
                                 }
                                 read += 9L;
-                                floatValueInterface.f(((float) read) * 100F / ((float) length));
+//                                if (floatValueInterface != null) {
+//                                    floatValueInterface.f(((float) read) * 100F / ((float) length));
+//                                }
+                                paramReference.param = ((float) read) * 100F / ((float) length);
                             }
                         }
                         break;
@@ -572,12 +588,13 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     setPaintColor(color);
                                     setStrokeWidth(strokeWidth);
                                     onTouchAction(motionAction, x, y);
-                                    floatValueInterface.f(((float) read) / ((float) length) * 100F);
+                                    paramReference.param = ((float) read) / ((float) length) * 100F;
                                     break;
                             }
                         }
                         break;
                 }
+                clockHandler.stop();
                 d.run();
             } catch (IOException e) {
                 handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
@@ -792,6 +809,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    @SuppressWarnings("unused")
     void changeHead(String id) {
         headCanvas = canvasMap.get(id);
         headBitmap = bitmapMap.get(headCanvas);
