@@ -18,6 +18,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.CrashHandler;
 import pers.zhc.tools.utils.DialogUtil;

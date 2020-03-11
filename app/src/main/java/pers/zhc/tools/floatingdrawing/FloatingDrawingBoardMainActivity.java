@@ -60,6 +60,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.MainActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.BitmapUtil;
@@ -534,16 +535,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             }
         }));
         findViewById(R.id.small_btn).setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
-    }
-
-    private void setPanelColor(int color, float[] hsva) {
-        for (TextView childTV : childTVs) {
-            TVsColor = color;
-            childTV.setBackgroundColor(TVsColor);
-            if (invertColorChecked)
-                childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
-        }
-        hsvaFloats[1] = hsva;
     }
 
     private void setPanelColor(int color, float[] hsva) {
