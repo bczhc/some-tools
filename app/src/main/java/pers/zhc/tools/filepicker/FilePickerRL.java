@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,10 +35,8 @@ import static pers.zhc.tools.utils.Common.showException;
 
 @SuppressLint("ViewConstructor")
 public class FilePickerRL extends RelativeLayout {
-    @SuppressWarnings("unused")
     public static final int TYPE_PICK_FILE = 1;
-    @SuppressWarnings("unused")
-    public static int TYPE_PICK_FOLDER = 2;
+    public static final int TYPE_PICK_FOLDER = 2;
     private final File initialPath;
     private final Runnable cancelAction;
     private final OnPickedResultActionInterface pickedResultAction;
@@ -46,17 +46,20 @@ public class FilePickerRL extends RelativeLayout {
     private final int type;
     private final Activity ctx;
     public String result;
+//    private List<File> currentFiles;
     private String resultString = "";
     private TextView pathView;
     private File currentPath;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
-    private EditText fileNameET;
+    private EditText headET;
+    private int unselectedColor;
 
     public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath
             , Runnable cancelAction, OnPickedResultActionInterface pickedResultAction
             , @Nullable String initFileName) {
         super(context);
+//        this.currentFiles = new LinkedList<>();
         this.ctx = (Activity) context;
         this.type = type;
         this.initialPath = initialPath;
@@ -67,14 +70,31 @@ public class FilePickerRL extends RelativeLayout {
     }
 
     private void init(String initFileName) {
+        this.unselectedColor = this.type == TYPE_PICK_FILE ? grey : white;
         View view = View.inflate(ctx, R.layout.file_picker_rl_activity, null);
         this.addView(view);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
-//        this.currentPath = new File("/storage/emulated/0");
         lp.setMargins(2, 10, 10, 0);
-        fileNameET = findViewById(R.id.file_name_et);
-        fileNameET.setText(initFileName);
+        headET = findViewById(R.id.file_name_et);
+        headET.setText(initFileName);
+        headET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                File[] fileList = getFileList(FilePickerRL.this.currentPath);
+                fillViews(fileList);
+            }
+        });
         Button cancel = findViewById(R.id.cancel);
         Button ok = findViewById(R.id.pick);
         cancel.setOnClickListener(v -> {
@@ -104,9 +124,7 @@ public class FilePickerRL extends RelativeLayout {
             AlertDialog alertDialog = ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String etText = et.getText().toString();
-                        if (etText.charAt(0) != '/') {
-                            etText = '/' + etText;
-                        }
+                        if (etText.charAt(0) != '/') etText = '/' + etText;
                         File f = new File(etText);
                         if (f.isFile() && type == 1) {
                             resultString = f.getAbsolutePath();
@@ -114,7 +132,7 @@ public class FilePickerRL extends RelativeLayout {
                         } else {
                             File[] listFiles = getFileList(f);
                             this.currentPath = f;
-                            fillViews(listFiles, lp, grey, justPicked, ll);
+                            fillViews(listFiles);
                         }
                     })
                     .setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -127,33 +145,34 @@ public class FilePickerRL extends RelativeLayout {
         this.ll = findViewById(R.id.ll);
         new Thread(() -> {
             File[] listFiles = getFileList(currentPath);
-            fillViews(listFiles, lp, grey, justPicked, ll);
+            fillViews(listFiles);
         }).start();
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void fillViews(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor,
-                           int[] justPicked, LinearLayout ll) {
-        new Thread(() -> {
+    private void fillViews(File[] listFilesP) {
+        final File[][] listFiles = {listFilesP};
+        Thread thread = new Thread(() -> {
+            listFiles[0] = filter(listFiles[0], headET.getText().toString());
             justPicked[0] = -1;
             ctx.runOnUiThread(ll::removeAllViews);
             ctx.runOnUiThread(() -> pathView.setText(String.format("%s", currentPath.getAbsolutePath())));
             TextView[] textViews;
             int length = 0;
             try {
-                length = listFiles.length;
+                length = listFiles[0].length;
             } catch (Exception e) {
                 ctx.runOnUiThread(() -> ToastUtils.show(ctx, R.string.no_access));
                 e.printStackTrace();
             }
             textViews = new TextView[length];
             switch (type) {
-                case 1:
+                case TYPE_PICK_FILE:
                     for (int i = 0; i < length; i++) {
                         final int finalI = i;
-                        extractM1(listFiles, lp, unselectedColor, textViews, i);
+                        extractM1(listFiles[0], lp, textViews, i);
                         textViews[i].setOnClickListener(v -> {
-                            File currentFile = listFiles[finalI];
+                            File currentFile = listFiles[0][finalI];
                             if (currentFile.isFile()) {
                                 Drawable background = textViews[finalI].getBackground();
                                 ColorDrawable colorDrawable = (ColorDrawable) background;
@@ -170,36 +189,37 @@ public class FilePickerRL extends RelativeLayout {
                                     }
                                 }
                                 try {
-                                    resultString = listFiles[justPicked[0]].getAbsolutePath();
+                                    resultString = listFiles[0][justPicked[0]].getAbsolutePath();
                                 } catch (ArrayIndexOutOfBoundsException e) {
                                     showException(e, ctx);
                                 }
                             } else {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = getFileList(currentFile);
-                                fillViews(listFiles1, lp, unselectedColor, justPicked, ll);
+                                fillViews(listFiles1);
                             }
                         });
                         ctx.runOnUiThread(() -> ll.addView(textViews[finalI]));
                     }
                     break;
-                case 2:
+                case TYPE_PICK_FOLDER:
                     for (int i = 0; i < length; i++) {
-                        extractM1(listFiles, lp, unselectedColor, textViews, i);
+                        extractM1(listFiles[0], lp, textViews, i);
                         final int finalI = i;
                         textViews[i].setOnClickListener(v -> {
-                            File currentFile = listFiles[finalI];
+                            File currentFile = listFiles[0][finalI];
                             if (currentFile.isDirectory()) {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = getFileList(currentFile);
-                                fillViews(listFiles1, lp, unselectedColor, justPicked, ll);
+                                fillViews(listFiles1);
                             }
                         });
                         ctx.runOnUiThread(() -> ll.addView(textViews[finalI]));
                     }
                     break;
             }
-        }).start();
+        });
+        thread.start();
     }
 
     /*@Override
@@ -208,7 +228,7 @@ public class FilePickerRL extends RelativeLayout {
         else previous();
     }*/
 
-    private void extractM1(File[] listFiles, LinearLayout.LayoutParams lp, int unselectedColor, TextView[] textViews,
+    private void extractM1(File[] listFiles, LinearLayout.LayoutParams lp, TextView[] textViews,
                            int i) {
         textViews[i] = new TextView(ctx);
         textViews[i].setBackgroundResource(R.drawable.view_stroke);
@@ -242,7 +262,7 @@ public class FilePickerRL extends RelativeLayout {
             if (parentFile != null) {
                 listFiles = getFileList(parentFile);
             }
-            fillViews(listFiles, lp, grey, justPicked, ll);
+            fillViews(listFiles);
             this.currentPath = parentFile;
         } catch (Exception e) {
             showException(e, ctx);
@@ -267,6 +287,26 @@ public class FilePickerRL extends RelativeLayout {
         r.addAll(dirList);
         r.addAll(fileList);
         return r.toArray(new File[0]);
+    }
+
+    private File[] filter(File[] files, String regex) {
+        List<File> fileList = new LinkedList<>();
+        for (File file : files) {
+            if (regex.equals("")) {
+                fileList.add(file);
+            } else {
+                boolean match = true;
+                try {
+                    match = file.getName().matches(regex);
+                } catch (Exception ignored) {
+                    ToastUtils.show(ctx, R.string.wrong_regex);
+                }
+                if (match) {
+                    fileList.add(file);
+                }
+            }
+        }
+        return fileList.toArray(new File[0]);
     }
 
     public interface OnPickedResultActionInterface {

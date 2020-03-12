@@ -208,5 +208,7 @@
     <string name="translate_error">翻译出错</string>
     <string name="invert_text_color">文字颜色反相</string>
     <string name="follow_painting_color">跟随笔刷颜色</string>
+    <string name="filter_with_regex">过滤器（正则表达式）</string>
+    <string name="wrong_regex">错误的正则</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

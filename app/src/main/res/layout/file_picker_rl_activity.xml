@@ -11,6 +11,7 @@
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/file_name_et" tools:ignore="Autofill,LabelFor,TextFields"
               android:layout_below="@id/textView"
+              android:hint="@string/filter_with_regex"
     />
     <ScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent"

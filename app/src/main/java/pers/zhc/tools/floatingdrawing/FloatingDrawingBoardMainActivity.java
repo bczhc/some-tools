@@ -87,6 +87,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
@@ -491,7 +492,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> this.panelColorFollowPainting = isChecked);
                         c.setContentView(inflate);
                         DialogUtil.setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
-                        , ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                                , ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         c.show();
                         break;
                     case 10:
@@ -1137,14 +1138,26 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 tv.setText(R.string.importing);
                 ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
                 TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
+//                PaintView.Latch latch = new PaintView.Latch();
                 pv.importPathFile(new File(s), () -> {
                     this.hsvaFloats[0] = null;
                     runOnUiThread(importPathFileDoneAction);
                     importPathFileProgressDialog.dismiss();
-                }, aFloat -> runOnUiThread(() -> {
-                    progressBar.setProgress(aFloat.intValue());
-                    pTV.setText(getString(R.string.progress_tv, aFloat));
-                }));
+                }, aFloat -> {
+//                    latch.suspend();
+                    CountDownLatch latch = new CountDownLatch(1);
+                    runOnUiThread(() -> {
+                        progressBar.setProgress(aFloat.intValue());
+                        pTV.setText(getString(R.string.progress_tv, aFloat));
+//                        latch.stop();
+                        latch.countDown();
+                    });
+                    try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                });
                 if (moreOptionsDialog != null) {
                     moreOptionsDialog.dismiss();
                 }
