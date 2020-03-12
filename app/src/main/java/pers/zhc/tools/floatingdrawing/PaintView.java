@@ -24,10 +24,10 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.u.CanDoHandler;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
-import pers.zhc.u.util.ClockHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,10 +54,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private Path mPath;
     private Paint eraserPaint;
     private Paint mPaintRef = null;
-    @SuppressWarnings("unused")
-    private Map<String, MyCanvas> canvasMap;
-    @SuppressWarnings("unused")
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private Map<MyCanvas, Bitmap> bitmapMap;
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private Map<String, MyCanvas> canvasMap;
     private MyCanvas headCanvas;
     private Bitmap headBitmap;
     private float mLastX, mLastY;//上次的坐标
@@ -429,13 +429,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         if (floatValueInterface != null) {
             floatValueInterface.f(0F);
         }
-        ClockHandler<Float> clockHandler = new ClockHandler<>(aFloat -> {
+        CanDoHandler<Float> canDoHandler = new CanDoHandler<>(aFloat -> {
             if (floatValueInterface != null && aFloat != null) {
                 floatValueInterface.f(aFloat);
             }
-        }, 1);
-        ClockHandler.ParamReference<Float> paramReference = clockHandler.getParamReference();
-        clockHandler.start();
+        });
+        canDoHandler.start();
         Handler handler = new Handler();
         importingPath = true;
         Thread thread = new Thread(() -> {
@@ -498,7 +497,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     break;
                             }
                             read += 12;
-                            paramReference.param = ((float) read) * 100F / ((float) length);
+                            canDoHandler.push(((float) read) * 100F / ((float) length));
                         }
                         break;
                     case "path ver 2.1":
@@ -546,7 +545,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
 //                                if (floatValueInterface != null) {
 //                                    floatValueInterface.f(((float) read) * 100F / ((float) length));
 //                                }
-                                paramReference.param = ((float) read) * 100F / ((float) length);
+                                canDoHandler.push(((float) read) * 100F / ((float) length));
                             }
                         }
                         break;
@@ -588,13 +587,13 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     setPaintColor(color);
                                     setStrokeWidth(strokeWidth);
                                     onTouchAction(motionAction, x, y);
-                                    paramReference.param = ((float) read) / ((float) length) * 100F;
+                                    canDoHandler.push(((float) read) * 100F / ((float) length));
                                     break;
                             }
                         }
                         break;
                 }
-                clockHandler.stop();
+                canDoHandler.stop();
                 d.run();
             } catch (IOException e) {
                 handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
@@ -850,5 +849,25 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 return super.removeLast();
             }
         }
+
     }
+
+    protected static class Latch {
+        private boolean stop = false;
+
+        public void await() {
+            for (; ; ) {
+                if (stop) break;
+            }
+        }
+
+        public void suspend() {
+            stop = false;
+        }
+
+        public void stop() {
+            stop = true;
+        }
+    }
+
 }
