@@ -2,9 +2,8 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="jni" targetName="doJni" />
-      <config projectName="jni" targetName="bitmap" />
       <config projectName="jni" targetName="verification" />
+      <config projectName="jni" targetName="doJni" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -14,25 +13,149 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
+      <change afterPath="$PROJECT_DIR$/../../proguard-rules-debug.pro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/c/codecs/codecsDo.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/codecs/JNICallback.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/jni/JNI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/pi/JNICallback.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.idea/dictionaries/root.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/dictionaries/root.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../hs_err_pid3904.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../hs_err_pid5132.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/../../proguard-rules.pro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../replay_pid3904.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/jar_libs/zhcSingle.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../main/jar_libs/zhcSingle.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/doJni.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/jni.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/jni.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/Base128Lib.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/Base128Lib.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/Base128Lib.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/Base128Lib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/doJNI.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/codecsDo.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/kwm.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/kwm.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/kwm.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/kwm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/pers_zhc_JNI.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/qmcLib.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/qmcLib.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/codecs/qmcLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/c/codecs/qmcLib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/floatingboard/bitmap.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/floatingboard/fb_tools.c" beforeDir="false" afterPath="$PROJECT_DIR$/c/floatingboard/fb_tools.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/floatingboard/pers_zhc_tools_utils_BitmapUtil.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/verification/com_zhc_tools_floatingdrawing_JNI.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/verification/verify.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/JNIHelper.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/MotionEvent.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/android_native_app_glue.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/com_jiagutech_input_InputPen.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/input_pen.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/pi.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/pi.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/pi.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/pi.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/pi.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/pi.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/pi.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/pi.dir/flags.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/cmake-build-debug/cpp.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/cpp.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/pi/com_zhc_tools_pi_PiJNI.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/pi/pi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/pi/pi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libbitmap.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libfb_tools.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libbitmap.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libfb_tools.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libbitmap.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libfb_tools.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libbitmap.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libfb_tools.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/libpi.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/EpicyclesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/EpicyclesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/filepicker/FilePickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/filepicker/FilePickerRL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/HSVAColorPickerRL.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/HSVAColorPickerRL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/NotificationClickReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/NotificationClickReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/functiondrawing/FunctionDrawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/S.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/S.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/DialogUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/DialogUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/codecs/CodecsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/codecs/CodecsActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/codecs/JNI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/codecs/JNIMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/codecs/jniCall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/JNI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/pi/Pi.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/pi/Pi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/pi/PiJNI.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/BitmapUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/BitmapUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/cpp/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/cpp/pi/pi.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/cpp/pi/pi.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/cpp/pi/pi.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_c++/pi/pi.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_c++/pi/pi.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/cpp/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/cpp/pi/pi.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/cpp/pi/pi.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/cpp/pi/pi.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_c++/pi/pi.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_c++/pi/pi.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/cpp/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/pi/cpp/pi/pi.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/cpp/pi/pi.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/pi/cpp/pi/pi.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_c++/pi/pi.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_c++/pi/pi.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/cpp/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/cpp/pi/pi.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/cpp/pi/pi.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/cpp/pi/pi.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_c++/pi/pi.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_c++/pi/pi.o.d" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +177,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="0-Debug-doJni" />
+  </component>
   <component name="ProjectId" id="1VlsrdxAQagObPq5hfWFLJ2szyK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -66,7 +192,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../C99" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/c/codecs" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -76,26 +202,21 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/h" />
+      <recent name="$PROJECT_DIR$/c/codecs" />
       <recent name="$PROJECT_DIR$/c/floatingboard" />
       <recent name="$PROJECT_DIR$/c" />
       <recent name="$PROJECT_DIR$/jni_c++/verification" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/jni_c++/pi" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/c/codecs" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/c/getevent" />
       <recent name="$PROJECT_DIR$/jni_c++" />
       <recent name="$PROJECT_DIR$/c" />
-      <recent name="$PROJECT_DIR$/codecs" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.bitmap">
-    <configuration name="bitmap" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="jni" TARGET_NAME="bitmap" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="jni" RUN_TARGET_NAME="bitmap">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="CMake Application.doJni">
     <configuration name="doJni" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="jni" TARGET_NAME="doJni" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="jni" RUN_TARGET_NAME="doJni">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -107,7 +228,6 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application.bitmap" />
       <item itemvalue="CMake Application.doJni" />
       <item itemvalue="CMake Application.verification" />
     </list>
@@ -173,6 +293,8 @@
       <workItem from="1581150953302" duration="2410000" />
       <workItem from="1581472795991" duration="1642000" />
       <workItem from="1582196104647" duration="338000" />
+      <workItem from="1584197734827" duration="3429000" />
+      <workItem from="1584227847126" duration="7211000" />
     </task>
     <servers />
   </component>
@@ -207,6 +329,10 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
+    <state x="418" y="206" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584230623773">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="418" y="206" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1584230623773" />
     <state x="178" y="27" width="999" height="741" key="CommitChangelistDialog2" timestamp="1580008641115">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -248,21 +374,25 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="337" y="225" key="com.intellij.ide.util.TipDialog/0.27.1366.741@0.27.1366.741" timestamp="1579851196081" />
-    <state x="290" y="27" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1581153084793">
+    <state x="290" y="27" width="1131" height="991" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1584236960336">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="206" y="27" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1366.741@0.27.1366.741" timestamp="1579959394299" />
-    <state x="290" y="27" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1581153084793" />
-    <state x="18" y="38" width="1824" height="1017" key="find.popup" timestamp="1581152468931">
+    <state x="290" y="27" width="1131" height="991" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1584236960336" />
+    <state x="17" y="38" width="1824" height="1017" key="find.popup" timestamp="1584240134164">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="13" y="35" width="1297" height="715" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1580008144441" />
-    <state x="18" y="38" width="1824" height="1017" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581152468931" />
-    <state x="486" y="115" width="945" height="964" key="search.everywhere.popup" timestamp="1581151247459">
+    <state x="17" y="38" width="1824" height="1017" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1584240134164" />
+    <state x="636" y="127" width="638" height="859" key="refactoring.ChangeSignatureDialog" timestamp="1584201589592">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="636" y="127" width="638" height="859" key="refactoring.ChangeSignatureDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1584201589592" />
+    <state x="486" y="115" width="945" height="964" key="search.everywhere.popup" timestamp="1584240119338">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="346" y="89" width="672" height="678" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1580007171441" />
-    <state x="486" y="115" width="945" height="964" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1581151247459" />
+    <state x="486" y="115" width="945" height="964" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1584240119338" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

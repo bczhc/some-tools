@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named bitmap
-
-# Build rule for target.
-bitmap: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 bitmap
-.PHONY : bitmap
-
-# fast build rule for target.
-bitmap/fast:
-	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/build
-.PHONY : bitmap/fast
-
-#=============================================================================
 # Target rules for targets named verification
 
 # Build rule for target.
@@ -149,32 +136,86 @@ doJni/fast:
 	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/build
 .PHONY : doJni/fast
 
-codecs/doJNI.o: codecs/doJNI.c.o
+codecs/Base128Lib.o: codecs/Base128Lib.c.o
 
-.PHONY : codecs/doJNI.o
+.PHONY : codecs/Base128Lib.o
 
 # target to build an object file
-codecs/doJNI.c.o:
-	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/doJNI.c.o
-.PHONY : codecs/doJNI.c.o
+codecs/Base128Lib.c.o:
+	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/Base128Lib.c.o
+.PHONY : codecs/Base128Lib.c.o
 
-codecs/doJNI.i: codecs/doJNI.c.i
+codecs/Base128Lib.i: codecs/Base128Lib.c.i
 
-.PHONY : codecs/doJNI.i
+.PHONY : codecs/Base128Lib.i
 
 # target to preprocess a source file
-codecs/doJNI.c.i:
-	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/doJNI.c.i
-.PHONY : codecs/doJNI.c.i
+codecs/Base128Lib.c.i:
+	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/Base128Lib.c.i
+.PHONY : codecs/Base128Lib.c.i
 
-codecs/doJNI.s: codecs/doJNI.c.s
+codecs/Base128Lib.s: codecs/Base128Lib.c.s
 
-.PHONY : codecs/doJNI.s
+.PHONY : codecs/Base128Lib.s
 
 # target to generate assembly for a file
-codecs/doJNI.c.s:
-	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/doJNI.c.s
-.PHONY : codecs/doJNI.c.s
+codecs/Base128Lib.c.s:
+	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/Base128Lib.c.s
+.PHONY : codecs/Base128Lib.c.s
+
+codecs/codecsDo.o: codecs/codecsDo.c.o
+
+.PHONY : codecs/codecsDo.o
+
+# target to build an object file
+codecs/codecsDo.c.o:
+	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/codecsDo.c.o
+.PHONY : codecs/codecsDo.c.o
+
+codecs/codecsDo.i: codecs/codecsDo.c.i
+
+.PHONY : codecs/codecsDo.i
+
+# target to preprocess a source file
+codecs/codecsDo.c.i:
+	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/codecsDo.c.i
+.PHONY : codecs/codecsDo.c.i
+
+codecs/codecsDo.s: codecs/codecsDo.c.s
+
+.PHONY : codecs/codecsDo.s
+
+# target to generate assembly for a file
+codecs/codecsDo.c.s:
+	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/codecsDo.c.s
+.PHONY : codecs/codecsDo.c.s
+
+codecs/kwm.o: codecs/kwm.c.o
+
+.PHONY : codecs/kwm.o
+
+# target to build an object file
+codecs/kwm.c.o:
+	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/kwm.c.o
+.PHONY : codecs/kwm.c.o
+
+codecs/kwm.i: codecs/kwm.c.i
+
+.PHONY : codecs/kwm.i
+
+# target to preprocess a source file
+codecs/kwm.c.i:
+	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/kwm.c.i
+.PHONY : codecs/kwm.c.i
+
+codecs/kwm.s: codecs/kwm.c.s
+
+.PHONY : codecs/kwm.s
+
+# target to generate assembly for a file
+codecs/kwm.c.s:
+	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/kwm.c.s
+.PHONY : codecs/kwm.c.s
 
 codecs/qmcLib.o: codecs/qmcLib.c.o
 
@@ -202,33 +243,6 @@ codecs/qmcLib.s: codecs/qmcLib.c.s
 codecs/qmcLib.c.s:
 	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/codecs/qmcLib.c.s
 .PHONY : codecs/qmcLib.c.s
-
-floatingboard/bitmap.o: floatingboard/bitmap.c.o
-
-.PHONY : floatingboard/bitmap.o
-
-# target to build an object file
-floatingboard/bitmap.c.o:
-	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/floatingboard/bitmap.c.o
-.PHONY : floatingboard/bitmap.c.o
-
-floatingboard/bitmap.i: floatingboard/bitmap.c.i
-
-.PHONY : floatingboard/bitmap.i
-
-# target to preprocess a source file
-floatingboard/bitmap.c.i:
-	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/floatingboard/bitmap.c.i
-.PHONY : floatingboard/bitmap.c.i
-
-floatingboard/bitmap.s: floatingboard/bitmap.c.s
-
-.PHONY : floatingboard/bitmap.s
-
-# target to generate assembly for a file
-floatingboard/bitmap.c.s:
-	$(MAKE) -f CMakeFiles/bitmap.dir/build.make CMakeFiles/bitmap.dir/floatingboard/bitmap.c.s
-.PHONY : floatingboard/bitmap.c.s
 
 floatingboard/fb_tools.o: floatingboard/fb_tools.c.o
 
@@ -319,18 +333,20 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... bitmap"
 	@echo "... verification"
 	@echo "... doJni"
-	@echo "... codecs/doJNI.o"
-	@echo "... codecs/doJNI.i"
-	@echo "... codecs/doJNI.s"
+	@echo "... codecs/Base128Lib.o"
+	@echo "... codecs/Base128Lib.i"
+	@echo "... codecs/Base128Lib.s"
+	@echo "... codecs/codecsDo.o"
+	@echo "... codecs/codecsDo.i"
+	@echo "... codecs/codecsDo.s"
+	@echo "... codecs/kwm.o"
+	@echo "... codecs/kwm.i"
+	@echo "... codecs/kwm.s"
 	@echo "... codecs/qmcLib.o"
 	@echo "... codecs/qmcLib.i"
 	@echo "... codecs/qmcLib.s"
-	@echo "... floatingboard/bitmap.o"
-	@echo "... floatingboard/bitmap.i"
-	@echo "... floatingboard/bitmap.s"
 	@echo "... floatingboard/fb_tools.o"
 	@echo "... floatingboard/fb_tools.i"
 	@echo "... floatingboard/fb_tools.s"

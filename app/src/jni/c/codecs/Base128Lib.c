@@ -3,6 +3,7 @@
 //
 
 #include "Base128Lib.h"
+#include "./codecsDo.h"
 #include "qmcLib.h"
 
 char e_table_l[] = {1, 3, 7, 15, 31, 63, 127};
@@ -78,17 +79,17 @@ int e_4116_TP(char buf[4116], int readSize) {
 }
 
 */
-int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid) {
-    callMethod(env, mid, "", (double) 0, obj);
+int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject callback) {
+    Callback(env, callback, "", (double) 0);
     FILE *fp, *fpO;
     if ((fp = fopen(fN, "rb")) == NULL) {
         printf("fopen error. \n");
-        callMethod(env, mid, "fopen error. ", -1, obj);
+        Callback(env, callback, "fopen error. ", -1);
         return (jint) EOF;
     }
     if ((fpO = fopen(D_fN, "wb")) == NULL) {
         printf("fopen error. \n");
-        callMethod(env, mid, "fopen error. ", -1, obj);
+        Callback(env, callback, "fopen error. ", -1);
         return (jint) EOF;
     }
     dl fS = getFileSize(fp), a = fS / ERS;
@@ -108,7 +109,7 @@ int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
         d = (double) i / (double) a * 100;
         if (!(i % per)) {
 //            printf("progress: %f%%\n", d);
-            callMethod(env, mid, "", d, obj);
+            Callback(env, callback, "", d);
         }
     }
     if (b) {
@@ -119,16 +120,16 @@ int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
     }
     fclose(fp);
     fclose(fpO);
-    callMethod(env, mid, "", (double) 100, obj);
+    Callback(env, callback, "", (double) 100);
     return 0;
 }
 
-int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid) {
-    callMethod(env, mid, "", (double) 0, obj);
+int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject callback) {
+    Callback(env, callback, "", (double) 0);
     FILE *fp, *fpO;
     if ((fp = fopen(fN, "rb")) == NULL) {
         printf("fopen error. \n");
-        callMethod(env, mid, "fopen error. ", -1, obj);
+        Callback(env, callback, "fopen error. ", -1);
         return EOF;
     }
     dl fS = getFileSize(fp) - 8, a = fS / DRS;
@@ -146,12 +147,12 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
     }
     if (f_ck > 0) {
         printf("not Base128 encoded\n");
-        callMethod(env, mid, "不是由Base128编码得到的文件", -1, obj);
+        Callback(env, callback, "不是由Base128编码得到的文件", -1);
         return -2;
     }
     if ((fpO = fopen(D_fN, "wb")) == NULL) {
         printf("fopen error. \n");
-        callMethod(env, mid, "fopen error. ", -1, obj);
+        Callback(env, callback, "fopen error. ", -1);
         return EOF;
     }
     fC = r[0] & 255;
@@ -159,7 +160,7 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
     for (int i = 0; i < a; ++i) {
         d = (double) i / (double) a * 100;
         if (!(i % per)) {
-            callMethod(env, mid, "", d, obj);
+            Callback(env, callback, "", d);
         }
         fread(r, DRS, 1, fp);
         d_1176P(R, r, DRS);
@@ -172,7 +173,7 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid
     }
     fclose(fp);
     fclose(fpO);
-    callMethod(env, mid, "", (double) 100, obj);
+    Callback(env, callback, "", (double) 100);
     return 0;
 }
 

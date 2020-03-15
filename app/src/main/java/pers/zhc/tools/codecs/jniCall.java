@@ -1,15 +1,13 @@
 package pers.zhc.tools.codecs;
 
-import android.app.Activity;
-import android.widget.TextView;
+import pers.zhc.tools.jni.JNI;
 
 import java.util.List;
 
-class JNIMain {
+class jniCall {
     /**
      * JNIMethodCall
      *
-     * @param activity    activityContext
      * @param f           f1
      * @param dF          f2
      * @param dT          doType
@@ -17,20 +15,20 @@ class JNIMain {
      *                    1: kwmDecode
      *                    21: Base128 encode
      *                    22: Base128 decode
-     * @param tv          progressTextView
      * @param savedConfig savedConfig
+     * @param callback    progress callback
      * @return status 0
      */
-    int JNI_Decode(String f, String dF, int dT, TextView tv, Activity activity, List<List<String>> savedConfig) {
+    static int jniDecode(String f, String dF, int dT, List<List<String>> savedConfig, JNI.Codecs.Callback callback) {
         switch (dT) {
             case 0:
-                return new JNI(tv, activity).qmcDecode(f, dF, getMode(savedConfig, 0));
+                pers.zhc.tools.jni.JNI.Codecs.qmcDecode(f, dF, getMode(savedConfig, 0), callback);
             case 1:
-                return new JNI(tv, activity).kwmDecode(f, dF, getMode(savedConfig, 1));
+                pers.zhc.tools.jni.JNI.Codecs.kwmDecode(f, dF, getMode(savedConfig, 1), callback);
             case 21:
-                return new JNI(tv, activity).Base128_encode(f, dF, getMode(savedConfig, 2));
+                pers.zhc.tools.jni.JNI.Codecs.Base128_encode(f, dF, getMode(savedConfig, 2), callback);
             case 22:
-                return new JNI(tv, activity).Base128_decode(f, dF, getMode(savedConfig, 3));
+                pers.zhc.tools.jni.JNI.Codecs.Base128_decode(f, dF, getMode(savedConfig, 3), callback);
         }
         return 0;
     }
@@ -44,7 +42,7 @@ class JNIMain {
      * @param i           index
      * @return mode integer
      */
-    private int getMode(List<List<String>> savedConfig, @SuppressWarnings("SameParameterValue") int i) {
+    private static int getMode(List<List<String>> savedConfig, @SuppressWarnings("SameParameterValue") int i) {
         boolean b = Boolean.parseBoolean(savedConfig.get(i).get(2));
         return b ? 1 : 0;
     }

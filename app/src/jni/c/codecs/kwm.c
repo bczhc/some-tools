@@ -3,14 +3,12 @@
 //
 
 #include <jni.h>
-#include "kwm.h"
-#include "../../zhc.h"
-#include "qmcLib.h"
+#include "./codecsDo.h"
 
 
 #define MAX_FIND_KEY_TIME 468
 
-int kwm(JNIEnv *env, jmethodID mid, jobject obj, const char *fN, const char *dFN) {
+int kwm(JNIEnv *env, const char *fN, const char *dFN, jobject callback) {
     int haveFoundKey = 0;
     FILE *fp = NULL, *fpO = NULL;
     if ((fp = fopen(fN, "rb")) == NULL) {
@@ -70,7 +68,7 @@ int kwm(JNIEnv *env, jmethodID mid, jobject obj, const char *fN, const char *dFN
             buf[i] ^= key[i & 31];
         }
         fwrite(buf, 1024, 1, fpO);
-        if (!(l % p)) callMethod(env, mid, "", ((double) l) / (double) a * 100, obj);
+        if (!(l % p)) Callback(env, callback, "", ((double) l) / (double) a * 100);
     }
     if (b) {
         fread(buf, b, 1, fp);
@@ -81,6 +79,6 @@ int kwm(JNIEnv *env, jmethodID mid, jobject obj, const char *fN, const char *dFN
     }
     fclose(fp);
     fclose(fpO);
-    callMethod(env, mid, "", (double) 100, obj);
+    Callback(env, callback, "", (double) 100);
     return 0;
 }
