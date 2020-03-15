@@ -13,4 +13,6 @@
     <color name="start">#7DC387</color>
     <color name="end">#DBE9EA</color>
     <color name="done_green">#009C00</color>
+    <color name="green">#FF00FF00</color>
+    <color name="grey">#FFDCDCDC</color>
 </resources>
