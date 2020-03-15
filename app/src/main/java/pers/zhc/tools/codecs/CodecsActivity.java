@@ -61,6 +61,7 @@ public class CodecsActivity extends BaseActivity {
     private List<List<String>> savedConfig;
     private File file = null;
     private String[] spinnerData = null;
+    private JNICallback jniCallback;
 
     @SuppressWarnings("WeakerAccess")
     public CodecsActivity() {
@@ -190,6 +191,7 @@ public class CodecsActivity extends BaseActivity {
             latch.countDown();
         });
         es.shutdown();
+        jniCallback = new JNICallback(tv, this);
     }
 
     private void setF(String s) {
@@ -416,7 +418,7 @@ public class CodecsActivity extends BaseActivity {
                                         if (x != null) {
                                             String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L) {
-                                                int status = new JNIMain().JNI_Decode(fPath, x, o == 1 ? this.dT : dT, tv, CodecsActivity.this, this.savedConfig);
+                                                int status = jniCall.jniDecode(fPath, x, o == 1 ? this.dT : dT, this.savedConfig, jniCallback);
                                                 if (status == -1)
                                                     runOnUiThread(() -> toast(R.string.fopen_error));
                                             }
@@ -490,7 +492,7 @@ public class CodecsActivity extends BaseActivity {
                                         allButtonsAction(o, buttons, VISIBLE);
                                     });
                                 else
-                                    status = new JNIMain().JNI_Decode(f, finalDF, o == 1 ? this.dT : dT, tv, CodecsActivity.this, savedConfig);
+                                    status = jniCall.jniDecode(f, finalDF, o == 1 ? this.dT : dT, savedConfig, jniCallback);
                                 if (status == -1 || status == 255) {
                                     runOnUiThread(() -> toast(R.string.fopen_error));
                                 }

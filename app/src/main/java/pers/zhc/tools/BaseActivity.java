@@ -43,8 +43,8 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        app.addActivity(this);
         super.onCreate(savedInstanceState);
+        app.addActivity(this);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
         ExternalJNI.ex(this);

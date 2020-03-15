@@ -57,30 +57,60 @@ include CMakeFiles/doJni.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/doJni.dir/flags.make
 
-CMakeFiles/doJni.dir/codecs/doJNI.c.o: CMakeFiles/doJni.dir/flags.make
-CMakeFiles/doJni.dir/codecs/doJNI.c.o: ../codecs/doJNI.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/doJni.dir/codecs/doJNI.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/doJni.dir/codecs/doJNI.c.o   -c /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/doJNI.c
+CMakeFiles/doJni.dir/codecs/codecsDo.c.o: CMakeFiles/doJni.dir/flags.make
+CMakeFiles/doJni.dir/codecs/codecsDo.c.o: ../codecs/codecsDo.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/doJni.dir/codecs/codecsDo.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/doJni.dir/codecs/codecsDo.c.o   -c /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/codecsDo.c
 
-CMakeFiles/doJni.dir/codecs/doJNI.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/doJni.dir/codecs/doJNI.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/doJNI.c > CMakeFiles/doJni.dir/codecs/doJNI.c.i
+CMakeFiles/doJni.dir/codecs/codecsDo.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/doJni.dir/codecs/codecsDo.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/codecsDo.c > CMakeFiles/doJni.dir/codecs/codecsDo.c.i
 
-CMakeFiles/doJni.dir/codecs/doJNI.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/doJni.dir/codecs/doJNI.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/doJNI.c -o CMakeFiles/doJni.dir/codecs/doJNI.c.s
+CMakeFiles/doJni.dir/codecs/codecsDo.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/doJni.dir/codecs/codecsDo.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/codecsDo.c -o CMakeFiles/doJni.dir/codecs/codecsDo.c.s
+
+CMakeFiles/doJni.dir/codecs/kwm.c.o: CMakeFiles/doJni.dir/flags.make
+CMakeFiles/doJni.dir/codecs/kwm.c.o: ../codecs/kwm.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/doJni.dir/codecs/kwm.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/doJni.dir/codecs/kwm.c.o   -c /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/kwm.c
+
+CMakeFiles/doJni.dir/codecs/kwm.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/doJni.dir/codecs/kwm.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/kwm.c > CMakeFiles/doJni.dir/codecs/kwm.c.i
+
+CMakeFiles/doJni.dir/codecs/kwm.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/doJni.dir/codecs/kwm.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/kwm.c -o CMakeFiles/doJni.dir/codecs/kwm.c.s
+
+CMakeFiles/doJni.dir/codecs/Base128Lib.c.o: CMakeFiles/doJni.dir/flags.make
+CMakeFiles/doJni.dir/codecs/Base128Lib.c.o: ../codecs/Base128Lib.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/doJni.dir/codecs/Base128Lib.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/doJni.dir/codecs/Base128Lib.c.o   -c /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/Base128Lib.c
+
+CMakeFiles/doJni.dir/codecs/Base128Lib.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/doJni.dir/codecs/Base128Lib.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/Base128Lib.c > CMakeFiles/doJni.dir/codecs/Base128Lib.c.i
+
+CMakeFiles/doJni.dir/codecs/Base128Lib.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/doJni.dir/codecs/Base128Lib.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/Base128Lib.c -o CMakeFiles/doJni.dir/codecs/Base128Lib.c.s
 
 # Object files for target doJni
 doJni_OBJECTS = \
-"CMakeFiles/doJni.dir/codecs/doJNI.c.o"
+"CMakeFiles/doJni.dir/codecs/codecsDo.c.o" \
+"CMakeFiles/doJni.dir/codecs/kwm.c.o" \
+"CMakeFiles/doJni.dir/codecs/Base128Lib.c.o"
 
 # External object files for target doJni
 doJni_EXTERNAL_OBJECTS =
 
-doJni: CMakeFiles/doJni.dir/codecs/doJNI.c.o
+doJni: CMakeFiles/doJni.dir/codecs/codecsDo.c.o
+doJni: CMakeFiles/doJni.dir/codecs/kwm.c.o
+doJni: CMakeFiles/doJni.dir/codecs/Base128Lib.c.o
 doJni: CMakeFiles/doJni.dir/build.make
 doJni: CMakeFiles/doJni.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable doJni"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable doJni"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/doJni.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

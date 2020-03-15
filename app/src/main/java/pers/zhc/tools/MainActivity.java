@@ -1,6 +1,5 @@
 package pers.zhc.tools;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
@@ -9,9 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +17,6 @@ import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.epicycles.EpicyclesEdit;
 import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
-import pers.zhc.tools.floatingdrawing.JNI;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.test.InputEvent;
@@ -34,14 +30,8 @@ import pers.zhc.tools.toast.AToast;
 import pers.zhc.tools.youdaoapi.YouDaoTranslate;
 import pers.zhc.u.common.ReadIS;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,48 +42,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        File vFile = getVFile(this);
-        String vS = "";
-        try {
-            InputStream is = new FileInputStream(vFile);
-            InputStreamReader isr = new InputStreamReader(is, "GBK");
-            BufferedReader br = new BufferedReader(isr);
-            vS = br.readLine();
-            br.close();
-            isr.close();
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        vS = vS == null ? "" : vS;
-        System.out.println("vS = " + vS);
-        int vI = new JNI().mG(this, vS);
-//        System.out.println("vI = " + vI);
-        if (vI != 0) {
-            RelativeLayout rl = findViewById(R.id.v_rl);
-            if (rl == null) setContentView(R.layout.v_f_activity);
-            rl = findViewById(R.id.v_rl);
-            rl.setOnLongClickListener(v -> {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                EditText et = new EditText(this);
-                et.setOnLongClickListener(v1 -> {
-                    String s = et.getText().toString();
-                    try {
-                        OutputStream os = new FileOutputStream(vFile, false);
-                        os.write(s.getBytes());
-                        os.flush();
-                        os.close();
-                        onCreate(savedInstanceState);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return true;
-                });
-                adb.setView(et)
-                        .show();
-                return false;
-            });
-        } else init();
+        setContentView(R.layout.tools_activity_main);
+        init();
     }
 
     private void shortcut(int[] texts, Class<?>[] classes) {

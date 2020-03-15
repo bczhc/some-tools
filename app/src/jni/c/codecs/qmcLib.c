@@ -1,7 +1,7 @@
 //
 // Created by root on 19-7-3.
 //
-#include "qmcLib.h"
+#include "codecsDo.h"
 
 char seedMap[8][7] = {
         {0x4a, 0xd6, 0xca, 0x90, 0x67, 0xf7, 0x52},
@@ -18,12 +18,6 @@ int x = -1;
 int y = 8;
 int dx = 1;
 int i = -1;
-
-void callMethod(JNIEnv *env, jmethodID id, char *s, double d, jobject obj) {
-    jstring str = (*env)->NewStringUTF(env, s);
-    (*env)->CallVoidMethod(env, obj, id, str, (jdouble) d);
-//    (*env)->CallStaticVoidMethod(env, c, id, str, (jdouble) d);
-}
 
 char nextMask_() {
     char ret;
@@ -47,12 +41,12 @@ char nextMask_() {
     return ret;
 }
 
-int decode(const char *fileName, const char *destFileName, JNIEnv *env, jmethodID id, jobject obj) {
+int decode(const char *fileName, const char *destFileName, JNIEnv *env, jobject callback) {
     x = -1;
     y = 8;
     dx = 1;
     i = -1;
-    callMethod(env, id, "", (double) 0, obj);
+    Callback(env, callback, "", (double) 0);
     FILE *fp, *fpO;
     if ((fp = fopen(fileName, "rb")) == NULL) return -1;
     if ((fpO = fopen(destFileName, "wb")) == NULL) return -1;
@@ -68,7 +62,7 @@ int decode(const char *fileName, const char *destFileName, JNIEnv *env, jmethodI
             c[k] ^= nextMask_();
         }
         fwrite(c, 1024, 1, fpO);
-        if (!(j % p)) callMethod(env, id, "", ((double) j) / (double) a * 100, obj);
+        if (!(j % p)) Callback(env, callback, "", ((double) j) / (double) a * 100);
     }
     if (b) {
         fread(c, b, 1, fp);
@@ -79,6 +73,6 @@ int decode(const char *fileName, const char *destFileName, JNIEnv *env, jmethodI
     }
     fclose(fp);
     fclose(fpO);
-    callMethod(env, id, "", (double) 100, obj);
+    Callback(env, callback, "", (double) 100);
     return 0;
 }

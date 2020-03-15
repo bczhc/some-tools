@@ -9,4 +9,4 @@
 
 #define MAX_FIND_KEY_TIME 468
 
-int kwm(JNIEnv *env, jmethodID mid, jobject obj, const char *fN, const char *dFN);
+int kwm(JNIEnv *env, const char *fN, const char *dFN, jobject callback);

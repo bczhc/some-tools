@@ -1,25 +1,29 @@
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
 #pragma ide diagnostic ignored "hicpp-signed-bitwise"
 //
 // Created by zhc-2 on 2019/6/19.
 //
 
-#include "qmcLib.h"
-#include "pers_zhc_JNI.h"
-#include "Base128Lib.h"
-#include "kwm.h"
-#include "../../jni_help.h"
+#include "./codecsDo.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 
-JNIEXPORT jint JNICALL Java_pers_zhc_tools_codecs_JNI_qmcDecode
-        (JNIEnv *env, jobject obj, jstring f, jstring dF, jint mode) {
+void Callback(JNIEnv *env, jobject callback, char *str, double d) {
     JNIEnv e = *env;
-    jclass mClass = e->GetObjectClass(env, obj);
-    jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
-    e->DeleteLocalRef(env, mClass);
+    jclass cls = e->GetObjectClass(env, callback);
+    jmethodID mid = e->GetMethodID(env, cls, "callback", "(Ljava/lang/String;D)V");
+    jstring s = e->NewStringUTF(env, str);
+    e->CallVoidMethod(env, callback, mid, s, (jdouble) d);
+    e->DeleteLocalRef(env, cls);
+    e->DeleteLocalRef(env, s);
+}
+
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_qmcDecode
+        (JNIEnv *env, jclass cls, jstring f, jstring dF, jint mode, jobject callback) {
+    JNIEnv e = *env;
     const char *f1 = e->GetStringUTFChars(env, f, (jboolean *) 0);
     const char *f2 = e->GetStringUTFChars(env, dF, (jboolean *) 0);
     char *sQ = NULL;
@@ -32,37 +36,30 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_codecs_JNI_qmcDecode
     char u1[strlen(f1) + 1], u2[strlen(f2) + 1];
     ToUpperCase(u1, f1), ToUpperCase(u2, f2);
     char *nN = NULL;
-    if (!strcmp(u1, u2)) NewFileName(&nN, f1), rC = decode(f1, nN, env, mid, obj), remove(f1), rename(nN, f1);
+    if (!strcmp(u1, u2)) NewFileName(&nN, f1), rC = decode(f1, nN, env, callback), remove(f1), rename(nN, f1);
     else
-        rC = decode(f1, f2, env, mid, obj);
+        rC = decode(f1, f2, env, callback);
     if (mode) remove(f1);
     return (jint) rC;
 }
 
-JNIEXPORT jint JNICALL Java_pers_zhc_tools_codecs_JNI_kwmDecode
-        (JNIEnv *env, jobject obj, jstring f, jstring dF, jint mode) {
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_kwmDecode
+        (JNIEnv *env, jclass cls, jstring f, jstring dF, jint mode, jobject callback) {
     JNIEnv e = *env;
-    jclass mClass = e->GetObjectClass(env, obj);
-    jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
-    e->DeleteLocalRef(env, mClass);
     const char *fN = e->GetStringUTFChars(env, f, (jboolean *) 0);
     const char *dFN = e->GetStringUTFChars(env, dF, (jboolean *) 0);
     int stt;
     char u1[strlen(fN) + 1], u2[strlen(dFN) + 1];
     ToUpperCase(u1, fN), ToUpperCase(u2, dFN);
     char *nN = NULL;
-    if (!strcmp(u1, u2)) NewFileName(&nN, fN), stt = kwm(env, mid, obj, fN, nN), remove(fN), rename(nN, fN);
-    else stt = kwm(env, mid, obj, fN, dFN);
+    if (!strcmp(u1, u2)) NewFileName(&nN, fN), stt = kwm(env, fN, nN, callback), remove(fN), rename(nN, fN);
+    else stt = kwm(env, fN, dFN, callback);
     if (mode) remove(fN);
     return stt;
 }
 
-JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1encode
-        (JNIEnv *env, jobject obj, jstring f1, jstring f2, jint mode) {
-    JNIEnv e = *env;
-    jclass mClass = e->GetObjectClass(env, obj);
-    jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
-    e->DeleteLocalRef(env, mClass);
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_Base128_1encode
+        (JNIEnv *env, jclass cls, jstring f1, jstring f2, jint mode, jobject callback) {
     const char *FileName = (*env)->GetStringUTFChars(env, f1, (jboolean *) NULL);
     const char *DestFileName = (*env)->GetStringUTFChars(env, f2, (jboolean *) NULL);
     char upperCaseD1[strlen(FileName) + 1], upperCaseD2[strlen(DestFileName) + 1];
@@ -71,22 +68,19 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1encode
     char *nFN = NULL;
     if (!strcmp(upperCaseD1, upperCaseD2)) {
         NewFileName(&nFN, FileName);
-        int status = eD(FileName, nFN, env, obj, mid);
-        if (status != 0) return;
+        int status = eD(FileName, nFN, env, callback);
+        if (status != 0) return status;
         remove(FileName);
         rename(nFN, DestFileName);
     } else {
-        eD(FileName, DestFileName, env, obj, mid);
+        eD(FileName, DestFileName, env, callback);
     }
     if (mode) remove(FileName);
+    return 0;
 }
 
-JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1decode
-        (JNIEnv *env, jobject obj, jstring f1, jstring f2, jint mode) {
-    JNIEnv e = *env;
-    jclass mClass = e->GetObjectClass(env, obj);
-    jmethodID mid = e->GetMethodID(env, mClass, "d", "(Ljava/lang/String;D)V");
-    e->DeleteLocalRef(env, mClass);
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_Base128_1decode
+        (JNIEnv *env, jclass cls, jstring f1, jstring f2, jint mode, jobject callback) {
     const char *FileName = (*env)->GetStringUTFChars(env, f1, (jboolean *) NULL);
     const char *DestFileName = (*env)->GetStringUTFChars(env, f2, (jboolean *) NULL);
     char upperCaseD1[strlen(FileName) + 1], upperCaseD2[strlen(DestFileName) + 1];
@@ -95,14 +89,15 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_codecs_JNI_Base128_1decode
     char *nFN = NULL;
     if (!strcmp(upperCaseD1, upperCaseD2)) {
         NewFileName(&nFN, FileName);
-        int status = dD(FileName, nFN, env, obj, mid);
-        if (status != 0) return;
+        int status = dD(FileName, nFN, env, callback);
+        if (status != 0) return status;
         remove(FileName);
         rename(nFN, DestFileName);
     } else {
-        dD(FileName, DestFileName, env, obj, mid);
+        dD(FileName, DestFileName, env, callback);
     }
     if (mode) remove(FileName);
+    return 0;
 }
 
 #pragma clang diagnostic pop

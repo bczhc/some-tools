@@ -2,13 +2,10 @@
 // Created by root on 19-8-27.
 //
 
-#include <stddef.h>
-#include "../verification/com_zhc_tools_floatingdrawing_JNI.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "../../h/pers_zhc_tools_jni_JNI_FloatingBoard.h"
 
-JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_floatToByteArray
-        (JNIEnv *env, jobject obj, jbyteArray dst, jfloat a, jint offset) {
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_floatToByteArray
+        (JNIEnv *env, jclass cls, jbyteArray dst, jfloat a, jint offset) {
     JNIEnv e = *env;
     float f = (float) a;
     char *c = (char *) &f;
@@ -20,8 +17,8 @@ JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_floatToByteArray
     e->SetByteArrayRegion(env, dst, offset, 4, R);
 }
 
-JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_intToByteArray
-        (JNIEnv *env, jobject obj, jbyteArray dst, jint j, jint offset) {
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_intToByteArray
+        (JNIEnv *env, jclass cls, jbyteArray dst, jint j, jint offset) {
     JNIEnv e = *env;
     int i = (int) j;
     char *c = (char *) &i;
@@ -33,8 +30,8 @@ JNIEXPORT void  JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_intToByteArray
     e->SetByteArrayRegion(env, dst, offset, 4, R);
 }
 
-JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToFloat
-        (JNIEnv *env, jobject obj, jbyteArray bytes, jint offset) {
+JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_byteArrayToFloat
+        (JNIEnv *env, jclass cls, jbyteArray bytes, jint offset) {
     JNIEnv e = *env;
     jbyte b[4];
     e->GetByteArrayRegion(env, bytes, offset, 4, b);
@@ -42,8 +39,8 @@ JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToFloa
     return (jfloat) r;
 }
 
-JNIEXPORT jint JNICALL Java_pers_zhc_tools_floatingdrawing_JNI_byteArrayToInt
-        (JNIEnv *env, jobject obj, jbyteArray bytes, jint offset) {
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_byteArrayToInt
+        (JNIEnv *env, jclass cls, jbyteArray bytes, jint offset) {
     JNIEnv e = *env;
     jbyte b[4];
     e->GetByteArrayRegion(env, bytes, offset, 4, b);
