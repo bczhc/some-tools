@@ -66,7 +66,11 @@ public class MyCanvas extends Canvas {
 
     @Override
     public void restore() {
-        scale(savedScale / scale);
-        translate(savedStartPointX - startPointX, savedStartPointY - startPointY);
+        transTo(savedStartPointX, savedStartPointY, savedScale);
+    }
+
+    public void transTo(float toStartPointX, float toStartPointY, float toScale) {
+        scale(toScale / scale);
+        translate(toStartPointX - startPointX, toStartPointY - startPointY);
     }
 }
