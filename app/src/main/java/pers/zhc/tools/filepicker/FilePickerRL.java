@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -41,19 +39,22 @@ public class FilePickerRL extends RelativeLayout {
     private final Runnable cancelAction;
     private final OnPickedResultActionInterface pickedResultAction;
     private final int[] justPicked = new int[]{-1};
-    private final int grey = Color.parseColor("#DCDCDC");
-    private final int white = Color.WHITE;
+    private final @DrawableRes
+    int cannotPick = R.drawable.file_picker_view_cannot_pick;
+    private final @DrawableRes
+    int canPickUnchecked = R.drawable.file_picker_view_can_pick_unchecked;
+    private final @DrawableRes
+    int viewChecked = R.drawable.file_picker_view_checked;
     private final int type;
     private final Activity ctx;
     public String result;
-//    private List<File> currentFiles;
     private String resultString = "";
     private TextView pathView;
     private File currentPath;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
     private EditText headET;
-    private int unselectedColor;
+    private @DrawableRes int unselectedDrawable;
 
     public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath
             , Runnable cancelAction, OnPickedResultActionInterface pickedResultAction
@@ -70,12 +71,11 @@ public class FilePickerRL extends RelativeLayout {
     }
 
     private void init(String initFileName) {
-        this.unselectedColor = this.type == TYPE_PICK_FILE ? grey : white;
+        this.unselectedDrawable = this.type == TYPE_PICK_FILE ? cannotPick : canPickUnchecked;
         View view = View.inflate(ctx, R.layout.file_picker_rl_activity, null);
         this.addView(view);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
-        lp.setMargins(2, 10, 10, 0);
         headET = findViewById(R.id.file_name_et);
         headET.setText(initFileName);
         headET.addTextChangedListener(new TextWatcher() {
@@ -157,7 +157,7 @@ public class FilePickerRL extends RelativeLayout {
             justPicked[0] = -1;
             ctx.runOnUiThread(ll::removeAllViews);
             ctx.runOnUiThread(() -> pathView.setText(String.format("%s", currentPath.getAbsolutePath())));
-            TextView[] textViews;
+            TextViewWithExtra[] textViews;
             int length = 0;
             try {
                 length = listFiles[0].length;
@@ -165,7 +165,7 @@ public class FilePickerRL extends RelativeLayout {
                 ctx.runOnUiThread(() -> ToastUtils.show(ctx, R.string.no_access));
                 e.printStackTrace();
             }
-            textViews = new TextView[length];
+            textViews = new TextViewWithExtra[length];
             switch (type) {
                 case TYPE_PICK_FILE:
                     for (int i = 0; i < length; i++) {
@@ -174,15 +174,13 @@ public class FilePickerRL extends RelativeLayout {
                         textViews[i].setOnClickListener(v -> {
                             File currentFile = listFiles[0][finalI];
                             if (currentFile.isFile()) {
-                                Drawable background = textViews[finalI].getBackground();
-                                ColorDrawable colorDrawable = (ColorDrawable) background;
-                                if (colorDrawable.getColor() == Color.GREEN) {
-                                    textViews[finalI].setBackgroundColor(white);
+                                if (textViews[finalI].picked) {
+                                    textViews[finalI].setBackgroundResource(canPickUnchecked);
                                 } else {
                                     try {
                                         if (justPicked[0] != -1)
-                                            textViews[justPicked[0]].setBackgroundColor(white);
-                                        textViews[finalI].setBackgroundColor(Color.GREEN);
+                                            textViews[justPicked[0]].setBackgroundResource(canPickUnchecked);
+                                        textViews[finalI].setBackgroundResource(viewChecked);
                                         justPicked[0] = finalI;
                                     } catch (ArrayIndexOutOfBoundsException e) {
                                         showException(e, ctx);
@@ -228,9 +226,9 @@ public class FilePickerRL extends RelativeLayout {
         else previous();
     }*/
 
-    private void extractM1(File[] listFiles, LinearLayout.LayoutParams lp, TextView[] textViews,
+    private void extractM1(File[] listFiles, LinearLayout.LayoutParams lp, TextViewWithExtra[] textViews,
                            int i) {
-        textViews[i] = new TextView(ctx);
+        textViews[i] = new TextViewWithExtra(ctx);
         textViews[i].setBackgroundResource(R.drawable.view_stroke);
         textViews[i].setTextSize(25);
         ctx.runOnUiThread(() -> textViews[i].setText(listFiles[i].isFile() ? listFiles[i].getName() : (listFiles[i].getName() + "/")));
@@ -238,14 +236,14 @@ public class FilePickerRL extends RelativeLayout {
         switch (type) {
             case 1:
                 if (listFiles[i].isFile()) {
-                    textViews[i].setBackgroundColor(white);
-                } else textViews[i].setBackgroundColor(unselectedColor);
+                    textViews[i].setBackgroundResource(canPickUnchecked);
+                } else textViews[i].setBackgroundResource(unselectedDrawable);
                 break;
             case 2:
                 if (listFiles[i].isFile()) {
-                    textViews[i].setBackgroundColor(unselectedColor);
+                    textViews[i].setBackgroundResource(unselectedDrawable);
                 } else {
-                    textViews[i].setBackgroundColor(white);
+                    textViews[i].setBackgroundResource(canPickUnchecked);
                 }
                 break;
         }
@@ -311,5 +309,21 @@ public class FilePickerRL extends RelativeLayout {
 
     public interface OnPickedResultActionInterface {
         void result(String s);
+    }
+
+    private static class TextViewWithExtra extends TextView {
+        private boolean picked = false;
+
+        @Override
+        public void setBackgroundResource(int resId) {
+            super.setBackgroundResource(resId);
+            this.picked = (resId == R.drawable.file_picker_view_checked);
+        }
+
+        public TextViewWithExtra(Context context) {
+            super(context);
+
+
+        }
     }
 }
