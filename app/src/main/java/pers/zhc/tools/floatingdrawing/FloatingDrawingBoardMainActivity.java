@@ -396,21 +396,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         toggleDrawAndControlMode();
                         break;
                     case 2:
-                        Dialog dialog = new Dialog(this);
-                        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
-                        dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-                                , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
-                        setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                        HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
-                            @Override
-                            void onPickedAction(int color, float[] hsva) {
-                                pv.setPaintColor(color);
-                                hsvaFloats[0] = hsva;
-                            }
-                        };
-                        setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                        dialog.setContentView(hsvColorPickerRL);
-                        dialog.show();
+                        setColor();
                         break;
                     case 3:
                         changeStrokeWidth();
@@ -425,11 +411,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         if (pv.isEraserMode) {
                             pv.setEraserMode(false);
                             childTVs[finalI].setText(R.string.drawing_mode);
-                            strings[6] = getString(R.string.drawing_mode);
+                            strings[finalI] = getString(R.string.drawing_mode);
                         } else {
                             pv.setEraserMode(true);
                             childTVs[finalI].setText(R.string.eraser_mode);
-                            strings[6] = getString(R.string.eraser_mode);
+                            strings[finalI] = getString(R.string.eraser_mode);
                         }
                         break;
                     case 7:
@@ -532,6 +518,51 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 runOnUiThread(() -> ToastUtils.show(this, R.string.current_version_is_the_latest));
             }
         }));
+    }
+
+    private void setColor() {
+        if (pv.isEraserMode) {
+            Dialog dialog = new Dialog(this);
+            SeekBar sb = new SeekBar(this);
+            sb.setProgress(pv.getEraserAlpha() * 100 / 255);
+            sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    pv.setEraserAlpha(HSVAColorPickerRL.limitValue(progress * 255 / 100, 0, 255));
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            dialog.setContentView(sb);
+            DialogUtil.setDialogAttr(dialog, false
+                    , ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+            dialog.show();
+        } else {
+            Dialog dialog = new Dialog(this);
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
+            dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                    , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
+            setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+            HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
+                @Override
+                void onPickedAction(int color, float[] hsva) {
+                    pv.setPaintColor(color);
+                    hsvaFloats[0] = hsva;
+                }
+            };
+            setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+            dialog.setContentView(hsvColorPickerRL);
+            dialog.show();
+        }
     }
 
     private void setPanelColor(int color, float[] hsva) {
