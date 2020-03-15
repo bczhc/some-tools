@@ -54,9 +54,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private Path mPath;
     private Paint eraserPaint;
     private Paint mPaintRef = null;
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    @SuppressWarnings("unused")
     private Map<MyCanvas, Bitmap> bitmapMap;
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    @SuppressWarnings("unused")
     private Map<String, MyCanvas> canvasMap;
     private MyCanvas headCanvas;
     private Bitmap headBitmap;
@@ -76,6 +76,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private float lockedEraserStrokeWidth;
     private float scaleWhenLocked = 1F;
     private OnColorChangedCallback onColorChangedCallback = null;
+    private Bitmap transBitmap;
+    private MyCanvas transCanvas;
 
     public PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -172,23 +174,34 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
                 headCanvas.invertTranslate(distanceX, distanceY);
+                if (transCanvas != null) {
+                    transCanvas.invertTranslate(distanceX, distanceY);
+                }
             }
 
             @Override
             public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
                 headCanvas.invertScale(dScale, midPointX, midPointY);
+                if (transCanvas != null) {
+                    transCanvas.invertScale(dScale, midPointX, midPointY);
+                }
                 setCurrentStrokeWidthWithLockedStrokeWidth();
             }
 
             @Override
             public void onTwoPointsUp() {
+                transBitmap = null;
+                redrawCanvas();
             }
 
             @Override
             public void onTwoPointsDown() {
                 mPath = null;
                 savedData = null;
-//                Bitmap transBitmap = Bitmap.createBitmap(PaintView.this.)
+                if (transBitmap == null) {
+                    transBitmap = Bitmap.createBitmap(headBitmap);
+                    transCanvas = new MyCanvas(transBitmap);
+                }
             }
 
             @Override
@@ -198,7 +211,15 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
 
             @Override
             public void onTwoPointsPress() {
-                redrawCanvas();
+                if (transBitmap != null) {
+                    float startPointX = headCanvas.getStartPointX();
+                    float startPointY = headCanvas.getStartPointY();
+                    float scale = headCanvas.getScale();
+                    MyCanvas c = new MyCanvas(transBitmap);
+                    c.transTo(startPointX, startPointY, scale);
+                    c.drawBitmap(headBitmap, 0, 0, mBitmapPaint);
+                }
+                drawing();
             }
         });
     }
@@ -793,17 +814,29 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
         if (canvas != null) {
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            if (headBitmap != null) {
-                canvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-                if (!importingPath) {
-                    if (mPath != null) {//显示实时正在绘制的path轨迹
-                        float mCanvasScale = headCanvas.getScale();
-                        canvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
-                        canvas.scale(mCanvasScale, mCanvasScale);
-                        if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
-                        else canvas.drawPath(mPath, mPaint);
+            if (transBitmap == null) {
+                if (headBitmap != null) {
+                    canvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
+                    if (!importingPath) {
+                        if (mPath != null) {//显示实时正在绘制的path轨迹
+                            float mCanvasScale = headCanvas.getScale();
+                            canvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
+                            canvas.scale(mCanvasScale, mCanvasScale);
+                            if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
+                            else canvas.drawPath(mPath, mPaint);
+                        }
                     }
                 }
+            } else {
+                transCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                transCanvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);
+                canvas.drawBitmap(transBitmap, 0, 0, mBitmapPaint);
+                /*
+                2down: create transBitmap,
+                trans transBitmap
+
+                2up: redraw headBitmap
+                */
             }
             mSurfaceHolder.unlockCanvasAndPost(canvas);
         }

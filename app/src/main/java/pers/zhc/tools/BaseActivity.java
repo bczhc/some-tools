@@ -44,6 +44,25 @@ public class BaseActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*new Handler(Looper.getMainLooper()).post(() -> {
+            while (true) {
+                try {
+                    Looper.loop();
+                } catch (Throwable e) {
+                    IHandlerException handler = mainThreadFactory.get(e);
+                    if (onExceptionCallBack != null) {
+                        onExceptionCallBack.onThrowException(Thread.currentThread(), e, handler);
+                    }
+                    if (handler == null) {
+                        defaultUncaughtExceptionHandler.uncaughtException(Thread.currentThread(), e);
+                        return;
+                    }
+                    if (handler.handler(e)) {
+                        return;
+                    }
+                }
+            }
+        });*/
         app.addActivity(this);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
