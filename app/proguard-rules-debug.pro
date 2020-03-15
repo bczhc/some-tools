@@ -20,5 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-dontobfuscate
+
 -keep class pers.zhc.tools.jni.**$** {*;}
 -keep class pers.zhc.tools.**.JNICallback {*;}

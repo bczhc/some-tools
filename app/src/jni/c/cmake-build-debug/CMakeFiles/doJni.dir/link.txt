@@ -1,1 +1,1 @@
-/usr/bin/cc -g   CMakeFiles/doJni.dir/codecs/doJNI.c.o  -o doJni 
+/usr/bin/cc -g   CMakeFiles/doJni.dir/codecs/codecsDo.c.o CMakeFiles/doJni.dir/codecs/kwm.c.o CMakeFiles/doJni.dir/codecs/Base128Lib.c.o  -o doJni 

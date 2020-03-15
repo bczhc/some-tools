@@ -62,7 +62,13 @@ android {
             //noinspection GroovyAssignabilityCheck
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles 'proguard-rules.pro'
+        }
+        debug {
+            //noinspection GroovyAssignabilityCheck
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles 'proguard-rules-debug.pro'
         }
     }
     compileOptions {

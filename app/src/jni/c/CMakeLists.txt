@@ -6,5 +6,4 @@ INCLUDE_DIRECTORIES(/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/inclu
 
 set(CMAKE_C_STANDARD 99)
 add_executable(verification verification/verify.c ../zhc.c ./codecs/qmcLib.c floatingboard/fb_tools.c)
-add_executable(doJni codecs/doJNI.c)
-add_executable(bitmap ./floatingboard/bitmap.c)
+add_executable(doJni codecs/codecsDo.c codecs/kwm.c codecs/Base128Lib.c)

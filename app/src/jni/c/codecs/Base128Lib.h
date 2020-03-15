@@ -45,9 +45,9 @@ int e_4116_TP(char buf[4116], int readSize) {
 }
 
 */
-int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid);
+int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj);
 
-int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj, jmethodID mid);
+int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject obj);
 
 void NewFileName(char **Dest, const char *filePath);
 

@@ -2,34 +2,16 @@
 // Created by root on 19-8-3.
 //
 
-#include "com_zhc_tools_pi_PiJNI.h"
-#include "../../zhc.h"
+#include "../../h/pers_zhc_tools_jni_JNI_Pi.h"
 
-
-
-//#include <iostream>
-
-//using namespace std;
-
-/*void o(JNIEnv *env, jobject obj, char *str) {
-*//*jclass clz = env->GetObjectClass(obj);
-jfieldID fid = env->GetFieldID(clz, "o", "Landroid/widget/EditText;");
-jobject fO = env->GetObjectField(obj, fid);
-jclass oClz = env->GetObjectClass(fO);
-jmethodID oMid = env->GetMethodID(oClz, "setText", "(Ljava/lang/String;)V");
-jstring s = env->NewStringUTF("Hello!");
-env->CallVoidMethod(fO, oMid, s);*//*
-    jclass clz = env->GetObjectClass(obj);
-    jmethodID mid = env->GetMethodID(clz, "O", "(Ljava/lang/String;)V");
-    jstring s = env->NewStringUTF(str);
-    env->CallVoidMethod(obj, mid, s);
-}*/
-
-void o(JNIEnv *env, jobject obj, jmethodID mid, jint a, jint i) {
-    env->CallVoidMethod(obj, mid, a, i);
+void Callback(JNIEnv *env, jobject callback, int a) {
+    jclass clz = env->GetObjectClass(callback);
+    jmethodID mid = env->GetMethodID(clz, "callback", "(I)V");
+    env->CallVoidMethod(callback, mid, (jint) a);
+    env->DeleteLocalRef(clz);
 }
 
-void pi(JNIEnv *env, jobject obj, int bN, jmethodID mid) {
+void pi(JNIEnv *env, int bN, jobject callback) {
     bN -= bN % 4;
 //    o(env, obj, p3);
     long a[2] = {956, 80}, b[2] = {57121, 25}, i = 0, j, k, p, q, r, s = 2, t, u, v, N, M = 10000;
@@ -47,7 +29,7 @@ void pi(JNIEnv *env, jobject obj, int bN, jmethodID mid) {
     }
     while (--i)(pi[i] = (t = pi[i] + s) % M) < 0 ? pi[i] += M, s = t / M - 1 : s = t / M;
     for (; ++i < N - 2;) {
-        o(env, obj, mid, (jint) pi[i], (jint) i);
+        Callback(env, callback, (jint) pi[i]);
     }
     delete[]pi, delete[]e;
 }
@@ -55,11 +37,9 @@ void pi(JNIEnv *env, jobject obj, int bN, jmethodID mid) {
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 
-JNIEXPORT void JNICALL Java_pers_zhc_tools_pi_PiJNI_gen
-        (JNIEnv *env, jobject obj, jint i) {
-    jclass clz = env->GetObjectClass(obj);
-    jmethodID mid = env->GetMethodID(clz, "O", "(I)V");
-    pi(env, obj, (int) i, mid);
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Pi_gen
+        (JNIEnv *env, jclass cls, jint bN, jobject callback) {
+    pi(env, bN, callback);
 }
 
 #pragma clang diagnostic pop
