@@ -15,6 +15,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -136,11 +137,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         setEraserMode(false);
         eraserPaint = new Paint();
         eraserPaint.setColor(Color.TRANSPARENT);
-        eraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        eraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
         eraserPaint.setAntiAlias(true);
         eraserPaint.setStyle(Paint.Style.STROKE);
         eraserPaint.setStrokeJoin(Paint.Join.ROUND);//使画笔更加圆润
         eraserPaint.setStrokeCap(Paint.Cap.ROUND);//同上
+        eraserPaint.setAlpha(255);
         //关闭硬件加速
         //否则橡皮擦模式下，设置的 PorterDuff.Mode.CLEAR ，实时绘制的轨迹是黑色
 //        setBackgroundColor(Color.WHITE);//设置白色背景
@@ -283,6 +285,14 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             undoList.add(pathBean);
             if (!importingPath) drawing();
         }
+    }
+
+    void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
+        this.eraserPaint.setAlpha(alpha);
+    }
+
+    int getEraserAlpha() {
+        return this.eraserPaint.getAlpha();
     }
 
 
