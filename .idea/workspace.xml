@@ -43,13 +43,191 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java" afterDir="false" />
+    <list default="true" id="e3ce9316-1ea2-4235-8b1a-ec64062b34d6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libFB_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libFB_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libcodecsDo.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libcodecsDo.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libFB_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libFB_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libcodecsDo.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libcodecsDo.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libFB_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libFB_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libcodecsDo.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libcodecsDo.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libFB_tools.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libFB_tools.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libcodecsDo.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libcodecsDo.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libpi.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libMotionEvent.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libbitmap.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libfb_tools.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libpi.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/MotionEvent/jni_c++/motionevent/MotionEvent.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/MotionEvent/jni_c++/motionevent/MotionEvent.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/codecs/qmcLib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/codecs/qmcLib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/verification/verify.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/c/verification/verify.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/a/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/bitmap/c/floatingboard/bitmap.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/bitmap/c/floatingboard/bitmap.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/Base128Lib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/Base128Lib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/doJNI.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/doJNI.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/kwm.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/kwm.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/qmcLib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/c/codecs/qmcLib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/doJNI/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/c/floatingboard/fb_tools.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/c/floatingboard/fb_tools.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/fb_tools/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/input_pen/jni_c++/motionevent/input_pen.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/input_pen/jni_c++/motionevent/input_pen.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/cpp/pi/pi.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/cpp/pi/pi.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/pi/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libMotionEvent.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libbitmap.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libfb_tools.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libpi.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/MotionEvent/jni_c++/motionevent/MotionEvent.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/MotionEvent/jni_c++/motionevent/MotionEvent.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/codecs/qmcLib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/codecs/qmcLib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/verification/verify.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/c/verification/verify.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/a/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/bitmap/c/floatingboard/bitmap.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/bitmap/c/floatingboard/bitmap.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/Base128Lib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/Base128Lib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/doJNI.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/doJNI.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/kwm.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/kwm.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/qmcLib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/c/codecs/qmcLib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/doJNI/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/c/floatingboard/fb_tools.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/c/floatingboard/fb_tools.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/fb_tools/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/cpp/pi/pi.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/cpp/pi/pi.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/pi/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libMotionEvent.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libbitmap.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libfb_tools.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libpi.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/MotionEvent/jni_c++/motionevent/MotionEvent.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/MotionEvent/jni_c++/motionevent/MotionEvent.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/codecs/qmcLib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/codecs/qmcLib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/verification/verify.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/c/verification/verify.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/a/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/bitmap/c/floatingboard/bitmap.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/bitmap/c/floatingboard/bitmap.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/Base128Lib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/Base128Lib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/doJNI.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/doJNI.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/kwm.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/kwm.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/qmcLib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/c/codecs/qmcLib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/doJNI/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/c/floatingboard/fb_tools.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/c/floatingboard/fb_tools.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/fb_tools/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/cpp/pi/pi.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/cpp/pi/pi.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/pi/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libMotionEvent.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/liba.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libbitmap.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libdoJNI.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libfb_tools.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libpi.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/MotionEvent/jni_c++/motionevent/MotionEvent.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/MotionEvent/jni_c++/motionevent/MotionEvent.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/codecs/qmcLib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/codecs/qmcLib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/verification/verify.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/c/verification/verify.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/a/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/bitmap/c/floatingboard/bitmap.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/bitmap/c/floatingboard/bitmap.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/Base128Lib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/Base128Lib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/doJNI.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/doJNI.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/kwm.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/kwm.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/qmcLib.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/c/codecs/qmcLib.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/doJNI/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/c/floatingboard/fb_tools.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/c/floatingboard/fb_tools.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/fb_tools/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/cpp/pi/pi.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/cpp/pi/pi.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/pi/zhc.o.d" beforeDir="false" />
     </list>
-    <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -1054,12 +1232,12 @@
     <state x="0" y="0" width="1920" height="1050" maximized="true" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1583940252330" />
     <state x="79" y="54" width="1172" height="681" key="DiffContextDialog/0.27.1366.741@0.27.1366.741" timestamp="1580272688407" />
     <state x="0" y="96" width="1920" height="857" maximized="true" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1584281757701" />
-    <state x="716" y="314" width="933" height="635" key="FileChooserDialogImpl" timestamp="1584241480816">
+    <state x="716" y="314" width="933" height="635" key="FileChooserDialogImpl" timestamp="1584288916978">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="716" y="286" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1584183405485" />
     <state x="716" y="140" width="424" height="491" key="FileChooserDialogImpl/0.27.1366.741@0.27.1366.741" timestamp="1580201056769" />
-    <state x="716" y="314" width="933" height="635" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1584241480816" />
+    <state x="716" y="314" width="933" height="635" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1584288916978" />
     <state x="0" y="150" width="1356" height="508" key="FileDocumentManager.FileCacheConflict" timestamp="1580127189706">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
