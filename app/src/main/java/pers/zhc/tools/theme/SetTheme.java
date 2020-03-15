@@ -13,7 +13,6 @@ public class SetTheme extends BaseActivity {
         setContentView(R.layout.set_app_theme_activity);
         Button setBtn = findViewById(R.id.setting_btn);
         setBtn.setOnClickListener(v -> {
-            setTheme(R.style.AppThemeWithBGColor);
             recreate();
         });
         setBtn.setOnLongClickListener(v -> {

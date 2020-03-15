@@ -4,7 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/doJNI.c" "/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/codecs/doJNI.c.o"
+  "/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/Base128Lib.c" "/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/codecs/Base128Lib.c.o"
+  "/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/codecsDo.c" "/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/codecs/codecsDo.c.o"
+  "/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/kwm.c" "/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir/codecs/kwm.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

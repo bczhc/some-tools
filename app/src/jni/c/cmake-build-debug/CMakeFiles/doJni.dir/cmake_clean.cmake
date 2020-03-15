@@ -1,5 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/doJni.dir/codecs/doJNI.c.o"
+  "CMakeFiles/doJni.dir/codecs/Base128Lib.c.o"
+  "CMakeFiles/doJni.dir/codecs/codecsDo.c.o"
+  "CMakeFiles/doJni.dir/codecs/kwm.c.o"
   "doJni"
   "doJni.pdb"
 )

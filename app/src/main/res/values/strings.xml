@@ -21,6 +21,7 @@
     <string name="type_path">输入路径</string>
     <string name="no_access">无此路径或无权访问</string>
     <string name="nul" translatable="false"/>
+    <string name="null_string">null</string>
     <string name="filter">过滤器：</string>
     <string name="iFileExtension">操作文件扩展名</string>
     <string name="oFileExtension">输出文件类型</string>
@@ -43,7 +44,6 @@
     <string name="tv_millis" translatable="false">%1dms</string>
     <string name="some_codecs">some-codecs</string>
     <string name="type_html_code">输入HTML代码</string>
-    <string name="piTV" translatable="false">3.%1$s</string>
     <string name="get_config_file_failed">获取配置文件路径失败</string>
     <string name="whether_to_save">是否保存</string>
     <string name="no">否</string>
@@ -208,5 +208,7 @@
     <string name="translate_error">翻译出错</string>
     <string name="invert_text_color">文字颜色反相</string>
     <string name="follow_painting_color">跟随笔刷颜色</string>
+    <string name="filter_with_regex">过滤器（正则表达式）</string>
+    <string name="wrong_regex">错误的正则</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

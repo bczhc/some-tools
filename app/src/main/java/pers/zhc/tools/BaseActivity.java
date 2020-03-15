@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,15 +23,14 @@ import pers.zhc.tools.utils.CrashHandler;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ExternalJNI;
 import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.ReadIS;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Stack;
@@ -44,8 +42,12 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        app.addActivity(this);
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            Log.e("Alert", "eee");
+            ToastUtils.show(this, "eee");
+        });
+        app.addActivity(this);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
         ExternalJNI.ex(this);
@@ -197,29 +199,6 @@ public class BaseActivity extends Activity {
         super.onDestroy();
     }
 
-
-    File getVFile(Context ctx) {
-        File filesDir = ctx.getFilesDir();
-        if (!filesDir.exists()) System.out.println("filesDir.mkdirs() = " + filesDir.mkdirs());
-        File vF = new File(filesDir.toString() + "/v");
-        if (!vF.exists()) {
-            try {
-                System.out.println("vF.createNewFile() = " + vF.createNewFile());
-                OutputStream os = new FileOutputStream(vF);
-                OutputStreamWriter osw = new OutputStreamWriter(os, "GBK");
-                BufferedWriter bw = new BufferedWriter(osw);
-//                bw.write("MTkwODI1-jzsvGT4h1g==");
-                bw.write("OTk5OTk5-n1NbWfU1tQ==");
-                bw.flush();
-                bw.close();
-                osw.close();
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return vF;
-    }
 
     /**
      * onConfigurationChanged
