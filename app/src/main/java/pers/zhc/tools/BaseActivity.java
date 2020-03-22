@@ -17,8 +17,8 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import pers.zhc.tools.crashhandler.CrashHandler;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.CrashHandler;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ExternalJNI;
 import pers.zhc.tools.utils.PermissionRequester;
@@ -36,6 +36,9 @@ import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author bczhc
+ */
 public class BaseActivity extends Activity {
     public final App app = new App();
 
@@ -47,8 +50,7 @@ public class BaseActivity extends Activity {
             ToastUtils.show(this, "eee");
         });
         app.addActivity(this);
-        CrashHandler crashHandler = CrashHandler.getInstance();
-        crashHandler.init(this);
+        CrashHandler.install(this);
         ExternalJNI.ex(this);
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
