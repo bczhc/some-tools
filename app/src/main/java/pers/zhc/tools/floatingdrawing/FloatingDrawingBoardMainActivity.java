@@ -547,9 +547,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         if (pv.isEraserMode) {
             Dialog dialog = new Dialog(this);
             LinearLayout linearLayout = new LinearLayout(this);
-            linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
+            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT
                     , ViewGroup.LayoutParams.WRAP_CONTENT));
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
             TextView titleTextView = new TextView(this);
             titleTextView.setText(R.string.opacity);
             SeekBar sb = new SeekBar(this);
@@ -572,7 +573,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
                 }
             });
-            sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             dialog.setContentView(linearLayout);
             DialogUtil.setDialogAttr(dialog, false
                     , ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
