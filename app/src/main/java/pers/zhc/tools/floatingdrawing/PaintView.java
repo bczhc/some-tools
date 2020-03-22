@@ -61,11 +61,15 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private Map<String, MyCanvas> canvasMap;
     private MyCanvas headCanvas;
     private Bitmap headBitmap;
-    private float mLastX, mLastY;//上次的坐标
+    /**
+     * 上次的坐标
+     */
+    private float mLastX, mLastY;
     private Paint mBitmapPaint;
-    //使用LinkedList 模拟栈，来保存 Path
-    private LinkedList<PathBean> undoList;
-    private LinkedList<PathBean> redoList;
+    /**
+     * 使用LinkedList 模拟栈，来保存 Path
+     */
+    private LinkedList<PathBean> undoList, redoList;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
     private GestureResolver gestureResolver;
@@ -105,7 +109,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);
     }
 
-    public void setOS(File file, boolean append) {
+    public void setOutputStream(File file, boolean append) {
         long length = 0L;
         if (file.exists()) {
             length = file.length();
@@ -118,7 +122,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             if (length == 0L) {
                 try {
                     byte[] headInfo = "path ver 2.1".getBytes();
-                    if (headInfo.length != 12) {
+                    final int headLength = 12;
+                    if (headInfo.length != headLength) {
                         Common.showException(new Exception("native error"), (Activity) ctx);
                     }
                     os.write(headInfo);
@@ -142,20 +147,21 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         eraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
         eraserPaint.setAntiAlias(true);
         eraserPaint.setStyle(Paint.Style.STROKE);
-        eraserPaint.setStrokeJoin(Paint.Join.ROUND);//使画笔更加圆润
-        eraserPaint.setStrokeCap(Paint.Cap.ROUND);//同上
+        //使画笔更加圆润
+        eraserPaint.setStrokeJoin(Paint.Join.ROUND);
+        //同上
+        eraserPaint.setStrokeCap(Paint.Cap.ROUND);
         eraserPaint.setAlpha(255);
-        //关闭硬件加速
-        //否则橡皮擦模式下，设置的 PorterDuff.Mode.CLEAR ，实时绘制的轨迹是黑色
-//        setBackgroundColor(Color.WHITE);//设置白色背景
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         //画笔
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mPaintRef = mPaint;
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);//使画笔更加圆润
-        mPaint.setStrokeCap(Paint.Cap.ROUND);//同上
+        //使画笔更加圆润
+        mPaint.setStrokeJoin(Paint.Join.ROUND);
+        //同上
+        mPaint.setStrokeCap(Paint.Cap.ROUND);
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
         //保存签名的画布
         //拿到控件的宽和高
@@ -291,14 +297,13 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
-        this.eraserPaint.setAlpha(alpha);
-    }
-
     int getEraserAlpha() {
         return this.eraserPaint.getAlpha();
     }
 
+    void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
+        this.eraserPaint.setAlpha(alpha);
+    }
 
     /**
      * 设置画笔颜色
@@ -736,7 +741,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
 
     void clearTouchRecordOSContent() {
         closePathRecorderOS();
-        setOS(internalPathFile, false);
+        setOutputStream(internalPathFile, false);
     }
 
     float getEraserStrokeWidth() {
