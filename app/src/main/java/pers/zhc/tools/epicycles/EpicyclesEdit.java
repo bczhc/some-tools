@@ -229,7 +229,7 @@ public class EpicyclesEdit extends BaseActivity {
     private void setTV(TextView tv, EpicyclesSequence.AEpicycle aEpicycle) {
         tv.setTextSize(20);
         tv.setOnLongClickListener(v1 -> {
-            DialogUtil.createConfirmationAD(this, (dialog, which) -> {
+            DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
                         ll.removeView(tv);
                         epicyclesSequence.epicycles.remove(aEpicycle);
                     }, (dialog, which) -> {

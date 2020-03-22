@@ -540,6 +540,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     }
                                     onTouchAction(MotionEvent.ACTION_MOVE, x, y);
                                     break;
+                                default:
+                                    break;
                             }
                             read += 12;
                             canDoHandler.push(((float) read) * 100F / ((float) length));
