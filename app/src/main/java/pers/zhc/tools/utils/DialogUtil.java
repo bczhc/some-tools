@@ -31,7 +31,9 @@ public class DialogUtil {
                     overlay = true;
                 }
             }
-        } else overlay = application_overlay;
+        } else {
+            overlay = application_overlay;
+        }
         Window window;
         try {
             window = Objects.requireNonNull(d.getWindow());
@@ -43,9 +45,13 @@ public class DialogUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
             } else                                 //noinspection deprecation
+            {
                 window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_SYSTEM_ERROR, 0, PixelFormat.RGB_888));
+            }
         }
-        if (isTransparent) window.setBackgroundDrawableResource(R.color.transparent);
+        if (isTransparent) {
+            window.setBackgroundDrawableResource(R.color.transparent);
+        }
     }
 
     public static AlertDialog createConfirmationAD(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId, int width, int height, boolean application_overlay) {

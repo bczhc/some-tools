@@ -34,7 +34,9 @@ public class ComplexGraphDrawingView extends View {
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
-        if (complexFunction == null) complexFunction = new ComplexFunction();
+        if (complexFunction == null) {
+            complexFunction = new ComplexFunction();
+        }
     }
 
     @Override

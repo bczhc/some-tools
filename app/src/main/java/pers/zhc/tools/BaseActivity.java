@@ -52,7 +52,7 @@ public class BaseActivity extends Activity {
         ExternalJNI.ex(this);
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
-        if (Infos.launcherClass.equals(this.getClass())) {
+        if (Infos.LAUNCHER_CLASS.equals(this.getClass())) {
             checkForUpdate(null);
         }
     }
@@ -63,7 +63,7 @@ public class BaseActivity extends Activity {
             int myVersionCode = BuildConfig.VERSION_CODE;
             String myVersionName = BuildConfig.VERSION_NAME;
             try {
-                String appURL = Infos.zhcStaticWebUrlString + "/res/app/" + getString(R.string.app_name) + "/release";
+                String appURL = Infos.ZHC_STATIC_WEB_URL_STRING + "/res/app/" + getString(R.string.app_name) + "/debug";
                 URL jsonURL = new URL(appURL + "/output.json");
                 InputStream is = jsonURL.openStream();
                 StringBuilder sb = new StringBuilder();
@@ -75,16 +75,17 @@ public class BaseActivity extends Activity {
                 String remoteVersionName = jsonObject.getString("versionName");
                 String remoteFileName = jsonObject.getString("outputFile");
                 long fileSize = -1;
-                if (jsonObject.has("length")) {
-                    fileSize = jsonObject.getLong("length");
+                final String length = "length";
+                if (jsonObject.has(length)) {
+                    fileSize = jsonObject.getLong(length);
                 }
                 boolean update = true;
                 try {
                     String[] split = remoteVersionName.split("_");
                     long remoteBuildTime = Long.parseLong(split[1]);
                     String[] split1 = myVersionName.split("_");
-                    long myBuildTIme = Long.parseLong(split1[1]);
-                    update = remoteBuildTime > myBuildTIme;
+                    long myBuildTime = Long.parseLong(split1[1]);
+                    update = remoteBuildTime > myBuildTime;
                 } catch (Exception ignored) {
                 }
                 if (checkForUpdateResultInterface != null) {
@@ -111,25 +112,25 @@ public class BaseActivity extends Activity {
                                                 .findViewById(R.id.rl);
                                         rl.setLayoutParams(new RelativeLayout.LayoutParams(
                                                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                                        TextView progressTV = rl.findViewById(R.id.progress_tv);
-                                        TextView barTV = rl.findViewById(R.id.progress_bar_title);
-                                        barTV.setText(R.string.downloading);
+                                        TextView progressTextView = rl.findViewById(R.id.progress_tv);
+                                        TextView barTextView = rl.findViewById(R.id.progress_bar_title);
+                                        barTextView.setText(R.string.downloading);
                                         ProgressBar pb = rl.findViewById(R.id.progress_bar);
                                         SeekBar seekBar = new SeekBar(this);
                                         seekBar.setLayoutParams(new ViewGroup.LayoutParams(
                                                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                                        progressTV.setText(R.string.please_wait);
+                                        progressTextView.setText(R.string.please_wait);
                                         downloadDialog.setContentView(rl);
                                         downloadDialog.setCanceledOnTouchOutside(false);
                                         downloadDialog.setCancelable(true);
                                         final OutputStream[] os = new OutputStream[1];
-                                        final InputStream[] downloadIS = new InputStream[1];
+                                        final InputStream[] downloadInputStream = new InputStream[1];
                                         downloadDialog.setOnCancelListener(dialog1 -> {
                                             es.shutdownNow();
                                             Thread thread = new Thread(() -> {
                                                 try {
                                                     os[0].close();
-                                                    downloadIS[0].close();
+                                                    downloadInputStream[0].close();
                                                 } catch (IOException | NullPointerException e) {
                                                     e.printStackTrace();
                                                 }
@@ -146,7 +147,7 @@ public class BaseActivity extends Activity {
                                             try {
                                                 URL apkURL = new URL(appURL + "/" + remoteFileName);
                                                 URLConnection urlConnection = apkURL.openConnection();
-                                                downloadIS[0] = urlConnection.getInputStream();
+                                                downloadInputStream[0] = urlConnection.getInputStream();
                                                 File apkDir = new File(Common.getExternalStoragePath(this)
                                                         + File.separatorChar + getString(R.string.some_tools_app), getString(R.string.apk));
                                                 if (!apkDir.exists()) {
@@ -157,12 +158,12 @@ public class BaseActivity extends Activity {
                                                 int readLen;
                                                 long read = 0L;
                                                 byte[] buffer = new byte[1024];
-                                                while ((readLen = downloadIS[0].read(buffer)) != -1) {
+                                                while ((readLen = downloadInputStream[0].read(buffer)) != -1) {
                                                     os[0].write(buffer, 0, readLen);
                                                     read += readLen;
                                                     long finalRead = read;
                                                     runOnUiThread(() -> {
-                                                        progressTV.setText(getString(R.string.download_progress
+                                                        progressTextView.setText(getString(R.string.download_progress
                                                                 , finalRead, finalFileSize));
                                                         pb.setProgress((int) (((double) finalRead) / ((double) finalFileSize) * 100D));
                                                     });
@@ -238,7 +239,7 @@ public class BaseActivity extends Activity {
 
     protected byte ckV() {
         try {
-            URLConnection urlConnection = new URL(Infos.zhcUrlString + "/i.zhc?t=tools_v").openConnection();
+            URLConnection urlConnection = new URL(Infos.ZHC_URL_STRING + "/i.zhc?t=tools_v").openConnection();
             InputStream is = urlConnection.getInputStream();
             byte[] b = new byte[urlConnection.getContentLength()];
             System.out.println("is.read(b) = " + is.read(b));
@@ -250,15 +251,17 @@ public class BaseActivity extends Activity {
     }
 
     protected interface CheckForUpdateResultInterface {
+        /**
+         * callback
+         * @param update b
+         */
         void onCheckForUpdateResult(boolean update);
     }
 
     public static class Infos {
-        public static final String zhcUrlString = "http://bczhc.free.idcfengye.com";
-        public static final String zhcStaticWebUrlString = "http://bczhc.gitee.io/web";
-        //        public static String zhcStaticWebUrlString = "http://bczhc.github.io";
-//        public static String zhcStaticWebUrlString = "https://gitee.com/bczhc/web/raw/master";
-        public static final Class<?> launcherClass = MainActivity.class;
+        public static final String ZHC_URL_STRING = "http://bczhc.free.idcfengye.com";
+        public static final String ZHC_STATIC_WEB_URL_STRING = "http://bczhc.gitee.io/web";
+        public static final Class<?> LAUNCHER_CLASS = MainActivity.class;
     }
 
     public static class RequestCode {

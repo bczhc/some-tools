@@ -112,7 +112,6 @@ class EpicyclesView extends View {
                 return false;
             }
         });
-        //noinspection DuplicatedCode
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
@@ -218,11 +217,21 @@ class EpicyclesView extends View {
     }
 
     private double getComplexArg(double re, double im) {
-        if (re > 0) return Math.atan(im / re);
-        if (re == 0 && im > 0) return Math.PI / 2D;
-        if (re == 0 && im < 0) return Math.PI / -2D;
-        if (re < 0 && im >= 0) return Math.atan(im / re) + Math.PI;
-        if (re < 0 && im < 0) return Math.atan(im / re) - Math.PI;
+        if (re > 0) {
+            return Math.atan(im / re);
+        }
+        if (re == 0 && im > 0) {
+            return Math.PI / 2D;
+        }
+        if (re == 0 && im < 0) {
+            return Math.PI / -2D;
+        }
+        if (re < 0 && im >= 0) {
+            return Math.atan(im / re) + Math.PI;
+        }
+        if (re < 0 && im < 0) {
+            return Math.atan(im / re) - Math.PI;
+        }
         return 0;
     }
 
