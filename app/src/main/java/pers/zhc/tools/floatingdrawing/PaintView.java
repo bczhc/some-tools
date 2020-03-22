@@ -42,6 +42,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author bczhc & (cv...)...
+ */
 @SuppressLint("ViewConstructor")
 public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private final File internalPathFile;
@@ -446,7 +449,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    void closePathRecorderOS() {
+    void closePathRecorderOutputStream() {
         closeStream(os);
     }
 
@@ -454,15 +457,15 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      * 导入路径
      *
      * @param f                   路径文件
-     * @param d                   完成接口
-     * @param floatValueInterface 进度接口
+     * @param d                   完成回调接口
+     * @param floatValueInterface 进度回调接口
      *                            路径存储结构：
      *                            一条笔迹或一个操作记录记录长度为9字节
      *                            byte b[9];(length=9)
      *                            1+4+4
-     *                            b[0]: 标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2；
-     *                            \ 按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；
-     *                            \ 撤销为0xC1，恢复为0xC2。(byte)
+     *                            b[0]: 标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2；\
+     *                            按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；\
+     *                            撤销为0xC1，恢复为0xC2。(byte)
      *                            如果标记为0xA1，排列结构：标记(int)+笔迹宽度(float)+颜色(int)
      *                            如果标记为0xA2，排列结构：标记(int)+橡皮擦宽度(float)+TRANSPARENT(int)
      *                            如果标记为0xB1或0xB2或0xB3，排列结构：标记(int)+x坐标(float)+y坐标(float)
@@ -745,8 +748,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         drawing();
     }
 
-    void clearTouchRecordOSContent() {
-        closePathRecorderOS();
+    void clearTouchRecordOutputStreamContent() {
+        closePathRecorderOutputStream();
         setOutputStream(internalPathFile, false);
     }
 
