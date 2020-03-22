@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
+import pers.zhc.tools.crashhandler.CrashTest;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.epicycles.EpicyclesEdit;
 import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
@@ -89,7 +90,8 @@ public class MainActivity extends BaseActivity {
                 R.string.input_event,
                 R.string.surface_view_test,
                 R.string.serviceTest,
-                R.string.you_dao_translate_interface_invoke
+                R.string.you_dao_translate_interface_invoke,
+                R.string.crash_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -108,7 +110,8 @@ public class MainActivity extends BaseActivity {
                 InputEvent.class,
                 SurfaceViewTest.class,
                 ServiceActivity.class,
-                YouDaoTranslate.class
+                YouDaoTranslate.class,
+                CrashTest.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

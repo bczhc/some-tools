@@ -156,7 +156,7 @@
     <string name="sensor_test">传感器测试</string>
     <string name="crash_bar">崩溃了……</string>
     <string name="upload">上传</string>
-    <string name="upload_crash_report">上传错误报告</string>
+    <string name="upload_crash_report">上传崩溃报告</string>
     <string name="upload_failed">上传失败</string>
     <string name="uploading">正在上传</string>
     <string name="upload_done">上传完成</string>
@@ -210,5 +210,8 @@
     <string name="follow_painting_color">跟随笔刷颜色</string>
     <string name="filter_with_regex">过滤器（正则表达式）</string>
     <string name="wrong_regex">错误的正则</string>
+    <string name="crash_test">崩溃测试</string>
+    <string name="crash_title">程序崩溃了…</string>
+    <string name="opacity">不透明度</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
