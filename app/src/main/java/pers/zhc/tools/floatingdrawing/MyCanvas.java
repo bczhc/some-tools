@@ -3,8 +3,22 @@ package pers.zhc.tools.floatingdrawing;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+/**
+ * @author bczhc
+ */
 public class MyCanvas extends Canvas {
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return super.equals(obj);
+    }
+
     private float scale = 1F;
     private float startPointX, startPointY;
     private float savedScale, savedStartPointX, savedStartPointY;

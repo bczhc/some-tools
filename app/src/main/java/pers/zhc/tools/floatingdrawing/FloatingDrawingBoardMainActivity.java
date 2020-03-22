@@ -433,7 +433,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     case 7:
                         DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                             pv.clearAll();
-                            pv.clearTouchRecordOSContent();
+                            pv.clearTouchRecordOutputStreamContent();
                         }, (dialog1, which) -> {
                         }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
                         break;
@@ -826,7 +826,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         new Thread(() -> uploadPaths(this)).start();
         FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMillisecond);
         this.fbSwitch.setChecked(false);
-        pv.closePathRecorderOS();
+        pv.closePathRecorderOutputStream();
     }
 
     private void hide() {
@@ -912,7 +912,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                 try {
                     float edit = Float.parseFloat(et.getText().toString());
-                    double a = Math.log(edit) / Math.log(1.07D);
+                    double a = Math.log(edit * pv.getScale()) / Math.log(1.07D);
                     strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getColor());
                     sb.setProgress((int) a);
                     if (checked[0] == R.id.radio1) {
@@ -930,8 +930,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             AlertDialog ad = adb.create();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-            } else //noinspection deprecation
-            {
+            } else {
+                //noinspection deprecation
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
             }
             DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, ad);
@@ -940,7 +940,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         float pvStrokeWidthInUse = pv.getStrokeWidthInUse();
         strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getColor());
         tv.setText(getString(R.string.stroke_width_info, pvStrokeWidthInUse, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
-        sb.setProgress((int) (Math.log(pvStrokeWidthInUse) / Math.log(1.07D)));
+        sb.setProgress((int) (Math.log(pvStrokeWidthInUse * pv.getScale()) / Math.log(1.07D)));
         sb.setMax(100);
         setDialogAttr(mainDialog, false, ((int) (((float) width) * .8F)), ViewGroup.LayoutParams.WRAP_CONTENT, true);
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -948,6 +948,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     float pow = (float) Math.pow(1.07D, progress);
+                    pow /= pv.getScale();
                     if (checked[0] == R.id.radio1) {
                         pv.setStrokeWidth(pow);
                     } else {
@@ -974,7 +975,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             float strokeWidth = (checkedId == R.id.radio1) ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
             strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getColor());
             tv.setText(getString(R.string.stroke_width_info, strokeWidth, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
-            sb.setProgress((int) (Math.log(strokeWidth) / Math.log(1.07D)));
+            sb.setProgress((int) (Math.log(strokeWidth * pv.getScale()) / Math.log(1.07D)));
         });
         mainLL.addView(strokeWatchView);
         mainDialog.setContentView(mainLL, new ViewGroup.LayoutParams(((int) (((float) width) * .8F)), ViewGroup.LayoutParams.WRAP_CONTENT));

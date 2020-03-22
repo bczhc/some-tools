@@ -151,7 +151,6 @@ public class Document extends BaseActivity {
         Cursor cursor = db.rawQuery("SELECT * FROM doc", null);
         LinearLayout.LayoutParams ll_lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams smallLL_LP4 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 4F);
-//        LinearLayout.LayoutParams smallLL_LP1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1F);
         int margin = DisplayUtil.px2sp(this, 10);
         ExecutorService es = Executors.newCachedThreadPool();
         String[] sqliteOptions = getResources().getStringArray(R.array.sqlite_options);
@@ -176,18 +175,23 @@ public class Document extends BaseActivity {
                             Button[] buttons = new Button[2];
                             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                                     v1 -> {
-                                        Intent intent = new Intent(this, NoteTakingActivity.class);
-                                        intent.putExtra("origin", false);
-                                        Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + millisecond, null);
-                                        c.moveToFirst();
-                                        intent.putExtra("title", c.getString(1));
-                                        intent.putExtra("content", c.getString(2));
-                                        c.close();
-                                        intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
-                                        intent.putExtra("millisecond", millisecond);
-                                        startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
-                                        dialog.dismiss();
-                                        overridePendingTransition(R.anim.in_left_and_bottom, 0);
+                                        try {
+                                            Intent intent = new Intent(this, NoteTakingActivity.class);
+                                            intent.putExtra("origin", false);
+                                            Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + millisecond, null);
+                                            c.moveToFirst();
+                                            intent.putExtra("title", c.getString(1));
+                                            intent.putExtra("content", c.getString(2));
+                                            c.close();
+                                            intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
+                                            intent.putExtra("millisecond", millisecond);
+                                            startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
+                                            dialog.dismiss();
+                                            overridePendingTransition(R.anim.in_left_and_bottom, 0);
+                                        } catch (IndexOutOfBoundsException e) {
+                                            e.printStackTrace();
+                                            ToastUtils.show(this, e.toString());
+                                        }
                                     },
                                     v1 -> {
                                         AlertDialog confirmationAD = DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
