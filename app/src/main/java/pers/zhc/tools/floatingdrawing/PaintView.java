@@ -143,7 +143,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private void init() {
         setEraserMode(false);
         eraserPaint = new Paint();
-        eraserPaint.setColor(Color.TRANSPARENT);
+        eraserPaint.setColor(Color.BLACK);
         eraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
         eraserPaint.setAntiAlias(true);
         eraserPaint.setStyle(Paint.Style.STROKE);
@@ -561,7 +561,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                         strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
                                         color = JNI.FloatingBoard.byteArrayToInt(buffer, 5 + i * 9);
                                         setEraserMode(buffer[i * 9] == (byte) 0xA2);
-                                        mPaintRef.setColor(color);
+                                        if (!isEraserMode) {
+                                            mPaintRef.setColor(color);
+                                        }
                                         mPaintRef.setStrokeWidth(strokeWidth);
                                         break;
                                     case (byte) 0xB1:
@@ -584,6 +586,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                         break;
                                     case (byte) 0xC2:
                                         redo();
+                                        break;
+                                    default:
                                         break;
                                 }
                                 read += 9L;

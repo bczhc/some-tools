@@ -40,7 +40,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private String getExceptionStackTraceString(Throwable e) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PrintWriter pw = new PrintWriter(byteArrayOutputStream);
-        e.printStackTrace();
+        e.printStackTrace(pw);
         Throwable cause = e.getCause();
         while (cause != null) {
             cause.printStackTrace(pw);
