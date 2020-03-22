@@ -79,6 +79,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -430,7 +431,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         }
                         break;
                     case 7:
-                        DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
+                        DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                             pv.clearAll();
                             pv.clearTouchRecordOSContent();
                         }, (dialog1, which) -> {
@@ -440,68 +441,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         pickScreenColor();
                         break;
                     case 9:
-                        Dialog c = new Dialog(this);
-                        LinearLayout inflate = View.inflate(this, R.layout.panel_view, null).findViewById(R.id.ll);
-                        Button panelColorBtn = inflate.findViewById(R.id.panel_color);
-                        panelColorBtn.setEnabled(!this.panelColorFollowPainting);
-                        panelColorBtn.setOnClickListener(v2 -> {
-                            Dialog TextViewsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
-                            setDialogAttr(TextViewsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            HSVAColorPickerRL TextViewsColorPicker = new HSVAColorPickerRL(this, FloatingDrawingBoardMainActivity.this.TextViewsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1], TextViewsColorDialog) {
-                                @Override
-                                void onPickedAction(int color, float[] hsva) {
-                                    setPanelColor(color, hsva);
-                                }
-                            };
-                            TextViewsColorDialog.setContentView(TextViewsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
-                            TextViewsColorDialog.show();
-                        });
-                        Button textsColorBtn = inflate.findViewById(R.id.text_color);
-                        textsColorBtn.setEnabled(!this.invertColorChecked);
-                        textsColorBtn.setOnClickListener(v2 -> {
-                            Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
-                            setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2], textsColorDialog) {
-                                @Override
-                                void onPickedAction(int color, float[] hsva) {
-                                    for (TextView childTextView : childTextViews) {
-                                        if (!invertColorChecked) {
-                                            textsColor = color;
-                                        }
-                                        childTextView.setTextColor(textsColor);
-                                    }
-                                    hsvaFloats[2] = hsva;
-                                }
-                            };
-                            textsColorDialog.setContentView(textsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
-                            textsColorDialog.show();
-                        });
-                        textsColorBtn.setText(R.string.text_color);
-                        Switch whetherTextColorIsInverted = inflate.findViewById(R.id.invert_text_color);
-                        whetherTextColorIsInverted.setChecked(invertColorChecked);
-                        whetherTextColorIsInverted.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                            textsColorBtn.setEnabled(!isChecked);
-                            invertColorChecked = isChecked;
-                            for (TextView childTV : childTextViews) {
-                                childTV.setTextColor(textsColor = ColorUtils.invertColor(TextViewsColor));
-                            }
-                        });
-                        Switch followPaintingColor = inflate.findViewById(R.id.follow_painting_color);
-                        followPaintingColor.setChecked(this.panelColorFollowPainting);
-                        followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                            this.panelColorFollowPainting = isChecked;
-                            panelColorBtn.setEnabled(!this.panelColorFollowPainting);
-                        });
-                        c.setContentView(inflate);
-                        setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
-                                , ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        c.show();
+                        setPanel();
                         break;
                     case 10:
                         moreOptions();
                         break;
                     case 11:
-                        DialogUtil.createConfirmationAD(this, (dialog1, which) -> exit(), (dialog1, which) -> {
+                        DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> exit(), (dialog1, which) -> {
                         }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
                         break;
                     default:
@@ -543,6 +489,65 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }));
     }
 
+    private void setPanel() {
+        Dialog c = new Dialog(this);
+        LinearLayout inflate = View.inflate(this, R.layout.panel_view, null).findViewById(R.id.ll);
+        Button panelColorBtn = inflate.findViewById(R.id.panel_color);
+        panelColorBtn.setEnabled(!this.panelColorFollowPainting);
+        panelColorBtn.setOnClickListener(v2 -> {
+            Dialog TextViewsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
+            setDialogAttr(TextViewsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+            AbstractHSVAColorPickerRelativeLayout TextViewsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, FloatingDrawingBoardMainActivity.this.TextViewsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1], TextViewsColorDialog) {
+                @Override
+                void onPickedAction(int color, float[] hsva) {
+                    setPanelColor(color, hsva);
+                }
+            };
+            TextViewsColorDialog.setContentView(TextViewsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
+            TextViewsColorDialog.show();
+        });
+        Button textsColorBtn = inflate.findViewById(R.id.text_color);
+        textsColorBtn.setEnabled(!this.invertColorChecked);
+        textsColorBtn.setOnClickListener(v2 -> {
+            Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
+            setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+            AbstractHSVAColorPickerRelativeLayout textsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2], textsColorDialog) {
+                @Override
+                void onPickedAction(int color, float[] hsva) {
+                    for (TextView childTextView : childTextViews) {
+                        if (!invertColorChecked) {
+                            textsColor = color;
+                        }
+                        childTextView.setTextColor(textsColor);
+                    }
+                    hsvaFloats[2] = hsva;
+                }
+            };
+            textsColorDialog.setContentView(textsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
+            textsColorDialog.show();
+        });
+        textsColorBtn.setText(R.string.text_color);
+        Switch whetherTextColorIsInverted = inflate.findViewById(R.id.invert_text_color);
+        whetherTextColorIsInverted.setChecked(invertColorChecked);
+        whetherTextColorIsInverted.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            textsColorBtn.setEnabled(!isChecked);
+            invertColorChecked = isChecked;
+            for (TextView childTV : childTextViews) {
+                childTV.setTextColor(textsColor = ColorUtils.invertColor(TextViewsColor));
+            }
+        });
+        Switch followPaintingColor = inflate.findViewById(R.id.follow_painting_color);
+        followPaintingColor.setChecked(this.panelColorFollowPainting);
+        followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            this.panelColorFollowPainting = isChecked;
+            panelColorBtn.setEnabled(!this.panelColorFollowPainting);
+        });
+        c.setContentView(inflate);
+        setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
+                , ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        c.show();
+    }
+
     private void setColor() {
         if (pv.isEraserMode) {
             Dialog dialog = new Dialog(this);
@@ -560,7 +565,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    pv.setEraserAlpha(HSVAColorPickerRL.limitValue(progress * 255 / 100, 0, 255));
+                    pv.setEraserAlpha(AbstractHSVAColorPickerRelativeLayout.limitValue(progress * 255 / 100, 0, 255));
                 }
 
                 @Override
@@ -578,12 +583,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     , ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             dialog.show();
         } else {
-            Dialog dialog = new Dialog(this);
+            Dialog dialog = new Dialog(this, R.style.dialog_with_background_dim_false);
             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
             dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                     , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
+            AbstractHSVAColorPickerRelativeLayout hsvaColorPickerRelativeLayout = new AbstractHSVAColorPickerRelativeLayout(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
                 @Override
                 void onPickedAction(int color, float[] hsva) {
                     pv.setPaintColor(color);
@@ -591,17 +596,17 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 }
             };
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            dialog.setContentView(hsvColorPickerRL);
+            dialog.setContentView(hsvaColorPickerRelativeLayout);
             dialog.show();
         }
     }
 
     private void setPanelColor(int color, float[] hsva) {
-        for (TextView childTV : childTextViews) {
+        for (TextView childTextView : childTextViews) {
             TextViewsColor = color;
-            childTV.setBackgroundColor(TextViewsColor);
+            childTextView.setBackgroundColor(TextViewsColor);
             if (invertColorChecked) {
-                childTV.setTextColor(textsColor = ColorUtils.invertColor(TextViewsColor));
+                childTextView.setTextColor(textsColor = ColorUtils.invertColor(TextViewsColor));
             }
         }
         hsvaFloats[1] = hsva;
@@ -649,8 +654,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             try {
                 image = reader.acquireLatestImage();
                 if (image != null) {
-                    Log.d("d", "image! " + image);
-                    /*int width = image.getWidth();
+                    int width = image.getWidth();
                     int height = image.getHeight();
                     final Image.Plane plane = image.getPlanes()[0];
                     final ByteBuffer buffer = plane.getBuffer();
@@ -659,9 +663,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     int rowPadding = rowStride - pixelStride * width;
                     Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
                     bitmap.copyPixelsFromBuffer(buffer);
-                    image.close();*/
-                    System.out.println("image = " + image);
-                    ToastUtils.show(this, getString(R.string.ok) + image);
+                    image.close();
+                    ToastUtils.show(this, getString(R.string.ok) + bitmap);
                 } else {
                     Log.d("d", "image is null.");
                 }
@@ -931,7 +934,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
             }
-            DialogUtil.setADWithET_autoShowSoftKeyboard(et, ad);
+            DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, ad);
             ad.show();
         });
         float pvStrokeWidthInUse = pv.getStrokeWidthInUse();
@@ -1128,7 +1131,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                             }).setView(linearLayout).create();
                     setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                    DialogUtil.setADWithET_autoShowSoftKeyboard(fileNameEditText, ad);
+                    DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(fileNameEditText, ad);
                     ad.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
@@ -1157,13 +1160,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                     }).setTitle(R.string.type_file_name).setView(et).create();
                     setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                    DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
+                    DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, alertDialog);
                     alertDialog.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v4 -> pv.resetTransform(),
                 v5 -> setLayer(),
-                v6 -> DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
+                v6 -> DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                     hide();
                     moreOptionsDialog.dismiss();
                 }, (dialog1, which) -> {

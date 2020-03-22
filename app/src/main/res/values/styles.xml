@@ -25,4 +25,10 @@
     </style>
     <style name="AppThemeTranslucent" parent="android:Theme.Translucent.NoTitleBar"/>
     <style name="BlackTheme" parent="android:Theme.Black.NoTitleBar"/>
+    <style name="dialog_with_background_dim_false" parent="android:Theme.Dialog">
+        <item name="android:backgroundDimEnabled">false</item><!--activity不变暗-->
+    </style>
+    <style name="dialog_with_background_dim_true" parent="android:Theme.Dialog">
+        <item name="android:backgroundDimEnabled">false</item><!--activity不变暗-->
+    </style>
 </resources>

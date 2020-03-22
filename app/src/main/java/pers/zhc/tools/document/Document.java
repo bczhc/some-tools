@@ -190,7 +190,7 @@ public class Document extends BaseActivity {
                                         overridePendingTransition(R.anim.in_left_and_bottom, 0);
                                     },
                                     v1 -> {
-                                        AlertDialog confirmationAD = DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
+                                        AlertDialog confirmationAD = DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                                             try {
                                                 db.execSQL("DELETE FROM doc WHERE t=" + millisecond);
                                             } catch (Exception e) {

@@ -29,7 +29,7 @@ import pers.zhc.tools.utils.ToastUtils;
 
 @SuppressWarnings("SameParameterValue")
 @SuppressLint("ViewConstructor")
-abstract class HSVAColorPickerRL extends RelativeLayout {
+abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
     private final float[] hsv = new float[3];
     private final int width;
     private final int height;
@@ -40,7 +40,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     private final float lW = 1.5F;
     private final float[] resultHSVA = new float[4];
     private int alpha;
-    private View[] hsvAView;
+    private View[] hsvaViews;
     private View vv;
 
     /**
@@ -51,7 +51,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
      * @param hsva         HSVA
      * @param dialog       防止dim
      */
-    protected HSVAColorPickerRL(Context context, int initialColor, int width, int height, @Nullable float[] hsva, @Nullable Dialog dialog) {
+    protected AbstractHSVAColorPickerRelativeLayout(Context context, int initialColor, int width, int height, @Nullable float[] hsva, @Nullable Dialog dialog) {
         super(context);
         if (dialog != null) {
             Window window = dialog.getWindow();
@@ -88,7 +88,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
 
     private void init() {
         int perViewHeight = height / 4;
-        hsvAView = new View[]{
+        hsvaViews = new View[]{
                 new HView(context, width, perViewHeight),
                 new SView(context, width, perViewHeight),
                 new VView(context, width, perViewHeight),
@@ -139,7 +139,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
             ad.show();
             Selection.selectAll(editText.getText());
-            DialogUtil.setADWithET_autoShowSoftKeyboard(editText, ad);
+            DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(editText, ad);
         });
         barRL.addView(tv);
         vv = new View(context);
@@ -150,11 +150,11 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         vv.setBackgroundColor(Color.HSVToColor(alpha, hsv));
         barRL.addView(vv);
         ll.addView(barRL);
-        LinearLayout[] linearLayouts = new LinearLayout[hsvAView.length];
+        LinearLayout[] linearLayouts = new LinearLayout[hsvaViews.length];
         for (int i = 0; i < linearLayouts.length; i++) {
             linearLayouts[i] = new LinearLayout(context);
             linearLayouts[i].setLayoutParams(new LinearLayout.LayoutParams(width, 0, 1));
-            linearLayouts[i].addView(hsvAView[i]);
+            linearLayouts[i].addView(hsvaViews[i]);
             ll.addView(linearLayouts[i]);
         }
         this.addView(ll);
@@ -162,7 +162,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     }
 
     private void invalidateAllView() {
-        for (View view : hsvAView) {
+        for (View view : hsvaViews) {
 //            if (i == notDrawIndex) continue;
 //            int finalI = i;
 //            new Thread(() -> hsvAView[finalI].postInvalidate()).start();
