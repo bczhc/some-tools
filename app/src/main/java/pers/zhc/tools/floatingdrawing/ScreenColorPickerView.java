@@ -47,7 +47,9 @@ public class ScreenColorPickerView extends View {
         int wMode = MeasureSpec.getMode(widthMeasureSpec);
         int hMode = MeasureSpec.getMode(heightMeasureSpec);
         boolean b = false;
-        if (width == -1 && height == -1) b = true;
+        if (width == -1 && height == -1) {
+            b = true;
+        }
         width = ((int) (MeasureSpec.getSize(widthMeasureSpec) * .4F));
         height = ((int) (MeasureSpec.getSize(heightMeasureSpec) * .4F));
         int w = 0, h = 0;
@@ -58,6 +60,8 @@ public class ScreenColorPickerView extends View {
             h = height;
         }
         setMeasuredDimension(w, h);
-        if (b) init();
+        if (b) {
+            init();
+        }
     }
 }

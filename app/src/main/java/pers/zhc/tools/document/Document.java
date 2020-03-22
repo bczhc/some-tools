@@ -113,8 +113,11 @@ public class Document extends BaseActivity {
                         Common.showException(e, this);
                         return;
                     }
-                    if (file.exists()) ToastUtils.show(this, R.string.importing_success);
-                    else ToastUtils.show(this, R.string.copying_failed);
+                    if (file.exists()) {
+                        ToastUtils.show(this, R.string.importing_success);
+                    } else {
+                        ToastUtils.show(this, R.string.copying_failed);
+                    }
                     setSVViews();
                 }
                 break;
@@ -127,8 +130,9 @@ public class Document extends BaseActivity {
                     try {
                         File destFile = new File(destFileDir + File.separator + dbName);
                         FileU.FileCopy(file, destFile);
-                        if (destFile.exists())
+                        if (destFile.exists()) {
                             ToastUtils.show(this, getString(R.string.exporting_success) + "\n" + destFile.getCanonicalPath());
+                        }
                     } catch (IOException e) {
                         Common.showException(e, this);
                     }

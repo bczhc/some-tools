@@ -5,8 +5,8 @@ import android.widget.TextView;
 import pers.zhc.tools.jni.JNI;
 
 public class JNICallback implements JNI.Codecs.Callback {
-    private TextView tv;
-    private Activity a;
+    private final TextView tv;
+    private final Activity a;
 
     JNICallback(TextView tv, Activity a) {
         this.tv = tv;

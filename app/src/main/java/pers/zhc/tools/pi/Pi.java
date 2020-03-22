@@ -34,7 +34,7 @@ public class Pi extends BaseActivity {
         btn.setOnClickListener(v -> {
             try {
                 String s = et.getText().toString();
-                int i = Integer.parseInt(s.equals("") ? "0" : s);
+                int i = Integer.parseInt("".equals(s) ? "0" : s);
                 try {
                     es[0].shutdownNow();
                 } catch (Exception ignored) {
@@ -66,17 +66,24 @@ public class Pi extends BaseActivity {
                 ClipData cd = ClipData.newPlainText("Pi", sb.toString());
                 if (cm != null) {
                     cm.setPrimaryClip(cd);
-                } else ToastUtils.show(this, "null");
+                } else {
+                    ToastUtils.show(this, "null");
+                }
                 ToastUtils.show(this, R.string.copying_success);
-            } else ToastUtils.show(this, R.string.null_string);
+            } else {
+                ToastUtils.show(this, R.string.null_string);
+            }
             return true;
         });
     }
 
     @Override
     public void onBackPressed() {
-        if (this.isGenerating) this.moveTaskToBack(true);
-        else finish();
+        if (this.isGenerating) {
+            this.moveTaskToBack(true);
+        } else {
+            finish();
+        }
         overridePendingTransition(0, R.anim.slide_out_bottom);
     }
 }

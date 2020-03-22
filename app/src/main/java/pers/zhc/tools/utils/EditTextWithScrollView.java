@@ -47,10 +47,13 @@ public class EditTextWithScrollView extends EditText {
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN)
             //如果是新的按下事件，则对mBottomFlag重新初始化
+        {
             mBottomFlag = false;
+        }
         //如果已经不要这次事件，则传出取消的信号，这里的作用不大
-        if (mBottomFlag)
+        if (mBottomFlag) {
             event.setAction(MotionEvent.ACTION_CANCEL);
+        }
 
         return super.dispatchTouchEvent(event);
     }
@@ -61,8 +64,9 @@ public class EditTextWithScrollView extends EditText {
         boolean result = super.onTouchEvent(event);
         if (mCanVerticalScroll) {
             //如果是需要拦截，则再拦截，这个方法会在onScrollChanged方法之后再调用一次
-            if (!mBottomFlag)
+            if (!mBottomFlag) {
                 getParent().requestDisallowInterceptTouchEvent(true);
+            }
         } else {
             getParent().requestDisallowInterceptTouchEvent(false);
         }

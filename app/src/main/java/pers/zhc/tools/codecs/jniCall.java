@@ -23,12 +23,18 @@ class jniCall {
         switch (dT) {
             case 0:
                 pers.zhc.tools.jni.JNI.Codecs.qmcDecode(f, dF, getMode(savedConfig, 0), callback);
+                break;
             case 1:
                 pers.zhc.tools.jni.JNI.Codecs.kwmDecode(f, dF, getMode(savedConfig, 1), callback);
+                break;
             case 21:
                 pers.zhc.tools.jni.JNI.Codecs.Base128_encode(f, dF, getMode(savedConfig, 2), callback);
+                break;
             case 22:
                 pers.zhc.tools.jni.JNI.Codecs.Base128_decode(f, dF, getMode(savedConfig, 3), callback);
+                break;
+            default:
+                break;
         }
         return 0;
     }

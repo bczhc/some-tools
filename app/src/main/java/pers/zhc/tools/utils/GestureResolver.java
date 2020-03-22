@@ -46,14 +46,18 @@ public class GestureResolver {
                     firstMidPointX = (x1 + x2) / 2;
                     firstMidPointY = (y1 + y2) / 2;
                 }
-                if (lastDistance == -1) lastDistance = distance;
+                if (lastDistance == -1) {
+                    lastDistance = distance;
+                }
                 float midPointX, midPointY;
                 midPointX = (x1 + x2) / 2;
                 midPointY = (y1 + y2) / 2;
                 this.gestureInterface.onTwoPointsZoom(firstMidPointX, firstMidPointY, midPointX, midPointY, firstDistance, distance, distance / firstDistance, distance / lastDistance, event);
                 lastDistance = distance;
             }
-            if (!twoPointsDown) gestureInterface.onTwoPointsDown();
+            if (!twoPointsDown) {
+                gestureInterface.onTwoPointsDown();
+            }
             twoPointsDown = true;
             gestureInterface.onTwoPointsPress();
         } else {

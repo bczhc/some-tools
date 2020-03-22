@@ -43,16 +43,23 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
                 int constrainX, constrainY;
                 constrainX = lp2_x - HSVAColorPickerRL.limitValue(lp2_x, ((int) (-width / 2F + viewSpec.width / 2F)), ((int) (width / 2F - viewSpec.width / 2F)));
                 constrainY = lp2_y - HSVAColorPickerRL.limitValue(lp2_y, ((int) (-height / 2F + viewSpec.height / 2F)), ((int) (height / 2F - viewSpec.height / 2F)));
-                if (constrainX == 0) layoutParams.x = lp2_x;
-                else paramX -= constrainX;
-                if (constrainY == 0) layoutParams.y = lp2_y;
-                else paramY -= constrainY;
+                if (constrainX == 0) {
+                    layoutParams.x = lp2_x;
+                } else {
+                    paramX -= constrainX;
+                }
+                if (constrainY == 0) {
+                    layoutParams.y = lp2_y;
+                } else {
+                    paramY -= constrainY;
+                }
                 // 更新悬浮窗位置
                 wm.updateViewLayout(view, layoutParams);
                 break;
             case MotionEvent.ACTION_UP:
-                if (Math.abs(lastRawX - rawX) < 1 && Math.abs(lastRawY - rawY) < 1)
+                if (Math.abs(lastRawX - rawX) < 1 && Math.abs(lastRawY - rawY) < 1) {
                     v.performClick();
+                }
                 break;
         }
         return true;
