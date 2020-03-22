@@ -15,7 +15,7 @@ import java.io.File;
 public class Picker extends BaseActivity {
     public static final int PICK_FILE = 1;
     public static final int PICK_FOLDER = 2;
-    private FilePickerRL filePickerRL;
+    private FilePickerRelativeLayout filePickerRelativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +29,16 @@ public class Picker extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 33 && grantResults[0] == 0) Do();
+        if (requestCode == 33 && grantResults[0] == 0) {
+            Do();
+        }
     }
 
     private void Do() {
         Intent intent = getIntent();
         String initialPath = intent.getStringExtra("initialPath");
         initialPath = initialPath == null ? Common.getExternalStoragePath(this) : initialPath;
-        filePickerRL = new FilePickerRL(this
+        filePickerRelativeLayout = new FilePickerRelativeLayout(this
                 , intent.getIntExtra("option", PICK_FILE)
                 , new File(initialPath)
                 , () -> {
@@ -49,11 +51,11 @@ public class Picker extends BaseActivity {
             finish();
             overridePendingTransition(0, R.anim.fade_out);
         }, null);
-        setContentView(filePickerRL);
+        setContentView(filePickerRelativeLayout);
     }
 
     @Override
     public void onBackPressed() {
-        filePickerRL.previous();
+        filePickerRelativeLayout.previous();
     }
 }

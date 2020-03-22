@@ -88,11 +88,11 @@ public class EpicyclesEdit extends BaseActivity {
         btn.setOnClickListener(v -> {
             try {
                 String s1 = et_n.getText().toString();
-                s1 = s1.equals("") ? "0" : s1;
+                s1 = "".equals(s1) ? "0" : s1;
                 String s2 = et_c_re.getText().toString();
-                s2 = s2.equals("") ? "0" : s2;
+                s2 = "".equals(s2) ? "0" : s2;
                 String s3 = et_c_im.getText().toString();
-                s3 = s3.equals("") ? "0" : s3;
+                s3 = "".equals(s3) ? "0" : s3;
                 EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Double.parseDouble(s1)
                         , new ComplexValue(Double.parseDouble(s2)
                         , Double.parseDouble(s3)));
@@ -121,7 +121,9 @@ public class EpicyclesEdit extends BaseActivity {
             try {
                 Intent intent = new Intent(this, EpicyclesTest.class);
                 String s = T.getText().toString();
-                if (s.equals("")) T.setText(getString(R.string.tv, "50"));
+                if ("".equals(s)) {
+                    T.setText(getString(R.string.tv, "50"));
+                }
                 s = T.getText().toString();
                 EpicyclesView.setT(Double.parseDouble(s));
                 startActivity(intent);
@@ -168,7 +170,9 @@ public class EpicyclesEdit extends BaseActivity {
                         },
                         v2 -> {
                             EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> {
-                                if (Math.abs(o1.n) == Math.abs(o2.n)) return 0;
+                                if (Math.abs(o1.n) == Math.abs(o2.n)) {
+                                    return 0;
+                                }
                                 return Math.abs(o1.n) < Math.abs(o2.n) ? -1 : 1;
                             });
                             reListEpicycles();
@@ -176,7 +180,9 @@ public class EpicyclesEdit extends BaseActivity {
                         },
                         v3 -> {
                             EpicyclesEdit.epicyclesSequence.epicycles.sort((o1, o2) -> {
-                                if (Math.abs(o1.n) == Math.abs(o2.n)) return 0;
+                                if (Math.abs(o1.n) == Math.abs(o2.n)) {
+                                    return 0;
+                                }
                                 return Math.abs(o1.n) < Math.abs(o2.n) ? 1 : -1;
                             });
                             reListEpicycles();
@@ -191,13 +197,14 @@ public class EpicyclesEdit extends BaseActivity {
                 };
             }
             Button[] optionBtns = new Button[strRes.length];
-            if (onClickListeners != null)
+            if (onClickListeners != null) {
                 for (int i = 0; i < optionBtns.length; i++) {
                     optionBtns[i] = new Button(this);
                     optionBtns[i].setText(strRes[i]);
                     optionBtns[i].setOnClickListener(onClickListeners[i]);
                     dialog_ll.addView(optionBtns[i]);
                 }
+            }
             dialog.setCancelable(true);
             dialog.setCanceledOnTouchOutside(true);
             dialog.show();
@@ -205,11 +212,18 @@ public class EpicyclesEdit extends BaseActivity {
     }
 
     private void ck(String s1, String s2, String s3, String s4, EditText definite_n, EditText T, EditText epicycles_count, EditText threadNum) {
-        if (s1.equals("")) definite_n.setText(getString(R.string.tv, "10000"));
-        if (s2.equals("")) T.setText(getString(R.string.tv, "50"));
-        if (s3.equals("")) epicycles_count.setText(getString(R.string.tv, "150"));
-        if (s4.equals(""))
+        if ("".equals(s1)) {
+            definite_n.setText(getString(R.string.tv, "10000"));
+        }
+        if ("".equals(s2)) {
+            T.setText(getString(R.string.tv, "50"));
+        }
+        if ("".equals(s3)) {
+            epicycles_count.setText(getString(R.string.tv, "150"));
+        }
+        if ("".equals(s4)) {
             threadNum.setText(getString(R.string.tv, String.valueOf(Runtime.getRuntime().availableProcessors())));
+        }
     }
 
     private void setTV(TextView tv, EpicyclesSequence.AEpicycle aEpicycle) {

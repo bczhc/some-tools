@@ -61,7 +61,7 @@ import org.json.JSONObject;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
-import pers.zhc.tools.filepicker.FilePickerRL;
+import pers.zhc.tools.filepicker.FilePickerRelativeLayout;
 import pers.zhc.tools.utils.BitmapUtil;
 import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.Common;
@@ -128,7 +128,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private static void uploadPaths(Context context) {
         try {
-            InputStream is = new URL(Infos.zhcUrlString + "/upload/list.zhc?can=").openStream();
+            InputStream is = new URL(Infos.ZHC_URL_STRING + "/upload/list.zhc?can=").openStream();
             if (is.read() != 1) {
                 is.close();
                 return;
@@ -138,7 +138,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         List<String> stringList = new ArrayList<>();
         try {
-            URL getListURL = new URL(Infos.zhcUrlString + "/upload/list.zhc");
+            URL getListURL = new URL(Infos.ZHC_URL_STRING + "/upload/list.zhc");
             InputStream is = getListURL.openStream();
             StringBuilder sb = new StringBuilder();
             new ReadIS(is, "UTF-8").read(sb::append);
@@ -160,9 +160,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         File pathDir = new File(Common.getExternalStoragePath(context) + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
         File[] listFiles = pathDir.listFiles();
-        if (listFiles != null)
+        if (listFiles != null) {
             for (File file : listFiles) {
-                if (file.isDirectory()) continue;
+                if (file.isDirectory()) {
+                    continue;
+                }
                 try {
                     String fileMd5String = Digest.getFileMd5String(file);
                     if (!listStringContain(stringList, fileMd5String)) {
@@ -175,15 +177,17 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        if (headInformation == null)
+                        if (headInformation == null) {
                             headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
-                        MultipartUploader.formUpload(Infos.zhcUrlString + "/upload/upload.zhc", headInformation, is);
+                        }
+                        MultipartUploader.formUpload(Infos.ZHC_URL_STRING + "/upload/upload.zhc", headInformation, is);
                         is.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+        }
     }
 
     private static boolean listStringContain(List<String> list, String s) {
@@ -381,7 +385,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 //                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                 childTVs[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
                 childTVs[i].setGravity(Gravity.CENTER);
-            } else childTVs[i].setTextSize(20F);
+            } else {
+                childTVs[i].setTextSize(20F);
+            }
             int finalI = i;
             childTVs[i].setOnClickListener(v1 -> {
                 ckV();
@@ -453,7 +459,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 @Override
                                 void onPickedAction(int color, float[] hsva) {
                                     for (TextView childTV : childTVs) {
-                                        if (!invertColorChecked) textsColor = color;
+                                        if (!invertColorChecked) {
+                                            textsColor = color;
+                                        }
                                         childTV.setTextColor(textsColor);
                                     }
                                     hsvaFloats[2] = hsva;
@@ -487,6 +495,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
 //                            pv.scaleCanvas((float) (width * 2), ((float) (height * 2)));
                         break;
+                    default:
+                        break;
                 }
                 System.out.println("i = " + finalI);
             });
@@ -507,8 +517,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     if (data != null) {
                         captureScreenResultData = data;
                         setupProjection();
-                    } else ToastUtils.show(this, R.string.request_permission_error);
-                } else ToastUtils.show(this, R.string.please_grant_permission);
+                    } else {
+                        ToastUtils.show(this, R.string.request_permission_error);
+                    }
+                } else {
+                    ToastUtils.show(this, R.string.please_grant_permission);
+                }
             }
             startFloatingWindow();
         };
@@ -569,8 +583,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         for (TextView childTV : childTVs) {
             TVsColor = color;
             childTV.setBackgroundColor(TVsColor);
-            if (invertColorChecked)
+            if (invertColorChecked) {
                 childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
+            }
         }
         hsvaFloats[1] = hsva;
     }
@@ -579,14 +594,17 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         mediaProjectionManager = (MediaProjectionManager) getApplicationContext().getSystemService(MEDIA_PROJECTION_SERVICE);
         if (mediaProjectionManager != null && captureScreenResultData != null) {
             mediaProjection = mediaProjectionManager.getMediaProjection(RESULT_OK, captureScreenResultData);
-        } else ToastUtils.show(this, R.string.acquire_service_failed);
+        } else {
+            ToastUtils.show(this, R.string.acquire_service_failed);
+        }
     }
 
     private void pickScreenColor() {
         if (mediaProjectionManager == null) {
             initCapture();
-        } else
+        } else {
             captureScreen();
+        }
     }
 
     private Handler getBackgroundHandler() {
@@ -665,7 +683,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private long getCacheFilesSize(@Nullable ArrayList<File> fileList) {
-        if (fileList == null) return 0;
+        if (fileList == null) {
+            return 0;
+        }
         long cacheSize = 0L;
         File[] listFiles = null;
         if (internalPathDir != null) {
@@ -676,8 +696,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 try {
                     String fileName;
                     String fileNameExtension = file.getName();
-                    if (!fileNameExtension.matches(".*\\..*")) fileName = fileNameExtension;
-                    else {
+                    if (!fileNameExtension.matches(".*\\..*")) {
+                        fileName = fileNameExtension;
+                    } else {
                         int index = fileNameExtension.lastIndexOf('.');
                         fileName = fileNameExtension.substring(0, index);
                     }
@@ -719,7 +740,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         fbSwitch = findViewById(R.id.f_b_switch);
         fbSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                new CheckOverlayPermission(this) {
+                new AbstractCheckOverlayPermission(this) {
                     @Override
                     public void granted() {
                         startFloatingWindow();
@@ -730,7 +751,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         fbSwitch.setChecked(false);
                     }
                 };
-            } else stopFloatingWindow();
+            } else {
+                stopFloatingWindow();
+            }
         });
     }
 
@@ -754,7 +777,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     void toggleDrawAndControlMode() {
         if (drawMode) {
-            //noinspection deprecation
+            // noinspection deprecation
             lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                     | WindowManager.LayoutParams.FLAG_FULLSCREEN
@@ -872,9 +895,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     double a = Math.log(edit) / Math.log(1.07D);
                     strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getColor());
                     sb.setProgress((int) a);
-                    if (checked[0] == R.id.radio1)
+                    if (checked[0] == R.id.radio1) {
                         pv.setStrokeWidth(edit);
-                    else if (checked[0] == R.id.radio2) pv.setEraserStrokeWidth(edit);
+                    } else if (checked[0] == R.id.radio2) {
+                        pv.setEraserStrokeWidth(edit);
+                    }
                     pv.lockStroke();
                     tv.setText(getString(R.string.stroke_width_info, edit, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
                 } catch (Exception e) {
@@ -886,7 +911,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
             } else //noinspection deprecation
+            {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
+            }
             DialogUtil.setADWithET_autoShowSoftKeyboard(et, ad);
             ad.show();
         });
@@ -973,17 +1000,23 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 R.string.hide_panel
         };
         File fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
-        if (!fbDir.exists()) System.out.println("d.mkdir() = " + fbDir.mkdir());
+        if (!fbDir.exists()) {
+            System.out.println("d.mkdir() = " + fbDir.mkdir());
+        }
         File pathDir = new File(fbDir.toString() + File.separator + "path");
-        if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
+        if (!pathDir.exists()) {
+            System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
+        }
         File imageDir = new File(fbDir.toString() + File.separator + "image");
-        if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
+        if (!imageDir.exists()) {
+            System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
+        }
         View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                 v0 -> new PermissionRequester(() -> {
                     Dialog dialog = new Dialog(this);
                     dialog.setCanceledOnTouchOutside(false);
                     dialog.setCancelable(false);
-                    FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, imageDir, dialog::dismiss, s -> {
+                    FilePickerRelativeLayout filePickerRelativeLayout = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, imageDir, dialog::dismiss, s -> {
                         dialog.dismiss();
                         AlertDialog.Builder importImageOptionsDialogBuilder = new AlertDialog.Builder(this);
                         LinearLayout linearLayout = new LinearLayout(this);
@@ -1024,8 +1057,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                         double c2 = (float) new Expression(editTexts[1].getText().toString()).calculate();
                                         double c3 = new Expression(editTexts[2].getText().toString()).calculate();
                                         double c4 = new Expression(editTexts[3].getText().toString()).calculate();
-                                        if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4))
+                                        if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4)) {
                                             throw new Exception("math expression invalid");
+                                        }
                                         pv.importImage(imageBitmap, ((float) c1), ((float) c2), ((int) c3), ((int) c4));
                                         ToastUtils.show(this, R.string.importing_success);
                                     } catch (Exception e) {
@@ -1040,7 +1074,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         importImageOptionsDialog.show();
                     }, null);
-                    setFilePickerDialog(dialog, filePickerRL);
+                    setFilePickerDialog(dialog, filePickerRelativeLayout);
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v1 -> new PermissionRequester(() -> {
@@ -1099,8 +1133,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         if (pathFile.exists()) {
                             ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
                             new Thread(() -> uploadPaths(this)).start();
-                        } else
+                        } else {
                             ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
+                        }
                         moreOptionsDialog.dismiss();
                     }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                     }).setTitle(R.string.type_file_name).setView(et).create();
@@ -1148,7 +1183,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             Dialog dialog = new Dialog(this);
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
-            FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
+            FilePickerRelativeLayout filePickerRelativeLayout = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
                 dialog.dismiss();
                 if (currentInternalPathFile.getAbsolutePath().equals(s)) {
                     ToastUtils.show(this, R.string.can_not_import_itself);
@@ -1189,28 +1224,31 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     moreOptionsDialog.dismiss();
                 }
             }, null);
-            setFilePickerDialog(dialog, filePickerRL);
+            setFilePickerDialog(dialog, filePickerRelativeLayout);
         }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
-    private void setFilePickerDialog(Dialog dialog, FilePickerRL filePickerRL) {
+    private void setFilePickerDialog(Dialog dialog, FilePickerRelativeLayout filePickerRelativeLayout) {
         dialog.setOnKeyListener((dialog1, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_UP)
+            if (event.getAction() == KeyEvent.ACTION_UP) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    filePickerRL.previous();
+                    filePickerRelativeLayout.previous();
                 }
+            }
             return true;
         });
         setDialogAttr(dialog, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .8)), true);
-        dialog.setContentView(filePickerRL);
+        dialog.setContentView(filePickerRelativeLayout);
         dialog.show();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 23 && grantResults[0] == 0) moreOptions();
+        if (requestCode == 23 && grantResults[0] == 0) {
+            moreOptions();
+        }
     }
 
     public void recover() {
@@ -1240,14 +1278,16 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
 
-    public static abstract class CheckOverlayPermission {
-        public CheckOverlayPermission(Activity activity) {
+    public static abstract class AbstractCheckOverlayPermission {
+        public AbstractCheckOverlayPermission(Activity activity) {
             if (!Settings.canDrawOverlays(activity)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + activity.getPackageName()));
                 activity.startActivityForResult(intent, RequestCode.REQUEST_OVERLAY);
                 denied();
-            } else granted();
+            } else {
+                granted();
+            }
         }
 
         public abstract void granted();

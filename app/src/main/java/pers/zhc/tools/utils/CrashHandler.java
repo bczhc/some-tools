@@ -158,7 +158,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
                     versionCode = pi.getLongVersionCode() + "";
                 } else //noinspection deprecation
+                {
                     versionCode = pi.versionCode + "";
+                }
                 infos.put("versionName", versionName);
                 infos.put("versionCode", versionCode);
             }
@@ -282,7 +284,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                             Handler handler = new Handler();
                             new Thread(() -> {
                                 try {
-                                    FileMultipartUploader.upload(BaseActivity.Infos.zhcUrlString + "/tools_app/crash_report.zhc", file);
+                                    FileMultipartUploader.upload(BaseActivity.Infos.ZHC_URL_STRING + "/tools_app/crash_report.zhc", file);
                                     handler.post(() -> {
                                         barR.setTextColor(ContextCompat.getColor(mContext, R.color.done_green));
                                         barR.setText(R.string.upload_done);
@@ -312,7 +314,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 ll.setFocusable(true);
                 ll.setFocusableInTouchMode(true);
                 ll.setOnKeyListener((v, keyCode, event) -> {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) this.cdl.countDown();
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        this.cdl.countDown();
+                    }
                     return true;
                 });
                 dialog.setContentView(ll, new ViewGroup.LayoutParams(((int) (((float) width) * .8)), ((int) (((float) height) * .8))));

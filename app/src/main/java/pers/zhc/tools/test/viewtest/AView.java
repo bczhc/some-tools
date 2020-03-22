@@ -34,7 +34,6 @@ public class AView extends View {
         this.mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         this.mCanvas = new MyCanvas(mBitmap);
         mBitmapPaint = new Paint();
-        //noinspection DuplicatedCode
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent motionEvent) {

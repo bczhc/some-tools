@@ -10,7 +10,7 @@ public class NotificationClickReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Objects.requireNonNull(intent.getAction()).equals("pers.zhc.tools.START_FB")) {
+        if ("pers.zhc.tools.START_FB".equals(Objects.requireNonNull(intent.getAction()))) {
             long millisecond = intent.getLongExtra("millisecond", 0);
             FloatingDrawingBoardMainActivity activity = (FloatingDrawingBoardMainActivity) FloatingDrawingBoardMainActivity.longActivityMap.get(millisecond);
             if (activity != null) {

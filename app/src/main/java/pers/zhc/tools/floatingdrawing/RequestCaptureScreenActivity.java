@@ -48,7 +48,9 @@ public class RequestCaptureScreenActivity extends Activity {
             if (requestPermissionInterface != null) {
                 requestPermissionInterface.onRequestCallback(requestCode, resultCode, data);
             }
-        } else ToastUtils.show(this, R.string.native_error);
+        } else {
+            ToastUtils.show(this, R.string.native_error);
+        }
         finish();
     }
 }

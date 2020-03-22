@@ -110,7 +110,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         if (file.exists()) {
             length = file.length();
         }
-        if (!append) length = 0L;
+        if (!append) {
+            length = 0L;
+        }
         try {
             os = new FileOutputStream(file, append);
             if (length == 0L) {
@@ -283,7 +285,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             PathBean pathBean = redoList.removeLast();
             headCanvas.drawPath(pathBean.path, pathBean.paint);
             undoList.add(pathBean);
-            if (!importingPath) drawing();
+            if (!importingPath) {
+                drawing();
+            }
         }
     }
 
@@ -357,9 +361,11 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 System.gc();
             }
             handler.post(() -> {
-                if (f.exists())
+                if (f.exists()) {
                     ToastUtils.show(ctx, ctx.getString(R.string.saving_success) + "\n" + f.toString());
-                else ToastUtils.show(ctx, R.string.saving_failed);
+                } else {
+                    ToastUtils.show(ctx, R.string.saving_failed);
+                }
             });
         }).start();
     }
@@ -517,7 +523,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     }
                                     break;
                                 case 3:
-                                    if (x != -1 && y != -1) onTouchAction(MotionEvent.ACTION_UP, x, y);
+                                    if (x != -1 && y != -1) {
+                                        onTouchAction(MotionEvent.ACTION_UP, x, y);
+                                    }
                                     break;
                                 case 0:
                                     x = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
@@ -610,10 +618,15 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     int motionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
                                     System.arraycopy(bytes, 20, bytes_4, 0, 4);
                                     float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    if (motionAction != 0 && motionAction != 1 && motionAction != 2)
+                                    if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
                                         motionAction = Random.ran_sc(0, 2);
-                                    if (strokeWidth <= 0) strokeWidth = Random.ran_sc(1, 800);
-                                    if (eraserStrokeWidth <= 0) eraserStrokeWidth = Random.ran_sc(1, 800);
+                                    }
+                                    if (strokeWidth <= 0) {
+                                        strokeWidth = Random.ran_sc(1, 800);
+                                    }
+                                    if (eraserStrokeWidth <= 0) {
+                                        eraserStrokeWidth = Random.ran_sc(1, 800);
+                                    }
                                     setEraserMode(bytes[24] == 1);
                                     setEraserStrokeWidth(eraserStrokeWidth);
                                     setPaintColor(color);
@@ -672,8 +685,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
-                    if (!importingPath)
+                    if (!importingPath) {
                         headCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
+                    }
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
@@ -832,8 +846,11 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                             float mCanvasScale = headCanvas.getScale();
                             canvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
                             canvas.scale(mCanvasScale, mCanvasScale);
-                            if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
-                            else canvas.drawPath(mPath, mPaint);
+                            if (isEraserMode) {
+                                canvas.drawPath(mPath, eraserPaint);
+                            } else {
+                                canvas.drawPath(mPath, mPaint);
+                            }
                         }
                     }
                 }

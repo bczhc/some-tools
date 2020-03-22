@@ -18,7 +18,9 @@ class ComplexFunction {
         int size = complexValueList.size();
         if (size > 0) {
             ComplexValue lastCV = complexValueList.get(size - 1);
-            if (lastCV.re == re && lastCV.im == im) return;
+            if (lastCV.re == re && lastCV.im == im) {
+                return;
+            }
         }
         complexValueList.add(new ComplexValue(re, im));
     }

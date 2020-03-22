@@ -184,8 +184,12 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
      * @return pos
      */
     private float setCurrentX(int i) {
-        if (i == 0) return currentXPos[0] = hsv[0] * ((float) width) / 360F;
-        if (i == 3) return currentXPos[3] = alpha * ((float) width) / 255F;
+        if (i == 0) {
+            return currentXPos[0] = hsv[0] * ((float) width) / 360F;
+        }
+        if (i == 3) {
+            return currentXPos[3] = alpha * ((float) width) / 255F;
+        }
         return currentXPos[i] = hsv[i] * width;
     }
 
@@ -193,7 +197,9 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
 
     private void setInvertedColor(boolean invalidate) {
         oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
-        if (invalidate) invalidateAllView();
+        if (invalidate) {
+            invalidateAllView();
+        }
     }
 
     private class HView extends View {
