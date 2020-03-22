@@ -537,7 +537,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private void setColor() {
         if (pv.isEraserMode) {
             Dialog dialog = new Dialog(this);
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                    , ViewGroup.LayoutParams.WRAP_CONTENT));
+            TextView titleTextView = new TextView(this);
+            titleTextView.setText(R.string.opacity);
             SeekBar sb = new SeekBar(this);
+            linearLayout.addView(titleTextView);
+            linearLayout.addView(sb);
             sb.setProgress(pv.getEraserAlpha() * 100 / 255);
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -556,7 +564,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 }
             });
             sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            dialog.setContentView(sb);
+            dialog.setContentView(linearLayout);
             DialogUtil.setDialogAttr(dialog, false
                     , ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             dialog.show();
