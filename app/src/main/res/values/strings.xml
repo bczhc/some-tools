@@ -214,5 +214,9 @@
     <string name="crash_title">程序崩溃了…</string>
     <string name="opacity">不透明度</string>
     <string name="database_delete_info">请输入要删除的t_millisecond（*表示全部）</string>
+    <string name="alloc">分配</string>
+    <string name="allocing">正在分配</string>
+    <string name="alloc_done">分配完成</string>
+    <string name="m_alloc_test">内存分配测试</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>
