@@ -34,6 +34,9 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author bczhc
+ */
 public class Document extends BaseActivity {
     private ScrollView sv;
     private SQLiteDatabase db;
@@ -55,10 +58,11 @@ public class Document extends BaseActivity {
         deleteBtn.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
-            adb.setTitle("请输入要删除的t_millisecond（*表示全部）")
+            adb.setTitle(R.string.database_delete_info)
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String s = et.getText().toString();
-                        if (s.matches(".*\\*.*")) {
+                        final String deleteAllCommand = ".*\\*.*";
+                        if (s.matches(deleteAllCommand)) {
                             try {
                                 db.delete("doc", null, null);
                             } catch (Exception e) {
@@ -137,6 +141,8 @@ public class Document extends BaseActivity {
                         Common.showException(e, this);
                     }
                 }
+                break;
+            default:
                 break;
         }
     }

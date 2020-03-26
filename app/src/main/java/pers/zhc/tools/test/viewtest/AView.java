@@ -7,12 +7,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
-import android.view.View;
+import pers.zhc.tools.BaseView;
 import pers.zhc.tools.floatingdrawing.MyCanvas;
 import pers.zhc.tools.utils.GestureResolver;
 
+/**
+ * @author bczhc
+ */
 @SuppressLint("ViewConstructor")
-public class AView extends View {
+public class AView extends BaseView {
     private final Bitmap bitmap;
     private MyCanvas mCanvas;
     private Bitmap mBitmap;
@@ -72,7 +75,6 @@ public class AView extends View {
             width = getWidth();
             height = getHeight();
             init();
-            System.out.println("init");
         }
         canvas.drawColor(Color.TRANSPARENT);
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);

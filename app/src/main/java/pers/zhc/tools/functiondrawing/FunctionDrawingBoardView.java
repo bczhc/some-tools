@@ -8,12 +8,12 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.view.MotionEvent;
-import android.view.View;
+import pers.zhc.tools.BaseView;
 import pers.zhc.u.math.util.MathFloatFunctionInterface;
 import pers.zhc.u.util.FFMap;
 
 @SuppressLint("ViewConstructor")
-public class FunctionDrawingBoardView extends View {
+public class FunctionDrawingBoardView extends BaseView {
     private final int xLength;
     private final int yLength;
     private final Paint mPaint;

@@ -714,15 +714,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         if (listFiles != null) {
             for (File file : listFiles) {
                 try {
-                    String fileName;
-                    String fileNameExtension = file.getName();
-                    if (!fileNameExtension.matches(".*\\..*")) {
-                        fileName = fileNameExtension;
+                    String filename;
+                    String filenameExtension = file.getName();
+                    if (!filenameExtension.matches(".*\\..*")) {
+filename = filenameExtension;
                     } else {
-                        int index = fileNameExtension.lastIndexOf('.');
-                        fileName = fileNameExtension.substring(0, index);
+                        int index = filenameExtension.lastIndexOf('.');
+filename = filenameExtension.substring(0, index);
                     }
-                    if (FloatingDrawingBoardMainActivity.longActivityMap.containsKey(Long.parseLong(fileName))) {
+                    if (FloatingDrawingBoardMainActivity.longActivityMap.containsKey(Long.parseLong(filename))) {
                         continue;
                     }
                 } catch (NumberFormatException ignored) {
@@ -1101,8 +1101,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 v1 -> new PermissionRequester(() -> {
                     LinearLayout linearLayout = View.inflate(this, R.layout.export_image_layout, null)
                             .findViewById(R.id.root);
-                    EditText fileNameEditText = linearLayout.findViewById(R.id.file_name);
-                    setSelectedEditTextWithCurrentTimeMillisecond(fileNameEditText);
+                    EditText filenameEditText = linearLayout.findViewById(R.id.file_name);
+                    setSelectedEditTextWithCurrentTimeMillisecond(filenameEditText);
                     EditText widthEditText = linearLayout.findViewById(R.id.width);
                     EditText heightEditText = linearLayout.findViewById(R.id.height);
                     Point point = new Point();
@@ -1126,13 +1126,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                     moreOptionsDialog.dismiss();
                                     return;
                                 }
-                                File imageFile = new File(imageDir.toString() + File.separator + fileNameEditText.getText().toString() + ".png");
+                                File imageFile = new File(imageDir.toString() + File.separator + filenameEditText.getText().toString() + ".png");
                                 pv.exportImg(imageFile, imageW[0], imageH[0]);
                                 moreOptionsDialog.dismiss();
                             }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                             }).setView(linearLayout).create();
                     setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                    DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(fileNameEditText, ad);
+                    DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(filenameEditText, ad);
                     ad.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
@@ -1210,6 +1210,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     ToastUtils.show(this, R.string.can_not_import_itself);
                     return;
                 }
+                Handler handler = new Handler();
                 Dialog importPathFileProgressDialog = new Dialog(this);
                 setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                 importPathFileProgressDialog.setCanceledOnTouchOutside(false);
