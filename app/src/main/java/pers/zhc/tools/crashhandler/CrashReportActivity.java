@@ -1,6 +1,5 @@
 package pers.zhc.tools.crashhandler;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,22 +8,25 @@ import android.os.Bundle;
 import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.MultipartUploader;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,35 @@ import java.util.Set;
  * @author bczhc
  */
 public class CrashReportActivity extends Activity {
+    private final String TAG = this.getClass().getName();
     private TextView uploadStateTextView;
+
+    private void saveToFile(String filename, String stackTraceString) {
+        final File crashDir = new File(Common.getExternalStoragePath(this), this.getString(R.string.some_tools_app)
+                + File.separatorChar + this.getString(R.string.crash));
+        if (!crashDir.exists()) {
+            Log.d(TAG, "saveToFile: " + crashDir.mkdirs());
+        }
+        final File file = new File(filename);
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(file, false);
+            //noinspection CharsetObjectCanBeUsed
+            os.write(stackTraceString.getBytes("UTF-8"));
+            os.flush();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,10 +84,8 @@ public class CrashReportActivity extends Activity {
             startActivity(launchIntent);
             killProcess();
         });
-        final long currentTimeMillis = System.currentTimeMillis();
-        final Date date = new Date(currentTimeMillis);
-        @SuppressLint("SimpleDateFormat") final String dateString = new SimpleDateFormat("yy-MM-dd-HH-mm-ss").format(date);
-        String fileName = "crash-" + dateString + "-" + currentTimeMillis + ".txt";
+        final String filename = intent.getStringExtra("filename");
+        new Thread(() -> this.saveToFile(filename, exception)).start();
         final Map<String, String> deviceInfo = collectDeviceInfo();
         StringBuilder content = new StringBuilder();
         final Set<String> keySet = deviceInfo.keySet();
@@ -65,7 +93,7 @@ public class CrashReportActivity extends Activity {
             content.append(key).append(": ").append(deviceInfo.get(key)).append('\n');
         }
         content.append(exception);
-        uploadReportButton.setOnClickListener(v -> upload(fileName, content.toString()));
+        uploadReportButton.setOnClickListener(v -> upload(filename, content.toString()));
     }
 
     private void killProcess() {
@@ -93,16 +121,16 @@ public class CrashReportActivity extends Activity {
         return infos;
     }
 
-    private void upload(String fileName, String information) {
+    private void upload(String filename, String information) {
         byte[] bytes = new byte[0];
         byte[] contentBytes = new byte[0];
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            bytes = fileName.getBytes(StandardCharsets.UTF_8);
+            bytes = filename.getBytes(StandardCharsets.UTF_8);
             contentBytes = information.getBytes(StandardCharsets.UTF_8);
         } else {
             try {
                 //noinspection CharsetObjectCanBeUsed
-                bytes = fileName.getBytes("UTF-8");
+                bytes = filename.getBytes("UTF-8");
                 //noinspection CharsetObjectCanBeUsed
                 contentBytes = information.getBytes("UTF-8");
             } catch (UnsupportedEncodingException e) {

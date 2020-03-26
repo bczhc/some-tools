@@ -16,6 +16,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.BaseView;
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener;
 import pers.zhc.tools.floatingdrawing.ScreenColorPickerView;
 import pers.zhc.tools.utils.ToastUtils;
@@ -53,7 +54,7 @@ public class S extends BaseActivity {
     }
 }
 
-class AStroke extends View {
+class AStroke extends BaseView {
     private int width = -1, height = -1;
     private Paint mPaint;
     private Path mPath;

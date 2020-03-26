@@ -10,7 +10,7 @@ import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Path;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
+import pers.zhc.tools.BaseView;
 import pers.zhc.tools.floatingdrawing.MyCanvas;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @SuppressLint("ViewConstructor")
-class EpicyclesView extends View {
+class EpicyclesView extends BaseView {
     static double T = 2 * Math.PI, omega = 2 * Math.PI / T;
     private final EpicyclesSequence epicyclesSequence;
     private int canvasWidth = 0;

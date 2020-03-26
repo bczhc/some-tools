@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.DialogUtil;
@@ -202,7 +203,7 @@ abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
         }
     }
 
-    private class HView extends View {
+    private class HView extends BaseView {
         private final int hW;
         private final int hH;
         private Paint hPaint;
@@ -246,7 +247,7 @@ abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
         }
     }
 
-    private class SView extends View {
+    private class SView extends BaseView {
         private final int sW;
         private final int sH;
         private Paint sPaint;
@@ -291,7 +292,7 @@ abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
         }
     }
 
-    private class VView extends View {
+    private class VView extends BaseView {
         private final int vW;
         private final int vH;
         private Paint vPaint;
@@ -340,7 +341,7 @@ abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
 
     }*/
 
-    private class AView extends View {
+    private class AView extends BaseView {
         private final int aW;
         private final int aH;
         private Paint aPaint;
