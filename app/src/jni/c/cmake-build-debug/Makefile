@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named verification
-
-# Build rule for target.
-verification: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 verification
-.PHONY : verification
-
-# fast build rule for target.
-verification/fast:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/build
-.PHONY : verification/fast
-
-#=============================================================================
 # Target rules for targets named doJni
 
 # Build rule for target.
@@ -135,6 +122,19 @@ doJni: cmake_check_build_system
 doJni/fast:
 	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/build
 .PHONY : doJni/fast
+
+#=============================================================================
+# Target rules for targets named malloc_test
+
+# Build rule for target.
+malloc_test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 malloc_test
+.PHONY : malloc_test
+
+# fast build rule for target.
+malloc_test/fast:
+	$(MAKE) -f CMakeFiles/malloc_test.dir/build.make CMakeFiles/malloc_test.dir/build
+.PHONY : malloc_test/fast
 
 codecs/Base128Lib.o: codecs/Base128Lib.c.o
 
@@ -217,113 +217,32 @@ codecs/kwm.c.s:
 	$(MAKE) -f CMakeFiles/doJni.dir/build.make CMakeFiles/doJni.dir/codecs/kwm.c.s
 .PHONY : codecs/kwm.c.s
 
-codecs/qmcLib.o: codecs/qmcLib.c.o
+malloc_test/mallocTest.o: malloc_test/mallocTest.c.o
 
-.PHONY : codecs/qmcLib.o
-
-# target to build an object file
-codecs/qmcLib.c.o:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/codecs/qmcLib.c.o
-.PHONY : codecs/qmcLib.c.o
-
-codecs/qmcLib.i: codecs/qmcLib.c.i
-
-.PHONY : codecs/qmcLib.i
-
-# target to preprocess a source file
-codecs/qmcLib.c.i:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/codecs/qmcLib.c.i
-.PHONY : codecs/qmcLib.c.i
-
-codecs/qmcLib.s: codecs/qmcLib.c.s
-
-.PHONY : codecs/qmcLib.s
-
-# target to generate assembly for a file
-codecs/qmcLib.c.s:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/codecs/qmcLib.c.s
-.PHONY : codecs/qmcLib.c.s
-
-floatingboard/fb_tools.o: floatingboard/fb_tools.c.o
-
-.PHONY : floatingboard/fb_tools.o
+.PHONY : malloc_test/mallocTest.o
 
 # target to build an object file
-floatingboard/fb_tools.c.o:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/floatingboard/fb_tools.c.o
-.PHONY : floatingboard/fb_tools.c.o
+malloc_test/mallocTest.c.o:
+	$(MAKE) -f CMakeFiles/malloc_test.dir/build.make CMakeFiles/malloc_test.dir/malloc_test/mallocTest.c.o
+.PHONY : malloc_test/mallocTest.c.o
 
-floatingboard/fb_tools.i: floatingboard/fb_tools.c.i
+malloc_test/mallocTest.i: malloc_test/mallocTest.c.i
 
-.PHONY : floatingboard/fb_tools.i
-
-# target to preprocess a source file
-floatingboard/fb_tools.c.i:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/floatingboard/fb_tools.c.i
-.PHONY : floatingboard/fb_tools.c.i
-
-floatingboard/fb_tools.s: floatingboard/fb_tools.c.s
-
-.PHONY : floatingboard/fb_tools.s
-
-# target to generate assembly for a file
-floatingboard/fb_tools.c.s:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/floatingboard/fb_tools.c.s
-.PHONY : floatingboard/fb_tools.c.s
-
-home/zhc/code/code/Android/some-tools/app/src/jni/zhc.o: home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o
-
-.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.o
-
-# target to build an object file
-home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o
-.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.o
-
-home/zhc/code/code/Android/some-tools/app/src/jni/zhc.i: home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.i
-
-.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.i
+.PHONY : malloc_test/mallocTest.i
 
 # target to preprocess a source file
-home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.i:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.i
-.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.i
+malloc_test/mallocTest.c.i:
+	$(MAKE) -f CMakeFiles/malloc_test.dir/build.make CMakeFiles/malloc_test.dir/malloc_test/mallocTest.c.i
+.PHONY : malloc_test/mallocTest.c.i
 
-home/zhc/code/code/Android/some-tools/app/src/jni/zhc.s: home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.s
+malloc_test/mallocTest.s: malloc_test/mallocTest.c.s
 
-.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.s
-
-# target to generate assembly for a file
-home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.s:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.s
-.PHONY : home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c.s
-
-verification/verify.o: verification/verify.c.o
-
-.PHONY : verification/verify.o
-
-# target to build an object file
-verification/verify.c.o:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/verification/verify.c.o
-.PHONY : verification/verify.c.o
-
-verification/verify.i: verification/verify.c.i
-
-.PHONY : verification/verify.i
-
-# target to preprocess a source file
-verification/verify.c.i:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/verification/verify.c.i
-.PHONY : verification/verify.c.i
-
-verification/verify.s: verification/verify.c.s
-
-.PHONY : verification/verify.s
+.PHONY : malloc_test/mallocTest.s
 
 # target to generate assembly for a file
-verification/verify.c.s:
-	$(MAKE) -f CMakeFiles/verification.dir/build.make CMakeFiles/verification.dir/verification/verify.c.s
-.PHONY : verification/verify.c.s
+malloc_test/mallocTest.c.s:
+	$(MAKE) -f CMakeFiles/malloc_test.dir/build.make CMakeFiles/malloc_test.dir/malloc_test/mallocTest.c.s
+.PHONY : malloc_test/mallocTest.c.s
 
 # Help Target
 help:
@@ -333,8 +252,8 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... verification"
 	@echo "... doJni"
+	@echo "... malloc_test"
 	@echo "... codecs/Base128Lib.o"
 	@echo "... codecs/Base128Lib.i"
 	@echo "... codecs/Base128Lib.s"
@@ -344,18 +263,9 @@ help:
 	@echo "... codecs/kwm.o"
 	@echo "... codecs/kwm.i"
 	@echo "... codecs/kwm.s"
-	@echo "... codecs/qmcLib.o"
-	@echo "... codecs/qmcLib.i"
-	@echo "... codecs/qmcLib.s"
-	@echo "... floatingboard/fb_tools.o"
-	@echo "... floatingboard/fb_tools.i"
-	@echo "... floatingboard/fb_tools.s"
-	@echo "... home/zhc/code/code/Android/some-tools/app/src/jni/zhc.o"
-	@echo "... home/zhc/code/code/Android/some-tools/app/src/jni/zhc.i"
-	@echo "... home/zhc/code/code/Android/some-tools/app/src/jni/zhc.s"
-	@echo "... verification/verify.o"
-	@echo "... verification/verify.i"
-	@echo "... verification/verify.s"
+	@echo "... malloc_test/mallocTest.o"
+	@echo "... malloc_test/mallocTest.i"
+	@echo "... malloc_test/mallocTest.s"
 .PHONY : help
 
 

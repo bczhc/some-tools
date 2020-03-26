@@ -60,7 +60,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.MainActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRelativeLayout;
 import pers.zhc.tools.utils.BitmapUtil;
@@ -435,6 +434,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                             pv.clearAll();
                             pv.clearTouchRecordOutputStreamContent();
+                            System.gc();
                         }, (dialog1, which) -> {
                         }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
                         break;
@@ -719,10 +719,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     String filename;
                     String filenameExtension = file.getName();
                     if (!filenameExtension.matches(".*\\..*")) {
-filename = filenameExtension;
+                        filename = filenameExtension;
                     } else {
                         int index = filenameExtension.lastIndexOf('.');
-filename = filenameExtension.substring(0, index);
+                        filename = filenameExtension.substring(0, index);
                     }
                     if (FloatingDrawingBoardMainActivity.longActivityMap.containsKey(Long.parseLong(filename))) {
                         continue;

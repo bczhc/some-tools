@@ -1,4 +1,4 @@
 /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/rebuild_cache.dir
 /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/verification.dir
 /home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/doJni.dir
+/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/CMakeFiles/malloc_test.dir
