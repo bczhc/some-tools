@@ -15,23 +15,28 @@ import pers.zhc.tools.R;
 
 import java.util.Objects;
 
+/**
+ * @author bczhc
+ */
 public class DialogUtil {
     /**
      * @param d                   d
      * @param isTransparent       b
      * @param width               w
      * @param height              h
-     * @param application_overlay overlay. null is auto
+     * @param applicationOverlay overlay. null is auto
      */
-    public static void setDialogAttr(Dialog d, boolean isTransparent, int width, int height, @Nullable Boolean application_overlay) {
+    public static void setDialogAttr(Dialog d, boolean isTransparent, int width, int height, @Nullable Boolean applicationOverlay) {
         boolean overlay = false;
-        if (application_overlay == null) {
+        if (applicationOverlay == null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(d.getContext())) {
                     overlay = true;
                 }
             }
-        } else overlay = application_overlay;
+        } else {
+            overlay = applicationOverlay;
+        }
         Window window;
         try {
             window = Objects.requireNonNull(d.getWindow());
@@ -42,21 +47,25 @@ public class DialogUtil {
         if (overlay) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
-            } else                                 //noinspection deprecation
+            } else {
+                //noinspection deprecation
                 window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_SYSTEM_ERROR, 0, PixelFormat.RGB_888));
+            }
         }
-        if (isTransparent) window.setBackgroundDrawableResource(R.color.transparent);
+        if (isTransparent) {
+            window.setBackgroundDrawableResource(R.color.transparent);
+        }
     }
 
-    public static AlertDialog createConfirmationAD(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId, int width, int height, boolean application_overlay) {
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId, int width, int height, boolean applicationOverlay) {
         AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
         AlertDialog ad = adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId).create();
-        setDialogAttr(ad, false, width, height, application_overlay);
+        setDialogAttr(ad, false, width, height, applicationOverlay);
         ad.setCanceledOnTouchOutside(true);
         return ad;
     }
 
-    public static void setADWithET_autoShowSoftKeyboard(EditText editText, Dialog ad) {
+    public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(EditText editText, Dialog ad) {
         editText.setFocusable(true);
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();

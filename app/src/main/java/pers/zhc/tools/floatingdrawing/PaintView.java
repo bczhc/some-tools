@@ -42,6 +42,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author bczhc & (cv...)...
+ */
 @SuppressLint("ViewConstructor")
 public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private final File internalPathFile;
@@ -61,11 +64,15 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private Map<String, MyCanvas> canvasMap;
     private MyCanvas headCanvas;
     private Bitmap headBitmap;
-    private float mLastX, mLastY;//上次的坐标
+    /**
+     * 上次的坐标
+     */
+    private float mLastX, mLastY;
     private Paint mBitmapPaint;
-    //使用LinkedList 模拟栈，来保存 Path
-    private LinkedList<PathBean> undoList;
-    private LinkedList<PathBean> redoList;
+    /**
+     * 使用LinkedList 模拟栈，来保存 Path
+     */
+    private LinkedList<PathBean> undoList, redoList;
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
     private GestureResolver gestureResolver;
@@ -105,18 +112,21 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);
     }
 
-    public void setOS(File file, boolean append) {
+    public void setOutputStream(File file, boolean append) {
         long length = 0L;
         if (file.exists()) {
             length = file.length();
         }
-        if (!append) length = 0L;
+        if (!append) {
+            length = 0L;
+        }
         try {
             os = new FileOutputStream(file, append);
             if (length == 0L) {
                 try {
                     byte[] headInfo = "path ver 2.1".getBytes();
-                    if (headInfo.length != 12) {
+                    final int headLength = 12;
+                    if (headInfo.length != headLength) {
                         Common.showException(new Exception("native error"), (Activity) ctx);
                     }
                     os.write(headInfo);
@@ -136,24 +146,25 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private void init() {
         setEraserMode(false);
         eraserPaint = new Paint();
-        eraserPaint.setColor(Color.TRANSPARENT);
+        eraserPaint.setColor(Color.BLACK);
         eraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
         eraserPaint.setAntiAlias(true);
         eraserPaint.setStyle(Paint.Style.STROKE);
-        eraserPaint.setStrokeJoin(Paint.Join.ROUND);//使画笔更加圆润
-        eraserPaint.setStrokeCap(Paint.Cap.ROUND);//同上
+        //使画笔更加圆润
+        eraserPaint.setStrokeJoin(Paint.Join.ROUND);
+        //同上
+        eraserPaint.setStrokeCap(Paint.Cap.ROUND);
         eraserPaint.setAlpha(255);
-        //关闭硬件加速
-        //否则橡皮擦模式下，设置的 PorterDuff.Mode.CLEAR ，实时绘制的轨迹是黑色
-//        setBackgroundColor(Color.WHITE);//设置白色背景
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         //画笔
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mPaintRef = mPaint;
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);//使画笔更加圆润
-        mPaint.setStrokeCap(Paint.Cap.ROUND);//同上
+        //使画笔更加圆润
+        mPaint.setStrokeJoin(Paint.Join.ROUND);
+        //同上
+        mPaint.setStrokeCap(Paint.Cap.ROUND);
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
         //保存签名的画布
         //拿到控件的宽和高
@@ -283,18 +294,19 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             PathBean pathBean = redoList.removeLast();
             headCanvas.drawPath(pathBean.path, pathBean.paint);
             undoList.add(pathBean);
-            if (!importingPath) drawing();
+            if (!importingPath) {
+                drawing();
+            }
         }
-    }
-
-    void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
-        this.eraserPaint.setAlpha(alpha);
     }
 
     int getEraserAlpha() {
         return this.eraserPaint.getAlpha();
     }
 
+    void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
+        this.eraserPaint.setAlpha(alpha);
+    }
 
     /**
      * 设置画笔颜色
@@ -357,9 +369,11 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 System.gc();
             }
             handler.post(() -> {
-                if (f.exists())
+                if (f.exists()) {
                     ToastUtils.show(ctx, ctx.getString(R.string.saving_success) + "\n" + f.toString());
-                else ToastUtils.show(ctx, R.string.saving_failed);
+                } else {
+                    ToastUtils.show(ctx, R.string.saving_failed);
+                }
             });
         }).start();
     }
@@ -435,7 +449,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    void closePathRecorderOS() {
+    void closePathRecorderOutputStream() {
         closeStream(os);
     }
 
@@ -443,15 +457,15 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      * 导入路径
      *
      * @param f                   路径文件
-     * @param d                   完成接口
-     * @param floatValueInterface 进度接口
+     * @param d                   完成回调接口
+     * @param floatValueInterface 进度回调接口
      *                            路径存储结构：
      *                            一条笔迹或一个操作记录记录长度为9字节
      *                            byte b[9];(length=9)
      *                            1+4+4
-     *                            b[0]: 标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2；
-     *                            \ 按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；
-     *                            \ 撤销为0xC1，恢复为0xC2。(byte)
+     *                            b[0]: 标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2；\
+     *                            按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；\
+     *                            撤销为0xC1，恢复为0xC2。(byte)
      *                            如果标记为0xA1，排列结构：标记(int)+笔迹宽度(float)+颜色(int)
      *                            如果标记为0xA2，排列结构：标记(int)+橡皮擦宽度(float)+TRANSPARENT(int)
      *                            如果标记为0xB1或0xB2或0xB3，排列结构：标记(int)+x坐标(float)+y坐标(float)
@@ -517,7 +531,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     }
                                     break;
                                 case 3:
-                                    if (x != -1 && y != -1) onTouchAction(MotionEvent.ACTION_UP, x, y);
+                                    if (x != -1 && y != -1) {
+                                        onTouchAction(MotionEvent.ACTION_UP, x, y);
+                                    }
                                     break;
                                 case 0:
                                     x = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
@@ -526,6 +542,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                         onTouchAction(MotionEvent.ACTION_DOWN, x, y);
                                     }
                                     onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                                    break;
+                                default:
                                     break;
                             }
                             read += 12;
@@ -548,7 +566,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                         strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
                                         color = JNI.FloatingBoard.byteArrayToInt(buffer, 5 + i * 9);
                                         setEraserMode(buffer[i * 9] == (byte) 0xA2);
-                                        mPaintRef.setColor(color);
+                                        if (!isEraserMode) {
+                                            mPaintRef.setColor(color);
+                                        }
                                         mPaintRef.setStrokeWidth(strokeWidth);
                                         break;
                                     case (byte) 0xB1:
@@ -571,6 +591,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                         break;
                                     case (byte) 0xC2:
                                         redo();
+                                        break;
+                                    default:
                                         break;
                                 }
                                 read += 9L;
@@ -610,10 +632,15 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                     int motionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
                                     System.arraycopy(bytes, 20, bytes_4, 0, 4);
                                     float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    if (motionAction != 0 && motionAction != 1 && motionAction != 2)
+                                    if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
                                         motionAction = Random.ran_sc(0, 2);
-                                    if (strokeWidth <= 0) strokeWidth = Random.ran_sc(1, 800);
-                                    if (eraserStrokeWidth <= 0) eraserStrokeWidth = Random.ran_sc(1, 800);
+                                    }
+                                    if (strokeWidth <= 0) {
+                                        strokeWidth = Random.ran_sc(1, 800);
+                                    }
+                                    if (eraserStrokeWidth <= 0) {
+                                        eraserStrokeWidth = Random.ran_sc(1, 800);
+                                    }
                                     setEraserMode(bytes[24] == 1);
                                     setEraserStrokeWidth(eraserStrokeWidth);
                                     setPaintColor(color);
@@ -672,8 +699,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
-                    if (!importingPath)
+                    if (!importingPath) {
                         headCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
+                    }
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
@@ -720,9 +748,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         drawing();
     }
 
-    void clearTouchRecordOSContent() {
-        closePathRecorderOS();
-        setOS(internalPathFile, false);
+    void clearTouchRecordOutputStreamContent() {
+        closePathRecorderOutputStream();
+        setOutputStream(internalPathFile, false);
     }
 
     float getEraserStrokeWidth() {
@@ -832,8 +860,11 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                             float mCanvasScale = headCanvas.getScale();
                             canvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
                             canvas.scale(mCanvasScale, mCanvasScale);
-                            if (isEraserMode) canvas.drawPath(mPath, eraserPaint);
-                            else canvas.drawPath(mPath, mPaint);
+                            if (isEraserMode) {
+                                canvas.drawPath(mPath, eraserPaint);
+                            } else {
+                                canvas.drawPath(mPath, mPaint);
+                            }
                         }
                     }
                 }

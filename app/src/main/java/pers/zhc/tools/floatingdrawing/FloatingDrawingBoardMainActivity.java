@@ -62,7 +62,7 @@ import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.MainActivity;
 import pers.zhc.tools.R;
-import pers.zhc.tools.filepicker.FilePickerRL;
+import pers.zhc.tools.filepicker.FilePickerRelativeLayout;
 import pers.zhc.tools.utils.BitmapUtil;
 import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.Common;
@@ -80,6 +80,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,28 +94,32 @@ import java.util.concurrent.CountDownLatch;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 public class FloatingDrawingBoardMainActivity extends BaseActivity {
-    static Map<Long, Context> longActivityMap;//memory leak?
+    /**
+     * 静态存储Context。。
+     * 不知会不会内存溢出（memory leak）……
+     */
+    static Map<Long, Context> longActivityMap;
     private final float[][] hsvaFloats = new float[3][0];
     RequestPermissionInterface requestPermissionInterface = null;
     boolean mainDrawingBoardNotDisplay = false;
     private WindowManager wm = null;
-    private LinearLayout fbLL;
+    private LinearLayout fbLinearLayout;
     private PaintView pv;
     private int width;
     private Bitmap icon;
     private int height;
-    private int TVsColor = Color.WHITE, textsColor = Color.GRAY;
+    private int TextViewsColor = Color.WHITE, textsColor = Color.GRAY;
     private boolean invertColorChecked = false;
     private File currentInternalPathFile = null;
     private Runnable importPathFileDoneAction;
     private long currentInstanceMillisecond;
-    private TextView[] childTVs;
+    private TextView[] childTextViews;
     private Switch fbSwitch;
     private String[] strings;
     private WindowManager.LayoutParams lp;
     private WindowManager.LayoutParams lp2;
     private ImageView iv;
-    private LinearLayout optionsLL;
+    private LinearLayout optionsLinearLayout;
     private FloatingViewOnTouchListener.ViewSpec fbMeasuredSpec;
     private String internalPathDir = null;
     private Handler backgroundHandler;
@@ -129,7 +134,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private static void uploadPaths(Context context) {
         try {
-            InputStream is = new URL(Infos.zhcUrlString + "/upload/list.zhc?can=").openStream();
+            InputStream is = new URL(Infos.ZHC_URL_STRING + "/upload/list.zhc?can=").openStream();
             if (is.read() != 1) {
                 is.close();
                 return;
@@ -139,8 +144,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         List<String> stringList = new ArrayList<>();
         try {
-            URL getListURL = new URL(Infos.zhcUrlString + "/upload/list.zhc");
-            InputStream is = getListURL.openStream();
+            URL getListUrl = new URL(Infos.ZHC_URL_STRING + "/upload/list.zhc");
+            InputStream is = getListUrl.openStream();
             StringBuilder sb = new StringBuilder();
             new ReadIS(is, "UTF-8").read(sb::append);
             String s = sb.toString();
@@ -161,9 +166,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         File pathDir = new File(Common.getExternalStoragePath(context) + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
         File[] listFiles = pathDir.listFiles();
-        if (listFiles != null)
+        if (listFiles != null) {
             for (File file : listFiles) {
-                if (file.isDirectory()) continue;
+                if (file.isDirectory()) {
+                    continue;
+                }
                 try {
                     String fileMd5String = Digest.getFileMd5String(file);
                     if (!listStringContain(stringList, fileMd5String)) {
@@ -176,15 +183,17 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        if (headInformation == null)
+                        if (headInformation == null) {
                             headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
-                        MultipartUploader.formUpload(Infos.zhcUrlString + "/upload/upload.zhc", headInformation, is);
+                        }
+                        MultipartUploader.formUpload(Infos.ZHC_URL_STRING + "/upload/upload.zhc", headInformation, is);
                         is.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+        }
     }
 
     private static boolean listStringContain(List<String> list, String s) {
@@ -196,7 +205,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         return false;
     }
 
-    public static void setSelectedET_currentMillisecond(EditText et) {
+    public static void setSelectedEditTextWithCurrentTimeMillisecond(EditText et) {
         @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         et.setText(String.format(et.getContext().getString(R.string.tv), format));
         Selection.selectAll(et.getText());
@@ -211,7 +220,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             longActivityMap = new HashMap<>();
         }
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey("internalPathFile")) {
+            final String savedOneKey = "internalPathFile";
+            if (savedInstanceState.containsKey(savedOneKey)) {
                 String lastInternalPath = savedInstanceState.getString("internalPathFile");
                 ToastUtils.show(this, getString(R.string.tv, lastInternalPath));
             }
@@ -298,7 +308,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         setSwitch();
         new Thread(() -> uploadPaths(this)).start();
         strings = getResources().getStringArray(R.array.btn_string);
-        childTVs = new TextView[strings.length];
+        childTextViews = new TextView[strings.length];
         // 更新悬浮窗位置
         pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         lp = new WindowManager.LayoutParams();
@@ -329,9 +339,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
-        fbLL = new LinearLayout(this);
-        fbLL.setOrientation(LinearLayout.VERTICAL);
-        fbLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        fbLinearLayout = new LinearLayout(this);
+        fbLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        fbLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         System.gc();
         InputStream inputStream = getResources().openRawResource(R.raw.db);
         icon = BitmapFactory.decodeStream(inputStream);
@@ -341,18 +351,18 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         importPathFileDoneAction = () -> {
             if (pv.isEraserMode) {
-                childTVs[6].setText(R.string.eraser_mode);
+                childTextViews[6].setText(R.string.eraser_mode);
                 strings[6] = getString(R.string.eraser_mode);
             } else {
-                childTVs[6].setText(R.string.drawing_mode);
+                childTextViews[6].setText(R.string.drawing_mode);
                 strings[6] = getString(R.string.drawing_mode);
             }
             ToastUtils.show(this, R.string.importing_success);
         };
-        this.optionsLL = new LinearLayout(this);
-        optionsLL.setOrientation(LinearLayout.VERTICAL);
-        optionsLL.setGravity(Gravity.CENTER);
-        optionsLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        this.optionsLinearLayout = new LinearLayout(this);
+        optionsLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        optionsLinearLayout.setGravity(Gravity.CENTER);
+        optionsLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         iv = new ImageView(this);
         float proportionX = ((float) 75) / ((float) 720);
         float proportionY = ((float) 75) / ((float) 1360);
@@ -360,38 +370,40 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 //        iv.setImageBitmap(icon);
         iv.setImageIcon(Icon.createWithResource(this, R.drawable.ic_db));
         iv.setOnClickListener(v -> {
-            fbLL.removeAllViews();
-            fbLL.addView(optionsLL);
+            fbLinearLayout.removeAllViews();
+            fbLinearLayout.addView(optionsLinearLayout);
             measureFB_LL();
         });
         this.fbMeasuredSpec = new FloatingViewOnTouchListener.ViewSpec();
-        FloatingViewOnTouchListener floatingViewOnTouchListener = new FloatingViewOnTouchListener(lp2, wm, fbLL, width, height, fbMeasuredSpec);
+        FloatingViewOnTouchListener floatingViewOnTouchListener = new FloatingViewOnTouchListener(lp2, wm, fbLinearLayout, width, height, fbMeasuredSpec);
         iv.setOnTouchListener(floatingViewOnTouchListener);
         for (int i = 0; i < strings.length; i++) {
-            childTVs[i] = new TextView(this);
+            childTextViews[i] = new TextView(this);
             LinearLayout smallLL = new LinearLayout(this);
             smallLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (height / strings.length * .7));
             layoutParams.setMargins(0, 0, 0, 5);
-            childTVs[i].setLayoutParams(layoutParams);
-            childTVs[i].setText(strings[i]);
-            childTVs[i].setBackgroundColor(TVsColor);
-            childTVs[i].setTextColor(textsColor);
-            childTVs[i].setOnTouchListener(floatingViewOnTouchListener);
+            childTextViews[i].setLayoutParams(layoutParams);
+            childTextViews[i].setText(strings[i]);
+            childTextViews[i].setBackgroundColor(TextViewsColor);
+            childTextViews[i].setTextColor(textsColor);
+            childTextViews[i].setOnTouchListener(floatingViewOnTouchListener);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-                childTVs[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
-                childTVs[i].setGravity(Gravity.CENTER);
-            } else childTVs[i].setTextSize(20F);
+                childTextViews[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
+                childTextViews[i].setGravity(Gravity.CENTER);
+            } else {
+                childTextViews[i].setTextSize(20F);
+            }
             int finalI = i;
-            childTVs[i].setOnClickListener(v1 -> {
+            childTextViews[i].setOnClickListener(v1 -> {
                 ckV();
                 switch (finalI) {
                     case 0:
-                        fbLL.removeAllViews();
-                        fbLL.addView(iv);
+                        fbLinearLayout.removeAllViews();
+                        fbLinearLayout.addView(iv);
                         measureFB_LL();
-                        wm.updateViewLayout(fbLL, lp2);
+                        wm.updateViewLayout(fbLinearLayout, lp2);
                         break;
                     case 1:
                         toggleDrawAndControlMode();
@@ -411,18 +423,18 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     case 6:
                         if (pv.isEraserMode) {
                             pv.setEraserMode(false);
-                            childTVs[finalI].setText(R.string.drawing_mode);
+                            childTextViews[finalI].setText(R.string.drawing_mode);
                             strings[finalI] = getString(R.string.drawing_mode);
                         } else {
                             pv.setEraserMode(true);
-                            childTVs[finalI].setText(R.string.eraser_mode);
+                            childTextViews[finalI].setText(R.string.eraser_mode);
                             strings[finalI] = getString(R.string.eraser_mode);
                         }
                         break;
                     case 7:
-                        DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
+                        DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                             pv.clearAll();
-                            pv.clearTouchRecordOSContent();
+                            pv.clearTouchRecordOutputStreamContent();
                         }, (dialog1, which) -> {
                         }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
                         break;
@@ -430,70 +442,23 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         pickScreenColor();
                         break;
                     case 9:
-                        Dialog c = new Dialog(this);
-                        LinearLayout inflate = View.inflate(this, R.layout.panel_view, null).findViewById(R.id.ll);
-                        Button panelColorBtn = inflate.findViewById(R.id.panel_color);
-                        panelColorBtn.setOnClickListener(v2 -> {
-                            Dialog TVsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
-                            setDialogAttr(TVsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            HSVAColorPickerRL TVsColorPicker = new HSVAColorPickerRL(this, TVsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1], TVsColorDialog) {
-                                @Override
-                                void onPickedAction(int color, float[] hsva) {
-                                    setPanelColor(color, hsva);
-                                }
-                            };
-                            TVsColorDialog.setContentView(TVsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
-                            TVsColorDialog.show();
-                        });
-                        Button textsColorBtn = inflate.findViewById(R.id.text_color);
-                        textsColorBtn.setEnabled(!this.invertColorChecked);
-                        textsColorBtn.setOnClickListener(v2 -> {
-                            Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
-                            setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-                            HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2], textsColorDialog) {
-                                @Override
-                                void onPickedAction(int color, float[] hsva) {
-                                    for (TextView childTV : childTVs) {
-                                        if (!invertColorChecked) textsColor = color;
-                                        childTV.setTextColor(textsColor);
-                                    }
-                                    hsvaFloats[2] = hsva;
-                                }
-                            };
-                            textsColorDialog.setContentView(textsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
-                            textsColorDialog.show();
-                        });
-                        textsColorBtn.setText(R.string.text_color);
-                        Switch whetherTextColorIsInverted = inflate.findViewById(R.id.invert_text_color);
-                        whetherTextColorIsInverted.setChecked(invertColorChecked);
-                        whetherTextColorIsInverted.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                            textsColorBtn.setEnabled(!isChecked);
-                            invertColorChecked = isChecked;
-                            for (TextView childTV : childTVs) {
-                                childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
-                            }
-                        });
-                        Switch followPaintingColor = inflate.findViewById(R.id.follow_painting_color);
-                        followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> this.panelColorFollowPainting = isChecked);
-                        c.setContentView(inflate);
-                        DialogUtil.setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
-                                , ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                        c.show();
+                        setPanel();
                         break;
                     case 10:
                         moreOptions();
                         break;
                     case 11:
-                        DialogUtil.createConfirmationAD(this, (dialog1, which) -> exit(), (dialog1, which) -> {
+                        DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> exit(), (dialog1, which) -> {
                         }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
-//                            pv.scaleCanvas((float) (width * 2), ((float) (height * 2)));
+                        break;
+                    default:
                         break;
                 }
                 System.out.println("i = " + finalI);
             });
             smallLL.setGravity(Gravity.CENTER);
-            smallLL.addView(childTVs[i]);
-            optionsLL.addView(smallLL);
+            smallLL.addView(childTextViews[i]);
+            optionsLinearLayout.addView(smallLL);
         }
         Button readCacheFileBtn = findViewById(R.id.open_cache_path_file);
         readCacheFileBtn.setOnClickListener(v -> {
@@ -508,8 +473,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     if (data != null) {
                         captureScreenResultData = data;
                         setupProjection();
-                    } else ToastUtils.show(this, R.string.request_permission_error);
-                } else ToastUtils.show(this, R.string.please_grant_permission);
+                    } else {
+                        ToastUtils.show(this, R.string.request_permission_error);
+                    }
+                } else {
+                    ToastUtils.show(this, R.string.please_grant_permission);
+                }
             }
             startFloatingWindow();
         };
@@ -522,15 +491,83 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         findViewById(R.id.small_btn).setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
     }
 
+    private void setPanel() {
+        Dialog c = new Dialog(this);
+        LinearLayout inflate = View.inflate(this, R.layout.panel_view, null).findViewById(R.id.ll);
+        Button panelColorBtn = inflate.findViewById(R.id.panel_color);
+        panelColorBtn.setEnabled(!this.panelColorFollowPainting);
+        panelColorBtn.setOnClickListener(v2 -> {
+            Dialog TextViewsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
+            setDialogAttr(TextViewsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+            AbstractHSVAColorPickerRelativeLayout TextViewsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, FloatingDrawingBoardMainActivity.this.TextViewsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1], TextViewsColorDialog) {
+                @Override
+                void onPickedAction(int color, float[] hsva) {
+                    setPanelColor(color, hsva);
+                }
+            };
+            TextViewsColorDialog.setContentView(TextViewsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
+            TextViewsColorDialog.show();
+        });
+        Button textsColorBtn = inflate.findViewById(R.id.text_color);
+        textsColorBtn.setEnabled(!this.invertColorChecked);
+        textsColorBtn.setOnClickListener(v2 -> {
+            Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
+            setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
+            AbstractHSVAColorPickerRelativeLayout textsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2], textsColorDialog) {
+                @Override
+                void onPickedAction(int color, float[] hsva) {
+                    for (TextView childTextView : childTextViews) {
+                        if (!invertColorChecked) {
+                            textsColor = color;
+                        }
+                        childTextView.setTextColor(textsColor);
+                    }
+                    hsvaFloats[2] = hsva;
+                }
+            };
+            textsColorDialog.setContentView(textsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
+            textsColorDialog.show();
+        });
+        textsColorBtn.setText(R.string.text_color);
+        Switch whetherTextColorIsInverted = inflate.findViewById(R.id.invert_text_color);
+        whetherTextColorIsInverted.setChecked(invertColorChecked);
+        whetherTextColorIsInverted.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            textsColorBtn.setEnabled(!isChecked);
+            invertColorChecked = isChecked;
+            for (TextView childTV : childTextViews) {
+                childTV.setTextColor(textsColor = ColorUtils.invertColor(TextViewsColor));
+            }
+        });
+        Switch followPaintingColor = inflate.findViewById(R.id.follow_painting_color);
+        followPaintingColor.setChecked(this.panelColorFollowPainting);
+        followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            this.panelColorFollowPainting = isChecked;
+            panelColorBtn.setEnabled(!this.panelColorFollowPainting);
+        });
+        c.setContentView(inflate);
+        setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
+                , ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        c.show();
+    }
+
     private void setColor() {
         if (pv.isEraserMode) {
             Dialog dialog = new Dialog(this);
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                    , ViewGroup.LayoutParams.WRAP_CONTENT));
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            TextView titleTextView = new TextView(this);
+            titleTextView.setText(R.string.opacity);
             SeekBar sb = new SeekBar(this);
+            linearLayout.addView(titleTextView);
+            linearLayout.addView(sb);
             sb.setProgress(pv.getEraserAlpha() * 100 / 255);
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    pv.setEraserAlpha(HSVAColorPickerRL.limitValue(progress * 255 / 100, 0, 255));
+                    pv.setEraserAlpha(AbstractHSVAColorPickerRelativeLayout.limitValue(progress * 255 / 100, 0, 255));
                 }
 
                 @Override
@@ -543,18 +580,17 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
                 }
             });
-            sb.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            dialog.setContentView(sb);
+            dialog.setContentView(linearLayout);
             DialogUtil.setDialogAttr(dialog, false
                     , ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
             dialog.show();
         } else {
-            Dialog dialog = new Dialog(this);
+            Dialog dialog = new Dialog(this, R.style.dialog_with_background_dim_false);
             Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
             dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                     , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            HSVAColorPickerRL hsvColorPickerRL = new HSVAColorPickerRL(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
+            AbstractHSVAColorPickerRelativeLayout hsvaColorPickerRelativeLayout = new AbstractHSVAColorPickerRelativeLayout(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
                 @Override
                 void onPickedAction(int color, float[] hsva) {
                     pv.setPaintColor(color);
@@ -562,17 +598,18 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 }
             };
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            dialog.setContentView(hsvColorPickerRL);
+            dialog.setContentView(hsvaColorPickerRelativeLayout);
             dialog.show();
         }
     }
 
     private void setPanelColor(int color, float[] hsva) {
-        for (TextView childTV : childTVs) {
-            TVsColor = color;
-            childTV.setBackgroundColor(TVsColor);
-            if (invertColorChecked)
-                childTV.setTextColor(textsColor = ColorUtils.invertColor(TVsColor));
+        for (TextView childTextView : childTextViews) {
+            TextViewsColor = color;
+            childTextView.setBackgroundColor(TextViewsColor);
+            if (invertColorChecked) {
+                childTextView.setTextColor(textsColor = ColorUtils.invertColor(TextViewsColor));
+            }
         }
         hsvaFloats[1] = hsva;
     }
@@ -581,14 +618,17 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         mediaProjectionManager = (MediaProjectionManager) getApplicationContext().getSystemService(MEDIA_PROJECTION_SERVICE);
         if (mediaProjectionManager != null && captureScreenResultData != null) {
             mediaProjection = mediaProjectionManager.getMediaProjection(RESULT_OK, captureScreenResultData);
-        } else ToastUtils.show(this, R.string.acquire_service_failed);
+        } else {
+            ToastUtils.show(this, R.string.acquire_service_failed);
+        }
     }
 
     private void pickScreenColor() {
         if (mediaProjectionManager == null) {
             initCapture();
-        } else
+        } else {
             captureScreen();
+        }
     }
 
     private Handler getBackgroundHandler() {
@@ -616,8 +656,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             try {
                 image = reader.acquireLatestImage();
                 if (image != null) {
-                    Log.d("d", "image! " + image);
-                    /*int width = image.getWidth();
+                    int width = image.getWidth();
                     int height = image.getHeight();
                     final Image.Plane plane = image.getPlanes()[0];
                     final ByteBuffer buffer = plane.getBuffer();
@@ -626,9 +665,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     int rowPadding = rowStride - pixelStride * width;
                     Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
                     bitmap.copyPixelsFromBuffer(buffer);
-                    image.close();*/
-                    System.out.println("image = " + image);
-                    ToastUtils.show(this, getString(R.string.ok) + image);
+                    image.close();
+                    ToastUtils.show(this, getString(R.string.ok) + bitmap);
                 } else {
                     Log.d("d", "image is null.");
                 }
@@ -667,7 +705,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private long getCacheFilesSize(@Nullable ArrayList<File> fileList) {
-        if (fileList == null) return 0;
+        if (fileList == null) {
+            return 0;
+        }
         long cacheSize = 0L;
         File[] listFiles = null;
         if (internalPathDir != null) {
@@ -676,14 +716,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         if (listFiles != null) {
             for (File file : listFiles) {
                 try {
-                    String fileName;
-                    String fileNameExtension = file.getName();
-                    if (!fileNameExtension.matches(".*\\..*")) fileName = fileNameExtension;
-                    else {
-                        int index = fileNameExtension.lastIndexOf('.');
-                        fileName = fileNameExtension.substring(0, index);
+                    String filename;
+                    String filenameExtension = file.getName();
+                    if (!filenameExtension.matches(".*\\..*")) {
+filename = filenameExtension;
+                    } else {
+                        int index = filenameExtension.lastIndexOf('.');
+filename = filenameExtension.substring(0, index);
                     }
-                    if (FloatingDrawingBoardMainActivity.longActivityMap.containsKey(Long.parseLong(fileName))) {
+                    if (FloatingDrawingBoardMainActivity.longActivityMap.containsKey(Long.parseLong(filename))) {
                         continue;
                     }
                 } catch (NumberFormatException ignored) {
@@ -707,9 +748,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void measureFB_LL() {
         int mode = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        fbLL.measure(mode, mode);
-        fbMeasuredSpec.width = fbLL.getMeasuredWidth();
-        fbMeasuredSpec.height = fbLL.getMeasuredHeight();
+        fbLinearLayout.measure(mode, mode);
+        fbMeasuredSpec.width = fbLinearLayout.getMeasuredWidth();
+        fbMeasuredSpec.height = fbLinearLayout.getMeasuredHeight();
     }
 
     @Override
@@ -721,7 +762,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         fbSwitch = findViewById(R.id.f_b_switch);
         fbSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                new CheckOverlayPermission(this) {
+                new AbstractCheckOverlayPermission(this) {
                     @Override
                     public void granted() {
                         startFloatingWindow();
@@ -732,22 +773,24 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         fbSwitch.setChecked(false);
                     }
                 };
-            } else stopFloatingWindow();
+            } else {
+                stopFloatingWindow();
+            }
         });
     }
 
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow() {
-        pv.setOS(currentInternalPathFile, true);
+        pv.setOutputStream(currentInternalPathFile, true);
         if (!longActivityMap.containsKey(currentInstanceMillisecond)) {
             longActivityMap.put(currentInstanceMillisecond, this);
         }
         try {
             wm.addView(pv, lp);
             mainDrawingBoardNotDisplay = false;
-            fbLL.addView(iv);
+            fbLinearLayout.addView(iv);
             measureFB_LL();
-            this.wm.addView(fbLL, lp2);
+            this.wm.addView(fbLinearLayout, lp2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -756,7 +799,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     void toggleDrawAndControlMode() {
         if (drawMode) {
-            //noinspection deprecation
+            // noinspection deprecation
             lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                     | WindowManager.LayoutParams.FLAG_FULLSCREEN
@@ -764,7 +807,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                     | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
             wm.updateViewLayout(pv, lp);
-            childTVs[1].setText(R.string.controlling);
+            childTextViews[1].setText(R.string.controlling);
             strings[1] = getString(R.string.controlling);
             drawMode = false;
         } else {
@@ -774,7 +817,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                     | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
             wm.updateViewLayout(pv, lp);
-            childTVs[1].setText(R.string.drawing);
+            childTextViews[1].setText(R.string.drawing);
             strings[1] = getString(R.string.drawing);
             drawMode = true;
         }
@@ -785,12 +828,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         new Thread(() -> uploadPaths(this)).start();
         FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMillisecond);
         this.fbSwitch.setChecked(false);
-        pv.closePathRecorderOS();
+        pv.closePathRecorderOutputStream();
     }
 
     private void hide() {
         try {
-            wm.removeViewImmediate(fbLL);
+            wm.removeViewImmediate(fbLinearLayout);
         } catch (IllegalArgumentException e) {
             Common.showException(e, this);
         }
@@ -813,7 +856,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             intent.setAction("pers.zhc.tools.START_FB");
             intent.setPackage(getPackageName());
             intent.putExtra("millisecond", currentInstanceMillisecond);
-            boolean isDrawMode = this.childTVs[1].getText().equals(getString(R.string.drawing_mode));
+            boolean isDrawMode = this.childTextViews[1].getText().equals(getString(R.string.drawing_mode));
             intent.putExtra("isDrawMode", isDrawMode);
             System.out.println("isDrawMode = " + isDrawMode);
             PendingIntent pi = getPendingIntent(intent);
@@ -871,12 +914,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                 try {
                     float edit = Float.parseFloat(et.getText().toString());
-                    double a = Math.log(edit) / Math.log(1.07D);
+                    double a = Math.log(edit * pv.getScale()) / Math.log(1.07D);
                     strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getColor());
                     sb.setProgress((int) a);
-                    if (checked[0] == R.id.radio1)
+                    if (checked[0] == R.id.radio1) {
                         pv.setStrokeWidth(edit);
-                    else if (checked[0] == R.id.radio2) pv.setEraserStrokeWidth(edit);
+                    } else if (checked[0] == R.id.radio2) {
+                        pv.setEraserStrokeWidth(edit);
+                    }
                     pv.lockStroke();
                     tv.setText(getString(R.string.stroke_width_info, edit, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
                 } catch (Exception e) {
@@ -887,15 +932,17 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             AlertDialog ad = adb.create();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-            } else //noinspection deprecation
+            } else {
+                //noinspection deprecation
                 Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
-            DialogUtil.setADWithET_autoShowSoftKeyboard(et, ad);
+            }
+            DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, ad);
             ad.show();
         });
         float pvStrokeWidthInUse = pv.getStrokeWidthInUse();
         strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getColor());
         tv.setText(getString(R.string.stroke_width_info, pvStrokeWidthInUse, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
-        sb.setProgress((int) (Math.log(pvStrokeWidthInUse) / Math.log(1.07D)));
+        sb.setProgress((int) (Math.log(pvStrokeWidthInUse * pv.getScale()) / Math.log(1.07D)));
         sb.setMax(100);
         setDialogAttr(mainDialog, false, ((int) (((float) width) * .8F)), ViewGroup.LayoutParams.WRAP_CONTENT, true);
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -903,6 +950,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     float pow = (float) Math.pow(1.07D, progress);
+                    pow /= pv.getScale();
                     if (checked[0] == R.id.radio1) {
                         pv.setStrokeWidth(pow);
                     } else {
@@ -929,7 +977,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             float strokeWidth = (checkedId == R.id.radio1) ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
             strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getColor());
             tv.setText(getString(R.string.stroke_width_info, strokeWidth, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
-            sb.setProgress((int) (Math.log(strokeWidth) / Math.log(1.07D)));
+            sb.setProgress((int) (Math.log(strokeWidth * pv.getScale()) / Math.log(1.07D)));
         });
         mainLL.addView(strokeWatchView);
         mainDialog.setContentView(mainLL, new ViewGroup.LayoutParams(((int) (((float) width) * .8F)), ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -937,9 +985,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void stopFloatingWindow() {
-        fbLL.removeAllViews();
+        fbLinearLayout.removeAllViews();
         try {
-            wm.removeViewImmediate(fbLL);
+            wm.removeViewImmediate(fbLinearLayout);
         } catch (Exception ignored) {
         }
         try {
@@ -975,17 +1023,23 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 R.string.hide_panel
         };
         File fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
-        if (!fbDir.exists()) System.out.println("d.mkdir() = " + fbDir.mkdir());
+        if (!fbDir.exists()) {
+            System.out.println("d.mkdir() = " + fbDir.mkdir());
+        }
         File pathDir = new File(fbDir.toString() + File.separator + "path");
-        if (!pathDir.exists()) System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
+        if (!pathDir.exists()) {
+            System.out.println("pathDir.mkdir() = " + pathDir.mkdir());
+        }
         File imageDir = new File(fbDir.toString() + File.separator + "image");
-        if (!imageDir.exists()) System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
+        if (!imageDir.exists()) {
+            System.out.println("imageDir.mkdir() = " + imageDir.mkdir());
+        }
         View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                 v0 -> new PermissionRequester(() -> {
                     Dialog dialog = new Dialog(this);
                     dialog.setCanceledOnTouchOutside(false);
                     dialog.setCancelable(false);
-                    FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, imageDir, dialog::dismiss, s -> {
+                    FilePickerRelativeLayout filePickerRelativeLayout = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, imageDir, dialog::dismiss, s -> {
                         dialog.dismiss();
                         AlertDialog.Builder importImageOptionsDialogBuilder = new AlertDialog.Builder(this);
                         LinearLayout linearLayout = new LinearLayout(this);
@@ -1026,8 +1080,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                         double c2 = (float) new Expression(editTexts[1].getText().toString()).calculate();
                                         double c3 = new Expression(editTexts[2].getText().toString()).calculate();
                                         double c4 = new Expression(editTexts[3].getText().toString()).calculate();
-                                        if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4))
+                                        if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4)) {
                                             throw new Exception("math expression invalid");
+                                        }
                                         pv.importImage(imageBitmap, ((float) c1), ((float) c2), ((int) c3), ((int) c4));
                                         ToastUtils.show(this, R.string.importing_success);
                                     } catch (Exception e) {
@@ -1042,51 +1097,51 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         importImageOptionsDialog.show();
                     }, null);
-                    setFilePickerDialog(dialog, filePickerRL);
+                    setFilePickerDialog(dialog, filePickerRelativeLayout);
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v1 -> new PermissionRequester(() -> {
                     LinearLayout linearLayout = View.inflate(this, R.layout.export_image_layout, null)
                             .findViewById(R.id.root);
-                    EditText fileNameET = linearLayout.findViewById(R.id.file_name);
-                    setSelectedET_currentMillisecond(fileNameET);
-                    EditText widthET = linearLayout.findViewById(R.id.width);
-                    EditText heightET = linearLayout.findViewById(R.id.height);
+                    EditText filenameEditText = linearLayout.findViewById(R.id.file_name);
+                    setSelectedEditTextWithCurrentTimeMillisecond(filenameEditText);
+                    EditText widthEditText = linearLayout.findViewById(R.id.width);
+                    EditText heightEditText = linearLayout.findViewById(R.id.height);
                     Point point = new Point();
                     pv.bitmapResolution(point);
                     final int[] imageW = {point.x};
                     final int[] imageH = {point.y};
-                    widthET.setText(String.valueOf(point.x));
-                    heightET.setText(String.valueOf(point.y));
-                    widthET.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                    heightET.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    widthEditText.setText(String.valueOf(point.x));
+                    heightEditText.setText(String.valueOf(point.y));
+                    widthEditText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    heightEditText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
                     AlertDialog ad = adb.setTitle(R.string.export_image)
                             .setPositiveButton(R.string.confirm, (dialog, which) -> {
                                 Expression expression = new Expression();
-                                expression.setExpressionString(widthET.getText().toString());
+                                expression.setExpressionString(widthEditText.getText().toString());
                                 imageW[0] = ((int) expression.calculate());
-                                expression.setExpressionString(heightET.getText().toString());
+                                expression.setExpressionString(heightEditText.getText().toString());
                                 imageH[0] = ((int) expression.calculate());
                                 if (Double.isNaN(imageW[0]) || Double.isNaN(imageH[0]) || imageW[0] <= 0 || imageH[0] <= 0) {
                                     ToastUtils.show(FloatingDrawingBoardMainActivity.this, R.string.please_type_correct_value);
                                     moreOptionsDialog.dismiss();
                                     return;
                                 }
-                                File imageFile = new File(imageDir.toString() + File.separator + fileNameET.getText().toString() + ".png");
+                                File imageFile = new File(imageDir.toString() + File.separator + filenameEditText.getText().toString() + ".png");
                                 pv.exportImg(imageFile, imageW[0], imageH[0]);
                                 moreOptionsDialog.dismiss();
                             }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                             }).setView(linearLayout).create();
-                    DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                    DialogUtil.setADWithET_autoShowSoftKeyboard(fileNameET, ad);
+                    setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(filenameEditText, ad);
                     ad.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v2 -> importPath(moreOptionsDialog, pathDir),
                 v3 -> new PermissionRequester(() -> {
                     EditText et = new EditText(this);
-                    setSelectedET_currentMillisecond(et);
+                    setSelectedEditTextWithCurrentTimeMillisecond(et);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
                     AlertDialog alertDialog = adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                         File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
@@ -1101,19 +1156,20 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         if (pathFile.exists()) {
                             ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
                             new Thread(() -> uploadPaths(this)).start();
-                        } else
+                        } else {
                             ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
+                        }
                         moreOptionsDialog.dismiss();
                     }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                     }).setTitle(R.string.type_file_name).setView(et).create();
                     setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                    DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
+                    DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, alertDialog);
                     alertDialog.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v4 -> pv.resetTransform(),
                 v5 -> setLayer(),
-                v6 -> DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
+                v6 -> DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                     hide();
                     moreOptionsDialog.dismiss();
                 }, (dialog1, which) -> {
@@ -1150,23 +1206,24 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             Dialog dialog = new Dialog(this);
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
-            FilePickerRL filePickerRL = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
+            FilePickerRelativeLayout filePickerRelativeLayout = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
                 dialog.dismiss();
                 if (currentInternalPathFile.getAbsolutePath().equals(s)) {
                     ToastUtils.show(this, R.string.can_not_import_itself);
                     return;
                 }
+                Handler handler = new Handler();
                 Dialog importPathFileProgressDialog = new Dialog(this);
                 setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                 importPathFileProgressDialog.setCanceledOnTouchOutside(false);
-                RelativeLayout progressRL = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
-                progressRL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                RelativeLayout progressRelativeLayout = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
+                progressRelativeLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 importPathFileProgressDialog.show();
-                importPathFileProgressDialog.setContentView(progressRL, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
-                TextView tv = progressRL.findViewById(R.id.progress_tv);
+                importPathFileProgressDialog.setContentView(progressRelativeLayout, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
+                TextView tv = progressRelativeLayout.findViewById(R.id.progress_tv);
                 tv.setText(R.string.importing);
-                ProgressBar progressBar = progressRL.findViewById(R.id.progress_bar);
-                TextView pTV = progressRL.findViewById(R.id.progress_bar_title);
+                ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
+                TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
 //                PaintView.Latch latch = new PaintView.Latch();
                 pv.importPathFile(new File(s), () -> {
                     this.hsvaFloats[0] = null;
@@ -1177,7 +1234,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     CountDownLatch latch = new CountDownLatch(1);
                     runOnUiThread(() -> {
                         progressBar.setProgress(aFloat.intValue());
-                        pTV.setText(getString(R.string.progress_tv, aFloat));
+                        pTextView.setText(getString(R.string.progress_tv, aFloat));
 //                        latch.stop();
                         latch.countDown();
                     });
@@ -1191,34 +1248,37 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     moreOptionsDialog.dismiss();
                 }
             }, null);
-            setFilePickerDialog(dialog, filePickerRL);
+            setFilePickerDialog(dialog, filePickerRelativeLayout);
         }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
-    private void setFilePickerDialog(Dialog dialog, FilePickerRL filePickerRL) {
+    private void setFilePickerDialog(Dialog dialog, FilePickerRelativeLayout filePickerRelativeLayout) {
         dialog.setOnKeyListener((dialog1, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_UP)
+            if (event.getAction() == KeyEvent.ACTION_UP) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    filePickerRL.previous();
+                    filePickerRelativeLayout.previous();
                 }
+            }
             return true;
         });
         setDialogAttr(dialog, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .8)), true);
-        dialog.setContentView(filePickerRL);
+        dialog.setContentView(filePickerRelativeLayout);
         dialog.show();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 23 && grantResults[0] == 0) moreOptions();
+        if (requestCode == 23 && grantResults[0] == 0) {
+            moreOptions();
+        }
     }
 
     public void recover() {
         if (!this.mainDrawingBoardNotDisplay) {
             try {
-                this.wm.addView(fbLL, lp2);
+                this.wm.addView(fbLinearLayout, lp2);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1242,14 +1302,16 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
 
-    public static abstract class CheckOverlayPermission {
-        public CheckOverlayPermission(Activity activity) {
+    public static abstract class AbstractCheckOverlayPermission {
+        public AbstractCheckOverlayPermission(Activity activity) {
             if (!Settings.canDrawOverlays(activity)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + activity.getPackageName()));
                 activity.startActivityForResult(intent, RequestCode.REQUEST_OVERLAY);
                 denied();
-            } else granted();
+            } else {
+                granted();
+            }
         }
 
         public abstract void granted();

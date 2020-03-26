@@ -12,9 +12,7 @@ public class SetTheme extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_app_theme_activity);
         Button setBtn = findViewById(R.id.setting_btn);
-        setBtn.setOnClickListener(v -> {
-            recreate();
-        });
+        setBtn.setOnClickListener(v -> recreate());
         setBtn.setOnLongClickListener(v -> {
             setTheme(R.style.AppTheme);
             recreate();

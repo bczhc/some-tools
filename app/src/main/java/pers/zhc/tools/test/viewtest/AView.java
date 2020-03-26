@@ -7,12 +7,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
-import android.view.View;
+import pers.zhc.tools.BaseView;
 import pers.zhc.tools.floatingdrawing.MyCanvas;
 import pers.zhc.tools.utils.GestureResolver;
 
+/**
+ * @author bczhc
+ */
 @SuppressLint("ViewConstructor")
-public class AView extends View {
+public class AView extends BaseView {
     private final Bitmap bitmap;
     private MyCanvas mCanvas;
     private Bitmap mBitmap;
@@ -34,7 +37,6 @@ public class AView extends View {
         this.mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         this.mCanvas = new MyCanvas(mBitmap);
         mBitmapPaint = new Paint();
-        //noinspection DuplicatedCode
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
@@ -73,7 +75,6 @@ public class AView extends View {
             width = getWidth();
             height = getHeight();
             init();
-            System.out.println("init");
         }
         canvas.drawColor(Color.TRANSPARENT);
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);

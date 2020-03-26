@@ -31,8 +31,11 @@ import java.util.Locale;
 
 import static pers.zhc.tools.utils.Common.showException;
 
+/**
+ * @author bczhc
+ */
 @SuppressLint("ViewConstructor")
-public class FilePickerRL extends RelativeLayout {
+public class FilePickerRelativeLayout extends RelativeLayout {
     public static final int TYPE_PICK_FILE = 1;
     public static final int TYPE_PICK_FOLDER = 2;
     private final File initialPath;
@@ -53,10 +56,11 @@ public class FilePickerRL extends RelativeLayout {
     private File currentPath;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
-    private EditText headET;
-    private @DrawableRes int unselectedDrawable;
+    private EditText headEditText;
+    private @DrawableRes
+    int unselectedDrawable;
 
-    public FilePickerRL(Context context, int type, @Documents.Nullable File initialPath
+    public FilePickerRelativeLayout(Context context, int type, @Documents.Nullable File initialPath
             , Runnable cancelAction, OnPickedResultActionInterface pickedResultAction
             , @Nullable String initFileName) {
         super(context);
@@ -76,9 +80,9 @@ public class FilePickerRL extends RelativeLayout {
         this.addView(view);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
-        headET = findViewById(R.id.file_name_et);
-        headET.setText(initFileName);
-        headET.addTextChangedListener(new TextWatcher() {
+        headEditText = findViewById(R.id.file_name_et);
+        headEditText.setText(initFileName);
+        headEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -91,7 +95,7 @@ public class FilePickerRL extends RelativeLayout {
 
             @Override
             public void afterTextChanged(Editable s) {
-                File[] fileList = getFileList(FilePickerRL.this.currentPath);
+                File[] fileList = getFileList(FilePickerRelativeLayout.this.currentPath);
                 fillViews(fileList);
             }
         });
@@ -111,6 +115,8 @@ public class FilePickerRL extends RelativeLayout {
                     dir = currentPath.getAbsolutePath();
                     result = dir;
                     break;
+                default:
+                    break;
             }
             pickedResultAction.result(result);
         });
@@ -119,12 +125,15 @@ public class FilePickerRL extends RelativeLayout {
             AlertDialog.Builder ad = new AlertDialog.Builder(ctx);
             EditText et = new EditText(ctx);
             String s = pathView.getText().toString();
-            ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.tv, (s.equals("/storage/emulated") ? s + "/0" : s) + '/')));
+            final char mark = '/';
+            ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.tv, ("/storage/emulated".equals(s) ? s + "/0" : s) + mark)));
             et.setLayoutParams(lp);
             AlertDialog alertDialog = ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String etText = et.getText().toString();
-                        if (etText.charAt(0) != '/') etText = '/' + etText;
+                        if (etText.charAt(0) != mark) {
+                            etText = mark + etText;
+                        }
                         File f = new File(etText);
                         if (f.isFile() && type == 1) {
                             resultString = f.getAbsolutePath();
@@ -139,7 +148,7 @@ public class FilePickerRL extends RelativeLayout {
                     })
                     .setView(et).create();
             DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
-            DialogUtil.setADWithET_autoShowSoftKeyboard(et, alertDialog);
+            DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, alertDialog);
             alertDialog.show();
         });
         this.ll = findViewById(R.id.ll);
@@ -153,7 +162,7 @@ public class FilePickerRL extends RelativeLayout {
     private void fillViews(File[] listFilesP) {
         final File[][] listFiles = {listFilesP};
         Thread thread = new Thread(() -> {
-            listFiles[0] = filter(listFiles[0], headET.getText().toString());
+            listFiles[0] = filter(listFiles[0], headEditText.getText().toString());
             justPicked[0] = -1;
             ctx.runOnUiThread(ll::removeAllViews);
             ctx.runOnUiThread(() -> pathView.setText(String.format("%s", currentPath.getAbsolutePath())));
@@ -178,8 +187,9 @@ public class FilePickerRL extends RelativeLayout {
                                     textViews[finalI].setBackgroundResource(canPickUnchecked);
                                 } else {
                                     try {
-                                        if (justPicked[0] != -1)
+                                        if (justPicked[0] != -1) {
                                             textViews[justPicked[0]].setBackgroundResource(canPickUnchecked);
+                                        }
                                         textViews[finalI].setBackgroundResource(viewChecked);
                                         justPicked[0] = finalI;
                                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -215,16 +225,12 @@ public class FilePickerRL extends RelativeLayout {
                         ctx.runOnUiThread(() -> ll.addView(textViews[finalI]));
                     }
                     break;
+                default:
+                    break;
             }
         });
         thread.start();
     }
-
-    /*@Override
-    public void onBackPressed() {
-        if (currentPath.equals(new File("/"))) finish();
-        else previous();
-    }*/
 
     private void extractM1(File[] listFiles, LinearLayout.LayoutParams lp, TextViewWithExtra[] textViews,
                            int i) {
@@ -237,7 +243,9 @@ public class FilePickerRL extends RelativeLayout {
             case 1:
                 if (listFiles[i].isFile()) {
                     textViews[i].setBackgroundResource(canPickUnchecked);
-                } else textViews[i].setBackgroundResource(unselectedDrawable);
+                } else {
+                    textViews[i].setBackgroundResource(unselectedDrawable);
+                }
                 break;
             case 2:
                 if (listFiles[i].isFile()) {
@@ -245,6 +253,8 @@ public class FilePickerRL extends RelativeLayout {
                 } else {
                     textViews[i].setBackgroundResource(canPickUnchecked);
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -278,8 +288,11 @@ public class FilePickerRL extends RelativeLayout {
         }
         Arrays.sort(files, comparator);
         for (File f : files) {
-            if (f.isDirectory()) dirList.add(f);
-            else fileList.add(f);
+            if (f.isDirectory()) {
+                dirList.add(f);
+            } else {
+                fileList.add(f);
+            }
         }
         List<File> r = new LinkedList<>();
         r.addAll(dirList);
@@ -290,14 +303,14 @@ public class FilePickerRL extends RelativeLayout {
     private File[] filter(File[] files, String regex) {
         List<File> fileList = new LinkedList<>();
         for (File file : files) {
-            if (regex.equals("")) {
+            if ("".equals(regex)) {
                 fileList.add(file);
             } else {
                 boolean match = true;
                 try {
                     match = file.getName().matches(regex);
                 } catch (Exception ignored) {
-                    ToastUtils.show(ctx, R.string.wrong_regex);
+                    ctx.runOnUiThread(() -> ToastUtils.show(ctx, R.string.wrong_regex));
                 }
                 if (match) {
                     fileList.add(file);
@@ -308,22 +321,26 @@ public class FilePickerRL extends RelativeLayout {
     }
 
     public interface OnPickedResultActionInterface {
+        /**
+         * onPickedResult callback
+         * @param s result string
+         */
         void result(String s);
     }
 
     private static class TextViewWithExtra extends TextView {
         private boolean picked = false;
 
-        @Override
-        public void setBackgroundResource(int resId) {
-            super.setBackgroundResource(resId);
-            this.picked = (resId == R.drawable.file_picker_view_checked);
-        }
-
         public TextViewWithExtra(Context context) {
             super(context);
 
 
+        }
+
+        @Override
+        public void setBackgroundResource(int resId) {
+            super.setBackgroundResource(resId);
+            this.picked = (resId == R.drawable.file_picker_view_checked);
         }
     }
 }

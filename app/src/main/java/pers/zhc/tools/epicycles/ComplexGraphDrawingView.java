@@ -7,10 +7,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.view.MotionEvent;
-import android.view.View;
+import pers.zhc.tools.BaseView;
 import pers.zhc.u.math.util.ComplexValue;
 
-public class ComplexGraphDrawingView extends View {
+public class ComplexGraphDrawingView extends BaseView {
 
     static ComplexFunction complexFunction;
     private float width;
@@ -34,7 +34,9 @@ public class ComplexGraphDrawingView extends View {
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
-        if (complexFunction == null) complexFunction = new ComplexFunction();
+        if (complexFunction == null) {
+            complexFunction = new ComplexFunction();
+        }
     }
 
     @Override

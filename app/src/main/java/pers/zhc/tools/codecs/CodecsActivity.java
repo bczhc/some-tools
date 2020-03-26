@@ -263,7 +263,9 @@ public class CodecsActivity extends BaseActivity {
                     dstExtensions = conf.get(1).get(1).split("\\|");
                     if (srcExtensions.length != dstExtensions.length) {
                         ToastUtils.show(this, R.string.dismiss_x);
-                        if (!(x.equals("kwm") | x.equals("kwd"))) return null;
+                        if (!("kwm".equals(x) | "kwd".equals(x))) {
+                            return null;
+                        }
                         String r;
                         if (name.matches(".*\\..*")) {
                             r = p + "/" + name_no_x + ".flac";
@@ -311,7 +313,7 @@ public class CodecsActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 CodecsActivity.this.dT = position;
-                if (CodecsActivity.this.spinnerData[position].equals("Base128")) {
+                if ("Base128".equals(CodecsActivity.this.spinnerData[position])) {
                     LinearLayout ll = findViewById(R.id.fl);
                     Button[] base128_btn = new Button[]{
                             new Button(CodecsActivity.this), new Button(CodecsActivity.this)
@@ -419,8 +421,9 @@ public class CodecsActivity extends BaseActivity {
                                             String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L) {
                                                 int status = jniCall.jniDecode(fPath, x, o == 1 ? this.dT : dT, this.savedConfig, jniCallback);
-                                                if (status == -1)
+                                                if (status == -1) {
                                                     runOnUiThread(() -> toast(R.string.fopen_error));
+                                                }
                                             }
                                         }
                                     } catch (IOException e) {
@@ -465,8 +468,9 @@ public class CodecsActivity extends BaseActivity {
 //                }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (!(e instanceof NullPointerException))
+                    if (!(e instanceof NullPointerException)) {
                         toast(e.toString());
+                    }
                     reset();
                     allButtonsAction(o, buttons, VISIBLE);
                 }
@@ -486,13 +490,14 @@ public class CodecsActivity extends BaseActivity {
                             try {
                                 size0 = new File(f).length() == 0L;
                                 int status = 2;
-                                if (size0)
+                                if (size0) {
                                     runOnUiThread(() -> {
                                         toast(R.string.null_file);
                                         allButtonsAction(o, buttons, VISIBLE);
                                     });
-                                else
+                                } else {
                                     status = jniCall.jniDecode(f, finalDF, o == 1 ? this.dT : dT, savedConfig, jniCallback);
+                                }
                                 if (status == -1 || status == 255) {
                                     runOnUiThread(() -> toast(R.string.fopen_error));
                                 }
@@ -535,18 +540,23 @@ public class CodecsActivity extends BaseActivity {
      *                disappear: 0x4
      */
     private void allButtonsAction(int o, @Nullable Button[] buttons, int t) {
-        if (o == 1) runOnUiThread(() -> dB.setVisibility(t));
-        else if (buttons != null) runOnUiThread(() -> {
-            for (Button button : buttons) {
-                button.setVisibility(t);
-            }
-        });
+        if (o == 1) {
+            runOnUiThread(() -> dB.setVisibility(t));
+        } else if (buttons != null) {
+            runOnUiThread(() -> {
+                for (Button button : buttons) {
+                    button.setVisibility(t);
+                }
+            });
+        }
     }
 
     private List<List<String>> loadSavedConfig() {
         List<List<String>> saved = new ArrayList<>();
         try {
-            if (!file.exists()) System.out.println("file.createNewFile() = " + file.createNewFile());
+            if (!file.exists()) {
+                System.out.println("file.createNewFile() = " + file.createNewFile());
+            }
             InputStream is = new FileInputStream(file);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             StringBuilder sb = new StringBuilder();
@@ -617,8 +627,11 @@ public class CodecsActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (this.isRunning) this.moveTaskToBack(false);
-        else finish();
+        if (this.isRunning) {
+            this.moveTaskToBack(false);
+        } else {
+            finish();
+        }
 //        else super.onBackPressed();
         overridePendingTransition(0, R.anim.slide_out_bottom);
     }

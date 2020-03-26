@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowIsTranslucent">false</item>
     </style>
-    <style name="inputDialog" parent="@android:style/Theme.Holo.Light.Dialog">
+    <style name="InputDialog" parent="@android:style/Theme.Holo.Light.Dialog">
         <item name="android:windowFrame">@color/transparent</item><!-- 边框 -->
         <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->
         <item name="android:windowIsTranslucent">false</item><!-- 半透明 -->
@@ -24,4 +24,11 @@
         <item name="android:windowSoftInputMode">stateAlwaysVisible</item><!--显示软键盘-->
     </style>
     <style name="AppThemeTranslucent" parent="android:Theme.Translucent.NoTitleBar"/>
+    <style name="BlackTheme" parent="android:Theme.Black.NoTitleBar"/>
+    <style name="dialog_with_background_dim_false" parent="android:Theme.Dialog">
+        <item name="android:backgroundDimEnabled">false</item><!--activity不变暗-->
+    </style>
+    <style name="dialog_with_background_dim_true" parent="android:Theme.Dialog">
+        <item name="android:backgroundDimEnabled">false</item><!--activity不变暗-->
+    </style>
 </resources>

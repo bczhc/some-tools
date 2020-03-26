@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.DialogUtil;
@@ -29,7 +30,7 @@ import pers.zhc.tools.utils.ToastUtils;
 
 @SuppressWarnings("SameParameterValue")
 @SuppressLint("ViewConstructor")
-abstract class HSVAColorPickerRL extends RelativeLayout {
+abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
     private final float[] hsv = new float[3];
     private final int width;
     private final int height;
@@ -40,7 +41,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     private final float lW = 1.5F;
     private final float[] resultHSVA = new float[4];
     private int alpha;
-    private View[] hsvAView;
+    private View[] hsvaViews;
     private View vv;
 
     /**
@@ -51,7 +52,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
      * @param hsva         HSVA
      * @param dialog       防止dim
      */
-    protected HSVAColorPickerRL(Context context, int initialColor, int width, int height, @Nullable float[] hsva, @Nullable Dialog dialog) {
+    protected AbstractHSVAColorPickerRelativeLayout(Context context, int initialColor, int width, int height, @Nullable float[] hsva, @Nullable Dialog dialog) {
         super(context);
         if (dialog != null) {
             Window window = dialog.getWindow();
@@ -88,7 +89,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
 
     private void init() {
         int perViewHeight = height / 4;
-        hsvAView = new View[]{
+        hsvaViews = new View[]{
                 new HView(context, width, perViewHeight),
                 new SView(context, width, perViewHeight),
                 new VView(context, width, perViewHeight),
@@ -139,7 +140,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
             DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
             ad.show();
             Selection.selectAll(editText.getText());
-            DialogUtil.setADWithET_autoShowSoftKeyboard(editText, ad);
+            DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(editText, ad);
         });
         barRL.addView(tv);
         vv = new View(context);
@@ -150,11 +151,11 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         vv.setBackgroundColor(Color.HSVToColor(alpha, hsv));
         barRL.addView(vv);
         ll.addView(barRL);
-        LinearLayout[] linearLayouts = new LinearLayout[hsvAView.length];
+        LinearLayout[] linearLayouts = new LinearLayout[hsvaViews.length];
         for (int i = 0; i < linearLayouts.length; i++) {
             linearLayouts[i] = new LinearLayout(context);
             linearLayouts[i].setLayoutParams(new LinearLayout.LayoutParams(width, 0, 1));
-            linearLayouts[i].addView(hsvAView[i]);
+            linearLayouts[i].addView(hsvaViews[i]);
             ll.addView(linearLayouts[i]);
         }
         this.addView(ll);
@@ -162,7 +163,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
     }
 
     private void invalidateAllView() {
-        for (View view : hsvAView) {
+        for (View view : hsvaViews) {
 //            if (i == notDrawIndex) continue;
 //            int finalI = i;
 //            new Thread(() -> hsvAView[finalI].postInvalidate()).start();
@@ -184,8 +185,12 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
      * @return pos
      */
     private float setCurrentX(int i) {
-        if (i == 0) return currentXPos[0] = hsv[0] * ((float) width) / 360F;
-        if (i == 3) return currentXPos[3] = alpha * ((float) width) / 255F;
+        if (i == 0) {
+            return currentXPos[0] = hsv[0] * ((float) width) / 360F;
+        }
+        if (i == 3) {
+            return currentXPos[3] = alpha * ((float) width) / 255F;
+        }
         return currentXPos[i] = hsv[i] * width;
     }
 
@@ -193,10 +198,12 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
 
     private void setInvertedColor(boolean invalidate) {
         oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));
-        if (invalidate) invalidateAllView();
+        if (invalidate) {
+            invalidateAllView();
+        }
     }
 
-    private class HView extends View {
+    private class HView extends BaseView {
         private final int hW;
         private final int hH;
         private Paint hPaint;
@@ -240,7 +247,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         }
     }
 
-    private class SView extends View {
+    private class SView extends BaseView {
         private final int sW;
         private final int sH;
         private Paint sPaint;
@@ -285,7 +292,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
         }
     }
 
-    private class VView extends View {
+    private class VView extends BaseView {
         private final int vW;
         private final int vH;
         private Paint vPaint;
@@ -334,7 +341,7 @@ abstract class HSVAColorPickerRL extends RelativeLayout {
 
     }*/
 
-    private class AView extends View {
+    private class AView extends BaseView {
         private final int aW;
         private final int aH;
         private Paint aPaint;

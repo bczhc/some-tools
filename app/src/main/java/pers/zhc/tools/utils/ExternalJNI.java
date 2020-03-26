@@ -29,7 +29,9 @@ public class ExternalJNI {
         System.out.println("download remote libs");
         System.out.println("abi = " + abi);
         File libsDir = new File(ctx.getFilesDir(), "libs");
-        if (!libsDir.exists()) System.out.println("libsDir.mkdirs() = " + libsDir.mkdirs());
+        if (!libsDir.exists()) {
+            System.out.println("libsDir.mkdirs() = " + libsDir.mkdirs());
+        }
         File file = new File(libsDir, "libex1.so");
         HttpURLConnection connection = (HttpURLConnection) new URL(downloadURL).openConnection();
         if (connection.getResponseCode() == 200) {
@@ -96,30 +98,38 @@ public class ExternalJNI {
         Handler handler = new Handler();
         new Thread(() -> {
             abi = getABI();
-            downloadURL = BaseActivity.Infos.zhcUrlString
+            downloadURL = BaseActivity.Infos.ZHC_URL_STRING
                     + "/tools_app/jni.zhc?abi=" + abi + "&name=libex1.so";
             File libsDir = new File(activity.getFilesDir(), "libs");
-            if (!libsDir.exists()) System.out.println("libsDir.mkdirs() = " + libsDir.mkdirs());
+            if (!libsDir.exists()) {
+                System.out.println("libsDir.mkdirs() = " + libsDir.mkdirs());
+            }
             File file = new File(libsDir, "libex1.so");
             boolean check;
             if (!file.exists()) {
                 check = false;
-            } else check = check(downloadURL, file);
+            } else {
+                check = check(downloadURL, file);
+            }
             try {
-                if (!check) fetch(activity);
-                if (file.exists()) try {
-                    System.load(file.getCanonicalPath());
-                    System.out.println("load remote lib");
-                    handler.post(() -> {
-                        try {
-                            ex1(activity);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.load(file.getAbsolutePath());
+                if (!check) {
+                    fetch(activity);
+                }
+                if (file.exists()) {
+                    try {
+                        System.load(file.getCanonicalPath());
+                        System.out.println("load remote lib");
+                        handler.post(() -> {
+                            try {
+                                ex1(activity);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.load(file.getAbsolutePath());
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

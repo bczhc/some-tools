@@ -10,7 +10,7 @@ import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Path;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
+import pers.zhc.tools.BaseView;
 import pers.zhc.tools.floatingdrawing.MyCanvas;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @SuppressLint("ViewConstructor")
-class EpicyclesView extends View {
+class EpicyclesView extends BaseView {
     static double T = 2 * Math.PI, omega = 2 * Math.PI / T;
     private final EpicyclesSequence epicyclesSequence;
     private int canvasWidth = 0;
@@ -112,7 +112,6 @@ class EpicyclesView extends View {
                 return false;
             }
         });
-        //noinspection DuplicatedCode
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
@@ -218,11 +217,21 @@ class EpicyclesView extends View {
     }
 
     private double getComplexArg(double re, double im) {
-        if (re > 0) return Math.atan(im / re);
-        if (re == 0 && im > 0) return Math.PI / 2D;
-        if (re == 0 && im < 0) return Math.PI / -2D;
-        if (re < 0 && im >= 0) return Math.atan(im / re) + Math.PI;
-        if (re < 0 && im < 0) return Math.atan(im / re) - Math.PI;
+        if (re > 0) {
+            return Math.atan(im / re);
+        }
+        if (re == 0 && im > 0) {
+            return Math.PI / 2D;
+        }
+        if (re == 0 && im < 0) {
+            return Math.PI / -2D;
+        }
+        if (re < 0 && im >= 0) {
+            return Math.atan(im / re) + Math.PI;
+        }
+        if (re < 0 && im < 0) {
+            return Math.atan(im / re) - Math.PI;
+        }
         return 0;
     }
 

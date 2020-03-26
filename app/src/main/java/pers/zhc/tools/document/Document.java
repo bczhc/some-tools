@@ -34,6 +34,9 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author bczhc
+ */
 public class Document extends BaseActivity {
     private ScrollView sv;
     private SQLiteDatabase db;
@@ -55,10 +58,11 @@ public class Document extends BaseActivity {
         deleteBtn.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
-            adb.setTitle("请输入要删除的t_millisecond（*表示全部）")
+            adb.setTitle(R.string.database_delete_info)
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String s = et.getText().toString();
-                        if (s.matches(".*\\*.*")) {
+                        final String deleteAllCommand = ".*\\*.*";
+                        if (s.matches(deleteAllCommand)) {
                             try {
                                 db.delete("doc", null, null);
                             } catch (Exception e) {
@@ -113,8 +117,11 @@ public class Document extends BaseActivity {
                         Common.showException(e, this);
                         return;
                     }
-                    if (file.exists()) ToastUtils.show(this, R.string.importing_success);
-                    else ToastUtils.show(this, R.string.copying_failed);
+                    if (file.exists()) {
+                        ToastUtils.show(this, R.string.importing_success);
+                    } else {
+                        ToastUtils.show(this, R.string.copying_failed);
+                    }
                     setSVViews();
                 }
                 break;
@@ -127,12 +134,15 @@ public class Document extends BaseActivity {
                     try {
                         File destFile = new File(destFileDir + File.separator + dbName);
                         FileU.FileCopy(file, destFile);
-                        if (destFile.exists())
+                        if (destFile.exists()) {
                             ToastUtils.show(this, getString(R.string.exporting_success) + "\n" + destFile.getCanonicalPath());
+                        }
                     } catch (IOException e) {
                         Common.showException(e, this);
                     }
                 }
+                break;
+            default:
                 break;
         }
     }
@@ -147,7 +157,6 @@ public class Document extends BaseActivity {
         Cursor cursor = db.rawQuery("SELECT * FROM doc", null);
         LinearLayout.LayoutParams ll_lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams smallLL_LP4 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 4F);
-//        LinearLayout.LayoutParams smallLL_LP1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1F);
         int margin = DisplayUtil.px2sp(this, 10);
         ExecutorService es = Executors.newCachedThreadPool();
         String[] sqliteOptions = getResources().getStringArray(R.array.sqlite_options);
@@ -172,21 +181,26 @@ public class Document extends BaseActivity {
                             Button[] buttons = new Button[2];
                             View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                                     v1 -> {
-                                        Intent intent = new Intent(this, NoteTakingActivity.class);
-                                        intent.putExtra("origin", false);
-                                        Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + millisecond, null);
-                                        c.moveToFirst();
-                                        intent.putExtra("title", c.getString(1));
-                                        intent.putExtra("content", c.getString(2));
-                                        c.close();
-                                        intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
-                                        intent.putExtra("millisecond", millisecond);
-                                        startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
-                                        dialog.dismiss();
-                                        overridePendingTransition(R.anim.in_left_and_bottom, 0);
+                                        try {
+                                            Intent intent = new Intent(this, NoteTakingActivity.class);
+                                            intent.putExtra("origin", false);
+                                            Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + millisecond, null);
+                                            c.moveToFirst();
+                                            intent.putExtra("title", c.getString(1));
+                                            intent.putExtra("content", c.getString(2));
+                                            c.close();
+                                            intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
+                                            intent.putExtra("millisecond", millisecond);
+                                            startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
+                                            dialog.dismiss();
+                                            overridePendingTransition(R.anim.in_left_and_bottom, 0);
+                                        } catch (IndexOutOfBoundsException e) {
+                                            e.printStackTrace();
+                                            ToastUtils.show(this, e.toString());
+                                        }
                                     },
                                     v1 -> {
-                                        AlertDialog confirmationAD = DialogUtil.createConfirmationAD(this, (dialog1, which) -> {
+                                        AlertDialog confirmationAD = DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                                             try {
                                                 db.execSQL("DELETE FROM doc WHERE t=" + millisecond);
                                             } catch (Exception e) {

@@ -80,7 +80,9 @@ public class Settings extends BaseActivity {
         }
         es.execute(() -> {
             try {
-                if (!file.exists()) System.out.println("file.createNewFile() = " + file.createNewFile());
+                if (!file.exists()) {
+                    System.out.println("file.createNewFile() = " + file.createNewFile());
+                }
             } catch (IOException e) {
                 showException(e, Settings.this);
             }
@@ -243,7 +245,9 @@ public class Settings extends BaseActivity {
                         this.returnIntent(r_intent);
                     })
                     .show();
-        } else super.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 //    /**
