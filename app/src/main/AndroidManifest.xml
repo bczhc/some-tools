@@ -307,5 +307,15 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity android:name=".malloctest.MAllocTest"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

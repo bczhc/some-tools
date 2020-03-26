@@ -37,48 +37,6 @@
 					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="verification">
-				<Option output="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/verification" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 verification"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="verification/fast">
-				<Option output="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/verification" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 verification/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
 			<Target title="doJni">
 				<Option output="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/doJni" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug"/>
@@ -121,6 +79,48 @@
 					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="malloc_test">
+				<Option output="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/malloc_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 malloc_test"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="malloc_test/fast">
+				<Option output="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/malloc_test" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/8/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 malloc_test/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/zhc/code/code/Android/some-tools/app/src/jni/c/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 		</Build>
 		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/Base128Lib.c">
 			<Option target="doJni"/>
@@ -140,23 +140,8 @@
 		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/kwm.h">
 			<Option target="doJni"/>
 		</Unit>
-		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/qmcLib.c">
-			<Option target="verification"/>
-		</Unit>
-		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/codecs/qmcLib.h">
-			<Option target="verification"/>
-		</Unit>
-		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/floatingboard/fb_tools.c">
-			<Option target="verification"/>
-		</Unit>
-		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/verification/verify.c">
-			<Option target="verification"/>
-		</Unit>
-		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.c">
-			<Option target="verification"/>
-		</Unit>
-		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/zhc.h">
-			<Option target="verification"/>
+		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/malloc_test/mallocTest.c">
+			<Option target="malloc_test"/>
 		</Unit>
 		<Unit filename="/home/zhc/code/code/Android/some-tools/app/src/jni/c/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
