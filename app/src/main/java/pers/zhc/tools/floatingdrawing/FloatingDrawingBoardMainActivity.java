@@ -434,6 +434,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                             pv.clearAll();
                             pv.clearTouchRecordOutputStreamContent();
+                            System.gc();
                         }, (dialog1, which) -> {
                         }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
                         break;
@@ -717,10 +718,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     String filename;
                     String filenameExtension = file.getName();
                     if (!filenameExtension.matches(".*\\..*")) {
-filename = filenameExtension;
+                        filename = filenameExtension;
                     } else {
                         int index = filenameExtension.lastIndexOf('.');
-filename = filenameExtension.substring(0, index);
+                        filename = filenameExtension.substring(0, index);
                     }
                     if (FloatingDrawingBoardMainActivity.longActivityMap.containsKey(Long.parseLong(filename))) {
                         continue;

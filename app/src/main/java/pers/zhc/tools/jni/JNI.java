@@ -3,6 +3,9 @@ package pers.zhc.tools.jni;
 import android.support.annotation.Size;
 import pers.zhc.tools.pi.JNICallback;
 
+/**
+ * @author bczhc
+ */
 public class JNI {
     public static class Codecs {
         static {
@@ -49,7 +52,7 @@ public class JNI {
         /**
          * generate
          *
-         * @param bN 小数点后位数
+         * @param bN       小数点后位数
          * @param callback callback
          */
         public static native void gen(int bN, JNICallback callback);
@@ -77,5 +80,12 @@ public class JNI {
         public static native float byteArrayToFloat(@Size(min = 4) byte[] bytes, int offset);
 
         public static native int byteArrayToInt(@Size(min = 4) byte[] bytes, int offset);
+    }
+
+    public static class MAllocTest {
+        static {
+            System.loadLibrary("mallocTest");
+        }
+        public static native long alloc(long size);
     }
 }

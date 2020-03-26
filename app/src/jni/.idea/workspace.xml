@@ -3,7 +3,7 @@
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
       <config projectName="jni" targetName="doJni" />
-      <config projectName="jni" targetName="verification" />
+      <config projectName="jni" targetName="malloc_test" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -13,10 +13,59 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
+      <change afterPath="$PROJECT_DIR$/c/malloc_test/mallocTest.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cpp/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/h/pers_zhc_tools_jni_JNI.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/h/pers_zhc_tools_jni_JNI_Codecs.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/h/pers_zhc_tools_jni_JNI_Codecs_Callback.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/h/pers_zhc_tools_jni_JNI_FloatingBoard.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/h/pers_zhc_tools_jni_JNI_MAllocTest.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/h/pers_zhc_tools_jni_JNI_Pi.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/h/pers_zhc_tools_jni_JNI_Pi_Callback.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libmallocTest.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libmallocTest.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86/libmallocTest.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../libs/x86_64/libmallocTest.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/malloctest/MAllocTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/layout/m_alloc_test_activity.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/c/cmake-build-debug/jni.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/c/cmake-build-debug/jni.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libcodecsDo.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libcodecsDo.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libcodecsDo.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libcodecsDo.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libcodecsDo.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/libcodecsDo.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libcodecsDo.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/libcodecsDo.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/jni/JNI.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/jni/JNI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/pi/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/pi/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/pi/zhc.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_help.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/jni_help.o.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/zhc.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/pi/zhc.o.d" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +102,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/c/codecs" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/c" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -62,19 +111,19 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/c" />
+      <recent name="$PROJECT_DIR$/h" />
+      <recent name="$PROJECT_DIR$/c/codecs" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/c/getevent" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/h" />
       <recent name="$PROJECT_DIR$/c/codecs" />
       <recent name="$PROJECT_DIR$/c/floatingboard" />
       <recent name="$PROJECT_DIR$/c" />
       <recent name="$PROJECT_DIR$/jni_c++/verification" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/c/codecs" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/c/getevent" />
-      <recent name="$PROJECT_DIR$/jni_c++" />
-      <recent name="$PROJECT_DIR$/c" />
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.doJni">
@@ -83,14 +132,14 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="verification" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="jni" TARGET_NAME="verification" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="jni" RUN_TARGET_NAME="verification">
+    <configuration name="malloc_test" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="jni" TARGET_NAME="malloc_test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="jni" RUN_TARGET_NAME="malloc_test">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <list>
       <item itemvalue="CMake Application.doJni" />
-      <item itemvalue="CMake Application.verification" />
+      <item itemvalue="CMake Application.malloc_test" />
     </list>
   </component>
   <component name="ServiceViewManager">
@@ -157,6 +206,7 @@
       <workItem from="1584197734827" duration="3429000" />
       <workItem from="1584227847126" duration="7211000" />
       <workItem from="1585142331930" duration="71000" />
+      <workItem from="1585237320397" duration="1761000" />
     </task>
     <servers />
   </component>
