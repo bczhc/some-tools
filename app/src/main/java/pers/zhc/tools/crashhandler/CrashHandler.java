@@ -1,5 +1,6 @@
 package pers.zhc.tools.crashhandler;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -7,6 +8,8 @@ import pers.zhc.tools.BaseActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author bczhc
@@ -28,7 +31,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         final String stackTraceString = getExceptionStackTraceString(e);
         intent.setClass(ctx, CrashReportActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        final long currentTimeMillis = System.currentTimeMillis();
+        final Date date = new Date(currentTimeMillis);
+        @SuppressLint("SimpleDateFormat") final String dateString = new SimpleDateFormat("yy-MM-dd-HH-mm-ss").format(date);
+        String filename = "crash-" + dateString + "-" + currentTimeMillis + ".txt";
         intent.putExtra("exception", stackTraceString);
+        intent.putExtra("filename", filename);
         ctx.startActivity(intent);
         try {
             ((BaseActivity) ctx).app.finishAllActivities();

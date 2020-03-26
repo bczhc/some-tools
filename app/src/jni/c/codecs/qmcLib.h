@@ -19,4 +19,4 @@
 
 char nextMask_();
 
-int decode(const char *fileName, const char *destFileName, JNIEnv *env, jobject callback);
+int decode(const char *filename, const char *destFileName, JNIEnv *env, jobject callback);
