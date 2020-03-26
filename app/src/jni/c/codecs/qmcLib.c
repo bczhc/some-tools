@@ -41,14 +41,14 @@ char nextMask_() {
     return ret;
 }
 
-int decode(const char *fileName, const char *destFileName, JNIEnv *env, jobject callback) {
+int decode(const char *filename, const char *destFileName, JNIEnv *env, jobject callback) {
     x = -1;
     y = 8;
     dx = 1;
     i = -1;
     Callback(env, callback, "", (double) 0);
     FILE *fp, *fpO;
-    if ((fp = fopen(fileName, "rb")) == NULL) return -1;
+    if ((fp = fopen(filename, "rb")) == NULL) return -1;
     if ((fpO = fopen(destFileName, "wb")) == NULL) return -1;
     char c[1024] = {0};
     dl fL = getFileSize(fp), a = fL / 1024;

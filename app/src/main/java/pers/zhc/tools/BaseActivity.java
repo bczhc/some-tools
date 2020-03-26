@@ -44,6 +44,7 @@ import java.util.concurrent.Executors;
  */
 public class BaseActivity extends Activity {
     public final App app = new App();
+    protected final String TAG = this.getClass().getName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

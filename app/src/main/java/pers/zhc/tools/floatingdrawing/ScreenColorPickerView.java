@@ -8,9 +8,9 @@ import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
+import pers.zhc.tools.BaseView;
 
-public class ScreenColorPickerView extends View {
+public class ScreenColorPickerView extends BaseView {
     private int width = -1, height = -1;
 
     public ScreenColorPickerView(Context context) {

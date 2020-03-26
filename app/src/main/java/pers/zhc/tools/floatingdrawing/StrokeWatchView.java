@@ -5,10 +5,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.view.View;
+import pers.zhc.tools.BaseView;
 
 @SuppressLint("ViewConstructor")
-public class StrokeWatchView extends View {
+public class StrokeWatchView extends BaseView {
     private final Paint mPaint;
     private float strokeWidth;
 
@@ -17,8 +17,10 @@ public class StrokeWatchView extends View {
         mPaint = new Paint();
         mPaint.setStrokeWidth(1);
         mPaint.setColor(Color.BLACK);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);//使画笔更加圆润
-        mPaint.setStrokeCap(Paint.Cap.ROUND);//同上
+        //使画笔更加圆润
+        mPaint.setStrokeJoin(Paint.Join.ROUND);
+        //同上
+        mPaint.setStrokeCap(Paint.Cap.ROUND);
     }
 
     void change(float strokeWidth, int color) {
