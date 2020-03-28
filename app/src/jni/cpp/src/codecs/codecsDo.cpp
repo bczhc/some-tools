@@ -12,20 +12,18 @@
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 
 void Callback(JNIEnv *env, jobject callback, const char *str, double d) {
-    JNIEnv e = *env;
-    jclass cls = e.GetObjectClass(callback);
-    jmethodID mid = e.GetMethodID(cls, "callback", "(Ljava/lang/String;D)V");
-    jstring s = e.NewStringUTF(str);
-    e.CallVoidMethod(callback, mid, s, (jdouble) d);
-    e.DeleteLocalRef(cls);
-    e.DeleteLocalRef(s);
+    jclass cls = env->GetObjectClass(callback);
+    jmethodID mid = env->GetMethodID(cls, "callback", "(Ljava/lang/String;D)V");
+    jstring s = env->NewStringUTF(str);
+    env->CallVoidMethod(callback, mid, s, (jdouble) d);
+    env->DeleteLocalRef(cls);
+    env->DeleteLocalRef(s);
 }
 
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_qmcDecode
         (JNIEnv *env, jclass cls, jstring f, jstring dF, jint mode, jobject callback) {
-    JNIEnv e = *env;
-    const char *f1 = e.GetStringUTFChars(f, (jboolean *) 0);
-    const char *f2 = e.GetStringUTFChars(dF, (jboolean *) 0);
+    const char *f1 = env->GetStringUTFChars(f, (jboolean *) 0);
+    const char *f2 = env->GetStringUTFChars(dF, (jboolean *) 0);
     char *sQ = NULL;
     strcat_auto(&sQ, f1);
     strcat_auto(&sQ, " -> ");
@@ -45,9 +43,8 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_qmcDecode
 
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_kwmDecode
         (JNIEnv *env, jclass cls, jstring f, jstring dF, jint mode, jobject callback) {
-    JNIEnv e = *env;
-    const char *fN = e.GetStringUTFChars(f, (jboolean *) 0);
-    const char *dFN = e.GetStringUTFChars(dF, (jboolean *) 0);
+    const char *fN = env->GetStringUTFChars(f, (jboolean *) 0);
+    const char *dFN = env->GetStringUTFChars(dF, (jboolean *) 0);
     int stt;
     char u1[strlen(fN) + 1], u2[strlen(dFN) + 1];
     ToUpperCase(u1, fN), ToUpperCase(u2, dFN);

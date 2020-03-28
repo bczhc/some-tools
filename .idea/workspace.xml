@@ -33,7 +33,6 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="pers.zhc." />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
     <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
@@ -44,31 +43,59 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="真是神奇。。直接访问内部类竟然不会运行上级类的static代码块。。">
+      <change afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/test.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/Android.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/codecs/codecsDo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/codecs/codecsDo.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/floatingboard/fb_tools.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/floatingboard/fb_tools.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Codecs.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Codecs.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Codecs_Callback.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Codecs_Callback.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_FloatingBoard.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_FloatingBoard.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_MAllocTest.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_MAllocTest.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Pi.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Pi.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Pi_Callback.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Pi_Callback.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/malloc_test/mallocTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/malloc_test/mallocTest.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libAll.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libAll.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libAll.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/jni/JNI.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/jni/JNI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/jni_help.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/pi/pi.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/zhc.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/jni_help.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/pi/pi.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/zhc.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/jni_help.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/pi/pi.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/zhc.o" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -181,8 +208,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="AnalyzeApkAction.lastApkPath" value="$PROJECT_DIR$/../../z/base.apk" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="A02AECP82AWGY" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-03-22T09:29:04.977Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_XL_API_26" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-03-28T16:37:50.353Z" />
     <property name="ExportApk.ApkPath" value="$PROJECT_DIR$/app" />
     <property name="ExportApk.BuildType" value="release" />
     <property name="ExportApk.BuildVariants" value="debug" />
@@ -485,14 +512,7 @@
       <workItem from="1585229335483" duration="3913000" />
       <workItem from="1585236392084" duration="4026000" />
       <workItem from="1585376766509" duration="900000" />
-      <workItem from="1585398953458" duration="3887000" />
-    </task>
-    <task id="LOCAL-00053" summary="issue #43 on github, override StrokeWatchView onMeasure(), refresh with forceLayout().">
-      <created>1580202546379</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1580202546380</updated>
+      <workItem from="1585398953458" duration="11454000" />
     </task>
     <task id="LOCAL-00054" summary="fix load broken .so library">
       <created>1580210122011</created>
@@ -830,7 +850,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585403138984</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="真是神奇。。直接访问内部类竟然不会运行上级类的static代码块。。">
+      <created>1585405574361</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1585405574361</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -960,7 +987,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="modify merge" />
     <MESSAGE value="inspect code" />
     <MESSAGE value="issue #92, #93" />
     <MESSAGE value="issue #88" />
@@ -985,7 +1011,8 @@
     <MESSAGE value="issue #105, fix #74: (https://github.com/bczhc/some-tools/issues/74#issuecomment-602172426 )" />
     <MESSAGE value="malloc trick :)" />
     <MESSAGE value="a" />
-    <option name="LAST_COMMIT_MESSAGE" value="a" />
+    <MESSAGE value="真是神奇。。直接访问内部类竟然不会运行上级类的static代码块。。" />
+    <option name="LAST_COMMIT_MESSAGE" value="真是神奇。。直接访问内部类竟然不会运行上级类的static代码块。。" />
   </component>
   <component name="WindowStateProjectService">
     <state x="318" y="68" key="#Notifications" timestamp="1579581379607">
@@ -1078,11 +1105,11 @@
     </state>
     <state x="751" y="337" width="550" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1584870749745" />
     <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1585238076672" />
-    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1585403137958">
+    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2" timestamp="1585405605690">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579597961330" />
-    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1585403137957" />
+    <state x="332" y="48" width="1371" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1585405605690" />
     <state x="53" y="27" width="1146" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580272692340" />
     <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1585240031480" />
     <state width="1053" height="588" key="DebuggerActiveHint" timestamp="1584285053805">
@@ -1116,32 +1143,32 @@
     <state x="0" y="0" width="1920" height="1050" key="GitRewordDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1584864076748" />
     <state x="273" y="376" width="964" height="198" key="GitRewordDialog/0.27.1366.741@0.27.1366.741" timestamp="1580202716970" />
     <state x="779" y="457" width="422" height="208" key="GitRewordDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1584285514342" />
-    <state width="1852" height="461" key="GridCell.Tab.0.bottom" timestamp="1585403413285">
+    <state width="1852" height="416" key="GridCell.Tab.0.bottom" timestamp="1585409682000">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.bottom/0.0.1449.815@0.0.1449.815" timestamp="1579592173845" />
-    <state width="1852" height="461" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1585403413285" />
+    <state width="1852" height="416" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1585409682000" />
     <state width="1312" height="127" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
     <state width="1852" height="808" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1585233042242" />
-    <state width="1852" height="461" key="GridCell.Tab.0.center" timestamp="1585403413284">
+    <state width="1852" height="416" key="GridCell.Tab.0.center" timestamp="1585409682000">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.center/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
-    <state width="1852" height="461" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1585403413284" />
+    <state width="1852" height="416" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1585409682000" />
     <state width="1312" height="127" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1580267310682" />
     <state width="1852" height="808" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1585233042232" />
-    <state width="1852" height="461" key="GridCell.Tab.0.left" timestamp="1585403413283">
+    <state width="1852" height="416" key="GridCell.Tab.0.left" timestamp="1585409681999">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.left/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
-    <state width="1852" height="461" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1585403413283" />
+    <state width="1852" height="416" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1585409681999" />
     <state width="1312" height="127" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1580267310681" />
     <state width="1852" height="808" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1585233042224" />
-    <state width="1852" height="461" key="GridCell.Tab.0.right" timestamp="1585403413285">
+    <state width="1852" height="416" key="GridCell.Tab.0.right" timestamp="1585409682000">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.right/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
-    <state width="1852" height="461" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1585403413285" />
+    <state width="1852" height="416" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1585409682000" />
     <state width="1312" height="127" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
     <state width="1852" height="808" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1585233042236" />
     <state width="1852" height="96" key="GridCell.Tab.1.bottom" timestamp="1585232933898">
@@ -1224,10 +1251,10 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="100" y="27" width="1155" height="741" key="ScreenshotViewer.Dimensions/0.27.1366.741@0.27.1366.741" timestamp="1579960899064" />
-    <state x="245" y="0" width="1288" height="1050" key="SettingsEditor" timestamp="1585399726899">
+    <state x="245" y="0" width="1288" height="1056" key="SettingsEditor" timestamp="1585410531368">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="245" y="0" width="1288" height="1050" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1585399726899" />
+    <state x="245" y="0" width="1288" height="1056" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1585410531368" />
     <state x="228" y="27" width="1024" height="741" key="SettingsEditor/0.27.1366.741@0.27.1366.741" timestamp="1580201147481" />
     <state x="371" y="52" width="1135" height="912" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1584185877905" />
     <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog" timestamp="1584281757702">
@@ -1275,10 +1302,10 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="104" y="132" width="1148" height="538" key="caller.chooser.dialog/0.27.1366.741@0.27.1366.741" timestamp="1580213879051" />
-    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1584865167748">
+    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1585413400824">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1584865167748" />
+    <state x="100" y="100" width="1720" height="851" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1585413400824" />
     <state x="100" y="127" width="1720" height="853" key="com.android.tools.idea.avdmanager.AvdListDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1582185605594" />
     <state x="100" y="127" width="1720" height="853" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1581844907111">
       <screen x="0" y="27" width="1920" height="1053" />
@@ -1343,10 +1370,10 @@
     </state>
     <state x="611" y="316" key="git4idea.merge.GitPullDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1584842922839" />
     <state x="516" y="185" width="655" height="446" key="git4idea.merge.GitPullDialog/0.27.1366.741@0.27.1366.741" timestamp="1580016104772" />
-    <state x="557" y="317" width="802" height="492" key="git4idea.rebase.GitRebaseDialog" timestamp="1585403142984">
+    <state x="557" y="317" width="802" height="492" key="git4idea.rebase.GitRebaseDialog" timestamp="1585405602227">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="557" y="317" width="802" height="492" key="git4idea.rebase.GitRebaseDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1585403142984" />
+    <state x="557" y="317" width="802" height="492" key="git4idea.rebase.GitRebaseDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1585405602227" />
     <state x="396" y="251" width="563" height="342" key="git4idea.rebase.GitRebaseDialog/0.27.1366.741@0.27.1366.741" timestamp="1580129558374" />
     <state x="557" y="345" width="794" height="493" key="git4idea.rebase.GitRebaseDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581830068671" />
     <state x="855" y="187" width="620" height="634" key="git4idea.rebase.GitRebaseEditor" timestamp="1585403149413">
@@ -1381,11 +1408,11 @@
     <state x="877" y="319" width="840" height="1034" key="run.anything.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1585403621822" />
     <state x="624" y="252" key="run.anything.popup/0.27.1366.741@0.27.1366.741" timestamp="1580204748923" />
     <state x="624" y="44" width="840" height="1034" key="run.anything.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1584286377842" />
-    <state x="623" y="231" width="928" height="677" key="search.everywhere.popup" timestamp="1585403940248">
+    <state x="623" y="231" width="928" height="677" key="search.everywhere.popup" timestamp="1585412880946">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.0.1449.815@0.0.1449.815" timestamp="1579597070884" />
-    <state x="623" y="231" width="928" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1585403940248" />
+    <state x="623" y="231" width="928" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1585412880946" />
     <state x="587" y="262" width="672" height="617" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221238206" />
     <state x="640" y="167" width="928" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1585239977121" />
   </component>
