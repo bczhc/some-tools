@@ -12,16 +12,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
+      <change afterPath="$PROJECT_DIR$/cpp/src/test.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/src/codecs/codecsDo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/codecs/codecsDo.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cpp/src/floatingboard/fb_tools.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/floatingboard/fb_tools.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI.h" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Codecs.h" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Codecs.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Codecs_Callback.h" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Codecs_Callback.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_FloatingBoard.h" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_FloatingBoard.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_MAllocTest.h" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_MAllocTest.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Pi.h" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Pi.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Pi_Callback.h" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/jni_h/pers_zhc_tools_jni_JNI_Pi_Callback.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cpp/src/malloc_test/mallocTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/malloc_test/mallocTest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libAll.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libAll.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libAll.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libAll.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libAll.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libAll.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libAll.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -303,19 +313,24 @@
     </state>
     <state x="149" y="147" width="1639" height="767" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1585395041474" />
     <state x="100" y="127" width="1166" height="541" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.27.1366.741@0.27.1366.741" timestamp="1579958934313" />
+    <state x="100" y="100" width="1720" height="850" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1585411357419">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="100" y="100" width="1720" height="850" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1585411357419" />
     <state x="337" y="225" key="com.intellij.ide.util.TipDialog" timestamp="1579851196081">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="337" y="225" key="com.intellij.ide.util.TipDialog/0.27.1366.741@0.27.1366.741" timestamp="1579851196081" />
-    <state x="290" y="27" width="1131" height="991" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1584236960336">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="206" y="27" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1366.741@0.27.1366.741" timestamp="1579959394299" />
-    <state x="290" y="27" width="1131" height="991" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1584236960336" />
-    <state x="17" y="11" width="1824" height="1015" key="find.popup" timestamp="1585403793761">
+    <state x="290" y="0" width="1131" height="991" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1585411230364">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="17" y="11" width="1824" height="1015" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1585403793761" />
+    <state x="290" y="0" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1585411230364" />
+    <state x="206" y="27" width="944" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1366.741@0.27.1366.741" timestamp="1579959394299" />
+    <state x="290" y="27" width="1131" height="991" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.27.1920.1053@0.27.1920.1053" timestamp="1584236960336" />
+    <state x="17" y="11" width="1824" height="1015" key="find.popup" timestamp="1585417039493">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="17" y="11" width="1824" height="1015" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1585417039493" />
     <state x="13" y="35" width="1297" height="715" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1580008144441" />
     <state x="17" y="38" width="1824" height="1017" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1584240134164" />
     <state x="557" y="353" key="git4idea.rebase.GitRebaseDialog" timestamp="1585403021886">
@@ -330,14 +345,15 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="678" y="359" key="git4idea.rebase.GitUnstructuredEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1585403050094" />
-    <state x="636" y="127" width="638" height="859" key="refactoring.ChangeSignatureDialog" timestamp="1584201589592">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="636" y="127" width="638" height="859" key="refactoring.ChangeSignatureDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1584201589592" />
-    <state x="486" y="88" width="945" height="962" key="search.everywhere.popup" timestamp="1585400789593">
+    <state x="636" y="100" width="638" height="859" key="refactoring.ChangeSignatureDialog" timestamp="1585411758230">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="486" y="88" width="945" height="962" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1585400789593" />
+    <state x="636" y="100" key="refactoring.ChangeSignatureDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1585411758230" />
+    <state x="636" y="127" width="638" height="859" key="refactoring.ChangeSignatureDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1584201589592" />
+    <state x="486" y="88" width="945" height="962" key="search.everywhere.popup" timestamp="1585410801912">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="486" y="88" width="945" height="962" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1585410801912" />
     <state x="346" y="89" width="672" height="678" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1580007171441" />
     <state x="486" y="115" width="945" height="964" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1584240119338" />
   </component>
