@@ -1,1 +1,0 @@
-/usr/bin/cc -g  -rdynamic CMakeFiles/jni_help_c.dir/jni_help.c.o  -o jni_help_c 

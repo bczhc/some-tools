@@ -7,10 +7,10 @@ import pers.zhc.tools.pi.JNICallback;
  * @author bczhc
  */
 public class JNI {
+    static {
+        System.loadLibrary("All");
+    }
     public static class Codecs {
-        static {
-            System.loadLibrary("codecsDo");
-        }
 
         /**
          * @param f    f
@@ -45,9 +45,6 @@ public class JNI {
     }
 
     public static class Pi {
-        static {
-            System.loadLibrary("pi");
-        }
 
         /**
          * generate
@@ -69,10 +66,6 @@ public class JNI {
     }
 
     public static class FloatingBoard {
-        static {
-            System.loadLibrary("FB_tools");
-        }
-
         public static native void floatToByteArray(@Size(min = 4) byte[] dest, float f, int offset);
 
         public static native void intToByteArray(@Size(min = 4) byte[] dest, int i, int offset);
@@ -83,9 +76,6 @@ public class JNI {
     }
 
     public static class MAllocTest {
-        static {
-            System.loadLibrary("mallocTest");
-        }
         public static native long alloc(long size);
     }
 }
