@@ -7,10 +7,20 @@ import pers.zhc.tools.pi.JNICallback;
  * @author bczhc
  */
 public class JNI {
-    static {
-        System.loadLibrary("All");
+    private volatile static boolean hasLoadLib = false;
+
+    private synchronized static void loadLib() {
+        if (!hasLoadLib) {
+            System.loadLibrary("All");
+            hasLoadLib = true;
+        }
     }
+
     public static class Codecs {
+
+        static {
+            loadLib();
+        }
 
         /**
          * @param f    f
@@ -45,6 +55,9 @@ public class JNI {
     }
 
     public static class Pi {
+        static {
+            loadLib();
+        }
 
         /**
          * generate
@@ -66,6 +79,10 @@ public class JNI {
     }
 
     public static class FloatingBoard {
+        static {
+            loadLib();
+        }
+
         public static native void floatToByteArray(@Size(min = 4) byte[] dest, float f, int offset);
 
         public static native void intToByteArray(@Size(min = 4) byte[] dest, int i, int offset);
@@ -76,6 +93,10 @@ public class JNI {
     }
 
     public static class MAllocTest {
+        static {
+            loadLib();
+        }
+
         public static native long alloc(long size);
     }
 }

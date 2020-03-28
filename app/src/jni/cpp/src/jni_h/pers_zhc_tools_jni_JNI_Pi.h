@@ -10,7 +10,7 @@ extern "C" {
 /*
  * Class:     pers_zhc_tools_jni_JNI_Pi
  * Method:    gen
- * Signature: (ILpers/zhc/tools/jni/JNI/Pi/Callback;)V
+ * Signature: (ILpers/zhc/tools/pi/JNICallback;)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Pi_gen
   (JNIEnv *, jclass, jint, jobject);

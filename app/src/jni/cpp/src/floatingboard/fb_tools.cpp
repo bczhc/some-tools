@@ -7,7 +7,7 @@
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_floatToByteArray
         (JNIEnv *env, jclass cls, jbyteArray dst, jfloat a, jint offset) {
     JNIEnv e = *env;
-    float f = (float) a;
+    auto f = (float) a;
     char *c = (char *) &f;
     jbyte R[4];
     R[0] = c[0];
