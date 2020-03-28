@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.15)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.14)
 
 PROJECT(cpp)
 
 INCLUDE_DIRECTORIES(/home/zhc/bin/android-sdk-linux/ndk-bundle/sysroot/usr/include)
 
-add_executable(pi pi/pi.cpp)
+FILE(GLOB ALL ./src/*.cpp ./src/*/*.cpp)
+add_executable(ALL ${ALL})
