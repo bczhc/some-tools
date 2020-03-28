@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     pers_zhc_tools_jni_JNI_MAllocTest
  * Method:    alloc
- * Signature: (J)V
+ * Signature: (J)J
  */
 JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024MAllocTest_alloc
-        (JNIEnv *, jclass, jlong);
+  (JNIEnv *, jclass, jlong);
 
 #ifdef __cplusplus
 }
