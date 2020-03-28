@@ -44,10 +44,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="malloc trick :)；画板清空后调用GC；">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
-    </list>
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="malloc trick :)；画板清空后调用GC；" />
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +71,7 @@
     <expand />
     <select />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="A02AECP82AWGY" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_XL_API_26" />
   <component name="ExportToHTMLSettings">
     <option name="printScope" value="1" />
     <option name="PRINT_LINE_NUMBERS" value="true" />
@@ -462,6 +459,8 @@
       <workItem from="1584874854491" duration="24000" />
       <workItem from="1585229335483" duration="3913000" />
       <workItem from="1585236392084" duration="4026000" />
+      <workItem from="1585376766509" duration="900000" />
+      <workItem from="1585398953458" duration="1458000" />
     </task>
     <task id="LOCAL-00052" summary="fixup! merge">
       <created>1580129160557</created>
@@ -1200,10 +1199,10 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="100" y="27" width="1155" height="741" key="ScreenshotViewer.Dimensions/0.27.1366.741@0.27.1366.741" timestamp="1579960899064" />
-    <state x="245" y="0" width="1288" height="1056" key="SettingsEditor" timestamp="1584862467410">
+    <state x="245" y="0" width="1288" height="1050" key="SettingsEditor" timestamp="1585399726899">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="245" y="0" width="1288" height="1056" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1584862467410" />
+    <state x="245" y="0" width="1288" height="1050" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1585399726899" />
     <state x="228" y="27" width="1024" height="741" key="SettingsEditor/0.27.1366.741@0.27.1366.741" timestamp="1580201147481" />
     <state x="371" y="52" width="1135" height="912" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1584185877905" />
     <state x="100" y="127" width="1720" height="853" key="ShowDiffWithBranchDialog" timestamp="1584281757702">
@@ -1357,11 +1356,11 @@
     <state x="877" y="319" width="840" height="1034" key="run.anything.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1584863285541" />
     <state x="624" y="252" key="run.anything.popup/0.27.1366.741@0.27.1366.741" timestamp="1580204748923" />
     <state x="624" y="44" width="840" height="1034" key="run.anything.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1584286377842" />
-    <state x="640" y="167" width="928" height="678" key="search.everywhere.popup" timestamp="1585239977121">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="623" y="231" width="928" height="677" key="search.everywhere.popup" timestamp="1585403123119">
+      <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="623" y="259" width="672" height="678" key="search.everywhere.popup/0.0.1449.815@0.0.1449.815" timestamp="1579597070884" />
-    <state x="623" y="231" width="928" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1584870770207" />
+    <state x="623" y="231" width="928" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1585403123119" />
     <state x="587" y="262" width="672" height="617" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221238206" />
     <state x="640" y="167" width="928" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1585239977121" />
   </component>
