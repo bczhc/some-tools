@@ -70,6 +70,7 @@ import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
+import pers.zhc.u.Latch;
 import pers.zhc.u.common.MultipartUploader;
 import pers.zhc.u.common.ReadIS;
 
@@ -88,7 +89,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
@@ -1223,25 +1223,19 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 tv.setText(R.string.importing);
                 ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
                 TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
-//                PaintView.Latch latch = new PaintView.Latch();
+                Latch latch = new Latch();
                 pv.importPathFile(new File(s), () -> {
                     this.hsvaFloats[0] = null;
                     runOnUiThread(importPathFileDoneAction);
                     importPathFileProgressDialog.dismiss();
                 }, aFloat -> {
-//                    latch.suspend();
-                    CountDownLatch latch = new CountDownLatch(1);
+                    latch.suspend();
                     runOnUiThread(() -> {
                         progressBar.setProgress(aFloat.intValue());
                         pTextView.setText(getString(R.string.progress_tv, aFloat));
-//                        latch.stop();
-                        latch.countDown();
+                        latch.stop();
                     });
-                    try {
-                        latch.await();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    latch.await();
                 });
                 if (moreOptionsDialog != null) {
                     moreOptionsDialog.dismiss();
