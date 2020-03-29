@@ -12,26 +12,55 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
-      <change afterPath="$PROJECT_DIR$/cpp/src/test.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/caches/gradle_models.ser" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle____local_aars____home_zhc_code_code_Android_some_tools_app_src_main_jar_libs_zhcSingle_jar_unspecified_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_core_common_1_1_1_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_core_runtime_1_1_1_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_common_1_1_1_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_livedata_1_1_1_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_livedata_core_1_1_1_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_runtime_1_1_1_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_viewmodel_1_1_1_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_asynclayoutinflater_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_collections_28_0_0_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_coordinatorlayout_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_cursoradapter_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_customview_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_documentfile_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_drawerlayout_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_interpolator_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_loader_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_localbroadcastmanager_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_print_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_slidingpanelayout_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_annotations_28_0_0_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_compat_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_core_ui_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_core_utils_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_fragment_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_media_compat_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_v4_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_swiperefreshlayout_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_versionedparcelable_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_viewpager_28_0_0_aar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__gradle_api_5_4_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__gradle_installation_beacon_5_4_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__groovy_all_1_0_2_5_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__org_mariuszgromada_math_MathParser_org_mXparser_4_3_3_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../buildSrc/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../buildSrc/buildSrc.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../buildSrc/src/main/groovy/pers/zhc/plugins/MyPlugin1.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../some-tools.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../somethind.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android.mk" beforeDir="false" afterPath="$PROJECT_DIR$/Android.mk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/codecs/codecsDo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/codecs/codecsDo.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/floatingboard/fb_tools.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/floatingboard/fb_tools.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/malloc_test/mallocTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/malloc_test/mallocTest.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/jar_libs/zhcSingle.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../main/jar_libs/zhcSingle.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,8 +149,8 @@
     </configuration>
     <list>
       <item itemvalue="CMake Application.ALL" />
-      <item itemvalue="Makefile.zhc.o" />
       <item itemvalue="Makefile.clean" />
+      <item itemvalue="Makefile.zhc.o" />
     </list>
     <recent_temporary>
       <list>
@@ -198,6 +227,7 @@
       <workItem from="1585314392573" duration="1462000" />
       <workItem from="1585353769231" duration="733000" />
       <workItem from="1585382714417" duration="7768000" />
+      <workItem from="1585484372821" duration="60000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <created>1585400117069</created>
