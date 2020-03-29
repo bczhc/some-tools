@@ -1,51 +1,6 @@
-import java.text.SimpleDateFormat
-
 apply plugin: 'com.android.application'
-
-static ran_sc(int min, int max) {
-    double ran_sc_db = Math.round(Math.random() * (max - min)) + min
-    return (int) ran_sc_db
-}
-
-static unicodeHexToString(int[] code) {
-    StringBuilder sb = StringBuilder.newInstance()
-    for (c in code) {
-        if (c > 0xFFFF && c < 0x110000) {
-            sb.append((Math.floor((c - 0x10000) / 0x400) + 0xD800) as char)
-                    .append(((c - 0x10000) % 0x400 + 0xDC00) as char)
-        } else
-            sb.append(c as char)
-    }
-    return sb.toString()
-}
-
-
-static gVersion() {
-    def date = Date.newInstance()
-    def dateString = new SimpleDateFormat("yyyyMMdd").format(date)
-    def time = new SimpleDateFormat("HHmmss").format(date)
-    def which = 0
-    def verString = "6.2.0.1"
-    def emoji = ranEmoji()
-    return [
-            Integer.parseInt(dateString + which),
-            "${verString}_${dateString}${time}_$emoji"
-    ]
-}
-
-static ranEmoji() {
-    def emojiRange = [[0x1F300, 0x1F5FF],
-                      [0x1F900, 0x1F9FF],
-                      [0x1F600, 0x1F64F],
-                      [0x1F680, 0x1F6FF]]
-    def hexArrLen = 3
-    def hex = []
-    for (int i = 0; i < hexArrLen; i++) {
-        def index = ran_sc(0, emojiRange.size() - 1)
-        hex[i] = ran_sc(emojiRange[index][0], emojiRange[index][1])
-    }
-    return unicodeHexToString(hex as int[])
-}
+//apply plugin: "jp.leafytree.android-scala"
+apply plugin: 'pers.zhc.plugins-my-plugin1'
 
 android {
     compileSdkVersion 29
@@ -53,7 +8,7 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 29
-        def verInfo = gVersion()
+        def verInfo = pers.zhc.plugins.MyPlugin1.gVersion()
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
     }
@@ -64,15 +19,26 @@ android {
             shrinkResources true
             proguardFiles 'proguard-rules.pro'
         }
+        debug {
+            //noinspection GroovyAssignabilityCheck
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles 'proguard-rules-debug.pro'
+        }
     }
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
         return true
     }
-    sourceSets.main {
-        jni.srcDirs = ['src/jni']
-        jniLibs.srcDirs = ['src/libs']
+    sourceSets {
+        main {
+            jni.srcDirs = ['src/jni']
+            jniLibs.srcDirs = ['src/libs']
+            /*scala {
+                srcDir "src/main/scala" // default: "src/main/scala"
+            }*/
+        }
     }
     return true
 }
@@ -83,4 +49,5 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
 //    implementation 'com.github.bumptech.glide:glide:4.4.0'
+//    implementation "org.scala-lang:scala-library:2.11.7"
 }
