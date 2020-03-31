@@ -8,7 +8,6 @@
 
 #include <stdlib.h>
 #include "../jni_h/pers_zhc_tools_jni_JNI_MAllocTest.h"
-#include <iostream>
 
 using namespace std;
 
