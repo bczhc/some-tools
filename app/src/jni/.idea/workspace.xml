@@ -12,55 +12,51 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="修改&#10;v&#10;算法">
-      <change afterPath="$PROJECT_DIR$/../../../.idea/caches/gradle_models.ser" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle____local_aars____home_zhc_code_code_Android_some_tools_app_src_main_jar_libs_zhcSingle_jar_unspecified_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_core_common_1_1_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_core_runtime_1_1_1_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_common_1_1_1_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_livedata_1_1_1_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_livedata_core_1_1_1_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_runtime_1_1_1_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__android_arch_lifecycle_viewmodel_1_1_1_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_asynclayoutinflater_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_collections_28_0_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_coordinatorlayout_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_cursoradapter_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_customview_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_documentfile_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_drawerlayout_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_interpolator_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_loader_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_localbroadcastmanager_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_print_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_slidingpanelayout_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_annotations_28_0_0_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_compat_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_core_ui_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_core_utils_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_fragment_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_media_compat_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_support_v4_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_swiperefreshlayout_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_versionedparcelable_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__com_android_support_viewpager_28_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__gradle_api_5_4_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__gradle_installation_beacon_5_4_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__groovy_all_1_0_2_5_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../.idea/libraries/Gradle__org_mariuszgromada_math_MathParser_org_mXparser_4_3_3_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../buildSrc/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../buildSrc/buildSrc.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../buildSrc/src/main/groovy/pers/zhc/plugins/MyPlugin1.groovy" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../some-tools.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../somethind.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/test/Test.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/jar_libs/zhcSingle.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../main/jar_libs/zhcSingle.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/src/malloc_test/mallocTest.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/malloc_test/mallocTest.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/src/zhc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/zhc.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/src/zhc.h" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/zhc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/armeabi-v7a/objs/All/cpp/src/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86/objs/All/cpp/src/zhc.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/zhc.o" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,26 +101,27 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/cpp/src" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../../../../../C++14/zhc.h" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/c" />
-      <recent name="$PROJECT_DIR$/h" />
-      <recent name="$PROJECT_DIR$/c/codecs" />
-      <recent name="$PROJECT_DIR$/c/getevent" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/cpp/src/jni_h" />
       <recent name="$PROJECT_DIR$/cpp/src" />
       <recent name="$PROJECT_DIR$/cpp" />
+      <recent name="$PROJECT_DIR$/h" />
+      <recent name="$PROJECT_DIR$/c/codecs" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cpp/src" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/c" />
       <recent name="$PROJECT_DIR$/h" />
       <recent name="$PROJECT_DIR$/c/codecs" />
     </key>
@@ -228,6 +225,7 @@
       <workItem from="1585353769231" duration="733000" />
       <workItem from="1585382714417" duration="7768000" />
       <workItem from="1585484372821" duration="60000" />
+      <workItem from="1585659857624" duration="2982000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <created>1585400117069</created>
@@ -292,15 +290,17 @@
     </state>
     <state x="0" y="0" width="1920" height="1029" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1585402973559" />
     <state x="178" y="27" width="999" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580008641115" />
-    <state x="141" y="142" width="1536" height="840" key="DiffContextDialog" timestamp="1585395041474">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="141" y="169" width="1536" height="843" key="DiffContextDialog" timestamp="1585659978980">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="141" y="142" width="1536" height="840" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1585395041474" />
     <state x="100" y="127" width="1166" height="541" key="DiffContextDialog/0.27.1366.741@0.27.1366.741" timestamp="1580006834842" />
-    <state x="647" y="228" key="FileChooserDialogImpl" timestamp="1581472860428">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="141" y="169" width="1536" height="843" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1585659978980" />
+    <state x="647" y="256" key="FileChooserDialogImpl" timestamp="1585659978255">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="647" y="228" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1581472860428" />
+    <state x="647" y="256" key="FileChooserDialogImpl/0.27.1920.1053@0.27.1920.1053" timestamp="1585659978255" />
     <state x="0" y="0" key="FileDocumentManager.FileCacheConflict" timestamp="1585401257010">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
