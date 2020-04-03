@@ -65,18 +65,18 @@ public class EpicyclesEdit extends BaseActivity {
             }
         });
         randomBtn.setOnClickListener(v -> {
-            EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Math.random() * 30, new ComplexValue(Math.random() * 10, Math.random() * 10));
-            EpicyclesEdit.epicyclesSequence.put(aEpicycle);
+            EpicyclesSequence.Epicycle Epicycle = new EpicyclesSequence.Epicycle(Math.random() * 30, new ComplexValue(Math.random() * 10, Math.random() * 10));
+            EpicyclesEdit.epicyclesSequence.put(Epicycle);
             TextView tv = new TextView(this);
-            setTV(tv, aEpicycle);
+            setTV(tv, Epicycle);
             String s = getString(R.string.left_parenthesis)
-                    + aEpicycle.c.re + getString(R.string.add)
-                    + aEpicycle.c.im + getString(R.string.i)
+                    + Epicycle.c.re + getString(R.string.add)
+                    + Epicycle.c.im + getString(R.string.i)
                     + getString(R.string.right_parenthesis)
                     + getString(R.string.e)
                     + getString(R.string.caret)
                     + getString(R.string.left_parenthesis)
-                    + aEpicycle.n
+                    + Epicycle.n
                     + getString(R.string.i)
                     + getString(R.string.t)
                     + getString(R.string.right_parenthesis);
@@ -93,11 +93,11 @@ public class EpicyclesEdit extends BaseActivity {
                 s2 = "".equals(s2) ? "0" : s2;
                 String s3 = et_c_im.getText().toString();
                 s3 = "".equals(s3) ? "0" : s3;
-                EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(Double.parseDouble(s1)
+                EpicyclesSequence.Epicycle Epicycle = new EpicyclesSequence.Epicycle(Double.parseDouble(s1)
                         , new ComplexValue(Double.parseDouble(s2)
                         , Double.parseDouble(s3)));
                 TextView tv = new TextView(this);
-                setTV(tv, aEpicycle);
+                setTV(tv, Epicycle);
                 String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
                         getString(R.string.left_parenthesis)
                         , s2, getString(R.string.add)
@@ -111,7 +111,7 @@ public class EpicyclesEdit extends BaseActivity {
                         , getString(R.string.right_parenthesis));
                 tv.setText(getString(R.string.tv, s));
                 ll.addView(tv);
-                epicyclesSequence.put(aEpicycle);
+                epicyclesSequence.put(Epicycle);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 ToastUtils.show(this, R.string.please_type_correct_value);
@@ -226,12 +226,12 @@ public class EpicyclesEdit extends BaseActivity {
         }
     }
 
-    private void setTV(TextView tv, EpicyclesSequence.AEpicycle aEpicycle) {
+    private void setTV(TextView tv, EpicyclesSequence.Epicycle Epicycle) {
         tv.setTextSize(20);
         tv.setOnLongClickListener(v1 -> {
             DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
                         ll.removeView(tv);
-                        epicyclesSequence.epicycles.remove(aEpicycle);
+                        epicyclesSequence.epicycles.remove(Epicycle);
                     }, (dialog, which) -> {
                     }, R.string.whether_to_delete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
                     , false).show();
@@ -255,7 +255,7 @@ public class EpicyclesEdit extends BaseActivity {
 
     private void reListEpicycles() {
         this.ll.removeAllViews();
-        for (EpicyclesSequence.AEpicycle epicycle : EpicyclesEdit.epicyclesSequence.epicycles) {
+        for (EpicyclesSequence.Epicycle epicycle : EpicyclesEdit.epicyclesSequence.epicycles) {
             String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
                     getString(R.string.left_parenthesis)
                     , epicycle.c.re, getString(R.string.add)
@@ -269,7 +269,7 @@ public class EpicyclesEdit extends BaseActivity {
                     , getString(R.string.right_parenthesis));
             TextView tv = new TextView(this);
             tv.setText(s);
-            setTV(tv, new EpicyclesSequence.AEpicycle(epicycle.n, epicycle.c));
+            setTV(tv, new EpicyclesSequence.Epicycle(epicycle.n, epicycle.c));
             ll.addView(tv);
         }
     }

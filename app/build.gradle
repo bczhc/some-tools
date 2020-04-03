@@ -21,12 +21,12 @@ android {
             shrinkResources true
             proguardFiles 'proguard-rules.pro'
         }
-        debug {
+        /*debug {
             //noinspection GroovyAssignabilityCheck
             minifyEnabled true
             shrinkResources true
             proguardFiles 'proguard-rules-debug.pro'
-        }
+        }*/
     }
     compileOptions {
         sourceCompatibility 1.8
