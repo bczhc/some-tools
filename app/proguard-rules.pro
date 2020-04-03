@@ -22,4 +22,4 @@
 -dontobfuscate
 
 -keep class pers.zhc.tools.jni.**$** {*;}
--keep class pers.zhc.tools.**.JNICallback {*;}
+-keep class pers.zhc.tools.**.JNI* {*;}

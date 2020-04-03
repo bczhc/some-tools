@@ -21,6 +21,7 @@ void Log(JNIEnv *env, const char *tag, const char *s) {
         env->DeleteLocalRef(str);
         env->DeleteLocalRef(tagS);
         env->DeleteLocalRef(mClass);
+        delete T;
     }
 }
 

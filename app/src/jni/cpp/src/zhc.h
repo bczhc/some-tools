@@ -11,21 +11,23 @@
 #include <string.h>
 #include <ctype.h>
 #else
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cctype>
+
 #endif
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 #ifndef ARR_len
 #define ARR_len(x) sizeof(x) / sizeof(x)[0]
-#endif
+#endif //ARR_len
 #define dl long long
 #define usi unsigned int
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif //__cplusplus
 
 char *ToUpperCase(char *Dest, const char *string);
 
@@ -151,27 +153,25 @@ int m_ctoi(char c);
 int Split(char ***dst, const char *s, int s_length, const char *separatorString, int separatorString_length);
 #ifdef __cplusplus
 }
-#endif
-#ifdef __cplusplus
 
 #include <iostream>
 
 using namespace std;
 
 template<typename T>
-class List {
+class ArrayList {
 private:
     T *arr{};
-    int32_t len{};
+    int32_t lastIndex{};
     int32_t pSize{};
 public:
-    List();
+    ArrayList();
 
     void add(int32_t index, T a);
 
     void add(T a);
 
-    bool addAll(int32_t index, List<T> &list);
+    bool addAll(int32_t index, ArrayList<T> &list);
 
     T get(int32_t index);
 
@@ -181,10 +181,13 @@ public:
 
     T set(int32_t index, T a);
 
-    List<T> subList(int32_t fromIndex, int32_t toIndex);
+    ArrayList<T> subList(int32_t fromIndex, int32_t toIndex);
 
     int32_t length();
+
+    void release();
 };
+
 
 template<typename T>
 class Stack {
@@ -200,41 +203,47 @@ public:
     int32_t push(T a);
 
     T pop();
+
+    T peek();
+
+    void release();
+
+    int32_t search(T a);
 };
 
 template<typename T>
-List<T>::List() {
+ArrayList<T>::ArrayList() {
     arr = nullptr;
-    len = 0;
+    lastIndex = 0;
     pSize = sizeof(T);
 }
 
 template<typename T>
-void List<T>::add(int32_t index, T a) {
-    ++len;
-    arr = (T *) realloc(arr, (size_t) (pSize * len));
-    for (int32_t i = len - 1; i > index; --i) {
+void ArrayList<T>::add(int32_t index, T a) {
+    ++lastIndex;
+    arr = (T *) realloc(arr, (size_t) (pSize * lastIndex));
+    for (int32_t i = lastIndex - 1; i > index; --i) {
         arr[i] = arr[i - 1];
     }
     arr[index] = a;
 }
 
 template<typename T>
-void List<T>::add(T a) {
-    ++len;
-    arr = (T *) realloc(arr, (size_t) (pSize * len));
-    arr[len - 1] = a;
+void ArrayList<T>::add(T a) {
+    ++lastIndex;
+    arr = (T *) realloc(arr, (size_t) (pSize * lastIndex));
+    arr[lastIndex - 1] = a;
 }
 
 template<typename T>
-bool List<T>::addAll(int32_t index, List<T> &list) {
+bool ArrayList<T>::addAll(int32_t index, ArrayList<T> &list) {
     int32_t listLength = list.length();
     if (!listLength) return false;
-    len += listLength;
-    arr = (T *) realloc(arr, (size_t) (pSize * len));
+    lastIndex += listLength;
+    arr = (T *) realloc(arr, (size_t) (pSize * lastIndex));
     int32_t i;
     int32_t t = index + listLength;
-    for (i = len - 1; i >= t; --i) {
+    for (i = lastIndex - 1; i >= t; --i) {
         arr[i] = arr[i - listLength];
     }
     for (i = 0; i < listLength; ++i) {
@@ -244,39 +253,39 @@ bool List<T>::addAll(int32_t index, List<T> &list) {
 }
 
 template<typename T>
-T List<T>::get(int32_t index) {
+T ArrayList<T>::get(int32_t index) {
     return arr[index];
 }
 
 template<typename T>
-int32_t List<T>::indexOf(T a) {
-    for (int32_t i = 0; i < len; ++i) {
+int32_t ArrayList<T>::indexOf(T a) {
+    for (int32_t i = 0; i < lastIndex; ++i) {
         if (arr[i] == a) return i;
     }
     return -1;
 }
 
 template<typename T>
-T List<T>::remove(int32_t index) {
+T ArrayList<T>::remove(int32_t index) {
     T r = arr[index];
-    for (int32_t i = index; i < len; ++i) {
+    for (int32_t i = index; i < lastIndex; ++i) {
         arr[i] = arr[i - 1];
     }
-    --len;
-    arr = (T *) realloc(arr, (size_t) (pSize * len));
+    --lastIndex;
+    arr = (T *) realloc(arr, (size_t) (pSize * lastIndex));
     return r;
 }
 
 template<typename T>
-T List<T>::set(int32_t index, T a) {
+T ArrayList<T>::set(int32_t index, T a) {
     T r = arr[index];
     arr[index] = a;
     return r;
 }
 
 template<typename T>
-List<T> List<T>::subList(int32_t fromIndex, int32_t toIndex) {
-    List<T> r{};
+ArrayList<T> ArrayList<T>::subList(int32_t fromIndex, int32_t toIndex) {
+    ArrayList<T> r{};
     for (int32_t i = fromIndex; i < toIndex; ++i) {
         r.add(arr[i]);
     }
@@ -284,8 +293,13 @@ List<T> List<T>::subList(int32_t fromIndex, int32_t toIndex) {
 }
 
 template<typename T>
-int32_t List<T>::length() {
-    return this->len;
+int32_t ArrayList<T>::length() {
+    return this->lastIndex;
+}
+
+template<typename T>
+void ArrayList<T>::release() {
+    delete this->arr;
 }
 
 template<typename T>
@@ -316,5 +330,58 @@ T Stack<T>::pop() {
     return r;
 }
 
-#endif
+template<typename T>
+T Stack<T>::peek() {
+    return stack[len - 1];
+}
+
+template<typename T>
+void Stack<T>::release() {
+    delete this->stack;
+}
+
+template<typename T>
+int32_t Stack<T>::search(T a) {
+    for (int32_t i = 0; i < len; ++i) {
+        if (stack[i] == a) return i + 1;
+    }
+}
+
+class RPN {
+public:
+
+};
+
+template<typename T>
+class LinkedList {
+private:
+    class Node {
+    private:
+        T data;
+        Node *next;
+    };
+
+    Node root;
+    int32_t len;
+public:
+    void put(T a);
+
+    void put(int32_t index, T a);
+
+    T removeFirst();
+
+    T removeLast();
+
+    T get(int32_t index);
+
+    int32_t length();
+};
+
+template<typename T>
+void LinkedList<T>::put(T a) {
+
+}
+
+#endif //__cplusplus
+
 #endif //C99_ZHC_H
