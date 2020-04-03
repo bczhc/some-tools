@@ -20,4 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontobfuscate
--keep class pers.zhc.**.*
+-dontoptimize
+-dontshrink
+#-keep class pers.zhc.**.* {*;}

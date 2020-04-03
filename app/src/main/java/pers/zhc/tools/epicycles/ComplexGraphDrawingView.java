@@ -80,6 +80,8 @@ public class ComplexGraphDrawingView extends BaseView {
             case MotionEvent.ACTION_UP:
                 mPath.close();
                 break;
+            default:
+                break;
         }
         complexFunction.put(x - width / 2D, -y + height / 2D);
         invalidate();

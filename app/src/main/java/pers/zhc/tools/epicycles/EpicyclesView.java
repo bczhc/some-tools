@@ -60,7 +60,7 @@ class EpicyclesView extends BaseView {
 
     @SuppressWarnings("unused")
     public static double getOmega() {
-        return EpicyclesView.omega;
+        return EpicyclesView.getOmega();
     }
 
     private void init(Context context) {
@@ -261,9 +261,9 @@ class EpicyclesView extends BaseView {
         mEpicyclesCanvas.drawLine(0F, canvasHeight / 2F, canvasWidth, canvasHeight / 2F, mCoPaint);
         mEpicyclesCanvas.drawLine(canvasWidth / 2F, 0F, canvasWidth / 2F, canvasHeight, mCoPaint);
 //            画实轴和虚轴 无箭头
-        List<EpicyclesSequence.AEpicycle> epicycles = this.epicyclesSequence.epicycles;
+        List<EpicyclesSequence.Epicycle> epicycles = this.epicyclesSequence.epicycles;
         for (int i = 0; i < epicycles.size(); i++) {
-            EpicyclesSequence.AEpicycle epicycle = epicycles.get(i);
+            EpicyclesSequence.Epicycle epicycle = epicycles.get(i);
             //一次画所有本轮
             float radius = ((float) Math.sqrt(Math.pow(epicycle.c.re, 2D) + Math.pow(epicycle.c.im, 2D)));
             CoordinateDouble centerPointCanvasCoordinate = rectCoordinateToCanvasCoordinate(center.x + lastLineToPoint.x, center.y + lastLineToPoint.y);

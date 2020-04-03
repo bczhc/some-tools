@@ -99,4 +99,27 @@ public class JNI {
 
         public static native long alloc(long size);
     }
+
+    public static class FourierSeriesCalc {
+        static {
+            if (!hasLoadLib) {
+                loadLib();
+            }
+        }
+
+        public static native void calc(double period, int epicyclesCount, Callback callback);
+
+        public static native void nSetFunctionResult(double re, double im);
+
+        public interface Callback {
+            /**
+             * callback
+             *
+             * @param n  n
+             * @param re complex value re part
+             * @param im complex value im part
+             */
+            void callback(double n, double re, double im);
+        }
+    }
 }
