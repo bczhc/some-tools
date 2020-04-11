@@ -186,8 +186,8 @@ public class Document extends BaseActivity {
                                             intent.putExtra("origin", false);
                                             Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + millisecond, null);
                                             c.moveToFirst();
-                                            intent.putExtra("title", c.getString(1));
-                                            intent.putExtra("content", c.getString(2));
+                                            NoteTakingActivity.title = c.getString(1).intern();
+                                            NoteTakingActivity.content = c.getString(2).intern();
                                             c.close();
                                             intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
                                             intent.putExtra("millisecond", millisecond);
