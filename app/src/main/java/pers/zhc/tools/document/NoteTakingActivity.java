@@ -14,14 +14,14 @@ import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.Documents;
 
 public class NoteTakingActivity extends Document {
+    static String content = null;
+    static String title = null;
     @Override
     protected void onCreate(@Documents.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.take_note_activity);
         Intent intent = getIntent();
         long millisecond = intent.getLongExtra("millisecond", 0);
-        String title = intent.getStringExtra("title");
-        String content = intent.getStringExtra("content");
         String bottom_btn_string = intent.getStringExtra("bottom_btn_string");
         boolean originCreate = intent.getBooleanExtra("origin", true);
         title = title == null ? getString(R.string.nul) : title;
@@ -60,5 +60,12 @@ public class NoteTakingActivity extends Document {
                 }
             });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        title = null;
+        content = null;
+        super.onBackPressed();
     }
 }

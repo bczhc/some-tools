@@ -61,81 +61,8 @@
     <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="FourierSeries3">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/epicycles/FourierSeries.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/epicycles/FourierSeries.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/epicycles/calcCall.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/epicycles/calcCall.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/arm64-v8a/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/armeabi-v7a/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/libs/x86_64/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/libs/x86_64/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/arm64-v8a/objs/All/cpp/src/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/Base128Lib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/codecsDo.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/codecsDo.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/kwm.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/kwm.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/codecs/qmcLib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/jni_help.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/jni_help.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/malloc_test/mallocTest.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/pi/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/armeabi-v7a/objs/All/cpp/src/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/Base128Lib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/codecsDo.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/codecsDo.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/kwm.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/kwm.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/codecs/qmcLib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/jni_help.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/jni_help.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/malloc_test/mallocTest.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/pi/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86/objs/All/cpp/src/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/codecsDo.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/codecsDo.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/kwm.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/kwm.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/codecs/qmcLib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/jni_help.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/jni_help.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/malloc_test/mallocTest.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/pi/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/obj/local/x86_64/objs/All/cpp/src/zhc.o.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -843,6 +770,7 @@
       <workItem from="1586438439839" duration="103000" />
       <workItem from="1586438590453" duration="6935000" />
       <workItem from="1586526789580" duration="3848000" />
+      <workItem from="1586618990121" duration="1144000" />
     </task>
     <task id="LOCAL-00097" summary="issue #110">
       <created>1584865235800</created>

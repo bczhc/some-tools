@@ -11,41 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="见鬼 积分">
-      <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/epicycles/FourierSeries.h" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/epicycles/FourierSeries.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/epicycles/calcCall.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/epicycles/calcCall.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libAll.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/ComplexGraphDrawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/malloc_test/mallocTest.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/codecs/Base128Lib.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/jni_help.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/jni_help.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/jni_help.o.d" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/pi/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/zhc.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/zhc.o.d" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/x86_64/objs/All/cpp/src/zhc.o.d" afterDir="false" />
-    </list>
+    <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="见鬼 积分" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -298,12 +264,12 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="663" y="148" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1586448446349" />
-    <state x="0" y="27" width="1920" height="1029" key="CommitChangelistDialog2" timestamp="1586543565442">
+    <state x="0" y="27" width="1373" height="965" key="CommitChangelistDialog2" timestamp="1586544511706">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="0" y="0" width="1920" height="1029" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1585932109441" />
     <state x="178" y="27" width="999" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580008641115" />
-    <state x="0" y="27" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1586543565442" />
+    <state x="0" y="27" width="1373" height="965" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1586544511706" />
     <state x="141" y="169" width="1536" height="843" key="DiffContextDialog" timestamp="1585659978980">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
