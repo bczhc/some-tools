@@ -13,6 +13,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_nSetFu
         (JNIEnv *env, jclass instance, jdouble re, jdouble im) {
     function_re = re;
     function_im = im;
+    jdoubleArray a = env->NewDoubleArray(2);
 }
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_calc

@@ -33,6 +33,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="jnilog" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
     <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
@@ -58,11 +59,13 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="FourierSeries3">
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/document/NoteTakingActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/jni/cpp/src/epicycles/calcCall.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/jni/cpp/src/epicycles/calcCall.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/ComplexFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/JNICall.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/epicycles/JNICall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/jni/JNI.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/jni/JNI.java" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -500,13 +503,6 @@
       <workItem from="1585485027072" duration="3325000" />
       <workItem from="1585494373548" duration="4000" />
     </task>
-    <task id="LOCAL-00060" summary="issue #11: https://github.com/bczhc/some-tools/issues/11#issue-544996397 (1.)">
-      <created>1581167606548</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1581167606548</updated>
-    </task>
     <task id="LOCAL-00061" summary="issue #11: https://github.com/bczhc/some-tools/issues/11#issuecomment-573398759">
       <created>1581229421064</created>
       <option name="number" value="00061" />
@@ -770,7 +766,7 @@
       <workItem from="1586438439839" duration="103000" />
       <workItem from="1586438590453" duration="6935000" />
       <workItem from="1586526789580" duration="3848000" />
-      <workItem from="1586618990121" duration="1144000" />
+      <workItem from="1586618990121" duration="2620000" />
     </task>
     <task id="LOCAL-00097" summary="issue #110">
       <created>1584865235800</created>
@@ -856,7 +852,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586449625046</updated>
     </task>
-    <option name="localTasksCounter" value="109" />
+    <task id="LOCAL-00109" summary="笔记使用static变量传title和content字符串 代替intent，避免传递大数据导致异常">
+      <created>1586620991120</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1586620991121</updated>
+    </task>
+    <option name="localTasksCounter" value="110" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -986,7 +989,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="面板颜色跟随笔刷" />
     <MESSAGE value="unfinished issue #99" />
     <MESSAGE value="issue #79, 弹窗是否为悬浮窗，权限检验" />
     <MESSAGE value="issue #83, 悬浮窗导入过慢的问题。利用周期性时钟Handler更新UI，哪怕1ms更新一次都毫无卡顿。以前的那种方式在1ms内都不知道Handler里post多少条任务了。。" />
@@ -1011,7 +1013,8 @@
     <MESSAGE value="修复pi崩溃" />
     <MESSAGE value="FourierSeries3" />
     <MESSAGE value="修复pi崩溃&#10;&#10;傅里叶级数计算 jni 未完成" />
-    <option name="LAST_COMMIT_MESSAGE" value="FourierSeries3" />
+    <MESSAGE value="笔记使用static变量传title和content字符串 代替intent，避免传递大数据导致异常" />
+    <option name="LAST_COMMIT_MESSAGE" value="笔记使用static变量传title和content字符串 代替intent，避免传递大数据导致异常" />
   </component>
   <component name="WindowStateProjectService">
     <state x="318" y="68" key="#Notifications" timestamp="1579581379607">
@@ -1117,13 +1120,13 @@
     </state>
     <state x="780" y="268" width="372" height="519" key="AndroidProcessChooserDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1586450478321" />
     <state x="780" y="296" width="360" height="470" key="AndroidProcessChooserDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1586539842648" />
-    <state x="0" y="27" width="1421" height="1002" key="CommitChangelistDialog2" timestamp="1586544225197">
+    <state x="0" y="27" width="1421" height="1002" key="CommitChangelistDialog2" timestamp="1586620990811">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="237" y="40" width="1157" height="734" key="CommitChangelistDialog2/0.0.1449.815@0.0.1449.815" timestamp="1579597961330" />
     <state x="332" y="48" width="1421" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1586449624382" />
     <state x="53" y="27" width="1146" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580272692340" />
-    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1586544225197" />
+    <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1586620990811" />
     <state width="1053" height="602" key="DebuggerActiveHint" timestamp="1586450848059">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
@@ -1159,34 +1162,34 @@
     <state x="0" y="0" width="1920" height="1050" key="GitRewordDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1584864076748" />
     <state x="273" y="376" width="964" height="198" key="GitRewordDialog/0.27.1366.741@0.27.1366.741" timestamp="1580202716970" />
     <state x="779" y="457" width="481" height="229" key="GitRewordDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1586543909828" />
-    <state width="1858" height="187" key="GridCell.Tab.0.bottom" timestamp="1586541710855">
+    <state width="1858" height="294" key="GridCell.Tab.0.bottom" timestamp="1586622271540">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.bottom/0.0.1449.815@0.0.1449.815" timestamp="1579592173845" />
     <state width="1858" height="297" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1586459310657" />
     <state width="1312" height="127" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
-    <state width="1858" height="187" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1586541710855" />
-    <state width="1858" height="187" key="GridCell.Tab.0.center" timestamp="1586541710854">
+    <state width="1858" height="294" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1586622271540" />
+    <state width="1858" height="294" key="GridCell.Tab.0.center" timestamp="1586622271536">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.center/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1858" height="297" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1586459310657" />
     <state width="1312" height="127" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1580267310682" />
-    <state width="1858" height="187" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1586541710854" />
-    <state width="1858" height="187" key="GridCell.Tab.0.left" timestamp="1586541710853">
+    <state width="1858" height="294" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1586622271536" />
+    <state width="1858" height="294" key="GridCell.Tab.0.left" timestamp="1586622271534">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.left/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1858" height="297" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1586459310656" />
     <state width="1312" height="127" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1580267310681" />
-    <state width="1858" height="187" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1586541710853" />
-    <state width="1858" height="187" key="GridCell.Tab.0.right" timestamp="1586541710854">
+    <state width="1858" height="294" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1586622271534" />
+    <state width="1858" height="294" key="GridCell.Tab.0.right" timestamp="1586622271538">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1407" height="212" key="GridCell.Tab.0.right/0.0.1449.815@0.0.1449.815" timestamp="1579592173844" />
     <state width="1858" height="297" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1586459310657" />
     <state width="1312" height="127" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1580267310683" />
-    <state width="1858" height="187" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1586541710854" />
+    <state width="1858" height="294" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1586622271538" />
     <state width="1858" height="187" key="GridCell.Tab.1.bottom" timestamp="1586541710856">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -1370,13 +1373,13 @@
     <state x="694" y="291" width="661" height="609" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1584866945991" />
     <state x="636" y="163" key="extract.method.dialog/0.27.1366.741@0.27.1366.741" timestamp="1580109656807" />
     <state x="694" y="319" width="652" height="548" key="extract.method.dialog/0.27.1920.1053@0.27.1920.1053" timestamp="1581256241043" />
-    <state x="527" y="102" width="1113" height="894" key="find.popup" timestamp="1586544165237">
+    <state x="527" y="102" width="1113" height="894" key="find.popup" timestamp="1586621475066">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="149" y="37" width="1187" height="740" key="find.popup/0.0.1449.815@0.0.1449.815" timestamp="1579594271434" />
     <state x="90" y="0" width="1619" height="1037" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1585930317633" />
     <state x="140" y="61" width="1120" height="673" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1580221246864" />
-    <state x="527" y="102" width="1113" height="894" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1586544165237" />
+    <state x="527" y="102" width="1113" height="894" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1586621475066" />
     <state x="575" y="139" width="690" height="722" key="git4idea.branch.GitSmartOperationDialog" timestamp="1585234469904">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>

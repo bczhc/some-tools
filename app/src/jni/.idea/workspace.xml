@@ -11,7 +11,12 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="见鬼 积分" />
+    <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="见鬼 积分">
+      <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/src/epicycles/calcCall.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/epicycles/calcCall.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/ComplexFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/ComplexFunction.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -185,6 +190,7 @@
       <workItem from="1586436713223" duration="810000" />
       <workItem from="1586438278256" duration="5337000" />
       <workItem from="1586526012811" duration="4096000" />
+      <workItem from="1586618951638" duration="833000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <created>1585400117069</created>

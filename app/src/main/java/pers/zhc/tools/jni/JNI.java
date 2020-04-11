@@ -109,8 +109,6 @@ public class JNI {
 
         public static native void calc(double period, int epicyclesCount, Callback callback);
 
-        public static native void nSetFunctionResult(double re, double im);
-
         public interface Callback {
             /**
              * callback

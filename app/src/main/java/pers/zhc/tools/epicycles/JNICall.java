@@ -13,13 +13,11 @@ public class JNICall implements JNI.FourierSeriesCalc.Callback {
     private final CountDownLatch latch;
     private final ComplexGraphDrawing.SynchronizedPut synchronizedSequence;
     private final ComplexFunctionInterface2 complexFunctionInterface;
-    private final ComplexValue result;
 
     public JNICall(CountDownLatch latch, ComplexGraphDrawing.SynchronizedPut synchronizedSequence, ComplexFunctionInterface2 complexFunctionInterface) {
         this.latch = latch;
         this.synchronizedSequence = synchronizedSequence;
         this.complexFunctionInterface = complexFunctionInterface;
-        result = new ComplexValue(0, 0);
     }
 
     @Override
@@ -28,8 +26,10 @@ public class JNICall implements JNI.FourierSeriesCalc.Callback {
         latch.countDown();
     }
 
-    public void getFunctionResult(double t) {
+    public void getFunctionResult(double[] a,double t) {
+        ComplexValue result = new ComplexValue(0, 0);
         complexFunctionInterface.x(result, t);
-        JNI.FourierSeriesCalc.nSetFunctionResult(result.re, result.im);
+        a[0] = result.re;
+        a[1] = result.im;
     }
 }
