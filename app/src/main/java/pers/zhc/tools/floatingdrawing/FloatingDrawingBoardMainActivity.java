@@ -70,6 +70,7 @@ import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
+import pers.zhc.u.Latch;
 import pers.zhc.u.common.MultipartUploader;
 import pers.zhc.u.common.ReadIS;
 
@@ -88,7 +89,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
@@ -619,7 +619,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         if (mediaProjectionManager != null && captureScreenResultData != null) {
             mediaProjection = mediaProjectionManager.getMediaProjection(RESULT_OK, captureScreenResultData);
         } else {
-            ToastUtils.show(this, R.string.acquire_service_failed);
+            ToastUtils.show(this, R.string.acquire_service_failure);
         }
     }
 
@@ -1048,7 +1048,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         EditText[] editTexts = new EditText[4];
                         Bitmap imageBitmap;
                         if ((imageBitmap = BitmapFactory.decodeFile(s)) == null) {
-                            ToastUtils.show(this, R.string.importing_failed);
+                            ToastUtils.show(this, R.string.importing_failure);
                             return;
                         }
                         Point point = new Point();
@@ -1157,7 +1157,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
                             new Thread(() -> uploadPaths(this)).start();
                         } else {
-                            ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
+                            ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failure), et.toString()));
                         }
                         moreOptionsDialog.dismiss();
                     }).setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -1224,25 +1224,19 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 tv.setText(R.string.importing);
                 ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
                 TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
-//                PaintView.Latch latch = new PaintView.Latch();
+                Latch latch = new Latch();
                 pv.importPathFile(new File(s), () -> {
                     this.hsvaFloats[0] = null;
                     runOnUiThread(importPathFileDoneAction);
                     importPathFileProgressDialog.dismiss();
                 }, aFloat -> {
-//                    latch.suspend();
-                    CountDownLatch latch = new CountDownLatch(1);
+                    latch.suspend();
                     runOnUiThread(() -> {
                         progressBar.setProgress(aFloat.intValue());
                         pTextView.setText(getString(R.string.progress_tv, aFloat));
-//                        latch.stop();
-                        latch.countDown();
+                        latch.stop();
                     });
-                    try {
-                        latch.await();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    latch.await();
                 });
                 if (moreOptionsDialog != null) {
                     moreOptionsDialog.dismiss();

@@ -46,7 +46,7 @@ public class EditTextWithScrollView extends EditText {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN)
-            //如果是新的按下事件，则对mBottomFlag重新初始化
+        //如果是新的按下事件，则对mBottomFlag重新初始化
         {
             mBottomFlag = false;
         }

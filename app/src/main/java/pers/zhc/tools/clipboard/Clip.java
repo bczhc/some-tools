@@ -25,8 +25,13 @@ public class Clip extends BaseActivity {
             ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
                 ClipData cd = ClipData.newHtmlText("", getString(R.string.html_content), s);
-                Objects.requireNonNull(cm).setPrimaryClip(cd);
-                ToastUtils.show(this, getString(R.string.copying_success));
+                try {
+                    Objects.requireNonNull(cm).setPrimaryClip(cd);
+                    ToastUtils.show(this, getString(R.string.copying_success));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show(this, R.string.copying_failure);
+                }
             } else {
                 ToastUtils.show(this, getString(R.string.html_clipboard_unsupported));
             }

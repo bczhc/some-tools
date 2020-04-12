@@ -12,16 +12,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.ComplexDefinite;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
-import pers.zhc.u.math.util.ComplexFunctionInterface;
 import pers.zhc.u.math.util.ComplexValue;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+/**
+ * @author bczhc
+ */
 public class ComplexGraphDrawing extends BaseActivity {
 
     private int width;
@@ -67,35 +66,13 @@ public class ComplexGraphDrawing extends BaseActivity {
                     int definite_n = intent.getIntExtra("definite_n", 10000);
                     int epicycles_count = intent.getIntExtra("epicycles_count", 100) - 1;//除去中间的0
                     EpicyclesView.setT(intent.getDoubleExtra("T", 2 * Math.PI));
-                    ComplexFunctionInterface function = ComplexGraphDrawingView.complexFunction.getFunction(0, EpicyclesView.T);
-                    ExecutorService es = Executors.newFixedThreadPool(threadNum);
+                    ComplexFunctionInterface2 function = ComplexGraphDrawingView.complexFunction.getFunction(0, EpicyclesView.getT());
+                    ComplexValue test = new ComplexValue(0, 0);
                     ComplexDefinite complexDefinite = new ComplexDefinite();
                     complexDefinite.n = definite_n;
-                    int a = -epicycles_count / 2;
                     SynchronizedPut synchronizedSequence = new SynchronizedPut(EpicyclesEdit.epicyclesSequence);
-                    CountDownLatch latch = new CountDownLatch(epicycles_count + 1);
-                    for (int n = a; n <= a + epicycles_count; n++) {
-                        int finalN = n;
-                        es.execute(() -> {
-                            ComplexFunctionInterface f = t -> function.x(t).multiply(
-                                    Math.cos(-finalN * t * EpicyclesView.omega), Math.sin(-finalN * t * EpicyclesView.omega)
-                            );
-                            ComplexValue df = complexDefinite.getDefiniteIntegralByTrapezium(0, EpicyclesView.T, f);
-                            EpicyclesSequence.AEpicycle aEpicycle = new EpicyclesSequence.AEpicycle(
-                                    finalN, df.selfDivide(EpicyclesView.T, 0));
-                            synchronizedSequence.put(aEpicycle);
-                            latch.countDown();
-                            runOnUiThread(() -> textView.setText(getString(R.string.progress_tv
-                                    , (epicycles_count + 1 - latch.getCount()) * 100F / (epicycles_count + 1))));
-                        });
-                    }
-                    es.shutdown();
                     new Thread(() -> {
-                        try {
-                            latch.await();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        JNI.FourierSeriesCalc.calc(EpicyclesView.getT(), epicycles_count, new JNICall(synchronizedSequence, function), threadNum);
                         runOnUiThread(() -> {
                             calcDialog.dismiss();
                             finish();
@@ -108,14 +85,14 @@ public class ComplexGraphDrawing extends BaseActivity {
         alertDialog.show();
     }
 
-    private static class SynchronizedPut {
+    static class SynchronizedPut {
         private final EpicyclesSequence sequence;
 
         public SynchronizedPut(EpicyclesSequence sequence) {
             this.sequence = sequence;
         }
 
-        private synchronized void put(EpicyclesSequence.AEpicycle o) {
+        synchronized void put(EpicyclesSequence.Epicycle o) {
             sequence.put(o);
         }
     }

@@ -1,27 +1,38 @@
 package pers.zhc.tools.document;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ScrollEditText;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.Documents;
 
+/**
+ * @author bczhc
+ */
 public class NoteTakingActivity extends Document {
+    static String content = null;
+    static String title = null;
+    private boolean textChanged;
+    private Button insertBtn;
+
     @Override
     protected void onCreate(@Documents.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.take_note_activity);
         Intent intent = getIntent();
         long millisecond = intent.getLongExtra("millisecond", 0);
-        String title = intent.getStringExtra("title");
-        String content = intent.getStringExtra("content");
         String bottom_btn_string = intent.getStringExtra("bottom_btn_string");
         boolean originCreate = intent.getBooleanExtra("origin", true);
         title = title == null ? getString(R.string.nul) : title;
@@ -30,12 +41,31 @@ public class NoteTakingActivity extends Document {
         SQLiteDatabase db = getDB(this);
         EditText title_et = findViewById(R.id.doc_title_et);
         ScrollEditText content_et = findViewById(R.id.doc_content_et);
-        Button insertBtn = findViewById(R.id.insert_record);
+        final TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count > 0) {
+                    textChanged = true;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                textChanged = true;
+            }
+        };
         content_et.setText(String.format(getString(R.string.tv), content));
         title_et.setText(String.format(getString(R.string.tv), title));
+        content_et.getEditText().addTextChangedListener(textWatcher);
+        title_et.addTextChangedListener(textWatcher);
+        insertBtn = findViewById(R.id.insert_record);
         insertBtn.setText(String.format(getString(R.string.tv), bottom_btn_string));
-        if (originCreate) {
-            insertBtn.setOnClickListener(v -> {
+        insertBtn.setOnClickListener(v -> {
+            if (originCreate) {
                 ContentValues cv = new ContentValues();
                 cv.put("t", System.currentTimeMillis());
                 cv.put("title", title_et.getText().toString());
@@ -46,9 +76,7 @@ public class NoteTakingActivity extends Document {
                 } catch (SQLException e) {
                     Common.showException(e, this);
                 }
-            });
-        } else {
-            insertBtn.setOnClickListener(v -> {
+            } else {
                 try {
                     ContentValues values = new ContentValues();
                     values.put("title", title_et.getText().toString());
@@ -58,7 +86,33 @@ public class NoteTakingActivity extends Document {
                 } catch (Exception e) {
                     Common.showException(e, this);
                 }
-            });
+            }
+            textChanged = false;
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (textChanged) {
+            final AlertDialog confirmationAlertDialog = DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
+                        insertBtn.performClick();
+                        clearStr();
+                        super.onBackPressed();
+                    }, (dialog, which) -> {
+                        clearStr();
+                        super.onBackPressed();
+                    }, R.string.whether_to_save_unsaved_content
+                    , ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+            confirmationAlertDialog.show();
+        } else {
+            clearStr();
+            super.onBackPressed();
         }
+    }
+
+    private void clearStr() {
+        title = null;
+        content = null;
+        System.gc();
     }
 }

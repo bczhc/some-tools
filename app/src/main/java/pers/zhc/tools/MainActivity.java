@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
@@ -29,17 +30,22 @@ import pers.zhc.tools.test.SurfaceViewTest;
 import pers.zhc.tools.test.service.ServiceActivity;
 import pers.zhc.tools.theme.SetTheme;
 import pers.zhc.tools.toast.AToast;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.youdaoapi.YouDaoTranslate;
 import pers.zhc.u.common.ReadIS;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * @author bczhc
+ */
 public class MainActivity extends BaseActivity {
+
+    private ShortcutManager shortcutManager = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,30 +54,45 @@ public class MainActivity extends BaseActivity {
         init();
     }
 
-    private void shortcut(int[] texts, Class<?>[] classes) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-            ShortcutManager sm = getSystemService(ShortcutManager.class);
-            int[] choice = {0, 4, 7};
-            if (sm != null && choice.length > sm.getMaxShortcutCountPerActivity()) {
-                return;
-            }
-            List<ShortcutInfo> infoList = new ArrayList<>();
-            for (int i = 0; i < choice.length; i++) {
-                ShortcutInfo.Builder builder = new ShortcutInfo.Builder(this, "shortcut_id" + i);
-                Intent intent = new Intent(this, classes[choice[i]]);
-                intent.setAction(Intent.ACTION_VIEW);
-                ShortcutInfo shortcutInfo = builder.setShortLabel(getString(texts[choice[i]]))
-                        .setLongLabel(getString(texts[choice[i]]))
-                        .setIcon(Icon.createWithResource(this, R.drawable.ic_launcher_foreground))
-                        .setIntent(intent).build();
-                infoList.add(shortcutInfo);
-            }
-            if (sm != null) {
-                sm.setDynamicShortcuts(infoList);
+
+    private boolean shortcut(int texts, Class<?> theClass, int id) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
+            return false;
+        }
+        if (shortcutManager == null) {
+            if ((shortcutManager = getSystemService(ShortcutManager.class)) == null) {
+                return false;
             }
         }
+        final List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
+        int removedIndex = -1;
+        for (int i = 0; i < dynamicShortcuts.size(); i++) {
+            ShortcutInfo dynamicShortcut = dynamicShortcuts.get(i);
+            if (dynamicShortcut.getId().equals("shortcut_id" + id)) {
+                removedIndex = i;
+            }
+        }
+        if (removedIndex != -1) {
+            dynamicShortcuts.remove(removedIndex);
+        } else {
+            int shortcutSize = dynamicShortcuts.size();
+            if (shortcutSize > shortcutManager.getMaxShortcutCountPerActivity()) {
+                return false;
+            }
+            ShortcutInfo.Builder builder = new ShortcutInfo.Builder(this, "shortcut_id" + id);
+            Intent intent = new Intent(this, theClass);
+            intent.setAction(Intent.ACTION_VIEW);
+            ShortcutInfo shortcutInfo = builder.setShortLabel(getString(texts))
+                    .setLongLabel(getString(texts))
+                    .setIcon(Icon.createWithResource(this, R.drawable.ic_launcher_foreground))
+                    .setIntent(intent).build();
+            dynamicShortcuts.add(shortcutInfo);
+        }
+        shortcutManager.setDynamicShortcuts(dynamicShortcuts);
+        return true;
     }
 
+    @SuppressWarnings("AlibabaMethodTooLong")
     private void init() {
         LinearLayout ll = findViewById(R.id.ll);
         final int[] texts = new int[]{
@@ -163,11 +184,15 @@ public class MainActivity extends BaseActivity {
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_bottom, 0);
                 });
+                btn.setOnLongClickListener(v -> {
+                    final boolean shortcut = shortcut(texts[finalI], classes[finalI], finalI);
+                    ToastUtils.show(this, shortcut ? R.string.create_shortcut_success : R.string.create_shortcut_failure);
+                    return true;
+                });
                 runOnUiThread(() -> ll.addView(btn));
             }
             mainTextLatch.countDown();
         }).start();
-        shortcut(texts, classes);
     }
 
     @Override

@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/getevent.dir/getevent/geteventV2.c.o  -o getevent 

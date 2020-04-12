@@ -7,9 +7,19 @@ import pers.zhc.tools.pi.JNICallback;
  * @author bczhc
  */
 public class JNI {
+    private volatile static boolean hasLoadLib = false;
+
+    private synchronized static void loadLib() {
+        if (!hasLoadLib) {
+            System.loadLibrary("All");
+            hasLoadLib = true;
+        }
+    }
+
     public static class Codecs {
+
         static {
-            System.loadLibrary("codecsDo");
+            loadLib();
         }
 
         /**
@@ -46,7 +56,7 @@ public class JNI {
 
     public static class Pi {
         static {
-            System.loadLibrary("pi");
+            loadLib();
         }
 
         /**
@@ -70,7 +80,7 @@ public class JNI {
 
     public static class FloatingBoard {
         static {
-            System.loadLibrary("FB_tools");
+            loadLib();
         }
 
         public static native void floatToByteArray(@Size(min = 4) byte[] dest, float f, int offset);
@@ -84,8 +94,30 @@ public class JNI {
 
     public static class MAllocTest {
         static {
-            System.loadLibrary("mallocTest");
+            loadLib();
         }
+
         public static native long alloc(long size);
+    }
+
+    public static class FourierSeriesCalc {
+        static {
+            if (!hasLoadLib) {
+                loadLib();
+            }
+        }
+
+        public static native void calc(double period, int epicyclesCount, Callback callback, int threadNum);
+
+        public interface Callback {
+            /**
+             * callback
+             *
+             * @param n  n
+             * @param re complex value re part
+             * @param im complex value im part
+             */
+            void callback(double n, double re, double im);
+        }
     }
 }

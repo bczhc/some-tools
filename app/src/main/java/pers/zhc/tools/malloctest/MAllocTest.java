@@ -28,7 +28,7 @@ public class MAllocTest extends BaseActivity {
             } catch (NumberFormatException e) {
                 Common.showException(e, this);
             }
-            ToastUtils.show(this, R.string.allocing);
+            ToastUtils.show(this, R.string.allocating);
             long finalSize = size;
             new Thread(() -> {
                 final long address = JNI.MAllocTest.alloc(finalSize);
