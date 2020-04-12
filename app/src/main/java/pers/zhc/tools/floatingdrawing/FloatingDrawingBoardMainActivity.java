@@ -60,6 +60,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.MainActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRelativeLayout;
 import pers.zhc.tools.utils.BitmapUtil;

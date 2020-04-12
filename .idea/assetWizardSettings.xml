@@ -74,10 +74,10 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundImage" value="$PROJECT_DIR$/app/src/main/res/drawable/transparent.xml" />
-                                      <entry key="foregroundImage" value="$PROJECT_DIR$/app/src/main/res/drawable/ic_db.xml" />
+                                      <entry key="foregroundImage" value="$PROJECT_DIR$/app/src/main/res/raw/db.png" />
+                                      <entry key="generatePlayStoreIcon" value="false" />
                                       <entry key="generateRoundIcon" value="false" />
                                       <entry key="legacyIconShape" value="NONE" />
-                                      <entry key="webIconShape" value="NONE" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -164,7 +164,7 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="outputName" value="ic_db" />
-                            <entry key="sourceFile" value="$PROJECT_DIR$/../../../../z/db.svg" />
+                            <entry key="sourceFile" value="$PROJECT_DIR$/../../../../Pictures/db.svg" />
                           </map>
                         </option>
                       </PersistentState>
