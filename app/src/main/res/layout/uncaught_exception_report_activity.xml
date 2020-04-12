@@ -37,6 +37,11 @@
                 android:layout_weight="1"
                 tools:ignore="ButtonStyle"/>
         <Button android:layout_width="0sp" android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/copy"
+                android:id="@+id/copy_btn"
+                tools:ignore="ButtonStyle"/>
+        <Button android:layout_width="0sp" android:layout_height="wrap_content"
                 android:text="@string/upload_crash_report"
                 android:id="@+id/upload_report_btn"
                 android:layout_weight="1"

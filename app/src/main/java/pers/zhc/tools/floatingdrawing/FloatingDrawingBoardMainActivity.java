@@ -618,7 +618,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         if (mediaProjectionManager != null && captureScreenResultData != null) {
             mediaProjection = mediaProjectionManager.getMediaProjection(RESULT_OK, captureScreenResultData);
         } else {
-            ToastUtils.show(this, R.string.acquire_service_failed);
+            ToastUtils.show(this, R.string.acquire_service_failure);
         }
     }
 
@@ -1047,7 +1047,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         EditText[] editTexts = new EditText[4];
                         Bitmap imageBitmap;
                         if ((imageBitmap = BitmapFactory.decodeFile(s)) == null) {
-                            ToastUtils.show(this, R.string.importing_failed);
+                            ToastUtils.show(this, R.string.importing_failure);
                             return;
                         }
                         Point point = new Point();
@@ -1156,7 +1156,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
                             new Thread(() -> uploadPaths(this)).start();
                         } else {
-                            ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
+                            ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failure), et.toString()));
                         }
                         moreOptionsDialog.dismiss();
                     }).setNegativeButton(R.string.cancel, (dialog, which) -> {

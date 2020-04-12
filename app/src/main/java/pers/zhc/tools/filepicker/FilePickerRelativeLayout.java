@@ -323,6 +323,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     public interface OnPickedResultActionInterface {
         /**
          * onPickedResult callback
+         *
          * @param s result string
          */
         void result(String s);
