@@ -55,7 +55,7 @@ class ComplexFunction {
             linesTime[i] = base * modules[i];
         }
         return (dest, t) -> {
-            final double relativeTime = (t - startTime) % time;
+            /*final double relativeTime = (t - startTime) % time;
             double lineTimeSum = 0;
             int c = 0;
             for (int i = 0; i < linesTime.length; i++) {
@@ -66,7 +66,8 @@ class ComplexFunction {
                 if (relativeTime >= lineTimeSum) {
                     aPointLinearToBPoint(dest, a, b, (relativeTime - lineTimeSum) / linesTime[nextIndex]);
                 }
-            }
+            }*/
+            dest.setValue(10, 10);
         };
     }
 

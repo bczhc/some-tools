@@ -7,39 +7,40 @@
 #include "./FourierSeries.h"
 #include "../jni_help.h"
 
-static double function_re, function_im;
+class CallBean {
+public:
+    JNIEnv *&mEnv;
+    jobject &mCall;
+    jmethodID &mF_Mid;
+    jmethodID &mCallback_Mid;
+    jmethodID &mGetFunctionResultCallMid;
 
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_nSetFunctionResult
-        (JNIEnv *env, jclass instance, jdouble re, jdouble im) {
-    function_re = re;
-    function_im = im;
+    CallBean(JNIEnv *&mEnv, jobject &mCall, jmethodID &mFMid, jmethodID &mCallbackMid,
+             jmethodID &getFunctionResultCallMid) : mEnv(mEnv), mCall(mCall), mF_Mid(mFMid),
+                                                    mCallback_Mid(mCallbackMid),
+                                                    mGetFunctionResultCallMid(getFunctionResultCallMid) {}
+};
+
+inline void getResult(CallBean callBean, double dest[], double t) {
+    callBean.mEnv->GetDoubleArrayElements()
+    callBean.mEnv->CallVoidMethod(callBean.mCall, callBean.mGetFunctionResultCallMid, dest,(jdouble) t);
 }
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_calc
-        (JNIEnv *env, jclass instance, jdouble period, jint epicyclesCount, jobject call) {
-    class CallBean {
-    public:
-        JNIEnv *&mEnv;
-        jobject &mCall;
-        jmethodID &mF_Mid;
-        jmethodID &mCallback_Mid;
-
-        CallBean(JNIEnv *&mEnv, jobject &mCall, jmethodID &mFMid, jmethodID &mCallbackMid) : mEnv(mEnv), mCall(mCall),
-                                                                                             mF_Mid(mFMid),
-                                                                                             mCallback_Mid(
-                                                                                                     mCallbackMid) {}
-    };
+        (JNIEnv *env, jclass instance, jdouble period, jint epicyclesCount, jobject call, jint threadNum) {
+    double funcData[threadNum * 2];
     jclass fClass = env->GetObjectClass(call);
     jmethodID fMid = env->GetMethodID(fClass, "getFunctionResult", "(D)V");
     jmethodID callbackMid = env->GetMethodID(fClass, "callback", "(DDD)V");
-    CallBean callBean(env, call, fMid, callbackMid);
+    jmethodID getFunctionResultCallMid = env->GetMethodID(fClass, "getFunctionResult", "([DD)V");
+    CallBean callBean(env, call, fMid, callbackMid, getFunctionResultCallMid);
     class Func : public ComplexFunctionInterface {
     private:
         CallBean mCallBean;
     public:
         void x(ComplexValue &dest, double t) override {
             mCallBean.mEnv->CallVoidMethod(mCallBean.mCall, mCallBean.mF_Mid, (jdouble) t);
-            dest.setValue(function_re, function_im);
+//            dest.setValue(function_re, function_im);
         }
 
         explicit Func(CallBean &mCallBean) : mCallBean(mCallBean) {}

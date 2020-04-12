@@ -10,18 +10,10 @@ extern "C" {
 /*
  * Class:     pers_zhc_tools_jni_JNI_FourierSeriesCalc
  * Method:    calc
- * Signature: (DILpers/zhc/tools/jni/JNI/FourierSeriesCalc/Callback;)V
+ * Signature: (DILpers/zhc/tools/jni/JNI/FourierSeriesCalc/Callback;I)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_calc
-  (JNIEnv *, jclass, jdouble, jint, jobject);
-
-/*
- * Class:     pers_zhc_tools_jni_JNI_FourierSeriesCalc
- * Method:    nSetFunctionResult
- * Signature: (DD)V
- */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_nSetFunctionResult
-  (JNIEnv *, jclass, jdouble, jdouble);
+  (JNIEnv *, jclass, jdouble, jint, jobject, jint);
 
 #ifdef __cplusplus
 }

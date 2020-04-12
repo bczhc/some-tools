@@ -1,6 +1,9 @@
 package pers.zhc.tools.crashhandler;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -8,20 +11,15 @@ import android.os.Bundle;
 import android.os.Process;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.R;
-import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.MultipartUploader;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
@@ -39,33 +37,6 @@ public class CrashReportActivity extends Activity {
     private final String TAG = this.getClass().getName();
     private TextView uploadStateTextView;
 
-    private void saveToFile(String filename, String stackTraceString) {
-        final File crashDir = new File(Common.getExternalStoragePath(this), this.getString(R.string.some_tools_app)
-                + File.separatorChar + this.getString(R.string.crash));
-        if (!crashDir.exists()) {
-            Log.d(TAG, "saveToFile: " + crashDir.mkdirs());
-        }
-        final File file = new File(filename);
-        OutputStream os = null;
-        try {
-            os = new FileOutputStream(file, false);
-            //noinspection CharsetObjectCanBeUsed
-            os.write(stackTraceString.getBytes("UTF-8"));
-            os.flush();
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +47,7 @@ public class CrashReportActivity extends Activity {
         textView.setText(exception);
         Button restartButton = findViewById(R.id.restart_btn);
         Button uploadReportButton = findViewById(R.id.upload_report_btn);
+        Button copyBtn = findViewById(R.id.copy_btn);
         uploadStateTextView = findViewById(R.id.state);
         restartButton.setOnClickListener(v -> {
             Intent launchIntent = new Intent();
@@ -85,7 +57,6 @@ public class CrashReportActivity extends Activity {
             killProcess();
         });
         final String filename = intent.getStringExtra("filename");
-        new Thread(() -> this.saveToFile(filename, exception)).start();
         final Map<String, String> deviceInfo = collectDeviceInfo();
         StringBuilder content = new StringBuilder();
         final Set<String> keySet = deviceInfo.keySet();
@@ -94,6 +65,15 @@ public class CrashReportActivity extends Activity {
         }
         content.append(exception);
         uploadReportButton.setOnClickListener(v -> upload(filename, content.toString()));
+        copyBtn.setOnClickListener(v -> {
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            if (cm != null) {
+                ClipData cd = ClipData.newPlainText("exception", exception);
+                cm.setPrimaryClip(cd);
+                ToastUtils.show(this, R.string.copying_success);
+            }
+        });
+        CrashHandler.save2File(this, filename, exception);
     }
 
     private void killProcess() {
@@ -152,9 +132,9 @@ public class CrashReportActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
                 runOnUiThread(() -> {
-                    ToastUtils.showError(this, R.string.upload_failed, e);
+                    ToastUtils.showError(this, R.string.upload_failure, e);
                     uploadStateTextView.setTextColor(Color.RED);
-                    uploadStateTextView.setText(R.string.upload_failed);
+                    uploadStateTextView.setText(R.string.upload_failure);
                 });
             }
         }).start();

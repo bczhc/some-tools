@@ -120,7 +120,7 @@ public class Document extends BaseActivity {
                     if (file.exists()) {
                         ToastUtils.show(this, R.string.importing_success);
                     } else {
-                        ToastUtils.show(this, R.string.copying_failed);
+                        ToastUtils.show(this, R.string.copying_failure);
                     }
                     setSVViews();
                 }

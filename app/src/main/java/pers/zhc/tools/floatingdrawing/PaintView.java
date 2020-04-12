@@ -372,7 +372,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 if (f.exists()) {
                     ToastUtils.show(ctx, ctx.getString(R.string.saving_success) + "\n" + f.toString());
                 } else {
-                    ToastUtils.show(ctx, R.string.saving_failed);
+                    ToastUtils.show(ctx, R.string.saving_failure);
                 }
             });
         }).start();
@@ -766,7 +766,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
         mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
         if (backgroundBitmap == null) {
-            ToastUtils.show(ctx, ctx.getString(R.string.importing_failed));
+            ToastUtils.show(ctx, ctx.getString(R.string.importing_failure));
         } else {
             headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         }
