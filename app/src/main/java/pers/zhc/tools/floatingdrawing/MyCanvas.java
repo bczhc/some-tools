@@ -9,6 +9,13 @@ import android.support.annotation.Nullable;
  * @author bczhc
  */
 public class MyCanvas extends Canvas {
+    private float scale = 1F;
+    private float startPointX, startPointY;
+    private float savedScale, savedStartPointX, savedStartPointY;
+    public MyCanvas(@NonNull Bitmap bitmap) {
+        super(bitmap);
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode();
@@ -17,14 +24,6 @@ public class MyCanvas extends Canvas {
     @Override
     public boolean equals(@Nullable Object obj) {
         return super.equals(obj);
-    }
-
-    private float scale = 1F;
-    private float startPointX, startPointY;
-    private float savedScale, savedStartPointX, savedStartPointY;
-
-    public MyCanvas(@NonNull Bitmap bitmap) {
-        super(bitmap);
     }
 
     @Override

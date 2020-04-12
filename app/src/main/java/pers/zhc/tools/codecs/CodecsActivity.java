@@ -620,7 +620,7 @@ public class CodecsActivity extends BaseActivity {
             showException(e, ctx);
         }
         if (f == null) {
-            toast(R.string.get_config_file_failed);
+            toast(R.string.get_config_file_failure);
         }
         return f;
     }

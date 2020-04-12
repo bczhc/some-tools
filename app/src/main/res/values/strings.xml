@@ -44,7 +44,7 @@
     <string name="tv_millis" translatable="false">%1dms</string>
     <string name="some_codecs">some-codecs</string>
     <string name="type_html_code">输入HTML代码</string>
-    <string name="get_config_file_failed">获取配置文件路径失败</string>
+    <string name="get_config_file_failure">获取配置文件路径失败</string>
     <string name="whether_to_save">是否保存</string>
     <string name="no">否</string>
     <string name="yes">是</string>
@@ -81,7 +81,7 @@
     <string name="importing_success">导入成功</string>
     <string name="exporting_success">导出成功</string>
     <string name="drawing_board">画板</string>
-    <string name="copying_failed">复制失败</string>
+    <string name="copying_failure">复制失败</string>
     <string name="whether_to_delete">是否删除</string>
     <string name="recording_success">记录成功</string>
     <string name="modification_record">修改记录</string>
@@ -91,7 +91,7 @@
     <string name="save_path">保存路径</string>
     <string name="export_path">导出路径</string>
     <string name="import_path">导入路径</string>
-    <string name="saving_failed">保存失败</string>
+    <string name="saving_failure">保存失败</string>
     <string name="select_path_file">选择路径文件</string>
     <string name="type_file_name">输入文件名</string>
     <string name="type_stroke_width__pixels">输入画笔宽度(pixels)</string>
@@ -99,7 +99,7 @@
     <string name="drawing_paint_stroke_width">画笔大小</string>
     <string name="clear_application_caches">清除应用缓存（正在活动悬浮窗的会保留）\n(%1$fkB)</string>
     <string name="import_image">导入图片</string>
-    <string name="importing_failed">导入失败</string>
+    <string name="importing_failure">导入失败</string>
     <string name="set__top__left__scaled_width__scaled_height">设置左起始点、顶起始点、缩放宽度、缩放高度</string>
     <string name="board_w_h_info_and_bitmap_w_h_info">画板宽高：%1$d, %2$d%3$s图片宽高：%4$d, %5$d</string>
     <string name="left_starting_point">左起始点</string>
@@ -157,7 +157,7 @@
     <string name="crash_bar">崩溃了……</string>
     <string name="upload">上传</string>
     <string name="upload_crash_report">上传崩溃报告</string>
-    <string name="upload_failed">上传失败</string>
+    <string name="upload_failure">上传失败</string>
     <string name="uploading">正在上传</string>
     <string name="upload_done">上传完成</string>
     <string name="please_choose">请选择…</string>
@@ -195,9 +195,9 @@
     <string name="hide_panel">隐藏面板</string>
     <string name="request_permission_error">请求权限出错</string>
     <string name="please_grant_permission">请同意权限</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
     <string name="check_for_update">检查更新</string>
-    <string name="acquire_service_failed">获取服务失败</string>
+    <string name="acquire_service_failure">获取服务失败</string>
     <string name="current_version_is_the_latest">当前已为最新版本</string>
     <string name="serviceTest">service_test</string>
     <string name="have_capture_task">有截图任务中</string>
@@ -214,9 +214,12 @@
     <string name="crash_title">程序崩溃了…</string>
     <string name="opacity">不透明度</string>
     <string name="database_delete_info">请输入要删除的t_millisecond（*表示全部）</string>
-    <string name="alloc">分配</string>
-    <string name="allocing">正在分配</string>
+    <string name="allocate">分配</string>
+    <string name="allocating">正在分配</string>
     <string name="alloc_done">分配完成</string>
     <string name="m_alloc_test">内存分配测试</string>
+    <string name="create_shortcut_success">创建快捷方式成功</string>
+    <string name="create_shortcut_failure">创建快捷方式失败</string>
+    <string name="whether_to_save_unsaved_content">是否保存尚未保存内容</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

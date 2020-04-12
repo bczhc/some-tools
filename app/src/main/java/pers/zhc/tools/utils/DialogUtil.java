@@ -20,10 +20,10 @@ import java.util.Objects;
  */
 public class DialogUtil {
     /**
-     * @param d                   d
-     * @param isTransparent       b
-     * @param width               w
-     * @param height              h
+     * @param d                  d
+     * @param isTransparent      b
+     * @param width              w
+     * @param height             h
      * @param applicationOverlay overlay. null is auto
      */
     public static void setDialogAttr(Dialog d, boolean isTransparent, int width, int height, @Nullable Boolean applicationOverlay) {

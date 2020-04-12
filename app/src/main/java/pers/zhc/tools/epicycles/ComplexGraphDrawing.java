@@ -18,8 +18,6 @@ import pers.zhc.u.ComplexDefinite;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
 import pers.zhc.u.math.util.ComplexValue;
 
-import java.util.concurrent.CountDownLatch;
-
 /**
  * @author bczhc
  */
@@ -73,14 +71,8 @@ public class ComplexGraphDrawing extends BaseActivity {
                     ComplexDefinite complexDefinite = new ComplexDefinite();
                     complexDefinite.n = definite_n;
                     SynchronizedPut synchronizedSequence = new SynchronizedPut(EpicyclesEdit.epicyclesSequence);
-                    CountDownLatch latch = new CountDownLatch(epicycles_count);
-                    new Thread(() -> JNI.FourierSeriesCalc.calc(EpicyclesView.getT(), epicycles_count, new JNICall(latch, synchronizedSequence, function))).start();
                     new Thread(() -> {
-                        try {
-                            latch.await();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        JNI.FourierSeriesCalc.calc(EpicyclesView.getT(), epicycles_count, new JNICall(synchronizedSequence, function), threadNum);
                         runOnUiThread(() -> {
                             calcDialog.dismiss();
                             finish();

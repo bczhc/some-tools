@@ -40,7 +40,6 @@ import java.util.concurrent.Executors;
  * @author bczhc
  * 代码首先是给人读的，只是恰好可以执行！
  * Machine does not care, but I care!
- *
  */
 public class BaseActivity extends Activity {
     public final App app = new App();
@@ -259,6 +258,7 @@ public class BaseActivity extends Activity {
     protected interface CheckForUpdateResultInterface {
         /**
          * callback
+         *
          * @param update b
          */
         void onCheckForUpdateResult(boolean update);

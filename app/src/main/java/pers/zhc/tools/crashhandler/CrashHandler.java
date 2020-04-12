@@ -4,9 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.utils.Common;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +22,7 @@ import java.util.Date;
  * @author bczhc
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
-    private Context ctx;
+    private final Context ctx;
 
     private CrashHandler(Context context) {
         this.ctx = context;
@@ -23,6 +30,35 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     public static void install(Context context) {
         Thread.setDefaultUncaughtExceptionHandler(new CrashHandler(context));
+    }
+
+    static void save2File(Context ctx, String filename, String stackTraceString) {
+        final File crashDir = new File(Common.getExternalStoragePath(ctx), ctx.getString(R.string.some_tools_app)
+                + File.separatorChar + ctx.getString(R.string.crash));
+        if (!crashDir.exists()) {
+            Log.d(CrashHandler.class.getName(), "save2File: " + crashDir.mkdirs());
+        }
+        final File file = new File(crashDir, filename);
+        System.out.println("crashDir.getPath() = " + crashDir.getPath());
+        System.out.println("file.getPath() = " + file.getPath());
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(file, false);
+            //noinspection CharsetObjectCanBeUsed
+            os.write(stackTraceString.getBytes("UTF-8"));
+            os.flush();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
