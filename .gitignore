@@ -1,25 +1,9 @@
-# Created by .ignore support plugin (hsz.mobi)
-将删除 .gradle/
-将删除 .idea/caches/gradle_models.ser
-将删除 .idea/libraries/
-将删除 app/build/
-将删除 app/src/jni/cpp/cmake-build-debug/
-将删除 app/src/main/scala/
-将删除 app/src/obj/local/arm64-v8a/objs/All/cpp/src/test.o
-将删除 app/src/obj/local/arm64-v8a/objs/All/cpp/src/test.o.d
-将删除 app/src/obj/local/arm64-v8a/objs/test/
-将删除 app/src/obj/local/armeabi-v7a/libtest.so
-将删除 app/src/obj/local/armeabi-v7a/objs/All/cpp/src/test.o
-将删除 app/src/obj/local/armeabi-v7a/objs/All/cpp/src/test.o.d
-将删除 app/src/obj/local/armeabi-v7a/objs/test/
-将删除 app/src/obj/local/x86/libtest.so
-将删除 app/src/obj/local/x86/objs/All/cpp/src/test.o
-将删除 app/src/obj/local/x86/objs/All/cpp/src/test.o.d
-将删除 app/src/obj/local/x86/objs/test/
-将删除 app/src/obj/local/x86_64/libtest.so
-将删除 app/src/obj/local/x86_64/objs/All/cpp/src/test.o
-将删除 app/src/obj/local/x86_64/objs/All/cpp/src/test.o.d
-将删除 app/src/obj/local/x86_64/objs/test/
-将删除 buildSrc/.gradle/
-将删除 buildSrc/build/
-将删除 gitpush
+buildSrc/build
+buildSrc/.gradle
+.gradle
+.idea/caches
+.idea/libraries
+app/src/jni/.idea/caches
+app/src/jni/cpp/cmake-build-debug
+app/src/libs
+app/src/obj
