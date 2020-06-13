@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 //apply plugin: "jp.leafytree.android-scala"
-apply plugin: 'pers.zhc.plugins-my-plugin1'
+//apply plugin: 'pers.zhc.plugins-my-plugin1'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
