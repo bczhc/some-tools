@@ -221,5 +221,11 @@
     <string name="create_shortcut_success">创建快捷方式成功</string>
     <string name="create_shortcut_failure">创建快捷方式失败</string>
     <string name="whether_to_save_unsaved_content">是否保存尚未保存内容</string>
+    <string name="password">密码</string>
+    <string name="diary">日记</string>
+    <string name="write_diary">写日记</string>
+    <string name="test">test</string>
+    <string name="saved">已保存</string>
+    <string name="record_time">记录时间</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

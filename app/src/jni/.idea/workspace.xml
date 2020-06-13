@@ -11,7 +11,44 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="见鬼 积分" />
+    <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="见鬼 积分">
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/BaseApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/diary/DiaryMainActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/diary/DiaryTakingActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/sqlite/SQLite.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/layout/diary_actionbar_view.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/layout/diary_activity.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/layout/diary_taking_activity.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/layout/password_view.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../main/res/menu/diary_actionbar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cpp/src/epicycles/calcCall.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/epicycles/calcCall.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/libAll.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/Common.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/Common.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/EditTextWithScrollView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -185,6 +222,7 @@
       <workItem from="1586436713223" duration="810000" />
       <workItem from="1586438278256" duration="5337000" />
       <workItem from="1586526012811" duration="4096000" />
+      <workItem from="1592062181143" duration="969000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <created>1585400117069</created>
@@ -264,12 +302,12 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="663" y="148" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1050@0.0.1920.1050" timestamp="1586448446349" />
-    <state x="0" y="27" width="1373" height="965" key="CommitChangelistDialog2" timestamp="1586544511706">
+    <state x="0" y="27" width="1373" height="965" key="CommitChangelistDialog2" timestamp="1586667055668">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="0" y="0" width="1920" height="1029" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1585932109441" />
     <state x="178" y="27" width="999" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1580008641115" />
-    <state x="0" y="27" width="1373" height="965" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1586544511706" />
+    <state x="0" y="27" width="1373" height="965" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1586667055668" />
     <state x="141" y="169" width="1536" height="843" key="DiffContextDialog" timestamp="1585659978980">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -314,6 +352,10 @@
     </state>
     <state x="164" y="31" width="1037" height="737" key="SettingsEditor/0.27.1366.741@0.27.1366.741" timestamp="1579851212262" />
     <state x="231" y="32" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1581150996365" />
+    <state x="455" y="226" width="1000" height="661" key="Vcs.Push.Dialog.v2" timestamp="1586667057330">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="455" y="226" width="1000" height="661" key="Vcs.Push.Dialog.v2/0.27.1920.1053@0.27.1920.1053" timestamp="1586667057330" />
     <state x="616" y="195" key="VcsDiffUtil.ChangesDialog" timestamp="1585395119584">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>

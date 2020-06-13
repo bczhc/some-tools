@@ -2,6 +2,8 @@ package pers.zhc.tools.functiondrawing;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;

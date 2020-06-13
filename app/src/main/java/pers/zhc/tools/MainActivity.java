@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.crashhandler.CrashTest;
+import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.epicycles.EpicyclesEdit;
 import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
@@ -114,7 +115,8 @@ public class MainActivity extends BaseActivity {
                 R.string.serviceTest,
                 R.string.you_dao_translate_interface_invoke,
                 R.string.crash_test,
-                R.string.m_alloc_test
+                R.string.m_alloc_test,
+                R.string.diary
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -135,7 +137,8 @@ public class MainActivity extends BaseActivity {
                 ServiceActivity.class,
                 YouDaoTranslate.class,
                 CrashTest.class,
-                MAllocTest.class
+                MAllocTest.class,
+                DiaryMainActivity.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
