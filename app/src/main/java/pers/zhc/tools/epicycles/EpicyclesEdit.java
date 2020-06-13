@@ -58,7 +58,7 @@ public class EpicyclesEdit extends BaseActivity {
                 intent.putExtra("T", Double.parseDouble(s2));
                 intent.putExtra("epicycles_count", Integer.parseInt(s3));
                 intent.putExtra("thread_num", Integer.parseInt(s4));
-                startActivityForResult(intent, RequestCode.START_ACTIVITY);
+                startActivityForResult(intent, RequestCode.START_ACTIVITY_0);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 ToastUtils.show(this, R.string.please_type_correct_value);
@@ -247,7 +247,7 @@ public class EpicyclesEdit extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == RequestCode.START_ACTIVITY) {
+        if (requestCode == RequestCode.START_ACTIVITY_0) {
             reListEpicycles();
         }
         super.onActivityResult(requestCode, resultCode, data);

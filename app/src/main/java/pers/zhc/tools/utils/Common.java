@@ -7,12 +7,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import pers.zhc.tools.BuildConfig;
 
 import java.io.File;
 import java.util.Objects;
 
+/**
+ * @author bczhc
+ */
 public class Common {
+    private static final String TAG = Common.class.getName();
+
     public static void showException(Exception e, Activity activity) {
         e.printStackTrace();
         activity.runOnUiThread(() -> ToastUtils.show(activity, e.toString()));
@@ -44,5 +50,17 @@ public class Common {
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
         }
         context.startActivity(intent);
+    }
+
+    public static File getInternalDatabaseDir(Context ctx) {
+        final File dir = new File(ctx.getFilesDir().getPath() + File.separatorChar + "db");
+        if (!dir.exists()) {
+            Log.d(TAG, dir.mkdirs() + "");
+        }
+        return dir;
+    }
+
+    public static File getInternalDatabaseDir(Context ctx, String name) {
+        return new File(getInternalDatabaseDir(ctx), name);
     }
 }

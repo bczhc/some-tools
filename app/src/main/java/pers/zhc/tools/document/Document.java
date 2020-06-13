@@ -259,7 +259,7 @@ public class Document extends BaseActivity {
         /*DocDB db = new DocDB(ctx, "a", null, 1);
         return db.getWritableDatabase();*/
         SQLiteDatabase database = null;
-        File dbPath = new File(getFilesDir().toString() + File.separator + "db");
+        File dbPath = Common.getInternalDatabaseDir(this);
         if (!dbPath.exists()) {
             System.out.println("dbPath.mkdirs() = " + dbPath.mkdirs());
         }
@@ -275,10 +275,8 @@ public class Document extends BaseActivity {
             e.printStackTrace();
             Common.showException(e, ctx);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            if (database != null) {
-                database.disableWriteAheadLogging();
-            }
+        if (database != null) {
+            database.disableWriteAheadLogging();
         }
         return database;
     }

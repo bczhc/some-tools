@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" tools:ignore="ProtectedPermissions"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <application
+            android:name=".BaseApplication"
             android:persistent="true"
             android:testOnly="false"
             android:allowBackup="false"
@@ -148,7 +149,6 @@
         <activity android:name="pers.zhc.tools.functiondrawing.FunctionDrawingBoard"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppThemeNotTranslucent"
-                  android:screenOrientation="landscape"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -159,7 +159,6 @@
         <activity android:name="pers.zhc.tools.epicycles.EpicyclesTest"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppThemeNotTranslucent"
-                  android:screenOrientation="landscape"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -179,7 +178,6 @@
         <activity android:name=".epicycles.ComplexGraphDrawing"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppThemeNotTranslucent"
-                  android:screenOrientation="landscape"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -310,6 +308,28 @@
         <activity android:name=".malloctest.MAllocTest"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".diary.DiaryMainActivity"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppThemeWithBar"
+                  android:label="@string/diary"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".diary.DiaryTakingActivity"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppThemeWithBar"
+                  android:label="@string/diary"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

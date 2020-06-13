@@ -22,8 +22,8 @@ public:
 };
 
 inline void getResult(CallBean callBean, double dest[], double t) {
-    callBean.mEnv->GetDoubleArrayElements()
-    callBean.mEnv->CallVoidMethod(callBean.mCall, callBean.mGetFunctionResultCallMid, dest,(jdouble) t);
+//    callBean.mEnv->GetDoubleArrayElements()
+//    callBean.mEnv->CallVoidMethod(callBean.mCall, callBean.mGetFunctionResultCallMid, dest,(jdouble) t);
 }
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_calc
