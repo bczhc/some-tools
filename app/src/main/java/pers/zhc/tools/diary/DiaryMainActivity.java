@@ -1,6 +1,7 @@
 package pers.zhc.tools.diary;
 
 import android.app.ActionBar;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -12,16 +13,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.sqlite.SQLite;
 
 import java.util.Calendar;
 
@@ -31,6 +40,7 @@ import java.util.Calendar;
 public class DiaryMainActivity extends BaseActivity {
     private SQLiteDatabase diaryDatabase;
     private LinearLayout ll;
+    private String currentPassword;
 
     static SQLiteDatabase getDiaryDatabase(Context ctx) {
         final SQLiteDatabase diaryDatabase = SQLiteDatabase.openOrCreateDatabase(Common.getInternalDatabaseDir(ctx, "diary.db"), null);
@@ -47,6 +57,42 @@ public class DiaryMainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final SQLiteDatabase passwordDatabase = getPasswordDatabase();
+        final Cursor cursor = passwordDatabase.rawQuery("SELECT pw FROM passwords where k=?", new String[]{"diary"});
+        if (cursor.moveToFirst()) {
+            currentPassword = cursor.getString(cursor.getColumnIndex("pw"));
+        }
+        cursor.close();
+        if (currentPassword == null) {
+            load();
+            return;
+        }
+        setContentView(R.layout.password_view);
+        EditText passwordET = findViewById(R.id.password_et);
+        String finalPassword = currentPassword;
+        passwordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String text = s.toString();
+                if (finalPassword.equals(text)) {
+                    passwordET.setEnabled(false);
+                    load();
+                }
+            }
+        });
+    }
+
+    private void load() {
         setContentView(R.layout.diary_activity);
         ll = findViewById(R.id.ll);
         ActionBar actionBar = getActionBar();
@@ -74,13 +120,18 @@ public class DiaryMainActivity extends BaseActivity {
 
     private void setPassword(String password) {
         final SQLiteDatabase passwordDatabase = getPasswordDatabase();
+        final boolean exist = SQLite.checkRecordExistence(passwordDatabase, "passwords", "k", "diary");
         ContentValues cv = new ContentValues();
         cv.put("k", "diary");
         cv.put("pw", password);
-        try {
-            passwordDatabase.insertOrThrow("passwords", null, cv);
-        } catch (SQLException e) {
-            Common.showException(e, this);
+        if (exist) {
+            passwordDatabase.update("passwords", cv, "k=?", new String[]{"diary"});
+        } else {
+            try {
+                passwordDatabase.insertOrThrow("passwords", null, cv);
+            } catch (SQLException e) {
+                Common.showException(e, this);
+            }
         }
     }
 
@@ -93,10 +144,38 @@ public class DiaryMainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.write) {
-            createDiary(null);
+        switch (item.getItemId()) {
+            case R.id.write:
+                createDiary(null);
+                break;
+            case R.id.password:
+                changePassword();
+                break;
+            default:
+                break;
         }
         return true;
+    }
+
+    private void changePassword() {
+        View view = View.inflate(this, R.layout.change_password_view, null);
+        Dialog dialog = new Dialog(this);
+        DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT
+                , ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        EditText oldPasswordET = view.findViewById(R.id.old_password);
+        EditText newPasswordET = view.findViewById(R.id.new_password);
+        Button confirm = view.findViewById(R.id.confirm);
+        confirm.setOnClickListener(v -> {
+            if (oldPasswordET.getText().toString().equals(currentPassword == null ? "" : currentPassword)) {
+                setPassword(newPasswordET.getText().toString());
+                ToastUtils.show(this, R.string.change_success);
+                dialog.dismiss();
+            } else {
+                ToastUtils.show(this, R.string.password_not_matching);
+            }
+        });
+        dialog.setContentView(view);
+        dialog.show();
     }
 
     private void createDiary(@Nullable DiaryTakingActivity.MyDate date) {
@@ -150,6 +229,15 @@ public class DiaryMainActivity extends BaseActivity {
                     dateTV.setText(dateString);
                     previewTV.setText(content);
                     childRL.setOnClickListener(v -> createDiary(new DiaryTakingActivity.MyDate(dateString)));
+                    childRL.setOnLongClickListener(v -> {
+                        DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
+                                    diaryDatabase.delete("diary", "date=?", new String[]{dateString});
+                                    refresh();
+                                }, (dialog, which) -> {
+                                }, R.string.whether_to_delete, ViewGroup.LayoutParams.MATCH_PARENT
+                                , ViewGroup.LayoutParams.WRAP_CONTENT, false).show();
+                        return true;
+                    });
                     runOnUiThread(() -> {
                         childRL.addView(dateTV);
                         childRL.addView(previewTV);

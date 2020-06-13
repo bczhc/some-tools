@@ -19,6 +19,7 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ScrollEditText;
+import pers.zhc.tools.utils.sqlite.SQLite;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -86,9 +87,7 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void initDB() {
-        final Cursor cursor = diaryDatabase.rawQuery("SELECT date FROM diary WHERE date=?", new String[]{this.mDate.toString()});
-        final boolean newRec = cursor.getCount() == 0;
-        cursor.close();
+        boolean newRec = !SQLite.checkRecordExistence(diaryDatabase, "diary", "date", mDate.toString());
         if (newRec) {
             ContentValues cv = new ContentValues();
             cv.put("date", mDate.toString());

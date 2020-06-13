@@ -3,6 +3,10 @@
     <item
             android:id="@+id/write"
             android:title="@string/write_diary"
-            android:showAsAction="always"
+            android:showAsAction="ifRoom"
     />
+    <item
+            android:id="@+id/password"
+            android:title="@string/password"
+            android:showAsAction="never"/>
 </menu>

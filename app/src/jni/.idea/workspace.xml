@@ -12,42 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b23c841-cff5-40f4-a6cb-7423dc0577af" name="Default Changelist" comment="见鬼 积分">
-      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/BaseApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/diary/DiaryMainActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/diary/DiaryTakingActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/sqlite/SQLite.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/res/layout/diary_actionbar_view.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/res/layout/diary_activity.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/res/layout/diary_taking_activity.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/res/layout/password_view.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../main/res/menu/diary_actionbar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../buildSrc/src/main/resources/META-INF/gradle-plugins/pers.zhc.plugins-my-plugin1.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cpp/src/epicycles/calcCall.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cpp/src/epicycles/calcCall.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/arm64-v8a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/arm64-v8a/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/armeabi-v7a/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/armeabi-v7a/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../libs/x86_64/libAll.so" beforeDir="false" afterPath="$PROJECT_DIR$/../libs/x86_64/libAll.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/BaseActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/BaseActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/document/Document.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/document/Document.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/epicycles/EpicyclesEdit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/functiondrawing/FunctionDrawingBoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/Common.java" beforeDir="false" afterPath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/Common.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/java/pers/zhc/tools/utils/EditTextWithScrollView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../main/res/values/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/Base128Lib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/codecsDo.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/kwm.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/codecs/qmcLib.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/floatingboard/fb_tools.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/jni_help.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/pi/pi.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" beforeDir="false" afterPath="$PROJECT_DIR$/../obj/local/arm64-v8a/objs/All/cpp/src/zhc.o" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,7 +188,7 @@
       <workItem from="1586436713223" duration="810000" />
       <workItem from="1586438278256" duration="5337000" />
       <workItem from="1586526012811" duration="4096000" />
-      <workItem from="1592062181143" duration="969000" />
+      <workItem from="1592062181143" duration="972000" />
     </task>
     <task id="LOCAL-00001" summary="a">
       <created>1585400117069</created>
