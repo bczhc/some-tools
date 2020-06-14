@@ -9,4 +9,12 @@
             android:id="@+id/password"
             android:title="@string/password"
             android:showAsAction="never"/>
+    <item
+            android:id="@+id/import_"
+            android:title="@string/import_"
+            android:showAsAction="never"/>
+    <item
+            android:id="@+id/export"
+            android:title="@string/export"
+            android:showAsAction="never"/>
 </menu>

@@ -283,6 +283,10 @@ public class BaseActivity extends Activity {
         public static final int REQUEST_OVERLAY = 8;
     }
 
+    public static class BroadcastIntent {
+        public static final String START_FLOATING_BOARD = "pers.zhc.tools.START_FB";
+    }
+
     public static class App {
         private final Stack<Activity> activities;
 

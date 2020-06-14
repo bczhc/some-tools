@@ -12,7 +12,10 @@ import pers.zhc.tools.utils.PermissionRequester;
 
 import java.io.File;
 
-public class Picker extends BaseActivity {
+/**
+ * @author bczhc
+ */
+public class FilePicker extends BaseActivity {
     public static final int PICK_FILE = 1;
     public static final int PICK_FOLDER = 2;
     private FilePickerRelativeLayout filePickerRelativeLayout;

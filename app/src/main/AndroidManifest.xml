@@ -25,6 +25,15 @@
                 <action android:name="pers.zhc.tools.START_FB"/>
             </intent-filter>
         </receiver>
+        <receiver android:name=".broadcast.BroadcastTest"
+                  android:exported="false"
+                  android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED"/>
+                <action android:name="android.intent.action.AIRPLANE_MODE"/>
+            </intent-filter>
+        </receiver>
+
         <service android:name=".test.service.MyService"
                  android:process=":service"
                  android:enabled="true"
@@ -50,7 +59,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.filepicker.Picker"
+        <activity android:name="pers.zhc.tools.filepicker.FilePicker"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         >

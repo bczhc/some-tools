@@ -23,7 +23,7 @@ import org.json.JSONObject;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.MainActivity;
 import pers.zhc.tools.R;
-import pers.zhc.tools.filepicker.Picker;
+import pers.zhc.tools.filepicker.FilePicker;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
 
@@ -155,15 +155,15 @@ public class CodecsActivity extends BaseActivity {
         this.mainTv = findViewById(R.id.textView);
         pF.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.putExtra("option", Picker.PICK_FILE);
-            intent.setClass(this, Picker.class);
+            intent.putExtra("option", FilePicker.PICK_FILE);
+            intent.setClass(this, FilePicker.class);
             startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
             overridePendingTransition(R.anim.in_left_and_bottom, 0);
         });
         pF.setOnLongClickListener(v -> {
             Intent intent = new Intent();
-            intent.putExtra("option", Picker.PICK_FOLDER);
-            intent.setClass(this, Picker.class);
+            intent.putExtra("option", FilePicker.PICK_FOLDER);
+            intent.setClass(this, FilePicker.class);
             startActivityForResult(intent, RequestCode.START_ACTIVITY_2);
             overridePendingTransition(R.anim.in_left_and_bottom, 0);
             return true;

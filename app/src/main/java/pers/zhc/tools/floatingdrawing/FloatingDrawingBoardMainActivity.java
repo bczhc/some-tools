@@ -92,6 +92,9 @@ import java.util.Objects;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
+/**
+ * @author bczhc
+ */
 public class FloatingDrawingBoardMainActivity extends BaseActivity {
     /**
      * 静态存储Context。。
@@ -852,7 +855,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     .setContentText(getString(R.string.appear_f_b, date));
 //            Intent intent = new Intent(this, NotificationClickReceiver.class);
             Intent intent = new Intent();
-            intent.setAction("pers.zhc.tools.START_FB");
+            final int backgroundReceiverFlag = 0x01000000;
+            intent.addFlags(backgroundReceiverFlag);
+            intent.setAction(BroadcastIntent.START_FLOATING_BOARD);
             intent.setPackage(getPackageName());
             intent.putExtra("millisecond", currentInstanceMillisecond);
             boolean isDrawMode = this.childTextViews[1].getText().equals(getString(R.string.drawing_mode));
@@ -871,7 +876,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
             Intent intent = new Intent();
-            intent.setAction("pers.zhc.tools.START_FB");
+            intent.setAction(BroadcastIntent.START_FLOATING_BOARD);
             intent.putExtra("millisecond", currentInstanceMillisecond);
             intent.setPackage(getPackageName());
             PendingIntent pi = getPendingIntent(intent);
