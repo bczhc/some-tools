@@ -27,12 +27,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.filepicker.FilePicker;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.utils.sqlite.SQLite;
+import pers.zhc.u.FileU;
+import pers.zhc.u.Latch;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author bczhc
@@ -63,7 +69,7 @@ public class DiaryMainActivity extends BaseActivity {
             currentPassword = cursor.getString(cursor.getColumnIndex("pw"));
         }
         cursor.close();
-        if (currentPassword == null) {
+        if (currentPassword.isEmpty()) {
             load();
             return;
         }
@@ -113,7 +119,7 @@ public class DiaryMainActivity extends BaseActivity {
         db.disableWriteAheadLogging();
         db.execSQL("CREATE TABLE IF NOT EXISTS passwords(\n" +
                 "    k text not null,\n" +
-                "    pw text\n" +
+                "    pw text not null\n" +
                 ")");
         return db;
     }
@@ -151,10 +157,65 @@ public class DiaryMainActivity extends BaseActivity {
             case R.id.password:
                 changePassword();
                 break;
+            case R.id.export:
+                Intent intent1 = new Intent(this, FilePicker.class);
+                intent1.putExtra("option", FilePicker.PICK_FOLDER);
+                startActivityForResult(intent1, RequestCode.START_ACTIVITY_1);
+                break;
+            case R.id.import_:
+                Intent intent2 = new Intent(this, FilePicker.class);
+                intent2.putExtra("option", FilePicker.PICK_FILE);
+                startActivityForResult(intent2, RequestCode.START_ACTIVITY_2);
             default:
                 break;
         }
         return true;
+    }
+
+    private void importDiary(File file) {
+        final File databaseFile = Common.getInternalDatabaseDir(this, "diary.db");
+        final Latch latch = new Latch();
+        latch.suspend();
+        AtomicBoolean status = new AtomicBoolean(false);
+        new Thread(() -> {
+            try {
+                status.set(FileU.FileCopy(file, databaseFile));
+            } catch (IOException e) {
+                Common.showException(e, this);
+            } finally {
+                latch.stop();
+            }
+        }).start();
+        latch.await();
+        if (status.get()) {
+            ToastUtils.show(this, R.string.importing_success);
+        } else {
+            ToastUtils.show(this, R.string.copying_failure);
+        }
+        diaryDatabase = getDiaryDatabase(this);
+        refresh();
+    }
+
+    private void exportDiary(File dir) {
+        final File databaseFile = Common.getInternalDatabaseDir(this, "diary.db");
+        final Latch latch = new Latch();
+        latch.suspend();
+        AtomicBoolean status = new AtomicBoolean(false);
+        new Thread(() -> {
+            try {
+                status.set(FileU.FileCopy(databaseFile, new File(dir, "diary.db")));
+            } catch (IOException e) {
+                Common.showException(e, this);
+            } finally {
+                latch.stop();
+            }
+        }).start();
+        latch.await();
+        if (status.get()) {
+            ToastUtils.show(this, R.string.exporting_success);
+        } else {
+            ToastUtils.show(this, R.string.copying_failure);
+        }
     }
 
     private void changePassword() {
@@ -197,8 +258,32 @@ public class DiaryMainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCode.START_ACTIVITY_0) {
-            refresh();
+        switch (requestCode) {
+            case RequestCode.START_ACTIVITY_0:
+                refresh();
+                break;
+            case RequestCode.START_ACTIVITY_1:
+                if (data == null) {
+                    break;
+                }
+                final String dir = data.getStringExtra("result");
+                if (dir == null) {
+                    break;
+                }
+                exportDiary(new File(dir));
+                break;
+            case RequestCode.START_ACTIVITY_2:
+                if (data == null) {
+                    break;
+                }
+                final String file = data.getStringExtra("result");
+                if (file == null) {
+                    break;
+                }
+                importDiary(new File(file));
+                break;
+            default:
+                break;
         }
     }
 

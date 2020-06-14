@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -53,7 +54,9 @@ public class DiaryTakingActivity extends BaseActivity {
             actionBar.setTitle(R.string.diary);
             infoTV = new TextView(this);
             infoTV.setTextColor(Color.WHITE);
-            infoTV.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                infoTV.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+            }
             actionBar.setCustomView(infoTV);
             actionBar.show();
         }

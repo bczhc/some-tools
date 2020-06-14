@@ -240,16 +240,16 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         ctx.runOnUiThread(() -> textViews[i].setText(listFiles[i].isFile() ? listFiles[i].getName() : (listFiles[i].getName() + "/")));
         textViews[i].setLayoutParams(lp);
         switch (type) {
-            case 1:
+            case TYPE_PICK_FILE:
                 if (listFiles[i].isFile()) {
                     textViews[i].setBackgroundResource(canPickUnchecked);
                 } else {
                     textViews[i].setBackgroundResource(unselectedDrawable);
                 }
                 break;
-            case 2:
+            case TYPE_PICK_FOLDER:
                 if (listFiles[i].isFile()) {
-                    textViews[i].setBackgroundResource(unselectedDrawable);
+                    textViews[i].setBackgroundResource(cannotPick);
                 } else {
                     textViews[i].setBackgroundResource(canPickUnchecked);
                 }

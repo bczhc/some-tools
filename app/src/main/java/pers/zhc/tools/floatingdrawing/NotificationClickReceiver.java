@@ -3,14 +3,18 @@ package pers.zhc.tools.floatingdrawing;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import pers.zhc.tools.BaseActivity;
 
 import java.util.Objects;
 
+/**
+ * @author bczhc
+ */
 public class NotificationClickReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if ("pers.zhc.tools.START_FB".equals(Objects.requireNonNull(intent.getAction()))) {
+        if (BaseActivity.BroadcastIntent.START_FLOATING_BOARD.equals(Objects.requireNonNull(intent.getAction()))) {
             long millisecond = intent.getLongExtra("millisecond", 0);
             FloatingDrawingBoardMainActivity activity = (FloatingDrawingBoardMainActivity) FloatingDrawingBoardMainActivity.longActivityMap.get(millisecond);
             if (activity != null) {

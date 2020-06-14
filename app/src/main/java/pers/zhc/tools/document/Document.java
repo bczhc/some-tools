@@ -18,7 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
-import pers.zhc.tools.filepicker.Picker;
+import pers.zhc.tools.filepicker.FilePicker;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.DisplayUtil;
@@ -86,14 +86,14 @@ public class Document extends BaseActivity {
         sv = findViewById(R.id.sv);
         importBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.setClass(this, Picker.class);
-            intent.putExtra("option", Picker.PICK_FILE);
+            intent.setClass(this, FilePicker.class);
+            intent.putExtra("option", FilePicker.PICK_FILE);
             startActivityForResult(intent, RequestCode.START_ACTIVITY_2);
         });
         exportBtn.setOnClickListener(v -> {
             Intent intent = new Intent();
-            intent.setClass(this, Picker.class);
-            intent.putExtra("option", Picker.PICK_FOLDER);
+            intent.setClass(this, FilePicker.class);
+            intent.putExtra("option", FilePicker.PICK_FOLDER);
             startActivityForResult(intent, RequestCode.START_ACTIVITY_3);
         });
         db = getDB(this);
