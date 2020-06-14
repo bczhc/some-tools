@@ -1,6 +1,7 @@
 package pers.zhc.tools.diary;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -313,16 +314,7 @@ public class DiaryMainActivity extends BaseActivity {
                     previewTV.setLayoutParams(previewLP);
                     dateTV.setText(dateString);
                     previewTV.setText(content);
-                    childRL.setOnClickListener(v -> createDiary(new DiaryTakingActivity.MyDate(dateString)));
-                    childRL.setOnLongClickListener(v -> {
-                        DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
-                                    diaryDatabase.delete("diary", "date=?", new String[]{dateString});
-                                    refresh();
-                                }, (dialog, which) -> {
-                                }, R.string.whether_to_delete, ViewGroup.LayoutParams.MATCH_PARENT
-                                , ViewGroup.LayoutParams.WRAP_CONTENT, false).show();
-                        return true;
-                    });
+                    setChildRL(dateString, childRL);
                     runOnUiThread(() -> {
                         childRL.addView(dateTV);
                         childRL.addView(previewTV);
@@ -332,5 +324,76 @@ public class DiaryMainActivity extends BaseActivity {
             }
             cursor.close();
         }).start();
+    }
+
+    private void setChildRL(String dateString, RelativeLayout childRL) {
+        childRL.setOnClickListener(v -> {
+            try {
+                createDiary(new DiaryTakingActivity.MyDate(dateString));
+            } catch (Exception e) {
+                Common.showException(e, this);
+            }
+        });
+        childRL.setOnLongClickListener(v -> {
+            Dialog dialog = new Dialog(this);
+            DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+            LinearLayout ll = new LinearLayout(this);
+            ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ll.setOrientation(LinearLayout.VERTICAL);
+            final Button changeDateBtn = new Button(this);
+            final Button deleteBtn = new Button(this);
+            changeDateBtn.setText(R.string.change_date);
+            deleteBtn.setText(R.string.delete);
+            ll.addView(changeDateBtn);
+            ll.addView(deleteBtn);
+            changeDateBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            deleteBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            changeDateBtn.setOnClickListener(v1 -> {
+                AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                EditText dateET = new EditText(this);
+                final AlertDialog d2 = adb.setTitle(R.string.enter_new_date)
+                        .setPositiveButton(R.string.confirm, (dialog1, which) -> {
+                            final String newDateString = dateET.getText().toString();
+                            final DiaryTakingActivity.MyDate newDate;
+                            try {
+                                newDate = new DiaryTakingActivity.MyDate(newDateString);
+                            } catch (Exception e) {
+                                ToastUtils.show(this, R.string.please_type_correct_value);
+                                return;
+                            }
+                            changeDate(dateString, newDate);
+                            dialog.dismiss();
+                            refresh();
+                        })
+                        .setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                        })
+                        .setView(dateET)
+                        .create();
+                DialogUtil.setDialogAttr(d2, false, ViewGroup.LayoutParams.MATCH_PARENT
+                        , ViewGroup.LayoutParams.WRAP_CONTENT, false);
+                d2.show();
+            });
+            deleteBtn.setOnClickListener(v1 -> DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
+                        diaryDatabase.delete("diary", "date=?", new String[]{dateString});
+                        dialog.dismiss();
+                        refresh();
+                    }, (d, which) -> {
+                    }, R.string.whether_to_delete, ViewGroup.LayoutParams.MATCH_PARENT
+                    , ViewGroup.LayoutParams.WRAP_CONTENT, false).show());
+            dialog.setContentView(ll);
+            dialog.show();
+            return true;
+        });
+    }
+
+    private void changeDate(String oldDateString, DiaryTakingActivity.MyDate newDate) {
+        ContentValues cv = new ContentValues();
+        cv.put("date", newDate.toString());
+        diaryDatabase.update("diary", cv, "date=?", new String[]{oldDateString});
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
