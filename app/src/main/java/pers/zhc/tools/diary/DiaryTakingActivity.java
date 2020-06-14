@@ -170,7 +170,7 @@ public class DiaryTakingActivity extends BaseActivity {
             day = date[2];
         }
 
-        MyDate(String dateString) {
+        MyDate(String dateString) throws Exception {
             final String[] split = dateString.split("\\.");
             year = Integer.parseInt(split[0]);
             month = Integer.parseInt(split[1]);
