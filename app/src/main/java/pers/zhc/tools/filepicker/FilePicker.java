@@ -14,6 +14,11 @@ import java.io.File;
 
 /**
  * @author bczhc
+ * <p>Put string extra whose key is "option" and value is {@link FilePicker#PICK_FILE} or {@link FilePicker#PICK_FOLDER}
+ * to the intent after start this activity by invoking {@link android.app.Activity#startActivityForResult(Intent, int)}</p>
+ * <p>The data it returns in {@link android.app.Activity#onActivityResult(int, int, Intent)} has an string extra
+ * whose key is "result" and value is the picked file or folder.</p><br/>
+ * <p><i>Writing English documents is too hard for me...</i></p>
  */
 public class FilePicker extends BaseActivity {
     public static final int PICK_FILE = 1;

@@ -49,6 +49,7 @@ public class DiaryMainActivity extends BaseActivity {
     private LinearLayout ll;
     private String currentPassword;
     private boolean isUnlocked = false;
+    private String[] week;
 
     static SQLiteDatabase getDiaryDatabase(Context ctx) {
         final SQLiteDatabase diaryDatabase = SQLiteDatabase.openOrCreateDatabase(Common.getInternalDatabaseDir(ctx, "diary.db"), null);
@@ -98,6 +99,8 @@ public class DiaryMainActivity extends BaseActivity {
                 }
             }
         });
+        this.week = getResources().getStringArray(R.array.weeks);
+
     }
 
     private void load() {
@@ -251,7 +254,7 @@ public class DiaryMainActivity extends BaseActivity {
         if (date == null) {
             final Calendar calendar = Calendar.getInstance();
             final int year = calendar.get(Calendar.YEAR);
-            final int month = calendar.get(Calendar.MONTH) + 1;
+            final int month = calendar.get(Calendar.MONTH);
             final int day = calendar.get(Calendar.DAY_OF_MONTH);
             dateInts = new int[]{year, month, day};
         } else {
@@ -317,8 +320,18 @@ public class DiaryMainActivity extends BaseActivity {
                     RelativeLayout.LayoutParams previewLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     previewLP.addRule(RelativeLayout.BELOW, R.id.tv1);
                     previewTV.setLayoutParams(previewLP);
-                    dateTV.setText(dateString);
-                    previewTV.setText(content);
+                    String weekString = null;
+                    try {
+                        final DiaryTakingActivity.MyDate myDate = new DiaryTakingActivity.MyDate(dateString);
+                        final Calendar calendar = Calendar.getInstance();
+                        calendar.set(myDate.year, myDate.month, myDate.day);
+                        final int weekIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+                        weekString = this.week[weekIndex];
+                    } catch (Exception e) {
+                        Common.showException(e, this);
+                    }
+                    dateTV.setText(dateString + " " + weekString);
+                    previewTV.setText(content.length() > 100 ? (content.substring(0, 100) + "...") : content);
                     setChildRL(dateString, childRL);
                     runOnUiThread(() -> {
                         childRL.addView(dateTV);
