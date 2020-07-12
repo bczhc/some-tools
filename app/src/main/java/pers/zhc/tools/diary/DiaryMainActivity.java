@@ -48,6 +48,7 @@ public class DiaryMainActivity extends BaseActivity {
     private SQLiteDatabase diaryDatabase;
     private LinearLayout ll;
     private String currentPassword;
+    private boolean isUnlocked = false;
 
     static SQLiteDatabase getDiaryDatabase(Context ctx) {
         final SQLiteDatabase diaryDatabase = SQLiteDatabase.openOrCreateDatabase(Common.getInternalDatabaseDir(ctx, "diary.db"), null);
@@ -100,7 +101,9 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     private void load() {
+        isUnlocked = true;
         setContentView(R.layout.diary_activity);
+        invalidateOptionsMenu();
         ll = findViewById(R.id.ll);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -144,8 +147,10 @@ public class DiaryMainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        final MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.diary_actionbar, menu);
+        if (isUnlocked) {
+            final MenuInflater menuInflater = getMenuInflater();
+            menuInflater.inflate(R.menu.diary_actionbar, menu);
+        }
         return true;
     }
 
@@ -246,7 +251,7 @@ public class DiaryMainActivity extends BaseActivity {
         if (date == null) {
             final Calendar calendar = Calendar.getInstance();
             final int year = calendar.get(Calendar.YEAR);
-            final int month = calendar.get(Calendar.MONTH);
+            final int month = calendar.get(Calendar.MONTH) + 1;
             final int day = calendar.get(Calendar.DAY_OF_MONTH);
             dateInts = new int[]{year, month, day};
         } else {

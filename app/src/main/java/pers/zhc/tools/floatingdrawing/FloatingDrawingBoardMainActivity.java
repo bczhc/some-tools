@@ -68,6 +68,7 @@ import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.views.AbstractHSVAColorPickerRelativeLayout;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
@@ -503,7 +504,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             setDialogAttr(TextViewsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
             AbstractHSVAColorPickerRelativeLayout TextViewsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, FloatingDrawingBoardMainActivity.this.TextViewsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1], TextViewsColorDialog) {
                 @Override
-                void onPickedAction(int color, float[] hsva) {
+                protected void onPickedAction(int color, float[] hsva) {
                     setPanelColor(color, hsva);
                 }
             };
@@ -517,7 +518,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
             AbstractHSVAColorPickerRelativeLayout textsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2], textsColorDialog) {
                 @Override
-                void onPickedAction(int color, float[] hsva) {
+                protected void onPickedAction(int color, float[] hsva) {
                     for (TextView childTextView : childTextViews) {
                         if (!invertColorChecked) {
                             textsColor = color;
@@ -594,7 +595,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
             AbstractHSVAColorPickerRelativeLayout hsvaColorPickerRelativeLayout = new AbstractHSVAColorPickerRelativeLayout(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
                 @Override
-                void onPickedAction(int color, float[] hsva) {
+                protected void onPickedAction(int color, float[] hsva) {
                     pv.setPaintColor(color);
                     hsvaFloats[0] = hsva;
                 }

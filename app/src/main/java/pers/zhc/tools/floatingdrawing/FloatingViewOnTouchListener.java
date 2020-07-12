@@ -3,6 +3,7 @@ package pers.zhc.tools.floatingdrawing;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import pers.zhc.tools.views.AbstractHSVAColorPickerRelativeLayout;
 
 public class FloatingViewOnTouchListener implements View.OnTouchListener {
     final private WindowManager.LayoutParams layoutParams;
