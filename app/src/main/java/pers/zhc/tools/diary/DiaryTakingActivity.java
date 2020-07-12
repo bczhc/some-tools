@@ -64,7 +64,7 @@ public class DiaryTakingActivity extends BaseActivity {
         int[] date = intent.getIntArrayExtra("date");
         if (date == null) {
             final Calendar calendar = Calendar.getInstance();
-            date = new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)};
+            date = new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)};
         }
         mDate = new MyDate(date);
         initDB();

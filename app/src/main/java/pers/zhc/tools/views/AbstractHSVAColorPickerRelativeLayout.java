@@ -1,4 +1,4 @@
-package pers.zhc.tools.floatingdrawing;
+package pers.zhc.tools.views;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -30,7 +30,7 @@ import pers.zhc.tools.utils.ToastUtils;
 
 @SuppressWarnings("SameParameterValue")
 @SuppressLint("ViewConstructor")
-abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
+public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
     private final float[] hsv = new float[3];
     private final int width;
     private final int height;
@@ -79,7 +79,7 @@ abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
         init();
     }
 
-    protected static int limitValue(int value, int min, int max) {
+    public static int limitValue(int value, int min, int max) {
         return value < min ? min : (Math.min(value, max));
     }
 
@@ -194,7 +194,7 @@ abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
         return currentXPos[i] = hsv[i] * width;
     }
 
-    abstract void onPickedAction(int color, float[] hsva);
+    protected abstract void onPickedAction(int color, float[] hsva);
 
     private void setInvertedColor(boolean invalidate) {
         oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(255, hsv)));

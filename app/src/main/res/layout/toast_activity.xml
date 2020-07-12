@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                android:layout_height="match_parent">
-    <EditText android:layout_width="match_parent" android:layout_height="match_parent"
-              android:layout_above="@id/toast"
-              android:id="@+id/toast_et"
-              android:layout_margin="10sp"
-              tools:ignore="Autofill,LabelFor,TextFields"
-              android:gravity="top"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
+                                         android:layout_above="@id/toast"
+                                         android:id="@+id/toast_et"
+                                         android:layout_margin="10sp"
+                                         app:gravity="top"
+                                         android:fillViewport="true"
     />
     <Button android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="@string/toast"

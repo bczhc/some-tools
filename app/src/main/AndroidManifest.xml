@@ -96,7 +96,7 @@
 
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.toast.AToast"
+        <activity android:name="pers.zhc.tools.toast.ToastTest"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme">
             <intent-filter>

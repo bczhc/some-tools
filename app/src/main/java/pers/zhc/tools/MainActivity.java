@@ -30,7 +30,7 @@ import pers.zhc.tools.test.SensorTest;
 import pers.zhc.tools.test.SurfaceViewTest;
 import pers.zhc.tools.test.service.ServiceActivity;
 import pers.zhc.tools.theme.SetTheme;
-import pers.zhc.tools.toast.AToast;
+import pers.zhc.tools.toast.ToastTest;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.youdaoapi.YouDaoTranslate;
 import pers.zhc.u.common.ReadIS;
@@ -121,7 +121,7 @@ public class MainActivity extends BaseActivity {
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
                 Pi.class,
-                AToast.class,
+                ToastTest.class,
                 Clip.class,
                 FloatingDrawingBoardMainActivity.class,
                 FunctionDrawingBoard.class,
