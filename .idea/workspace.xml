@@ -54,17 +54,14 @@
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:diary_temporary_menus" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="日记没有解锁时不会显示菜单按钮 fix #139">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/diary/DiaryMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/diary/DiaryMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/diary/DiaryTakingActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/diary/DiaryTakingActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/AbstractHSVAColorPickerRelativeLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/views/AbstractHSVAColorPickerRelativeLayout.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingViewOnTouchListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingViewOnTouchListener.java" afterDir="false" />
@@ -145,7 +142,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="ed30cb12362dd28be826a3420f313591232ac9ae" />
+        <entry key="$PROJECT_DIR$" value="diary_temporary_menus" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -952,7 +949,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="HEAD" />
+                        <option value="diary_temporary_menus" />
                       </list>
                     </value>
                   </entry>
@@ -1064,10 +1061,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state width="1053" height="602" key="DebuggerActiveHint/0.0.1920.1050@0.0.1920.1050" timestamp="1592113140593" />
-    <state x="0" y="0" width="1920" height="1050" maximized="true" key="DiffContextDialog" timestamp="1592074282339">
+    <state x="0" y="0" width="1920" height="1050" maximized="true" key="DiffContextDialog" timestamp="1594569280810">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="0" y="0" width="1920" height="1050" maximized="true" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1592074282339" />
+    <state x="0" y="0" width="1920" height="1050" maximized="true" key="DiffContextDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1594569280810" />
     <state x="0" y="96" width="1920" height="857" maximized="true" key="DiffContextDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1586544269018" />
     <state x="716" y="286" width="933" height="635" key="FileChooserDialogImpl" timestamp="1592081616260">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -1127,15 +1124,15 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="544" y="145" width="732" height="718" key="MultipleFileMergeDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1586543858913" />
-    <state x="695" y="238" width="763" height="716" key="RollbackChangesDialog" timestamp="1585919658338">
-      <screen x="0" y="0" width="1920" height="1050" />
-    </state>
-    <state x="695" y="238" width="528" height="579" key="RollbackChangesDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1585919658338" />
     <state x="0" y="0" width="1920" height="1050" key="SettingsEditor" timestamp="1592106281240">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="0" y="0" width="1920" height="1050" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1592106281240" />
     <state x="371" y="52" width="1135" height="912" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1591449137951" />
+    <state x="100" y="100" width="1720" height="850" key="ShowDiffWithBranchDialog" timestamp="1594569280811">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="100" y="100" width="1720" height="850" key="ShowDiffWithBranchDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1594569280811" />
     <state x="555" y="261" width="1012" height="669" key="Vcs.Push.Dialog.v2" timestamp="1592109573885">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>

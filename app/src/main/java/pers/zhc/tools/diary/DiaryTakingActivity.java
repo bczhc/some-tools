@@ -153,6 +153,9 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     static class MyDate {
+        /**
+         * month: 0 is JANUARY!
+         */
         int year, month, day;
 
         MyDate(int year, int month, int day) {
@@ -170,16 +173,19 @@ public class DiaryTakingActivity extends BaseActivity {
             day = date[2];
         }
 
-        MyDate(String dateString) throws Exception {
+        MyDate(String dateString) {
             final String[] split = dateString.split("\\.");
             year = Integer.parseInt(split[0]);
-            month = Integer.parseInt(split[1]);
+            month = Integer.parseInt(split[1]) - 1;
             day = Integer.parseInt(split[2]);
         }
 
-        @Override
-        public String toString() {
-            return year + "." + month + "." + day;
+        MyDate(long timestamp) {
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(timestamp);
+            this.year = calendar.get(Calendar.YEAR);
+            this.month = calendar.get(Calendar.MONTH);
+            this.day = calendar.get(Calendar.DAY_OF_MONTH);
         }
 
         @Override
@@ -190,7 +196,9 @@ public class DiaryTakingActivity extends BaseActivity {
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
+
             MyDate myDate = (MyDate) o;
+
             if (year != myDate.year) {
                 return false;
             }
@@ -207,5 +215,11 @@ public class DiaryTakingActivity extends BaseActivity {
             result = 31 * result + day;
             return result;
         }
+
+        @Override
+        public String toString() {
+            return year + "." + (month + 1) + "." + day;
+        }
+
     }
 }
