@@ -48,7 +48,7 @@
     <string name="whether_to_save">是否保存</string>
     <string name="no">否</string>
     <string name="yes">是</string>
-    <string name="overlaid_drawing_board">叠加画板</string>
+    <string name="overlaid_drawing_board">悬浮画板</string>
     <string name="pick_color">选择颜色</string>
     <string name="start_floating_window">开启悬浮窗</string>
     <string name="stop_floating_window">关闭悬浮窗</string>
