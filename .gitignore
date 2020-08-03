@@ -1,6 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .gradle/
-.idea/caches/gradle_models.ser
+.idea/caches/
 .idea/libraries/
 app/build/
 app/src/jni/cpp/cmake-build-debug/
