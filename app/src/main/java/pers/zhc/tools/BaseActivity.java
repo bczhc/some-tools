@@ -107,7 +107,7 @@ public class BaseActivity extends Activity {
                                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                                 })
                                 .setPositiveButton(R.string.confirm, (dialog, which) -> {
-                                    ExecutorService es = Executors.newCachedThreadPool();//使用线程池，目的是为了可以终止下载线程
+                                    ExecutorService es = Executors.newCachedThreadPool();
                                     new PermissionRequester(() -> {
                                         Dialog downloadDialog = new Dialog(this);
                                         DialogUtil.setDialogAttr(downloadDialog, false

@@ -105,7 +105,6 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
         TextView tv = new TextView(context);
         tv.setText(R.string.h_s_v_a_color_picker);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             tv.setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
         } else {
             float r = ((float) height) / 12;
@@ -172,9 +171,6 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
 
     private void invalidateAllView() {
         for (View view : hsvaViews) {
-//            if (i == notDrawIndex) continue;
-//            int finalI = i;
-//            new Thread(() -> hsvAView[finalI].postInvalidate()).start();
             view.invalidate();
         }
         int color = this.getColor();
@@ -241,7 +237,6 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
 
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             setMeasuredDimension(hW, hH);
         }
 
@@ -273,13 +268,11 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
 
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             setMeasuredDimension(sW, sH);
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
-//            super.onDraw(canvas);
             System.arraycopy(hsv, 0, temp[1], 0, hsv.length);
             temp[1][3] = alpha;
             for (float i = 0; i < sW; i++) {
@@ -318,13 +311,11 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
 
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             setMeasuredDimension(vW, vH);
         }
 
         @Override
         protected void onDraw(Canvas canvas) {
-//            super.onDraw(canvas);
             System.arraycopy(hsv, 0, temp[2], 0, hsv.length);
             temp[2][3] = alpha;
             for (float i = 0; i < vW; i++) {
@@ -363,7 +354,6 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
 
         @Override
         protected void onDraw(Canvas canvas) {
-//            super.onDraw(canvas);
             System.arraycopy(hsv, 0, temp[3], 0, hsv.length);
             temp[3][3] = alpha;
             for (float i = 0; i < aW; i++) {
@@ -375,7 +365,6 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
 
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             setMeasuredDimension(aW, aH);
         }
 

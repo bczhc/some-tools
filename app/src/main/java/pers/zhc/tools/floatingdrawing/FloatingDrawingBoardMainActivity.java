@@ -216,6 +216,23 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         Selection.selectAll(et.getText());
     }
 
+    public static String completeParentheses(String s) {
+        StringBuilder sb = new StringBuilder(s);
+        Stack<Character> stack = new Stack<>();
+        final int length = s.length();
+        for (int i = 0; i < length; i++) {
+            final char c = s.charAt(i);
+            if (stack.empty() && c == ')') sb.insert(0, '(');
+            if (c == '(') stack.push(c);
+            else if (!stack.empty() && c == ')') stack.pop();
+        }
+        while (!stack.empty()) {
+            sb.append(')');
+            stack.pop();
+        }
+        return sb.toString();
+    }
+
     @SuppressLint("UseSparseArrays")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -502,7 +519,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         Button panelColorBtn = inflate.findViewById(R.id.panel_color);
         panelColorBtn.setEnabled(!this.panelColorFollowPainting);
         panelColorBtn.setOnClickListener(v2 -> {
-            Dialog TextViewsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
+            Dialog TextViewsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this, R.style.dialog_with_background_dim_false);
             setDialogAttr(TextViewsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
             AbstractHSVAColorPickerRelativeLayout TextViewsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, FloatingDrawingBoardMainActivity.this.TextViewsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1], TextViewsColorDialog) {
                 @Override
@@ -516,7 +533,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         Button textsColorBtn = inflate.findViewById(R.id.text_color);
         textsColorBtn.setEnabled(!this.invertColorChecked);
         textsColorBtn.setOnClickListener(v2 -> {
-            Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this);
+            Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this, R.style.dialog_with_background_dim_false);
             setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
             AbstractHSVAColorPickerRelativeLayout textsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2], textsColorDialog) {
                 @Override
@@ -539,15 +556,24 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         whetherTextColorIsInverted.setOnCheckedChangeListener((buttonView, isChecked) -> {
             textsColorBtn.setEnabled(!isChecked);
             invertColorChecked = isChecked;
-            for (TextView childTV : childTextViews) {
-                childTV.setTextColor(textsColor = ColorUtils.invertColor(TextViewsColor));
+            if (isChecked) for (TextView childTV : childTextViews) {
+                childTV.setTextColor(ColorUtils.invertColor(TextViewsColor));
             }
+            else
+                for (TextView childTV : childTextViews) {
+                    childTV.setTextColor(textsColor);
+                }
         });
         Switch followPaintingColor = inflate.findViewById(R.id.follow_painting_color);
         followPaintingColor.setChecked(this.panelColorFollowPainting);
         followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> {
             this.panelColorFollowPainting = isChecked;
             panelColorBtn.setEnabled(!this.panelColorFollowPainting);
+            float[] hsva = new float[4];
+            final int pvColor = pv.getColor();
+            Color.colorToHSV(pvColor, hsva);
+            hsva[3] = Color.alpha(pvColor);
+            setPanelColor(pvColor, hsva);
         });
         c.setContentView(inflate);
         setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
@@ -804,7 +830,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
 
     void toggleDrawAndControlMode() {
         if (drawMode) {
@@ -1306,7 +1331,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
     }
 
-
     public static abstract class AbstractCheckOverlayPermission {
         public AbstractCheckOverlayPermission(Activity activity) {
             if (!Settings.canDrawOverlays(activity)) {
@@ -1322,22 +1346,5 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         public abstract void granted();
 
         public abstract void denied();
-    }
-
-    public static String completeParentheses(String s) {
-        StringBuilder sb = new StringBuilder(s);
-        Stack<Character> stack = new Stack<>();
-        final int length = s.length();
-        for (int i = 0; i < length; i++) {
-            final char c = s.charAt(i);
-            if (stack.empty() && c == ')') sb.insert(0, '(');
-            if (c == '(') stack.push(c);
-            else if (!stack.empty() && c == ')') stack.pop();
-        }
-        while (!stack.empty()) {
-            sb.append(')');
-            stack.pop();
-        }
-        return sb.toString();
     }
 }
