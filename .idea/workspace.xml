@@ -33,7 +33,7 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="not all" />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="nullp" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
     <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
@@ -59,17 +59,10 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="#130 fix #95; 修复由于主题原因导致的文件选择弹窗上方有透明遮挡物">
-      <change afterPath="$PROJECT_DIR$/.idea/smartfox_info.xml" afterDir="false" />
+    <list default="true" id="3999e64b-f7c0-4318-b190-f6b221531b2b" name="Default Changelist" comment="fix #95; 修复由于主题原因导致的文件选择弹窗上方有透明遮挡物">
       <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/floatingdrawing/FloatingDrawingBoardMainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/views/AbstractHSVAColorPickerRelativeLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/views/AbstractHSVAColorPickerRelativeLayout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRelativeLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRelativeLayout.java" afterDir="false" />
     </list>
     <list id="15828c76-ae83-4315-9595-85fe0d2c9536" name="fix load broken .so library" comment="fix load broken .so library" />
     <option name="SHOW_DIALOG" value="false" />
@@ -498,13 +491,6 @@
       <workItem from="1585485027072" duration="3325000" />
       <workItem from="1585494373548" duration="4000" />
     </task>
-    <task id="LOCAL-00064" summary="优化傅里叶级数计算线程分配，使用固定线程数线程池。">
-      <created>1581319695325</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1581319695327</updated>
-    </task>
     <task id="LOCAL-00065" summary="本轮绘制手势处理，未完成本轮绘制线程问题">
       <created>1581323953956</created>
       <option name="number" value="00065" />
@@ -750,7 +736,7 @@
       <workItem from="1592110971637" duration="1584000" />
       <workItem from="1594549800723" duration="3786000" />
       <workItem from="1596361857538" duration="3131000" />
-      <workItem from="1596418064336" duration="2142000" />
+      <workItem from="1596418064336" duration="3881000" />
     </task>
     <task id="LOCAL-00097" summary="issue #110">
       <created>1584865235800</created>
@@ -864,7 +850,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592108900402</updated>
     </task>
-    <option name="localTasksCounter" value="113" />
+    <task id="LOCAL-00113" summary="fix #95; 修复由于主题原因导致的文件选择弹窗上方有透明遮挡物">
+      <created>1596421166521</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1596421166522</updated>
+    </task>
+    <option name="localTasksCounter" value="114" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -994,7 +987,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="混淆，压缩，优化……" />
     <MESSAGE value="文件选择器边框（利用Drawable）；去掉悬浮画板的悬浮窗FLAG.KEEP_SCREEN_ON" />
     <MESSAGE value="悬浮画板：移动缩放过程为bitmap显示 (issue #44 )" />
     <MESSAGE value="FB icon" />
@@ -1019,7 +1011,8 @@
     <MESSAGE value="a" />
     <MESSAGE value="日记 删除和简陋密码" />
     <MESSAGE value="日记 导入导出, fix #116" />
-    <option name="LAST_COMMIT_MESSAGE" value="日记 导入导出, fix #116" />
+    <MESSAGE value="fix #95; 修复由于主题原因导致的文件选择弹窗上方有透明遮挡物" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix #95; 修复由于主题原因导致的文件选择弹窗上方有透明遮挡物" />
   </component>
   <component name="WindowStateProjectService">
     <state x="371" y="61" width="777" height="707" key="#app" timestamp="1596362894736">
@@ -1051,11 +1044,11 @@
     <state x="751" y="337" width="550" height="379" key="AndroidCreateXmlResourceDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1592110043581" />
     <state x="534" y="265" width="392" height="290" key="AndroidCreateXmlResourceDialog/0.27.1366.741@0.27.1366.741" timestamp="1596362837301" />
     <state x="751" y="365" width="542" height="405" key="AndroidCreateXmlResourceDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1591454527183" />
-    <state x="167" y="27" width="1189" height="741" key="CommitChangelistDialog2" timestamp="1596420628619">
+    <state x="167" y="27" width="1189" height="741" key="CommitChangelistDialog2" timestamp="1596421166085">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="332" y="48" width="1421" height="1002" key="CommitChangelistDialog2/0.0.1920.1050@0.0.1920.1050" timestamp="1594555109891" />
-    <state x="167" y="27" width="1189" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1596420628619" />
+    <state x="167" y="27" width="1189" height="741" key="CommitChangelistDialog2/0.27.1366.741@0.27.1366.741" timestamp="1596421166085" />
     <state x="0" y="27" width="1906" height="1041" key="CommitChangelistDialog2/0.27.1920.1053@0.27.1920.1053" timestamp="1591453520463" />
     <state width="1053" height="602" key="DebuggerActiveHint" timestamp="1592113140593">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -1077,50 +1070,50 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="0" y="0" width="1920" height="1050" key="GitRewordDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1592082436532" />
-    <state width="1314" height="76" key="GridCell.Tab.0.bottom" timestamp="1596364604012">
+    <state width="1316" height="143" key="GridCell.Tab.0.bottom" timestamp="1596422592309">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1858" height="231" key="GridCell.Tab.0.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1594554061537" />
-    <state width="1314" height="76" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1596364604012" />
+    <state width="1316" height="143" key="GridCell.Tab.0.bottom/0.27.1366.741@0.27.1366.741" timestamp="1596422592309" />
     <state width="1858" height="337" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1591449446909" />
-    <state width="1314" height="76" key="GridCell.Tab.0.center" timestamp="1596364604009">
+    <state width="1316" height="143" key="GridCell.Tab.0.center" timestamp="1596422592308">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1858" height="231" key="GridCell.Tab.0.center/0.0.1920.1050@0.0.1920.1050" timestamp="1594554061533" />
-    <state width="1314" height="76" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1596364604009" />
+    <state width="1316" height="143" key="GridCell.Tab.0.center/0.27.1366.741@0.27.1366.741" timestamp="1596422592308" />
     <state width="1858" height="337" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1591449446908" />
-    <state width="1314" height="76" key="GridCell.Tab.0.left" timestamp="1596364604009">
+    <state width="1316" height="143" key="GridCell.Tab.0.left" timestamp="1596422592308">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1858" height="231" key="GridCell.Tab.0.left/0.0.1920.1050@0.0.1920.1050" timestamp="1594554061530" />
-    <state width="1314" height="76" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1596364604009" />
+    <state width="1316" height="143" key="GridCell.Tab.0.left/0.27.1366.741@0.27.1366.741" timestamp="1596422592308" />
     <state width="1858" height="337" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1591449446908" />
-    <state width="1314" height="76" key="GridCell.Tab.0.right" timestamp="1596364604009">
+    <state width="1316" height="143" key="GridCell.Tab.0.right" timestamp="1596422592308">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1858" height="231" key="GridCell.Tab.0.right/0.0.1920.1050@0.0.1920.1050" timestamp="1594554061536" />
-    <state width="1314" height="76" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1596364604009" />
+    <state width="1316" height="143" key="GridCell.Tab.0.right/0.27.1366.741@0.27.1366.741" timestamp="1596422592308" />
     <state width="1858" height="337" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1591449446909" />
-    <state width="1314" height="76" key="GridCell.Tab.1.bottom" timestamp="1596364604015">
+    <state width="1316" height="143" key="GridCell.Tab.1.bottom" timestamp="1596422592310">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1858" height="231" key="GridCell.Tab.1.bottom/0.0.1920.1050@0.0.1920.1050" timestamp="1594554061543" />
-    <state width="1314" height="76" key="GridCell.Tab.1.bottom/0.27.1366.741@0.27.1366.741" timestamp="1596364604015" />
-    <state width="1314" height="76" key="GridCell.Tab.1.center" timestamp="1596364604013">
+    <state width="1316" height="143" key="GridCell.Tab.1.bottom/0.27.1366.741@0.27.1366.741" timestamp="1596422592310" />
+    <state width="1316" height="143" key="GridCell.Tab.1.center" timestamp="1596422592310">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1858" height="231" key="GridCell.Tab.1.center/0.0.1920.1050@0.0.1920.1050" timestamp="1594554061542" />
-    <state width="1314" height="76" key="GridCell.Tab.1.center/0.27.1366.741@0.27.1366.741" timestamp="1596364604013" />
-    <state width="1314" height="76" key="GridCell.Tab.1.left" timestamp="1596364604013">
+    <state width="1316" height="143" key="GridCell.Tab.1.center/0.27.1366.741@0.27.1366.741" timestamp="1596422592310" />
+    <state width="1316" height="143" key="GridCell.Tab.1.left" timestamp="1596422592309">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1858" height="231" key="GridCell.Tab.1.left/0.0.1920.1050@0.0.1920.1050" timestamp="1594554061538" />
-    <state width="1314" height="76" key="GridCell.Tab.1.left/0.27.1366.741@0.27.1366.741" timestamp="1596364604013" />
-    <state width="1314" height="76" key="GridCell.Tab.1.right" timestamp="1596364604013">
+    <state width="1316" height="143" key="GridCell.Tab.1.left/0.27.1366.741@0.27.1366.741" timestamp="1596422592309" />
+    <state width="1316" height="143" key="GridCell.Tab.1.right" timestamp="1596422592310">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state width="1858" height="231" key="GridCell.Tab.1.right/0.0.1920.1050@0.0.1920.1050" timestamp="1594554061543" />
-    <state width="1314" height="76" key="GridCell.Tab.1.right/0.27.1366.741@0.27.1366.741" timestamp="1596364604013" />
+    <state width="1316" height="143" key="GridCell.Tab.1.right/0.27.1366.741@0.27.1366.741" timestamp="1596422592310" />
     <state x="0" y="27" width="1320" height="741" key="SettingsEditor" timestamp="1596420064696">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1131,10 +1124,11 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="100" y="100" width="1720" height="850" key="ShowDiffWithBranchDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1594569280811" />
-    <state x="555" y="261" width="1012" height="669" key="Vcs.Push.Dialog.v2" timestamp="1592109573885">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="395" y="211" width="800" height="536" key="Vcs.Push.Dialog.v2" timestamp="1596421181307">
+      <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="555" y="261" width="1012" height="669" key="Vcs.Push.Dialog.v2/0.0.1920.1050@0.0.1920.1050" timestamp="1592109573885" />
+    <state x="395" y="211" width="800" height="536" key="Vcs.Push.Dialog.v2/0.27.1366.741@0.27.1366.741" timestamp="1596421181307" />
     <state x="344" y="70" width="1109" height="847" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1596420288901">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
@@ -1144,19 +1138,20 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="620" y="447" width="680" height="220" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.27.1920.1053@0.27.1920.1053" timestamp="1591450300019" />
-    <state x="338" y="156" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1594553772898">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="240" y="137" width="1051" height="630" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1596422234882">
+      <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="338" y="156" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1050@0.0.1920.1050" timestamp="1594553772898" />
+    <state x="240" y="137" width="1051" height="630" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.27.1366.741@0.27.1366.741" timestamp="1596422234882" />
     <state x="694" y="291" width="667" height="609" key="extract.method.dialog" timestamp="1592111753452">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="694" y="291" width="667" height="609" key="extract.method.dialog/0.0.1920.1050@0.0.1920.1050" timestamp="1592111753452" />
-    <state x="64" y="27" width="1152" height="741" key="find.popup" timestamp="1596420547849">
+    <state x="64" y="27" width="1152" height="741" key="find.popup" timestamp="1596420969460">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="90" y="0" width="1619" height="1037" key="find.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1594553716669" />
-    <state x="64" y="27" width="1152" height="741" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1596420547849" />
+    <state x="64" y="27" width="1152" height="741" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1596420969460" />
     <state x="527" y="102" width="1113" height="894" key="find.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1591455395908" />
     <state x="557" y="317" width="812" height="492" key="git4idea.rebase.GitRebaseDialog" timestamp="1592082423364">
       <screen x="0" y="0" width="1920" height="1050" />
@@ -1167,16 +1162,58 @@
     </state>
     <state x="0" y="43" width="1920" height="1001" key="new project wizard/0.0.1920.1050@0.0.1920.1050" timestamp="1592104525316" />
     <state x="0" y="70" width="1865" height="965" key="new project wizard/0.27.1920.1053@0.27.1920.1053" timestamp="1591451881730" />
-    <state x="624" y="17" width="840" height="1032" key="run.anything.popup" timestamp="1594554743279">
-      <screen x="0" y="0" width="1920" height="1050" />
+    <state x="444" y="39" width="598" height="729" key="run.anything.popup" timestamp="1596421814823">
+      <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="624" y="17" width="840" height="1032" key="run.anything.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1594554743279" />
+    <state x="444" y="39" width="598" height="729" key="run.anything.popup/0.27.1366.741@0.27.1366.741" timestamp="1596421814823" />
     <state x="624" y="44" width="840" height="1034" key="run.anything.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1591451290613" />
-    <state x="342" y="38" width="928" height="478" key="search.everywhere.popup" timestamp="1596420879263">
+    <state x="342" y="38" width="928" height="478" key="search.everywhere.popup" timestamp="1596422273266">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="480" y="16" width="928" height="677" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1594554681635" />
-    <state x="342" y="38" width="928" height="478" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1596420879263" />
+    <state x="342" y="38" width="928" height="478" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1596422273266" />
     <state x="640" y="167" width="928" height="678" key="search.everywhere.popup/0.27.1920.1053@0.27.1920.1053" timestamp="1591450373771" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRelativeLayout.java</url>
+          <line>104</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRelativeLayout.java</url>
+          <line>111</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRelativeLayout.java</url>
+          <line>114</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRelativeLayout.java</url>
+          <line>132</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRelativeLayout.java</url>
+          <line>188</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePicker.java</url>
+          <line>55</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/pers/zhc/tools/filepicker/FilePickerRelativeLayout.java</url>
+          <line>200</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
