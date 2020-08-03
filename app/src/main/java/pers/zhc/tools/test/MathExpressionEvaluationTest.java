@@ -9,6 +9,7 @@ import android.widget.TextView;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 
 public class MathExpressionEvaluationTest extends BaseActivity {
     @Override
@@ -31,7 +32,7 @@ public class MathExpressionEvaluationTest extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                expression.setExpressionString(s.toString());
+                expression.setExpressionString(FloatingDrawingBoardMainActivity.completeParentheses(s.toString()));
                 tv.setText(String.valueOf(expression.calculate()));
             }
         });

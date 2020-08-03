@@ -88,7 +88,8 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
     }
 
     private void init() {
-        int perViewHeight = height / 4;
+        int perViewHeight = height * 2 / 11;
+
         hsvaViews = new View[]{
                 new HView(context, width, perViewHeight),
                 new SView(context, width, perViewHeight),
@@ -122,8 +123,12 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
             adb.setView(editText);
             adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                 String s = editText.getText().toString();
-                int parseColor;
+                if (s.charAt(0) == '#') s = s.substring(1);
+                if (s.length() == 6) s = "#FF" + s;
+                else if (s.length() == 7) s = "#0" + s;
                 try {
+                    if (s.length() > 8) throw new Exception(context.getString(R.string.please_type_correct_value));
+                    int parseColor;
                     parseColor = Color.parseColor(s);
                     Color.colorToHSV(parseColor, this.hsv);
                     this.alpha = Color.alpha(parseColor);
@@ -137,6 +142,9 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
             });
             adb.setTitle(R.string.please_enter_color_hex);
             AlertDialog ad = adb.create();
+            ad.setButton(AlertDialog.BUTTON_NEUTRAL, this.context.getString(R.string.save_color), (dialog, which) -> {
+
+            });
             DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
             ad.show();
             Selection.selectAll(editText.getText());
@@ -337,10 +345,6 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
         }
     }
 
-    /*private static void turn2Position(Position dest, int color) {
-
-    }*/
-
     private class AView extends BaseView {
         private final int aW;
         private final int aH;
@@ -385,13 +389,13 @@ public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayo
         }
     }
 
-    /*private void colorToThisPosition(Position dest, @ColorInt int color) {
-        int alpha = Color.alpha(color);
-        float[] c = new float[3];
-        Color.colorToHSV(color, c);
-        dest.positions[0] = c[0] * width / 360F;
-        dest.positions[1] = c[1] * width;
-        dest.positions[2] = c[2] * width;
-        dest.positions[3] = alpha * width / 255F;
-    }*/
+    private class SavedColorListView extends BaseView {
+        private final int w, h;
+
+        public SavedColorListView(Context context, int w, int h) {
+            super(context);
+            this.w = w;
+            this.h = h;
+        }
+    }
 }

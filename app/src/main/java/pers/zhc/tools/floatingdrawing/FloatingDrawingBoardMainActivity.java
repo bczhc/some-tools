@@ -41,6 +41,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -90,6 +91,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Stack;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
@@ -554,8 +556,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void setColor() {
+        Dialog dialog;
         if (pv.isEraserMode) {
-            Dialog dialog = new Dialog(this);
+            dialog = new Dialog(this);
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -586,12 +589,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             dialog.setContentView(linearLayout);
             DialogUtil.setDialogAttr(dialog, false
                     , ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-            dialog.show();
         } else {
-            Dialog dialog = new Dialog(this, R.style.dialog_with_background_dim_false);
-            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(R.color.transparent);
-            dialog.getWindow().setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-                    , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
+            dialog = new Dialog(this, R.style.dialog_with_background_dim_false);
+            dialog.setCanceledOnTouchOutside(true);
+            final Window dialogWindow = dialog.getWindow();
+            if (dialogWindow != null) {
+                dialogWindow.setBackgroundDrawableResource(R.color.transparent);
+                dialogWindow.setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                        , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
+            }
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
             AbstractHSVAColorPickerRelativeLayout hsvaColorPickerRelativeLayout = new AbstractHSVAColorPickerRelativeLayout(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
                 @Override
@@ -602,8 +608,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             };
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
             dialog.setContentView(hsvaColorPickerRelativeLayout);
-            dialog.show();
         }
+        dialog.show();
     }
 
     private void setPanelColor(int color, float[] hsva) {
@@ -1081,10 +1087,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 .setTitle(R.string.set__top__left__scaled_width__scaled_height)
                                 .setPositiveButton(R.string.confirm, (dialog1, which) -> {
                                     try {
-                                        double c1 = (float) new Expression(editTexts[0].getText().toString()).calculate();
-                                        double c2 = (float) new Expression(editTexts[1].getText().toString()).calculate();
-                                        double c3 = new Expression(editTexts[2].getText().toString()).calculate();
-                                        double c4 = new Expression(editTexts[3].getText().toString()).calculate();
+                                        double c1 = (float) new Expression(completeParentheses(editTexts[0].getText().toString())).calculate();
+                                        double c2 = (float) new Expression(completeParentheses(editTexts[1].getText().toString())).calculate();
+                                        double c3 = new Expression(completeParentheses(editTexts[2].getText().toString())).calculate();
+                                        double c4 = new Expression(completeParentheses(editTexts[3].getText().toString())).calculate();
                                         if (Double.isNaN(c1) || Double.isNaN(c2) || Double.isNaN(c3) | Double.isNaN(c4)) {
                                             throw new Exception("math expression invalid");
                                         }
@@ -1124,9 +1130,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     AlertDialog ad = adb.setTitle(R.string.export_image)
                             .setPositiveButton(R.string.confirm, (dialog, which) -> {
                                 Expression expression = new Expression();
-                                expression.setExpressionString(widthEditText.getText().toString());
+                                expression.setExpressionString(completeParentheses(widthEditText.getText().toString()));
                                 imageW[0] = ((int) expression.calculate());
-                                expression.setExpressionString(heightEditText.getText().toString());
+                                expression.setExpressionString(completeParentheses(heightEditText.getText().toString()));
                                 imageH[0] = ((int) expression.calculate());
                                 if (Double.isNaN(imageW[0]) || Double.isNaN(imageH[0]) || imageW[0] <= 0 || imageH[0] <= 0) {
                                     ToastUtils.show(FloatingDrawingBoardMainActivity.this, R.string.please_type_correct_value);
@@ -1316,5 +1322,22 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         public abstract void granted();
 
         public abstract void denied();
+    }
+
+    public static String completeParentheses(String s) {
+        StringBuilder sb = new StringBuilder(s);
+        Stack<Character> stack = new Stack<>();
+        final int length = s.length();
+        for (int i = 0; i < length; i++) {
+            final char c = s.charAt(i);
+            if (stack.empty() && c == ')') sb.insert(0, '(');
+            if (c == '(') stack.push(c);
+            else if (!stack.empty() && c == ')') stack.pop();
+        }
+        while (!stack.empty()) {
+            sb.append(')');
+            stack.pop();
+        }
+        return sb.toString();
     }
 }

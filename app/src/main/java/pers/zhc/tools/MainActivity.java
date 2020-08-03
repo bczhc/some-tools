@@ -101,7 +101,7 @@ public class MainActivity extends BaseActivity {
                 R.string.generate_pi,
                 R.string.toast,
                 R.string.put_in_clipboard,
-                R.string.overlaid_drawing_board,
+                R.string.floating_drawing_board,
                 R.string.fourier_series_calc,
                 R.string.notes,
                 R.string.fourier_series_in_complex,
