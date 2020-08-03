@@ -22,6 +22,7 @@ import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.Documents;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.Collator;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -50,8 +51,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     int viewChecked = R.drawable.file_picker_view_checked;
     private final int type;
     private final Activity ctx;
-    public String result;
-    private String resultString = "";
+    private String result;
     private TextView pathView;
     private File currentPath;
     private LinearLayout ll;
@@ -106,19 +106,13 @@ public class FilePickerRelativeLayout extends RelativeLayout {
             cancelAction.run();
         });
         ok.setOnClickListener(v -> {
-            switch (type) {
-                case 1:
-                    result = resultString;
-                    break;
-                case 2:
-                    String dir;
-                    dir = currentPath.getAbsolutePath();
-                    result = dir;
-                    break;
-                default:
-                    break;
+            if (type == 2) {
+                String dir;
+                dir = currentPath.getAbsolutePath();
+                result = dir;
             }
-            pickedResultAction.result(result);
+            if (result != null)
+                pickedResultAction.result(result);
         });
         this.pathView = findViewById(R.id.textView);
         this.pathView.setOnClickListener((v) -> {
@@ -136,7 +130,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                         }
                         File f = new File(etText);
                         if (f.isFile() && type == 1) {
-                            resultString = f.getAbsolutePath();
+                            result = f.getAbsolutePath();
                             ok.performClick();
                         } else {
                             File[] listFiles = getFileList(f);
@@ -165,7 +159,15 @@ public class FilePickerRelativeLayout extends RelativeLayout {
             listFiles[0] = filter(listFiles[0], headEditText.getText().toString());
             justPicked[0] = -1;
             ctx.runOnUiThread(ll::removeAllViews);
-            ctx.runOnUiThread(() -> pathView.setText(String.format("%s", currentPath.getAbsolutePath())));
+            String currentPathString;
+            try {
+                currentPathString = currentPath.getCanonicalPath();
+            } catch (IOException ignored) {
+                currentPathString = currentPath.getAbsolutePath();
+            }
+            String finalCurrentPathString = currentPathString;
+            ctx.runOnUiThread(() -> pathView.setText(String.format("%s"
+                    , result == null ? (finalCurrentPathString + File.separatorChar) : result)));
             TextViewWithExtra[] textViews;
             int length = 0;
             try {
@@ -185,6 +187,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                             if (currentFile.isFile()) {
                                 if (textViews[finalI].picked) {
                                     textViews[finalI].setBackgroundResource(canPickUnchecked);
+                                    result = null;
                                 } else {
                                     try {
                                         if (justPicked[0] != -1) {
@@ -195,17 +198,19 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                                     } catch (ArrayIndexOutOfBoundsException e) {
                                         showException(e, ctx);
                                     }
-                                }
-                                try {
-                                    resultString = listFiles[0][justPicked[0]].getAbsolutePath();
-                                } catch (ArrayIndexOutOfBoundsException e) {
-                                    showException(e, ctx);
+                                    try {
+                                        result = listFiles[0][justPicked[0]].getAbsolutePath();
+                                    } catch (ArrayIndexOutOfBoundsException e) {
+                                        showException(e, ctx);
+                                    }
                                 }
                             } else {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = getFileList(currentFile);
                                 fillViews(listFiles1);
                             }
+                            ctx.runOnUiThread(() -> pathView.setText(String.format("%s"
+                                    , result == null ? (finalCurrentPathString + File.separatorChar) : result)));
                         });
                         ctx.runOnUiThread(() -> ll.addView(textViews[finalI]));
                     }
@@ -260,6 +265,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     }
 
     public void previous() {
+        result = null;
         if (currentPath.equals(new File(File.separator))) {
             cancelAction.run();
             return;
