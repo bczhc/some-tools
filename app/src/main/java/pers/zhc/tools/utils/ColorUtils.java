@@ -1,6 +1,8 @@
 package pers.zhc.tools.utils;
 
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
 
 @SuppressWarnings({"unused"})
 public class ColorUtils {
@@ -75,6 +77,61 @@ public class ColorUtils {
         return parseColorInt(new RGB(255 - rgb.r, 255 - rgb.g, 255 - rgb.b));
     }
 
+    /**
+     * @param hue        hue
+     * @param saturation saturation
+     * @param value      value
+     * @param alpha      alpha
+     * @return color int
+     */
+    @ColorInt
+    public static int HSVAtoColor(@FloatRange(from = 0, to = 255) int alpha,
+                                @FloatRange(from = 0, to = 360) float hue,
+                                @FloatRange(from = 0, to = 1) float saturation,
+                                @FloatRange(from = 0, to = 1) float value) {
+        hue /= 360;
+        int r, g, b;
+        int h = (int) (hue * 6);
+        float f = hue * 6 - h;
+        float p = value * (1 - saturation);
+        float q = value * (1 - f * saturation);
+        float t = value * (1 - (1 - f) * saturation);
+
+        switch (h) {
+            case 0:
+                r = ((int) (value * 255));
+                g = ((int) (t * 255));
+                b = ((int) (p * 255));
+                break;
+            case 1:
+                r = ((int) (q * 255));
+                g = ((int) (value * 255));
+                b = ((int) (p * 255));
+                break;
+            case 2:
+                r = ((int) (p * 255));
+                g = ((int) (value * 255));
+                b = ((int) (t * 255));
+                break;
+            case 3:
+                r = ((int) (p * 255));
+                g = ((int) (q * 255));
+                b = ((int) (value * 255));
+                break;
+            case 4:
+                r = ((int) (t * 255));
+                g = ((int) (p * 255));
+                b = ((int) (value * 255));
+                break;
+            default:
+                r = ((int) (value * 255));
+                g = ((int) (p * 255));
+                b = ((int) (q * 255));
+                break;
+        }
+        return b | g << 8 | r << 16 | alpha << 24;
+    }
+
     int getColor(float pos) throws Exception {
         float perAreaWidth = (endPos - startPos) / (colors.length - 1);
         int area = (int) ((pos - startPos) / perAreaWidth) + (((pos - startPos) % perAreaWidth) > 0 ? 1 : 0);
@@ -106,6 +163,31 @@ public class ColorUtils {
             float G = ((rgb2.g - rgb1.g) / (eP - sP)) * pos + rgb1.g - sP * (rgb2.g - rgb1.g) / (eP - sP);
             float B = ((rgb2.b - rgb1.b) / (eP - sP)) * pos + rgb1.b - sP * (rgb2.b - rgb1.b) / (eP - sP);
             return parseColorInt(new RGB(((int) R), ((int) G), ((int) B)));
+        }
+    }
+
+    public static class HSVAColor {
+        public float[] hsv;
+        public float alpha;
+
+        public HSVAColor() {
+            hsv = new float[3];
+        }
+
+        public float getH() {
+            return hsv[0];
+        }
+
+        public float getS() {
+            return hsv[1];
+        }
+
+        public float getV() {
+            return hsv[2];
+        }
+
+        public float getAlpha() {
+            return alpha;
         }
     }
 }
