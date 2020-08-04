@@ -3,7 +3,7 @@ package pers.zhc.tools.floatingdrawing;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
+import pers.zhc.tools.views.AbstractHSVAColorPickerRelativeLayout;
 
 public class FloatingViewOnTouchListener implements View.OnTouchListener {
     final private WindowManager.LayoutParams layoutParams;
@@ -42,8 +42,8 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
                 int lp2_x = paramX + dx;
                 int lp2_y = paramY + dy;
                 int constrainX, constrainY;
-                constrainX = lp2_x - HSVAColorPickerRelativeLayout.limitValue(lp2_x, ((int) (-width / 2F + viewSpec.width / 2F)), ((int) (width / 2F - viewSpec.width / 2F)));
-                constrainY = lp2_y - HSVAColorPickerRelativeLayout.limitValue(lp2_y, ((int) (-height / 2F + viewSpec.height / 2F)), ((int) (height / 2F - viewSpec.height / 2F)));
+                constrainX = lp2_x - AbstractHSVAColorPickerRelativeLayout.limitValue(lp2_x, ((int) (-width / 2F + viewSpec.width / 2F)), ((int) (width / 2F - viewSpec.width / 2F)));
+                constrainY = lp2_y - AbstractHSVAColorPickerRelativeLayout.limitValue(lp2_y, ((int) (-height / 2F + viewSpec.height / 2F)), ((int) (height / 2F - viewSpec.height / 2F)));
                 if (constrainX == 0) {
                     layoutParams.x = lp2_x;
                 } else {
