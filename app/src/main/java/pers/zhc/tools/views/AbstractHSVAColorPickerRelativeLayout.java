@@ -26,7 +26,7 @@ import pers.zhc.tools.utils.ToastUtils;
 
 @SuppressWarnings("SameParameterValue")
 @SuppressLint("ViewConstructor")
-public abstract class HSVAColorPickerRelativeLayout extends RelativeLayout {
+public abstract class AbstractHSVAColorPickerRelativeLayout extends RelativeLayout {
     private final float[] currentXPos = new float[4];
     private final float lW = 1.5F;
     private final float[] currentHSVA = new float[4];
@@ -43,7 +43,7 @@ public abstract class HSVAColorPickerRelativeLayout extends RelativeLayout {
      * @param width        view width
      * @param height       view height
      */
-    protected HSVAColorPickerRelativeLayout(Context context, int initialColor, int width, int height) {
+    protected AbstractHSVAColorPickerRelativeLayout(Context context, int initialColor, int width, int height) {
         super(context);
         Color.colorToHSV(initialColor, currentHSVA);
         currentHSVA[3] = Color.alpha(initialColor) / 255F;
@@ -57,7 +57,7 @@ public abstract class HSVAColorPickerRelativeLayout extends RelativeLayout {
      * @param height  view height
      */
 
-    protected HSVAColorPickerRelativeLayout(Context context, float[] hsva, int width, int height) {
+    protected AbstractHSVAColorPickerRelativeLayout(Context context, float[] hsva, int width, int height) {
         super(context);
         System.arraycopy(hsva, 0, currentHSVA, 0, hsva.length);
         init(context, width, height);
@@ -117,11 +117,14 @@ public abstract class HSVAColorPickerRelativeLayout extends RelativeLayout {
             adb.setView(editText);
             adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                 String s = editText.getText().toString();
-                if (s.charAt(0) == '#') s = s.substring(1);
-                if (s.length() == 6) s = "#FF" + s;
-                else if (s.length() == 7) s = "#0" + s;
                 try {
-                    if (s.length() > 8) throw new Exception(this.context.getString(R.string.please_type_correct_value));
+                    if (s.charAt(0) == '#') s = s.substring(1);
+                    if (s.length() < 6 || s.length() > 8) throw new Exception("Illegal color hex string.");
+                    if (s.length() == 6) s = "#FF" + s;
+                    else if (s.length() == 7) s = "#0" + s;
+                    else {
+                        s = "#" + s;
+                    }
                     final int parsedColor = Color.parseColor(s);
                     Color.colorToHSV(parsedColor, currentHSVA);
                     currentHSVA[3] = Color.alpha(parsedColor) / 255F;
@@ -143,7 +146,12 @@ public abstract class HSVAColorPickerRelativeLayout extends RelativeLayout {
             DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(editText, ad);
         });
         barRL.addView(tv);
-        colorPreviewView = new View(this.context);
+        colorPreviewView = new View(this.context) {
+            @Override
+            protected void onDraw(Canvas canvas) {
+                canvas.drawColor(Color.HSVToColor(((int) (currentHSVA[3] * 255)), currentHSVA));
+            }
+        };
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.tv);
         layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.tv);
@@ -158,16 +166,15 @@ public abstract class HSVAColorPickerRelativeLayout extends RelativeLayout {
             ll.addView(linearLayouts[i]);
         }
         this.addView(ll);
-        colorPreviewView.setBackgroundColor(Color.HSVToColor(((int) (currentHSVA[3] * 255)), currentHSVA));
     }
 
     private void invalidateAllViews() {
+        onColorPicked(currentHSVA[0], currentHSVA[1], currentHSVA[2], ((int) (currentHSVA[3] * 255)));
         oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(((int) (currentHSVA[3] * 255)), currentHSVA)));
         for (View view : hsvaViews) {
             view.invalidate();
         }
-        onColorPicked(currentHSVA[0], currentHSVA[1], currentHSVA[2], ((int) (currentHSVA[3] * 255)));
-        colorPreviewView.setBackgroundColor(Color.HSVToColor(((int) (currentHSVA[3] * 255)), currentHSVA));
+        colorPreviewView.invalidate();
     }
 
     private int getColor() {

@@ -69,7 +69,7 @@ import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
+import pers.zhc.tools.views.AbstractHSVAColorPickerRelativeLayout;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
@@ -104,7 +104,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
      * 不知会不会内存溢出（memory leak）……
      */
     static Map<Long, Context> longActivityMap;
-    private final float[][] hsvaFloats = new float[3][0];
     RequestPermissionInterface requestPermissionInterface = null;
     boolean mainDrawingBoardNotDisplay = false;
     private WindowManager wm = null;
@@ -300,7 +299,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             return true;
         });
         clearPathBtn.performLongClick();
-        Arrays.fill(hsvaFloats, null);
         Point point = new Point();
         /*//noinspection deprecation
         width = this.getWindowManager().getDefaultDisplay().getWidth();
@@ -519,7 +517,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             Dialog TextViewsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this, R.style.dialog_with_background_dim_false);
             TextViewsColorDialog.setCanceledOnTouchOutside(true);
             setDialogAttr(TextViewsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            HSVAColorPickerRelativeLayout TextViewsColorPicker = new HSVAColorPickerRelativeLayout(this, FloatingDrawingBoardMainActivity.this.TextViewsColor, ((int) (width * .8)), ((int) (height * .4))) {
+            AbstractHSVAColorPickerRelativeLayout TextViewsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, FloatingDrawingBoardMainActivity.this.TextViewsColor, ((int) (width * .8)), ((int) (height * .4))) {
                 @Override
                 public void onColorPicked(float h, float s, float v, int alpha) {
                     float[] a = new float[]{h, s, v};
@@ -535,7 +533,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this, R.style.dialog_with_background_dim_false);
             textsColorDialog.setCanceledOnTouchOutside(true);
             setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            HSVAColorPickerRelativeLayout textsColorPicker = new HSVAColorPickerRelativeLayout(this, textsColor, ((int) (width * .8)), ((int) (height * .4))) {
+            AbstractHSVAColorPickerRelativeLayout textsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, textsColor, ((int) (width * .8)), ((int) (height * .4))) {
                 @Override
                 public void onColorPicked(float h, float s, float v, int alpha) {
                     for (TextView childTextView : childTextViews) {
@@ -598,7 +596,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    pv.setEraserAlpha(HSVAColorPickerRelativeLayout.limitValue(progress * 255 / 100, 0, 255));
+                    pv.setEraserAlpha(AbstractHSVAColorPickerRelativeLayout.limitValue(progress * 255 / 100, 0, 255));
                 }
 
                 @Override
@@ -624,7 +622,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
             }
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            HSVAColorPickerRelativeLayout hsvaColorPickerRelativeLayout = new HSVAColorPickerRelativeLayout(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4))) {
+            AbstractHSVAColorPickerRelativeLayout hsvaColorPickerRelativeLayout = new AbstractHSVAColorPickerRelativeLayout(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4))) {
                 @Override
                 public void onColorPicked(float h, float s, float v, int alpha) {
                     pv.setPaintColor(Color.HSVToColor(alpha, new float[]{h, s, v}));
@@ -1259,7 +1257,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
                 Latch latch = new Latch();
                 pv.importPathFile(new File(s), () -> {
-                    this.hsvaFloats[0] = null;
                     runOnUiThread(importPathFileDoneAction);
                     importPathFileProgressDialog.dismiss();
                 }, aFloat -> {
