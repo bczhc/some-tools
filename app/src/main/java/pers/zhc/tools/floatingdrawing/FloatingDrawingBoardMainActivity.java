@@ -69,7 +69,7 @@ import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.views.AbstractHSVAColorPickerRelativeLayout;
+import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
@@ -317,10 +317,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (this.panelColorFollowPainting) {
                 float[] hsv = new float[3];
                 Color.colorToHSV(color, hsv);
-                float[] hsva = new float[4];
-                System.arraycopy(hsv, 0, hsva, 0, hsv.length);
-                hsva[3] = Color.alpha(color);
-                setPanelColor(color, hsva);
+                setPanelColor(color);
             }
         });
         pv.setStrokeWidth(10F);
@@ -520,11 +517,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         panelColorBtn.setEnabled(!this.panelColorFollowPainting);
         panelColorBtn.setOnClickListener(v2 -> {
             Dialog TextViewsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this, R.style.dialog_with_background_dim_false);
+            TextViewsColorDialog.setCanceledOnTouchOutside(true);
             setDialogAttr(TextViewsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            AbstractHSVAColorPickerRelativeLayout TextViewsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, FloatingDrawingBoardMainActivity.this.TextViewsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[1], TextViewsColorDialog) {
+            HSVAColorPickerRelativeLayout TextViewsColorPicker = new HSVAColorPickerRelativeLayout(this, FloatingDrawingBoardMainActivity.this.TextViewsColor, ((int) (width * .8)), ((int) (height * .4))) {
                 @Override
-                protected void onPickedAction(int color, float[] hsva) {
-                    setPanelColor(color, hsva);
+                public void onColorPicked(float h, float s, float v, int alpha) {
+                    float[] a = new float[]{h, s, v};
+                    setPanelColor(Color.HSVToColor(alpha, a));
                 }
             };
             TextViewsColorDialog.setContentView(TextViewsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
@@ -534,17 +533,17 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         textsColorBtn.setEnabled(!this.invertColorChecked);
         textsColorBtn.setOnClickListener(v2 -> {
             Dialog textsColorDialog = new Dialog(FloatingDrawingBoardMainActivity.this, R.style.dialog_with_background_dim_false);
+            textsColorDialog.setCanceledOnTouchOutside(true);
             setDialogAttr(textsColorDialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            AbstractHSVAColorPickerRelativeLayout textsColorPicker = new AbstractHSVAColorPickerRelativeLayout(this, textsColor, ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[2], textsColorDialog) {
+            HSVAColorPickerRelativeLayout textsColorPicker = new HSVAColorPickerRelativeLayout(this, textsColor, ((int) (width * .8)), ((int) (height * .4))) {
                 @Override
-                protected void onPickedAction(int color, float[] hsva) {
+                public void onColorPicked(float h, float s, float v, int alpha) {
                     for (TextView childTextView : childTextViews) {
                         if (!invertColorChecked) {
-                            textsColor = color;
+                            textsColor = Color.HSVToColor(alpha, new float[]{h, s, v});
                         }
                         childTextView.setTextColor(textsColor);
                     }
-                    hsvaFloats[2] = hsva;
                 }
             };
             textsColorDialog.setContentView(textsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
@@ -573,7 +572,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             final int pvColor = pv.getColor();
             Color.colorToHSV(pvColor, hsva);
             hsva[3] = Color.alpha(pvColor);
-            setPanelColor(pvColor, hsva);
+            setPanelColor(pvColor);
         });
         c.setContentView(inflate);
         setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
@@ -599,7 +598,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    pv.setEraserAlpha(AbstractHSVAColorPickerRelativeLayout.limitValue(progress * 255 / 100, 0, 255));
+                    pv.setEraserAlpha(HSVAColorPickerRelativeLayout.limitValue(progress * 255 / 100, 0, 255));
                 }
 
                 @Override
@@ -625,11 +624,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
             }
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
-            AbstractHSVAColorPickerRelativeLayout hsvaColorPickerRelativeLayout = new AbstractHSVAColorPickerRelativeLayout(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4)), hsvaFloats[0], dialog) {
+            HSVAColorPickerRelativeLayout hsvaColorPickerRelativeLayout = new HSVAColorPickerRelativeLayout(this, pv.getColor(), ((int) (width * .8)), ((int) (height * .4))) {
                 @Override
-                protected void onPickedAction(int color, float[] hsva) {
-                    pv.setPaintColor(color);
-                    hsvaFloats[0] = hsva;
+                public void onColorPicked(float h, float s, float v, int alpha) {
+                    pv.setPaintColor(Color.HSVToColor(alpha, new float[]{h, s, v}));
                 }
             };
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
@@ -638,7 +636,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         dialog.show();
     }
 
-    private void setPanelColor(int color, float[] hsva) {
+    private void setPanelColor(int color) {
         for (TextView childTextView : childTextViews) {
             TextViewsColor = color;
             childTextView.setBackgroundColor(TextViewsColor);
@@ -646,7 +644,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 childTextView.setTextColor(textsColor = ColorUtils.invertColor(TextViewsColor));
             }
         }
-        hsvaFloats[1] = hsva;
     }
 
     private void setupProjection() {
