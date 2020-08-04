@@ -41,7 +41,7 @@ public class Pi extends BaseActivity {
                 }
                 es[0] = Executors.newFixedThreadPool(1);
                 es[0].execute(() -> {
-                    JNICallback callback = new JNICallback(sb = new StringBuilder("3.14"));
+                    JNICallback callback = new JNICallback(sb = new StringBuilder("3."));
                     runOnUiThread(() -> tv.setText(R.string.please_wait));
                     this.isGenerating = true;
                     long sM = System.currentTimeMillis();

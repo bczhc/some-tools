@@ -72,7 +72,7 @@ public class DiaryMainActivity extends BaseActivity {
             currentPassword = cursor.getString(cursor.getColumnIndex("pw"));
         }
         cursor.close();
-        if (currentPassword.isEmpty()) {
+        if (currentPassword == null || currentPassword.isEmpty()) {
             load();
             return;
         }
