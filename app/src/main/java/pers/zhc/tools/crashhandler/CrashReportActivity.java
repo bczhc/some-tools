@@ -72,6 +72,8 @@ public class CrashReportActivity extends Activity {
                 cm.setPrimaryClip(cd);
                 ToastUtils.show(this, R.string.copying_success);
             }
+            //for debugging
+            System.err.println(exception);
         });
         CrashHandler.save2File(this, filename, exception);
     }
