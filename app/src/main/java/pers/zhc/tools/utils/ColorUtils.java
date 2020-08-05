@@ -3,6 +3,7 @@ package pers.zhc.tools.utils;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
 
 @SuppressWarnings({"unused"})
 public class ColorUtils {
@@ -86,9 +87,9 @@ public class ColorUtils {
      */
     @ColorInt
     public static int HSVAtoColor(@FloatRange(from = 0, to = 255) int alpha,
-                                @FloatRange(from = 0, to = 360) float hue,
-                                @FloatRange(from = 0, to = 1) float saturation,
-                                @FloatRange(from = 0, to = 1) float value) {
+                                  @FloatRange(from = 0, to = 360) float hue,
+                                  @FloatRange(from = 0, to = 1) float saturation,
+                                  @FloatRange(from = 0, to = 1) float value) {
         hue /= 360;
         int r, g, b;
         int h = (int) (hue * 6);
@@ -168,26 +169,29 @@ public class ColorUtils {
 
     public static class HSVAColor {
         public float[] hsv;
-        public float alpha;
+        public int alpha;
 
         public HSVAColor() {
             hsv = new float[3];
         }
 
-        public float getH() {
-            return hsv[0];
+        public void set(@IntRange(from = 0, to = 255) int alpha,
+                        @FloatRange(from = 0, to = 1) float h,
+                        @FloatRange(from = 0, to = 1) float s,
+                        @FloatRange(from = 0, to = 1) float v) {
+            hsv[0] = h;
+            hsv[1] = s;
+            hsv[2] = v;
+            this.alpha = alpha;
         }
 
-        public float getS() {
-            return hsv[1];
+        public void set(@ColorInt int color) {
+            this.alpha = Color.alpha(color);
+            Color.colorToHSV(color, this.hsv);
         }
 
-        public float getV() {
-            return hsv[2];
-        }
-
-        public float getAlpha() {
-            return alpha;
+        public int getColor() {
+            return Color.HSVToColor(alpha, hsv);
         }
     }
 }
