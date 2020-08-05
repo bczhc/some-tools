@@ -472,6 +472,26 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      *                            如果标记为0xC1或0xC2，则后8字节忽略。
      */
     void importPathFile(File f, Runnable d, @Nullable ValueInterface<Float> floatValueInterface) {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        int time;
+        View inflate = View.inflate(this, R.layout.type_importing_sleep_time_view, null);
+        adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
+            try {
+                time = findViewById(R.id.type_importing_sleep_time).getProgress();
+
+            } catch (Exception e) {
+                Common.showException(e, this);
+            }
+        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+        }).setTitle(R.string.type_importing_sleep_time).setView(inflate);
+        AlertDialog ad = adb.create();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+        } else {
+            //noinspection deprecation
+            Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
+        }
+        ad.show();
         if (floatValueInterface != null) {
             floatValueInterface.f(0F);
         }
@@ -841,9 +861,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     void drawing() {
-        if (importingPath) {
+      /*  if (importingPath) {
             return;
-        }
+        }*/
         Canvas canvas = null;
         try {
             canvas = mSurfaceHolder.lockCanvas();
