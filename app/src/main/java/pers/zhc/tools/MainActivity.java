@@ -23,6 +23,7 @@ import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.malloctest.MAllocTest;
 import pers.zhc.tools.pi.Pi;
+import pers.zhc.tools.pressuretest.PressureTest;
 import pers.zhc.tools.test.InputEvent;
 import pers.zhc.tools.test.MathExpressionEvaluationTest;
 import pers.zhc.tools.test.S;
@@ -116,7 +117,8 @@ public class MainActivity extends BaseActivity {
                 R.string.you_dao_translate_interface_invoke,
                 R.string.crash_test,
                 R.string.m_alloc_test,
-                R.string.diary
+                R.string.diary,
+                R.string.pressure_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -138,7 +140,8 @@ public class MainActivity extends BaseActivity {
                 YouDaoTranslate.class,
                 CrashTest.class,
                 MAllocTest.class,
-                DiaryMainActivity.class
+                DiaryMainActivity.class,
+                PressureTest.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
