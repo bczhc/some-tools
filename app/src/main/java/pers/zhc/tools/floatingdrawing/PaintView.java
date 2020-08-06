@@ -839,9 +839,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     void drawing() {
-      /*  if (importingPath) {
+        if (importingPath) {
             return;
-        }*/
+        }
+
         Canvas canvas = null;
         try {
             canvas = mSurfaceHolder.lockCanvas();
