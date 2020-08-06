@@ -235,5 +235,7 @@
     <string name="save_color">保存颜色</string>
     <string name="pressure_test">压力测试</string>
     <string name="type_importing_sleep_time">输入导入延时毫秒数：</string>
+    <string name="zero">0</string>
+    <string name="_1000_ms">1000ms</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

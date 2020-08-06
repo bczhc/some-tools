@@ -34,8 +34,10 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.Selection;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -93,6 +95,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
@@ -106,6 +109,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
      * 我已经看不懂我自己写的都是什么东西了，太乱了。
      */
     static Map<Long, Context> longActivityMap;
+    private final ColorUtils.HSVAColor strokeColorHSVA = new ColorUtils.HSVAColor();
+    private final ColorUtils.HSVAColor panelColorHSVA = new ColorUtils.HSVAColor();
+    private final ColorUtils.HSVAColor panelTextColorHSVA = new ColorUtils.HSVAColor();
     RequestPermissionInterface requestPermissionInterface = null;
     boolean mainDrawingBoardNotDisplay = false;
     private WindowManager wm = null;
@@ -137,9 +143,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private boolean isCapturing = false;
     private Intent captureScreenResultData = null;
     private boolean panelColorFollowPainting;
-    private final ColorUtils.HSVAColor strokeColorHSVA = new ColorUtils.HSVAColor();
-    private final ColorUtils.HSVAColor panelColorHSVA = new ColorUtils.HSVAColor();
-    private final ColorUtils.HSVAColor panelTextColorHSVA = new ColorUtils.HSVAColor();
 
     private static void uploadPaths(Context context) {
         try {
@@ -1255,34 +1258,89 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     ToastUtils.show(this, R.string.can_not_import_itself);
                     return;
                 }
-                Handler handler = new Handler();
-                Dialog importPathFileProgressDialog = new Dialog(this);
-                setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                importPathFileProgressDialog.setCanceledOnTouchOutside(false);
-                RelativeLayout progressRelativeLayout = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
-                progressRelativeLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                importPathFileProgressDialog.show();
-                importPathFileProgressDialog.setContentView(progressRelativeLayout, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
-                TextView tv = progressRelativeLayout.findViewById(R.id.progress_tv);
-                tv.setText(R.string.importing);
-                ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
-                TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
-                Latch latch = new Latch();
-                pv.importPathFile(new File(s), () -> {
-                    runOnUiThread(importPathFileDoneAction);
-                    importPathFileProgressDialog.dismiss();
-                }, aFloat -> {
-                    latch.suspend();
-                    runOnUiThread(() -> {
-                        progressBar.setProgress(aFloat.intValue());
-                        pTextView.setText(getString(R.string.progress_tv, aFloat));
-                        latch.stop();
-                    });
-                    latch.await();
+                View inflate = View.inflate(this, R.layout.type_importing_sleep_time_view, null);
+                EditText progressET = inflate.findViewById(R.id.progress);
+                progressET.setText(R.string.zero);
+                SeekBar progressSB = inflate.findViewById(R.id.type_importing_sleep_time);
+                AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                AtomicInteger speedDelayMillis = new AtomicInteger();
+                progressSB.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if (fromUser) {
+                            progressET.setText(String.valueOf(progress));
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
                 });
-                if (moreOptionsDialog != null) {
-                    moreOptionsDialog.dismiss();
-                }
+                progressET.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        int parseInt = 0;
+                        try {
+                            parseInt = Integer.parseInt(s.toString());
+                        } catch (NumberFormatException ignored) {
+                        }
+                        progressSB.setProgress(parseInt);
+                        speedDelayMillis.set(parseInt);
+                    }
+                });
+                Runnable importAction = () -> {
+                    Handler handler = new Handler();
+                    Dialog importPathFileProgressDialog = new Dialog(this);
+                    setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    importPathFileProgressDialog.setCanceledOnTouchOutside(false);
+                    RelativeLayout progressRelativeLayout = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
+                    progressRelativeLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    importPathFileProgressDialog.show();
+                    importPathFileProgressDialog.setContentView(progressRelativeLayout, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
+                    TextView tv = progressRelativeLayout.findViewById(R.id.progress_tv);
+                    tv.setText(R.string.importing);
+                    ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
+                    TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
+                    Latch latch = new Latch();
+                    pv.importPathFile(new File(s), () -> {
+                        runOnUiThread(importPathFileDoneAction);
+                        importPathFileProgressDialog.dismiss();
+                    }, aFloat -> {
+                        latch.suspend();
+                        runOnUiThread(() -> {
+                            progressBar.setProgress(aFloat.intValue());
+                            pTextView.setText(getString(R.string.progress_tv, aFloat));
+                            latch.stop();
+                        });
+                        latch.await();
+                    }, speedDelayMillis.get());
+                    if (moreOptionsDialog != null) {
+                        moreOptionsDialog.dismiss();
+                    }
+                };
+                adb.setPositiveButton(R.string.confirm, (dialog1, which) -> importAction.run()).setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                    speedDelayMillis.set(0);
+                    importAction.run();
+                }).setTitle(R.string.type_importing_sleep_time).setView(inflate);
+                AlertDialog ad = adb.create();
+                setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+                ad.show();
             }, null);
             setFilePickerDialog(dialog, filePickerRelativeLayout);
         }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE

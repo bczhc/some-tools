@@ -72,6 +72,7 @@ public class DiaryMainActivity extends BaseActivity {
             currentPassword = cursor.getString(cursor.getColumnIndex("pw"));
         }
         cursor.close();
+        this.week = getResources().getStringArray(R.array.weeks);
         if (currentPassword == null || currentPassword.isEmpty()) {
             load();
             return;
@@ -99,8 +100,6 @@ public class DiaryMainActivity extends BaseActivity {
                 }
             }
         });
-        this.week = getResources().getStringArray(R.array.weeks);
-
     }
 
     private void load() {
