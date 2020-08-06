@@ -1,24 +1,39 @@
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:padding="5sp"
+>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
+            android:text="@string/zero"
+            android:id="@+id/tv_left"
     />
 
     <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:min="0"
             android:max="1000"
-            android:layout_weight="4"
-            android:id="@+id/type_importing_sleep_time"/>
+            android:id="@+id/type_importing_sleep_time"
+            android:layout_toRightOf="@id/tv_left"
+            android:layout_toLeftOf="@id/tv_right"
+            android:layout_toEndOf="@id/tv_left"
+            android:layout_toStartOf="@id/tv_right"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" 1000ms"/>
-</LinearLayout>
+            android:text="@string/_1000_ms"
+            android:id="@+id/tv_right"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+    />
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:layout_below="@id/type_importing_sleep_time"
+              android:layout_alignBaseline="@id/type_importing_sleep_time"
+              android:gravity="center"
+              android:layout_centerHorizontal="true"
+              android:id="@+id/progress"
+              tools:ignore="Autofill,LabelFor,TextFields"/>
+</RelativeLayout>

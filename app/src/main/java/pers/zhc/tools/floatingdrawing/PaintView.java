@@ -58,9 +58,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private Path mPath;
     private Paint eraserPaint;
     private Paint mPaintRef = null;
-    @SuppressWarnings("unused")
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private Map<MyCanvas, Bitmap> bitmapMap;
-    @SuppressWarnings("unused")
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private Map<String, MyCanvas> canvasMap;
     private MyCanvas headCanvas;
     private Bitmap headBitmap;
@@ -127,7 +127,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                     byte[] headInfo = "path ver 2.1".getBytes();
                     final int headLength = 12;
                     if (headInfo.length != headLength) {
-                        Common.showException(new Exception("native error"), (Activity) ctx);
+                        Common.showException(new Exception("native error"), ctx);
                     }
                     os.write(headInfo);
                     os.flush();
@@ -136,7 +136,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         } catch (FileNotFoundException e) {
-            Common.showException(e, (Activity) ctx);
+            Common.showException(e, ctx);
         }
     }
 
@@ -363,7 +363,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                Common.showException(e, (Activity) ctx);
+                Common.showException(e, ctx);
             } finally {
                 closeStream(fileOutputStream[0]);
                 System.gc();
@@ -461,37 +461,17 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      * @param floatValueInterface 进度回调接口
      *                            路径存储结构：
      *                            一条笔迹或一个操作记录记录长度为9字节
-     *                            byte b[9];(length=9)
-     *                            1+4+4
-     *                            b[0]: 标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2；\
-     *                            按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；\
-     *                            撤销为0xC1，恢复为0xC2。(byte)
-     *                            如果标记为0xA1，排列结构：标记(int)+笔迹宽度(float)+颜色(int)
-     *                            如果标记为0xA2，排列结构：标记(int)+橡皮擦宽度(float)+TRANSPARENT(int)
-     *                            如果标记为0xB1或0xB2或0xB3，排列结构：标记(int)+x坐标(float)+y坐标(float)
-     *                            如果标记为0xC1或0xC2，则后8字节忽略。
+     *                            <code>byte b[9]</code>
+     *                            <p>1+4+4</p>
+     *                            <p>b[0]: 标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2</p>
+     *                            <p>按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3</p>
+     *                            <p>撤销为0xC1，恢复为0xC2。(byte)</p>
+     *                            <p>如果标记为0xA1，排列结构：标记(int)+笔迹宽度(float)+颜色(int)</p>
+     *                            <p>如果标记为0xA2，排列结构：标记(int)+橡皮擦宽度(float)+TRANSPARENT(int)</p>
+     *                            <p>如果标记为0xB1或0xB2或0xB3，排列结构：标记(int)+x坐标(float)+y坐标(float)</p>
+     *                            <p>如果标记为0xC1或0xC2，则后8字节忽略。</p>
      */
-    void importPathFile(File f, Runnable d, @Nullable ValueInterface<Float> floatValueInterface) {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        int time;
-        View inflate = View.inflate(this, R.layout.type_importing_sleep_time_view, null);
-        adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
-            try {
-                time = findViewById(R.id.type_importing_sleep_time).getProgress();
-
-            } catch (Exception e) {
-                Common.showException(e, this);
-            }
-        }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-        }).setTitle(R.string.type_importing_sleep_time).setView(inflate);
-        AlertDialog ad = adb.create();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-        } else {
-            //noinspection deprecation
-            Objects.requireNonNull(ad.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
-        }
-        ad.show();
+    void importPathFile(File f, Runnable d, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
         if (floatValueInterface != null) {
             floatValueInterface.f(0F);
         }
@@ -571,7 +551,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                         }
                         break;
                     case "path ver 2.1":
-                        int bufferSize = 2304; //512 * 9
+                        //512 * 9
+                        int bufferSize = 2304;
                         handler.post(() -> ToastUtils.show(ctx, R.string.import_2_1));
                         raf.skipBytes(12);
                         byte[] buffer = new byte[bufferSize];
@@ -616,9 +597,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                         break;
                                 }
                                 read += 9L;
-//                                if (floatValueInterface != null) {
-//                                    floatValueInterface.f(((float) read) * 100F / ((float) length));
-//                                }
                                 canDoHandler.push(((float) read) * 100F / ((float) length));
                             }
                         }
