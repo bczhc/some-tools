@@ -269,12 +269,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             if (backgroundBitmap != null) {
                 headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
             }
-            if (!importingPath) {
+         //   if (!importingPath) {
                 for (PathBean pb : undoList) {
                     headCanvas.drawPath(pb.path, pb.paint);
                 }
                 drawing();
-            }
+           // }
         }
     }
 
@@ -294,9 +294,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             PathBean pathBean = redoList.removeLast();
             headCanvas.drawPath(pathBean.path, pathBean.paint);
             undoList.add(pathBean);
-            if (!importingPath) {
+         //   if (!importingPath) {
                 drawing();
-            }
+          //  }
         }
     }
 
@@ -697,9 +697,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
-                    if (!importingPath) {
+                 //   if (!importingPath) {
                         headCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
-                    }
+                  //  }
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
