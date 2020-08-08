@@ -7,10 +7,11 @@ import android.content.DialogInterface;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
-import androidx.annotation.Nullable;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import androidx.annotation.Nullable;
 import pers.zhc.tools.R;
 
 import java.util.Objects;
@@ -68,7 +69,8 @@ public class DialogUtil {
     public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(EditText editText, Dialog ad) {
         editText.setFocusable(true);
         editText.setFocusableInTouchMode(true);
-        editText.requestFocus();
-        Objects.requireNonNull(ad.getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        ad.setOnShowListener(dialog -> imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0));
+        ad.setOnDismissListener(dialog -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0));
     }
 }
