@@ -30,10 +30,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.Settings;
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Selection;
@@ -59,6 +55,10 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1352,7 +1352,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     filePickerRelativeLayout.previous();
                 }
             }
-            return true;
+            return false;
         });
         setDialogAttr(dialog, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .8)), true);
         dialog.setContentView(filePickerRelativeLayout);
