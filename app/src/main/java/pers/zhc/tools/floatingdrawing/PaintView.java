@@ -14,13 +14,13 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Handler;
-import androidx.annotation.ColorInt;
-import androidx.annotation.IntRange;
-import androidx.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import androidx.annotation.ColorInt;
+import androidx.annotation.IntRange;
+import androidx.annotation.Nullable;
 import pers.zhc.tools.R;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
@@ -78,7 +78,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private GestureResolver gestureResolver;
     private List<byte[]> savedData = null;
     private byte[] data = null;
-    private boolean importingPath = false;
+    private boolean dontDrawWhileImporting = false;
     private boolean isLockingStroke = false;
     private float lockedStrokeWidth = 0F;
     private float lockedEraserStrokeWidth;
@@ -269,12 +269,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             if (backgroundBitmap != null) {
                 headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
             }
-         //   if (!importingPath) {
+            if (!dontDrawWhileImporting) {
                 for (PathBean pb : undoList) {
                     headCanvas.drawPath(pb.path, pb.paint);
                 }
                 drawing();
-           // }
+            }
         }
     }
 
@@ -294,9 +294,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             PathBean pathBean = redoList.removeLast();
             headCanvas.drawPath(pathBean.path, pathBean.paint);
             undoList.add(pathBean);
-         //   if (!importingPath) {
+            if (!dontDrawWhileImporting) {
                 drawing();
-          //  }
+            }
         }
     }
 
@@ -464,14 +464,16 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      *                            <code>byte b[9]</code>
      *                            <p>1+4+4</p>
      *                            <p>b[0]: 标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2</p>
-     *                            <p>按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3</p>
-     *                            <p>撤销为0xC1，恢复为0xC2。(byte)</p>
-     *                            <p>如果标记为0xA1，排列结构：标记(int)+笔迹宽度(float)+颜色(int)</p>
-     *                            <p>如果标记为0xA2，排列结构：标记(int)+橡皮擦宽度(float)+TRANSPARENT(int)</p>
-     *                            <p>如果标记为0xB1或0xB2或0xB3，排列结构：标记(int)+x坐标(float)+y坐标(float)</p>
+     *                            <p>按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；
+     *                            撤销为0xC1，恢复为0xC2。(byte)</p>
+     *                            <p>如果标记为0xA1，排列结构：标记(byte)+笔迹宽度(float)+颜色(int)</p>
+     *                            <p>如果标记为0xA2，排列结构：标记(byte)+橡皮擦宽度(float)+TRANSPARENT(int)</p>
+     *                            <p>如果标记为0xB1或0xB2或0xB3，排列结构：标记(byte)+x坐标(float)+y坐标(float)</p>
      *                            <p>如果标记为0xC1或0xC2，则后8字节忽略。</p>
      */
+    @SuppressWarnings("BusyWait")
     void importPathFile(File f, Runnable d, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
+        dontDrawWhileImporting = speedDelayMillis == 0;
         if (floatValueInterface != null) {
             floatValueInterface.f(0F);
         }
@@ -482,7 +484,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         });
         canDoHandler.start();
         Handler handler = new Handler();
-        importingPath = true;
         Thread thread = new Thread(() -> {
             RandomAccessFile raf = null;
             try {
@@ -509,6 +510,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                         x = -1;
                         y = -1;
                         while (raf.read(bytes) != -1) {
+                            Thread.sleep(speedDelayMillis);
                             lastP1 = p1;
                             p1 = JNI.FloatingBoard.byteArrayToInt(bytes, 0);
                             switch (p1) {
@@ -559,6 +561,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                         int bufferRead;
                         read = 0L;
                         while ((bufferRead = raf.read(buffer)) != -1) {
+                            Thread.sleep(speedDelayMillis);
                             int a = bufferRead / 9;
                             for (int i = 0; i < a; i++) {
                                 switch (buffer[i * 9]) {
@@ -607,6 +610,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                         byte[] bytes_4 = new byte[4];
                         read = 0L;
                         while (raf.read(bytes) != -1) {
+                            Thread.sleep(speedDelayMillis);
                             read += 26L;
                             switch (bytes[25]) {
                                 case 1:
@@ -652,9 +656,10 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 }
                 canDoHandler.stop();
                 d.run();
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
             } finally {
+                dontDrawWhileImporting = false;
                 if (raf != null) {
                     try {
                         raf.close();
@@ -662,7 +667,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                         e.printStackTrace();
                     }
                 }
-                importingPath = false;
                 redrawCanvas();
                 drawing();
             }
@@ -697,9 +701,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
-                 //   if (!importingPath) {
+                    if (!dontDrawWhileImporting) {
                         headCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
-                  //  }
+                    }
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
@@ -839,10 +843,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     void drawing() {
-    /*    if (importingPath) {
+        if (dontDrawWhileImporting) {
             return;
         }
-*/
 
         Canvas canvas = null;
         try {
@@ -855,7 +858,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             if (transBitmap == null) {
                 if (headBitmap != null) {
                     canvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-                    if (!importingPath) {
+                    if (!dontDrawWhileImporting) {
                         if (mPath != null) {//显示实时正在绘制的path轨迹
                             float mCanvasScale = headCanvas.getScale();
                             canvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
