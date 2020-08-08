@@ -1,13 +1,13 @@
-# Created by .ignore support plugin (hsz.mobi)
 .gradle/
-.idea/caches/
-.idea/libraries/
 app/build/
 app/src/jni/cpp/cmake-build-debug/
+**/cmake-build-debug/
 app/src/obj/
 app/src/libs/
 buildSrc/.gradle/
 buildSrc/build/
 gitpush
-.idea/shelf/
+.idea/
+**/.idea/
 local.properties
+**/replay*.log
