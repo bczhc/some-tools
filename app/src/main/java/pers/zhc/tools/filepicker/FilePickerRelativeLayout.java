@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,6 +13,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
@@ -119,15 +119,12 @@ public class FilePickerRelativeLayout extends RelativeLayout {
             AlertDialog.Builder ad = new AlertDialog.Builder(ctx);
             EditText et = new EditText(ctx);
             String s = pathView.getText().toString();
-            final char mark = '/';
-            ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.tv, ("/storage/emulated".equals(s) ? s + "/0" : s) + mark)));
+            ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.tv, ("/storage/emulated/".equals(s) ? s + "0" : s))));
+            et.setSelection(et.getText().length());
             et.setLayoutParams(lp);
             AlertDialog alertDialog = ad.setTitle(R.string.type_path)
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String etText = et.getText().toString();
-                        if (etText.charAt(0) != mark) {
-                            etText = mark + etText;
-                        }
                         File f = new File(etText);
                         if (f.isFile() && type == 1) {
                             result = f.getAbsolutePath();
@@ -166,8 +163,8 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                 currentPathString = currentPath.getAbsolutePath();
             }
             String finalCurrentPathString = currentPathString;
-            ctx.runOnUiThread(() -> pathView.setText(String.format("%s"
-                    , result == null ? (finalCurrentPathString + File.separatorChar) : result)));
+            ctx.runOnUiThread(() -> pathView.setText(ctx.getString(R.string.tv
+                    , result == null ? (finalCurrentPathString + ("/".equals(finalCurrentPathString) ? "" : File.separatorChar)) : result)));
             TextViewWithExtra[] textViews;
             int length = 0;
             try {
@@ -209,8 +206,8 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                                 File[] listFiles1 = getFileList(currentFile);
                                 fillViews(listFiles1);
                             }
-                            ctx.runOnUiThread(() -> pathView.setText(String.format("%s"
-                                    , result == null ? (finalCurrentPathString + File.separatorChar) : result)));
+                            ctx.runOnUiThread(() -> pathView.setText(ctx.getString(R.string.tv
+                                    , result == null ? (finalCurrentPathString + ("/".equals(finalCurrentPathString) ? "" : File.separatorChar)) : result)));
                         });
                         ctx.runOnUiThread(() -> ll.addView(textViews[finalI]));
                     }
@@ -242,7 +239,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         textViews[i] = new TextViewWithExtra(ctx);
         textViews[i].setBackgroundResource(R.drawable.view_stroke);
         textViews[i].setTextSize(25);
-        ctx.runOnUiThread(() -> textViews[i].setText(listFiles[i].isFile() ? listFiles[i].getName() : (listFiles[i].getName() + "/")));
+        ctx.runOnUiThread(() -> textViews[i].setText(listFiles[i].isFile() ? listFiles[i].getName() : (listFiles[i].getName())));
         textViews[i].setLayoutParams(lp);
         switch (type) {
             case TYPE_PICK_FILE:
