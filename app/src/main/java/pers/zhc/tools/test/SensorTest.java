@@ -23,7 +23,6 @@ public class SensorTest extends BaseActivity {
         SensorEventListener sensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-                System.out.println("event.values = " + Arrays.toString(event.values));
                 tv.setText(Arrays.toString(event.values));
             }
 
@@ -32,7 +31,7 @@ public class SensorTest extends BaseActivity {
 
             }
         };
-        Sensor sensor = Objects.requireNonNull(sensorManager).getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        Sensor sensor = Objects.requireNonNull(sensorManager).getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 }
