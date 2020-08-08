@@ -1,7 +1,7 @@
 package pers.zhc.tools.views;
 
-import android.support.annotation.FloatRange;
-import android.support.annotation.IntRange;
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
 
 /**
  * @author bczhc

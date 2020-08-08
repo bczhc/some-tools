@@ -7,8 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
-import android.support.annotation.FloatRange;
-import android.support.annotation.IntRange;
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
 import android.text.Selection;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -391,13 +391,10 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         }
     }
 
-    private class SavedColorListView extends BaseView {
-        private final int w, h;
+    private static class SavedColorListView extends BaseView {
 
         public SavedColorListView(Context context, int w, int h) {
             super(context);
-            this.w = w;
-            this.h = h;
         }
     }
 }

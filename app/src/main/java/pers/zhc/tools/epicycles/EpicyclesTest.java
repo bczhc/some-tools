@@ -1,7 +1,7 @@
 package pers.zhc.tools.epicycles;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 
 public class EpicyclesTest extends BaseActivity {

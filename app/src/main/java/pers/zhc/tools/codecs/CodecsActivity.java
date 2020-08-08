@@ -5,9 +5,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -225,7 +225,6 @@ public class CodecsActivity extends BaseActivity {
      *             }
      * @return dest file
      */
-    @SuppressWarnings("SpellCheckingInspection")
     private String x(File file, int dT, List<List<String>> conf) {
         String name = file.getName();
         String name_no_x, x = "";

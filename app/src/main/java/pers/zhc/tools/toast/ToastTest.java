@@ -1,7 +1,7 @@
 package pers.zhc.tools.toast;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.widget.Button;
 import pers.zhc.tools.BaseActivity;

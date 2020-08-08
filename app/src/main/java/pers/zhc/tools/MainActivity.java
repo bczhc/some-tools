@@ -6,7 +6,7 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -94,7 +94,6 @@ public class MainActivity extends BaseActivity {
         return true;
     }
 
-    @SuppressWarnings("AlibabaMethodTooLong")
     private void init() {
         LinearLayout ll = findViewById(R.id.ll);
         final int[] texts = new int[]{

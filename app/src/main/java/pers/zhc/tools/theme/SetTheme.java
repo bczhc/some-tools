@@ -1,7 +1,7 @@
 package pers.zhc.tools.theme;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.widget.Button;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;

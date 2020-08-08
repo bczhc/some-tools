@@ -3,7 +3,7 @@ package pers.zhc.tools.crashhandler;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;

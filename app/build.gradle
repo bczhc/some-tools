@@ -1,6 +1,6 @@
+import pers.zhc.plugins.MyPlugin1
+
 apply plugin: 'com.android.application'
-//apply plugin: "jp.leafytree.android-scala"
-//apply plugin: 'pers.zhc.plugins-my-plugin1'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
@@ -10,7 +10,7 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 29
-        def verInfo = pers.zhc.plugins.MyPlugin1.gVersion()
+        def verInfo = MyPlugin1.gVersion()
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
     }
@@ -45,17 +45,14 @@ android {
 	lintOptions {
         checkReleaseBuilds false
         abortOnError false
+        return true
     }
     return true
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'src/main/jar_libs')
-    //noinspection GradleCompatible
-    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
-//    implementation 'com.github.bumptech.glide:glide:4.4.0'
-//    implementation "org.scala-lang:scala-library:2.11.7"
-    //noinspection GradleDependency
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.50"
 }

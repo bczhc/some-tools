@@ -30,10 +30,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.Settings;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Selection;
@@ -144,6 +144,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private Intent captureScreenResultData = null;
     private boolean panelColorFollowPainting;
 
+    @SuppressWarnings("unused")
     private static void uploadPaths(Context context) {
         try {
             InputStream is = new URL(Infos.ZHC_URL_STRING + "/upload/list.zhc?can=").openStream();
@@ -331,7 +332,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         pv.setPaintColor(Color.RED);
         wm = (WindowManager) this.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         setSwitch();
-        new Thread(() -> uploadPaths(this)).start();
         strings = getResources().getStringArray(R.array.btn_string);
         childTextViews = new TextView[strings.length];
         // 更新悬浮窗位置
@@ -869,7 +869,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void exit() {
         stopFloatingWindow();
-        new Thread(() -> uploadPaths(this)).start();
         FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMillisecond);
         this.fbSwitch.setChecked(false);
         pv.closePathRecorderOutputStream();
@@ -1201,7 +1200,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         }
                         if (pathFile.exists()) {
                             ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
-                            new Thread(() -> uploadPaths(this)).start();
                         } else {
                             ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failure), et.toString()));
                         }

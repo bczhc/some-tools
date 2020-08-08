@@ -1,6 +1,6 @@
 package pers.zhc.tools.jni;
 
-import android.support.annotation.Size;
+import androidx.annotation.Size;
 import pers.zhc.tools.pi.JNICallback;
 
 /**

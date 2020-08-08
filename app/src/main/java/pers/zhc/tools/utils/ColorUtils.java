@@ -1,9 +1,9 @@
 package pers.zhc.tools.utils;
 
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.annotation.FloatRange;
-import android.support.annotation.IntRange;
+import androidx.annotation.ColorInt;
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
 
 @SuppressWarnings({"unused"})
 public class ColorUtils {
@@ -139,7 +139,7 @@ public class ColorUtils {
 //        System.out.println("area = " + area);
         int color;
         try {
-            color = new TwoColor(colors[area - 1], colors[area], 0F, perAreaWidth).getColor((pos - startPos) % perAreaWidth);
+            color = new TwoColor(colors[area - 1], colors[area], perAreaWidth).getColor((pos - startPos) % perAreaWidth);
         } catch (Exception e) {
             throw new Exception(e.toString());
         }
@@ -152,8 +152,8 @@ public class ColorUtils {
         private final float sP;
         private final float eP;
 
-        private TwoColor(int color1, int color2, float sP, float eP) {
-            this.sP = sP;
+        private TwoColor(int color1, int color2, float eP) {
+            this.sP = (float) 0.0;
             this.eP = eP;
             rgb1 = parseRGB(color1);
             rgb2 = parseRGB(color2);
@@ -168,7 +168,7 @@ public class ColorUtils {
     }
 
     public static class HSVAColor {
-        public float[] hsv;
+        public final float[] hsv;
         public int alpha;
 
         public HSVAColor() {

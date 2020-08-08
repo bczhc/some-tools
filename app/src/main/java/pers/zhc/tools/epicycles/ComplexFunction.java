@@ -1,6 +1,6 @@
 package pers.zhc.tools.epicycles;
 
-import android.support.annotation.FloatRange;
+import androidx.annotation.FloatRange;
 import pers.zhc.u.math.util.ComplexValue;
 
 import java.util.ArrayList;

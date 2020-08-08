@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
