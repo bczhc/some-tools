@@ -9,6 +9,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import androidx.annotation.Nullable;
@@ -72,5 +73,6 @@ public class DialogUtil {
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         ad.setOnShowListener(dialog -> imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0));
         ad.setOnDismissListener(dialog -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0));
+        editText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
     }
 }

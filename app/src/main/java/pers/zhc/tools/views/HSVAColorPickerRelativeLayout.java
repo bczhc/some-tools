@@ -148,6 +148,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
                     final int parsedColor = Color.parseColor(s);
                     Color.colorToHSV(parsedColor, currentHSV);
                     alpha = Color.alpha(parsedColor);
+                    invalidateAllViews();
                 } catch (Exception e) {
                     e.printStackTrace();
                     ToastUtils.show(this.context, R.string.please_type_correct_value);
