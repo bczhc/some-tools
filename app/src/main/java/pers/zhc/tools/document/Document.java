@@ -46,12 +46,14 @@ public class Document extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.document_activity);
+        boolean fromShortcut = getIntent().getBooleanExtra("fromShortcut", false);
+        if (fromShortcut) finish();
         Button insertBtn = findViewById(R.id.note_take);
         Button importBtn = findViewById(R.id.import_btn);
         Button exportBtn = findViewById(R.id.export_btn);
         insertBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(this, NoteTakingActivity.class);
-            startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
+            Intent takingIntent = new Intent(this, NoteTakingActivity.class);
+            startActivityForResult(takingIntent, RequestCode.START_ACTIVITY_1);
             overridePendingTransition(R.anim.in_left_and_bottom, 0);
         });
         Button deleteBtn = findViewById(R.id.delete_btn);

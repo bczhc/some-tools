@@ -6,11 +6,11 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.clipboard.Clip;
@@ -83,6 +83,7 @@ public class MainActivity extends BaseActivity {
             }
             ShortcutInfo.Builder builder = new ShortcutInfo.Builder(this, "shortcut_id" + id);
             Intent intent = new Intent(this, theClass);
+            intent.putExtra("fromShortcut", true);
             intent.setAction(Intent.ACTION_VIEW);
             ShortcutInfo shortcutInfo = builder.setShortLabel(getString(texts))
                     .setLongLabel(getString(texts))
