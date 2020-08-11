@@ -162,9 +162,9 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
 
             });
             DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
-            ad.show();
-            Selection.selectAll(editText.getText());
             DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(editText, ad);
+            Selection.selectAll(editText.getText());
+            ad.show();
         });
         barRL.addView(tv);
         colorPreviewView = new View(this.context) {
