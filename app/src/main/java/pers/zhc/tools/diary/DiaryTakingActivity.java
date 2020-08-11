@@ -9,13 +9,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
@@ -25,18 +28,14 @@ import pers.zhc.tools.utils.sqlite.SQLite;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author bczhc
  */
 public class DiaryTakingActivity extends BaseActivity {
 
-    private ScheduledExecutorService ses;
     private EditText et;
-    private TextView infoTV;
+    private TextView charactersCountTV;
     private MyDate mDate;
     private SQLiteDatabase diaryDatabase;
 
@@ -46,18 +45,35 @@ public class DiaryTakingActivity extends BaseActivity {
         setContentView(R.layout.diary_taking_activity);
         diaryDatabase = DiaryMainActivity.getDiaryDatabase(this);
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
-        startTimer();
+        Handler debounceHandler = new Handler();
+        et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                debounceHandler.removeCallbacksAndMessages(null);
+                debounceHandler.postDelayed(() -> showCharactersCount(), 2000);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         final ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setTitle(R.string.diary);
-            infoTV = new TextView(this);
-            infoTV.setTextColor(Color.WHITE);
+            charactersCountTV = new TextView(this);
+            charactersCountTV.setTextColor(Color.WHITE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                infoTV.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                charactersCountTV.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             }
-            actionBar.setCustomView(infoTV);
+            actionBar.setCustomView(charactersCountTV);
             actionBar.show();
         }
         final Intent intent = getIntent();
@@ -71,6 +87,10 @@ public class DiaryTakingActivity extends BaseActivity {
         prepareContent();
     }
 
+    private void showCharactersCount() {
+        charactersCountTV.setText(getString(R.string.characters_count_tv, et.length()));
+    }
+
     private void prepareContent() {
         final Cursor cursor = diaryDatabase.rawQuery("SELECT content FROM diary WHERE date=?", new String[]{mDate.toString()});
         String content = null;
@@ -80,6 +100,7 @@ public class DiaryTakingActivity extends BaseActivity {
         cursor.close();
         if (content != null) {
             et.setText(content);
+            showCharactersCount();
         }
     }
 
@@ -118,14 +139,8 @@ public class DiaryTakingActivity extends BaseActivity {
         return true;
     }
 
-    private void startTimer() {
-        ses = Executors.newScheduledThreadPool(1);
-        ses.scheduleAtFixedRate(() -> runOnUiThread(this::save), 0, 10, TimeUnit.SECONDS);
-    }
-
     @Override
     protected void onDestroy() {
-        ses.shutdown();
         save();
         super.onDestroy();
     }
@@ -147,9 +162,6 @@ public class DiaryTakingActivity extends BaseActivity {
         cv.put("date", mDate.toString());
         cv.put("content", this.et.getText().toString());
         diaryDatabase.update("diary", cv, "date=?", new String[]{mDate.toString()});
-        final Date date = new Date();
-        final String time = new SimpleDateFormat("-HH:mm:ss").format(date);
-        infoTV.setText(getString(R.string.saved) + time);
     }
 
     static class MyDate {
