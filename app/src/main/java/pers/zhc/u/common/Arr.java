@@ -199,11 +199,3 @@ public class Arr {
         }
     }
 }
-
-class s0 {
-    public static void main(String[] args) {
-        new Arr.SeparateArr<>(new String[]{"A"}, 2).separate((Arr.SeparateArrDo) a -> {
-
-        });
-    }
-}

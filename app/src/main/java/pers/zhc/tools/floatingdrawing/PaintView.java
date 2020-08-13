@@ -245,8 +245,18 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         mPaint.setStrokeWidth(width);
     }
 
-    int getColor() {
+    int getPaintColor() {
         return this.mPaint.getColor();
+    }
+
+    /**
+     * 设置画笔颜色
+     */
+    void setPaintColor(@ColorInt int color) {
+        mPaint.setColor(color);
+        if (this.onColorChangedCallback != null) {
+            onColorChangedCallback.change(color);
+        }
     }
 
     /**
@@ -306,16 +316,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
 
     void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
         this.eraserPaint.setAlpha(alpha);
-    }
-
-    /**
-     * 设置画笔颜色
-     */
-    void setPaintColor(@ColorInt int color) {
-        mPaint.setColor(color);
-        if (this.onColorChangedCallback != null) {
-            onColorChangedCallback.change(color);
-        }
     }
 
     /**
@@ -457,7 +457,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      * 导入路径
      *
      * @param f                   路径文件
-     * @param d                   完成回调接口
+     * @param doneAction          完成回调接口
      * @param floatValueInterface 进度回调接口
      *                            路径存储结构：
      *                            一条笔迹或一个操作记录记录长度为9字节
@@ -467,12 +467,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      *                            <p>按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；
      *                            撤销为0xC1，恢复为0xC2。(byte)</p>
      *                            <p>如果标记为0xA1，排列结构：标记(byte)+笔迹宽度(float)+颜色(int)</p>
-     *                            <p>如果标记为0xA2，排列结构：标记(byte)+橡皮擦宽度(float)+TRANSPARENT(int)</p>
+     *                            <p>如果标记为0xA2，排列结构：标记(byte)+橡皮擦宽度(float)+像皮擦颜色（alpha信息）(int)</p>
      *                            <p>如果标记为0xB1或0xB2或0xB3，排列结构：标记(byte)+x坐标(float)+y坐标(float)</p>
      *                            <p>如果标记为0xC1或0xC2，则后8字节忽略。</p>
      */
     @SuppressWarnings("BusyWait")
-    void importPathFile(File f, Runnable d, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
+    void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
         dontDrawWhileImporting = speedDelayMillis == 0;
         if (floatValueInterface != null) {
             floatValueInterface.f(0F);
@@ -570,9 +570,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                                         strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
                                         color = JNI.FloatingBoard.byteArrayToInt(buffer, 5 + i * 9);
                                         setEraserMode(buffer[i * 9] == (byte) 0xA2);
-                                        if (!isEraserMode) {
-                                            mPaintRef.setColor(color);
-                                        }
+                                        mPaintRef.setColor(color);
                                         mPaintRef.setStrokeWidth(strokeWidth);
                                         break;
                                     case (byte) 0xB1:
@@ -655,7 +653,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                         break;
                 }
                 canDoHandler.stop();
-                d.run();
+                doneAction.run();
+                ((FloatingDrawingBoardMainActivity) ctx).strokeColorHSVA.set(getPaintColor());
             } catch (IOException | InterruptedException e) {
                 handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
             } finally {
@@ -720,8 +719,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                     try {
                         for (byte[] bytes : savedData) {
                             os.write(bytes);
-                            os.flush();
                         }
+                        os.flush();
                     } catch (IOException e) {
                         ((Activity) ctx).runOnUiThread(() -> ToastUtils.showError(ctx, R.string.write_error, e));
                     }
