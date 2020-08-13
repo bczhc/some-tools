@@ -459,7 +459,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     case 7:
                         DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                             pv.clearAll();
-                            pv.clearTouchRecordOutputStreamContent();
                             System.gc();
                         }, (dialog1, which) -> {
                         }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
@@ -826,7 +825,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     @SuppressLint({"ClickableViewAccessibility"})
     void startFloatingWindow() {
-        pv.setOutputStream(currentInternalPathFile, true);
         if (!longActivityMap.containsKey(currentInstanceMillisecond)) {
             longActivityMap.put(currentInstanceMillisecond, this);
         }
@@ -839,6 +837,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        pv.configPathDatabase();
     }
 
     void toggleDrawAndControlMode() {
@@ -871,7 +870,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         stopFloatingWindow();
         FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMillisecond);
         this.fbSwitch.setChecked(false);
-        pv.closePathRecorderOutputStream();
+        pv.releasePathDatabase();
     }
 
     private void hide() {
@@ -1185,6 +1184,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v2 -> importPath(moreOptionsDialog, pathDir),
                 v3 -> new PermissionRequester(() -> {
+                    pv.commitDB();
                     EditText et = new EditText(this);
                     setSelectedEditTextWithCurrentTimeMillisecond(et);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
