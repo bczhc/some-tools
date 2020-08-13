@@ -109,7 +109,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
      * 我已经看不懂我自己写的都是什么东西了，太乱了。
      */
     static Map<Long, Context> longActivityMap;
-    private final ColorUtils.HSVAColor strokeColorHSVA = new ColorUtils.HSVAColor();
+    final ColorUtils.HSVAColor strokeColorHSVA = new ColorUtils.HSVAColor();
     private final ColorUtils.HSVAColor panelColorHSVA = new ColorUtils.HSVAColor();
     private final ColorUtils.HSVAColor panelTextColorHSVA = new ColorUtils.HSVAColor();
     RequestPermissionInterface requestPermissionInterface = null;
@@ -514,7 +514,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 runOnUiThread(() -> ToastUtils.show(this, R.string.current_version_is_the_latest));
             }
         }));
-        strokeColorHSVA.set(pv.getColor());
+        strokeColorHSVA.set(pv.getPaintColor());
         panelColorHSVA.set(panelColor);
         panelTextColorHSVA.set(panelTextColor);
     }
@@ -574,7 +574,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             this.panelColorFollowPainting = isChecked;
             panelColorBtn.setEnabled(!this.panelColorFollowPainting);
             if (isChecked) {
-                setPanelColor(pv.getColor());
+                setPanelColor(pv.getPaintColor());
             } else setPanelColor(panelColorHSVA.getColor());
             if (invertColorChecked) {
                 setPanelTextColor(ColorUtils.invertColor(panelColor));
@@ -960,7 +960,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 try {
                     float edit = Float.parseFloat(et.getText().toString());
                     double a = Math.log(edit * pv.getScale()) / Math.log(1.07D);
-                    strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getColor());
+                    strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getPaintColor());
                     sb.setProgress((int) a);
                     if (checked[0] == R.id.radio1) {
                         pv.setStrokeWidth(edit);
@@ -985,7 +985,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             ad.show();
         });
         float pvStrokeWidthInUse = pv.getStrokeWidthInUse();
-        strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getColor());
+        strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getPaintColor());
         tv.setText(getString(R.string.stroke_width_info, pvStrokeWidthInUse, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
         sb.setProgress((int) (Math.log(pvStrokeWidthInUse * pv.getScale()) / Math.log(1.07D)));
         sb.setMax(100);
@@ -1003,7 +1003,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     }
                     pv.lockStroke();
                     tv.setText(getString(R.string.stroke_width_info, pow, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
-                    strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getColor());
+                    strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getPaintColor());
                 }
             }
 
@@ -1020,7 +1020,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         rg.setOnCheckedChangeListener((group, checkedId) -> {
             checked[0] = checkedId;
             float strokeWidth = (checkedId == R.id.radio1) ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
-            strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getColor());
+            strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getPaintColor());
             tv.setText(getString(R.string.stroke_width_info, strokeWidth, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
             sb.setProgress((int) (Math.log(strokeWidth * pv.getScale()) / Math.log(1.07D)));
         });
