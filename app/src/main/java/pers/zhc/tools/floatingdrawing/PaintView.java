@@ -1,8 +1,10 @@
 package pers.zhc.tools.floatingdrawing;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -32,14 +34,11 @@ import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,7 +52,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private final Context ctx;
     boolean isEraserMode;
     private SurfaceHolder mSurfaceHolder;
-    private OutputStream os;
     private Paint mPaint;
     private Path mPath;
     private Paint eraserPaint;
@@ -76,8 +74,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private Bitmap backgroundBitmap;
     private Canvas mBackgroundCanvas;
     private GestureResolver gestureResolver;
-    private List<byte[]> savedData = null;
-    private byte[] data = null;
     private boolean dontDrawWhileImporting = false;
     private boolean isLockingStroke = false;
     private float lockedStrokeWidth = 0F;
@@ -86,6 +82,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
     private OnColorChangedCallback onColorChangedCallback = null;
     private Bitmap transBitmap;
     private MyCanvas transCanvas;
+    private SQLiteDatabase pathDatabase = null;
 
     public PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -95,8 +92,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         this.width = width;
         this.height = height;
         init();
-        Paint zP = new Paint();
-        zP.setColor(Color.parseColor("#5000ff00"));
     }
 
     public void setOnColorChangedCallback(OnColorChangedCallback onColorChangedCallback) {
@@ -110,34 +105,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         setFocusableInTouchMode(true);
         setZOrderOnTop(true);
         mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);
-    }
-
-    public void setOutputStream(File file, boolean append) {
-        long length = 0L;
-        if (file.exists()) {
-            length = file.length();
-        }
-        if (!append) {
-            length = 0L;
-        }
-        try {
-            os = new FileOutputStream(file, append);
-            if (length == 0L) {
-                try {
-                    byte[] headInfo = "path ver 2.1".getBytes();
-                    final int headLength = 12;
-                    if (headInfo.length != headLength) {
-                        Common.showException(new Exception("native error"), ctx);
-                    }
-                    os.write(headInfo);
-                    os.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (FileNotFoundException e) {
-            Common.showException(e, ctx);
-        }
     }
 
     /***
@@ -210,7 +177,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
             @Override
             public void onTwoPointsDown() {
                 mPath = null;
-                savedData = null;
                 if (transBitmap == null) {
                     transBitmap = Bitmap.createBitmap(headBitmap);
                     transCanvas = new MyCanvas(transBitmap);
@@ -235,6 +201,35 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 drawing();
             }
         });
+    }
+
+    void configPathDatabase() {
+        pathDatabase = SQLiteDatabase.openOrCreateDatabase(internalPathFile, null);
+        pathDatabase.execSQL("CREATE TABLE IF NOT EXISTS info (\n" +
+                "    " +
+                "version text,\n" +
+                "    creation_timestamp long,\n" +
+                "    modification_timestamp long\n" +
+                ");");
+        pathDatabase.execSQL("CREATE TABLE IF NOT EXISTS path (\n" +
+                "    mark char,\n" +
+                "    num1 number,\n" +
+                "    num2 number\n" +
+                ");");
+        pathDatabase.execSQL("BEGIN");
+        boolean putCreationTime = false;
+        Cursor timeSelect = pathDatabase.rawQuery("SELECT * FROM info", null);
+        if (!timeSelect.moveToFirst()) {
+            putCreationTime = true;
+        }
+        timeSelect.close();
+        final long currentTimeMillis = System.currentTimeMillis();
+        ContentValues cv = new ContentValues();
+        if (putCreationTime) {
+            cv.put("creation_timestamp", currentTimeMillis);
+        }
+        cv.put("modification_timestamp", currentTimeMillis);
+        pathDatabase.insertOrThrow("info", null, cv);
     }
 
     float getStrokeWidth() {
@@ -263,14 +258,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      * 撤销操作
      */
     void undo() {
-        data = new byte[9];
-        data[0] = (byte) 0xC1;
-        try {
-            os.write(data);
-            os.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         if (!undoList.isEmpty()) {
             clearPaint();//清除之前绘制内容
             PathBean lastPb = undoList.removeLast();//将最后一个移除
@@ -286,20 +273,13 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 drawing();
             }
         }
+        pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,null,null)", 0xC1));
     }
 
     /**
      * 恢复操作
      */
     void redo() {
-        data = new byte[9];
-        data[0] = (byte) 0xC2;
-        try {
-            os.write(data);
-            os.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         if (!redoList.isEmpty()) {
             PathBean pathBean = redoList.removeLast();
             headCanvas.drawPath(pathBean.path, pathBean.paint);
@@ -308,6 +288,7 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                 drawing();
             }
         }
+        pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,null,null)", 0xC2));
     }
 
     int getEraserAlpha() {
@@ -449,10 +430,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    void closePathRecorderOutputStream() {
-        closeStream(os);
-    }
-
     /**
      * 导入路径
      *
@@ -460,10 +437,8 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
      * @param doneAction          完成回调接口
      * @param floatValueInterface 进度回调接口
      *                            路径存储结构：
-     *                            一条笔迹或一个操作记录记录长度为9字节
-     *                            <code>byte b[9]</code>
-     *                            <p>1+4+4</p>
-     *                            <p>b[0]: 标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2</p>
+     *                            <p>一条笔迹中一个记录点或一个操作记录为数据库一条记录，参阅 {@link #configPathDatabase()}</p>
+     *                            <p>标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2</p>
      *                            <p>按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；
      *                            撤销为0xC1，恢复为0xC2。(byte)</p>
      *                            <p>如果标记为0xA1，排列结构：标记(byte)+笔迹宽度(float)+颜色(int)</p>
@@ -485,6 +460,12 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         canDoHandler.start();
         Handler handler = new Handler();
         Thread thread = new Thread(() -> {
+            try {
+                SQLiteDatabase db = SQLiteDatabase.openDatabase(f.getPath(), null, SQLiteDatabase.OPEN_READONLY);
+                importPathVer3(db, canDoHandler, doneAction, speedDelayMillis);
+                return;
+            } catch (Exception ignored) {
+            }
             RandomAccessFile raf = null;
             try {
                 raf = new RandomAccessFile(f, "r");
@@ -561,7 +542,6 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                         int bufferRead;
                         read = 0L;
                         while ((bufferRead = raf.read(buffer)) != -1) {
-                            Thread.sleep(speedDelayMillis);
                             int a = bufferRead / 9;
                             for (int i = 0; i < a; i++) {
                                 switch (buffer[i * 9]) {
@@ -673,6 +653,49 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         thread.start();
     }
 
+    private void importPathVer3(SQLiteDatabase db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
+        Cursor cursor = db.rawQuery("SELECT * FROM path", null);
+        final int markColumnIndex = cursor.getColumnIndex("mark");
+        final int num1ColumnIndex = cursor.getColumnIndex("num1");
+        final int num2ColumnIndex = cursor.getColumnIndex("num2");
+        if (cursor.moveToFirst()) {
+            do {
+                switch (cursor.getShort(markColumnIndex)) {
+                    case 0xA1:
+                        setEraserMode(false);
+                        mPaintRef.setStrokeWidth(cursor.getFloat(num1ColumnIndex));
+                        mPaintRef.setColor(cursor.getInt(num2ColumnIndex));
+                        break;
+                    case 0xA2:
+                        setEraserMode(true);
+                        mPaintRef.setStrokeWidth(cursor.getFloat(num1ColumnIndex));
+                        mPaintRef.setColor(cursor.getInt(num2ColumnIndex));
+                        break;
+                    case 0xB1:
+                        onTouchAction(MotionEvent.ACTION_DOWN, cursor.getInt(num1ColumnIndex), cursor.getInt(num2ColumnIndex));
+                        break;
+                    case 0xB2:
+                        onTouchAction(MotionEvent.ACTION_UP, cursor.getInt(num1ColumnIndex), cursor.getInt(num2ColumnIndex));
+                        break;
+                    case 0xB3:
+                        onTouchAction(MotionEvent.ACTION_MOVE, cursor.getInt(num1ColumnIndex), cursor.getInt(num2ColumnIndex));
+                        break;
+                    case 0xC1:
+                        undo();
+                        break;
+                    case 0xC2:
+                        redo();
+                        break;
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        dontDrawWhileImporting = false;
+        redrawCanvas();
+        drawing();
+        doneAction.run();
+    }
+
     private void onTouchAction(int motionAction, float x, float y) {
         float startPointX = headCanvas.getStartPointX();
         float startPointY = headCanvas.getStartPointY();
@@ -680,23 +703,18 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         x = (x - startPointX) / canvasScale;
         y = (y - startPointY) / canvasScale;
         switch (motionAction) {
-            case MotionEvent.ACTION_DOWN:
-                //路径
-                mPath = new Path();
-                mLastX = x;
-                mLastY = y;
-                mPath.moveTo(mLastX, mLastY);
-                savedData = new ArrayList<>();
-                data = new byte[9];
-                data[0] = (byte) (isEraserMode ? 0xA2 : 0xA1);
-                JNI.FloatingBoard.floatToByteArray(data, getStrokeWidthInUse(), 1);
-                JNI.FloatingBoard.intToByteArray(data, mPaintRef.getColor(), 5);
-                savedData.add(data);
-                data = new byte[9];
-                data[0] = (byte) 0xB1;
-                JNI.FloatingBoard.floatToByteArray(data, x, 1);
-                JNI.FloatingBoard.floatToByteArray(data, y, 5);
-                savedData.add(data);
+            case MotionEvent.ACTION_MOVE:
+                if (mPath != null) {
+                    float dx = Math.abs(x - mLastX);
+                    float dy = Math.abs(y - mLastY);
+                    if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
+                        //利用二阶贝塞尔曲线，使绘制路径更加圆滑
+                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
+                    }
+                    mLastX = x;
+                    mLastY = y;
+                }
+                pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,%f,%f)", 0xB3, x, y));
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
@@ -710,48 +728,19 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
                     mPath.reset();
                     mPath = null;
                 }
-                if (savedData != null) {
-                    data = new byte[9];
-                    data[0] = (byte) 0xB2;
-                    JNI.FloatingBoard.floatToByteArray(data, x, 1);
-                    JNI.FloatingBoard.floatToByteArray(data, y, 5);
-                    savedData.add(data);
-                    try {
-                        for (byte[] bytes : savedData) {
-                            os.write(bytes);
-                        }
-                        os.flush();
-                    } catch (IOException e) {
-                        ((Activity) ctx).runOnUiThread(() -> ToastUtils.showError(ctx, R.string.write_error, e));
-                    }
-                }
+                pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,%f,%f)", 0xB2, x, y));
                 break;
-            case MotionEvent.ACTION_MOVE:
-                if (mPath != null) {
-                    float dx = Math.abs(x - mLastX);
-                    float dy = Math.abs(y - mLastY);
-                    if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
-                        //利用二阶贝塞尔曲线，使绘制路径更加圆滑
-                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
-                    }
-                    mLastX = x;
-                    mLastY = y;
-                }
-                if (savedData != null) {
-                    data = new byte[9];
-                    data[0] = (byte) 0xB3;
-                    JNI.FloatingBoard.floatToByteArray(data, x, 1);
-                    JNI.FloatingBoard.floatToByteArray(data, y, 5);
-                    savedData.add(data);
-                }
+            case MotionEvent.ACTION_DOWN:
+                //路径
+                mPath = new Path();
+                mLastX = x;
+                mLastY = y;
+                mPath.moveTo(mLastX, mLastY);
+                pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,%f,%d)", isEraserMode ? 0xA2 : 0xA1, mPaintRef.getStrokeWidth(), mPaintRef.getColor()));
+                pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,%f,%f)", 0xB1, x, y));
                 break;
         }
         drawing();
-    }
-
-    void clearTouchRecordOutputStreamContent() {
-        closePathRecorderOutputStream();
-        setOutputStream(internalPathFile, false);
     }
 
     float getEraserStrokeWidth() {
@@ -781,6 +770,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
         setCurrentStrokeWidthWithLockedStrokeWidth();
     }
 
+    /**
+     * 把路径绘制到缓冲Bitmap上
+     */
     private void redrawCanvas() {
         headCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
@@ -841,6 +833,9 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    /**
+     * 把缓冲Bitmap内容绘制到SurfaceView上。绘画中的笔迹也在这里呈献。
+     */
     void drawing() {
         if (dontDrawWhileImporting) {
             return;
@@ -897,6 +892,14 @@ public class PaintView extends SurfaceView implements SurfaceHolder.Callback {
 
     float getZoomedStrokeWidthInUse() {
         return getScale() * getStrokeWidthInUse();
+    }
+
+    public void releasePathDatabase() {
+        pathDatabase.close();
+    }
+
+    public void commitDB() {
+        pathDatabase.execSQL("COMMIT");
     }
 
     /**
