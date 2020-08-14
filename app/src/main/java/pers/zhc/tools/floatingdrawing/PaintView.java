@@ -48,7 +48,6 @@ public class PaintView extends View {
     private final int width;
     private final Context ctx;
     boolean isEraserMode;
-    private OutputStream os;
     private Paint mPaint;
     private Path mPath;
     private Paint eraserPaint;
@@ -80,6 +79,7 @@ public class PaintView extends View {
     private Bitmap transBitmap;
     private MyCanvas transCanvas;
     private SQLiteDatabase pathDatabase = null;
+    private final ContentValues cv = new ContentValues();
 
     public PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -92,34 +92,6 @@ public class PaintView extends View {
 
     public void setOnColorChangedCallback(OnColorChangedCallback onColorChangedCallback) {
         this.onColorChangedCallback = onColorChangedCallback;
-    }
-
-    public void setOutputStream(File file, boolean append) {
-        long length = 0L;
-        if (file.exists()) {
-            length = file.length();
-        }
-        if (!append) {
-            length = 0L;
-        }
-        try {
-            os = new FileOutputStream(file, append);
-            if (length == 0L) {
-                try {
-                    byte[] headInfo = "path ver 2.1".getBytes();
-                    final int headLength = 12;
-                    if (headInfo.length != headLength) {
-                        Common.showException(new Exception("native error"), ctx);
-                    }
-                    os.write(headInfo);
-                    os.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (FileNotFoundException e) {
-            Common.showException(e, ctx);
-        }
     }
 
     /***
@@ -231,7 +203,7 @@ public class PaintView extends View {
                 "    num1 number,\n" +
                 "    num2 number\n" +
                 ");");
-        pathDatabase.execSQL("BEGIN");
+        pathDatabase.beginTransaction();
         boolean putCreationTime = false;
         Cursor timeSelect = pathDatabase.rawQuery("SELECT * FROM info", null);
         if (!timeSelect.moveToFirst()) {
@@ -288,7 +260,11 @@ public class PaintView extends View {
                 postInvalidate();
             }
         }
-        pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,null,null)", 0xC1));
+        cv.clear();
+        cv.put("mark", 0xC1);
+        cv.put("num1", 0);
+        cv.put("num2", 0);
+        pathDatabase.insert("path", null, cv);
     }
 
     /**
@@ -303,7 +279,11 @@ public class PaintView extends View {
                 postInvalidate();
             }
         }
-        pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,null,null)", 0xC2));
+        cv.clear();
+        cv.put("mark", 0xC2);
+        cv.put("num1", 0);
+        cv.put("num2", 0);
+        pathDatabase.insert("path", null, cv);
     }
 
     int getEraserAlpha() {
@@ -739,7 +719,7 @@ public class PaintView extends View {
         cursor.close();
         dontDrawWhileImporting = false;
         redrawCanvas();
-        drawing();
+        postInvalidate();
         doneAction.run();
     }
 
@@ -761,7 +741,11 @@ public class PaintView extends View {
                     mLastX = x;
                     mLastY = y;
                 }
-                pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,%f,%f)", 0xB3, x, y));
+                cv.clear();
+                cv.put("mark", 0xB3);
+                cv.put("num1", x);
+                cv.put("num2", y);
+                pathDatabase.insert("path", null, cv);
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
@@ -775,7 +759,11 @@ public class PaintView extends View {
                     mPath.reset();
                     mPath = null;
                 }
-                pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,%f,%f)", 0xB2, x, y));
+                cv.clear();
+                cv.put("mark", 0xB2);
+                cv.put("num1", x);
+                cv.put("num2", y);
+                pathDatabase.insert("path", null, cv);
                 break;
             case MotionEvent.ACTION_DOWN:
                 //路径
@@ -783,8 +771,16 @@ public class PaintView extends View {
                 mLastX = x;
                 mLastY = y;
                 mPath.moveTo(mLastX, mLastY);
-                pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,%f,%d)", isEraserMode ? 0xA2 : 0xA1, mPaintRef.getStrokeWidth(), mPaintRef.getColor()));
-                pathDatabase.execSQL(String.format("INSERT INTO path VALUES(%d,%f,%f)", 0xB1, x, y));
+                cv.clear();
+                cv.put("mark", isEraserMode ? 0xA2 : 0xA1);
+                cv.put("num1", mPaintRef.getStrokeWidth());
+                cv.put("num2", mPaintRef.getColor());
+                pathDatabase.insert("path", null, cv);
+                cv.clear();
+                cv.put("mark", 0xB1);
+                cv.put("num1", x);
+                cv.put("num2", y);
+                pathDatabase.insert("path", null, cv);
                 break;
         }
         postInvalidate();
@@ -885,7 +881,7 @@ public class PaintView extends View {
     }
 
     public void commitDB() {
-        pathDatabase.execSQL("COMMIT");
+        pathDatabase.endTransaction();
     }
 
     /**
