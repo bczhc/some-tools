@@ -29,6 +29,7 @@ import pers.zhc.tools.test.MathExpressionEvaluationTest;
 import pers.zhc.tools.test.S;
 import pers.zhc.tools.test.SensorTest;
 import pers.zhc.tools.test.SurfaceViewTest;
+import pers.zhc.tools.test.jni.Test;
 import pers.zhc.tools.test.service.ServiceActivity;
 import pers.zhc.tools.theme.SetTheme;
 import pers.zhc.tools.toast.ToastTest;
@@ -129,7 +130,7 @@ public class MainActivity extends BaseActivity {
                 FunctionDrawingBoard.class,
                 Document.class,
                 EpicyclesEdit.class,
-                S.class,
+                Test.class,
                 pers.zhc.tools.test.viewtest.MainActivity.class,
                 SetTheme.class,
                 MathExpressionEvaluationTest.class,

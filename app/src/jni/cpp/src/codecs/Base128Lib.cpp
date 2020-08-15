@@ -8,6 +8,7 @@
 
 char e_table_l[] = {1, 3, 7, 15, 31, 63, 127};
 
+#define dl int64_t
 
 void e1(char *Dest, const char buf[7]) {
     Dest[0] = (char) ((buf[0] & 255) >> 1);
@@ -83,18 +84,15 @@ int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject callback) {
     Callback(env, callback, "", (double) 0);
     FILE *fp, *fpO;
     if ((fp = fopen(fN, "rb")) == NULL) {
-        printf("fopen error. \n");
         Callback(env, callback, "fopen error. ", -1);
         return (jint) EOF;
     }
     if ((fpO = fopen(D_fN, "wb")) == NULL) {
-        printf("fopen error. \n");
         Callback(env, callback, "fopen error. ", -1);
         return (jint) EOF;
     }
     dl fS = getFileSize(fp), a = fS / ERS;
     dl per = fS / 10290;
-    printf("size: %lld\n", fS);
     int b = (int) (fS % ERS);
     char r[ERS] = {0};
     char R[DRS] = {0};
@@ -108,7 +106,6 @@ int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject callback) {
         fwrite(R, DRS, 1, fpO);
         d = (double) i / (double) a * 100;
         if (!(i % per)) {
-//            printf("progress: %f%%\n", d);
             Callback(env, callback, "", d);
         }
     }
@@ -128,13 +125,11 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject callback) {
     Callback(env, callback, "", (double) 0);
     FILE *fp, *fpO;
     if ((fp = fopen(fN, "rb")) == NULL) {
-        printf("fopen error. \n");
         Callback(env, callback, "fopen error. ", -1);
         return EOF;
     }
     dl fS = getFileSize(fp) - 8, a = fS / DRS;
     dl per = fS / 11760;
-    printf("size: %lld\n", fS + 8);
     int b = fS % DRS;
     char r[DRS] = {0};
     char R[ERS] = {0};
@@ -146,12 +141,10 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject callback) {
         f_ck += (r[j] != b1[j]);
     }
     if (f_ck > 0) {
-        printf("not Base128 encoded\n");
         Callback(env, callback, "不是由Base128编码得到的文件", -1);
         return -2;
     }
     if ((fpO = fopen(D_fN, "wb")) == NULL) {
-        printf("fopen error. \n");
         Callback(env, callback, "fopen error. ", -1);
         return EOF;
     }

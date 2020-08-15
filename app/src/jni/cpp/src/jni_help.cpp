@@ -29,7 +29,7 @@ void LogArr(JNIEnv *env, const char *tag, const char *s, int size) {
     char *r = nullptr;
     char *R = nullptr;
     for (int i = 0; i < size; ++i) {
-        m_itoa(&r, (int) (usi) s[i]);
+        m_itoa(&r, (int) (uint32_t) s[i]);
         strcat_auto(&R, r);
         strcat_auto(&R, " ");
     }

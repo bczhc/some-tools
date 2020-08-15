@@ -5,6 +5,9 @@
 #include <jni.h>
 #include "./codecsDo.h"
 
+#define dl int64_t
+#define usi uint32_t
+
 
 #define MAX_FIND_KEY_TIME 468
 

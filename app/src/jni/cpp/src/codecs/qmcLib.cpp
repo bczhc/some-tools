@@ -3,6 +3,8 @@
 //
 #include "codecsDo.h"
 
+#define dl int64_t
+
 char seedMap[8][7] = {
         {(char) 0x4a, (char) 0xd6, (char) 0xca, (char) 0x90, (char) 0x67, (char) 0xf7, (char) 0x52},
         {(char) 0x5e, (char) 0x95, (char) 0x23, (char) 0x9f, (char) 0x13, (char) 0x11, (char) 0x7e},
@@ -54,7 +56,7 @@ int decode(const char *filename, const char *destFileName, JNIEnv *env, jobject 
     dl fL = getFileSize(fp), a = fL / 1024;
     if (!fL)
         return 0;
-    usi p = fL / 20480;
+    uint32_t p = fL / 20480;
     int b = (int) (fL % 1024);
     for (int j = 0; j < a; ++j) {
         fread(c, 1024, 1, fp);

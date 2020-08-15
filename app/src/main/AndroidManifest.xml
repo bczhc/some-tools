@@ -17,6 +17,7 @@
             android:hardwareAccelerated="true"
             android:extractNativeLibs="false"
             android:usesCleartextTraffic="true"
+            android:requestLegacyExternalStorage="true"
             tools:targetApi="m">
         <receiver android:name=".floatingdrawing.NotificationClickReceiver"
                   android:exported="true"
@@ -347,6 +348,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".pressuretest.PressureTest"
+                  android:configChanges="screenSize|keyboardHidden|orientation"
+                  android:theme="@style/AppTheme"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".test.jni.Test"
                   android:configChanges="screenSize|keyboardHidden|orientation"
                   android:theme="@style/AppTheme"
         >

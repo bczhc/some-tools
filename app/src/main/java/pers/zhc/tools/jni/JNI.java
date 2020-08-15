@@ -102,9 +102,7 @@ public class JNI {
 
     public static class FourierSeriesCalc {
         static {
-            if (!hasLoadLib) {
-                loadLib();
-            }
+            loadLib();
         }
 
         public static native void calc(double period, int epicyclesCount, Callback callback, int threadNum);
@@ -119,5 +117,60 @@ public class JNI {
              */
             void callback(double n, double re, double im);
         }
+    }
+
+    public static class Sqlite3 {
+        static {
+            loadLib();
+            System.loadLibrary("sqlite3");
+        }
+
+        public interface SqliteExecCallback {
+            /**
+             * Callback when {@link Sqlite3#exec(int, String, SqliteExecCallback)} is called.
+             * @param contents content in database
+             * @return whether to continue search:
+             * 0: interrupt searching
+             * 1: continue
+             */
+            int callback(String[] contents);
+        }
+
+        /**
+         * Create a handler hold an id linked the native database object.
+         *
+         * @return the id, and it's the "handler"
+         */
+        public static native int createHandler();
+
+        /**
+         * Release the native database associated with the id.
+         *
+         * @param id the id
+         */
+        public static native void releaseHandler(int id);
+
+        /**
+         * Open sqlite database.
+         *
+         * @param id   the associated id
+         * @param path sqlite database path, if not exists, it'll create a new sqlite database
+         */
+        public static native void open(int id, String path);
+
+        /**
+         * Close sqlite database
+         *
+         * @param id the associated id
+         */
+        public static native void close(int id);
+
+        /**
+         * Execute a sqlite command.
+         *
+         * @param id  the associated id
+         * @param cmd command
+         */
+        public static native void exec(int id, String cmd, SqliteExecCallback callback);
     }
 }
