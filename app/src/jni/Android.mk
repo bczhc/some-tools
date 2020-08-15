@@ -3,7 +3,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := sqlite3
 LOCAL_CFLAGS := -O3
-LOCAL_SRC_FILES := $(LOCAL_PATH)/cpp/src/sqlite3/sqlite3.c
+LOCAL_SRC_FILES := $(LOCAL_PATH)/cpp/third_party/sqlite3-single-c/sqlite3.c
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)

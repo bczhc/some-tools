@@ -1,7 +1,6 @@
 package pers.zhc.tools.floatingdrawing;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,6 +24,7 @@ import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.sqlite.MySQLite3;
 import pers.zhc.u.CanDoHandler;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
@@ -78,8 +78,7 @@ public class PaintView extends View {
     private OnColorChangedCallback onColorChangedCallback = null;
     private Bitmap transBitmap;
     private MyCanvas transCanvas;
-    private SQLiteDatabase pathDatabase = null;
-    private final ContentValues cv = new ContentValues();
+    private MySQLite3 savePathDatabase;
 
     public PaintView(Context context, int width, int height, File internalPathFile) {
         super(context);
@@ -191,32 +190,25 @@ public class PaintView extends View {
     }
 
     void configPathDatabase() {
-        pathDatabase = SQLiteDatabase.openOrCreateDatabase(internalPathFile, null);
-        pathDatabase.execSQL("CREATE TABLE IF NOT EXISTS info (\n" +
+        savePathDatabase = MySQLite3.open(internalPathFile.getPath());
+        savePathDatabase.exec("CREATE TABLE IF NOT EXISTS info (\n" +
                 "    " +
                 "version text,\n" +
                 "    creation_timestamp long,\n" +
                 "    modification_timestamp long\n" +
-                ");");
-        pathDatabase.execSQL("CREATE TABLE IF NOT EXISTS path (\n" +
+                ");", null);
+        savePathDatabase.exec("CREATE TABLE IF NOT EXISTS path (\n" +
                 "    mark char,\n" +
                 "    num1 number,\n" +
                 "    num2 number\n" +
-                ");");
-        pathDatabase.beginTransaction();
+                ");", null);
+        savePathDatabase.exec("BEGIN TRANSACTION", null);
         boolean putCreationTime = false;
-        Cursor timeSelect = pathDatabase.rawQuery("SELECT * FROM info", null);
-        if (!timeSelect.moveToFirst()) {
-            putCreationTime = true;
-        }
-        timeSelect.close();
+        if (!savePathDatabase.hasTable("info")) putCreationTime = true;
         final long currentTimeMillis = System.currentTimeMillis();
-        ContentValues cv = new ContentValues();
         if (putCreationTime) {
-            cv.put("creation_timestamp", currentTimeMillis);
-        }
-        cv.put("modification_timestamp", currentTimeMillis);
-        pathDatabase.insertOrThrow("info", null, cv);
+            savePathDatabase.exec("INSERT INTO info VALUES(" + currentTimeMillis + "," + currentTimeMillis + ")", null);
+        } else savePathDatabase.exec("UPDATE info set modification_timestamp=" + currentTimeMillis, null);
     }
 
     float getStrokeWidth() {
@@ -260,11 +252,19 @@ public class PaintView extends View {
                 postInvalidate();
             }
         }
-        cv.clear();
-        cv.put("mark", 0xC1);
-        cv.put("num1", 0);
-        cv.put("num2", 0);
-        pathDatabase.insert("path", null, cv);
+        pathInsert(0xC1);
+    }
+
+    private void pathInsert(int mark, float num1, int num2) {
+        savePathDatabase.exec("INSERT INTO path VALUES(" + mark + "," + num1 + "," + num2 + ")", null);
+    }
+
+    private void pathInsert(int mark) {
+        savePathDatabase.exec("INSERT INTO path VALUES(" + mark + ",null,null)", null);
+    }
+
+    private void pathInsert(int mark, float num1, float num2) {
+        savePathDatabase.exec("INSERT INTO path VALUES(" + mark + "," + num1 + "," + num2 + ")", null);
     }
 
     /**
@@ -279,11 +279,7 @@ public class PaintView extends View {
                 postInvalidate();
             }
         }
-        cv.clear();
-        cv.put("mark", 0xC2);
-        cv.put("num1", 0);
-        cv.put("num2", 0);
-        pathDatabase.insert("path", null, cv);
+        pathInsert(0xC2);
     }
 
     int getEraserAlpha() {
@@ -741,11 +737,7 @@ public class PaintView extends View {
                     mLastX = x;
                     mLastY = y;
                 }
-                cv.clear();
-                cv.put("mark", 0xB3);
-                cv.put("num1", x);
-                cv.put("num2", y);
-                pathDatabase.insert("path", null, cv);
+                pathInsert(0xB3, x, y);
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
@@ -759,11 +751,7 @@ public class PaintView extends View {
                     mPath.reset();
                     mPath = null;
                 }
-                cv.clear();
-                cv.put("mark", 0xB2);
-                cv.put("num1", x);
-                cv.put("num2", y);
-                pathDatabase.insert("path", null, cv);
+                pathInsert(0xB2, x, y);
                 break;
             case MotionEvent.ACTION_DOWN:
                 //路径
@@ -771,16 +759,8 @@ public class PaintView extends View {
                 mLastX = x;
                 mLastY = y;
                 mPath.moveTo(mLastX, mLastY);
-                cv.clear();
-                cv.put("mark", isEraserMode ? 0xA2 : 0xA1);
-                cv.put("num1", mPaintRef.getStrokeWidth());
-                cv.put("num2", mPaintRef.getColor());
-                pathDatabase.insert("path", null, cv);
-                cv.clear();
-                cv.put("mark", 0xB1);
-                cv.put("num1", x);
-                cv.put("num2", y);
-                pathDatabase.insert("path", null, cv);
+                pathInsert(isEraserMode ? 0xA2 : 0xA1, mPaintRef.getStrokeWidth(), mPaintRef.getColor());
+                pathInsert(0xB1, x, y);
                 break;
         }
         postInvalidate();
@@ -877,11 +857,11 @@ public class PaintView extends View {
     }
 
     public void releasePathDatabase() {
-        pathDatabase.close();
+        savePathDatabase.close();
     }
 
     public void commitDB() {
-        pathDatabase.endTransaction();
+        savePathDatabase.exec("COMMIT", null);
     }
 
     /**

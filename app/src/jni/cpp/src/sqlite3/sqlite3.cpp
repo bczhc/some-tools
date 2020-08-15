@@ -1,4 +1,4 @@
-#include "./sqlite3.h"
+#include "../../third_party/sqlite3-single-c/sqlite3.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_Sqlite3.h"
 #include "../zhc.h"
 
@@ -7,10 +7,10 @@ typedef int(*Callback)(void *arg, int colNum, char **content, char **colName);
 class Sqlite3 {
 private:
     sqlite3 *db;
-    char *errMsg;
 
 public:
     int id;
+    char *errMsg;
 
     inline int open(const char *path) {
         return sqlite3_open(path, &db);
@@ -87,11 +87,15 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
         (JNIEnv *env, jclass cls, jint id, jstring cmd, jobject callbackInterface) {
     const char *command = env->GetStringUTFChars(cmd, (jboolean *) nullptr);
     if (callbackInterface == nullptr) {
-        sqlArray.get(id)->exec(command, (Callback) nullptr);
+        if (sqlArray.get(id)->exec(command, (Callback) nullptr)) {
+            throwException(env, sqlArray.get(id)->errMsg);
+        }
     } else {
         CallbackImpl::m_env = env;
         CallbackImpl::m_obj = callbackInterface;
-        sqlArray.get(id)->exec(command, CallbackImpl::callback);
+        if (sqlArray.get(id)->exec(command, CallbackImpl::callback)) {
+            throwException(env, sqlArray.get(id)->errMsg);
+        }
     }
     env->ReleaseStringUTFChars(cmd, command);
 }
