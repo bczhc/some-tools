@@ -3,12 +3,13 @@ package pers.zhc.tools.filepicker;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.WindowManager;
+import androidx.annotation.NonNull;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.tools.utils.ToastUtils;
 
 import java.io.File;
 
@@ -37,8 +38,12 @@ public class FilePicker extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 33 && grantResults[0] == 0) {
-            Do();
+        if (requestCode == RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults[0] == 0) Do();
+            else {
+                ToastUtils.show(this, R.string.please_grant_permission);
+                finish();
+            }
         }
     }
 
