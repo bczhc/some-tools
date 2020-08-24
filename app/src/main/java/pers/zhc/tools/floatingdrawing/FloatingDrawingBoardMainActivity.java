@@ -1184,7 +1184,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v2 -> importPath(moreOptionsDialog, pathDir),
                 v3 -> new PermissionRequester(() -> {
-                    pv.commitDB();
+                    pv.commitDatabase();
+                    pv.beginDatabaseTransaction();
                     EditText et = new EditText(this);
                     setSelectedEditTextWithCurrentTimeMillisecond(et);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);

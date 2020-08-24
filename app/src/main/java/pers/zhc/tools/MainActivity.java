@@ -24,9 +24,9 @@ import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.malloctest.MAllocTest;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.pressuretest.PressureTest;
+import pers.zhc.tools.test.DocumentProviderTest;
 import pers.zhc.tools.test.InputEvent;
 import pers.zhc.tools.test.MathExpressionEvaluationTest;
-import pers.zhc.tools.test.S;
 import pers.zhc.tools.test.SensorTest;
 import pers.zhc.tools.test.SurfaceViewTest;
 import pers.zhc.tools.test.jni.Test;
@@ -119,7 +119,8 @@ public class MainActivity extends BaseActivity {
                 R.string.crash_test,
                 R.string.m_alloc_test,
                 R.string.diary,
-                R.string.pressure_test
+                R.string.pressure_test,
+                R.string.document_provider_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -142,7 +143,8 @@ public class MainActivity extends BaseActivity {
                 CrashTest.class,
                 MAllocTest.class,
                 DiaryMainActivity.class,
-                PressureTest.class
+                PressureTest.class,
+                DocumentProviderTest.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

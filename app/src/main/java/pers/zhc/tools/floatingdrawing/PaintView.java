@@ -202,7 +202,7 @@ public class PaintView extends View {
                 "    num1 number,\n" +
                 "    num2 number\n" +
                 ");", null);
-        savePathDatabase.exec("BEGIN TRANSACTION", null);
+        beginDatabaseTransaction();
         boolean putCreationTime = false;
         if (!savePathDatabase.hasTable("info")) putCreationTime = true;
         final long currentTimeMillis = System.currentTimeMillis();
@@ -860,8 +860,12 @@ public class PaintView extends View {
         savePathDatabase.close();
     }
 
-    public void commitDB() {
+    public void commitDatabase() {
         savePathDatabase.exec("COMMIT", null);
+    }
+
+    public void beginDatabaseTransaction() {
+        savePathDatabase.exec("BEGIN TRANSACTION", null);
     }
 
     /**

@@ -1,4 +1,4 @@
-package pers.zhc.tools.jni;
+/*翟灿hhh*/package pers.zhc.tools.jni;
 
 import androidx.annotation.Size;
 import pers.zhc.tools.pi.JNICallback;
@@ -7,7 +7,7 @@ import pers.zhc.tools.pi.JNICallback;
  * @author bczhc
  */
 public class JNI {
-    private volatile static boolean hasLoadLib = false;
+    private static boolean hasLoadLib = false;
 
     private synchronized static void loadLib() {
         if (!hasLoadLib) {
@@ -172,5 +172,21 @@ public class JNI {
          * @param cmd command
          */
         public static native void exec(int id, String cmd, SqliteExecCallback callback);
+    }
+
+    public static class Diary {
+        static {
+            loadLib();
+        }
+
+        public static native String countDiaryCharacters();
+    }
+
+    public static class CharacterCounter {
+        static {
+            loadLib();
+        }
+
+        public static native String count(String s);
     }
 }

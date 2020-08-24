@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +22,6 @@ import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ExternalJNI;
 import pers.zhc.tools.utils.PermissionRequester;
-import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.ReadIS;
 
 import java.io.File;
@@ -48,10 +47,6 @@ public class BaseActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            Log.e("Alert", "eee");
-            ToastUtils.show(this, "eee");
-        });
         app.addActivity(this);
         CrashHandler.install(this);
         ExternalJNI.ex(this);
@@ -219,7 +214,6 @@ public class BaseActivity extends Activity {
     @Override
     public void onConfigurationChanged(@SuppressWarnings("NullableProblems") Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        String TAG = "onConfigurationChanged";
         // 检测屏幕的方向：纵向或横向
         if (this.getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE) {

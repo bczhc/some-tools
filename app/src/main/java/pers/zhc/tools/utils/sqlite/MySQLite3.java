@@ -31,10 +31,14 @@ public class MySQLite3 {
 
     public boolean hasTable(String tableName) {
         AtomicBoolean r = new AtomicBoolean(false);
-        exec("SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';", contents -> {
-            r.set(true);
-            return 1;
-        });
+        try {
+            exec("SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';", contents -> {
+                r.set(true);
+                return 1;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return r.get();
     }
 }
