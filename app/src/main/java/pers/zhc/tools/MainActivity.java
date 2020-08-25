@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
+import pers.zhc.tools.characterscounter.CounterTest;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.crashhandler.CrashTest;
@@ -120,7 +121,8 @@ public class MainActivity extends BaseActivity {
                 R.string.m_alloc_test,
                 R.string.diary,
                 R.string.pressure_test,
-                R.string.document_provider_test
+                R.string.document_provider_test,
+                R.string.characters_counter_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -144,7 +146,8 @@ public class MainActivity extends BaseActivity {
                 MAllocTest.class,
                 DiaryMainActivity.class,
                 PressureTest.class,
-                DocumentProviderTest.class
+                DocumentProviderTest.class,
+                CounterTest.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

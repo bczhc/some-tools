@@ -1,3 +1,6 @@
 [submodule "app/src/jni/cpp/third_party/sqlite3-single-c"]
 	path = app/src/jni/cpp/third_party/sqlite3-single-c
 	url = https://hub.fastgit.org/bczhc/sqlite3-single-c.git
+[submodule "app/src/jni/cpp/third_party/my-cpp-lib"]
+	path = app/src/jni/cpp/third_party/my-cpp-lib
+	url = https://hub.fastgit.org/bczhc/cpp.git

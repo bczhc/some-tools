@@ -239,5 +239,6 @@
     <string name="_1000_ms">1000ms</string>
     <string name="characters_count_tv">%1$s字</string>
     <string name="document_provider_test">document provider test</string>
+    <string name="characters_counter_test">character counter test</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
 </resources>

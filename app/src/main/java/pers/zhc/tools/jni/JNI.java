@@ -174,19 +174,40 @@ public class JNI {
         public static native void exec(int id, String cmd, SqliteExecCallback callback);
     }
 
-    public static class Diary {
+    public static class CharactersCounter {
         static {
             loadLib();
         }
 
-        public static native String countDiaryCharacters();
-    }
+        /**
+         * Create a handler used to find the native handler that holds the result map
+         * @return id
+         */
+        public static native int createHandler();
 
-    public static class CharacterCounter {
-        static {
-            loadLib();
-        }
+        /**
+         * Release handler
+         * @param id id
+         */
+        public static native void releaseHandler(int id);
 
-        public static native String count(String s);
+        /**
+         * Count duplicated characters in text
+         * @param s string
+         */
+        public static native void count(int id, String s);
+
+        /**
+         * clear native result data
+         * @param id id
+         */
+        public static native void clearResult(int id);
+
+        /**
+         * get result json
+         * @param id id
+         * @return json string
+         */
+        public static native String getResultJson(int id);
     }
 }

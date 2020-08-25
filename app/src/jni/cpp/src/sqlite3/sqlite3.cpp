@@ -88,12 +88,14 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
     const char *command = env->GetStringUTFChars(cmd, (jboolean *) nullptr);
     if (callbackInterface == nullptr) {
         if (sqlArray.get(id)->exec(command, (Callback) nullptr)) {
+            env->ReleaseStringUTFChars(cmd, command);
             throwException(env, sqlArray.get(id)->errMsg);
         }
     } else {
         CallbackImpl::m_env = env;
         CallbackImpl::m_obj = callbackInterface;
         if (sqlArray.get(id)->exec(command, CallbackImpl::callback)) {
+            env->ReleaseStringUTFChars(cmd, command);
             throwException(env, sqlArray.get(id)->errMsg);
         }
     }

@@ -38,6 +38,8 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_qmcDecode
     else
         rC = decode(f1, f2, env, callback);
     if (mode) remove(f1);
+    env->ReleaseStringUTFChars(f, f1);
+    env->ReleaseStringUTFChars(dF, f2);
     return (jint) rC;
 }
 
@@ -52,6 +54,8 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_kwmDecode
     if (!strcmp(u1, u2)) NewFileName(&nN, fN), stt = kwm(env, fN, nN, callback), remove(fN), rename(nN, fN);
     else stt = kwm(env, fN, dFN, callback);
     if (mode) remove(fN);
+    env->ReleaseStringUTFChars(f, fN);
+    env->ReleaseStringUTFChars(dF, dFN);
     return stt;
 }
 
@@ -66,13 +70,19 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_Base128_1encode
     if (!strcmp(upperCaseD1, upperCaseD2)) {
         NewFileName(&nFN, FileName);
         int status = eD(FileName, nFN, env, callback);
-        if (status != 0) return status;
+        if (status != 0) {
+            env->ReleaseStringUTFChars(f1, FileName);
+            env->ReleaseStringUTFChars(f2, DestFileName);
+            return status;
+        }
         remove(FileName);
         rename(nFN, DestFileName);
     } else {
         eD(FileName, DestFileName, env, callback);
     }
     if (mode) remove(FileName);
+    env->ReleaseStringUTFChars(f1, FileName);
+    env->ReleaseStringUTFChars(f2, DestFileName);
     return 0;
 }
 
@@ -87,13 +97,19 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_Base128_1decode
     if (!strcmp(upperCaseD1, upperCaseD2)) {
         NewFileName(&nFN, FileName);
         int status = dD(FileName, nFN, env, callback);
-        if (status != 0) return status;
+        if (status != 0) {
+            env->ReleaseStringUTFChars(f1, FileName);
+            env->ReleaseStringUTFChars(f2, DestFileName);
+            return status;
+        }
         remove(FileName);
         rename(nFN, DestFileName);
     } else {
         dD(FileName, DestFileName, env, callback);
     }
     if (mode) remove(FileName);
+    env->ReleaseStringUTFChars(f1, FileName);
+    env->ReleaseStringUTFChars(f2, DestFileName);
     return 0;
 }
 

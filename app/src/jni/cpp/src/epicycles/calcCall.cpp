@@ -3,8 +3,7 @@
 //
 
 #include "../jni_h/pers_zhc_tools_jni_JNI_FourierSeriesCalc.h"
-#include "./ComplexValue.h"
-#include "./FourierSeries.h"
+#include "../../third_party/my-cpp-lib/FourierSeries.h"
 #include "../jni_help.h"
 
 class CallBean {
@@ -64,6 +63,6 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_calc
         }
     } cb(callBean);
     FourierSeries fs(func, epicyclesCount, period);
-    fs.calc(cb, 10000);
+    fs.calc(cb, 10000, 1);
     env->DeleteLocalRef(fClass);
 }
