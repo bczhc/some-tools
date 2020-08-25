@@ -17,5 +17,22 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Build with Gradle
-      run: ./gradlew build
+    - name: clone submosule
+      run: git submodule update --init --recursive
+    - name: set up NDK
+      run: |
+        echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager
+        ${ANDROID_HOME}/ndk-bundle/ndk-build --version
+    - name: build JNI
+      run: |
+        cd app/src/jni
+        ${ANDROID_HOME}/ndk-bundle/ndk-build
+        cd ${GITHUB_WORKSPACE}
+    - name: build app
+      run: ./gradlew build;./gradlew assembleDebug
+    - name: upload apk
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-debug
+        path: app/build/outputs/apk/debug/app-debug.apk
+
