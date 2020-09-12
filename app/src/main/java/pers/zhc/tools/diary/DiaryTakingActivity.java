@@ -1,11 +1,7 @@
 package pers.zhc.tools.diary;
 
 import android.app.ActionBar;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
-import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ScrollEditText;
+import pers.zhc.tools.utils.sqlite.MySQLite3;
 import pers.zhc.tools.utils.sqlite.SQLite;
 
 import java.text.SimpleDateFormat;
@@ -37,13 +33,13 @@ public class DiaryTakingActivity extends BaseActivity {
     private EditText et;
     private TextView charactersCountTV;
     private MyDate mDate;
-    private SQLiteDatabase diaryDatabase;
+    private MySQLite3 diaryDatabase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        diaryDatabase = DiaryMainActivity.diaryDatabase;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_taking_activity);
-        diaryDatabase = DiaryMainActivity.getDiaryDatabase(this);
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
         Handler debounceHandler = new Handler();
         et.addTextChangedListener(new TextWatcher() {
@@ -92,14 +88,14 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void prepareContent() {
-        final Cursor cursor = diaryDatabase.rawQuery("SELECT content FROM diary WHERE date=?", new String[]{mDate.toString()});
-        String content = null;
-        if (cursor.moveToFirst()) {
-            content = cursor.getString(cursor.getColumnIndex("content"));
-        }
-        cursor.close();
-        if (content != null) {
-            et.setText(content);
+        final String[] content = {null};
+        diaryDatabase.exec("SELECT content FROM diary WHERE date='" + mDate.toString() + "'", contents -> {
+            if (content[0] == null)
+                content[0] = contents[0];
+            return 0;
+        });
+        if (content[0] != null) {
+            et.setText(content[0]);
             showCharactersCount();
         }
     }
@@ -113,14 +109,7 @@ public class DiaryTakingActivity extends BaseActivity {
     private void initDB() {
         boolean newRec = !SQLite.checkRecordExistence(diaryDatabase, "diary", "date", mDate.toString());
         if (newRec) {
-            ContentValues cv = new ContentValues();
-            cv.put("date", mDate.toString());
-            cv.put("content", "");
-            try {
-                diaryDatabase.insertOrThrow("diary", null, cv);
-            } catch (SQLException e) {
-                Common.showException(e, this);
-            }
+            diaryDatabase.exec("INSERT INTO diary VALUES('" + mDate.toString() + "','')");
         }
     }
 
@@ -158,65 +147,33 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void save() {
-        ContentValues cv = new ContentValues();
-        cv.put("date", mDate.toString());
-        cv.put("content", this.et.getText().toString());
-        diaryDatabase.update("diary", cv, "date=?", new String[]{mDate.toString()});
+        diaryDatabase.exec("UPDATE diary SET content='" + et.getText().toString() + "' WHERE date='" + mDate.toString() + "'");
     }
 
     static class MyDate {
-        /**
-         * month: 0 is JANUARY!
-         */
         int year, month, day;
 
-        MyDate(int year, int month, int day) {
-            this.year = year;
-            this.month = month;
-            this.day = day;
+        public MyDate(int date) {
+            year = date / 10000;
+            month = (date / 100) % 100;
+            day = date % 100;
         }
 
-        MyDate() {
-        }
-
-        MyDate(int[] date) {
+        public MyDate(int[] date) {
             year = date[0];
             month = date[1];
             day = date[2];
         }
 
-        MyDate(String dateString) {
-            final String[] split = dateString.split("\\.");
-            year = Integer.parseInt(split[0]);
-            month = Integer.parseInt(split[1]) - 1;
-            day = Integer.parseInt(split[2]);
-        }
-
-        MyDate(long timestamp) {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(timestamp);
-            this.year = calendar.get(Calendar.YEAR);
-            this.month = calendar.get(Calendar.MONTH);
-            this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        }
-
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
 
             MyDate myDate = (MyDate) o;
 
-            if (year != myDate.year) {
-                return false;
-            }
-            if (month != myDate.month) {
-                return false;
-            }
+            if (year != myDate.year) return false;
+            if (month != myDate.month) return false;
             return day == myDate.day;
         }
 
@@ -230,8 +187,11 @@ public class DiaryTakingActivity extends BaseActivity {
 
         @Override
         public String toString() {
-            return year + "." + (month + 1) + "." + day;
+            return year + "." + month + '.' + day;
         }
 
+        public String getDateString() {
+            return "" + year + month + day;
+        }
     }
 }

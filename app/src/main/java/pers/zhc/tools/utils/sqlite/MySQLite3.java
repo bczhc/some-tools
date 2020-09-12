@@ -29,6 +29,10 @@ public class MySQLite3 {
         JNI.Sqlite3.exec(this.id, cmd, callback);
     }
 
+    public void exec(String cmd) {
+        exec(cmd, null);
+    }
+
     public boolean hasTable(String tableName) {
         AtomicBoolean r = new AtomicBoolean(false);
         try {
