@@ -3,6 +3,7 @@
 //
 
 #include "Base128Lib.h"
+using namespace bczhc;
 #include "./codecsDo.h"
 #include "qmcLib.h"
 
@@ -176,10 +177,10 @@ void NewFileName(char **Dest, const char *filePath) {
         char *xS = NULL;
 //        itoa(x, xS, 10);
         m_itoa(&xS, x);
-        strcpyAndCat_auto(Dest, filePath, -1, "", -1);
-        strcpyAndCat_auto(Dest, *Dest, -1, " (", -1);
-        strcpyAndCat_auto(Dest, *Dest, -1, xS, -1);
-        strcpyAndCat_auto(Dest, *Dest, -1, ")", -1);
+        strcpyAndCat_auto(Dest, filePath, -1, "", -1, false);
+        strcpyAndCat_auto(Dest, *Dest, -1, " (", -1, true);
+        strcpyAndCat_auto(Dest, *Dest, -1, xS, -1, true);
+        strcpyAndCat_auto(Dest, *Dest, -1, ")", -1, true);
         if (access(*Dest, F_OK) == EOF) break;
         ++x;
         free(xS);

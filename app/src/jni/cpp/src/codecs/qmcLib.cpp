@@ -2,6 +2,7 @@
 // Created by root on 19-7-3.
 //
 #include "codecsDo.h"
+using namespace bczhc;
 
 #define dl int64_t
 

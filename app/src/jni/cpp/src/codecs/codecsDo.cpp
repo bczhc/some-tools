@@ -6,6 +6,7 @@
 //
 
 #include "./codecsDo.h"
+using namespace bczhc;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"

@@ -4,6 +4,7 @@
 
 #include <jni.h>
 #include "./codecsDo.h"
+using namespace bczhc;
 
 #define dl int64_t
 #define usi uint32_t

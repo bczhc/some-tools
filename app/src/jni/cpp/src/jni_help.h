@@ -6,7 +6,7 @@
 #define JNI_JNI_HELP_H
 
 #include <jni.h>
-#include "zhc.h"
+#include "../third_party/my-cpp-lib/zhc.h"
 
 void Log(JNIEnv *env, const char *tag, const char *s);
 

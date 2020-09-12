@@ -6,7 +6,7 @@
 #define BASE128_LIB_H
 
 #include <unistd.h>
-#include "../zhc.h"
+#include "../../third_party/my-cpp-lib/zhc.h"
 #include <jni.h>
 
 #define ERS 1029
