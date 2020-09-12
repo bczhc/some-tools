@@ -24,5 +24,5 @@ LOCAL_MODULE := All
 LOCAL_CPPFLAGS := -O3
 MY_SRC_LIST := $(wildcard $(LOCAL_PATH)/cpp/src/*.cpp wildcard $(LOCAL_PATH)/cpp/src/**/*.cpp)
 LOCAL_SRC_FILES := $(MY_SRC_LIST:$(LOCAL_PATH)/%=%)
-LOCAL_SHARED_LIBRARIES := myLib
+LOCAL_SHARED_LIBRARIES := myLib sqlite3
 include $(BUILD_SHARED_LIBRARY)
