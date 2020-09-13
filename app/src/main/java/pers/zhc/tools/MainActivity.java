@@ -34,6 +34,7 @@ import pers.zhc.tools.test.jni.Test;
 import pers.zhc.tools.test.service.ServiceActivity;
 import pers.zhc.tools.theme.SetTheme;
 import pers.zhc.tools.toast.ToastTest;
+import pers.zhc.tools.typetest.TypeTest;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.youdaoapi.YouDaoTranslate;
 import pers.zhc.u.common.ReadIS;
@@ -122,7 +123,8 @@ public class MainActivity extends BaseActivity {
                 R.string.diary,
                 R.string.pressure_test,
                 R.string.document_provider_test,
-                R.string.characters_counter_test
+                R.string.characters_counter_test,
+                R.string.type_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -147,7 +149,8 @@ public class MainActivity extends BaseActivity {
                 DiaryMainActivity.class,
                 PressureTest.class,
                 DocumentProviderTest.class,
-                CounterTest.class
+                CounterTest.class,
+                TypeTest.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
