@@ -89,7 +89,7 @@ public class DiaryTakingActivity extends BaseActivity {
 
     private void prepareContent() {
         final String[] content = {null};
-        diaryDatabase.exec("SELECT content FROM diary WHERE date='" + mDate.toString() + "'", contents -> {
+        diaryDatabase.exec("SELECT content FROM diary WHERE date='" + mDate.getDateString() + "'", contents -> {
             if (content[0] == null)
                 content[0] = contents[0];
             return 0;
@@ -147,7 +147,7 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void save() {
-        diaryDatabase.exec("UPDATE diary SET content='" + et.getText().toString() + "' WHERE date='" + mDate.toString() + "'");
+        diaryDatabase.exec("UPDATE diary SET content='" + et.getText().toString() + "' WHERE date='" + mDate.getDateString() + "'");
     }
 
     static class MyDate {
@@ -190,8 +190,13 @@ public class DiaryTakingActivity extends BaseActivity {
             return year + "." + month + '.' + day;
         }
 
+        private String add0(int a) {
+            if (a < 10) return "0" + a;
+            return String.valueOf(a);
+        }
+        
         public String getDateString() {
-            return "" + year + month + day;
+            return add0(year) + add0(month) + add0(day);
         }
     }
 }

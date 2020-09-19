@@ -250,7 +250,7 @@ public class DiaryMainActivity extends BaseActivity {
         if (date == null) {
             final Calendar calendar = Calendar.getInstance();
             final int year = calendar.get(Calendar.YEAR);
-            final int month = calendar.get(Calendar.MONTH);
+            final int month = calendar.get(Calendar.MONTH) + 1;
             final int day = calendar.get(Calendar.DAY_OF_MONTH);
             dateInts = new int[]{year, month, day};
         } else {

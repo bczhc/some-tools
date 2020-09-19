@@ -243,4 +243,5 @@
     <string name="type_test">type test</string>
     <!--    <string name="whether_to_clear_caches_containing_current">是否清除缓存？</string>-->
     <string name="type_speed">%1$s字/分</string>
+    <string name="type_to_count">输入开始计时</string>
 </resources>
