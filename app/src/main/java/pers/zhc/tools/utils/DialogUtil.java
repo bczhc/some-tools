@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import pers.zhc.tools.R;
 
 import java.util.Objects;
@@ -74,5 +75,21 @@ public class DialogUtil {
         ad.setOnShowListener(dialog -> imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0));
         ad.setOnDismissListener(dialog -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0));
         editText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+    }
+
+    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback, DialogInterface.OnClickListener negativeAction){
+        AlertDialog[] ad = new AlertDialog[1];
+        AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
+        EditText et = new EditText(ctx);
+        adb.setTitle(strId)
+                .setView(et)
+                .setPositiveButton(R.string.confirm, (dialog, which) -> callback.confirm(et, ad[0]))
+                .setNegativeButton(R.string.cancel, negativeAction);
+        ad[0] = adb.create();
+        return ad[0];
+    }
+
+    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback){
+        return createPromptDialog(ctx, strId, callback, (dialog, which) -> {});
     }
 }

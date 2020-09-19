@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -41,6 +42,7 @@ public class DiaryTakingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_taking_activity);
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
+        et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         Handler debounceHandler = new Handler();
         et.addTextChangedListener(new TextWatcher() {
             @Override
@@ -107,9 +109,9 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void initDB() {
-        boolean newRec = !SQLite.checkRecordExistence(diaryDatabase, "diary", "date", mDate.toString());
+        boolean newRec = !SQLite.checkRecordExistence(diaryDatabase, "diary", "date", mDate.getDateString());
         if (newRec) {
-            diaryDatabase.exec("INSERT INTO diary VALUES('" + mDate.toString() + "','')");
+            diaryDatabase.exec("INSERT INTO diary VALUES('" + mDate.getDateString() + "','')");
         }
     }
 

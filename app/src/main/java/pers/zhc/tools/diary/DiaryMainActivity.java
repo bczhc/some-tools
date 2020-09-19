@@ -54,8 +54,8 @@ public class DiaryMainActivity extends BaseActivity {
     static MySQLite3 getDiaryDatabase(Context ctx) {
         MySQLite3 database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
         database.exec("CREATE TABLE IF NOT EXISTS diary(\n" +
-                "    date INT,\n" +
-                "    content text not null\n" +
+                "    date INTEGER,\n" +
+                "    content TEXT NOT NULL\n" +
                 ")");
         return database;
     }
@@ -150,14 +150,30 @@ public class DiaryMainActivity extends BaseActivity {
             final MenuInflater menuInflater = getMenuInflater();
             menuInflater.inflate(R.menu.diary_actionbar, menu);
         }
-        return true;
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void createSpecificDateDiary() {
+        final AlertDialog promptDialog = DialogUtil.createPromptDialog(this, R.string.enter_specific_date, (et, alertDialog) -> {
+            final String s = et.getText().toString();
+            try {
+                final int dateInt = Integer.parseInt(s);
+                createDiary(new DiaryTakingActivity.MyDate(dateInt));
+            } catch (NumberFormatException e) {
+                ToastUtils.show(this, R.string.please_type_correct_value);
+            }
+        });
+        promptDialog.show();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.write:
+            case R.id.write_diary:
                 createDiary(null);
+                break;
+            case R.id.create:
+                createSpecificDateDiary();
                 break;
             case R.id.password:
                 changePassword();
@@ -171,6 +187,20 @@ public class DiaryMainActivity extends BaseActivity {
                 Intent intent2 = new Intent(this, FilePicker.class);
                 intent2.putExtra("option", FilePicker.PICK_FILE);
                 startActivityForResult(intent2, RequestCode.START_ACTIVITY_2);
+                break;
+            case R.id.sort:
+                diaryDatabase.exec("BEGIN TRANSACTION");
+                diaryDatabase.exec("DROP TABLE IF EXISTS temp");
+                diaryDatabase.exec("CREATE TABLE IF NOT EXISTS temp(\n" +
+                        "    date INTEGER,\n" +
+                        "    content TEXT NOT NULL\n" +
+                        ")");
+                diaryDatabase.exec("INSERT INTO temp SELECT * FROM diary ORDER BY date");
+                diaryDatabase.exec("DROP TABLE diary");
+                diaryDatabase.exec("ALTER TABLE temp RENAME TO diary");
+                diaryDatabase.exec("COMMIT");
+                refresh();
+                break;
             default:
                 break;
         }
