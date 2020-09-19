@@ -345,7 +345,7 @@ public class DiaryMainActivity extends BaseActivity {
                 String weekString = null;
                 try {
                     final Calendar calendar = Calendar.getInstance();
-                    calendar.set(myDate.year, myDate.month, myDate.day);
+                    calendar.set(myDate.year, myDate.month - 1, myDate.day);
                     final int weekIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1;
                     weekString = this.week[weekIndex];
                 } catch (Exception e) {
