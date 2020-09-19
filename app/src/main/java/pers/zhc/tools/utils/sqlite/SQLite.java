@@ -13,4 +13,16 @@ public class SQLite {
         cursor.close();
         return r;
     }
+
+    public static boolean checkRecordExistence(MySQLite3 database, String tableName, String columnName, String value) {
+        final boolean[] r = {false};
+        try {
+            database.exec("SELECT * FROM " + tableName + " WHERE " + columnName + "=" + value, contents -> {
+                r[0] = true;
+                return 1;
+            });
+        } catch (Exception ignored) {
+        }
+        return r[0];
+    }
 }

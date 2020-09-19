@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,6 +31,7 @@ import pers.zhc.tools.filepicker.FilePicker;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.sqlite.MySQLite3;
 import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
@@ -45,22 +45,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author bczhc
  */
 public class DiaryMainActivity extends BaseActivity {
-    private SQLiteDatabase diaryDatabase;
+    static MySQLite3 diaryDatabase;
     private LinearLayout ll;
     private String currentPassword;
     private boolean isUnlocked = false;
     private String[] week;
 
-    static SQLiteDatabase getDiaryDatabase(Context ctx) {
-        final SQLiteDatabase diaryDatabase = SQLiteDatabase.openOrCreateDatabase(Common.getInternalDatabaseDir(ctx, "diary.db"), null);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            diaryDatabase.disableWriteAheadLogging();
-        }
-        diaryDatabase.execSQL("CREATE TABLE IF NOT EXISTS diary(\n" +
-                "    date text not null,\n" +
+    static MySQLite3 getDiaryDatabase(Context ctx) {
+        MySQLite3 database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
+        database.exec("CREATE TABLE IF NOT EXISTS diary(\n" +
+                "    date INT,\n" +
                 "    content text not null\n" +
                 ")");
-        return diaryDatabase;
+        return database;
     }
 
     @Override
@@ -297,56 +294,52 @@ public class DiaryMainActivity extends BaseActivity {
 
     private void refresh() {
         ll.removeAllViews();
-        new Thread(() -> {
-            final Cursor cursor = diaryDatabase.rawQuery("SELECT * FROM diary", null);
-            final int dateColIndex = cursor.getColumnIndex("date");
-            final int contentColIndex = cursor.getColumnIndex("content");
-            if (cursor.moveToFirst()) {
-                do {
-                    final String dateString = cursor.getString(dateColIndex);
-                    final String content = cursor.getString(contentColIndex);
-                    RelativeLayout childRL = new RelativeLayout(this);
-                    final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    childRL.setLayoutParams(layoutParams);
-                    TextView dateTV = new TextView(this);
-                    dateTV.setId(R.id.tv1);
-                    RelativeLayout.LayoutParams dateLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    dateTV.setLayoutParams(dateLP);
-                    dateTV.setTextColor(Color.parseColor("#1565C0"));
-                    dateTV.setTextSize(30);
-                    TextView previewTV = new TextView(this);
-                    previewTV.setId(R.id.tv2);
-                    RelativeLayout.LayoutParams previewLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    previewLP.addRule(RelativeLayout.BELOW, R.id.tv1);
-                    previewTV.setLayoutParams(previewLP);
-                    String weekString = null;
-                    try {
-                        final DiaryTakingActivity.MyDate myDate = new DiaryTakingActivity.MyDate(dateString);
-                        final Calendar calendar = Calendar.getInstance();
-                        calendar.set(myDate.year, myDate.month, myDate.day);
-                        final int weekIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-                        weekString = this.week[weekIndex];
-                    } catch (Exception e) {
-                        Common.showException(e, this);
-                    }
-                    dateTV.setText(dateString + " " + weekString);
-                    previewTV.setText(content.length() > 100 ? (content.substring(0, 100) + "...") : content);
-                    setChildRL(dateString, childRL);
-                    runOnUiThread(() -> {
-                        childRL.addView(dateTV);
-                        childRL.addView(previewTV);
-                        ll.addView(childRL);
-                    });
-                } while (cursor.moveToNext());
+        new Thread(() -> diaryDatabase.exec("SELECT * FROM diary", contents -> {
+            try {
+                final DiaryTakingActivity.MyDate myDate = new DiaryTakingActivity.MyDate(Integer.parseInt(contents[0]));
+                final String content = contents[1];
+                RelativeLayout childRL = new RelativeLayout(this);
+                final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                childRL.setLayoutParams(layoutParams);
+                TextView dateTV = new TextView(this);
+                dateTV.setId(R.id.tv1);
+                RelativeLayout.LayoutParams dateLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dateTV.setLayoutParams(dateLP);
+                dateTV.setTextColor(Color.parseColor("#1565C0"));
+                dateTV.setTextSize(30);
+                TextView previewTV = new TextView(this);
+                previewTV.setId(R.id.tv2);
+                RelativeLayout.LayoutParams previewLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                previewLP.addRule(RelativeLayout.BELOW, R.id.tv1);
+                previewTV.setLayoutParams(previewLP);
+                String weekString = null;
+                try {
+                    final Calendar calendar = Calendar.getInstance();
+                    calendar.set(myDate.year, myDate.month, myDate.day);
+                    final int weekIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+                    weekString = this.week[weekIndex];
+                } catch (Exception e) {
+                    Common.showException(e, this);
+                }
+                dateTV.setText(myDate.toString() + " " + weekString);
+                previewTV.setText(content.length() > 100 ? (content.substring(0, 100) + "...") : content);
+                setChildRL(myDate, childRL);
+                runOnUiThread(() -> {
+                    childRL.addView(dateTV);
+                    childRL.addView(previewTV);
+                    ll.addView(childRL);
+                });
+            } catch (Exception e) {
+                Common.showException(e, this);
             }
-            cursor.close();
-        }).start();
+            return 0;
+        })).start();
     }
 
-    private void setChildRL(String dateString, RelativeLayout childRL) {
+    private void setChildRL(DiaryTakingActivity.MyDate date, RelativeLayout childRL) {
         childRL.setOnClickListener(v -> {
             try {
-                createDiary(new DiaryTakingActivity.MyDate(dateString));
+                createDiary(date);
             } catch (Exception e) {
                 Common.showException(e, this);
             }
@@ -370,10 +363,10 @@ public class DiaryMainActivity extends BaseActivity {
                 EditText dateET = new EditText(this);
                 final AlertDialog d2 = adb.setTitle(R.string.enter_new_date)
                         .setPositiveButton(R.string.confirm, (dialog1, which) -> {
-                            final String newDateString = dateET.getText().toString();
+                            final String dateString = dateET.getText().toString();
                             final DiaryTakingActivity.MyDate newDate;
                             try {
-                                newDate = new DiaryTakingActivity.MyDate(newDateString);
+                                newDate = new DiaryTakingActivity.MyDate(Integer.parseInt(dateString));
                             } catch (Exception e) {
                                 ToastUtils.show(this, R.string.please_type_correct_value);
                                 return;
@@ -391,7 +384,7 @@ public class DiaryMainActivity extends BaseActivity {
                 d2.show();
             });
             deleteBtn.setOnClickListener(v1 -> DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
-                        diaryDatabase.delete("diary", "date=?", new String[]{dateString});
+                        diaryDatabase.exec("DELETE FROM diary WHERE date=" + date);
                         dialog.dismiss();
                         refresh();
                     }, (d, which) -> {
@@ -404,9 +397,7 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     private void changeDate(String oldDateString, DiaryTakingActivity.MyDate newDate) {
-        ContentValues cv = new ContentValues();
-        cv.put("date", newDate.toString());
-        diaryDatabase.update("diary", cv, "date=?", new String[]{oldDateString});
+        diaryDatabase.exec("UPDATE diary SET date=" + newDate.getDateString() + "WHERE date=" + oldDateString);
     }
 
     @Override

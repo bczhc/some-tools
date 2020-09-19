@@ -6,6 +6,28 @@ using namespace bczhc;
 
 typedef int(*Callback)(void *arg, int colNum, char **content, char **colName);
 
+class CallbackBean {
+public:
+    JNIEnv *&env;
+    jobject &callbackInterface;
+
+    CallbackBean(JNIEnv *&env, jobject &callbackInterface) : env(env), callbackInterface(callbackInterface) {}
+};
+
+inline static int callback(void *arg, int colNum, char **content, char **colName) {
+    auto *bean = (CallbackBean *) arg;
+    jclass callbackClass = bean->env->GetObjectClass(bean->callbackInterface);
+    jmethodID callbackMID = bean->env->GetMethodID(callbackClass, "callback",
+                                               "([Ljava/lang/String;)I");
+    jclass stringClass = bean->env->FindClass("java/lang/String");
+    jobjectArray contentArray = bean->env->NewObjectArray(colNum, stringClass, nullptr);
+    for (int i = 0; i < colNum; ++i) {
+        jstring s = bean->env->NewStringUTF(content[i]);
+        bean->env->SetObjectArrayElement(contentArray, i, s);
+    }
+    return (int) bean->env->CallIntMethod(bean->callbackInterface, callbackMID, contentArray);
+}
+
 class Sqlite3 {
 private:
     sqlite3 *db;
@@ -24,6 +46,10 @@ public:
 
     inline int exec(const char *cmd, Callback callback) {
         return sqlite3_exec(db, cmd, callback, nullptr, &errMsg);
+    }
+
+    inline int exec(const char *cmd, Callback callback, void *arg) {
+        return sqlite3_exec(db, cmd, callback, arg, &errMsg);
     }
 };
 
@@ -60,33 +86,9 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
     if (sqlArray.get(id)->close()) throwException(env, "Close database failed.");
 }
 
-class CallbackImpl {
-public:
-    static jobject &m_obj;
-    static JNIEnv *&m_env;
-
-    inline static int callback(void *arg, int colNum, char **content, char **colName) {
-        jclass callbackClass = m_env->GetObjectClass(m_obj);
-        jmethodID callbackMID = m_env->GetMethodID(callbackClass, "callback",
-                                                   "([Ljava/lang/String;)I");
-        jclass stringClass = m_env->FindClass("java/lang/String");
-        jobjectArray contentArray = m_env->NewObjectArray(colNum, stringClass, nullptr);
-        for (int i = 0; i < colNum; ++i) {
-            jstring s = m_env->NewStringUTF(content[i]);
-            m_env->SetObjectArrayElement(contentArray, i, s);
-        }
-        return (int) m_env->CallIntMethod(m_obj, callbackMID, contentArray);
-    }
-};
-
-jobject t = nullptr;
-JNIEnv *t2 = nullptr;
-jobject &CallbackImpl::m_obj = t;
-JNIEnv *&CallbackImpl::m_env = t2;
-
-
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
         (JNIEnv *env, jclass cls, jint id, jstring cmd, jobject callbackInterface) {
+    int dbId = (int) id;
     const char *command = env->GetStringUTFChars(cmd, (jboolean *) nullptr);
     if (callbackInterface == nullptr) {
         if (sqlArray.get(id)->exec(command, (Callback) nullptr)) {
@@ -94,9 +96,8 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
             throwException(env, sqlArray.get(id)->errMsg);
         }
     } else {
-        CallbackImpl::m_env = env;
-        CallbackImpl::m_obj = callbackInterface;
-        if (sqlArray.get(id)->exec(command, CallbackImpl::callback)) {
+        CallbackBean bean(env, callbackInterface);
+        if (sqlArray.get(id)->exec(command, callback, &bean)) {
             env->ReleaseStringUTFChars(cmd, command);
             throwException(env, sqlArray.get(id)->errMsg);
         }

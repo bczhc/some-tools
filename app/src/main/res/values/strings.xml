@@ -230,7 +230,7 @@
     <string name="new_password">新密码</string>
     <string name="password_not_matching">密码不匹配</string>
     <string name="change_success">修改成功</string>
-    <string name="enter_new_date">输入新的日期（以句点.分隔)</string>
+    <string name="enter_new_date">输入新的日期（yyyyMMdd格式）</string>
     <string name="change_date">修改日期</string>
     <string name="save_color">保存颜色</string>
     <string name="pressure_test">压力测试</string>
