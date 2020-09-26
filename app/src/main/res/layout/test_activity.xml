@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:n1="http://schemas.android.com/apk/res/android" n1:orientation="vertical"
+        n1:layout_width="fill_parent"
+        n1:layout_height="fill_parent">
+    <Button n1:layout_width="wrap_content" n1:layout_height="wrap_content"
+            n1:id="@+id/b3"
+            n1:text="java call java"
+    />
+    <Button n1:layout_width="wrap_content" n1:layout_height="wrap_content"
+            n1:id="@+id/b1"
+            n1:text="java call jni"
+    />
+    <Button n1:layout_width="wrap_content" n1:layout_height="wrap_content"
+            n1:id="@+id/b2"
+            n1:text="JNI call static java"
+    />
+    <Button n1:layout_width="wrap_content" n1:layout_height="wrap_content"
+            n1:id="@+id/b4"
+            n1:text="jni call java"
+    />
+</LinearLayout>

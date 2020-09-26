@@ -26,9 +26,9 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_releas
 /*
  * Class:     pers_zhc_tools_jni_JNI_CharactersCounter
  * Method:    count
- * Signature: (ILjava/lang/String;)Ljava/lang/String;
+ * Signature: (ILjava/lang/String;)V
  */
-JNIEXPORT void  JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_count
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_count
   (JNIEnv *, jclass, jint, jstring);
 
 /*

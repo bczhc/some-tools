@@ -2,6 +2,7 @@
 
 import androidx.annotation.Size;
 import pers.zhc.tools.pi.JNICallback;
+import pers.zhc.tools.test.jni.Test;
 
 /**
  * @author bczhc
@@ -209,5 +210,20 @@ public class JNI {
          * @return json string
          */
         public static native String getResultJson(int id);
+    }
+    
+    public static class JniTest {
+        static {
+            loadLib();
+        }
+
+        public static native void call();
+
+        public static native int toCall();
+
+        public static void forJNI() {
+        }
+
+        public static native int toCall2(Object instance);
     }
 }
