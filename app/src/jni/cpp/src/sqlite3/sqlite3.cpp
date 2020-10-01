@@ -1,6 +1,7 @@
 #include "../../third_party/my-cpp-lib/third_party/sqlite3-single-c/sqlite3.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_Sqlite3.h"
 #include "../../third_party/my-cpp-lib/Sqlite3.h"
+#include "../jni_help.h"
 
 using namespace bczhc;
 

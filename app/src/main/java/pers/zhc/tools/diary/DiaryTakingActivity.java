@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +43,8 @@ public class DiaryTakingActivity extends BaseActivity {
     private MySQLite3 diaryDatabase;
     private Timer savingTimer;
     boolean live = true;
+    boolean speak = false;
+    TextToSpeech tts;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,15 +56,39 @@ public class DiaryTakingActivity extends BaseActivity {
         et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         Handler debounceHandler = new Handler();
         et.addTextChangedListener(new TextWatcher() {
+            private String last;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 debounceHandler.removeCallbacksAndMessages(null);
                 debounceHandler.postDelayed(() -> showCharactersCount(), 2000);
+                if (speak) {
+                    last = s.toString();
+                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (speak) {
+                    if (count < before) {
+                        //delete
+                        tts.speak(getString(R.string.deleted_xxx, last.subSequence(start, start + before)), TextToSpeech.QUEUE_FLUSH, null, "");
+                    } else {
+                        //insert
+                        CharSequence changed = s.subSequence(start, start + count);
+                        switch (changed.toString()) {
+                            case "。":
+                                changed = "句点";
+                                break;
+                            case "，":
+                                changed = "逗号";
+                                break;
+                            default:
+                                break;
+                        }
+                        tts.speak(changed, TextToSpeech.QUEUE_ADD, null, String.valueOf(System.currentTimeMillis()));
+                    }
+                }
             }
 
             @Override
@@ -129,6 +157,21 @@ public class DiaryTakingActivity extends BaseActivity {
         if (newRec) {
             diaryDatabase.exec("INSERT INTO diary VALUES('" + mDate.getDateString() + "','')");
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.speak_switch);
+        Switch speakSwitch = new Switch(this);
+        speakSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            speak = isChecked;
+            if (isChecked) {
+                tts = new TextToSpeech(DiaryTakingActivity.this, null);
+            }
+        });
+        speakSwitch.setText(R.string.voice);
+        item.setActionView(speakSwitch);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -215,7 +258,7 @@ public class DiaryTakingActivity extends BaseActivity {
             if (a < 10) return "0" + a;
             return String.valueOf(a);
         }
-        
+
         public String getDateString() {
             return add0(year) + add0(month) + add0(day);
         }

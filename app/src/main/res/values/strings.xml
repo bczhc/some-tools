@@ -246,4 +246,9 @@
     <string name="type_to_count">输入开始计时</string>
     <string name="enter_specific_date">输入指定日期（yyyyMMdd格式）</string>
     <string name="create">创建</string>
+    <string name="tts_test">TTS Test</string>
+    <string name="speak">speak</string>
+    <string name="voice">语音</string>
+    <string name="unsupported_tts">语音包丢失或语音不支持</string>
+    <string name="deleted_xxx">已删除%1$s</string>
 </resources>
