@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,8 @@ import pers.zhc.tools.utils.sqlite.SQLite;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author bczhc
@@ -35,9 +38,12 @@ public class DiaryTakingActivity extends BaseActivity {
     private TextView charactersCountTV;
     private MyDate mDate;
     private MySQLite3 diaryDatabase;
+    private Timer savingTimer;
+    boolean live = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        savingTimer = new Timer();
         diaryDatabase = DiaryMainActivity.diaryDatabase;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_taking_activity);
@@ -83,6 +89,15 @@ public class DiaryTakingActivity extends BaseActivity {
         mDate = new MyDate(date);
         initDB();
         prepareContent();
+        savingTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (live) {
+                    save();
+                    Log.d(TAG, "saved diary");
+                }
+            }
+        }, 10000);
     }
 
     private void showCharactersCount() {
@@ -133,6 +148,8 @@ public class DiaryTakingActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         save();
+        live = false;
+        savingTimer.cancel();
         super.onDestroy();
     }
 
@@ -149,7 +166,7 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void save() {
-        diaryDatabase.exec("UPDATE diary SET content='" + et.getText().toString() + "' WHERE date='" + mDate.getDateString() + "'");
+        diaryDatabase.exec("UPDATE diary SET content='" + et.getText().toString().replace("'", "''") + "' WHERE date='" + mDate.getDateString() + "'");
     }
 
     static class MyDate {
