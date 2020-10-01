@@ -15,7 +15,12 @@ LOCAL_SRC_FILES := cpp/third_party/my-cpp-lib/zhc.cpp\
                    cpp/third_party/my-cpp-lib/ComplexValue.cpp\
                    cpp/third_party/my-cpp-lib/ComplexIntegral.cpp\
                    cpp/third_party/my-cpp-lib/CountCharacters.cpp\
-                   cpp/third_party/my-cpp-lib/utf8.cpp
+                   cpp/third_party/my-cpp-lib/utf8.cpp\
+                   cpp/third_party/my-cpp-lib/Concurrent.cpp\
+                   cpp/third_party/my-cpp-lib/Sqlite3.cpp\
+                   cpp/third_party/my-cpp-lib/io.cpp\
+                   cpp/third_party/my-cpp-lib/String.cpp\
+                   cpp/third_party/my-cpp-lib/reverseCharacters.cpp
 LOCAL_SHARED_LIBRARIES := sqlite3
 include $(BUILD_SHARED_LIBRARY)
 

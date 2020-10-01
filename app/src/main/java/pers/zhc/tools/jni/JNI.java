@@ -137,34 +137,21 @@ public class JNI {
             int callback(String[] contents);
         }
 
-        /**
-         * Create a handler hold an id linked the native database object.
-         *
-         * @return the id, and it's the "handler"
-         */
-        public static native int createHandler();
-
-        /**
-         * Release the native database associated with the id.
-         *
-         * @param id the id
-         */
-        public static native void releaseHandler(int id);
 
         /**
          * Open sqlite database.
          *
-         * @param id   the associated id
          * @param path sqlite database path, if not exists, it'll create a new sqlite database
+         * @return the associated id/address in JNI, and it's the "handler"
          */
-        public static native void open(int id, String path);
+        public static native long open(String path);
 
         /**
          * Close sqlite database
          *
          * @param id the associated id
          */
-        public static native void close(int id);
+        public static native void close(long id);
 
         /**
          * Execute a sqlite command.
@@ -172,7 +159,7 @@ public class JNI {
          * @param id  the associated id
          * @param cmd command
          */
-        public static native void exec(int id, String cmd, SqliteExecCallback callback);
+        public static native void exec(long id, String cmd, SqliteExecCallback callback);
     }
 
     public static class CharactersCounter {

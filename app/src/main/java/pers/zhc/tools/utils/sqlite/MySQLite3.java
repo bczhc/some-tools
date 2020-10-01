@@ -8,21 +8,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author bczhc
  */
 public class MySQLite3 {
-    private int id;
+    private long id;
 
     private MySQLite3() {
     }
 
     public static MySQLite3 open(String path) {
         final MySQLite3 db = new MySQLite3();
-        db.id = JNI.Sqlite3.createHandler();
-        JNI.Sqlite3.open(db.id, path);
+        db.id = JNI.Sqlite3.open(path);
         return db;
     }
 
     public void close() {
         JNI.Sqlite3.close(this.id);
-        JNI.Sqlite3.releaseHandler(this.id);
     }
 
     public void exec(String cmd, JNI.Sqlite3.SqliteExecCallback callback) {

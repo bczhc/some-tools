@@ -7,29 +7,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Class:     pers_zhc_tools_jni_JNI_Sqlite3
- * Method:    createHandler
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_createHandler
-  (JNIEnv *, jclass);
-
-/*
- * Class:     pers_zhc_tools_jni_JNI_Sqlite3
- * Method:    releaseHandler
- * Signature: (I)V
- */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_releaseHandler
-  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_Sqlite3
  * Method:    open
  * Signature: (ILjava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
-  (JNIEnv *, jclass, jint, jstring);
+JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_Sqlite3
@@ -37,7 +22,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
  * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_Sqlite3
@@ -45,7 +30,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
  * Signature: (ILjava/lang/String;Lpers/zhc/tools/jni/JNI/Sqlite3/SqliteExecCallback;)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
-  (JNIEnv *, jclass, jint, jstring, jobject);
+  (JNIEnv *, jclass, jlong, jstring, jobject);
 
 #ifdef __cplusplus
 }

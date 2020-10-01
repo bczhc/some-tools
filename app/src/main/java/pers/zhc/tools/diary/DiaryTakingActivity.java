@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ScrollEditText;
@@ -204,6 +205,7 @@ public class DiaryTakingActivity extends BaseActivity {
             return result;
         }
 
+        @NotNull
         @Override
         public String toString() {
             return year + "." + month + '.' + day;

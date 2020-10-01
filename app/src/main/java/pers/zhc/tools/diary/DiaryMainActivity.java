@@ -434,4 +434,10 @@ public class DiaryMainActivity extends BaseActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    protected void onDestroy() {
+        diaryDatabase.close();
+        super.onDestroy();
+    }
 }
