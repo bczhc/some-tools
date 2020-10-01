@@ -5,11 +5,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
-        targetSdkVersion 29
+        targetSdkVersion 30
         def verInfo = MyPlugin1.gVersion()
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
@@ -44,6 +44,7 @@ android {
         abortOnError false
         return true
     }
+    ndkVersion '21.3.6528147'
     return true
 }
 

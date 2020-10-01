@@ -414,7 +414,7 @@ public class DiaryMainActivity extends BaseActivity {
                 d2.show();
             });
             deleteBtn.setOnClickListener(v1 -> DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
-                        diaryDatabase.exec("DELETE FROM diary WHERE date=" + date);
+                        diaryDatabase.exec("DELETE FROM diary WHERE date='" + date.getDateString() + '\'');
                         dialog.dismiss();
                         refresh();
                     }, (d, which) -> {

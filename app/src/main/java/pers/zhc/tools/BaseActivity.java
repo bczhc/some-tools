@@ -212,7 +212,7 @@ public class BaseActivity extends Activity {
      *                   而对于其他配置的更改，则系统会onDestroy()当前Activity，然后重启一个新的Activity实例。
      */
     @Override
-    public void onConfigurationChanged(@SuppressWarnings("NullableProblems") Configuration newConfig) {
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // 检测屏幕的方向：纵向或横向
         if (this.getResources().getConfiguration().orientation
