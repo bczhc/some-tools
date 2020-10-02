@@ -18,6 +18,8 @@ import pers.zhc.u.ComplexDefinite;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
 import pers.zhc.u.math.util.ComplexValue;
 
+import java.util.ArrayList;
+
 /**
  * @author bczhc
  */
@@ -64,15 +66,15 @@ public class ComplexGraphDrawing extends BaseActivity {
                     calcDialog.setCancelable(false);
                     calcDialog.show();
                     int definite_n = intent.getIntExtra("definite_n", 10000);
-                    int epicycles_count = intent.getIntExtra("epicycles_count", 100) - 1;//除去中间的0
+                    int epicyclesCount = intent.getIntExtra("epicyclesCount", 100) - 1;//除去中间的0
                     EpicyclesView.setT(intent.getDoubleExtra("T", 2 * Math.PI));
-                    ComplexFunctionInterface2 function = ComplexGraphDrawingView.complexFunction.getFunction(0, EpicyclesView.getT());
-                    ComplexValue test = new ComplexValue(0, 0);
                     ComplexDefinite complexDefinite = new ComplexDefinite();
                     complexDefinite.n = definite_n;
-                    SynchronizedPut synchronizedSequence = new SynchronizedPut(EpicyclesEdit.epicyclesSequence);
                     new Thread(() -> {
-                        JNI.FourierSeriesCalc.calc(EpicyclesView.getT(), epicycles_count, new JNICall(synchronizedSequence, function), threadNum);
+                        JNI.FourierSeries.calc(((ArrayList<ComplexValue>) ComplexGraphDrawingView.pointList), EpicyclesView.getT()
+                                , epicyclesCount, (n, re, im) -> {
+                                    System.out.println(n + " " + re + ' ' + im);
+                                }, threadNum, 100000);
                         runOnUiThread(() -> {
                             calcDialog.dismiss();
                             finish();

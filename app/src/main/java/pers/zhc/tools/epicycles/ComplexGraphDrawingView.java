@@ -10,15 +10,18 @@ import android.view.MotionEvent;
 import pers.zhc.tools.BaseView;
 import pers.zhc.u.math.util.ComplexValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ComplexGraphDrawingView extends BaseView {
 
-    static ComplexFunction complexFunction;
     private float width;
     private float height;
     private Paint mCoPaint;
     private Paint mPaint;
     private Path mPath;
     private boolean instanceFirst = true;
+    static List<ComplexValue> pointList = null;
 
     public ComplexGraphDrawingView(Context context) {
         super(context);
@@ -34,8 +37,8 @@ public class ComplexGraphDrawingView extends BaseView {
         mPaint.setStrokeWidth(2);
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
-        if (complexFunction == null) {
-            complexFunction = new ComplexFunction();
+        if (pointList == null) {
+            pointList = new ArrayList<>();
         }
     }
 
@@ -43,13 +46,13 @@ public class ComplexGraphDrawingView extends BaseView {
     protected void onDraw(Canvas canvas) {
         width = ((float) getWidth());
         height = ((float) getHeight());
-        if (instanceFirst && complexFunction.length() != 0) {
+        if (instanceFirst && pointList.size() != 0) {
             mPath = new Path();
-            ComplexValue complexValue = complexFunction.get(0);
+            ComplexValue complexValue = pointList.get(0);
             mPath.moveTo(((float) (complexValue.re + width / 2D)), ((float) (height / 2D - complexValue.im)));
-            int length = complexFunction.length();
+            int length = pointList.size();
             for (int i = 1; i < length; i++) {
-                complexValue = complexFunction.get(i);
+                complexValue = pointList.get(i);
                 mPath.lineTo(((float) (complexValue.re + width / 2D)), ((float) (height / 2D - complexValue.im)));
             }
             mPath.close();
@@ -70,7 +73,7 @@ public class ComplexGraphDrawingView extends BaseView {
         float y = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                complexFunction.clear();
+                pointList.clear();
                 mPath = new Path();
                 mPath.moveTo(x, y);
                 break;
@@ -83,7 +86,7 @@ public class ComplexGraphDrawingView extends BaseView {
             default:
                 break;
         }
-        complexFunction.put(x - width / 2D, -y + height / 2D);
+        pointList.add(new ComplexValue(x - width / 2D, -y + height / 2D));
         invalidate();
         return true;
     }

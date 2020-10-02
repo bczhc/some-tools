@@ -5,6 +5,20 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/home/zhc/zhc-android-keystore.jks')
+            storePassword '123456'
+            keyAlias 'key0'
+            keyPassword '123456'
+        }
+        release {
+            storeFile file('/home/zhc/zhc-android-keystore.jks')
+            storePassword '123456'
+            keyPassword '123456'
+            keyAlias 'key0'
+        }
+    }
     compileSdkVersion 30
     defaultConfig {
         applicationId "pers.zhc.tools"
@@ -13,6 +27,9 @@ android {
         def verInfo = MyPlugin1.gVersion()
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
+        ndk {
+            abiFilters "arm64-v8a"
+        }
     }
     buildTypes {
         release {
@@ -20,6 +37,9 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+            debuggable true
+            jniDebuggable true
         }
         /*debug {
             //noinspection GroovyAssignabilityCheck
@@ -33,18 +53,17 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         return true
     }
-    sourceSets {
-        main {
-            jni.srcDirs = ['src/jni']
-            jniLibs.srcDirs = ['src/libs']
-        }
-    }
 	lintOptions {
         checkReleaseBuilds false
         abortOnError false
         return true
     }
     ndkVersion '21.3.6528147'
+    externalNativeBuild {
+        cmake {
+            path file('src/main/jni/cpp/CMakeLists.txt')
+        }
+    }
     return true
 }
 

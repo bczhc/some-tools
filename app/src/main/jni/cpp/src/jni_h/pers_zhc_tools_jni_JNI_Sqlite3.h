@@ -7,11 +7,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 /*
  * Class:     pers_zhc_tools_jni_JNI_Sqlite3
  * Method:    open
- * Signature: (ILjava/lang/String;)V
+ * Signature: (Ljava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
   (JNIEnv *, jclass, jstring);
@@ -19,7 +18,7 @@ JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
 /*
  * Class:     pers_zhc_tools_jni_JNI_Sqlite3
  * Method:    close
- * Signature: (I)V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
   (JNIEnv *, jclass, jlong);
@@ -27,7 +26,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
 /*
  * Class:     pers_zhc_tools_jni_JNI_Sqlite3
  * Method:    exec
- * Signature: (ILjava/lang/String;Lpers/zhc/tools/jni/JNI/Sqlite3/SqliteExecCallback;)V
+ * Signature: (JLjava/lang/String;Lpers/zhc/tools/jni/JNI/Sqlite3/SqliteExecCallback;)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
   (JNIEnv *, jclass, jlong, jstring, jobject);

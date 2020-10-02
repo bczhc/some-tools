@@ -1,410 +1,431 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="pers.zhc.tools">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" tools:ignore="ProtectedPermissions"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    xmlns:tools="http://schemas.android.com/tools"
+    package="pers.zhc.tools">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.CHANGE_CONFIGURATION"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <application
-            android:name=".BaseApplication"
-            android:persistent="true"
-            android:testOnly="false"
-            android:allowBackup="false"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:supportsRtl="true"
-            android:hardwareAccelerated="true"
-            android:extractNativeLibs="false"
-            android:usesCleartextTraffic="true"
-            android:requestLegacyExternalStorage="true"
-            tools:targetApi="m">
-        <receiver android:name=".floatingdrawing.NotificationClickReceiver"
-                  android:exported="true"
-                  android:enabled="true" tools:ignore="ExportedReceiver">
+        android:name=".BaseApplication"
+        android:allowBackup="false"
+        android:extractNativeLibs="false"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:persistent="true"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="true"
+        android:testOnly="false"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="q">
+        <receiver
+            android:name=".floatingdrawing.NotificationClickReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
             <intent-filter android:priority="1000">
-                <action android:name="pers.zhc.tools.START_FB"/>
+                <action android:name="pers.zhc.tools.START_FB" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".broadcast.BroadcastTest"
-                  android:exported="false"
-                  android:enabled="true">
+        <receiver
+            android:name=".broadcast.BroadcastTest"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED"/>
-                <action android:name="android.intent.action.AIRPLANE_MODE"/>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+                <action android:name="android.intent.action.AIRPLANE_MODE" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".test.service.MyService"
-                 android:process=":service"
-                 android:enabled="true"
-                 android:exported="true"
-                 android:icon="@drawable/ic_zhc_logo"
-                 android:label="s1" tools:ignore="ExportedService"/>
-        <provider android:authorities="pers.zhc.tools.fileprovider"
-                  android:name="androidx.core.content.FileProvider"
-                  android:exported="false"
-                  android:grantUriPermissions="true"
-        >
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-                       android:resource="@xml/file_paths"/>
+        <service
+            android:name=".test.service.MyService"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@drawable/ic_zhc_logo"
+            android:label="s1"
+            android:process=":service"
+            tools:ignore="ExportedService" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="pers.zhc.tools.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name="pers.zhc.tools.MainActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme">
+
+        <activity
+            android:name="pers.zhc.tools.MainActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.filepicker.FilePicker"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name="pers.zhc.tools.filepicker.FilePicker"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/FB_AppTheme"
-        >
+        <activity
+            android:name="pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/FB_AppTheme">
             <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
-
-            </intent-filter>
-        </activity>
-        <activity android:name="pers.zhc.tools.codecs.Settings"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-                  android:label="@string/settings"
-        />
-        <activity android:name="pers.zhc.tools.pi.Pi"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.toast.ToastTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme">
+        <activity
+            android:name="pers.zhc.tools.codecs.Settings"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/settings"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="pers.zhc.tools.pi.Pi"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.clipboard.Clip"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme">
+        <activity
+            android:name="pers.zhc.tools.toast.ToastTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.codecs.CodecsActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme">
+        <activity
+            android:name="pers.zhc.tools.clipboard.Clip"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.BaseActivity"/>
-        <activity android:name="pers.zhc.tools.functiondrawing.FunctionDrawing"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme">
+        <activity
+            android:name="pers.zhc.tools.codecs.CodecsActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.document.Document"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme">
+        <activity android:name="pers.zhc.tools.BaseActivity" />
+        <activity
+            android:name="pers.zhc.tools.functiondrawing.FunctionDrawing"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
+
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.document.NoteTakingActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme">
+        <activity
+            android:name="pers.zhc.tools.document.Document"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.functiondrawing.FunctionDrawingBoard"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppThemeNotTranslucent"
-        >
+        <activity
+            android:name="pers.zhc.tools.document.NoteTakingActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name="pers.zhc.tools.epicycles.EpicyclesTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppThemeNotTranslucent"
-        >
+        <activity
+            android:name="pers.zhc.tools.functiondrawing.FunctionDrawingBoard"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppThemeNotTranslucent">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".epicycles.EpicyclesEdit"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme">
+        <activity
+            android:name="pers.zhc.tools.epicycles.EpicyclesTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppThemeNotTranslucent">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".epicycles.ComplexGraphDrawing"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppThemeNotTranslucent"
-        >
+        <activity
+            android:name=".epicycles.EpicyclesEdit"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.S"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".epicycles.ComplexGraphDrawing"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppThemeNotTranslucent">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.viewtest.MainActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".test.S"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".theme.SetTheme"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".test.viewtest.MainActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.MathExpressionEvaluationTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".theme.SetTheme"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.SensorTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".test.MathExpressionEvaluationTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.InputEvent"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".test.SensorTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.SurfaceViewTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".test.InputEvent"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".floatingdrawing.RequestCaptureScreenActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppThemeTranslucent"
-        >
+        <activity
+            android:name=".test.SurfaceViewTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.service.ServiceActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".floatingdrawing.RequestCaptureScreenActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppThemeTranslucent">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".youdaoapi.YouDaoTranslate"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".test.service.ServiceActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".crashhandler.CrashReportActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/BlackTheme"
-        >
+        <activity
+            android:name=".youdaoapi.YouDaoTranslate"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".crashhandler.CrashTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".crashhandler.CrashReportActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/BlackTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".malloctest.MAllocTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".crashhandler.CrashTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".diary.DiaryMainActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppThemeWithBar"
-                  android:label="@string/diary"
-        >
+        <activity
+            android:name=".malloctest.MAllocTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".diary.DiaryTakingActivity"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppThemeWithBar"
-                  android:label="@string/diary"
-        >
+        <activity
+            android:name=".diary.DiaryMainActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/diary"
+            android:theme="@style/AppThemeWithBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".pressuretest.PressureTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".diary.DiaryTakingActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/diary"
+            android:theme="@style/AppThemeWithBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.jni.Test"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".pressuretest.PressureTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.DocumentProviderTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".test.jni.Test"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".characterscounter.CounterTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".test.DocumentProviderTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".typetest.TypeTest"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".characterscounter.CounterTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".test.TTS"
-                  android:configChanges="screenSize|keyboardHidden|orientation"
-                  android:theme="@style/AppTheme"
-        >
+        <activity
+            android:name=".typetest.TypeTest"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".test.TTS"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
     </application>

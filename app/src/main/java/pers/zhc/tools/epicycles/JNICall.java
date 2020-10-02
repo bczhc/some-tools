@@ -7,7 +7,7 @@ import pers.zhc.u.math.util.ComplexValue;
 /**
  * @author bczhc
  */
-public class JNICall implements JNI.FourierSeriesCalc.Callback {
+public class JNICall implements JNI.FourierSeries.Callback {
     private final ComplexGraphDrawing.SynchronizedPut synchronizedSequence;
     private final ComplexFunctionInterface2 complexFunctionInterface;
 

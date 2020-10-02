@@ -1,19 +1,22 @@
-/*翟灿hhh*/package pers.zhc.tools.jni;
+/*翟灿hhh*/
+package pers.zhc.tools.jni;
 
 import androidx.annotation.Size;
 import pers.zhc.tools.pi.JNICallback;
-import pers.zhc.tools.test.jni.Test;
+import pers.zhc.u.math.util.ComplexValue;
+
+import java.util.ArrayList;
 
 /**
  * @author bczhc
  */
 public class JNI {
-    private static boolean hasLoadLib = false;
+    private static boolean hasLoadedLib = false;
 
     private synchronized static void loadLib() {
-        if (!hasLoadLib) {
+        if (!hasLoadedLib) {
             System.loadLibrary("All");
-            hasLoadLib = true;
+            hasLoadedLib = true;
         }
     }
 
@@ -101,12 +104,12 @@ public class JNI {
         public static native long alloc(long size);
     }
 
-    public static class FourierSeriesCalc {
+    public static class FourierSeries {
         static {
             loadLib();
         }
 
-        public static native void calc(double period, int epicyclesCount, Callback callback, int threadNum);
+        public static native void calc(ArrayList<ComplexValue> points, double period, int epicyclesCount, Callback callback, int threadNum, int integralD);
 
         public interface Callback {
             /**
@@ -128,7 +131,8 @@ public class JNI {
 
         public interface SqliteExecCallback {
             /**
-             * Callback when {@link Sqlite3#exec(int, String, SqliteExecCallback)} is called.
+             * Callback when {@link Sqlite3#exec(long, String, SqliteExecCallback)} is called.
+             *
              * @param contents content in database
              * @return whether to continue search:
              * 0: interrupt searching
@@ -169,36 +173,41 @@ public class JNI {
 
         /**
          * Create a handler used to find the native handler that holds the result map
+         *
          * @return id
          */
         public static native int createHandler();
 
         /**
          * Release handler
+         *
          * @param id id
          */
         public static native void releaseHandler(int id);
 
         /**
          * Count duplicated characters in text
+         *
          * @param s string
          */
         public static native void count(int id, String s);
 
         /**
          * clear native result data
+         *
          * @param id id
          */
         public static native void clearResult(int id);
 
         /**
          * get result json
+         *
          * @param id id
          * @return json string
          */
         public static native String getResultJson(int id);
     }
-    
+
     public static class JniTest {
         static {
             loadLib();
