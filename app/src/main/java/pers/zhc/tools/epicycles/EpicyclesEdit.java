@@ -54,9 +54,9 @@ public class EpicyclesEdit extends BaseActivity {
                 s3 = epicycles_count.getText().toString();
                 s4 = threadNum.getText().toString();
                 Intent intent = new Intent(this, ComplexGraphDrawing.class);
-                intent.putExtra("definite_n", Integer.parseInt(s1));
+                intent.putExtra("integralN", Integer.parseInt(s1));
                 intent.putExtra("T", Double.parseDouble(s2));
-                intent.putExtra("epicycles_count", Integer.parseInt(s3));
+                intent.putExtra("epicyclesCount", Integer.parseInt(s3));
                 intent.putExtra("thread_num", Integer.parseInt(s4));
                 startActivityForResult(intent, RequestCode.START_ACTIVITY_0);
             } catch (NumberFormatException e) {

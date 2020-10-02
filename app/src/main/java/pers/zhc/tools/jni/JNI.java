@@ -15,7 +15,7 @@ public class JNI {
 
     private synchronized static void loadLib() {
         if (!hasLoadedLib) {
-            System.loadLibrary("All");
+            System.loadLibrary("Main");
             hasLoadedLib = true;
         }
     }
@@ -109,7 +109,7 @@ public class JNI {
             loadLib();
         }
 
-        public static native void calc(ArrayList<ComplexValue> points, double period, int epicyclesCount, Callback callback, int threadNum, int integralD);
+        public static native void calc(ArrayList<ComplexValue> points, double period, int epicyclesCount, Callback callback, int threadNum, int integralN);
 
         public interface Callback {
             /**
@@ -126,7 +126,6 @@ public class JNI {
     public static class Sqlite3 {
         static {
             loadLib();
-            System.loadLibrary("sqlite3");
         }
 
         public interface SqliteExecCallback {

@@ -6,10 +6,11 @@
 #define JNI_JNI_HELP_H
 
 #include <jni.h>
-#include "../third_party/my-cpp-lib/zhc.h"
+#include "../third_party/my-cpp-lib/String.h"
+using namespace bczhc::string;
 
-void Log(JNIEnv *env, const char *tag, const char *s);
+//void Log(JNIEnv *env, const String& tag, const String& msg);
 
-void LogArr(JNIEnv *env, const char *tag, const char *s, int size);
+void Log(JNIEnv *env, const char *tag, const char *msg);
 
 #endif //JNI_JNI_HELP_H

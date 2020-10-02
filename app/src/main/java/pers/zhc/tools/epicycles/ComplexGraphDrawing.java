@@ -5,20 +5,22 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.ComplexDefinite;
-import pers.zhc.u.math.fourier.EpicyclesSequence;
 import pers.zhc.u.math.util.ComplexValue;
-
-import java.util.ArrayList;
 
 /**
  * @author bczhc
@@ -65,16 +67,23 @@ public class ComplexGraphDrawing extends BaseActivity {
                     calcDialog.setCanceledOnTouchOutside(false);
                     calcDialog.setCancelable(false);
                     calcDialog.show();
-                    int definite_n = intent.getIntExtra("definite_n", 10000);
-                    int epicyclesCount = intent.getIntExtra("epicyclesCount", 100) - 1;//除去中间的0
+                    int integralN = intent.getIntExtra("integralN", 10000);
+                    int epicyclesCount = intent.getIntExtra("epicyclesCount", 100);
                     EpicyclesView.setT(intent.getDoubleExtra("T", 2 * Math.PI));
+                    Log.d(TAG, String.format("Fourier series calculation info:" +
+                                    "integralN: %d; period: %f; epicycles count: %d; thread number: %d",
+                            integralN, EpicyclesView.getT(), epicyclesCount, threadNum));
                     ComplexDefinite complexDefinite = new ComplexDefinite();
-                    complexDefinite.n = definite_n;
+                    complexDefinite.n = integralN;
+                    Object lock = new Object();
                     new Thread(() -> {
                         JNI.FourierSeries.calc(((ArrayList<ComplexValue>) ComplexGraphDrawingView.pointList), EpicyclesView.getT()
                                 , epicyclesCount, (n, re, im) -> {
-                                    System.out.println(n + " " + re + ' ' + im);
-                                }, threadNum, 100000);
+                                    synchronized (lock) {
+                                        EpicyclesEdit.epicyclesSequence.put(n, re, im);
+                                        Log.d(TAG, n + " " + re + ' ' + im);
+                                    }
+                                }, threadNum, integralN);
                         runOnUiThread(() -> {
                             calcDialog.dismiss();
                             finish();
@@ -85,17 +94,5 @@ public class ComplexGraphDrawing extends BaseActivity {
         DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT
                 , ViewGroup.LayoutParams.WRAP_CONTENT, false);
         alertDialog.show();
-    }
-
-    static class SynchronizedPut {
-        private final EpicyclesSequence sequence;
-
-        public SynchronizedPut(EpicyclesSequence sequence) {
-            this.sequence = sequence;
-        }
-
-        synchronized void put(EpicyclesSequence.Epicycle o) {
-            sequence.put(o);
-        }
     }
 }

@@ -2,8 +2,10 @@
 #include "../../third_party/my-cpp-lib/FourierSeries.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_FourierSeries.h"
 #include "../jni_help.h"
+#include "../../third_party/my-cpp-lib/Concurrent.h"
 
 using namespace bczhc;
+using namespace concurrent;
 
 class Point {
 public:
@@ -35,7 +37,8 @@ private:
     }
 
     static Point linearMoveBetweenTwoPoints(Point p1, Point p2, double progress) {
-        Point p((float) (p1.x + (p2.x - p1.x * progress)), (float) (p1.y + (p2.y - p1.y) * progress));
+        Point p((float) (p1.x + (p2.x - p1.x * progress)),
+                (float) (p1.y + (p2.y - p1.y) * progress));
         return p;
     }
 
@@ -61,7 +64,8 @@ public:
         double mapToLength = t * pathsTotalLength / period;
         int index = search(sumLength, listLength, mapToLength);
         Point r = linearMoveBetweenTwoPoints(list.get(index),
-                                             index == listLength - 1 ? list.get(0) : list.get(index + 1),
+                                             index == listLength - 1 ? list.get(0) : list.get(
+                                                     index + 1),
                                              mapToLength - sumLength[index]);
         dest.re = r.x, dest.im = r.y;
     }
@@ -69,9 +73,13 @@ public:
 
 using namespace linearlist;
 
+jobject globalCallback;
+JavaVM *globalJvm;
+
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
-        (JNIEnv *env, jclass cls, jobject points, jdouble period, jint epicyclesCount, jobject callback,
-         jint threadNum, jint integralD) {
+        (JNIEnv *env, jclass cls, jobject points, jdouble period, jint epicyclesCount,
+         jobject callback,
+         jint threadNum, jint integralN) {
     jclass listCLass = env->GetObjectClass(points);
     jmethodID sizeMId = env->GetMethodID(listCLass, "size", "()I");
     int length = (int) env->CallIntMethod(points, sizeMId);
@@ -82,62 +90,48 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
         jclass complexValueClass = env->GetObjectClass(complexValueObj);
         jfieldID reFId = env->GetFieldID(complexValueClass, "re", "D");
         jfieldID imFId = env->GetFieldID(complexValueClass, "im", "D");
-        Point p(env->GetDoubleField(complexValueObj, reFId), env->GetDoubleField(complexValueObj, imFId));
+        Point p(env->GetDoubleField(complexValueObj, reFId),
+                env->GetDoubleField(complexValueObj, imFId));
         list.insert(p);
-
-        string s = to_string(p.x);
-        s.append(" ");
-        s.append(to_string(p.y));
-        Log(env, "jni---insert", s.c_str());
     }
 
-    F f(list, period);
+    SequentialList<Point> testList;
+    Point a(0, 0);
+    testList.insert(a);
+    Point b(0, 10);
+    testList.insert(b);
+    Point c(10, 0);
+    testList.insert(c);
+    F f(testList, period);
 
-    jclass callbackClass = env->GetObjectClass(callback);
-    jmethodID callbackMId = env->GetMethodID(callbackClass, "callback", "(DDD)V");
+    env->GetJavaVM(&globalJvm);
+    globalCallback = env->NewGlobalRef(callback);
 
-    Log(env, "jni---", "1");
+    using stdstr = std::string;
 
     class Callback : public FourierSeriesCallback {
-    public:
-        jobject &callbackObject;
-        jmethodID &callbackMId;
-        JNIEnv *&env;
-
-        void callback(double n, double re, double im) override {
-//            env->CallVoidMethod(callbackObject, callbackMId, (jdouble) n, (jdouble) re, (jdouble) im);
-            string s = to_string(n);
-            s.append(" ");
-            s.append(to_string(re));
-            s.append(" ");
-            s.append(to_string(im));
-            Log(env, "jni---", s.c_str());
-        }
-
-        Callback(jobject &callbackObject, jmethodID &callbackMId, JNIEnv *&env) : callbackObject(callbackObject),
-                                                                                  callbackMId(callbackMId), env(env) {}
-    } cb(callback, callbackMId, env);
-
-    Log(env, "jni---", "3");
-
-    class CB2 : public FourierSeriesCallback {
     private:
-        JNIEnv *&env;
     public:
-        CB2(JNIEnv *&env) : env(env) {}
-
         void callback(double n, double re, double im) override {
-            string s = to_string(n);
-            s.append(" ");
-            s.append(to_string(re));
-            s.append(" ");
-            s.append(to_string(im));
-            Log(env, "jni---", s.c_str());
+            JNIEnv *env = nullptr;
+            globalJvm->AttachCurrentThread(&env, nullptr);
+
+            jclass callbackClass = env->GetObjectClass(globalCallback);
+            jmethodID callbackMId = env->GetMethodID(callbackClass, "callback", "(DDD)V");
+            env->CallVoidMethod(globalCallback, callbackMId, (jdouble) n, (jdouble) re,
+                                (jdouble) im);
+            /*String s = to_string(n).c_str();
+            s.append(" ")
+                    .append(to_string(re))
+                    .append(" ")
+                    .append(to_string(im));
+            Log(env, "jni---", s.getCString());*/
+            //TODO String concatenating seems having bug.
+            globalJvm->DetachCurrentThread();
         }
-    } cb2(env);
+    } cb;
 
-    FourierSeries fs(f, 100, 10);
-    fs.calc(cb2, 10000, 3);
-
-    Log(env, "jni---", "2");
+    FourierSeries fs(f, epicyclesCount, period);
+    fs.calc(cb, integralN, threadNum);
+    Log(env, "jni---", "finished fourier series calculate");
 }
