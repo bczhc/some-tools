@@ -7,13 +7,13 @@ apply plugin: 'kotlin-android-extensions'
 android {
     signingConfigs {
         debug {
-            storeFile file('/home/zhc/zhc-android-keystore.jks')
+            storeFile file('test.jks')
             storePassword '123456'
             keyAlias 'key0'
             keyPassword '123456'
         }
         release {
-            storeFile file('/home/zhc/zhc-android-keystore.jks')
+            storeFile file('test.jks')
             storePassword '123456'
             keyPassword '123456'
             keyAlias 'key0'
