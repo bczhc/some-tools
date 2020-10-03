@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ScrollEditText;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.utils.sqlite.MySQLite3;
 import pers.zhc.tools.utils.sqlite.SQLite;
 
@@ -46,7 +47,7 @@ public class DiaryTakingActivity extends BaseActivity {
     private EditText et;
     private TextView charactersCountTV;
     private MyDate mDate;
-    private MySQLite3 diaryDatabase;
+    private MySQLite3 diaryDatabase = DiaryMainActivity.diaryDatabase;
     private Timer savingTimer;
     boolean live = true;
     boolean speak = false;
@@ -55,7 +56,6 @@ public class DiaryTakingActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         savingTimer = new Timer();
-        diaryDatabase = DiaryMainActivity.diaryDatabase;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_taking_activity);
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
@@ -140,6 +140,10 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void prepareContent() {
+        if (diaryDatabase.isClosed()) {
+            ToastUtils.show(this, R.string.closed);
+            return;
+        }
         final String[] content = {null};
         diaryDatabase.exec("SELECT content FROM diary WHERE date='" + mDate.getDateString() + "'", contents -> {
             if (content[0] == null)
@@ -159,6 +163,10 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void initDB() {
+        if (diaryDatabase.isClosed()) {
+            ToastUtils.show(this, R.string.closed);
+            return;
+        }
         boolean newRec = !SQLite.checkRecordExistence(diaryDatabase, "diary", "date", mDate.getDateString());
         if (newRec) {
             diaryDatabase.exec("INSERT INTO diary VALUES('" + mDate.getDateString() + "','')");
@@ -216,6 +224,12 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void save() {
+        if (diaryDatabase.isClosed()) {
+            runOnUiThread(() -> {
+                ToastUtils.show(this, R.string.closed);
+            });
+            return;
+        }
         diaryDatabase.exec("UPDATE diary SET content='" + et.getText().toString().replace("'", "''") + "' WHERE date='" + mDate.getDateString() + "'");
     }
 

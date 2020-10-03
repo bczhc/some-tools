@@ -255,4 +255,5 @@
     <string name="unsupported">不支持</string>
     <string name="deleted_shortcut">已删除快捷方式</string>
     <string name="over_quantity_limit">超出数量限制</string>
+    <string name="closed">已关闭</string>
 </resources>

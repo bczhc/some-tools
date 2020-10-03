@@ -1,6 +1,7 @@
 package pers.zhc.tools.diary;
 
-import android.app.ActionBar;
+import android.annotation.SuppressLint;
+    import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -10,6 +11,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -119,7 +121,9 @@ public class DiaryMainActivity extends BaseActivity {
     private SQLiteDatabase getPasswordDatabase() {
         final SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
                 Common.getInternalDatabaseDir(this, "passwords.db"), null);
-        db.disableWriteAheadLogging();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            db.disableWriteAheadLogging();
+        }
         db.execSQL("CREATE TABLE IF NOT EXISTS passwords(\n" +
                 "    k text not null,\n" +
                 "    pw text not null\n" +
@@ -145,10 +149,16 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (isUnlocked) {
             final MenuInflater menuInflater = getMenuInflater();
             menuInflater.inflate(R.menu.diary_actionbar, menu);
+            menu.findItem(R.id.write_diary).getActionView();
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -158,7 +168,7 @@ public class DiaryMainActivity extends BaseActivity {
             final String s = et.getText().toString();
             try {
                 final int dateInt = Integer.parseInt(s);
-                createDiary(new DiaryTakingActivity.MyDate(dateInt));
+                createOrOpenDiary(new DiaryTakingActivity.MyDate(dateInt));
             } catch (NumberFormatException e) {
                 ToastUtils.show(this, R.string.please_type_correct_value);
             }
@@ -170,7 +180,7 @@ public class DiaryMainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.write_diary:
-                createDiary(null);
+                createOrOpenDiary(null);
                 break;
             case R.id.create:
                 createSpecificDateDiary();
@@ -274,7 +284,11 @@ public class DiaryMainActivity extends BaseActivity {
         dialog.show();
     }
 
-    private void createDiary(@Nullable DiaryTakingActivity.MyDate date) {
+    private void createOrOpenDiary(@Nullable DiaryTakingActivity.MyDate date) {
+        if (diaryDatabase.isClosed()) {
+            ToastUtils.show(this, R.string.closed);
+            return;
+        }
         Intent intent = new Intent(this, DiaryTakingActivity.class);
         final int[] dateInts;
         if (date == null) {
@@ -322,6 +336,7 @@ public class DiaryMainActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void refresh() {
         ll.removeAllViews();
         new Thread(() -> diaryDatabase.exec("SELECT * FROM diary", contents -> {
@@ -369,7 +384,7 @@ public class DiaryMainActivity extends BaseActivity {
     private void setChildRL(DiaryTakingActivity.MyDate date, RelativeLayout childRL) {
         childRL.setOnClickListener(v -> {
             try {
-                createDiary(date);
+                createOrOpenDiary(date);
             } catch (Exception e) {
                 Common.showException(e, this);
             }
@@ -431,13 +446,13 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     protected void onDestroy() {
-        diaryDatabase.close();
+        try {
+            diaryDatabase.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Common.showException(e, this);
+        }
         super.onDestroy();
     }
 }

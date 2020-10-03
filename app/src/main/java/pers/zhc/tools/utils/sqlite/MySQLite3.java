@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class MySQLite3 {
     private long id;
+    private boolean isClosed = false;
 
     private MySQLite3() {
     }
@@ -21,6 +22,7 @@ public class MySQLite3 {
 
     public void close() {
         JNI.Sqlite3.close(this.id);
+        isClosed = true;
     }
 
     public void exec(String cmd, JNI.Sqlite3.SqliteExecCallback callback) {
@@ -29,6 +31,10 @@ public class MySQLite3 {
 
     public void exec(String cmd) {
         exec(cmd, null);
+    }
+
+    public boolean isClosed() {
+        return isClosed;
     }
 
     public boolean hasTable(String tableName) {
