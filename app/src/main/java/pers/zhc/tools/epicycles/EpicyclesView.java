@@ -256,11 +256,11 @@ class EpicyclesView extends BaseView {
     private void render(Canvas canvas) {
         center.y = (center.x = 0);
         lastLineToPoint.x = (lastLineToPoint.y = 0);
-        mEpicyclesCanvas.drawColor(Color.WHITE);
 //            清空上一次bitmap上绘画的
+        mEpicyclesCanvas.drawColor(Color.WHITE);
+//            画实轴和虚轴 无箭头
         mEpicyclesCanvas.drawLine(0F, canvasHeight / 2F, canvasWidth, canvasHeight / 2F, mCoPaint);
         mEpicyclesCanvas.drawLine(canvasWidth / 2F, 0F, canvasWidth / 2F, canvasHeight, mCoPaint);
-//            画实轴和虚轴 无箭头
         List<EpicyclesSequence.Epicycle> epicycles = this.epicyclesSequence.epicycles;
         for (int i = 0; i < epicycles.size(); i++) {
             EpicyclesSequence.Epicycle epicycle = epicycles.get(i);

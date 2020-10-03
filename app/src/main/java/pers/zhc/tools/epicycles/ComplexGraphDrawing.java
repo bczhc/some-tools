@@ -7,8 +7,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -27,17 +25,12 @@ import pers.zhc.u.math.util.ComplexValue;
  */
 public class ComplexGraphDrawing extends BaseActivity {
 
-    private int width;
-    private int height;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ComplexGraphDrawingView complexGraphDrawingView = new ComplexGraphDrawingView(this);
         Point point = new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
-        width = point.x;
-        height = point.y;
         setContentView(complexGraphDrawingView);
     }
 
@@ -50,23 +43,17 @@ public class ComplexGraphDrawing extends BaseActivity {
             super.onBackPressed();
         })
                 .setNegativeButton(R.string.calc, (dialog, which) -> {
-                    Dialog calcDialog = new Dialog(this);
-                    DialogUtil.setDialogAttr(calcDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-                    ScrollView sv = new ScrollView(this);
-                    sv.setLayoutParams(new ViewGroup.LayoutParams(((int) (((float) width) * .8F)), ((int) (((float) height) * .8F))));
-                    LinearLayout ll = new LinearLayout(this);
-                    ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    ll.setOrientation(LinearLayout.VERTICAL);
-                    int threadNum = intent.getIntExtra("thread_num", Runtime.getRuntime().availableProcessors());
-                    ViewGroup.LayoutParams doubleWrapLP = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     TextView textView = new TextView(this);
                     textView.setTextSize(30F);
-                    ll.addView(textView);
-                    sv.addView(ll);
-                    calcDialog.setContentView(sv, doubleWrapLP);
-                    calcDialog.setCanceledOnTouchOutside(false);
-                    calcDialog.setCancelable(false);
-                    calcDialog.show();
+
+                    Dialog progressDialog = new Dialog(this);
+                    DialogUtil.setDialogAttr(progressDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+                    progressDialog.setContentView(textView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
+                    int threadNum = intent.getIntExtra("thread_num", Runtime.getRuntime().availableProcessors());
                     int integralN = intent.getIntExtra("integralN", 10000);
                     int epicyclesCount = intent.getIntExtra("epicyclesCount", 100);
                     EpicyclesView.setT(intent.getDoubleExtra("T", 2 * Math.PI));
@@ -77,15 +64,17 @@ public class ComplexGraphDrawing extends BaseActivity {
                     complexDefinite.n = integralN;
                     Object lock = new Object();
                     new Thread(() -> {
+                        final int[] c = {0};
                         JNI.FourierSeries.calc(((ArrayList<ComplexValue>) ComplexGraphDrawingView.pointList), EpicyclesView.getT()
                                 , epicyclesCount, (n, re, im) -> {
                                     synchronized (lock) {
                                         EpicyclesEdit.epicyclesSequence.put(n, re, im);
                                         Log.d(TAG, n + " " + re + ' ' + im);
+                                        runOnUiThread(() -> textView.setText(getString(R.string.progress_tv, ((float) ++c[0]) / ((float) epicyclesCount) * 100)));
                                     }
                                 }, threadNum, integralN);
                         runOnUiThread(() -> {
-                            calcDialog.dismiss();
+                            progressDialog.dismiss();
                             finish();
                             overridePendingTransition(0, R.anim.fade_out);
                         });
