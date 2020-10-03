@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">tools</string>
-    <string name="tv" translatable="false">%1$s</string>
+    <string name="str" translatable="false">%1$s</string>
     <string name="progress_tv" translatable="false">%1$f%%</string>
     <string name="select_file_or_directory">选择文件/目录</string>
     <string name="encode">编码</string>
@@ -13,7 +13,7 @@
     <!--    <string name="percent_100">100%</string>-->
     <string name="null_file">为空文件</string>
     <string name="native_error">内部错误</string>
-    <string name="fopen_error">打开文件错误</string>
+    <string name="file_open_error">打开文件错误</string>
     <string name="incorrect_file_extension">格式不正确</string>
     <string name="all_file_encoded_done">所有文件编码完成！</string>
     <string name="all_file_decoded_done">所有文件解码完成！</string>
@@ -44,7 +44,7 @@
     <string name="tv_millis" translatable="false">%1dms</string>
     <string name="some_codecs">some-codecs</string>
     <string name="type_html_code">输入HTML代码</string>
-    <string name="get_config_file_failure">获取配置文件路径失败</string>
+    <string name="get_config_file_failed">获取配置文件路径失败</string>
     <string name="whether_to_save">是否保存</string>
     <string name="no">否</string>
     <string name="yes">是</string>
@@ -57,7 +57,7 @@
     <string name="eraser_mode">擦除</string>
     <string name="alpha" translatable="false">alpha</string>
     <string name="done">完成</string>
-    <string name="h_s_v_a_color_picker">HSVA调色板</string>
+    <string name="hsva_color_picker">HSVA调色板</string>
     <string name="control_panel_color">面板颜色</string>
     <string name="text_color">文字颜色</string>
     <string name="whether_text_color_is_inverted">是否文字颜色反相</string>
@@ -156,7 +156,7 @@
     <string name="crash_bar">崩溃了……</string>
     <string name="upload">上传</string>
     <string name="upload_crash_report">上传崩溃报告</string>
-    <string name="upload_failure">上传失败</string>
+    <string name="uploading_failure">上传失败</string>
     <string name="uploading">正在上传</string>
     <string name="upload_done">上传完成</string>
     <string name="please_choose">请选择…</string>
@@ -196,7 +196,7 @@
     <string name="please_grant_permission">请同意权限</string>
     <string name="ok">OK</string>
     <string name="check_for_update">检查更新</string>
-    <string name="acquire_service_failure">获取服务失败</string>
+    <string name="acquire_service_failed">获取服务失败</string>
     <string name="current_version_is_the_latest">当前已为最新版本</string>
     <string name="serviceTest">service_test</string>
     <string name="have_capture_task">有截图任务中</string>
@@ -217,8 +217,8 @@
     <string name="allocating">正在分配</string>
     <string name="alloc_done">分配完成</string>
     <string name="m_alloc_test">内存分配测试</string>
-    <string name="create_shortcut_success">创建快捷方式成功</string>
-    <string name="create_shortcut_failure">创建快捷方式失败</string>
+    <string name="create_shortcut_succeeded">创建快捷方式成功</string>
+    <string name="create_shortcut_failed">创建快捷方式失败</string>
     <string name="whether_to_save_unsaved_content">是否保存尚未保存内容</string>
     <string name="password">密码</string>
     <string name="diary">日记</string>
@@ -237,7 +237,7 @@
     <string name="type_importing_sleep_time">调节导入延时毫秒数：</string>
     <string name="zero">0</string>
     <string name="_1000_ms">1000ms</string>
-    <string name="characters_count_tv">%1$s字</string>
+    <string name="characters_count_tv">%1$d字</string>
     <string name="document_provider_test">document provider test</string>
     <string name="characters_counter_test">character counter test</string>
     <string name="type_test">type test</string>
@@ -252,4 +252,7 @@
     <string name="unsupported_tts">语音包丢失或语音不支持</string>
     <string name="deleted_xxx">已删除%1$s</string>
     <string name="no_write_permission">没有写入权限</string>
+    <string name="unsupported">不支持</string>
+    <string name="deleted_shortcut">已删除快捷方式</string>
+    <string name="over_quantity_limit">超出数量限制</string>
 </resources>

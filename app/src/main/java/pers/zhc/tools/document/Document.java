@@ -46,8 +46,6 @@ public class Document extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.document_activity);
-        boolean fromShortcut = getIntent().getBooleanExtra("fromShortcut", false);
-        if (fromShortcut) finish();
         Button insertBtn = findViewById(R.id.note_take);
         Button importBtn = findViewById(R.id.import_btn);
         Button exportBtn = findViewById(R.id.export_btn);
@@ -217,7 +215,7 @@ public class Document extends BaseActivity {
                             };
                             for (int i = 0; i < buttons.length; i++) {
                                 buttons[i] = new Button(this);
-                                buttons[i].setText(String.format(getString(R.string.tv), sqliteOptions[i]));
+                                buttons[i].setText(String.format(getString(R.string.str), sqliteOptions[i]));
                                 buttons[i].setOnClickListener(onClickListeners[i]);
                                 linearLayout1.addView(buttons[i]);
                             }
@@ -249,7 +247,7 @@ public class Document extends BaseActivity {
         smallLL.setLayoutParams(smallLL_LP4);
         TextView tv = new TextView(this);
         tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        tv.setText(String.format(getString(R.string.tv), s));
+        tv.setText(String.format(getString(R.string.str), s));
         runOnUiThread(() -> {
             smallLL.addView(tv);
             tv.setTextSize(15F);
@@ -278,7 +276,9 @@ public class Document extends BaseActivity {
             Common.showException(e, ctx);
         }
         if (database != null) {
-            database.disableWriteAheadLogging();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                database.disableWriteAheadLogging();
+            }
         }
         return database;
     }

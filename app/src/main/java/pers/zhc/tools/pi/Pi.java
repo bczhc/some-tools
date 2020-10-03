@@ -50,7 +50,7 @@ public class Pi extends BaseActivity {
                     runOnUiThread(() -> {
                         tv.setText(R.string.nul);
                         this.isGenerating = false;
-                        outET.setText(String.format(getString(R.string.tv), sb.toString()));
+                        outET.setText(String.format(getString(R.string.str), sb.toString()));
                         timeTV.setText(String.format(getResources().getString(R.string.tv_millis), (eM - sM)));
                     });
                 });

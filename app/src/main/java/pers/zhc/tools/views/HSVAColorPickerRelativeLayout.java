@@ -118,7 +118,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         RelativeLayout barRL = new RelativeLayout(this.context);
         barRL.setLayoutParams(new LinearLayout.LayoutParams(this.width, ViewGroup.LayoutParams.WRAP_CONTENT));
         TextView tv = new TextView(this.context);
-        tv.setText(R.string.h_s_v_a_color_picker);
+        tv.setText(R.string.hsva_color_picker);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             tv.setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
         } else {

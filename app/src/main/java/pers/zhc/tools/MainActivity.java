@@ -10,9 +10,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+
 import pers.zhc.tools.characterscounter.CounterTest;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
@@ -25,7 +36,12 @@ import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.malloctest.MAllocTest;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.pressuretest.PressureTest;
-import pers.zhc.tools.test.*;
+import pers.zhc.tools.test.DocumentProviderTest;
+import pers.zhc.tools.test.InputEvent;
+import pers.zhc.tools.test.MathExpressionEvaluationTest;
+import pers.zhc.tools.test.SensorTest;
+import pers.zhc.tools.test.SurfaceViewTest;
+import pers.zhc.tools.test.TTS;
 import pers.zhc.tools.test.jni.Test;
 import pers.zhc.tools.test.service.ServiceActivity;
 import pers.zhc.tools.theme.SetTheme;
@@ -34,12 +50,6 @@ import pers.zhc.tools.typetest.TypeTest;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.youdaoapi.YouDaoTranslate;
 import pers.zhc.u.common.ReadIS;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * @author bczhc
@@ -56,13 +66,15 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    private boolean shortcut(int texts, Class<?> theClass, int id) {
+    private void shortcut(int texts, Class<?> theClass, int id) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-            return false;
+            ToastUtils.show(this, R.string.unsupported);
+            return;
         }
         if (shortcutManager == null) {
             if ((shortcutManager = getSystemService(ShortcutManager.class)) == null) {
-                return false;
+                ToastUtils.show(this, R.string.create_shortcut_failed);
+                return;
             }
         }
         final List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
@@ -75,11 +87,15 @@ public class MainActivity extends BaseActivity {
         }
         if (removedIndex != -1) {
             dynamicShortcuts.remove(removedIndex);
+            ToastUtils.show(this, R.string.deleted_shortcut);
         } else {
             int shortcutSize = dynamicShortcuts.size();
-            if (shortcutSize > shortcutManager.getMaxShortcutCountPerActivity()) {
-                return false;
+            if (shortcutSize + 1 > shortcutManager.getMaxShortcutCountPerActivity()) {
+                ToastUtils.show(this, R.string.over_quantity_limit);
+                return;
             }
+
+            //new
             ShortcutInfo.Builder builder = new ShortcutInfo.Builder(this, "shortcut_id" + id);
             Intent intent = new Intent(this, theClass);
             intent.putExtra("fromShortcut", true);
@@ -89,9 +105,19 @@ public class MainActivity extends BaseActivity {
                     .setIcon(Icon.createWithResource(this, R.drawable.ic_launcher_foreground))
                     .setIntent(intent).build();
             dynamicShortcuts.add(shortcutInfo);
+            ToastUtils.show(this, R.string.create_shortcut_succeeded);
         }
-        shortcutManager.setDynamicShortcuts(dynamicShortcuts);
-        return true;
+        //rebuild
+        List<ShortcutInfo> newShortCutInfoList = new ArrayList<>();
+        for (ShortcutInfo shortcut : dynamicShortcuts) {
+            ShortcutInfo.Builder builder1 = new ShortcutInfo.Builder(this, shortcut.getId());
+            builder1.setIcon(Icon.createWithResource(this, R.drawable.ic_launcher_foreground))
+                    .setLongLabel(Objects.requireNonNull(shortcut.getLongLabel()))
+                    .setIntent(Objects.requireNonNull(shortcut.getIntent()))
+                    .setShortLabel(Objects.requireNonNull(shortcut.getShortLabel()));
+            newShortCutInfoList.add(builder1.build());
+        }
+        shortcutManager.setDynamicShortcuts(newShortCutInfoList);
     }
 
     private void init() {
@@ -174,7 +200,7 @@ public class MainActivity extends BaseActivity {
                     try {
                         String mainActivityText = finalJsonObject.getString("MainActivityText");
                         TextView tv = new TextView(this);
-                        tv.setText(getString(R.string.tv, mainActivityText));
+                        tv.setText(getString(R.string.str, mainActivityText));
                         ll.addView(tv);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -198,8 +224,7 @@ public class MainActivity extends BaseActivity {
                     overridePendingTransition(R.anim.slide_in_bottom, 0);
                 });
                 btn.setOnLongClickListener(v -> {
-                    final boolean shortcut = shortcut(texts[finalI], classes[finalI], finalI);
-                    ToastUtils.show(this, shortcut ? R.string.create_shortcut_success : R.string.create_shortcut_failure);
+                    shortcut(texts[finalI], classes[finalI], finalI);
                     return true;
                 });
                 runOnUiThread(() -> ll.addView(btn));

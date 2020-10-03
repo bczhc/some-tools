@@ -80,7 +80,7 @@ public class EpicyclesEdit extends BaseActivity {
                     + getString(R.string.i)
                     + getString(R.string.t)
                     + getString(R.string.right_parenthesis);
-            tv.setText(getString(R.string.tv, s));
+            tv.setText(getString(R.string.str, s));
             ll.addView(tv);
 
         });
@@ -109,7 +109,7 @@ public class EpicyclesEdit extends BaseActivity {
                         , s1, getString(R.string.i)
                         , getString(R.string.t)
                         , getString(R.string.right_parenthesis));
-                tv.setText(getString(R.string.tv, s));
+                tv.setText(getString(R.string.str, s));
                 ll.addView(tv);
                 epicyclesSequence.put(Epicycle);
             } catch (NumberFormatException e) {
@@ -122,7 +122,7 @@ public class EpicyclesEdit extends BaseActivity {
                 Intent intent = new Intent(this, EpicyclesTest.class);
                 String s = T.getText().toString();
                 if ("".equals(s)) {
-                    T.setText(getString(R.string.tv, "50"));
+                    T.setText(getString(R.string.str, "50"));
                 }
                 s = T.getText().toString();
                 EpicyclesView.setT(Double.parseDouble(s));
@@ -213,16 +213,16 @@ public class EpicyclesEdit extends BaseActivity {
 
     private void ck(String s1, String s2, String s3, String s4, EditText definite_n, EditText T, EditText epicycles_count, EditText threadNum) {
         if ("".equals(s1)) {
-            definite_n.setText(getString(R.string.tv, "10000"));
+            definite_n.setText(getString(R.string.str, "10000"));
         }
         if ("".equals(s2)) {
-            T.setText(getString(R.string.tv, "50"));
+            T.setText(getString(R.string.str, "50"));
         }
         if ("".equals(s3)) {
-            epicycles_count.setText(getString(R.string.tv, "150"));
+            epicycles_count.setText(getString(R.string.str, "150"));
         }
         if ("".equals(s4)) {
-            threadNum.setText(getString(R.string.tv, String.valueOf(Runtime.getRuntime().availableProcessors())));
+            threadNum.setText(getString(R.string.str, String.valueOf(Runtime.getRuntime().availableProcessors())));
         }
     }
 

@@ -159,6 +159,7 @@
         <activity
             android:name="pers.zhc.tools.document.Document"
             android:configChanges="screenSize|keyboardHidden|orientation"
+            android:taskAffinity="pers.zhc.tools.document"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -168,7 +169,9 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.document.NoteTakingActivity"
+            android:launchMode="singleTask"
             android:configChanges="screenSize|keyboardHidden|orientation"
+            android:taskAffinity="pers.zhc.tools.document"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

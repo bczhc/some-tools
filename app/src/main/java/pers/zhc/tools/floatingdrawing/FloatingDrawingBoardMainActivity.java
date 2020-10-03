@@ -220,7 +220,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     public static void setSelectedEditTextWithCurrentTimeMillisecond(EditText et) {
         @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        et.setText(String.format(et.getContext().getString(R.string.tv), format));
+        et.setText(String.format(et.getContext().getString(R.string.str), format));
         Selection.selectAll(et.getText());
     }
 
@@ -253,7 +253,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             final String savedOneKey = "internalPathFile";
             if (savedInstanceState.containsKey(savedOneKey)) {
                 String lastInternalPath = savedInstanceState.getString("internalPathFile");
-                ToastUtils.show(this, getString(R.string.tv, lastInternalPath));
+                ToastUtils.show(this, getString(R.string.str, lastInternalPath));
             }
         }
         new PermissionRequester(() -> {
@@ -663,7 +663,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         if (mediaProjectionManager != null && captureScreenResultData != null) {
             mediaProjection = mediaProjectionManager.getMediaProjection(RESULT_OK, captureScreenResultData);
         } else {
-            ToastUtils.show(this, R.string.acquire_service_failure);
+            ToastUtils.show(this, R.string.acquire_service_failed);
         }
     }
 
@@ -1111,10 +1111,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             editTexts[j].setHint(hintRes[j]);
                             linearLayout.addView(editTexts[j]);
                         }
-                        editTexts[0].setText(getString(R.string.tv, "0"));
-                        editTexts[1].setText(getString(R.string.tv, "0"));
-                        editTexts[2].setText(getString(R.string.tv, String.valueOf(imageBitmapWidth)));
-                        editTexts[3].setText(getString(R.string.tv, String.valueOf(imageBitmapHeight)));
+                        editTexts[0].setText(getString(R.string.str, "0"));
+                        editTexts[1].setText(getString(R.string.str, "0"));
+                        editTexts[2].setText(getString(R.string.str, String.valueOf(imageBitmapWidth)));
+                        editTexts[3].setText(getString(R.string.str, String.valueOf(imageBitmapHeight)));
                         linearLayout.addView(infoTV);
                         AlertDialog importImageOptionsDialog = importImageOptionsDialogBuilder.setView(linearLayout)
                                 .setTitle(R.string.set__top__left__scaled_width__scaled_height)
@@ -1390,7 +1390,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState.containsKey("internalPathFile")) {
             String lastInternalPath = savedInstanceState.getString("internalPathFile");
-            ToastUtils.show(this, getString(R.string.tv, lastInternalPath));
+            ToastUtils.show(this, getString(R.string.str, lastInternalPath));
         }
     }
 

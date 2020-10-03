@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
@@ -31,7 +30,6 @@ import java.util.Set;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.R;
-import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.MultipartUploader;
 
@@ -143,9 +141,9 @@ public class CrashReportActivity extends BaseActivity {
             } catch (IOException e) {
                 e.printStackTrace();
                 runOnUiThread(() -> {
-                    ToastUtils.showError(this, R.string.upload_failure, e);
+                    ToastUtils.showError(this, R.string.uploading_failure, e);
                     uploadStateTextView.setTextColor(Color.RED);
-                    uploadStateTextView.setText(R.string.upload_failure);
+                    uploadStateTextView.setText(R.string.uploading_failure);
                 });
             }
         }).start();

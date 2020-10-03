@@ -58,12 +58,12 @@ public class NoteTakingActivity extends Document {
                 textChanged = true;
             }
         };
-        content_et.setText(String.format(getString(R.string.tv), content));
-        title_et.setText(String.format(getString(R.string.tv), title));
+        content_et.setText(String.format(getString(R.string.str), content));
+        title_et.setText(String.format(getString(R.string.str), title));
         content_et.getEditText().addTextChangedListener(textWatcher);
         title_et.addTextChangedListener(textWatcher);
         insertBtn = findViewById(R.id.insert_record);
-        insertBtn.setText(String.format(getString(R.string.tv), bottom_btn_string));
+        insertBtn.setText(String.format(getString(R.string.str), bottom_btn_string));
         insertBtn.setOnClickListener(v -> {
             if (originCreate) {
                 ContentValues cv = new ContentValues();

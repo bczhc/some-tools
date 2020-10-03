@@ -119,7 +119,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
             AlertDialog.Builder ad = new AlertDialog.Builder(ctx);
             EditText et = new EditText(ctx);
             String s = pathView.getText().toString();
-            ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.tv, ("/storage/emulated/".equals(s) ? s + "0" : s))));
+            ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.str, ("/storage/emulated/".equals(s) ? s + "0" : s))));
             et.setSelection(et.getText().length());
             et.setLayoutParams(lp);
             AlertDialog alertDialog = ad.setTitle(R.string.type_path)
@@ -163,7 +163,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                 currentPathString = currentPath.getAbsolutePath();
             }
             String finalCurrentPathString = currentPathString;
-            ctx.runOnUiThread(() -> pathView.setText(ctx.getString(R.string.tv
+            ctx.runOnUiThread(() -> pathView.setText(ctx.getString(R.string.str
                     , result == null ? (finalCurrentPathString + ("/".equals(finalCurrentPathString) ? "" : File.separatorChar)) : result)));
             TextViewWithExtra[] textViews;
             int length = 0;
@@ -206,7 +206,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                                 File[] listFiles1 = getFileList(currentFile);
                                 fillViews(listFiles1);
                             }
-                            ctx.runOnUiThread(() -> pathView.setText(ctx.getString(R.string.tv
+                            ctx.runOnUiThread(() -> pathView.setText(ctx.getString(R.string.str
                                     , result == null ? (finalCurrentPathString + ("/".equals(finalCurrentPathString) ? "" : File.separatorChar)) : result)));
                         });
                         ctx.runOnUiThread(() -> ll.addView(textViews[finalI]));

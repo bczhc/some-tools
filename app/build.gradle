@@ -32,6 +32,12 @@ android {
         }
     }
     buildTypes {
+        debug {
+            //noinspection GroovyAssignabilityCheck
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles 'proguard-rules-debug.pro'
+        }
         release {
             //noinspection GroovyAssignabilityCheck
             minifyEnabled true
@@ -41,12 +47,6 @@ android {
             debuggable true
             jniDebuggable true
         }
-        /*debug {
-            //noinspection GroovyAssignabilityCheck
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles 'proguard-rules-debug.pro'
-        }*/
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

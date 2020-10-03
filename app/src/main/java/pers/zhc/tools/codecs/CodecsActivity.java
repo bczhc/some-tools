@@ -200,7 +200,7 @@ public class CodecsActivity extends BaseActivity {
             reset();
             try {
                 this.f = u.getCanonicalPath();
-                runOnUiThread(() -> this.mainTv.setText(String.format(getResources().getString(R.string.tv), this.f)));
+                runOnUiThread(() -> this.mainTv.setText(String.format(getResources().getString(R.string.str), this.f)));
             } catch (IOException e) {
                 showException(e, CodecsActivity.this);
                 reset();
@@ -209,7 +209,7 @@ public class CodecsActivity extends BaseActivity {
         } else {
             isFolder = true;
             this.folder = new File(s);
-            runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), s)));
+            runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.str), s)));
         }
     }
 
@@ -414,14 +414,14 @@ public class CodecsActivity extends BaseActivity {
                                 if (file.isFile()) {
                                     try {
                                         int finalI = i;
-                                        runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.tv), finalI + " of " + length + ": " + file.getName())));
+                                        runOnUiThread(() -> mainTv.setText(String.format(getResources().getString(R.string.str), finalI + " of " + length + ": " + file.getName())));
                                         String x = x(file, o == 1 ? this.dT : dT, this.savedConfig);
                                         if (x != null) {
                                             String fPath = file.getCanonicalPath();
                                             if (file.length() != 0L) {
                                                 int status = jniCall.jniDecode(fPath, x, o == 1 ? this.dT : dT, this.savedConfig, jniCallback);
                                                 if (status == -1) {
-                                                    runOnUiThread(() -> toast(R.string.fopen_error));
+                                                    runOnUiThread(() -> toast(R.string.file_open_error));
                                                 }
                                             }
                                         }
@@ -438,7 +438,7 @@ public class CodecsActivity extends BaseActivity {
                                 toast(o == 1 ? R.string.all_file_decoded_done : (dT == 21 ? R.string.all_file_encoded_done : R.string.all_file_decoded_done));
                                 allButtonsAction(o, buttons, VISIBLE);
                                 String folder = this.folder.toString();
-                                this.mainTv.setText(String.format(getString(R.string.tv), folder));
+                                this.mainTv.setText(String.format(getString(R.string.str), folder));
                                 this.folder = null;
                                 this.f = null;
                                 tv.setText(R.string.nul);
@@ -498,7 +498,7 @@ public class CodecsActivity extends BaseActivity {
                                     status = jniCall.jniDecode(f, finalDF, o == 1 ? this.dT : dT, savedConfig, jniCallback);
                                 }
                                 if (status == -1 || status == 255) {
-                                    runOnUiThread(() -> toast(R.string.fopen_error));
+                                    runOnUiThread(() -> toast(R.string.file_open_error));
                                 }
                                 if (status == 1) {
                                     runOnUiThread(() -> toast(R.string.native_error));
@@ -619,7 +619,7 @@ public class CodecsActivity extends BaseActivity {
             showException(e, ctx);
         }
         if (f == null) {
-            toast(R.string.get_config_file_failure);
+            toast(R.string.get_config_file_failed);
         }
         return f;
     }

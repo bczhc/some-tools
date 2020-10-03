@@ -1,5 +1,6 @@
 package pers.zhc.tools.diary;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,9 +18,13 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
 import org.jetbrains.annotations.NotNull;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ScrollEditText;
@@ -35,6 +40,7 @@ import java.util.TimerTask;
 /**
  * @author bczhc
  */
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class DiaryTakingActivity extends BaseActivity {
 
     private EditText et;
@@ -148,8 +154,8 @@ public class DiaryTakingActivity extends BaseActivity {
 
     private void recordTime() {
         final Date date = new Date();
-        final String time = new SimpleDateFormat("[HH:mm]").format(date);
-        et.setText(String.valueOf(et.getText()) + '\n' + time);
+        @SuppressLint("SimpleDateFormat") final String time = new SimpleDateFormat("[HH:mm]").format(date);
+        et.getText().insert(et.getSelectionStart(), getString(R.string.str, time));
     }
 
     private void initDB() {
