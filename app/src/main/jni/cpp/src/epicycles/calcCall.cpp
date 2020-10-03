@@ -29,16 +29,18 @@ private:
     }
 
     static int search(const double *arr, int length, double target) {
+        if (target < arr[0]) return 0;
         for (int i = 0; i < length - 1; ++i) {
-            if (target > arr[i] && target < arr[i + 1]) return i;
+            if (target > arr[i] && target < arr[i + 1]) return i + 1;
         }
         if (target > arr[length - 1]) return length - 1;
         return -1;
     }
 
     static Point linearMoveBetweenTwoPoints(Point p1, Point p2, double progress) {
-        Point p((float) (p1.x + (p2.x - p1.x * progress)),
-                (float) (p1.y + (p2.y - p1.y) * progress));
+        double s = progress / getPathLength(p1, p2);
+        Point p((float) (p1.x + (p2.x - p1.x) * s),
+                (float) (p1.y + (p2.y - p1.y) * s));
         return p;
     }
 
@@ -66,7 +68,8 @@ public:
         Point r = linearMoveBetweenTwoPoints(list.get(index),
                                              index == listLength - 1 ? list.get(0) : list.get(
                                                      index + 1),
-                                             mapToLength - sumLength[index]);
+                                             index == 0 ? mapToLength : (mapToLength -
+                                                                         sumLength[index - 1]));
         dest.re = r.x, dest.im = r.y;
     }
 };
@@ -95,14 +98,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
         list.insert(p);
     }
 
-    SequentialList<Point> testList;
-    Point a(0, 0);
-    testList.insert(a);
-    Point b(0, 10);
-    testList.insert(b);
-    Point c(10, 0);
-    testList.insert(c);
-    F f(testList, period);
+    F f(list, period);
 
     env->GetJavaVM(&globalJvm);
     globalCallback = env->NewGlobalRef(callback);
