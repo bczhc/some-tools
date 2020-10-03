@@ -251,4 +251,5 @@
     <string name="voice">语音</string>
     <string name="unsupported_tts">语音包丢失或语音不支持</string>
     <string name="deleted_xxx">已删除%1$s</string>
+    <string name="no_write_permission">没有写入权限</string>
 </resources>

@@ -1,23 +1,21 @@
 package pers.zhc.tools.crashhandler;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.widget.Button;
 import android.widget.TextView;
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.BuildConfig;
-import pers.zhc.tools.R;
-import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.u.common.MultipartUploader;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,16 +28,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.BuildConfig;
+import pers.zhc.tools.R;
+import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.u.common.MultipartUploader;
+
 /**
  * @author bczhc
  */
-public class CrashReportActivity extends Activity {
-    private final String TAG = this.getClass().getName();
+public class CrashReportActivity extends BaseActivity {
     private TextView uploadStateTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            ToastUtils.show(this, R.string.no_write_permission);
+        }
         final Intent intent = getIntent();
         setContentView(R.layout.uncaught_exception_report_activity);
         final String exception = intent.getStringExtra("exception");
@@ -58,24 +66,25 @@ public class CrashReportActivity extends Activity {
         });
         final String filename = intent.getStringExtra("filename");
         final Map<String, String> deviceInfo = collectDeviceInfo();
-        StringBuilder content = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         final Set<String> keySet = deviceInfo.keySet();
         for (String key : keySet) {
-            content.append(key).append(": ").append(deviceInfo.get(key)).append('\n');
+            sb.append(key).append(": ").append(deviceInfo.get(key)).append('\n');
         }
-        content.append(exception);
-        uploadReportButton.setOnClickListener(v -> upload(filename, content.toString()));
+        sb.append(exception);
+        String content = sb.toString();
+        uploadReportButton.setOnClickListener(v -> upload(filename, content));
         copyBtn.setOnClickListener(v -> {
             ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             if (cm != null) {
-                ClipData cd = ClipData.newPlainText("exception", exception);
+                ClipData cd = ClipData.newPlainText("exception", content);
                 cm.setPrimaryClip(cd);
                 ToastUtils.show(this, R.string.copying_success);
             }
             //for debugging
             System.err.println(exception);
         });
-        CrashHandler.save2File(this, filename, exception);
+        CrashHandler.save2File(this, filename, content);
     }
 
     private void killProcess() {

@@ -32,7 +32,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         Thread.setDefaultUncaughtExceptionHandler(new CrashHandler(context));
     }
 
-    static void save2File(Context ctx, String filename, String stackTraceString) {
+    static void save2File(Context ctx, String filename, String content) {
         final File crashDir = new File(Common.getExternalStoragePath(ctx), ctx.getString(R.string.some_tools_app)
                 + File.separatorChar + ctx.getString(R.string.crash));
         if (!crashDir.exists()) {
@@ -45,7 +45,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         try {
             os = new FileOutputStream(file, false);
             //noinspection CharsetObjectCanBeUsed
-            os.write(stackTraceString.getBytes("UTF-8"));
+            os.write(content.getBytes("UTF-8"));
             os.flush();
             os.close();
         } catch (IOException e) {
