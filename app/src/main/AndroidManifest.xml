@@ -63,7 +63,7 @@
 
         <activity
             android:name="pers.zhc.tools.MainActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -75,7 +75,7 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.filepicker.FilePicker"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -86,7 +86,7 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/FB_AppTheme">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.VIEW" />
@@ -97,12 +97,12 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.codecs.Settings"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:label="@string/settings"
             android:theme="@style/AppTheme" />
         <activity
             android:name="pers.zhc.tools.pi.Pi"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -113,7 +113,7 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.toast.ToastTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -124,7 +124,7 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.clipboard.Clip"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -135,7 +135,7 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.codecs.CodecsActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -147,7 +147,7 @@
         <activity android:name="pers.zhc.tools.BaseActivity" />
         <activity
             android:name="pers.zhc.tools.functiondrawing.FunctionDrawing"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -158,7 +158,7 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.document.Document"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:taskAffinity="pers.zhc.tools.document"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -170,7 +170,7 @@
         <activity
             android:name="pers.zhc.tools.document.NoteTakingActivity"
             android:launchMode="singleTask"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:taskAffinity="pers.zhc.tools.document"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -181,7 +181,7 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.functiondrawing.FunctionDrawingBoard"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppThemeNotTranslucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -191,7 +191,7 @@
         </activity>
         <activity
             android:name="pers.zhc.tools.epicycles.EpicyclesTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppThemeNotTranslucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -201,7 +201,7 @@
         </activity>
         <activity
             android:name=".epicycles.EpicyclesEdit"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -211,7 +211,7 @@
         </activity>
         <activity
             android:name=".epicycles.ComplexGraphDrawing"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppThemeNotTranslucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -221,7 +221,7 @@
         </activity>
         <activity
             android:name=".test.S"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -231,7 +231,7 @@
         </activity>
         <activity
             android:name=".test.viewtest.MainActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -241,7 +241,7 @@
         </activity>
         <activity
             android:name=".theme.SetTheme"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -251,7 +251,7 @@
         </activity>
         <activity
             android:name=".test.MathExpressionEvaluationTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -261,7 +261,7 @@
         </activity>
         <activity
             android:name=".test.SensorTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -271,7 +271,7 @@
         </activity>
         <activity
             android:name=".test.InputEvent"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -281,7 +281,7 @@
         </activity>
         <activity
             android:name=".test.SurfaceViewTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -291,7 +291,7 @@
         </activity>
         <activity
             android:name=".floatingdrawing.RequestCaptureScreenActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppThemeTranslucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -301,7 +301,7 @@
         </activity>
         <activity
             android:name=".test.service.ServiceActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -311,7 +311,7 @@
         </activity>
         <activity
             android:name=".youdaoapi.YouDaoTranslate"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -321,7 +321,7 @@
         </activity>
         <activity
             android:name=".crashhandler.CrashReportActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/BlackTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -331,7 +331,7 @@
         </activity>
         <activity
             android:name=".crashhandler.CrashTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -341,7 +341,7 @@
         </activity>
         <activity
             android:name=".malloctest.MAllocTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -351,7 +351,7 @@
         </activity>
         <activity
             android:name=".diary.DiaryMainActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:label="@string/diary"
             android:theme="@style/AppThemeWithBar">
             <intent-filter>
@@ -362,7 +362,7 @@
         </activity>
         <activity
             android:name=".diary.DiaryTakingActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:label="@string/diary"
             android:theme="@style/AppThemeWithBar">
             <intent-filter>
@@ -373,7 +373,7 @@
         </activity>
         <activity
             android:name=".pressuretest.PressureTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -383,7 +383,7 @@
         </activity>
         <activity
             android:name=".test.jni.Test"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -393,7 +393,7 @@
         </activity>
         <activity
             android:name=".test.DocumentProviderTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -403,7 +403,7 @@
         </activity>
         <activity
             android:name=".characterscounter.CounterTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -413,7 +413,7 @@
         </activity>
         <activity
             android:name=".typetest.TypeTest"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -423,7 +423,7 @@
         </activity>
         <activity
             android:name=".test.TTS"
-            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
