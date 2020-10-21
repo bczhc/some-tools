@@ -220,6 +220,7 @@
     <string name="create_shortcut_succeeded">创建快捷方式成功</string>
     <string name="create_shortcut_failed">创建快捷方式失败</string>
     <string name="whether_to_save_unsaved_content">是否保存尚未保存内容</string>
+    <string name="whether_to_import_note">导入操作将会覆盖当前已有笔记，是否继续？</string>
     <string name="password">密码</string>
     <string name="diary">日记</string>
     <string name="write_diary">写日记</string>
