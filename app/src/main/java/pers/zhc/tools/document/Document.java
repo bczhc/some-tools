@@ -117,12 +117,21 @@ public class Document extends BaseActivity {
                         Common.showException(e, this);
                         return;
                     }
+                       final AlertDialog confirmationAlertDialog = DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
+                    setSVViews();
+                       ToastUtils.show(this, R.string.importing_success);
+                    }, (dialog, which) -> {
+                        ToastUtils.show(this, R.string.importing_canceled);
+                    }, R.string.whether_to_import_notes
+   
+                    , ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+                    
                     if (file.exists()) {
-                        ToastUtils.show(this, R.string.importing_success);
+                        confirmationAlertDialog.show();
                     } else {
                         ToastUtils.show(this, R.string.copying_failure);
                     }
-                    setSVViews();
+                 
                 }
                 break;
             case RequestCode.START_ACTIVITY_3:
