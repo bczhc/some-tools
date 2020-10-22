@@ -79,6 +79,7 @@
     <string name="import_">导入</string>
     <string name="importing_success">导入成功</string>
     <string name="exporting_success">导出成功</string>
+    <string name="importing_canceled">导入取消</string>
     <string name="drawing_board">画板</string>
     <string name="copying_failure">复制失败</string>
     <string name="whether_to_delete">是否删除</string>
