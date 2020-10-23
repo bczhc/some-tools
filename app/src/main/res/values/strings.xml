@@ -238,7 +238,7 @@
     <string name="pressure_test">压力测试</string>
     <string name="type_importing_sleep_time">调节导入延时毫秒数：</string>
     <string name="zero">0</string>
-    <string name="_100_ms">100ms</string>
+    <string name="_1000_ms">1000ms</string>
     <string name="characters_count_tv">%1$d字</string>
     <string name="document_provider_test">document provider test</string>
     <string name="characters_counter_test">character counter test</string>
