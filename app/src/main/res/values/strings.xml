@@ -79,6 +79,7 @@
     <string name="import_">导入</string>
     <string name="importing_success">导入成功</string>
     <string name="exporting_success">导出成功</string>
+    <string name="importing_canceled">导入取消</string>
     <string name="drawing_board">画板</string>
     <string name="copying_failure">复制失败</string>
     <string name="whether_to_delete">是否删除</string>
@@ -220,6 +221,8 @@
     <string name="create_shortcut_succeeded">创建快捷方式成功</string>
     <string name="create_shortcut_failed">创建快捷方式失败</string>
     <string name="whether_to_save_unsaved_content">是否保存尚未保存内容</string>
+    <string name="whether_to_import_notes">导入操作将会覆盖当前已有笔记，是否继续？</string>
+    <string name="filename_duplication">当前目录下已有同名文件，继续将覆盖</string>
     <string name="password">密码</string>
     <string name="diary">日记</string>
     <string name="write_diary">写日记</string>
@@ -236,7 +239,7 @@
     <string name="pressure_test">压力测试</string>
     <string name="type_importing_sleep_time">调节导入延时毫秒数：</string>
     <string name="zero">0</string>
-    <string name="_1000_ms">1000ms</string>
+    <string name="_100_ms">100ms</string>
     <string name="characters_count_tv">%1$d字</string>
     <string name="document_provider_test">document provider test</string>
     <string name="characters_counter_test">character counter test</string>

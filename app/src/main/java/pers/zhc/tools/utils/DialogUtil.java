@@ -69,12 +69,12 @@ public class DialogUtil {
     }
 
     public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(EditText editText, Dialog ad) {
-        editText.setFocusable(true);
-        editText.setFocusableInTouchMode(true);
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         ad.setOnShowListener(dialog -> imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0));
         ad.setOnDismissListener(dialog -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0));
         editText.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
     }
 
     public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback, DialogInterface.OnClickListener negativeAction){
