@@ -120,8 +120,7 @@ public class Document extends BaseActivity {
                         Common.showException(e, this);
                         return;
                     }
-
-                    final AlertDialog confirmationAlertDialog = DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
+                       final AlertDialog confirmationAlertDialog = DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
                     setSVViews();
                        ToastUtils.show(this, R.string.importing_success);
                     }, (dialog, which) -> {
@@ -139,7 +138,6 @@ public class Document extends BaseActivity {
                     } else {
                         ToastUtils.show(this, R.string.copying_failure);
                     }
-                    
                 }
                 break;
             case RequestCode.START_ACTIVITY_3:

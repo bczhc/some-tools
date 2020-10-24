@@ -1302,7 +1302,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         progressSB.setProgress(parseInt);
                         if(parseInt<0)
                         {
-                            parseInt=0;
+                        parseInt=0;
                         }
                         speedDelayMillis.set(parseInt);
                     }
