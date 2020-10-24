@@ -1,0 +1,36 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5sp"
+>
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/type_file_name"
+        android:textSize="18sp"
+        android:layout_marginLeft="12sp"
+        android:layout_marginTop="15sp"
+        android:textStyle="bold"
+        android:id="@+id/export_notesTextview1"/>
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/filename_duplication"
+        android:textColor="#FF0000"
+        android:textSize="12sp"
+        android:layout_marginTop="12sp"
+        android:layout_marginBottom="-5sp"
+        android:layout_below="@+id/export_notesTextview1"
+        android:id="@+id/export_notesTextview2"
+    />
+    <EditText
+        android:layout_width="match_parent" 
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/export_notesTextview2"
+        android:id="@+id/filename"
+        android:selectAllOnFocus="true"
+    />
+</RelativeLayout>

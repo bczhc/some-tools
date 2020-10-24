@@ -58,10 +58,10 @@ android {
         abortOnError false
         return true
     }
-    ndkVersion '21.3.6528147'
+    ndkVersion '21.0.6113669'
     externalNativeBuild {
         cmake {
-            version "3.10.2"
+            version "3.17.2"
             path file('src/main/jni/cpp/CMakeLists.txt')
         }
     }

@@ -14,7 +14,7 @@
     <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="1000"
+            android:max="100"
             android:id="@+id/type_importing_sleep_time"
             android:layout_toRightOf="@id/tv_left"
             android:layout_toLeftOf="@id/tv_right"
@@ -24,7 +24,7 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/_1000_ms"
+            android:text="@string/_100_ms"
             android:id="@+id/tv_right"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
