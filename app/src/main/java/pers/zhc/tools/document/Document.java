@@ -127,9 +127,9 @@ public class Document extends BaseActivity {
                     , ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
                     
                     if (file.exists()) {
-                       if(((LinearLayout)sv.getChildAt(0)).getChildCount() != 0){
+                       if(((LinearLayout) sv.getChildAt(0)).getChildCount() != 0) {
                         confirmationAlertDialog.show();
-                        } else{
+                        } else {
                             setSVViews();
                             ToastUtils.show(this, R.string.importing_success);
                         }
