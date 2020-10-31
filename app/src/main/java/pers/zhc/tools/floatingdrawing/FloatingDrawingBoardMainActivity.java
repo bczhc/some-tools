@@ -1300,6 +1300,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         } catch (NumberFormatException ignored) {
                         }
                         progressSB.setProgress(parseInt);
+                        if(parseInt<0)
+                        {
+                        parseInt=0;
+                        }
                         speedDelayMillis.set(parseInt);
                     }
                 });

@@ -25,6 +25,7 @@ import pers.zhc.tools.utils.DisplayUtil;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.utils.ViewWithExtras;
 import pers.zhc.u.FileU;
+import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import android.text.TextWatcher;
+import android.text.Editable;
 
 /**
  * @author bczhc
@@ -117,30 +120,78 @@ public class Document extends BaseActivity {
                         Common.showException(e, this);
                         return;
                     }
+                       final AlertDialog confirmationAlertDialog = DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
+                    setSVViews();
+                       ToastUtils.show(this, R.string.importing_success);
+                    }, (dialog, which) -> {
+                        ToastUtils.show(this, R.string.importing_canceled);
+                    }, R.string.whether_to_import_notes
+   
+                    , ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
                     if (file.exists()) {
-                        ToastUtils.show(this, R.string.importing_success);
+                        if(((LinearLayout) sv.getChildAt(0)).getChildCount() != 0) {
+                        confirmationAlertDialog.show();
+                        } else {
+                            setSVViews();
+                            ToastUtils.show(this, R.string.importing_success);
+                        }
                     } else {
                         ToastUtils.show(this, R.string.copying_failure);
                     }
-                    setSVViews();
                 }
                 break;
             case RequestCode.START_ACTIVITY_3:
                 if (data != null) {
-                    String destFileDir = data.getStringExtra("result");
+                    final String destFileDir = data.getStringExtra("result");
                     String dbPath = db.getPath();
                     File file = new File(dbPath);
-                    String dbName = file.getName();
-                    try {
-                        File destFile = new File(destFileDir + File.separator + dbName);
-                        FileU.FileCopy(file, destFile);
-                        if (destFile.exists()) {
-                            ToastUtils.show(this, getString(R.string.exporting_success) + "\n" + destFile.getCanonicalPath());
-                        }
-                    } catch (IOException e) {
-                        Common.showException(e, this);
+                    AlertDialog.Builder adb=new AlertDialog.Builder(this);
+                    View inflate = View.inflate(this, R.layout.export_notes, null);
+                    final EditText filename=inflate.findViewById(R.id.filename);
+                    filename.setText("doc");
+                    final TextView tv=inflate.findViewById(R.id.export_notesTextview2);
+                    if(!(new File(destFileDir + File.separator + "doc.db")).exists())
+                    {
+                        tv.setVisibility(tv.INVISIBLE);
                     }
-                }
+                    filename.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            if((new File(destFileDir + File.separator + filename.getText()+".db")).exists())
+                            {
+                                tv.setVisibility(tv.VISIBLE);
+                                } else {
+                                    tv.setVisibility(tv.INVISIBLE);
+                                    }
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                            }
+                        });
+                    adb.setView(inflate);
+                    adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                        try {
+                            File destFile = new File(destFileDir + File.separator + filename.getText()+".db");
+                            FileU.FileCopy(file, destFile);
+                            if (destFile.exists()) {
+                                ToastUtils.show(this, getString(R.string.exporting_success) + "\n" + destFile.getCanonicalPath());
+                            }
+                        } catch (IOException e) {
+                            Common.showException(e, this);
+                        }
+                    } ).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        
+                    });
+                    Dialog ad=adb.create();
+                    setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT
+                                  , ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    ad.show();
+                  }
                 break;
             default:
                 break;
@@ -258,29 +309,29 @@ public class Document extends BaseActivity {
     SQLiteDatabase getDB(Activity ctx) {
         /*DocDB db = new DocDB(ctx, "a", null, 1);
         return db.getWritableDatabase();*/
-        SQLiteDatabase database = null;
-        File dbPath = Common.getInternalDatabaseDir(this);
-        if (!dbPath.exists()) {
-            System.out.println("dbPath.mkdirs() = " + dbPath.mkdirs());
-        }
-        try {
-            dbFile = new File(dbPath.getPath() + File.separator + "doc.db");
-            database = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
-            database.execSQL("CREATE TABLE IF NOT EXISTS doc(\n" +
-                    "    t long,\n" +
-                    "    title text not null,\n" +
-                    "    content text not null\n" +
-                    ");");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Common.showException(e, ctx);
-        }
-        if (database != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                database.disableWriteAheadLogging();
+            SQLiteDatabase database = null;
+            File dbPath = Common.getInternalDatabaseDir(this);
+            if (!dbPath.exists()) {
+                System.out.println("dbPath.mkdirs() = " + dbPath.mkdirs());
             }
-        }
-        return database;
+            try {
+                dbFile = new File(dbPath.getPath() + File.separator + "doc.db");
+                database = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
+                database.execSQL("CREATE TABLE IF NOT EXISTS doc(\n" +
+                                 "    t long,\n" +
+                                 "    title text not null,\n" +
+                                 "    content text not null\n" +
+                                 ");");
+            } catch (Exception e) {
+                e.printStackTrace();
+                Common.showException(e, ctx);
+            }
+            if (database != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    database.disableWriteAheadLogging();
+                }
+            }
+            return database;
     }
 
     @Override
