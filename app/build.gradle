@@ -60,6 +60,14 @@ android {
         abortOnError false
         return true
     }
+
+    try {
+        println(000)
+        ndkVersion = MyPlugin1.getNdkVersion()
+    } catch (def ignored) {
+        println("Android ndk version not found, set to 21.3.6528147.")
+        ndkVersion = "21.3.6528147"
+    }
     externalNativeBuild {
         cmake {
             path file('src/main/jni/cpp/CMakeLists.txt')

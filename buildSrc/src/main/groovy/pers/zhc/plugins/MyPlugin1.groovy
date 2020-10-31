@@ -31,7 +31,6 @@ class MyPlugin1 implements Plugin<Project> {
         return sb.toString()
     }
 
-
     static gVersion() {
         def date = Date.newInstance()
         def dateString = new SimpleDateFormat("yyyyMMdd").format(date)
@@ -57,5 +56,25 @@ class MyPlugin1 implements Plugin<Project> {
             hex[i] = ran_sc(emojiRange[index][0], emojiRange[index][1])
         }
         return unicodeHexToString(hex as int[])
+    }
+
+    static getNdkVersion() {
+        def versionString = null;
+        def ndkHome = System.getenv("ANDROID_NDK_HOME")
+        if (ndkHome == null) throw new Exception("null environment variable \"ANDROID_NDK_HOME\"")
+        def sourcePropertiesFile = new File(ndkHome + File.separator + "source.properties")
+        def is = new FileInputStream(sourcePropertiesFile)
+        def isr = new InputStreamReader(is)
+        def br = new BufferedReader(isr)
+        def lines = br.readLines()
+        for (String line : lines) {
+            if (line.matches(".*Pkg.Revision.*")) {
+                versionString =  line.split(" = ")[1]
+            }
+        }
+        br.close()
+        is.close()
+        println(versionString)
+        return versionString
     }
 }
