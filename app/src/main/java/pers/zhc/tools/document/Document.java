@@ -36,6 +36,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import android.text.TextWatcher;
 import android.text.Editable;
+import pers.zhc.u.common.Color;
+import android.text.style.ClickableSpan;
+import java.util.ArrayList;
+import java.nio.LongBuffer;
 
 /**
  * @author bczhc
@@ -44,6 +48,7 @@ public class Document extends BaseActivity {
     private ScrollView sv;
     private SQLiteDatabase db;
     private File dbFile = null;
+    private String state="normal";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +64,7 @@ public class Document extends BaseActivity {
         });
         Button deleteBtn = findViewById(R.id.delete_btn);
         deleteBtn.setOnClickListener(v -> {
-            AlertDialog.Builder adb = new AlertDialog.Builder(this);
+           /* AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
             adb.setTitle(R.string.database_delete_info)
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
@@ -84,7 +89,22 @@ public class Document extends BaseActivity {
                     .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     })
                     .setView(et)
-                    .show();
+                    .show();*/
+                    if(state == "del")
+                    {
+                        try{
+                            for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+                               if( ((TextView) (((LinearLayout) ((LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i)).getChildAt(0))).getChildAt(0)).getCurrentTextColor()==0xFF0000)
+                        db.delete("doc", "id=?", new String[]{String.valueOf(时间戳)});
+                        }
+                    } catch (Exception e) {
+                        Common.showException(e, this);
+                    }
+                    state = "normal";
+                    }
+                    else {
+                    state = "del";
+                    }
         });
         sv = findViewById(R.id.sv);
         importBtn.setOnClickListener(v -> {
@@ -224,6 +244,12 @@ public class Document extends BaseActivity {
                         long millisecond = cursor.getLong(0);
                         ll.extra = millisecond;
                         ll.a.setOnClickListener(v -> {
+                            if(state == "del"){
+                ll.a.setBackground(getDrawable(R.drawable.view_stroke_red));
+                for (int i = 0; i < ll.a.getChildCount(); i++) {
+               ((TextView) ((LinearLayout) ll.a.getChildAt(i)).getChildAt(0)).setTextColor(0xFFFF0000);
+                }
+                } else {
                             Dialog dialog = new Dialog(this);
                             LinearLayout linearLayout1 = new LinearLayout(this);
                             linearLayout1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -273,6 +299,7 @@ public class Document extends BaseActivity {
                             dialog.setContentView(linearLayout1);
                             dialog.setCanceledOnTouchOutside(true);
                             dialog.show();
+                            }
                         });
                         Date date = new Date(millisecond);
                         String formatDate = SimpleDateFormat.getDateTimeInstance().format(date);
