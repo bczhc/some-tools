@@ -67,7 +67,7 @@ android {
     } catch (def e) {
         e.printStackTrace()
         println("Android ndk version not found, set to 21.3.6528147.")
-        ndkVersion = "21.3.6528147"
+        ndkVersion = "21.0.6113669"
     }
     externalNativeBuild {
         cmake {
