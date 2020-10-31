@@ -23,6 +23,12 @@ jobs:
         run: |
           echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager
           ${ANDROID_HOME}/ndk-bundle/ndk-build --version
+      - name: jacoco
+        run: |
+          ./gradlew build jacocoTestReport
+          ./gradlew connectedCheck
+          CODECOV_TOKEN="2830c249-be2e-485b-90a0-8fd5e36a1b30"
+          bash <(curl -s https://codecov.io/bash)
       - name: build app
         run: ./gradlew build;./gradlew assembleDebug
       - name: upload apk
