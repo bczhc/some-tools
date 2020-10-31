@@ -74,7 +74,7 @@ class MyPlugin1 implements Plugin<Project> {
         }
         br.close()
         is.close()
-        println(versionString)
+        println("Android ndk version: $versionString")
         return versionString
     }
 }

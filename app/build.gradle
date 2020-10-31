@@ -39,6 +39,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles 'proguard-rules-debug.pro'
+            testCoverageEnabled true
         }
         release {
             //noinspection GroovyAssignabilityCheck
@@ -62,9 +63,9 @@ android {
     }
 
     try {
-        println(000)
         ndkVersion = MyPlugin1.getNdkVersion()
-    } catch (def ignored) {
+    } catch (def e) {
+        e.printStackTrace()
         println("Android ndk version not found, set to 21.3.6528147.")
         ndkVersion = "21.3.6528147"
     }
@@ -72,10 +73,6 @@ android {
         cmake {
             path file('src/main/jni/cpp/CMakeLists.txt')
         }
-    }
-    productFlavors {
-        free {}
-        paid {}
     }
     return true
 }
@@ -87,6 +84,7 @@ jacoco {
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
+
 
 
 dependencies {

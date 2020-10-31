@@ -94,8 +94,10 @@ public class Document extends BaseActivity {
                     {
                         try{
                             for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
-                               if( ((TextView) (((LinearLayout) ((LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i)).getChildAt(0))).getChildAt(0)).getCurrentTextColor()==0xFF0000)
-                        db.delete("doc", "id=?", new String[]{String.valueOf(时间戳)});
+                               if( ((TextView) (((LinearLayout) ((LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i)).getChildAt(0))).getChildAt(0)).getCurrentTextColor()==0xFF0000) {
+                                   //TODO delete record
+//                                   db.delete("doc", "id=?", new String[]{String.valueOf(时间戳)});
+                               }
                         }
                     } catch (Exception e) {
                         Common.showException(e, this);
