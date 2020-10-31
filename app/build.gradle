@@ -20,11 +20,11 @@ android {
             keyAlias 'key0'
         }
     }
-    compileSdkVersion 30
+    compileSdkVersion 29
     defaultConfig {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
-        targetSdkVersion 30
+        targetSdkVersion 29
         def verInfo = MyPlugin1.gVersion()
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
