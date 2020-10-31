@@ -1,6 +1,8 @@
 some-tools
 ----------------
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/931b7e3905cc49448a14cebf432a6396)](https://app.codacy.com/gh/bczhc/some-tools?utm_source=github.com&utm_medium=referral&utm_content=bczhc/some-tools&utm_campaign=Badge_Grade)
+
 ![Android CI](https://github.com/bczhc/some-tools/workflows/Android%20CI/badge.svg)
 
 ![](https://img.shields.io/github/stars/bczhc/some-tools?style=flat-square)
