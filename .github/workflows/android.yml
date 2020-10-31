@@ -22,7 +22,7 @@ jobs:
       - name: setup NDK
         run: |
           echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager
-          ${ANDROID_HOME}/ndk-bundle/ndk-build --version
+          ANDROID_NDK_HOME=${ANDROID_HOME}/ndk-bundle
       - name: jacoco
         run: |
           ./gradlew build jacocoTestReport
