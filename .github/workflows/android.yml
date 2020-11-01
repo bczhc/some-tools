@@ -25,6 +25,8 @@ jobs:
           echo "export ANDROID_NDK_HOME=${ANDROID_HOME}/ndk-bundle" >> ~/.profile
       - name: jacoco
         run: |
+          sudo apt remove cmake -y
+          sodo apt-get install cmake=3.17.2 -y
           source ~/.profile
           ./gradlew build jacocoTestReport
           ./gradlew connectedCheck
