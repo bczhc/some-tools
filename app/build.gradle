@@ -66,11 +66,12 @@ android {
         ndkVersion = MyPlugin1.getNdkVersion()
     } catch (def e) {
         e.printStackTrace()
-        println("Android ndk version not found, set to 21.3.6528147.")
         ndkVersion = "21.0.6113669"
+        println("Android ndk version not found, set to ${ndkVersion}.")
     }
     externalNativeBuild {
         cmake {
+            version "3.17.2"
             path file('src/main/jni/cpp/CMakeLists.txt')
         }
     }

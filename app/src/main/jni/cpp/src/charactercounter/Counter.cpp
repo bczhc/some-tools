@@ -1,7 +1,8 @@
 //
 // Created by root on 2020/8/25.
 //
-
+/*
+TODO
 #include "../jni_h/pers_zhc_tools_jni_JNI_CharactersCounter.h"
 #include "../../third_party/my-cpp-lib/zhc.h"
 #include "../../third_party/my-cpp-lib/CountCharacters.h"
@@ -40,3 +41,4 @@ JNIEXPORT jstring JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_get
     jstring r = env->NewStringUTF(j->dump().c_str());
     return r;
 }
+*/
