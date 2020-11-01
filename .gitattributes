@@ -1,1 +1,2 @@
-*.* linguist-detectable
+*.groovy linguist-detectable
+*.kt linguist-detectable
