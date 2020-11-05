@@ -8,7 +8,7 @@ buildscript {
         maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath fileTree(include: ['*.jar'], dir: 'buildSrc/libs')
         //noinspection GradleDependency
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72"
