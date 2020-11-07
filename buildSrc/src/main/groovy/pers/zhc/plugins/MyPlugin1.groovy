@@ -4,6 +4,8 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 import java.text.SimpleDateFormat
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 /**
  * @author bczhc
@@ -58,23 +60,47 @@ class MyPlugin1 implements Plugin<Project> {
         return unicodeHexToString(hex as int[])
     }
 
-    static getNdkVersion() {
-        def versionString = null;
-        def ndkHome = System.getenv("ANDROID_NDK_HOME")
-        if (ndkHome == null) throw new Exception("null environment variable \"ANDROID_NDK_HOME\"")
-        def sourcePropertiesFile = new File(ndkHome + File.separator + "source.properties")
-        def is = new FileInputStream(sourcePropertiesFile)
-        def isr = new InputStreamReader(is)
-        def br = new BufferedReader(isr)
-        def lines = br.readLines()
-        for (String line : lines) {
-            if (line.matches(".*Pkg.Revision.*")) {
-                versionString =  line.split(" = ")[1]
-            }
+    static class Tools {
+        private def ndkDir, sdkDir
+
+        Tools(ndkDir, sdkDir) {
+            this.ndkDir = ndkDir
+            this.sdkDir = sdkDir
         }
-        br.close()
-        is.close()
-        println("Android ndk version: $versionString")
-        return versionString
+
+        synchronized getCMakeVersion() {
+            def versionString = null
+            try {
+                def cmakeDir = new File(this.sdkDir as String, "cmake")
+                def realCMakeRoot = new File(cmakeDir, cmakeDir.list()[0])
+                def sourcePropertiesFile = new File(realCMakeRoot, "source.properties")
+                versionString = getVersionStringFromPropertiesFile(sourcePropertiesFile)
+            } catch (def ignored) {
+                ignored.printStackTrace()
+            }
+            return versionString
+        }
+
+        synchronized getVersionStringFromPropertiesFile(File sourcePropertiesFile) {
+            def versionString = null
+            def is = new FileInputStream(sourcePropertiesFile)
+            def isr = new InputStreamReader(is)
+            def br = new BufferedReader(isr)
+            def lines = br.readLines()
+            for (String line : lines) {
+                Matcher matcher = Pattern.compile("(?<=Pkg\\.Revision ?= ?).*").matcher(line)
+                if (matcher.find()) {
+                    versionString = matcher.group(0)
+                }
+            }
+            br.close()
+            is.close()
+            return versionString
+        }
+
+        synchronized getNdkVersion() {
+            def sourcePropertiesFile = new File(ndkDir as String, "source.properties")
+            return getVersionStringFromPropertiesFile(sourcePropertiesFile)
+        }
     }
 }

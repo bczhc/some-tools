@@ -61,18 +61,14 @@ android {
         abortOnError false
         return true
     }
-
-    try {
-        ndkVersion = MyPlugin1.getNdkVersion()
-    } catch (def e) {
-        e.printStackTrace()
-        ndkVersion = "21.0.6113669"
-        println("Android ndk version not found, set to ${ndkVersion}.")
-    }
+    def tools = MyPlugin1.Tools.newInstance([android.ndkDirectory, android.sdkDirectory] as Object[])
+    ndkVersion = tools.getNdkVersion()
+    println("Ndk Version: ${ndkVersion}")
     externalNativeBuild {
         cmake {
-            version "3.17.2"
-            path file('src/main/jni/cpp/CMakeLists.txt')
+            version tools.getCMakeVersion()
+            println("CMake Version: ${getVersion()}")
+            setPath(file('src/main/jni/cpp/CMakeLists.txt'))
         }
     }
     return true
@@ -85,7 +81,6 @@ jacoco {
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
-
 
 
 dependencies {

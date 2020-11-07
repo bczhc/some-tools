@@ -1,4 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.10.2)
+project(jni)
 
 add_library(sqlite3 STATIC third_party/my-cpp-lib/third_party/sqlite3-single-c/sqlite3.c)
 add_library(myLib STATIC
