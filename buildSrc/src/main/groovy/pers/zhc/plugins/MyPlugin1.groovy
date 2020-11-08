@@ -89,7 +89,7 @@ class MyPlugin1 implements Plugin<Project> {
             def versions = []
             def versionString = null
             try {
-                def cmakeDir = new File("/home/zhc/bin/AndroidSdk", "cmake")
+                def cmakeDir = new File(this.sdkDir as String, "cmake")
                 def subDirs = cmakeDir.listFiles()
                 subDirs.each { def subDir ->
                     def matcher = Pattern.compile("[0-9]+").matcher(subDir.name)
