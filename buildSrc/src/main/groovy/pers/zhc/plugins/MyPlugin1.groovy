@@ -68,17 +68,64 @@ class MyPlugin1 implements Plugin<Project> {
             this.sdkDir = sdkDir
         }
 
+        private static class Version {
+            private int major, minor, build
+            private File dir
+
+            Version(int major, int minor, int build, File dir) {
+                this.major = major
+                this.minor = minor
+                this.build = build
+                this.dir = dir
+            }
+
+            @Override
+            String toString() {
+                return dir.name
+            }
+        }
+
         synchronized getCMakeVersion() {
+            def versions = []
             def versionString = null
             try {
-                def cmakeDir = new File(this.sdkDir as String, "cmake")
-                def realCMakeRoot = new File(cmakeDir, cmakeDir.list()[0])
+                def cmakeDir = new File("/home/zhc/bin/AndroidSdk", "cmake")
+                def subDirs = cmakeDir.listFiles()
+                subDirs.each { def subDir ->
+                    def matcher = Pattern.compile("[0-9]+").matcher(subDir.name)
+
+                    if (!matcher.find()) throw new Exception("can't resolve version")
+                    def major = matcher.group(0) as int
+
+                    if (!matcher.find()) throw new Exception("can't resolve version")
+                    def minor = matcher.group(0) as int
+
+                    if (!matcher.find()) throw new Exception("can't resolve version")
+                    def build = matcher.group(0) as int
+
+                    def version = new Version(major, minor, build, subDir)
+                    versions.add(version)
+                }
+                versions.sort { def o1, o2 ->
+                    Version a = o1 as Version
+                    Version b = o2 as Version
+                    if (a.major == b.major) {
+                        if (a.minor == b.minor) {
+                            return a.build - b.build
+                        }
+                        return a.minor - b.minor
+                    }
+                    return a.major - b.major
+                }
+
+                def realCMakeRoot = (versions[versions.size() - 1] as Version).dir
                 def sourcePropertiesFile = new File(realCMakeRoot, "source.properties")
                 versionString = getVersionStringFromPropertiesFile(sourcePropertiesFile)
             } catch (def ignored) {
                 ignored.printStackTrace()
             }
             return versionString
+
         }
 
         synchronized getVersionStringFromPropertiesFile(File sourcePropertiesFile) {
