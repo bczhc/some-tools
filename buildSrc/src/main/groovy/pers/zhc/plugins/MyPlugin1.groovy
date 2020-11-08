@@ -88,37 +88,42 @@ class MyPlugin1 implements Plugin<Project> {
         synchronized getCMakeVersion() {
             def versions = []
             def versionString = null
+            def realCMakeRoot
+            def cmakeDir = new File(this.sdkDir as String, "cmake")
             try {
-                def cmakeDir = new File(this.sdkDir as String, "cmake")
                 def subDirs = cmakeDir.listFiles()
-                subDirs.each { def subDir ->
-                    def matcher = Pattern.compile("[0-9]+").matcher(subDir.name)
+                try {
+                    subDirs.each { def subDir ->
+                        def matcher = Pattern.compile("[0-9]+").matcher(subDir.name)
 
-                    if (!matcher.find()) throw new Exception("can't resolve version")
-                    def major = matcher.group(0) as int
+                        if (!matcher.find()) throw new Exception("can't resolve version")
+                        def major = matcher.group(0) as int
 
-                    if (!matcher.find()) throw new Exception("can't resolve version")
-                    def minor = matcher.group(0) as int
+                        if (!matcher.find()) throw new Exception("can't resolve version")
+                        def minor = matcher.group(0) as int
 
-                    if (!matcher.find()) throw new Exception("can't resolve version")
-                    def build = matcher.group(0) as int
+                        if (!matcher.find()) throw new Exception("can't resolve version")
+                        def build = matcher.group(0) as int
 
-                    def version = new Version(major, minor, build, subDir)
-                    versions.add(version)
-                }
-                versions.sort { def o1, o2 ->
-                    Version a = o1 as Version
-                    Version b = o2 as Version
-                    if (a.major == b.major) {
-                        if (a.minor == b.minor) {
-                            return a.build - b.build
-                        }
-                        return a.minor - b.minor
+                        def version = new Version(major, minor, build, subDir)
+                        versions.add(version)
                     }
-                    return a.major - b.major
+                    versions.sort { def o1, o2 ->
+                        Version a = o1 as Version
+                        Version b = o2 as Version
+                        if (a.major == b.major) {
+                            if (a.minor == b.minor) {
+                                return a.build - b.build
+                            }
+                            return a.minor - b.minor
+                        }
+                        return a.major - b.major
+                    }
+                    realCMakeRoot = (versions[versions.size() - 1] as Version).dir
+                } catch (def ignored) {
+                    realCMakeRoot = cmakeDir.listFiles()[0]
                 }
 
-                def realCMakeRoot = (versions[versions.size() - 1] as Version).dir
                 def sourcePropertiesFile = new File(realCMakeRoot, "source.properties")
                 versionString = getVersionStringFromPropertiesFile(sourcePropertiesFile)
             } catch (def ignored) {
