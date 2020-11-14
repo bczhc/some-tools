@@ -3,6 +3,7 @@ package pers.zhc.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -85,52 +86,69 @@ class MyPlugin1 implements Plugin<Project> {
             }
         }
 
-        synchronized getCMakeVersion() {
-            def versions = []
-            def versionString = null
-            def realCMakeRoot
-            def cmakeDir = new File(this.sdkDir as String, "cmake")
-            try {
-                def subDirs = cmakeDir.listFiles()
-                try {
-                    subDirs.each { def subDir ->
-                        def matcher = Pattern.compile("[0-9]+").matcher(subDir.name)
-
-                        if (!matcher.find()) throw new Exception("can't resolve version")
-                        def major = matcher.group(0) as int
-
-                        if (!matcher.find()) throw new Exception("can't resolve version")
-                        def minor = matcher.group(0) as int
-
-                        if (!matcher.find()) throw new Exception("can't resolve version")
-                        def build = matcher.group(0) as int
-
-                        def version = new Version(major, minor, build, subDir)
-                        versions.add(version)
-                    }
-                    versions.sort { def o1, o2 ->
-                        Version a = o1 as Version
-                        Version b = o2 as Version
-                        if (a.major == b.major) {
-                            if (a.minor == b.minor) {
-                                return a.build - b.build
-                            }
-                            return a.minor - b.minor
-                        }
-                        return a.major - b.major
-                    }
-                    realCMakeRoot = (versions[versions.size() - 1] as Version).dir
-                } catch (def ignored) {
-                    realCMakeRoot = cmakeDir.listFiles()[0]
+        synchronized getCmakeVersionFromExecutable(String binDirPath) {
+            def dir = new File(binDirPath)
+            def executablePath = binDirPath + File.separatorChar + dir.list(new FilenameFilter() {
+                @Override
+                boolean accept(File d, String name) {
+                    return name.matches("^cmake.*")
                 }
+            })[0]
 
-                def sourcePropertiesFile = new File(realCMakeRoot, "source.properties")
-                versionString = getVersionStringFromPropertiesFile(sourcePropertiesFile)
-            } catch (def ignored) {
-                ignored.printStackTrace()
+            def runtime = Runtime.getRuntime()
+            def is = runtime.exec([executablePath, "--version"] as String[]).inputStream
+            def read = ReadIS.readToString(is, StandardCharsets.UTF_8)
+            is.close()
+            def matcher = Pattern.compile("(?<=cmake version )[0-9]+\\.[0-9]+\\.[0-9]").matcher(read)
+            matcher.find()
+            return matcher.group(0)
+        }
+
+        synchronized getCMakeVersion() {
+            def cmakeDir = new File(this.sdkDir as String, "cmake")
+
+            def binDirPath = (cmakeDir.path + File.separatorChar + "bin") as String
+            if (new File(binDirPath).exists()) {
+                return getCmakeVersionFromExecutable(binDirPath)
             }
-            return versionString
 
+            def versions = []
+            def realCMakeRoot
+            def subDirs = cmakeDir.listFiles()
+            try {
+                subDirs.each { def subDir ->
+                    def matcher = Pattern.compile("[0-9]+").matcher(subDir.name)
+
+                    if (!matcher.find()) throw new Exception("can't resolve version")
+                    def major = matcher.group(0) as int
+
+                    if (!matcher.find()) throw new Exception("can't resolve version")
+                    def minor = matcher.group(0) as int
+
+                    if (!matcher.find()) throw new Exception("can't resolve version")
+                    def build = matcher.group(0) as int
+
+                    def version = new Version(major, minor, build, subDir)
+                    versions.add(version)
+                }
+                versions.sort { def o1, o2 ->
+                    Version a = o1 as Version
+                    Version b = o2 as Version
+                    if (a.major == b.major) {
+                        if (a.minor == b.minor) {
+                            return a.build - b.build
+                        }
+                        return a.minor - b.minor
+                    }
+                    return a.major - b.major
+                }
+                realCMakeRoot = (versions[versions.size() - 1] as Version).dir
+            } catch (def ignored) {
+                realCMakeRoot = cmakeDir.listFiles()[0]
+            }
+
+            def sourcePropertiesFile = new File(realCMakeRoot, "source.properties")
+            return getVersionStringFromPropertiesFile(sourcePropertiesFile)
         }
 
         synchronized getVersionStringFromPropertiesFile(File sourcePropertiesFile) {
