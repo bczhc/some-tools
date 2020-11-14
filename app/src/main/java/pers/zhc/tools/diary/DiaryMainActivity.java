@@ -446,13 +446,15 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    public void finish() {
         try {
-            diaryDatabase.close();
+            if (diaryDatabase != null) {
+                diaryDatabase.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Common.showException(e, this);
         }
-        super.onDestroy();
+        super.finish();
     }
 }
