@@ -36,6 +36,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import android.text.TextWatcher;
 import android.text.Editable;
+import android.widget.RelativeLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.CheckBox;
 
 /**
  * @author bczhc
@@ -45,6 +49,8 @@ public class Document extends BaseActivity {
     private SQLiteDatabase db;
     private File dbFile = null;
     private String state="normal";
+    private int chooseNum=0;
+    private RelativeLayout topView;
 
     private static class LinearLayoutWithTimestamp extends LinearLayout {
 
@@ -77,16 +83,74 @@ public class Document extends BaseActivity {
                                 if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
                                    //TODO delete record
                                    db.delete("doc", "t=?", new String[]{String.valueOf(((LinearLayoutWithTimestamp) childLL).timestamp)});
-                                    setSVViews();
+                                   ToastUtils.show(this,"已删除"+String.valueOf(chooseNum)+"条笔记");
                                    }
                         }
+                        setSVViews();
+                        topView=findViewById(R.id.note_top_view);      
+                        topView.removeAllViews();
                     } catch (Exception e) {
                         Common.showException(e, this);
                     }
+                    View inflate = View.inflate(this, R.layout.note_top_view, null);
+                    topView=findViewById(R.id.note_top_view);
+                    topView.removeView(inflate);
                     state = "normal";
                     }
                     else {
                     state = "del";
+                    chooseNum=0;
+                    View inflate = View.inflate(this, R.layout.note_top_view, null);  
+                    topView=findViewById(R.id.note_top_view);
+                    topView.addView(inflate);
+                    ImageView close= findViewById(R.id.cancel_deletion);
+                    close.setOnClickListener(v1 ->{
+                        topView=findViewById(R.id.note_top_view);
+                        topView.removeAllViews();
+                        state="normal";
+                        for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+                            LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {  
+                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                                for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
+                                    ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
+                                }
+
+                            }
+                        }     
+                    });
+                    final CheckBox chooseAll=findViewById(R.id.choose_all);
+                        chooseAll.setOnClickListener(v2 -> {
+                            //使用setOnClickListener以防止setChecked触发setOnCheckedChangeListener
+                                    TextView ttv=topView.findViewById(R.id.top_tv);
+                                    if(chooseAll.isChecked())
+                                    {
+                                        for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+                                            LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFF808080) {  
+                                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                                                for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
+                                                    ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFFFF0000);
+                                                }                    
+                                            }
+                                        } 
+                                        chooseNum=((LinearLayout) sv.getChildAt(0)).getChildCount();
+                                        ttv.setText("已选择 "+String.valueOf(chooseNum)+" 项");
+                                        
+                                    } else {
+                                        for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+                                            LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {  
+                                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                                                for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
+                                                    ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
+                                                }                    
+                                            }
+                                        } 
+                                        chooseNum=0;
+                                        ttv.setText("未选择笔记");
+                                        }   
+                            });
                     ToastUtils.show(this,R.string.note_deletion_tip);
                     }
         });
@@ -229,10 +293,14 @@ public class Document extends BaseActivity {
                         llWithTimestamp.timestamp = millisecond;
                         LinearLayoutWithTimestamp finalLlWithTimestamp = llWithTimestamp;
                         llWithTimestamp.setOnClickListener(v -> {
+                        topView=findViewById(R.id.note_top_view);
+                        TextView ttv=topView.findViewById(R.id.top_tv);
                             if(state.equals("del")){
                 if(((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(0)).getChildAt(0)).getCurrentTextColor() != 0xFFFF0000)
                 {
                 finalLlWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke_red));
+                chooseNum++;
+                ttv.setText("已选择 "+String.valueOf(chooseNum)+" 项");
                 for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
                ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFFFF0000);
                 }
@@ -240,6 +308,17 @@ public class Document extends BaseActivity {
                 else
                 {
                 finalLlWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke));
+                chooseNum--;
+                CheckBox chooseAll=findViewById(R.id.choose_all);
+                if(chooseAll.isChecked())
+                {
+                    chooseAll.setChecked(false);
+                }
+                if(chooseNum == 0){
+                ttv.setText("未选择笔记");
+                } else {
+                ttv.setText("已选择 "+String.valueOf(chooseNum)+" 项");
+                }
                 for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
                 ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFF808080);
                 }
@@ -326,6 +405,7 @@ public class Document extends BaseActivity {
         runOnUiThread(() -> {
             smallLL.addView(tv);
             tv.setTextSize(15F);
+            tv.setTextColor(0xFF808080);
             ll.addView(smallLL);
         });
     }
@@ -362,6 +442,8 @@ public class Document extends BaseActivity {
     public void onBackPressed() {
         if(state.equals("del"))
         {
+            topView=findViewById(R.id.note_top_view);
+            topView.removeAllViews();
             state="normal";
             for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
                 LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
@@ -369,8 +451,7 @@ public class Document extends BaseActivity {
                     childLL.setBackground(getDrawable(R.drawable.view_stroke));
                     for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
                         ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
-                    }
-                    
+                    }                    
                     }
                } 
         }

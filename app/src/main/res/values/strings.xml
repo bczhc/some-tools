@@ -214,6 +214,7 @@
     <string name="crash_title">程序崩溃了…</string>
     <string name="opacity">不透明度</string>
     <string name="note_deletion_tip">点击以选择要删除的笔记</string>
+    <string name="no_notes_were_selected">未选择笔记</string>
     <string name="allocate">分配</string>
     <string name="allocating">正在分配</string>
     <string name="alloc_done">分配完成</string>
