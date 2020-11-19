@@ -110,7 +110,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
     public:
         void callback(double n, double re, double im) override {
             JNIEnv *env = nullptr;
-            globalJvm->AttachCurrentThread((void **) &env, nullptr);
+            globalJvm->AttachCurrentThread(&env, nullptr);
 
             jclass callbackClass = env->GetObjectClass(globalCallback);
             jmethodID callbackMId = env->GetMethodID(callbackClass, "callback", "(DDD)V");
