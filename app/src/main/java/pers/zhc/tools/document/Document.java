@@ -148,7 +148,7 @@ public class Document extends BaseActivity {
                                             }
                                         } 
                                         chooseNum=0;
-                                        ttv.setText("未选择笔记");
+                                        ttv.setText(R.string.no_notes_were_selected);
                                         }   
                             });
                     ToastUtils.show(this,R.string.note_deletion_tip);
@@ -315,7 +315,7 @@ public class Document extends BaseActivity {
                     chooseAll.setChecked(false);
                 }
                 if(chooseNum == 0){
-                ttv.setText("未选择笔记");
+                ttv.setText(R.string.no_notes_were_selected);
                 } else {
                 ttv.setText("已选择 "+String.valueOf(chooseNum)+" 项");
                 }
