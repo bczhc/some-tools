@@ -83,7 +83,7 @@ public class Document extends BaseActivity {
                                 if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
                                    //TODO delete record
                                    db.delete("doc", "t=?", new String[]{String.valueOf(((LinearLayoutWithTimestamp) childLL).timestamp)});
-                                   ToastUtils.show(this,"已删除"+String.valueOf(chooseNum)+"条笔记");
+                                   ToastUtils.show(this,getString(R.string.deleted_notes,chooseNum));
                                    }
                         }
                         setSVViews();
@@ -135,7 +135,7 @@ public class Document extends BaseActivity {
                                             }
                                         } 
                                         chooseNum=((LinearLayout) sv.getChildAt(0)).getChildCount();
-                                        ttv.setText("已选择 "+String.valueOf(chooseNum)+" 项");
+                                        ttv.setText(getString(R.string.selected_notes,chooseNum));
                                         
                                     } else {
                                         for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
@@ -300,7 +300,7 @@ public class Document extends BaseActivity {
                 {
                 finalLlWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke_red));
                 chooseNum++;
-                ttv.setText("已选择 "+String.valueOf(chooseNum)+" 项");
+                ttv.setText(getString(R.string.selected_notes,chooseNum));
                 for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
                ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFFFF0000);
                 }
@@ -317,7 +317,7 @@ public class Document extends BaseActivity {
                 if(chooseNum == 0){
                 ttv.setText(R.string.no_notes_were_selected);
                 } else {
-                ttv.setText("已选择 "+String.valueOf(chooseNum)+" 项");
+                ttv.setText(getString(R.string.selected_notes,chooseNum));
                 }
                 for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
                 ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFF808080);
