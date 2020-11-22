@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import androidx.annotation.NonNull;
@@ -47,17 +46,20 @@ public class DiaryMainActivity extends BaseActivity {
     private String[] week;
 
     static MySQLite3 getDiaryDatabase(Context ctx) {
-        MySQLite3 database;
-        try {
-            database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-        } catch (Exception ignored) {
-            Log.d(MySQLite3.class.getName(), String.valueOf(Common.getInternalDatabaseDir(ctx, "diary.db").delete()));
-            database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-        }
-        database.exec("CREATE TABLE IF NOT EXISTS diary(\n" +
+        String createTableSql = "CREATE TABLE IF NOT EXISTS diary(\n" +
                 "    date INTEGER,\n" +
                 "    content TEXT NOT NULL\n" +
-                ")");
+                ")";
+        MySQLite3 database;
+        database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
+        try {
+            database.exec(createTableSql);
+        } catch (Exception ignored) {
+            System.out.println(Common.getInternalDatabaseDir(ctx, "diary.db").delete());
+            database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
+            database.exec(createTableSql);
+            ToastUtils.show(ctx, R.string.corrupted_database_and_recreate_new);
+        }
         return database;
     }
 

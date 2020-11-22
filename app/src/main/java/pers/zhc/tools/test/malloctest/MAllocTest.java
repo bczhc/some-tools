@@ -1,4 +1,4 @@
-package pers.zhc.tools.malloctest;
+package pers.zhc.tools.test.malloctest;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;

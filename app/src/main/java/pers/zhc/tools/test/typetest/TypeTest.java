@@ -1,4 +1,4 @@
-package pers.zhc.tools.typetest;
+package pers.zhc.tools.test.typetest;
 
 import android.os.Bundle;
 import android.text.Editable;

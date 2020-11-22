@@ -6,6 +6,7 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
+import java.util.regex.Pattern;
 
 import pers.zhc.tools.characterscounter.CounterTest;
 import pers.zhc.tools.clipboard.Clip;
@@ -33,22 +35,17 @@ import pers.zhc.tools.document.Document;
 import pers.zhc.tools.epicycles.EpicyclesEdit;
 import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
-import pers.zhc.tools.malloctest.MAllocTest;
+import pers.zhc.tools.test.*;
+import pers.zhc.tools.test.malloctest.MAllocTest;
 import pers.zhc.tools.pi.Pi;
-import pers.zhc.tools.pressuretest.PressureTest;
-import pers.zhc.tools.test.DocumentProviderTest;
-import pers.zhc.tools.test.InputEvent;
-import pers.zhc.tools.test.MathExpressionEvaluationTest;
-import pers.zhc.tools.test.SensorTest;
-import pers.zhc.tools.test.SurfaceViewTest;
-import pers.zhc.tools.test.TTS;
+import pers.zhc.tools.test.pressuretest.PressureTest;
 import pers.zhc.tools.test.jni.Test;
 import pers.zhc.tools.test.service.ServiceActivity;
-import pers.zhc.tools.theme.SetTheme;
-import pers.zhc.tools.toast.ToastTest;
-import pers.zhc.tools.typetest.TypeTest;
+import pers.zhc.tools.test.theme.SetTheme;
+import pers.zhc.tools.test.toast.ToastTest;
+import pers.zhc.tools.test.typetest.TypeTest;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.youdaoapi.YouDaoTranslate;
+import pers.zhc.tools.test.youdaoapi.YouDaoTranslate;
 import pers.zhc.u.common.ReadIS;
 
 /**
@@ -147,7 +144,8 @@ public class MainActivity extends BaseActivity {
                 R.string.document_provider_test,
                 R.string.characters_counter_test,
                 R.string.type_test,
-                R.string.tts_test
+                R.string.tts_test,
+                R.string.regular_expression_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -174,7 +172,8 @@ public class MainActivity extends BaseActivity {
                 DocumentProviderTest.class,
                 CounterTest.class,
                 TypeTest.class,
-                TTS.class
+                TTS.class,
+                RegExpTest.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

@@ -1,4 +1,4 @@
-package pers.zhc.tools.youdaoapi;
+package pers.zhc.tools.test.youdaoapi;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;

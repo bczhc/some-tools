@@ -34,7 +34,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".broadcast.BroadcastTest"
+            android:name=".test.broadcast.BroadcastTest"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -112,7 +112,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="pers.zhc.tools.toast.ToastTest"
+            android:name=".test.toast.ToastTest"
             android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -240,7 +240,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".theme.SetTheme"
+            android:name=".test.theme.SetTheme"
             android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -310,7 +310,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".youdaoapi.YouDaoTranslate"
+            android:name=".test.youdaoapi.YouDaoTranslate"
             android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -340,7 +340,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".malloctest.MAllocTest"
+            android:name=".test.malloctest.MAllocTest"
             android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -372,7 +372,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".pressuretest.PressureTest"
+            android:name=".test.pressuretest.PressureTest"
             android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -412,7 +412,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".typetest.TypeTest"
+            android:name=".test.typetest.TypeTest"
             android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -429,6 +429,16 @@
                 <action android:name="android.intent.action.VIEW" />
 
                 <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".test.RegExpTest"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
     </application>
