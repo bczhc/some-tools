@@ -3,7 +3,13 @@
 //
 
 #include "Base128Lib.h"
+#include "../../third_party/my-cpp-lib/String.h"
+#include "../../third_party/my-cpp-lib/File.h"
+
 using namespace bczhc;
+using namespace string;
+using namespace file;
+
 #include "./codecsDo.h"
 #include "qmcLib.h"
 
@@ -92,7 +98,7 @@ int eD(const char *fN, const char *D_fN, JNIEnv *env, jobject callback) {
         Callback(env, callback, "fopen error. ", -1);
         return (jint) EOF;
     }
-    dl fS = getFileSize(fp), a = fS / ERS;
+    dl fS = File::getFileSize(fp), a = fS / ERS;
     dl per = fS / 10290;
     int b = (int) (fS % ERS);
     char r[ERS] = {0};
@@ -129,7 +135,7 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject callback) {
         Callback(env, callback, "fopen error. ", -1);
         return EOF;
     }
-    dl fS = getFileSize(fp) - 8, a = fS / DRS;
+    dl fS = File::getFileSize(fp) - 8, a = fS / DRS;
     dl per = fS / 11760;
     int b = fS % DRS;
     char r[DRS] = {0};
@@ -173,16 +179,16 @@ int dD(const char *fN, const char *D_fN, JNIEnv *env, jobject callback) {
 
 void NewFileName(char **Dest, const char *filePath) {
     int x = 2;
-    while (1) {
-        char *xS = NULL;
-//        itoa(x, xS, 10);
-        m_itoa(&xS, x);
-        strcpyAndCat_auto(Dest, filePath, -1, "", -1, false);
-        strcpyAndCat_auto(Dest, *Dest, -1, " (", -1, true);
-        strcpyAndCat_auto(Dest, *Dest, -1, xS, -1, true);
-        strcpyAndCat_auto(Dest, *Dest, -1, ")", -1, true);
+    while (true) {
+        String xS;
+        xS = String::toString(x);
+        xS.append(filePath)
+                .append(" (")
+                .append(xS)
+                .append(")");
+        *Dest = (char *) malloc((size_t) (xS.size() + 1));
+        strcpy(*Dest, xS.getCString());
         if (access(*Dest, F_OK) == EOF) break;
         ++x;
-        free(xS);
     }
 }

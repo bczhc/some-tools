@@ -4,7 +4,6 @@
 /*
 TODO
 #include "../jni_h/pers_zhc_tools_jni_JNI_CharactersCounter.h"
-#include "../../third_party/my-cpp-lib/zhc.h"
 #include "../../third_party/my-cpp-lib/CountCharacters.h"
 
 using namespace bczhc;

@@ -2,7 +2,9 @@
 // Created by root on 19-7-3.
 //
 #include "codecsDo.h"
+#include "../../third_party/my-cpp-lib/File.h"
 using namespace bczhc;
+using namespace file;
 
 #define dl int64_t
 
@@ -54,7 +56,7 @@ int decode(const char *filename, const char *destFileName, JNIEnv *env, jobject 
     if ((fp = fopen(filename, "rb")) == NULL) return -1;
     if ((fpO = fopen(destFileName, "wb")) == NULL) return -1;
     char c[1024] = {0};
-    dl fL = getFileSize(fp), a = fL / 1024;
+    dl fL = bczhc::file::File::getFileSize(fp), a = fL / 1024;
     if (!fL)
         return 0;
     uint32_t p = fL / 20480;

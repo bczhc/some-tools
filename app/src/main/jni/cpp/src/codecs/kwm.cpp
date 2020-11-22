@@ -4,7 +4,10 @@
 
 #include <jni.h>
 #include "./codecsDo.h"
+#include "../../third_party/my-cpp-lib/File.h"
+
 using namespace bczhc;
+using namespace file;
 
 #define dl int64_t
 #define usi uint32_t
@@ -12,9 +15,36 @@ using namespace bczhc;
 
 #define MAX_FIND_KEY_TIME 468
 
+int cmpCharArray(const char *a1, const int a1Len, const char *a2,
+                 const int a2Len) {
+    if (a1Len != a2Len)
+        return 0;
+    else {
+        for (int i = 0; i < a1Len; ++i) {
+            if (a1[i] != a2[i])
+                return 0;
+        }
+    }
+    return 1;
+}
+
+#ifndef ARR_len
+#define ARR_len(x) sizeof(x) / sizeof(x)[0]
+#endif // ARR_len
+
+void PrintArr(const char arr[], int len) {
+    int l_ = len - 1;
+    printf("[");
+    for (int i = 0; i < l_; ++i) {
+        printf("%i%c", (int) arr[i], 44);
+    }
+    printf("%i]___%u", (int) arr[l_ - 1], (l_ + 1));
+}
+
 int kwm(JNIEnv *env, const char *fN, const char *dFN, jobject callback) {
     int haveFoundKey = 0;
     FILE *fp = NULL, *fpO = NULL;
+
     if ((fp = fopen(fN, "rb")) == NULL) {
         printf("fopen error.");
         return -1;
@@ -24,7 +54,7 @@ int kwm(JNIEnv *env, const char *fN, const char *dFN, jobject callback) {
         return -1;
     }
     char key[32] = {0}, old_key[32] = {0};
-    dl fS = getFileSize(fp), a = fS / 1024;
+    dl fS = File::getFileSize(fp), a = fS / 1024;
     usi b = (usi) fS % 1024;
     fseek(fp, 1024L, SEEK_SET);
     usi p = fS / 20480;
