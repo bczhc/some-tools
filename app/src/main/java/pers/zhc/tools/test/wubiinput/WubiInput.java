@@ -1,5 +1,6 @@
-package pers.zhc.tools.wubiinput;
+package pers.zhc.tools.test.wubiinput;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,19 +29,7 @@ public class WubiInput extends BaseActivity {
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        File dictFile = null;
-        try {
-            InputStream dictIS = getResources().openRawResource(R.raw.wubi_dict);
-            dictFile = Common.getInternalDatabaseDir(this, "wubi_dict.db");
-            FileOutputStream fos = new FileOutputStream(dictFile);
-            FileU.StreamWrite(dictIS, fos);
-            fos.close();
-            dictIS.close();
-        } catch (IOException e) {
-            Common.showException(e, this);
-        }
-        dictDB = MySQLite3.open(dictFile.getPath());
-        dictDB.exec("BEGIN");
+        dictDB = getWubiDictDatabase(this);
         setContentView(R.layout.wubi_input_activity);
         TextView candidateTV = findViewById(R.id.candidate);
         EditText wubiCodeET = findViewById(R.id.code);
@@ -83,7 +72,7 @@ public class WubiInput extends BaseActivity {
                     }
                 }
                 candidates = new ArrayList<>();
-                dictDB.exec("SELECT char FROM wubi_dict WHERE code is '" + s + "' ORDER BY num DESC", contents -> {
+                WubiInput.this.dictDB.exec("SELECT char FROM wubi_dict WHERE code is '" + s + "' ORDER BY num DESC", contents -> {
                     String candidate = contents[0];
                     candidates.add(candidate);
                     return 0;
@@ -101,6 +90,23 @@ public class WubiInput extends BaseActivity {
             }
         });
         wubiCodeET.addTextChangedListener(textWatcher.get());
+    }
+
+    public static MySQLite3 getWubiDictDatabase(Context ctx) {
+        File dictFile = null;
+        try {
+            InputStream dictIS = ctx.getResources().openRawResource(R.raw.wubi_dict);
+            dictFile = Common.getInternalDatabaseDir(ctx, "wubi_dict.db");
+            FileOutputStream fos = new FileOutputStream(dictFile);
+            FileU.StreamWrite(dictIS, fos);
+            fos.close();
+            dictIS.close();
+        } catch (IOException e) {
+            Common.showException(e, ctx);
+        }
+        MySQLite3 dictDB = MySQLite3.open(dictFile.getPath());
+        dictDB.exec("BEGIN");
+        return dictDB;
     }
 
     @Override

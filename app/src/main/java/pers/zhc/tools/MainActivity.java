@@ -6,7 +6,6 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
-import java.util.regex.Pattern;
 
 import pers.zhc.tools.characterscounter.CounterTest;
 import pers.zhc.tools.clipboard.Clip;
@@ -44,9 +42,9 @@ import pers.zhc.tools.test.service.ServiceActivity;
 import pers.zhc.tools.test.theme.SetTheme;
 import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
+import pers.zhc.tools.test.wubiinput.WubiInput;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.test.youdaoapi.YouDaoTranslate;
-import pers.zhc.tools.wubiinput.WubiInput;
 import pers.zhc.u.common.ReadIS;
 
 /**

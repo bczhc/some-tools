@@ -52,7 +52,7 @@
             android:process=":service"
             tools:ignore="ExportedService" />
         <!-- Declares the input method service -->
-        <service android:name=".inputmethod.MyIME"
+        <service android:name=".inputmethod.WubiInputMethod"
                  android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
@@ -450,7 +450,7 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity><activity
-                android:name=".wubiinput.WubiInput"
+                android:name=".test.wubiinput.WubiInput"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/AppTheme">
             <intent-filter>
