@@ -46,6 +46,7 @@ import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.test.youdaoapi.YouDaoTranslate;
+import pers.zhc.tools.wubiinput.WubiInput;
 import pers.zhc.u.common.ReadIS;
 
 /**
@@ -145,7 +146,8 @@ public class MainActivity extends BaseActivity {
                 R.string.characters_counter_test,
                 R.string.type_test,
                 R.string.tts_test,
-                R.string.regular_expression_test
+                R.string.regular_expression_test,
+                R.string.wubi_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -173,7 +175,8 @@ public class MainActivity extends BaseActivity {
                 CounterTest.class,
                 TypeTest.class,
                 TTS.class,
-                RegExpTest.class
+                RegExpTest.class,
+                WubiInput.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

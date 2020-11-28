@@ -51,6 +51,15 @@
             android:label="s1"
             android:process=":service"
             tools:ignore="ExportedService" />
+        <!-- Declares the input method service -->
+        <service android:name=".inputmethod.MyIME"
+                 android:permission="android.permission.BIND_INPUT_METHOD">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data android:name="android.view.im"
+                       android:resource="@xml/method" />
+        </service>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="pers.zhc.tools.fileprovider"
@@ -433,6 +442,15 @@
         </activity>
         <activity
                 android:name=".test.RegExpTest"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity><activity
+                android:name=".wubiinput.WubiInput"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/AppTheme">
             <intent-filter>
