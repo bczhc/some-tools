@@ -268,4 +268,5 @@
     <string name="corrupted_database_and_recreate_new">数据库损坏，已重新创建新的数据库</string>
     <string name="wubi_test">五笔测试</string>
     <string name="something_went_wrong">something went wrong</string>
+    <string name="alphabet_mode">字母模式</string>
 </resources>

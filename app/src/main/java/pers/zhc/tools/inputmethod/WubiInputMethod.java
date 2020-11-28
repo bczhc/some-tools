@@ -10,13 +10,13 @@ import pers.zhc.tools.test.wubiinput.WubiInput;
 import pers.zhc.tools.utils.sqlite.MySQLite3;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class WubiInputMethod extends InputMethodService {
     private final StringBuilder wubiCodeSB = new StringBuilder();
     private MySQLite3 wubiDictDB = null;
     private TextView candidateTV, wubiCodeTV;
+    private boolean isAlphabetsMode = false;
 
     @Override
     public View onCreateInputView() {
@@ -42,6 +42,14 @@ public class WubiInputMethod extends InputMethodService {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+            isAlphabetsMode = !isAlphabetsMode;
+        }
+        if (isAlphabetsMode) {
+            candidateTV.setText(R.string.alphabet_mode);
+            return false;
+        } else candidateTV.setText(R.string.nul);
+
         InputConnection ic = getCurrentInputConnection();
 
         boolean accept = checkAcceptedKeyCodeRange(keyCode);
@@ -56,6 +64,10 @@ public class WubiInputMethod extends InputMethodService {
             }
             switch (keyCode) {
                 case KeyEvent.KEYCODE_SPACE:
+                    if (wubiCodeSB.length() == 0) {
+                        ic.commitText(" ", 0);
+                        break;
+                    }
                     commitTheFirstCandidate(ic);
                     candidates.clear();
                     clearWubiCodeSB();
@@ -82,6 +94,12 @@ public class WubiInputMethod extends InputMethodService {
                     break;
             }
             refresh();
+            if (wubiCodeSB.length() == 4 && candidates.size() == 1) {
+                commitTheFirstCandidate(ic);
+                candidates.clear();
+                clearWubiCodeSB();
+                setTVs(getString(R.string.nul));
+            }
         }
         return accept;
     }
@@ -98,9 +116,30 @@ public class WubiInputMethod extends InputMethodService {
     private void refresh() {
         String wubiCodeStr = wubiCodeSB.toString();
         setCandidatesField(wubiCodeStr);
-        String candidatesString = Arrays.toString(candidates.toArray());
+        setTVs(wubiCodeStr);
+    }
+
+    private void setTVs(String wubiCodeStr) {
+        String candidatesString = arrays2String(candidates.toArray());
         candidateTV.setText(candidatesString);
         wubiCodeTV.setText(wubiCodeStr);
+    }
+
+    private String arrays2String(Object[] a) {
+        if (a == null)
+            return "null";
+
+        int iMax = a.length - 1;
+        if (iMax == -1)
+            return "";
+
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; ; i++) {
+            b.append(a[i]);
+            if (i == iMax)
+                return b.toString();
+            b.append(", ");
+        }
     }
 
     private void setCandidatesField(String wubiCodeStr) {
