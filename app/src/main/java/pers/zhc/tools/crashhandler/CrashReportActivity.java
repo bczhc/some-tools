@@ -29,6 +29,7 @@ import java.util.Set;
 
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BuildConfig;
+import pers.zhc.tools.Infos;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.MultipartUploader;
@@ -58,7 +59,7 @@ public class CrashReportActivity extends BaseActivity {
         restartButton.setOnClickListener(v -> {
             Intent launchIntent = new Intent();
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .setClass(this, BaseActivity.Infos.LAUNCHER_CLASS);
+                    .setClass(this, Infos.LAUNCHER_CLASS);
             startActivity(launchIntent);
             killProcess();
         });
@@ -132,7 +133,7 @@ public class CrashReportActivity extends BaseActivity {
         byte[] finalBytes = bytes;
         new Thread(() -> {
             try {
-                final String crashUploadSite = BaseActivity.Infos.ZHC_URL_STRING + "/tools_app/crash_report.zhc";
+                final String crashUploadSite = Infos.ZHC_URL_STRING + "/tools_app/crash_report.zhc";
                 MultipartUploader.formUpload(crashUploadSite, finalBytes, finalContentBytes);
                 runOnUiThread(() -> {
                     uploadStateTextView.setTextColor(ContextCompat.getColor(this, R.color.done_green));

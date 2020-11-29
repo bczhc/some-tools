@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,11 +25,7 @@ import pers.zhc.tools.utils.ExternalJNI;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.u.common.ReadIS;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Stack;
@@ -212,7 +209,7 @@ public class BaseActivity extends Activity {
      *                   而对于其他配置的更改，则系统会onDestroy()当前Activity，然后重启一个新的Activity实例。
      */
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // 检测屏幕的方向：纵向或横向
         if (this.getResources().getConfiguration().orientation
@@ -258,18 +255,11 @@ public class BaseActivity extends Activity {
         void onCheckForUpdateResult(boolean update);
     }
 
-    public static class Infos {
-        public static final String ZHC_URL_STRING = "http://bczhc.free.idcfengye.com";
-        public static final String ZHC_STATIC_WEB_URL_STRING = "http://bczhc.gitee.io/web";
-        public static final Class<?> LAUNCHER_CLASS = MainActivity.class;
-    }
-
     public static class RequestCode {
         public static final int START_ACTIVITY_0 = 0;
         public static final int START_ACTIVITY_1 = 1;
         public static final int START_ACTIVITY_2 = 2;
         public static final int START_ACTIVITY_3 = 3;
-        @SuppressWarnings("unused")
         public static final int START_ACTIVITY_4 = 4;
         public static final int REQUEST_PERMISSION_INTERNET = 5;
         public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 6;

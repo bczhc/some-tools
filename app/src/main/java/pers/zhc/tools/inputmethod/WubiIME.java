@@ -10,9 +10,10 @@ import pers.zhc.tools.test.wubiinput.WubiInput;
 import pers.zhc.tools.utils.sqlite.MySQLite3;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class WubiInputMethod extends InputMethodService {
+public class WubiIME extends InputMethodService {
     private final StringBuilder wubiCodeSB = new StringBuilder();
     private MySQLite3 wubiDictDB = null;
     private TextView candidateTV, wubiCodeTV;
@@ -39,25 +40,17 @@ public class WubiInputMethod extends InputMethodService {
     }
 
     private final List<String> candidates = new ArrayList<>();
+    private boolean switchTypingMode = true;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-            isAlphabetsMode = !isAlphabetsMode;
-        }
-        if (isAlphabetsMode) {
-            candidateTV.setText(R.string.alphabet_mode);
-            return false;
-        } else candidateTV.setText(R.string.nul);
-
+        switchTypingMode = keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT;
+        if (isAlphabetsMode) return false;
         InputConnection ic = getCurrentInputConnection();
 
         boolean accept = checkAcceptedKeyCodeRange(keyCode);
         if (accept) {
-            if (wubiCodeSB.length() == 4
-                    && keyCode != KeyEvent.KEYCODE_COMMA
-                    && keyCode != KeyEvent.KEYCODE_PERIOD
-                    && keyCode != KeyEvent.KEYCODE_DEL) {
+            if (wubiCodeSB.length() == 4 && (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z)) {
                 commitTheFirstCandidate(ic);
                 clearWubiCodeSB();
                 candidates.clear();
@@ -104,6 +97,19 @@ public class WubiInputMethod extends InputMethodService {
         return accept;
     }
 
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+            if (switchTypingMode) {
+                isAlphabetsMode = !isAlphabetsMode;
+            }
+            if (isAlphabetsMode) {
+                candidateTV.setText(R.string.alphabet_mode);
+            } else candidateTV.setText(R.string.nul);
+        }
+        return checkAcceptedKeyCodeRange(keyCode);
+    }
+
     private void commitTheFirstCandidate(InputConnection ic) {
         if (candidates.size() != 0)
             ic.commitText(candidates.get(0), 0);
@@ -144,15 +150,13 @@ public class WubiInputMethod extends InputMethodService {
 
     private void setCandidatesField(String wubiCodeStr) {
         candidates.clear();
-        wubiDictDB.exec("SELECT char FROM wubi_dict WHERE code IS '" + wubiCodeStr + "' ORDER BY num DESC", contents -> {
-            String candidate = contents[0];
-            candidates.add(candidate);
+        if (wubiCodeStr.isEmpty()) return;
+        //TODO 输一个码会索引再次的bug
+        wubiDictDB.exec(String.format("SELECT word FROM wubi_code_%s WHERE code IS '%s'"
+                , wubiCodeStr.charAt(0), wubiCodeStr), contents -> {
+            String[] split = contents[0].split("\\|");
+            candidates.addAll(Arrays.asList(split));
             return 0;
         });
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        return checkAcceptedKeyCodeRange(keyCode);
     }
 }

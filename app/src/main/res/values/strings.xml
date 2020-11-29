@@ -269,4 +269,6 @@
     <string name="wubi_test">五笔测试</string>
     <string name="something_went_wrong">something went wrong</string>
     <string name="alphabet_mode">字母模式</string>
+    <string name="wubi_input_method">五笔输入法</string>
+    <string name="checking_local_needed_files">检查本地所需文件中</string>
 </resources>

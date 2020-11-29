@@ -93,18 +93,7 @@ public class WubiInput extends BaseActivity {
     }
 
     public static MySQLite3 getWubiDictDatabase(Context ctx) {
-        File dictFile = null;
-        try {
-            InputStream dictIS = ctx.getResources().openRawResource(R.raw.wubi_dict);
-            dictFile = Common.getInternalDatabaseDir(ctx, "wubi_dict.db");
-            FileOutputStream fos = new FileOutputStream(dictFile);
-            FileU.StreamWrite(dictIS, fos);
-            fos.close();
-            dictIS.close();
-        } catch (IOException e) {
-            Common.showException(e, ctx);
-        }
-        MySQLite3 dictDB = MySQLite3.open(dictFile.getPath());
+        MySQLite3 dictDB = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "wubi_code.db").getPath());
         dictDB.exec("BEGIN");
         return dictDB;
     }

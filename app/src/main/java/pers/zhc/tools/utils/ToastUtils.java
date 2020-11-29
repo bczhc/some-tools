@@ -1,9 +1,10 @@
 package pers.zhc.tools.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import android.widget.Toast;
 import pers.zhc.tools.R;
 
 public class ToastUtils {
@@ -18,11 +19,13 @@ public class ToastUtils {
     }
 
     public static void show(Context ctx, @NonNull CharSequence charSequence) {
-        if (ToastUtils.toast != null) {
-            ToastUtils.toast.cancel();
-        }
-        ToastUtils.toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
-        ToastUtils.toast.show();
+        ((Activity) ctx).runOnUiThread(() -> {
+            if (ToastUtils.toast != null) {
+                ToastUtils.toast.cancel();
+            }
+            ToastUtils.toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
+            ToastUtils.toast.show();
+        });
     }
 
     public static void showError(Context ctx, @StringRes int error_msg_resId, Exception e) {
