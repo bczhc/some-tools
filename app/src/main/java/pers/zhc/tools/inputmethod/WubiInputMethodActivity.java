@@ -34,7 +34,7 @@ public class WubiInputMethodActivity extends BaseActivity {
             Download.checkMD5(md5TextFileURL, localWubiDatabaseFile, result -> {
                 checkDownloadDialog.dismiss();
                 if (result) ready();
-                else Download.startDownloadWithDialog(this, wubiDatabaseURL, localWubiDatabaseFile, this::ready);
+                else runOnUiThread(() -> Download.startDownloadWithDialog(this, wubiDatabaseURL, localWubiDatabaseFile, this::ready));
             });
         } catch (IOException e) {
             Common.showException(e, this);

@@ -94,8 +94,10 @@ public class Download {
             new Thread(() -> {
                 try {
                     download(url, os, progress -> {
-                        ((Activity) ctx).runOnUiThread(() -> pb.setProgress(((int) (progress / 100F * 10000))));
-                        progressTextView.setText(ctx.getString(R.string.progress_tv, progress));
+                        ((Activity) ctx).runOnUiThread(() -> {
+                            pb.setProgress(((int) (progress / 100F * 10000)));
+                            progressTextView.setText(ctx.getString(R.string.progress_tv, progress));
+                        });
                     }, () -> {
                         downloadDialog.dismiss();
                         if (doneAction != null) {

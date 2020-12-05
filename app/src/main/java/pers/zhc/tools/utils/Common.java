@@ -68,4 +68,10 @@ public class Common {
     public static String getGithubRawFileURLString(String username, String branch, String filePathInRepo) {
         return String.format("https://hub.fastgit.org/%s/store/blob/%s/%s?raw=true", username, branch, filePathInRepo);
     }
+
+    public static void debugAssert(boolean condition) {
+        if (BuildConfig.DEBUG && !condition) {
+            throw new AssertionError("Assertion failed");
+        }
+    }
 }

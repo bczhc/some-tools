@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity {
 
     private void shortcut(int texts, Class<?> theClass, int id) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-            ToastUtils.show(this, R.string.unsupported);
+            ToastUtils.show(this, R.string.shortcut_unsupport);
             return;
         }
         if (shortcutManager == null) {
