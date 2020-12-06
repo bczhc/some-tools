@@ -20,11 +20,11 @@ android {
             keyAlias 'key0'
         }
     }
-    compileSdkVersion 30
+    compileSdkVersion 29
     defaultConfig {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
-        targetSdkVersion 30
+        targetSdkVersion 29
         def verInfo = MyPlugin1.gVersion()
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
@@ -61,17 +61,14 @@ android {
         abortOnError false
         return true
     }
-
-    try {
-        ndkVersion = MyPlugin1.getNdkVersion()
-    } catch (def e) {
-        e.printStackTrace()
-        println("Android ndk version not found, set to 21.3.6528147.")
-        ndkVersion = "21.3.6528147"
-    }
+    def tools = MyPlugin1.Tools.newInstance([android.ndkDirectory, android.sdkDirectory] as Object[])
+    ndkVersion = tools.getNdkVersion()
+    println("Ndk Version: ${ndkVersion}")
     externalNativeBuild {
         cmake {
-            path file('src/main/jni/cpp/CMakeLists.txt')
+            version tools.getCMakeVersion()
+            println("CMake Version: ${getVersion()}")
+            setPath(file('src/main/jni/cpp/CMakeLists.txt'))
         }
     }
     return true
@@ -84,7 +81,6 @@ jacoco {
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
-
 
 
 dependencies {

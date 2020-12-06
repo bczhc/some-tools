@@ -122,7 +122,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
                     .append(" ")
                     .append(to_string(im));
             Log(env, "jni---", s.getCString());*/
-            //TODO String concatenating seems having bug.
+            //TODO String concatenating seems having a bug.
             globalJvm->DetachCurrentThread();
         }
     } cb;

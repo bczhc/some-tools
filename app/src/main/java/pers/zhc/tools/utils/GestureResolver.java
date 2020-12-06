@@ -135,7 +135,7 @@ public class GestureResolver {
          * @param distanceY y方向的变化（与上一次触摸的y距离）
          * @param event     事件
          */
-        @SuppressWarnings({"EmptyMethod", "unused"})
+        @SuppressWarnings({"EmptyMethod"})
         void onOnePointScroll(float distanceX, float distanceY, MotionEvent event);
     }
 }

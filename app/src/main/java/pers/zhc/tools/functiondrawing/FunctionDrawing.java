@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.u.FourierSeries;
@@ -90,7 +91,7 @@ public class FunctionDrawing extends BaseActivity {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // 检测屏幕的
         // 方向：纵向或横向

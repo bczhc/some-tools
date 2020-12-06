@@ -4,6 +4,7 @@
 
 #include "../jni_h/pers_zhc_tools_jni_JNI_JniTest.h"
 #include <sys/time.h> // NOLINT(modernize-deprecated-headers)
+#include <stdint.h>
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_call
         (JNIEnv *, jclass) {

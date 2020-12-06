@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:n1="http://schemas.android.com/apk/res/android" n1:orientation="vertical"
-        n1:layout_width="fill_parent"
-        n1:layout_height="fill_parent">
-    <Button n1:layout_width="wrap_content" n1:layout_height="wrap_content"
-            n1:id="@+id/b3"
-            n1:text="java call java"
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <ImageView
+            android:id="@+id/cancel_deletion"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_width="22sp"
+            android:layout_height="22sp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="15sp"
+            android:layout_marginStart="20sp"
+            android:layout_centerVertical="true"
     />
-    <Button n1:layout_width="wrap_content" n1:layout_height="wrap_content"
-            n1:id="@+id/b1"
-            n1:text="java call jni"
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:text="未选择笔记"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:layout_alignLeft="@id/cancel_deletion"
+            android:layout_centerVertical="true"
     />
-    <Button n1:layout_width="wrap_content" n1:layout_height="wrap_content"
-            n1:id="@+id/b2"
-            n1:text="JNI call static java"
+
+    <CheckBox
+            android:id="@+id/cv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
     />
-    <Button n1:layout_width="wrap_content" n1:layout_height="wrap_content"
-            n1:id="@+id/b4"
-            n1:text="jni call java"
-    />
-</LinearLayout>
+
+</RelativeLayout>

@@ -213,7 +213,10 @@
     <string name="crash_test">崩溃测试</string>
     <string name="crash_title">程序崩溃了…</string>
     <string name="opacity">不透明度</string>
-    <string name="database_delete_info">请输入要删除的t_millisecond（*表示全部）</string>
+    <string name="note_deletion_tip">点击以选择要删除的笔记</string>
+    <string name="no_notes_were_selected">未选择笔记</string>
+    <string name="selected_notes">已选择 %1$d项</string>
+    <string name="deleted_notes">已删除%1$d条笔记</string>
     <string name="allocate">分配</string>
     <string name="allocating">正在分配</string>
     <string name="alloc_done">分配完成</string>
@@ -259,4 +262,14 @@
     <string name="deleted_shortcut">已删除快捷方式</string>
     <string name="over_quantity_limit">超出数量限制</string>
     <string name="closed">已关闭</string>
+    <string name="regular_expression_test">正则表达式测试</string>
+    <string name="text">文本</string>
+    <string name="regex">正则表达式</string>
+    <string name="corrupted_database_and_recreate_new">数据库损坏，已重新创建新的数据库</string>
+    <string name="wubi_test">五笔测试</string>
+    <string name="something_went_wrong">something went wrong</string>
+    <string name="alphabet_mode">字母模式</string>
+    <string name="wubi_input_method">五笔输入法</string>
+    <string name="checking_local_needed_files">检查本地所需文件中</string>
+    <string name="shortcut_unsupport">不支持快捷方式</string>
 </resources>

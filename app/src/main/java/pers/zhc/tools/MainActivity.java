@@ -10,20 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
-
 import pers.zhc.tools.characterscounter.CounterTest;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
@@ -33,23 +22,28 @@ import pers.zhc.tools.document.Document;
 import pers.zhc.tools.epicycles.EpicyclesEdit;
 import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
-import pers.zhc.tools.malloctest.MAllocTest;
+import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.pi.Pi;
-import pers.zhc.tools.pressuretest.PressureTest;
-import pers.zhc.tools.test.DocumentProviderTest;
-import pers.zhc.tools.test.InputEvent;
-import pers.zhc.tools.test.MathExpressionEvaluationTest;
-import pers.zhc.tools.test.SensorTest;
-import pers.zhc.tools.test.SurfaceViewTest;
-import pers.zhc.tools.test.TTS;
+import pers.zhc.tools.test.*;
 import pers.zhc.tools.test.jni.Test;
+import pers.zhc.tools.test.malloctest.MAllocTest;
+import pers.zhc.tools.test.pressuretest.PressureTest;
 import pers.zhc.tools.test.service.ServiceActivity;
-import pers.zhc.tools.theme.SetTheme;
-import pers.zhc.tools.toast.ToastTest;
-import pers.zhc.tools.typetest.TypeTest;
+import pers.zhc.tools.test.theme.SetTheme;
+import pers.zhc.tools.test.toast.ToastTest;
+import pers.zhc.tools.test.typetest.TypeTest;
+import pers.zhc.tools.test.wubiinput.WubiInput;
+import pers.zhc.tools.test.youdaoapi.YouDaoTranslate;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.youdaoapi.YouDaoTranslate;
 import pers.zhc.u.common.ReadIS;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author bczhc
@@ -68,7 +62,7 @@ public class MainActivity extends BaseActivity {
 
     private void shortcut(int texts, Class<?> theClass, int id) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-            ToastUtils.show(this, R.string.unsupported);
+            ToastUtils.show(this, R.string.shortcut_unsupport);
             return;
         }
         if (shortcutManager == null) {
@@ -147,7 +141,10 @@ public class MainActivity extends BaseActivity {
                 R.string.document_provider_test,
                 R.string.characters_counter_test,
                 R.string.type_test,
-                R.string.tts_test
+                R.string.tts_test,
+                R.string.regular_expression_test,
+                R.string.wubi_test,
+                R.string.wubi_input_method
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -174,7 +171,10 @@ public class MainActivity extends BaseActivity {
                 DocumentProviderTest.class,
                 CounterTest.class,
                 TypeTest.class,
-                TTS.class
+                TTS.class,
+                RegExpTest.class,
+                WubiInput.class,
+                WubiInputMethodActivity.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

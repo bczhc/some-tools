@@ -6,8 +6,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.core.content.FileProvider;
 import android.util.Log;
+import androidx.core.content.FileProvider;
 import pers.zhc.tools.BuildConfig;
 
 import java.io.File;
@@ -63,5 +63,15 @@ public class Common {
 
     public static File getInternalDatabaseDir(Context ctx, String name) {
         return new File(getInternalDatabaseDir(ctx), name);
+    }
+
+    public static String getGithubRawFileURLString(String username, String branch, String filePathInRepo) {
+        return String.format("https://hub.fastgit.org/%s/store/blob/%s/%s?raw=true", username, branch, filePathInRepo);
+    }
+
+    public static void debugAssert(boolean condition) {
+        if (BuildConfig.DEBUG && !condition) {
+            throw new AssertionError("Assertion failed");
+        }
     }
 }

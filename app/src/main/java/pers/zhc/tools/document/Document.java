@@ -3,6 +3,7 @@ package pers.zhc.tools.document;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,7 +24,6 @@ import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.DisplayUtil;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.utils.ViewWithExtras;
 import pers.zhc.u.FileU;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
@@ -36,10 +36,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import android.text.TextWatcher;
 import android.text.Editable;
-import pers.zhc.u.common.Color;
-import android.text.style.ClickableSpan;
-import java.util.ArrayList;
-import java.nio.LongBuffer;
+import android.widget.RelativeLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.CheckBox;
 
 /**
  * @author bczhc
@@ -49,6 +49,17 @@ public class Document extends BaseActivity {
     private SQLiteDatabase db;
     private File dbFile = null;
     private String state="normal";
+    private int chooseNum=0;
+    private RelativeLayout topView;
+
+    private static class LinearLayoutWithTimestamp extends LinearLayout {
+
+        public LinearLayoutWithTimestamp(Context context) {
+            super(context);
+        }
+
+        private long timestamp;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,48 +75,83 @@ public class Document extends BaseActivity {
         });
         Button deleteBtn = findViewById(R.id.delete_btn);
         deleteBtn.setOnClickListener(v -> {
-           /* AlertDialog.Builder adb = new AlertDialog.Builder(this);
-            EditText et = new EditText(this);
-            adb.setTitle(R.string.database_delete_info)
-                    .setPositiveButton(R.string.confirm, (dialog, which) -> {
-                        String s = et.getText().toString();
-                        final String deleteAllCommand = ".*\\*.*";
-                        if (s.matches(deleteAllCommand)) {
-                            try {
-                                db.delete("doc", null, null);
-                            } catch (Exception e) {
-                                Common.showException(e, this);
-                            }
-                        } else {
-                            try {
-                                int i = Integer.parseInt(s);
-                                db.delete("doc", "id=?", new String[]{String.valueOf(i)});
-                            } catch (Exception e) {
-                                Common.showException(e, this);
-                            }
-                        }
-                        setSVViews();
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    })
-                    .setView(et)
-                    .show();*/
-                    if(state == "del")
+                    if(state.equals("del"))
                     {
                         try{
                             for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
-                               if( ((TextView) (((LinearLayout) ((LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i)).getChildAt(0))).getChildAt(0)).getCurrentTextColor()==0xFF0000) {
+                                LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                                if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
                                    //TODO delete record
-//                                   db.delete("doc", "id=?", new String[]{String.valueOf(时间戳)});
-                               }
+                                   db.delete("doc", "t=?", new String[]{String.valueOf(((LinearLayoutWithTimestamp) childLL).timestamp)});
+                                   ToastUtils.show(this,getString(R.string.deleted_notes,chooseNum));
+                                   }
                         }
+                        setSVViews();
+                        topView=findViewById(R.id.note_top_view);      
+                        topView.removeAllViews();
                     } catch (Exception e) {
                         Common.showException(e, this);
                     }
+                    View inflate = View.inflate(this, R.layout.note_top_view, null);
+                    topView=findViewById(R.id.note_top_view);
+                    topView.removeView(inflate);
                     state = "normal";
                     }
                     else {
                     state = "del";
+                    chooseNum=0;
+                    View inflate = View.inflate(this, R.layout.note_top_view, null);  
+                    topView=findViewById(R.id.note_top_view);
+                    topView.addView(inflate);
+                    ImageView close= findViewById(R.id.cancel_deletion);
+                    close.setOnClickListener(v1 ->{
+                        topView=findViewById(R.id.note_top_view);
+                        topView.removeAllViews();
+                        state="normal";
+                        for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+                            LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {  
+                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                                for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
+                                    ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
+                                }
+
+                            }
+                        }     
+                    });
+                    final CheckBox chooseAll=findViewById(R.id.choose_all);
+                        chooseAll.setOnClickListener(v2 -> {
+                            //使用setOnClickListener以防止setChecked触发setOnCheckedChangeListener
+                                    TextView ttv=topView.findViewById(R.id.top_tv);
+                                    if(chooseAll.isChecked())
+                                    {
+                                        for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+                                            LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFF808080) {  
+                                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                                                for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
+                                                    ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFFFF0000);
+                                                }                    
+                                            }
+                                        } 
+                                        chooseNum=((LinearLayout) sv.getChildAt(0)).getChildCount();
+                                        ttv.setText(getString(R.string.selected_notes,chooseNum));
+                                        
+                                    } else {
+                                        for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+                                            LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {  
+                                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                                                for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
+                                                    ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
+                                                }                    
+                                            }
+                                        } 
+                                        chooseNum=0;
+                                        ttv.setText(R.string.no_notes_were_selected);
+                                        }   
+                            });
+                    ToastUtils.show(this,R.string.note_deletion_tip);
                     }
         });
         sv = findViewById(R.id.sv);
@@ -174,7 +220,7 @@ public class Document extends BaseActivity {
                     final TextView tv=inflate.findViewById(R.id.export_notesTextview2);
                     if(!(new File(destFileDir + File.separator + "doc.db")).exists())
                     {
-                        tv.setVisibility(tv.INVISIBLE);
+                        tv.setVisibility(View.INVISIBLE);
                     }
                     filename.addTextChangedListener(new TextWatcher() {
                             @Override
@@ -185,9 +231,9 @@ public class Document extends BaseActivity {
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                             if((new File(destFileDir + File.separator + filename.getText()+".db")).exists())
                             {
-                                tv.setVisibility(tv.VISIBLE);
+                                tv.setVisibility(View.VISIBLE);
                                 } else {
-                                    tv.setVisibility(tv.INVISIBLE);
+                                    tv.setVisibility(View.INVISIBLE);
                                     }
                             }
 
@@ -236,20 +282,47 @@ public class Document extends BaseActivity {
         if (cursor.moveToFirst()) {
             es.execute(() -> {
                 do {
-                    ViewWithExtras<LinearLayout, Long> ll = new ViewWithExtras<>();
-                    ll.a = new LinearLayout(this);
-                    ll.a.setOrientation(LinearLayout.HORIZONTAL);
+                    LinearLayoutWithTimestamp llWithTimestamp = new LinearLayoutWithTimestamp(this);
+                    llWithTimestamp = new LinearLayoutWithTimestamp(this);
+                    llWithTimestamp.setOrientation(LinearLayout.HORIZONTAL);
                     ll_lp.setMargins(margin, margin, margin, margin);
-                    ll.a.setLayoutParams(ll_lp);
+                    llWithTimestamp.setLayoutParams(ll_lp);
                     {//i = 0
                         LinearLayout smallLL = new LinearLayout(this);
                         long millisecond = cursor.getLong(0);
-                        ll.extra = millisecond;
-                        ll.a.setOnClickListener(v -> {
-                            if(state == "del"){
-                ll.a.setBackground(getDrawable(R.drawable.view_stroke_red));
-                for (int i = 0; i < ll.a.getChildCount(); i++) {
-               ((TextView) ((LinearLayout) ll.a.getChildAt(i)).getChildAt(0)).setTextColor(0xFFFF0000);
+                        llWithTimestamp.timestamp = millisecond;
+                        LinearLayoutWithTimestamp finalLlWithTimestamp = llWithTimestamp;
+                        llWithTimestamp.setOnClickListener(v -> {
+                        topView=findViewById(R.id.note_top_view);
+                        TextView ttv=topView.findViewById(R.id.top_tv);
+                            if(state.equals("del")){
+                if(((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(0)).getChildAt(0)).getCurrentTextColor() != 0xFFFF0000)
+                {
+                finalLlWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke_red));
+                chooseNum++;
+                ttv.setText(getString(R.string.selected_notes,chooseNum));
+                for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
+               ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFFFF0000);
+                }
+                }
+                else
+                {
+                finalLlWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke));
+                chooseNum--;
+                CheckBox chooseAll=findViewById(R.id.choose_all);
+                if(chooseAll.isChecked())
+                {
+                    chooseAll.setChecked(false);
+                }
+                if(chooseNum == 0){
+                ttv.setText(R.string.no_notes_were_selected);
+                } else {
+                ttv.setText(getString(R.string.selected_notes,chooseNum));
+                }
+                for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
+                ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFF808080);
+                }
+                
                 }
                 } else {
                             Dialog dialog = new Dialog(this);
@@ -305,18 +378,19 @@ public class Document extends BaseActivity {
                         });
                         Date date = new Date(millisecond);
                         String formatDate = SimpleDateFormat.getDateTimeInstance().format(date);
-                        setSmallTVExtracted(smallLL_LP4, ll.a, smallLL, formatDate);
+                        setSmallTVExtracted(smallLL_LP4, llWithTimestamp, smallLL, formatDate);
                     }
                     for (int i = 1; i < 3; i++) {
                         LinearLayout smallLL = new LinearLayout(this);
                         String s = cursor.getString(i);
                         int length = s.length();
-                        setSmallTVExtracted(smallLL_LP4, ll.a, smallLL, length > 100 ? (s.substring(0, 100) + "\n...") : s);
+                        setSmallTVExtracted(smallLL_LP4, llWithTimestamp, smallLL, length > 100 ? (s.substring(0, 100) + "\n...") : s);
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        ll.a.setBackground(getDrawable(R.drawable.view_stroke));
+                        llWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke));
                     }
-                    runOnUiThread(() -> linearLayout.addView(ll.a));
+                    LinearLayoutWithTimestamp finalLlWithTimestamp1 = llWithTimestamp;
+                    runOnUiThread(() -> linearLayout.addView(finalLlWithTimestamp1));
                 } while (cursor.moveToNext());
                 cursor.close();
             });
@@ -331,6 +405,7 @@ public class Document extends BaseActivity {
         runOnUiThread(() -> {
             smallLL.addView(tv);
             tv.setTextSize(15F);
+            tv.setTextColor(0xFF808080);
             ll.addView(smallLL);
         });
     }
@@ -365,7 +440,24 @@ public class Document extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, R.anim.slide_out_bottom);
+        if(state.equals("del"))
+        {
+            topView=findViewById(R.id.note_top_view);
+            topView.removeAllViews();
+            state="normal";
+            for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+                LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {  
+                    childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                    for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
+                        ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
+                    }                    
+                    }
+               } 
+        }
+        else{
+            super.onBackPressed();
+            overridePendingTransition(0, R.anim.slide_out_bottom);
+        }
     }
 }

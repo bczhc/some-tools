@@ -1,7 +1,7 @@
 package pers.zhc.tools.diary;
 
 import android.annotation.SuppressLint;
-    import android.app.ActionBar;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -15,16 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
@@ -54,11 +46,20 @@ public class DiaryMainActivity extends BaseActivity {
     private String[] week;
 
     static MySQLite3 getDiaryDatabase(Context ctx) {
-        MySQLite3 database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-        database.exec("CREATE TABLE IF NOT EXISTS diary(\n" +
+        String createTableSql = "CREATE TABLE IF NOT EXISTS diary(\n" +
                 "    date INTEGER,\n" +
                 "    content TEXT NOT NULL\n" +
-                ")");
+                ")";
+        MySQLite3 database;
+        database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
+        try {
+            database.exec(createTableSql);
+        } catch (Exception ignored) {
+            System.out.println(Common.getInternalDatabaseDir(ctx, "diary.db").delete());
+            database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
+            database.exec(createTableSql);
+            ToastUtils.show(ctx, R.string.corrupted_database_and_recreate_new);
+        }
         return database;
     }
 
@@ -446,13 +447,15 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    public void finish() {
         try {
-            diaryDatabase.close();
+            if (diaryDatabase != null) {
+                diaryDatabase.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Common.showException(e, this);
         }
-        super.onDestroy();
+        super.finish();
     }
 }
