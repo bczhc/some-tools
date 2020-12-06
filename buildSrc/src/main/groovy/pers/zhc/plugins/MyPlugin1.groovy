@@ -36,11 +36,11 @@ class MyPlugin1 implements Plugin<Project> {
         def dateString = new SimpleDateFormat("yyyyMMdd").format(date)
         def time = new SimpleDateFormat("HHmmss").format(date)
         def which = 0
-        def verString = "7.0.0.0"
+        def verString = "1.0.0"
         def emoji = ranEmoji()
         return [
                 Integer.parseInt(dateString + which),
-                "${verString}_${dateString}${time}_$emoji"
+                "${verString}-${dateString}${time}-$emoji"
         ]
     }
 
