@@ -1,7 +1,14 @@
 apply plugin: 'groovy'
+apply plugin: 'kotlin'
 
 dependencies {
     implementation gradleApi()
+}
+
+buildscript {
+    dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
+    }
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
