@@ -33,8 +33,8 @@ jobs:
       - name: build app
         run: |
           source ~/.profile
-          ./gradlew build
-          ./gradlew assembleDebug
+          ./gradlew :app:java:buildJavaDepJar
+          ./gradlew :app:assembleDebug
       - name: upload apk
         uses: actions/upload-artifact@v2
         with:
