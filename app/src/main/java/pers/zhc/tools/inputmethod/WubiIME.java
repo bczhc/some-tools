@@ -120,7 +120,8 @@ public class WubiIME extends InputMethodService {
      * 6: semicolon
      * 7: apostrophe
      * 9: enter
-     * 8: someMattersWithShift, prevent returning 0 and will be consumed by the next receiver.
+     * 10: 0-9
+     * 8: someMattersWithShift, preventing returning 0 and will be consumed by the next receiver.
      * 0: others
      * </p>
      */
@@ -137,9 +138,12 @@ public class WubiIME extends InputMethodService {
         if (keyCode == KeyEvent.KEYCODE_SEMICOLON) return 6;
         if (keyCode == KeyEvent.KEYCODE_APOSTROPHE) return 7;
         if (keyCode == KeyEvent.KEYCODE_ENTER) return 9;
+        if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) return 10;
+
         for (int code : punctuationWithShiftKeyCodes) {
             if (code == keyCode) return 8;
         }
+        if (keyCode == KeyEvent.KEYCODE_BACK) return 8;
         return 0;
     }
 
