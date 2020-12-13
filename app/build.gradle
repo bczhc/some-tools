@@ -1,9 +1,12 @@
 import pers.zhc.plugins.BuildUtils
+import pers.zhc.plugins.MyPlugin2
+import pers.zhc.plugins.Utils
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco-android'
+apply plugin: MyPlugin2
 
 android {
     signingConfigs {
@@ -82,19 +85,19 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
+evaluationDependsOnChildren()
+
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.10"
-    println 111
+
+    //my java-dep jar
+    def jarProperties = Utils.getJarSrcAndTargetLocation(project)
+    println jarProperties
+    implementation files(jarProperties[1].path)
 }
 
-//def buildJavaDepJarTask = tasks.findByName(":buildSrc:build")
-//tasks.named("preBuild").get().dependsOn(":app:$buildJavaDepJarTask.name")
-task aa {
-    doLast {
-        println 'aa'
-    }
+afterEvaluate {
+    tasks.named("build").get().dependsOn("buildJavaDepJar")
 }
-
-rootProject.project("buildSrc").tasks.named("build").get().dependsOn(":app:aa")

@@ -1,9 +1,7 @@
 import pers.zhc.plugins.MyPlugin1
-import pers.zhc.plugins.Test
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 apply plugin: MyPlugin1
-apply plugin: Test
 
 buildscript {
     repositories {
