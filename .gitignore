@@ -11,3 +11,6 @@ gitpush
 **/.idea/
 local.properties
 **/replay*.log
+app/.cxx
+**/CMakeFiles
+build

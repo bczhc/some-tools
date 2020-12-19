@@ -32,6 +32,7 @@ class Utils {
 
             val jar = javaProject.property("jar") as Jar
             val jarFile = jar.archiveFile.get().asFile
+            println(jarFile)
             if (!jarFile.exists()) {
                 throw Exception("Jar archive generating failed.")
             }

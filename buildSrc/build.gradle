@@ -5,6 +5,13 @@ dependencies {
     implementation gradleApi()
 }
 
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
 buildscript {
     repositories {
         maven { url "https://repo.maven.apache.org/maven2" }
