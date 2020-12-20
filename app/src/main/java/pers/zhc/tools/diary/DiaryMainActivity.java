@@ -150,11 +150,6 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (isUnlocked) {
             final MenuInflater menuInflater = getMenuInflater();
@@ -211,6 +206,9 @@ public class DiaryMainActivity extends BaseActivity {
                 diaryDatabase.exec("ALTER TABLE temp RENAME TO diary");
                 diaryDatabase.exec("COMMIT");
                 refresh();
+                break;
+            case R.id.attachment:
+                startActivity(new Intent(this, DiaryAttachmentActivity.class));
                 break;
             default:
                 break;

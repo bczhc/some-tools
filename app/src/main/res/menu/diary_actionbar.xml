@@ -25,4 +25,9 @@
             android:title="@string/sort"
             android:showAsAction="never"
     />
+    <item
+            android:id="@+id/attachment"
+            android:title="@string/attachment"
+            android:showAsAction="never"
+    />
 </menu>
