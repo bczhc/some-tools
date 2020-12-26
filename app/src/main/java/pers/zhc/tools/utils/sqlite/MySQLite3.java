@@ -49,4 +49,8 @@ public class MySQLite3 {
         }
         return r.get();
     }
+
+    public boolean checkIfCorrupt() {
+        return JNI.Sqlite3.checkIfCorrupt(id);
+    }
 }

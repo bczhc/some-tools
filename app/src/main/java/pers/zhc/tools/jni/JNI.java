@@ -151,6 +151,14 @@ public class JNI {
          */
         public static native void exec(long id, String cmd, SqliteExecCallback callback);
 
+        /**
+         * Check if the database is corrupted.
+         *
+         * @param id id
+         * @return result
+         */
+        public static native boolean checkIfCorrupt(long id);
+
         public interface SqliteExecCallback {
             /**
              * Callback when {@link Sqlite3#exec(long, String, SqliteExecCallback)} is called.

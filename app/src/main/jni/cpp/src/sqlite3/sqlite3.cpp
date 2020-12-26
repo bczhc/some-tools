@@ -46,7 +46,7 @@ void throwException(JNIEnv *env, const char *msg) {
 }
 
 JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
-        (JNIEnv *env, jclass cls, jstring path) {
+        (JNIEnv *env, jclass, jstring path) {
     auto *db = new Sqlite3;
     const char *file = env->GetStringUTFChars(path, (jboolean *) nullptr);
     int code = db->open(file);
@@ -61,7 +61,7 @@ JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
 }
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
-        (JNIEnv *env, jclass cls, jlong id) {
+        (JNIEnv *env, jclass, jlong id) {
     auto *db = (Sqlite3 *) id;
     int code = db->close();
     if (code) {
@@ -74,7 +74,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
 }
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
-        (JNIEnv *env, jclass cls, jlong id, jstring cmd, jobject callbackInterface) {
+        (JNIEnv *env, jclass, jlong id, jstring cmd, jobject callbackInterface) {
 
     auto *db = (Sqlite3 *) id;
     const char *command = env->GetStringUTFChars(cmd, (jboolean *) nullptr);
@@ -90,4 +90,9 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
     }
 
     env->ReleaseStringUTFChars(cmd, command);
+}
+
+JNIEXPORT jboolean JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_checkIfCorrupt
+        (JNIEnv *env, jclass, jlong id) {
+    return (jboolean) ((Sqlite3 *) id)->checkIfCorrupt();
 }

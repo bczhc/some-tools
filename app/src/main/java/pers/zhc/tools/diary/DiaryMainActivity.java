@@ -46,20 +46,29 @@ public class DiaryMainActivity extends BaseActivity {
     private String[] week;
 
     static MySQLite3 getDiaryDatabase(Context ctx) {
-        String createTableSql = "CREATE TABLE IF NOT EXISTS diary(\n" +
-                "    date INTEGER,\n" +
-                "    content TEXT NOT NULL\n" +
-                ")";
         MySQLite3 database;
         database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-        try {
-            database.exec(createTableSql);
-        } catch (Exception ignored) {
+        if (database.checkIfCorrupt()) {
             System.out.println(Common.getInternalDatabaseDir(ctx, "diary.db").delete());
             database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-            database.exec(createTableSql);
             ToastUtils.show(ctx, R.string.corrupted_database_and_recreate_new);
         }
+
+        database.exec("CREATE TABLE IF NOT EXISTS diary(\n" +
+                "    date INTEGER,\n" +
+                "    content TEXT NOT NULL\n" +
+                ")");
+        database.exec("CREATE TABLE IF NOT EXISTS attachment_info (\n" +
+                "    id INTEGER PRIMARY KEY,\n" +
+                "    title TEXT NOT NULL,\n" +
+                "    associated_diary_date INTEGER,\n" +
+                "    description TEXT NOT NULL\n" +
+                ")");
+        database.exec("CREATE TABLE IF NOT EXISTS attachment_file (\n" +
+                "    id INTEGER,\n" +
+                "    relative_path TEXT NOT NULL,\n" +
+                "    type TEXT NOT NULL\n" +
+                ")");
         return database;
     }
 
