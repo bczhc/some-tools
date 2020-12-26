@@ -128,19 +128,6 @@ public class JNI {
             loadLib();
         }
 
-        public interface SqliteExecCallback {
-            /**
-             * Callback when {@link Sqlite3#exec(long, String, SqliteExecCallback)} is called.
-             *
-             * @param contents content in database
-             * @return whether to continue search:
-             * 0: interrupt searching
-             * 1: continue
-             */
-            int callback(String[] contents);
-        }
-
-
         /**
          * Open sqlite database.
          *
@@ -163,6 +150,18 @@ public class JNI {
          * @param cmd command
          */
         public static native void exec(long id, String cmd, SqliteExecCallback callback);
+
+        public interface SqliteExecCallback {
+            /**
+             * Callback when {@link Sqlite3#exec(long, String, SqliteExecCallback)} is called.
+             *
+             * @param contents content in database
+             * @return whether to continue search:
+             * 0: interrupt searching
+             * 1: continue
+             */
+            int callback(String[] contents);
+        }
     }
 
     public static class CharactersCounter {

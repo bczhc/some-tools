@@ -17,35 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WubiIME extends InputMethodService {
-    private final StringBuilder wubiCodeSB = new StringBuilder();
-    private MySQLite3 wubiDictDB = null;
-    private TextView candidateTV, wubiCodeTV;
-    private boolean isAlphabetsMode = false, switchTypingMode = false;
-    private InputConnection ic;
-    private int inputRangeCode;
-    private String lastWord;
-    private final Quotation quotation = new Quotation();
-    private TextToSpeech tts = null;
-
-    @Override
-    public void onStartInput(EditorInfo attribute, boolean restarting) {
-        ic = getCurrentInputConnection();
-        quotation.reset();
-    }
-
-    @Override
-    public View onCreateInputView() {
-        if (wubiDictDB == null) {
-            wubiDictDB = WubiInput.getWubiDictDatabase(this);
-        }
-        View candidateView = View.inflate(this, R.layout.wubi_input_method_candidate_view, null);
-        candidateTV = candidateView.findViewById(R.id.candidates);
-        wubiCodeTV = candidateView.findViewById(R.id.code);
-        setCandidatesView(candidateView);
-        setCandidatesViewShown(true);
-        return super.onCreateInputView();
-    }
-
     private final static String[] chinesePunctuationStrings = {
             "。",
             "，",
@@ -53,7 +24,6 @@ public class WubiIME extends InputMethodService {
             "【",
             "】"
     };
-
     /**
      * On-to-one correspondence with {@link WubiIME#chinesePunctuationStrings}
      */
@@ -64,7 +34,6 @@ public class WubiIME extends InputMethodService {
             KeyEvent.KEYCODE_LEFT_BRACKET,
             KeyEvent.KEYCODE_RIGHT_BRACKET
     };
-
     /**
      * punctuations that needs to input with shift key
      */
@@ -84,7 +53,6 @@ public class WubiIME extends InputMethodService {
             "（",
             "）"
     };
-
     /**
      * On-to-one correspondence with {@link WubiIME#chinesePunctuationWithShiftStrings}
      */
@@ -104,9 +72,6 @@ public class WubiIME extends InputMethodService {
             KeyEvent.KEYCODE_9,
             KeyEvent.KEYCODE_0
     };
-
-//    private static final String shiftWithNumberInChinese = "！·#￥%…—*（）—+";
-
     /**
      * The keys only matter when composing, otherwise it'll be consumed by the next receiver.
      */
@@ -116,70 +81,18 @@ public class WubiIME extends InputMethodService {
             KeyEvent.KEYCODE_SPACE,
             KeyEvent.KEYCODE_ENTER
     };
-
-
-    /**
-     * @param keyCode key code
-     * @return <p>
-     * 1: A-Z
-     * 2: punctuation
-     * 3: backspace
-     * 4: space
-     * 5: shift
-     * 6: semicolon
-     * 7: apostrophe
-     * 9: enter
-     * 10: 0-9
-     * 8: someMattersWithShift, preventing returning 0 and will be consumed by the next receiver.
-     * 0: others
-     * </p>
-     */
-    static int checkInputRange(int keyCode) {
-        if (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z) return 1;
-        if (keyCode == KeyEvent.KEYCODE_DEL) return 3;
-        if (keyCode == KeyEvent.KEYCODE_SPACE) return 4;
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) return 5;
-        for (int punctuationKeyCode : punctuationKeyCodes) {
-            if (punctuationKeyCode == keyCode) {
-                return 2;
-            }
-        }
-        if (keyCode == KeyEvent.KEYCODE_SEMICOLON) return 6;
-        if (keyCode == KeyEvent.KEYCODE_APOSTROPHE) return 7;
-        if (keyCode == KeyEvent.KEYCODE_ENTER) return 9;
-        if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) return 10;
-
-        for (int code : punctuationWithShiftKeyCodes) {
-            if (code == keyCode) return 8;
-        }
-        if (keyCode == KeyEvent.KEYCODE_BACK) return 8;
-        return 0;
-    }
-
-    private static class Quotation {
-        private final String[] singleQuotation = {"‘", "’"};
-        private final String[] doubleQuotation = {"“", "”"};
-        private int singleQuotationIndex = 0, doubleQuotationIndex = 0;
-
-        private String getSingleQuotation() {
-            String r = singleQuotation[singleQuotationIndex];
-            singleQuotationIndex = 1 - singleQuotationIndex;
-            return r;
-        }
-
-        private String getDoubleQuotation() {
-            String r = doubleQuotation[doubleQuotationIndex];
-            doubleQuotationIndex = 1 - doubleQuotationIndex;
-            return r;
-        }
-
-        private void reset() {
-            singleQuotationIndex = 0;
-            doubleQuotationIndex = 0;
-        }
-    }
-
+    private final StringBuilder wubiCodeSB = new StringBuilder();
+    private final Quotation quotation = new Quotation();
     private final List<String> candidates = new ArrayList<>();
+    private MySQLite3 wubiDictDB = null;
+    private TextView candidateTV, wubiCodeTV;
+    private boolean isAlphabetsMode = false, switchTypingMode = false;
+    private InputConnection ic;
+    private int inputRangeCode;
+    private String lastWord;
+    private TextToSpeech tts = null;
+
+//    private static final String shiftWithNumberInChinese = "！·#￥%…—*（）—+";
     //    private boolean switchTypingMode = true;
     private boolean composing = false;
     private final KeyEventResolver keyEventResolver = new KeyEventResolver(new KeyEventResolverCallback() {
@@ -267,7 +180,8 @@ public class WubiIME extends InputMethodService {
                         commitCandidate(keyCode - KeyEvent.KEYCODE_1);
                         clearInputMethodText();
                         composing = false;
-                    } else if(!keyEventResolver.isHoldShift()) commitText(String.valueOf(keyCode - KeyEvent.KEYCODE_0));
+                    } else if (!keyEventResolver.isHoldShift())
+                        commitText(String.valueOf(keyCode - KeyEvent.KEYCODE_0));
                     break;
             }
         }
@@ -308,6 +222,63 @@ public class WubiIME extends InputMethodService {
             }
         }
     });
+
+    /**
+     * @param keyCode key code
+     * @return <p>
+     * 1: A-Z
+     * 2: punctuation
+     * 3: backspace
+     * 4: space
+     * 5: shift
+     * 6: semicolon
+     * 7: apostrophe
+     * 9: enter
+     * 10: 0-9
+     * 8: someMattersWithShift, preventing returning 0 and will be consumed by the next receiver.
+     * 0: others
+     * </p>
+     */
+    static int checkInputRange(int keyCode) {
+        if (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z) return 1;
+        if (keyCode == KeyEvent.KEYCODE_DEL) return 3;
+        if (keyCode == KeyEvent.KEYCODE_SPACE) return 4;
+        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) return 5;
+        for (int punctuationKeyCode : punctuationKeyCodes) {
+            if (punctuationKeyCode == keyCode) {
+                return 2;
+            }
+        }
+        if (keyCode == KeyEvent.KEYCODE_SEMICOLON) return 6;
+        if (keyCode == KeyEvent.KEYCODE_APOSTROPHE) return 7;
+        if (keyCode == KeyEvent.KEYCODE_ENTER) return 9;
+        if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) return 10;
+
+        for (int code : punctuationWithShiftKeyCodes) {
+            if (code == keyCode) return 8;
+        }
+        if (keyCode == KeyEvent.KEYCODE_BACK) return 8;
+        return 0;
+    }
+
+    @Override
+    public void onStartInput(EditorInfo attribute, boolean restarting) {
+        ic = getCurrentInputConnection();
+        quotation.reset();
+    }
+
+    @Override
+    public View onCreateInputView() {
+        if (wubiDictDB == null) {
+            wubiDictDB = WubiInput.getWubiDictDatabase(this);
+        }
+        View candidateView = View.inflate(this, R.layout.wubi_input_method_candidate_view, null);
+        candidateTV = candidateView.findViewById(R.id.candidates);
+        wubiCodeTV = candidateView.findViewById(R.id.code);
+        setCandidatesView(candidateView);
+        setCandidatesViewShown(true);
+        return super.onCreateInputView();
+    }
 
     /**
      * Clear wubi code string and candidate word list
@@ -436,5 +407,28 @@ public class WubiIME extends InputMethodService {
     private void update() {
         fetchCandidatesAndSetToField(wubiCodeSB.toString());
         updateInputMethodText();
+    }
+
+    private static class Quotation {
+        private final String[] singleQuotation = {"‘", "’"};
+        private final String[] doubleQuotation = {"“", "”"};
+        private int singleQuotationIndex = 0, doubleQuotationIndex = 0;
+
+        private String getSingleQuotation() {
+            String r = singleQuotation[singleQuotationIndex];
+            singleQuotationIndex = 1 - singleQuotationIndex;
+            return r;
+        }
+
+        private String getDoubleQuotation() {
+            String r = doubleQuotation[doubleQuotationIndex];
+            doubleQuotationIndex = 1 - doubleQuotationIndex;
+            return r;
+        }
+
+        private void reset() {
+            singleQuotationIndex = 0;
+            doubleQuotationIndex = 0;
+        }
     }
 }

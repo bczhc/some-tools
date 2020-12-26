@@ -277,4 +277,7 @@
     <string name="attachment">附件</string>
     <string name="add">添加</string>
     <string name="pick_file">选择文件</string>
+    <string name="add_file">添加文件</string>
+    <string name="description">描述</string>
+    <string name="create_attachment">创建附件</string>
 </resources>

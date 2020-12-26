@@ -1,8 +1,6 @@
 package pers.zhc.tools.diary;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -19,6 +17,8 @@ import android.view.*;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
@@ -107,7 +107,7 @@ public class DiaryMainActivity extends BaseActivity {
         setContentView(R.layout.diary_activity);
         invalidateOptionsMenu();
         ll = findViewById(R.id.ll);
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
@@ -154,7 +154,6 @@ public class DiaryMainActivity extends BaseActivity {
         if (isUnlocked) {
             final MenuInflater menuInflater = getMenuInflater();
             menuInflater.inflate(R.menu.diary_actionbar, menu);
-            menu.findItem(R.id.write_diary).getActionView();
         }
         return super.onCreateOptionsMenu(menu);
     }

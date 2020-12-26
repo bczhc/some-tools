@@ -1,13 +1,13 @@
 package pers.zhc.tools.functiondrawing;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.view.MotionEvent;
+import androidx.appcompat.app.AppCompatActivity;
 import pers.zhc.tools.BaseView;
 import pers.zhc.u.math.util.MathFloatFunctionInterface;
 import pers.zhc.u.util.FFMap;
@@ -28,7 +28,7 @@ public class FunctionDrawingBoardView extends BaseView {
         super(context);
         mPaint = new Paint();
         Point point = new Point();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getSize(point);
+        ((AppCompatActivity) context).getWindowManager().getDefaultDisplay().getSize(point);
         width = point.x;
         height = point.y;
         mPath = new Path();

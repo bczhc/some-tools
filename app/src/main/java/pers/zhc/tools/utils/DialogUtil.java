@@ -1,6 +1,5 @@
 package pers.zhc.tools.utils;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import pers.zhc.tools.R;
 
 import java.util.Objects;
@@ -77,7 +77,7 @@ public class DialogUtil {
         editText.setFocusableInTouchMode(true);
     }
 
-    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback, DialogInterface.OnClickListener negativeAction){
+    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback, DialogInterface.OnClickListener negativeAction) {
         AlertDialog[] ad = new AlertDialog[1];
         AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
         EditText et = new EditText(ctx);
@@ -89,7 +89,8 @@ public class DialogUtil {
         return ad[0];
     }
 
-    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback){
-        return createPromptDialog(ctx, strId, callback, (dialog, which) -> {});
+    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback) {
+        return createPromptDialog(ctx, strId, callback, (dialog, which) -> {
+        });
     }
 }

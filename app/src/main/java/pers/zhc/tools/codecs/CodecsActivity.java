@@ -2,22 +2,16 @@ package pers.zhc.tools.codecs;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
+import android.widget.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.BaseActivity;
@@ -27,14 +21,7 @@ import pers.zhc.tools.filepicker.FilePicker;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -607,7 +594,7 @@ public class CodecsActivity extends BaseActivity {
         return saved;
     }
 
-    private File getFile(Activity ctx) {
+    private File getFile(AppCompatActivity ctx) {
         File f = null;
         try {
             File storageDirectory = ctx.getFilesDir();

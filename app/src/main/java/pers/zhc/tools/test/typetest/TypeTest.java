@@ -57,7 +57,7 @@ public class TypeTest extends BaseActivity {
                     long now = System.currentTimeMillis();
                     float rate = (float) count / ((now - start) / 1000F / 60F);
                     if (start == -1) runOnUiThread(() -> speedTV.setText(R.string.type_to_count));
-                    else runOnUiThread(() ->speedTV.setText(getString(R.string.type_speed, rate)));
+                    else runOnUiThread(() -> speedTV.setText(getString(R.string.type_speed, rate)));
                     try {
                         //noinspection BusyWait
                         Thread.sleep(100);

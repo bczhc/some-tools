@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:id="@+id/write_diary"
             android:title="@string/write_diary"
-            android:showAsAction="ifRoom"/>
+            app:showAsAction="ifRoom"/>
     <item
             android:id="@+id/create"
             android:title="@string/create"
-            android:showAsAction="never"/>
+            app:showAsAction="never"/>
     <item
             android:id="@+id/password"
             android:title="@string/password"
-            android:showAsAction="never"/>
+            app:showAsAction="never"/>
     <item
             android:id="@+id/import_"
             android:title="@string/import_"
-            android:showAsAction="never"/>
+            app:showAsAction="never"/>
     <item
             android:id="@+id/export"
             android:title="@string/export"
-            android:showAsAction="never"/>
+            app:showAsAction="never"/>
     <item
             android:id="@+id/sort"
             android:title="@string/sort"
-            android:showAsAction="never"
-    />
+            app:showAsAction="never"/>
     <item
             android:id="@+id/attachment"
             android:title="@string/attachment"
-            android:showAsAction="never"
-    />
+            app:showAsAction="never"/>
 </menu>

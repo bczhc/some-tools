@@ -1,7 +1,7 @@
 package pers.zhc.tools.utils;
 
-import androidx.annotation.StringRes;
 import android.text.Editable;
+import androidx.annotation.StringRes;
 
 public interface EditTextInterface {
     Editable getText();

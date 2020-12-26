@@ -5,8 +5,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 

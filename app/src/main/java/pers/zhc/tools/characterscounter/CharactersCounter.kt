@@ -12,7 +12,7 @@ class CharactersCounter {
         JNI.CharactersCounter.count(id, s)
     }
 
-    fun getResultJson() : String {
+    fun getResultJson(): String {
         return JNI.CharactersCounter.getResultJson(id)
     }
 

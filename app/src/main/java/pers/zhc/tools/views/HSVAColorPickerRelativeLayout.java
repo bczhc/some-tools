@@ -1,14 +1,11 @@
 package pers.zhc.tools.views;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
-import androidx.annotation.FloatRange;
-import androidx.annotation.IntRange;
 import android.text.Selection;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -18,6 +15,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
+import androidx.appcompat.app.AlertDialog;
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
@@ -55,12 +55,11 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
     }
 
     /**
-     *
      * @param context context
-     * @param alpha alpha
-     * @param hsv hsv float array
-     * @param width view's width
-     * @param height view's height
+     * @param alpha   alpha
+     * @param hsv     hsv float array
+     * @param width   view's width
+     * @param height  view's height
      */
     public HSVAColorPickerRelativeLayout(Context context, int alpha, float[] hsv, int width, int height) {
         super(context);
@@ -70,11 +69,10 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
     }
 
     /**
-     *
-     * @param context context
+     * @param context   context
      * @param hsvaColor {@link ColorUtils.HSVAColor} HSVA color
-     * @param width view's width
-     * @param height view's height
+     * @param width     view's width
+     * @param height    view's height
      */
     public HSVAColorPickerRelativeLayout(Context context, ColorUtils.HSVAColor hsvaColor, int width, int height) {
         super(context);
@@ -200,12 +198,12 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         colorPreviewView.invalidate();
     }
 
-    public void setOnColorPickedInterface(OnColorPickedInterface onColorPickedInterface) {
-        this.onColorPickedInterface = onColorPickedInterface;
-    }
-
     public OnColorPickedInterface getOnColorPickedInterface() {
         return onColorPickedInterface;
+    }
+
+    public void setOnColorPickedInterface(OnColorPickedInterface onColorPickedInterface) {
+        this.onColorPickedInterface = onColorPickedInterface;
     }
 
     private int getColor() {
@@ -225,6 +223,13 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
                               @FloatRange(from = 0, to = 1) float v,
                               @IntRange(from = 0, to = 255) int alpha) {
 
+    }
+
+    private static class SavedColorListView extends BaseView {
+
+        public SavedColorListView(Context context, int w, int h) {
+            super(context);
+        }
     }
 
     private class HView extends BaseView {
@@ -389,13 +394,6 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
             currentXPos[3] = x;
             invalidateAllViews();
             return true;
-        }
-    }
-
-    private static class SavedColorListView extends BaseView {
-
-        public SavedColorListView(Context context, int w, int h) {
-            super(context);
         }
     }
 }

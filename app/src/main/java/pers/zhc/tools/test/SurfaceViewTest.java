@@ -6,9 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 
 public class SurfaceViewTest extends BaseActivity {

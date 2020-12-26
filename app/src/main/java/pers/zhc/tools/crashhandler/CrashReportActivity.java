@@ -12,27 +12,20 @@ import android.os.Bundle;
 import android.os.Process;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.Infos;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.MultipartUploader;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * @author bczhc

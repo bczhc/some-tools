@@ -1,6 +1,5 @@
 package pers.zhc.tools.epicycles;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Point;
@@ -8,17 +7,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
-import java.util.ArrayList;
-
+import androidx.appcompat.app.AlertDialog;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.ComplexDefinite;
 import pers.zhc.u.math.util.ComplexValue;
+
+import java.util.ArrayList;
 
 /**
  * @author bczhc

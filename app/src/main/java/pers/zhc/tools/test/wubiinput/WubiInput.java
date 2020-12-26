@@ -12,12 +12,7 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ScrollEditText;
 import pers.zhc.tools.utils.sqlite.MySQLite3;
-import pers.zhc.u.FileU;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +20,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class WubiInput extends BaseActivity {
     private MySQLite3 dictDB;
+
+    public static MySQLite3 getWubiDictDatabase(Context ctx) {
+        MySQLite3 dictDB = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "wubi_code.db").getPath());
+        dictDB.exec("BEGIN");
+        return dictDB;
+    }
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -90,12 +91,6 @@ public class WubiInput extends BaseActivity {
             }
         });
         wubiCodeET.addTextChangedListener(textWatcher.get());
-    }
-
-    public static MySQLite3 getWubiDictDatabase(Context ctx) {
-        MySQLite3 dictDB = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "wubi_code.db").getPath());
-        dictDB.exec("BEGIN");
-        return dictDB;
     }
 
     @Override

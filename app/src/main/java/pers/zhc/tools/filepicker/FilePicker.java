@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
@@ -16,8 +17,8 @@ import java.io.File;
 /**
  * @author bczhc
  * <p>Put a string extra whose key is "option" and value is {@link FilePicker#PICK_FILE} or {@link FilePicker#PICK_FOLDER}
- * to the intent before starting this activity by invoking {@link android.app.Activity#startActivityForResult(Intent, int)}</p>
- * <p>The data it returns in {@link android.app.Activity#onActivityResult(int, int, Intent)} has a string extra
+ * to the intent before starting this activity by invoking {@link AppCompatActivity#startActivityForResult(Intent, int)}</p>
+ * <p>The data it returns in {@link AppCompatActivity#onActivityResult(int, int, Intent)} has a string extra
  * whose key is "result" and value is the picked file or folder.</p><br/>
  */
 public class FilePicker extends BaseActivity {

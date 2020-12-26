@@ -17,6 +17,7 @@ class CounterTest : BaseActivity() {
         val textEditText = findViewById<ScrollEditText>(R.id.text).editText
         val output = findViewById<TextView>(R.id.output)
         val counter = CharactersCounter()
+
         class MyTW : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 counter.clearResult()

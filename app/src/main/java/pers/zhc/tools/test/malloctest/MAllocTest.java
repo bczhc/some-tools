@@ -1,9 +1,9 @@
 package pers.zhc.tools.test.malloctest;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.widget.Button;
 import android.widget.EditText;
+import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.jni.JNI;

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:id="@+id/speak_switch"
-            android:showAsAction="always"
+            app:showAsAction="always"
             android:title=""
     />
     <item
             android:id="@+id/record_time"
-            android:showAsAction="ifRoom"
+            app:showAsAction="ifRoom"
             android:title="@string/record_time"
     />
 </menu>

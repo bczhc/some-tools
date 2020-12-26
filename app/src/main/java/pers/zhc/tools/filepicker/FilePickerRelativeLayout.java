@@ -1,20 +1,17 @@
 package pers.zhc.tools.filepicker;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
@@ -24,11 +21,7 @@ import pers.zhc.u.common.Documents;
 import java.io.File;
 import java.io.IOException;
 import java.text.Collator;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static pers.zhc.tools.utils.Common.showException;
 
@@ -50,7 +43,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     private final @DrawableRes
     int viewChecked = R.drawable.file_picker_view_checked;
     private final int type;
-    private final Activity ctx;
+    private final AppCompatActivity ctx;
     private String result;
     private TextView pathView;
     private File currentPath;
@@ -65,7 +58,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
             , @Nullable String initFileName) {
         super(context);
 //        this.currentFiles = new LinkedList<>();
-        this.ctx = (Activity) context;
+        this.ctx = (AppCompatActivity) context;
         this.type = type;
         this.initialPath = initialPath;
         this.cancelAction = cancelAction;
@@ -332,7 +325,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         void result(String s);
     }
 
-    private static class TextViewWithExtra extends TextView {
+    private static class TextViewWithExtra extends AppCompatTextView {
         private boolean picked = false;
 
         public TextViewWithExtra(Context context) {
