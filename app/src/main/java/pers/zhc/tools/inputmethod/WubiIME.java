@@ -114,17 +114,7 @@ public class WubiIME extends InputMethodService {
             KeyEvent.KEYCODE_BACK,
             KeyEvent.KEYCODE_DEL,
             KeyEvent.KEYCODE_SPACE,
-            KeyEvent.KEYCODE_ENTER,
-            KeyEvent.KEYCODE_0,
-            KeyEvent.KEYCODE_1,
-            KeyEvent.KEYCODE_2,
-            KeyEvent.KEYCODE_3,
-            KeyEvent.KEYCODE_4,
-            KeyEvent.KEYCODE_5,
-            KeyEvent.KEYCODE_6,
-            KeyEvent.KEYCODE_7,
-            KeyEvent.KEYCODE_8,
-            KeyEvent.KEYCODE_9
+            KeyEvent.KEYCODE_ENTER
     };
 
 
@@ -277,7 +267,7 @@ public class WubiIME extends InputMethodService {
                         commitCandidate(keyCode - KeyEvent.KEYCODE_1);
                         clearInputMethodText();
                         composing = false;
-                    }
+                    } else if(!keyEventResolver.isHoldShift()) commitText(String.valueOf(keyCode - KeyEvent.KEYCODE_0));
                     break;
             }
         }
