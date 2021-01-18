@@ -1,5 +1,7 @@
 some-tools
 ----------------
+![some-tools Shitcode](https://img.shields.io/static/v1?label=some-tools&message=Shitcode&color=7B5804)
+
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/931b7e3905cc49448a14cebf432a6396)](https://app.codacy.com/gh/bczhc/some-tools?utm_source=github.com&utm_medium=referral&utm_content=bczhc/some-tools&utm_campaign=Badge_Grade)
 [![](https://img.shields.io/lgtm/grade/java/github/bczhc/some-tools)](https://lgtm.com/projects/g/bczhc/some-tools/context:java)
