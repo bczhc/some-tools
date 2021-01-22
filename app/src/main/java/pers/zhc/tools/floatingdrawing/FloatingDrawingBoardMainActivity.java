@@ -2,21 +2,10 @@ package pers.zhc.tools.floatingdrawing;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.graphics.Point;
+import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
@@ -36,28 +25,13 @@ import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.SeekBar;
-import android.widget.Switch;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,12 +41,7 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.Infos;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRelativeLayout;
-import pers.zhc.tools.utils.BitmapUtil;
-import pers.zhc.tools.utils.ColorUtils;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtil;
-import pers.zhc.tools.utils.PermissionRequester;
-import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.*;
 import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
 import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
@@ -80,22 +49,11 @@ import pers.zhc.u.Latch;
 import pers.zhc.u.common.MultipartUploader;
 import pers.zhc.u.common.ReadIS;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
@@ -509,11 +467,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             startFloatingWindow();
         };
         TextView checkForUpdateTV = findViewById(R.id.check_for_update_tv);
-        checkForUpdateTV.setOnClickListener(v -> super.checkForUpdate(update -> {
-            if (!update) {
-                runOnUiThread(() -> ToastUtils.show(this, R.string.current_version_is_the_latest));
-            }
-        }));
+        checkForUpdateTV.setOnClickListener(v -> super.checkForUpdate());
         strokeColorHSVA.set(pv.getPaintColor());
         panelColorHSVA.set(panelColor);
         panelTextColorHSVA.set(panelTextColor);
@@ -1301,9 +1255,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         } catch (NumberFormatException ignored) {
                         }
                         progressSB.setProgress(parseInt);
-                        if(parseInt<0)
-                        {
-                        parseInt=0;
+                        if (parseInt < 0) {
+                            parseInt = 0;
                         }
                         speedDelayMillis.set(parseInt);
                     }
@@ -1400,7 +1353,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     public static abstract class AbstractCheckOverlayPermission {
-        public AbstractCheckOverlayPermission(Activity activity) {
+        public AbstractCheckOverlayPermission(AppCompatActivity activity) {
             if (!Settings.canDrawOverlays(activity)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + activity.getPackageName()));

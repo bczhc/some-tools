@@ -15,13 +15,13 @@ import java.util.List;
 
 public class ComplexGraphDrawingView extends BaseView {
 
+    static List<ComplexValue> pointList = null;
     private float width;
     private float height;
     private Paint mCoPaint;
     private Paint mPaint;
     private Path mPath;
     private boolean instanceFirst = true;
-    static List<ComplexValue> pointList = null;
 
     public ComplexGraphDrawingView(Context context) {
         super(context);

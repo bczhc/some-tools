@@ -6,12 +6,12 @@ public class KeyEventResolver {
     private final KeyEventResolverCallback callback;
     private boolean holdShift = false;
 
-    public boolean isHoldShift() {
-        return holdShift;
-    }
-
     public KeyEventResolver(KeyEventResolverCallback callback) {
         this.callback = callback;
+    }
+
+    public boolean isHoldShift() {
+        return holdShift;
     }
 
     public void onKeyDown(KeyEvent event) {

@@ -1,10 +1,10 @@
 package pers.zhc.tools.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
 import pers.zhc.tools.R;
 
 public class ToastUtils {
@@ -19,7 +19,7 @@ public class ToastUtils {
     }
 
     public static void show(Context ctx, @NonNull CharSequence charSequence) {
-        ((Activity) ctx).runOnUiThread(() -> {
+        ((AppCompatActivity) ctx).runOnUiThread(() -> {
             if (ToastUtils.toast != null) {
                 ToastUtils.toast.cancel();
             }

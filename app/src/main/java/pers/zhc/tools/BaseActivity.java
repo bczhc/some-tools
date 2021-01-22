@@ -1,43 +1,27 @@
 package pers.zhc.tools;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import pers.zhc.tools.crashhandler.CrashHandler;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ExternalJNI;
 import pers.zhc.tools.utils.PermissionRequester;
-import pers.zhc.u.common.ReadIS;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Stack;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author bczhc
  * 代码首先是给人读的，只是恰好可以执行！
  * Machine does not care, but I care!
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
     public final App app = new App();
     protected final String TAG = this.getClass().getName();
 
@@ -50,144 +34,11 @@ public class BaseActivity extends Activity {
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
         if (Infos.LAUNCHER_CLASS.equals(this.getClass())) {
-            checkForUpdate(null);
+            checkForUpdate();
         }
     }
 
-    protected void checkForUpdate(@Nullable CheckForUpdateResultInterface checkForUpdateResultInterface) {
-        new Thread(() -> {
-            System.out.println("check update...");
-            int myVersionCode = BuildConfig.VERSION_CODE;
-            String myVersionName = BuildConfig.VERSION_NAME;
-            try {
-                String appURL = Infos.ZHC_STATIC_WEB_URL_STRING + "/res/app/" + getString(R.string.app_name) + "/debug";
-                URL jsonURL = new URL(appURL + "/output.json");
-                InputStream is = jsonURL.openStream();
-                StringBuilder sb = new StringBuilder();
-                new ReadIS(is).read(s -> sb.append(s).append("\n"));
-                is.close();
-                JSONArray jsonArray = new JSONArray(sb.toString());
-                JSONObject jsonObject = jsonArray.getJSONObject(0).getJSONObject("apkData");
-                int remoteVersionCode = jsonObject.getInt("versionCode");
-                String remoteVersionName = jsonObject.getString("versionName");
-                String remoteFileName = jsonObject.getString("outputFile");
-                long fileSize = -1;
-                final String length = "length";
-                if (jsonObject.has(length)) {
-                    fileSize = jsonObject.getLong(length);
-                }
-                boolean update = true;
-                try {
-                    String[] split = remoteVersionName.split("_");
-                    long remoteBuildTime = Long.parseLong(split[1]);
-                    String[] split1 = myVersionName.split("_");
-                    long myBuildTime = Long.parseLong(split1[1]);
-                    update = remoteBuildTime > myBuildTime;
-                } catch (Exception ignored) {
-                }
-                if (checkForUpdateResultInterface != null) {
-                    checkForUpdateResultInterface.onCheckForUpdateResult(update);
-                }
-                if (update) {
-                    long finalFileSize = fileSize;
-                    runOnUiThread(() -> {
-                        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                        TextView tv = new TextView(this);
-                        tv.setText(getString(R.string.version_info, myVersionName, myVersionCode
-                                , remoteVersionName, remoteVersionCode));
-                        AlertDialog ad = adb.setTitle(R.string.found_update_whether_to_install)
-                                .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                                })
-                                .setPositiveButton(R.string.confirm, (dialog, which) -> {
-                                    ExecutorService es = Executors.newCachedThreadPool();
-                                    new PermissionRequester(() -> {
-                                        Dialog downloadDialog = new Dialog(this);
-                                        DialogUtil.setDialogAttr(downloadDialog, false
-                                                , ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                                                , false);
-                                        RelativeLayout rl = View.inflate(this, R.layout.progress_bar, null)
-                                                .findViewById(R.id.rl);
-                                        rl.setLayoutParams(new RelativeLayout.LayoutParams(
-                                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                                        TextView progressTextView = rl.findViewById(R.id.progress_tv);
-                                        TextView barTextView = rl.findViewById(R.id.progress_bar_title);
-                                        barTextView.setText(R.string.downloading);
-                                        ProgressBar pb = rl.findViewById(R.id.progress_bar);
-                                        SeekBar seekBar = new SeekBar(this);
-                                        seekBar.setLayoutParams(new ViewGroup.LayoutParams(
-                                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                                        progressTextView.setText(R.string.please_wait);
-                                        downloadDialog.setContentView(rl);
-                                        downloadDialog.setCanceledOnTouchOutside(false);
-                                        downloadDialog.setCancelable(true);
-                                        final OutputStream[] os = new OutputStream[1];
-                                        final InputStream[] downloadInputStream = new InputStream[1];
-                                        downloadDialog.setOnCancelListener(dialog1 -> {
-                                            es.shutdownNow();
-                                            Thread thread = new Thread(() -> {
-                                                try {
-                                                    os[0].close();
-                                                    downloadInputStream[0].close();
-                                                } catch (IOException | NullPointerException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            });
-                                            thread.start();
-                                            try {
-                                                thread.join();
-                                            } catch (InterruptedException e) {
-                                                e.printStackTrace();
-                                            }
-                                        });
-                                        downloadDialog.show();
-                                        es.execute(() -> {
-                                            try {
-                                                URL apkURL = new URL(appURL + "/" + remoteFileName);
-                                                URLConnection urlConnection = apkURL.openConnection();
-                                                downloadInputStream[0] = urlConnection.getInputStream();
-                                                File apkDir = new File(Common.getExternalStoragePath(this)
-                                                        + File.separatorChar + getString(R.string.some_tools_app), getString(R.string.apk));
-                                                if (!apkDir.exists()) {
-                                                    System.out.println("apkDir.mkdirs() = " + apkDir.mkdirs());
-                                                }
-                                                File apk = new File(apkDir, remoteFileName);
-                                                os[0] = new FileOutputStream(apk, false);
-                                                int readLen;
-                                                long read = 0L;
-                                                byte[] buffer = new byte[1024];
-                                                while ((readLen = downloadInputStream[0].read(buffer)) != -1) {
-                                                    os[0].write(buffer, 0, readLen);
-                                                    read += readLen;
-                                                    long finalRead = read;
-                                                    runOnUiThread(() -> {
-                                                        progressTextView.setText(getString(R.string.download_progress
-                                                                , finalRead, finalFileSize));
-                                                        pb.setProgress((int) (((double) finalRead) / ((double) finalFileSize) * 100D));
-                                                    });
-                                                }
-                                                runOnUiThread(() -> Common.installApk(this, apk));
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            } finally {
-                                                downloadDialog.dismiss();
-                                            }
-                                        });
-                                        es.shutdown();
-                                    }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
-                                })
-                                .setView(tv).create();
-                        DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                                , false);
-                        ad.setCanceledOnTouchOutside(false);
-                        ad.show();
-                    });
-                }
-            } catch (IOException e) {
-                Common.showException(e, this);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }).start();
+    protected void checkForUpdate() {
     }
 
     @Override
@@ -272,13 +123,13 @@ public class BaseActivity extends Activity {
     }
 
     public static class App {
-        private final Stack<Activity> activities;
+        private final Stack<AppCompatActivity> activities;
 
         App() {
             activities = new Stack<>();
         }
 
-        void addActivity(Activity activity) {
+        void addActivity(AppCompatActivity activity) {
             if (!activities.contains(activity)) {
                 activities.push(activity);
             }
@@ -289,7 +140,7 @@ public class BaseActivity extends Activity {
         }
 
         public void finishAllActivities() {
-            for (Activity activity : activities) {
+            for (AppCompatActivity activity : activities) {
                 if (activity != null) {
                     activity.finish();
                 }

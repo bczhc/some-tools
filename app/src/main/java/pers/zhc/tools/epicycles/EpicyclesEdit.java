@@ -4,13 +4,13 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.DialogUtil;
@@ -70,7 +70,7 @@ public class EpicyclesEdit extends BaseActivity {
             TextView tv = new TextView(this);
             setTV(tv, Epicycle);
             String s = getString(R.string.left_parenthesis)
-                    + Epicycle.c.re + getString(R.string.add)
+                    + Epicycle.c.re + getString(R.string.add_symbol)
                     + Epicycle.c.im + getString(R.string.i)
                     + getString(R.string.right_parenthesis)
                     + getString(R.string.e)
@@ -100,7 +100,7 @@ public class EpicyclesEdit extends BaseActivity {
                 setTV(tv, Epicycle);
                 String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
                         getString(R.string.left_parenthesis)
-                        , s2, getString(R.string.add)
+                        , s2, getString(R.string.add_symbol)
                         , s3, getString(R.string.i)
                         , getString(R.string.right_parenthesis)
                         , getString(R.string.e)
@@ -258,7 +258,7 @@ public class EpicyclesEdit extends BaseActivity {
         for (EpicyclesSequence.Epicycle epicycle : EpicyclesEdit.epicyclesSequence.epicycles) {
             String s = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s",
                     getString(R.string.left_parenthesis)
-                    , epicycle.c.re, getString(R.string.add)
+                    , epicycle.c.re, getString(R.string.add_symbol)
                     , epicycle.c.im, getString(R.string.i)
                     , getString(R.string.right_parenthesis)
                     , getString(R.string.e)

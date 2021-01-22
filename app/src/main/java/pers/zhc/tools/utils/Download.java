@@ -1,6 +1,5 @@
 package pers.zhc.tools.utils;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
@@ -10,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import pers.zhc.tools.R;
 import pers.zhc.u.Digest;
 import pers.zhc.u.interfaces.ProgressCallback;
@@ -20,7 +20,7 @@ import java.net.URLConnection;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Download {
-    public static void download(URL url, OutputStream os, @Nullable ProgressCallback progressCallback,@Nullable Runnable doneAction) throws IOException {
+    public static void download(URL url, OutputStream os, @Nullable ProgressCallback progressCallback, @Nullable Runnable doneAction) throws IOException {
         URLConnection connection = url.openConnection();
         byte[] buf = new byte[4096];
 
@@ -94,7 +94,7 @@ public class Download {
             new Thread(() -> {
                 try {
                     download(url, os, progress -> {
-                        ((Activity) ctx).runOnUiThread(() -> {
+                        ((AppCompatActivity) ctx).runOnUiThread(() -> {
                             pb.setProgress(((int) (progress / 100F * 10000)));
                             progressTextView.setText(ctx.getString(R.string.progress_tv, progress));
                         });

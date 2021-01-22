@@ -1,14 +1,14 @@
 package pers.zhc.tools.codecs;
 
-import android.app.Activity;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
 import pers.zhc.tools.jni.JNI;
 
 public class JNICallback implements JNI.Codecs.Callback {
     private final TextView tv;
-    private final Activity a;
+    private final AppCompatActivity a;
 
-    JNICallback(TextView tv, Activity a) {
+    JNICallback(TextView tv, AppCompatActivity a) {
         this.tv = tv;
         this.a = a;
     }

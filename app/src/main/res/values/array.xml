@@ -44,4 +44,13 @@
         <item>星期五</item>
         <item>星期六</item>
     </array>
+    <array name="wubi_settings">
+        <item>启用输入法</item>
+        <item>选择输入法</item>
+        <item>五笔编码库</item>
+        <item>文本转语音（TTS）</item>
+    </array>
+    <array name="wubi_code_settings">
+        <item>下载编码库</item>
+    </array>
 </resources>

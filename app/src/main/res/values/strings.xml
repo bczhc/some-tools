@@ -114,7 +114,7 @@
     <string name="function_drawing_board_a_period_Length">函数画板一个周期x长度</string>
     <string name="function_drawing_board_a_period_length">函数画板一个周期y长度</string>
     <string name="epicycles_test">本轮测试</string>
-    <string name="add">+</string>
+    <string name="add_symbol">+</string>
     <string name="left_parenthesis">(</string>
     <string name="right_parenthesis">)</string>
     <string name="i">i</string>
@@ -272,4 +272,12 @@
     <string name="wubi_input_method">五笔输入法</string>
     <string name="checking_local_needed_files">检查本地所需文件中</string>
     <string name="shortcut_unsupport">不支持快捷方式</string>
+    <string name="enable_tts">启用文本转语音</string>
+    <string name="downloading_done">下载完成</string>
+    <string name="attachment">附件</string>
+    <string name="add">添加</string>
+    <string name="pick_file">选择文件</string>
+    <string name="add_file">添加文件</string>
+    <string name="description">描述</string>
+    <string name="create_attachment">创建附件</string>
 </resources>

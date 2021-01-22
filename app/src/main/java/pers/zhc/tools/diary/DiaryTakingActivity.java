@@ -1,7 +1,6 @@
 package pers.zhc.tools.diary;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -18,13 +17,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
+import androidx.appcompat.app.ActionBar;
 import org.jetbrains.annotations.NotNull;
-
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ScrollEditText;
@@ -32,7 +29,6 @@ import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.utils.sqlite.MySQLite3;
 import pers.zhc.tools.utils.sqlite.SQLite;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,14 +41,14 @@ import java.util.TimerTask;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class DiaryTakingActivity extends BaseActivity {
 
+    boolean live = true;
+    boolean speak = false;
+    private TextToSpeech tts;
     private EditText et;
     private TextView charactersCountTV;
     private MyDate mDate;
-    private MySQLite3 diaryDatabase = DiaryMainActivity.diaryDatabase;
+    private final MySQLite3 diaryDatabase = DiaryMainActivity.diaryDatabase;
     private Timer savingTimer;
-    boolean live = true;
-    boolean speak = false;
-    TextToSpeech tts;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,7 +99,7 @@ public class DiaryTakingActivity extends BaseActivity {
 
             }
         });
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
@@ -205,14 +201,6 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        save();
-        live = false;
-        savingTimer.cancel();
-        super.onDestroy();
-    }
-
-    @Override
     public void onBackPressed() {
         save();
         super.onBackPressed();
@@ -226,9 +214,7 @@ public class DiaryTakingActivity extends BaseActivity {
 
     private void save() {
         if (diaryDatabase.isClosed()) {
-            runOnUiThread(() -> {
-                ToastUtils.show(this, R.string.closed);
-            });
+            runOnUiThread(() -> ToastUtils.show(this, R.string.closed));
             return;
         }
         diaryDatabase.exec("UPDATE diary SET content='" + et.getText().toString().replace("'", "''") + "' WHERE date='" + mDate.getDateString() + "'");
@@ -283,5 +269,13 @@ public class DiaryTakingActivity extends BaseActivity {
         public String getDateString() {
             return add0(year) + add0(month) + add0(day);
         }
+    }
+
+    @Override
+    public void finish() {
+        save();
+        live = false;
+        savingTimer.cancel();
+        super.finish();
     }
 }

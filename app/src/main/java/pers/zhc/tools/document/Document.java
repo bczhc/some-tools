@@ -1,7 +1,5 @@
 package pers.zhc.tools.document;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,14 +7,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.*;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
@@ -25,7 +23,6 @@ import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.DisplayUtil;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.FileU;
-import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,12 +31,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import android.text.TextWatcher;
-import android.text.Editable;
-import android.widget.RelativeLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.CheckBox;
+
+import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 /**
  * @author bczhc
@@ -48,18 +41,9 @@ public class Document extends BaseActivity {
     private ScrollView sv;
     private SQLiteDatabase db;
     private File dbFile = null;
-    private String state="normal";
-    private int chooseNum=0;
+    private String state = "normal";
+    private int chooseNum = 0;
     private RelativeLayout topView;
-
-    private static class LinearLayoutWithTimestamp extends LinearLayout {
-
-        public LinearLayoutWithTimestamp(Context context) {
-            super(context);
-        }
-
-        private long timestamp;
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,84 +59,80 @@ public class Document extends BaseActivity {
         });
         Button deleteBtn = findViewById(R.id.delete_btn);
         deleteBtn.setOnClickListener(v -> {
-                    if(state.equals("del"))
-                    {
-                        try{
-                            for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
-                                LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
-                                if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
-                                   //TODO delete record
-                                   db.delete("doc", "t=?", new String[]{String.valueOf(((LinearLayoutWithTimestamp) childLL).timestamp)});
-                                   ToastUtils.show(this,getString(R.string.deleted_notes,chooseNum));
-                                   }
+            if (state.equals("del")) {
+                try {
+                    for (int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++) {
+                        LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                        if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
+                            db.delete("doc", "t=?", new String[]{String.valueOf(((LinearLayoutWithTimestamp) childLL).timestamp)});
+                            ToastUtils.show(this, getString(R.string.deleted_notes, chooseNum));
                         }
-                        setSVViews();
-                        topView=findViewById(R.id.note_top_view);      
-                        topView.removeAllViews();
-                    } catch (Exception e) {
-                        Common.showException(e, this);
                     }
-                    View inflate = View.inflate(this, R.layout.note_top_view, null);
-                    topView=findViewById(R.id.note_top_view);
-                    topView.removeView(inflate);
+                    setSVViews();
+                    topView = findViewById(R.id.note_top_view);
+                    topView.removeAllViews();
+                } catch (Exception e) {
+                    Common.showException(e, this);
+                }
+                View inflate = View.inflate(this, R.layout.note_top_view, null);
+                topView = findViewById(R.id.note_top_view);
+                topView.removeView(inflate);
+                state = "normal";
+            } else {
+                state = "del";
+                chooseNum = 0;
+                View inflate = View.inflate(this, R.layout.note_top_view, null);
+                topView = findViewById(R.id.note_top_view);
+                topView.addView(inflate);
+                ImageView close = findViewById(R.id.cancel_deletion);
+                close.setOnClickListener(v1 -> {
+                    topView = findViewById(R.id.note_top_view);
+                    topView.removeAllViews();
                     state = "normal";
+                    for (int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++) {
+                        LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                        if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
+                            childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                            for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
+                                ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
+                            }
+
+                        }
                     }
-                    else {
-                    state = "del";
-                    chooseNum=0;
-                    View inflate = View.inflate(this, R.layout.note_top_view, null);  
-                    topView=findViewById(R.id.note_top_view);
-                    topView.addView(inflate);
-                    ImageView close= findViewById(R.id.cancel_deletion);
-                    close.setOnClickListener(v1 ->{
-                        topView=findViewById(R.id.note_top_view);
-                        topView.removeAllViews();
-                        state="normal";
-                        for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+                });
+                final CheckBox chooseAll = findViewById(R.id.choose_all);
+                chooseAll.setOnClickListener(v2 -> {
+                    //使用setOnClickListener以防止setChecked触发setOnCheckedChangeListener
+                    TextView ttv = topView.findViewById(R.id.top_tv);
+                    if (chooseAll.isChecked()) {
+                        for (int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++) {
                             LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
-                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {  
+                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFF808080) {
+                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                                for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
+                                    ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFFFF0000);
+                                }
+                            }
+                        }
+                        chooseNum = ((LinearLayout) sv.getChildAt(0)).getChildCount();
+                        ttv.setText(getString(R.string.selected_notes, chooseNum));
+
+                    } else {
+                        for (int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++) {
+                            LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
                                 childLL.setBackground(getDrawable(R.drawable.view_stroke));
                                 for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
                                     ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
                                 }
-
                             }
-                        }     
-                    });
-                    final CheckBox chooseAll=findViewById(R.id.choose_all);
-                        chooseAll.setOnClickListener(v2 -> {
-                            //使用setOnClickListener以防止setChecked触发setOnCheckedChangeListener
-                                    TextView ttv=topView.findViewById(R.id.top_tv);
-                                    if(chooseAll.isChecked())
-                                    {
-                                        for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
-                                            LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
-                                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFF808080) {  
-                                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
-                                                for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
-                                                    ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFFFF0000);
-                                                }                    
-                                            }
-                                        } 
-                                        chooseNum=((LinearLayout) sv.getChildAt(0)).getChildCount();
-                                        ttv.setText(getString(R.string.selected_notes,chooseNum));
-                                        
-                                    } else {
-                                        for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
-                                            LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
-                                            if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {  
-                                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
-                                                for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
-                                                    ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
-                                                }                    
-                                            }
-                                        } 
-                                        chooseNum=0;
-                                        ttv.setText(R.string.no_notes_were_selected);
-                                        }   
-                            });
-                    ToastUtils.show(this,R.string.note_deletion_tip);
+                        }
+                        chooseNum = 0;
+                        ttv.setText(R.string.no_notes_were_selected);
                     }
+                });
+                ToastUtils.show(this, R.string.note_deletion_tip);
+            }
         });
         sv = findViewById(R.id.sv);
         importBtn.setOnClickListener(v -> {
@@ -188,17 +168,17 @@ public class Document extends BaseActivity {
                         Common.showException(e, this);
                         return;
                     }
-                       final AlertDialog confirmationAlertDialog = DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
-                    setSVViews();
-                       ToastUtils.show(this, R.string.importing_success);
-                    }, (dialog, which) -> {
-                        ToastUtils.show(this, R.string.importing_canceled);
-                    }, R.string.whether_to_import_notes
-   
-                    , ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+                    final AlertDialog confirmationAlertDialog = DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
+                                setSVViews();
+                                ToastUtils.show(this, R.string.importing_success);
+                            }, (dialog, which) -> {
+                                ToastUtils.show(this, R.string.importing_canceled);
+                            }, R.string.whether_to_import_notes
+
+                            , ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
                     if (file.exists()) {
-                        if(((LinearLayout) sv.getChildAt(0)).getChildCount() != 0) {
-                        confirmationAlertDialog.show();
+                        if (((LinearLayout) sv.getChildAt(0)).getChildCount() != 0) {
+                            confirmationAlertDialog.show();
                         } else {
                             setSVViews();
                             ToastUtils.show(this, R.string.importing_success);
@@ -213,38 +193,36 @@ public class Document extends BaseActivity {
                     final String destFileDir = data.getStringExtra("result");
                     String dbPath = db.getPath();
                     File file = new File(dbPath);
-                    AlertDialog.Builder adb=new AlertDialog.Builder(this);
+                    AlertDialog.Builder adb = new AlertDialog.Builder(this);
                     View inflate = View.inflate(this, R.layout.export_notes, null);
-                    final EditText filename=inflate.findViewById(R.id.filename);
+                    final EditText filename = inflate.findViewById(R.id.filename);
                     filename.setText("doc");
-                    final TextView tv=inflate.findViewById(R.id.export_notesTextview2);
-                    if(!(new File(destFileDir + File.separator + "doc.db")).exists())
-                    {
+                    final TextView tv = inflate.findViewById(R.id.export_notesTextview2);
+                    if (!(new File(destFileDir + File.separator + "doc.db")).exists()) {
                         tv.setVisibility(View.INVISIBLE);
                     }
                     filename.addTextChangedListener(new TextWatcher() {
-                            @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                            }
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
-                            @Override
-                            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            if((new File(destFileDir + File.separator + filename.getText()+".db")).exists())
-                            {
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            if ((new File(destFileDir + File.separator + filename.getText() + ".db")).exists()) {
                                 tv.setVisibility(View.VISIBLE);
-                                } else {
-                                    tv.setVisibility(View.INVISIBLE);
-                                    }
+                            } else {
+                                tv.setVisibility(View.INVISIBLE);
                             }
+                        }
 
-                            @Override
-                            public void afterTextChanged(Editable s) {
-                            }
-                        });
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                        }
+                    });
                     adb.setView(inflate);
                     adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                         try {
-                            File destFile = new File(destFileDir + File.separator + filename.getText()+".db");
+                            File destFile = new File(destFileDir + File.separator + filename.getText() + ".db");
                             FileU.FileCopy(file, destFile);
                             if (destFile.exists()) {
                                 ToastUtils.show(this, getString(R.string.exporting_success) + "\n" + destFile.getCanonicalPath());
@@ -252,14 +230,14 @@ public class Document extends BaseActivity {
                         } catch (IOException e) {
                             Common.showException(e, this);
                         }
-                    } ).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                        
+                    }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+
                     });
-                    Dialog ad=adb.create();
+                    Dialog ad = adb.create();
                     setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT
-                                  , ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                            , ViewGroup.LayoutParams.WRAP_CONTENT, true);
                     ad.show();
-                  }
+                }
                 break;
             default:
                 break;
@@ -293,87 +271,83 @@ public class Document extends BaseActivity {
                         llWithTimestamp.timestamp = millisecond;
                         LinearLayoutWithTimestamp finalLlWithTimestamp = llWithTimestamp;
                         llWithTimestamp.setOnClickListener(v -> {
-                        topView=findViewById(R.id.note_top_view);
-                        TextView ttv=topView.findViewById(R.id.top_tv);
-                            if(state.equals("del")){
-                if(((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(0)).getChildAt(0)).getCurrentTextColor() != 0xFFFF0000)
-                {
-                finalLlWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke_red));
-                chooseNum++;
-                ttv.setText(getString(R.string.selected_notes,chooseNum));
-                for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
-               ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFFFF0000);
-                }
-                }
-                else
-                {
-                finalLlWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke));
-                chooseNum--;
-                CheckBox chooseAll=findViewById(R.id.choose_all);
-                if(chooseAll.isChecked())
-                {
-                    chooseAll.setChecked(false);
-                }
-                if(chooseNum == 0){
-                ttv.setText(R.string.no_notes_were_selected);
-                } else {
-                ttv.setText(getString(R.string.selected_notes,chooseNum));
-                }
-                for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
-                ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFF808080);
-                }
-                
-                }
-                } else {
-                            Dialog dialog = new Dialog(this);
-                            LinearLayout linearLayout1 = new LinearLayout(this);
-                            linearLayout1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                            linearLayout1.setOrientation(LinearLayout.VERTICAL);
-                            DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-                            Button[] buttons = new Button[2];
-                            View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
-                                    v1 -> {
-                                        try {
-                                            Intent intent = new Intent(this, NoteTakingActivity.class);
-                                            intent.putExtra("origin", false);
-                                            Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + millisecond, null);
-                                            c.moveToFirst();
-                                            NoteTakingActivity.title = c.getString(1);
-                                            NoteTakingActivity.content = c.getString(2);
-                                            c.close();
-                                            intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
-                                            intent.putExtra("millisecond", millisecond);
-                                            startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
-                                            dialog.dismiss();
-                                            overridePendingTransition(R.anim.in_left_and_bottom, 0);
-                                        } catch (IndexOutOfBoundsException e) {
-                                            e.printStackTrace();
-                                            ToastUtils.show(this, e.toString());
-                                        }
-                                    },
-                                    v1 -> {
-                                        AlertDialog confirmationAD = DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
-                                            try {
-                                                db.execSQL("DELETE FROM doc WHERE t=" + millisecond);
-                                            } catch (Exception e) {
-                                                Common.showException(e, this);
-                                            }
-                                            setSVViews();
-                                            dialog.dismiss();
-                                        }, (dialog1, which) -> {
-                                        }, R.string.whether_to_delete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-                                        confirmationAD.show();
+                            topView = findViewById(R.id.note_top_view);
+                            TextView ttv = topView.findViewById(R.id.top_tv);
+                            if (state.equals("del")) {
+                                if (((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(0)).getChildAt(0)).getCurrentTextColor() != 0xFFFF0000) {
+                                    finalLlWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke_red));
+                                    chooseNum++;
+                                    ttv.setText(getString(R.string.selected_notes, chooseNum));
+                                    for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
+                                        ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFFFF0000);
                                     }
-                            };
-                            for (int i = 0; i < buttons.length; i++) {
-                                buttons[i] = new Button(this);
-                                buttons[i].setText(String.format(getString(R.string.str), sqliteOptions[i]));
-                                buttons[i].setOnClickListener(onClickListeners[i]);
-                                linearLayout1.addView(buttons[i]);
-                            }
-                            dialog.setContentView(linearLayout1);
-                            dialog.setCanceledOnTouchOutside(true);
-                            dialog.show();
+                                } else {
+                                    finalLlWithTimestamp.setBackground(getDrawable(R.drawable.view_stroke));
+                                    chooseNum--;
+                                    CheckBox chooseAll = findViewById(R.id.choose_all);
+                                    if (chooseAll.isChecked()) {
+                                        chooseAll.setChecked(false);
+                                    }
+                                    if (chooseNum == 0) {
+                                        ttv.setText(R.string.no_notes_were_selected);
+                                    } else {
+                                        ttv.setText(getString(R.string.selected_notes, chooseNum));
+                                    }
+                                    for (int i = 0; i < finalLlWithTimestamp.getChildCount(); i++) {
+                                        ((TextView) ((LinearLayout) finalLlWithTimestamp.getChildAt(i)).getChildAt(0)).setTextColor(0xFF808080);
+                                    }
+
+                                }
+                            } else {
+                                Dialog dialog = new Dialog(this);
+                                LinearLayout linearLayout1 = new LinearLayout(this);
+                                linearLayout1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                linearLayout1.setOrientation(LinearLayout.VERTICAL);
+                                DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+                                Button[] buttons = new Button[2];
+                                View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
+                                        v1 -> {
+                                            try {
+                                                Intent intent = new Intent(this, NoteTakingActivity.class);
+                                                intent.putExtra("origin", false);
+                                                Cursor c = db.rawQuery("SELECT * FROM doc WHERE t=" + millisecond, null);
+                                                c.moveToFirst();
+                                                NoteTakingActivity.title = c.getString(1);
+                                                NoteTakingActivity.content = c.getString(2);
+                                                c.close();
+                                                intent.putExtra("bottom_btn_string", getString(R.string.modification_record));
+                                                intent.putExtra("millisecond", millisecond);
+                                                startActivityForResult(intent, RequestCode.START_ACTIVITY_1);
+                                                dialog.dismiss();
+                                                overridePendingTransition(R.anim.in_left_and_bottom, 0);
+                                            } catch (IndexOutOfBoundsException e) {
+                                                e.printStackTrace();
+                                                ToastUtils.show(this, e.toString());
+                                            }
+                                        },
+                                        v1 -> {
+                                            AlertDialog confirmationAD = DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
+                                                try {
+                                                    db.execSQL("DELETE FROM doc WHERE t=" + millisecond);
+                                                } catch (Exception e) {
+                                                    Common.showException(e, this);
+                                                }
+                                                setSVViews();
+                                                dialog.dismiss();
+                                            }, (dialog1, which) -> {
+                                            }, R.string.whether_to_delete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+                                            confirmationAD.show();
+                                        }
+                                };
+                                for (int i = 0; i < buttons.length; i++) {
+                                    buttons[i] = new Button(this);
+                                    buttons[i].setText(String.format(getString(R.string.str), sqliteOptions[i]));
+                                    buttons[i].setOnClickListener(onClickListeners[i]);
+                                    linearLayout1.addView(buttons[i]);
+                                }
+                                dialog.setContentView(linearLayout1);
+                                dialog.setCanceledOnTouchOutside(true);
+                                dialog.show();
                             }
                         });
                         Date date = new Date(millisecond);
@@ -410,54 +384,61 @@ public class Document extends BaseActivity {
         });
     }
 
-    SQLiteDatabase getDB(Activity ctx) {
+    SQLiteDatabase getDB(AppCompatActivity ctx) {
         /*DocDB db = new DocDB(ctx, "a", null, 1);
         return db.getWritableDatabase();*/
-            SQLiteDatabase database = null;
-            File dbPath = Common.getInternalDatabaseDir(this);
-            if (!dbPath.exists()) {
-                System.out.println("dbPath.mkdirs() = " + dbPath.mkdirs());
+        SQLiteDatabase database = null;
+        File dbPath = Common.getInternalDatabaseDir(this);
+        if (!dbPath.exists()) {
+            System.out.println("dbPath.mkdirs() = " + dbPath.mkdirs());
+        }
+        try {
+            dbFile = new File(dbPath.getPath() + File.separator + "doc.db");
+            database = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
+            database.execSQL("CREATE TABLE IF NOT EXISTS doc(\n" +
+                    "    t long,\n" +
+                    "    title text not null,\n" +
+                    "    content text not null\n" +
+                    ");");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Common.showException(e, ctx);
+        }
+        if (database != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                database.disableWriteAheadLogging();
             }
-            try {
-                dbFile = new File(dbPath.getPath() + File.separator + "doc.db");
-                database = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
-                database.execSQL("CREATE TABLE IF NOT EXISTS doc(\n" +
-                                 "    t long,\n" +
-                                 "    title text not null,\n" +
-                                 "    content text not null\n" +
-                                 ");");
-            } catch (Exception e) {
-                e.printStackTrace();
-                Common.showException(e, ctx);
-            }
-            if (database != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    database.disableWriteAheadLogging();
-                }
-            }
-            return database;
+        }
+        return database;
     }
 
     @Override
     public void onBackPressed() {
-        if(state.equals("del"))
-        {
-            topView=findViewById(R.id.note_top_view);
+        if (state.equals("del")) {
+            topView = findViewById(R.id.note_top_view);
             topView.removeAllViews();
-            state="normal";
-            for( int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++){
+            state = "normal";
+            for (int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++) {
                 LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
-                if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {  
+                if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
                     childLL.setBackground(getDrawable(R.drawable.view_stroke));
                     for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
                         ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFF808080);
-                    }                    
                     }
-               } 
-        }
-        else{
+                }
+            }
+        } else {
             super.onBackPressed();
             overridePendingTransition(0, R.anim.slide_out_bottom);
+        }
+    }
+
+    private static class LinearLayoutWithTimestamp extends LinearLayout {
+
+        private long timestamp;
+
+        public LinearLayoutWithTimestamp(Context context) {
+            super(context);
         }
     }
 }

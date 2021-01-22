@@ -1,9 +1,11 @@
-import pers.zhc.plugins.MyPlugin1
+import pers.zhc.plugins.BuildUtils
+import pers.zhc.plugins.MyPlugin2
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco-android'
+apply plugin: MyPlugin2
 
 android {
     signingConfigs {
@@ -25,7 +27,7 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 14
         targetSdkVersion 29
-        def verInfo = MyPlugin1.gVersion()
+        def verInfo = BuildUtils.gVersion()
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
         ndk {
@@ -61,7 +63,7 @@ android {
         abortOnError false
         return true
     }
-    def tools = MyPlugin1.Tools.newInstance([android.ndkDirectory, android.sdkDirectory] as Object[])
+    def tools = BuildUtils.Tools.newInstance([android.ndkDirectory, android.sdkDirectory] as Object[])
     ndkVersion = tools.getNdkVersion()
     println("Ndk Version: ${ndkVersion}")
     externalNativeBuild {
@@ -82,9 +84,12 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
-
 dependencies {
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.72"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.10"
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation(project("java").project("javaLib")) {
+        transitive = false
+    }
 }

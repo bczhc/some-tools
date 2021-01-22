@@ -2,12 +2,7 @@ package pers.zhc.tools.epicycles;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PaintFlagsDrawFilter;
-import android.graphics.Path;
+import android.graphics.*;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import pers.zhc.tools.BaseView;

@@ -1,18 +1,18 @@
 package pers.zhc.tools.floatingdrawing;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.WindowManager;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ToastUtils;
 
-public class RequestCaptureScreenActivity extends Activity {
+public class RequestCaptureScreenActivity extends AppCompatActivity {
     private long timeMillisecond;
 
     @Override

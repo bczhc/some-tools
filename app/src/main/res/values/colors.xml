@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFE528</color>
-    <color name="colorPrimaryDark">#FF0B8003</color>
+    <color name="colorPrimary">#FF0B8003</color>
+    <color name="colorPrimaryDark">#086A02</color>
     <color name="colorAccent">#FFF30DF0</color>
     <color name="settings_colorPrimary">#FFB56F</color>
     <color name="settings_colorPrimaryDark">#FF0B8003</color>
@@ -15,4 +15,5 @@
     <color name="done_green">#009C00</color>
     <color name="green">#FF00FF00</color>
     <color name="grey">#FFDCDCDC</color>
+    <color name="white">#FFFFFF</color>
 </resources>

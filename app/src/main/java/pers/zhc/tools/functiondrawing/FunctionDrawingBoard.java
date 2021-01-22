@@ -6,14 +6,15 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.content.ContextCompat;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.u.math.util.MathFloatFunctionInterface;
@@ -53,7 +54,7 @@ public class FunctionDrawingBoard extends BaseActivity {
         r = new int[4];
         for (int i = 0; i < editTexts.length; i++) {
             int finalI = i;
-            editTexts[i] = new EditText(this) {
+            editTexts[i] = new AppCompatEditText(this) {
                 @Override
                 protected void onDraw(Canvas canvas) {
                     s.delete(0, s.length());
