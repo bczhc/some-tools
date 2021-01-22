@@ -3,7 +3,7 @@
 //
 
 #include "jni_help.h"
-#include "../third_party/my-cpp-lib/String.h"
+#include "../third_party/my-cpp-lib/string.h"
 using namespace bczhc;
 
 void Log(JNIEnv *env, const char *tag, const char* msg) {

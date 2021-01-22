@@ -3,8 +3,8 @@
 //
 
 #include "Base128Lib.h"
-#include "../../third_party/my-cpp-lib/String.h"
-#include "../../third_party/my-cpp-lib/File.h"
+#include "../../third_party/my-cpp-lib/string.h"
+#include "../../third_party/my-cpp-lib/file.h"
 
 using namespace bczhc;
 using namespace string;

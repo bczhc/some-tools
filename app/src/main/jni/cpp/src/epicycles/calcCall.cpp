@@ -1,8 +1,8 @@
 #include <jni.h>
-#include "../../third_party/my-cpp-lib/FourierSeries.h"
+#include "../../third_party/my-cpp-lib/math/fourier_series.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_FourierSeries.h"
 #include "../jni_help.h"
-#include "../../third_party/my-cpp-lib/Concurrent.h"
+#include "../../third_party/my-cpp-lib/concurrent.h"
 
 using namespace bczhc;
 using namespace concurrent;
@@ -102,8 +102,6 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
 
     env->GetJavaVM(&globalJvm);
     globalCallback = env->NewGlobalRef(callback);
-
-    using stdstr = std::string;
 
     class Callback : public FourierSeriesCallback {
     private:
