@@ -7,11 +7,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import pers.zhc.tools.BaseView;
-import pers.zhc.u.math.util.MathFunctionInterface;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import pers.zhc.tools.BaseView;
+import pers.zhc.u.math.util.MathFunctionInterface;
 
 @SuppressLint("ViewConstructor")
 public class FunctionDrawerView extends BaseView {

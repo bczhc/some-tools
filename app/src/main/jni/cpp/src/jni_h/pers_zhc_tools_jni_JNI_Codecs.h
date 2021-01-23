@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;Ljava/lang/String;ILpers/zhc/tools/jni/JNI/Codecs/Callback;)I
  */
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_qmcDecode
-  (JNIEnv *, jclass, jstring, jstring, jint, jobject);
+        (JNIEnv *, jclass, jstring, jstring, jint, jobject);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_Codecs
@@ -21,7 +21,7 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_qmcDecode
  * Signature: (Ljava/lang/String;Ljava/lang/String;ILpers/zhc/tools/jni/JNI/Codecs/Callback;)I
  */
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_kwmDecode
-  (JNIEnv *, jclass, jstring, jstring, jint, jobject);
+        (JNIEnv *, jclass, jstring, jstring, jint, jobject);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_Codecs
@@ -29,7 +29,7 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_kwmDecode
  * Signature: (Ljava/lang/String;Ljava/lang/String;ILpers/zhc/tools/jni/JNI/Codecs/Callback;)I
  */
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_Base128_1encode
-  (JNIEnv *, jclass, jstring, jstring, jint, jobject);
+        (JNIEnv *, jclass, jstring, jstring, jint, jobject);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_Codecs
@@ -37,7 +37,7 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_Base128_1encode
  * Signature: (Ljava/lang/String;Ljava/lang/String;ILpers/zhc/tools/jni/JNI/Codecs/Callback;)I
  */
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_Base128_1decode
-  (JNIEnv *, jclass, jstring, jstring, jint, jobject);
+        (JNIEnv *, jclass, jstring, jstring, jint, jobject);
 
 #ifdef __cplusplus
 }

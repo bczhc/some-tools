@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (ILpers/zhc/tools/pi/JNICallback;)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Pi_gen
-  (JNIEnv *, jclass, jint, jobject);
+        (JNIEnv *, jclass, jint, jobject);
 
 #ifdef __cplusplus
 }

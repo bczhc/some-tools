@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
-  (JNIEnv *, jclass, jstring);
+        (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_Sqlite3
@@ -21,7 +21,7 @@ JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
-  (JNIEnv *, jclass, jlong);
+        (JNIEnv *, jclass, jlong);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_Sqlite3
@@ -29,7 +29,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
  * Signature: (JLjava/lang/String;Lpers/zhc/tools/jni/JNI/Sqlite3/SqliteExecCallback;)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
-  (JNIEnv *, jclass, jlong, jstring, jobject);
+        (JNIEnv *, jclass, jlong, jstring, jobject);
 
 JNIEXPORT jboolean JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_checkIfCorrupt
         (JNIEnv *, jclass, jlong);

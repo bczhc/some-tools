@@ -25,7 +25,7 @@ android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "pers.zhc.tools"
-        minSdkVersion 14
+        minSdkVersion 17
         targetSdkVersion 29
         def verInfo = BuildUtils.gVersion()
         versionCode(verInfo[0] as int)
@@ -84,6 +84,10 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
@@ -92,4 +96,5 @@ dependencies {
     implementation(project("java").project("javaLib")) {
         transitive = false
     }
+    implementation 'com.github.mik3y:usb-serial-for-android:3.3.0'
 }

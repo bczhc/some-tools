@@ -12,8 +12,10 @@ extern "C" {
  * Method:    calc
  * Signature: (DILpers/zhc/tools/jni/JNI/FourierSeriesCalc/Callback;I)V
  */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_calc
-  (JNIEnv *, jclass, jdouble, jint, jobject, jint);
+JNIEXPORT void JNICALL
+Java_pers_zhc_tools_jni_JNI_00024FourierSeriesCalc_calc
+(JNIEnv
+*, jclass, jdouble, jint, jobject, jint);
 
 #ifdef __cplusplus
 }

@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
+
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.floatingdrawing.MyCanvas;
 import pers.zhc.tools.utils.GestureResolver;

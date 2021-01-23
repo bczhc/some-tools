@@ -1,7 +1,9 @@
 package pers.zhc.tools.crashhandler;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.utils.ToastUtils;
 

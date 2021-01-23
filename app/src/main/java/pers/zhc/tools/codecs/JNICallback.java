@@ -1,7 +1,9 @@
 package pers.zhc.tools.codecs;
 
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import pers.zhc.tools.jni.JNI;
 
 public class JNICallback implements JNI.Codecs.Callback {

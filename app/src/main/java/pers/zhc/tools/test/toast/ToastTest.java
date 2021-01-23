@@ -3,7 +3,9 @@ package pers.zhc.tools.test.toast;
 import android.os.Bundle;
 import android.text.Editable;
 import android.widget.Button;
+
 import androidx.annotation.Nullable;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ScrollEditText;

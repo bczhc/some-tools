@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/util/ArrayList;DILpers/zhc/tools/jni/JNI/FourierSeries/Callback;II)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
-  (JNIEnv *, jclass, jobject, jdouble, jint, jobject, jint, jint);
+        (JNIEnv *, jclass, jobject, jdouble, jint, jobject, jint, jint);
 
 #ifdef __cplusplus
 }

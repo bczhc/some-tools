@@ -12,40 +12,49 @@ extern "C" {
  * Method:    createHandler
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_createHandler
-  (JNIEnv *, jclass);
+JNIEXPORT jint
+
+JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_createHandler
+        (JNIEnv *, jclass);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_CharactersCounter
  * Method:    releaseHandler
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_releaseHandler
-  (JNIEnv *, jclass, jint);
+JNIEXPORT void JNICALL
+Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_releaseHandler
+(JNIEnv
+*, jclass, jint);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_CharactersCounter
  * Method:    count
  * Signature: (ILjava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_count
-  (JNIEnv *, jclass, jint, jstring);
+JNIEXPORT void JNICALL
+Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_count
+(JNIEnv
+*, jclass, jint, jstring);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_CharactersCounter
  * Method:    clearResult
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_clearResult
-  (JNIEnv *, jclass, jint);
+JNIEXPORT void JNICALL
+Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_clearResult
+(JNIEnv
+*, jclass, jint);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_CharactersCounter
  * Method:    getResultJson
  * Signature: (I)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_getResultJson
-  (JNIEnv *, jclass, jint);
+JNIEXPORT jstring
+JNICALL Java_pers_zhc_tools_jni_JNI_00024CharactersCounter_getResultJson
+        (JNIEnv * , jclass, jint);
 
 #ifdef __cplusplus
 }

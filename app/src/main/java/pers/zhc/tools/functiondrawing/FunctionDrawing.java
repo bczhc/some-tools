@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+
 import org.jetbrains.annotations.NotNull;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.u.FourierSeries;

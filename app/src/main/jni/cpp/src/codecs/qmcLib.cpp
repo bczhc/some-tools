@@ -2,7 +2,9 @@
 // Created by root on 19-7-3.
 //
 #include "codecsDo.h"
-#include "../../third_party/my-cpp-lib/File.h"
+#include "../../third_party/my-cpp-lib/file.h"
+
+>>>>>>> Stashed changes
 using namespace bczhc;
 using namespace file;
 

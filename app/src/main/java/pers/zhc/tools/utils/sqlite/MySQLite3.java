@@ -1,8 +1,8 @@
 package pers.zhc.tools.utils.sqlite;
 
-import pers.zhc.tools.jni.JNI;
-
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import pers.zhc.tools.jni.JNI;
 
 /**
  * @author bczhc

@@ -7,11 +7,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.view.MotionEvent;
-import pers.zhc.tools.BaseView;
-import pers.zhc.u.math.util.ComplexValue;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import pers.zhc.tools.BaseView;
+import pers.zhc.u.math.util.ComplexValue;
 
 public class ComplexGraphDrawingView extends BaseView {
 

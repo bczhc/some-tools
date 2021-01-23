@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.BatteryManager;
 import android.util.Log;
+
 import pers.zhc.tools.utils.ToastUtils;
 
 /**

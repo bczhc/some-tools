@@ -13,7 +13,7 @@ extern "C" {
  * Signature: ([BFI)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_floatToByteArray
-  (JNIEnv *, jclass, jbyteArray, jfloat, jint);
+        (JNIEnv *, jclass, jbyteArray, jfloat, jint);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_FloatingBoard
@@ -21,7 +21,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_floatToByt
  * Signature: ([BII)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_intToByteArray
-  (JNIEnv *, jclass, jbyteArray, jint, jint);
+        (JNIEnv *, jclass, jbyteArray, jint, jint);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_FloatingBoard
@@ -29,7 +29,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_intToByteA
  * Signature: ([BI)F
  */
 JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_byteArrayToFloat
-  (JNIEnv *, jclass, jbyteArray, jint);
+        (JNIEnv *, jclass, jbyteArray, jint);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_FloatingBoard
@@ -37,7 +37,7 @@ JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_byteArra
  * Signature: ([BI)I
  */
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_byteArrayToInt
-  (JNIEnv *, jclass, jbyteArray, jint);
+        (JNIEnv *, jclass, jbyteArray, jint);
 
 #ifdef __cplusplus
 }

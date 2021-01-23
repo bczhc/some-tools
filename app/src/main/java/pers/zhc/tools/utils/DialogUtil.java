@@ -11,12 +11,14 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
-import pers.zhc.tools.R;
 
 import java.util.Objects;
+
+import pers.zhc.tools.R;
 
 /**
  * @author bczhc

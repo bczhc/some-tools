@@ -1,8 +1,8 @@
 package pers.zhc.tools.codecs;
 
-import pers.zhc.tools.jni.JNI;
-
 import java.util.List;
+
+import pers.zhc.tools.jni.JNI;
 
 class jniCall {
     /**

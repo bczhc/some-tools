@@ -8,16 +8,24 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import pers.zhc.tools.R;
-import pers.zhc.u.Digest;
-import pers.zhc.u.interfaces.ProgressCallback;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.atomic.AtomicReference;
+
+import pers.zhc.tools.R;
+import pers.zhc.u.Digest;
+import pers.zhc.u.interfaces.ProgressCallback;
 
 public class Download {
     public static void download(URL url, OutputStream os, @Nullable ProgressCallback progressCallback, @Nullable Runnable doneAction) throws IOException {

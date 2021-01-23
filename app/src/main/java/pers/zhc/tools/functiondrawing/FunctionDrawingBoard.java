@@ -12,14 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
+
+import java.util.Objects;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.u.math.util.MathFloatFunctionInterface;
-
-import java.util.Objects;
 
 public class FunctionDrawingBoard extends BaseActivity {
     static MathFloatFunctionInterface functionInterface;

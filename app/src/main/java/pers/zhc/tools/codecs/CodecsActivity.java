@@ -7,27 +7,43 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.MainActivity;
-import pers.zhc.tools.R;
-import pers.zhc.tools.filepicker.FilePicker;
-import pers.zhc.tools.utils.PermissionRequester;
-import pers.zhc.tools.utils.ToastUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.MainActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.filepicker.FilePicker;
+import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.tools.utils.ToastUtils;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
