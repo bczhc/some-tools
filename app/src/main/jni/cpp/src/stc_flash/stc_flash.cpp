@@ -129,12 +129,40 @@ char Serial::getParity() {
 #pragma ide diagnostic ignored "LocalValueEscapesScope"
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
-        (JNIEnv *env, jclass, jstring hexFilePathS, jobject jniInterface) {
+        (JNIEnv *env, jclass, jstring hexFilePathS, jobject jniInterface, jobject echoCallback) {
     try {
         const char *hexFilePath = env->GetStringUTFChars(hexFilePathS, nullptr);
         envRef = &env;
         jniInterfaceRef = &jniInterface;
-        run(hexFilePath);
+
+        class CB : public EchoCallback {
+        private:
+            JNIEnv *&env;
+            jobject &echoCallback;
+
+            jclass cls;
+            jmethodID printMId, flushMid;
+        public:
+            CB(JNIEnv *&env, jobject &echoCallback) : env(env), echoCallback(echoCallback) {
+                cls = env->GetObjectClass(echoCallback);
+                printMId = env->GetMethodID(cls, "print", "(Ljava/lang/String;)V");
+                flushMid = env->GetMethodID(cls, "flush", "()V");
+            }
+
+            void print(const char *s) override {
+                jstring jString = env->NewStringUTF(s);
+                env->CallVoidMethod(echoCallback, printMId, jString);
+            }
+
+            void flush() override {
+                env->CallVoidMethod(echoCallback, flushMid);
+            }
+
+            ~CB() {
+                env->DeleteLocalRef(cls);
+            }
+        } cb(env, echoCallback);
+        run(hexFilePath, &cb);
         env->ReleaseStringUTFChars(hexFilePathS, hexFilePath);
     } catch (const String &e) {
         Log(env, "jni exception", e.getCString());

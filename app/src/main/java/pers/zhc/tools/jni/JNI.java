@@ -236,6 +236,12 @@ public class JNI {
             loadLib();
         }
 
-        public static native void burn(String hexFilePath, JNIInterface jniInterface);
+        public interface EchoCallback {
+            void print(String s);
+
+            void flush();
+        }
+
+        public static native void burn(String hexFilePath, JNIInterface jniInterface, EchoCallback echoCallback);
     }
 }
