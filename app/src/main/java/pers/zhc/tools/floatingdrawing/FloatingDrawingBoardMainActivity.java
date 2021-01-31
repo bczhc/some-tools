@@ -55,6 +55,7 @@ import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import android.os.Vibrator;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
@@ -444,6 +445,86 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             smallLL.addView(childTextViews[i]);
             optionsLinearLayout.addView(smallLL);
         }
+        //添加撤销，恢复按钮长按事件
+        final Boolean[] onUndo={false};
+        childTextViews[4].setOnLongClickListener(v->{
+           final int[] time={470};//执行间隔
+            final Thread Thread=new Thread()
+            {
+                @Override
+                public void run() {
+                    Vibrator vibrator = (Vibrator)FloatingDrawingBoardMainActivity.this.getSystemService(FloatingDrawingBoardMainActivity.this.VIBRATOR_SERVICE);
+                    vibrator.vibrate(100);
+                    while (onUndo[0]) {
+                        if(time[0] > 70){
+                            time[0]-=36;
+                        }
+                        pv.undo();
+                        try {
+                            sleep(time[0]);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };           
+            ckV();
+            Thread.start();
+            onUndo[0]=true;
+                return true;
+        });
+        childTextViews[4].setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v,MotionEvent event){
+            if(event.getAction() == MotionEvent.ACTION_UP&onUndo[0])
+                {
+                    onUndo[0]=false;
+              }
+                return false;
+                }
+        });
+        final Boolean[] onRedo={false};
+        childTextViews[5].setOnLongClickListener(v->{
+            final int[] time={470};//执行间隔
+            final Thread Thread=new Thread()
+            {
+                @Override
+                public void run() {
+                    Vibrator vibrator = (Vibrator)FloatingDrawingBoardMainActivity.this.getSystemService(FloatingDrawingBoardMainActivity.this.VIBRATOR_SERVICE);
+                    vibrator.vibrate(100);
+                    while (onRedo[0]) {
+                        if(time[0] > 70){
+                            time[0]-=36;
+                        }
+                        pv.redo();
+                        try {
+                            sleep(time[0]);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            };           
+            ckV();
+            Thread.start();
+            onRedo[0]=true;
+            return true;
+        });
+        childTextViews[5].setOnTouchListener(new View.OnTouchListener()
+            {
+                @Override
+                public boolean onTouch(View v,MotionEvent event){
+                    if(event.getAction() == MotionEvent.ACTION_UP&onRedo[0])
+                    {
+                        onRedo[0]=false;
+                    }
+                    return false;
+                }
+            });
+        
         Button readCacheFileBtn = findViewById(R.id.open_cache_path_file);
         readCacheFileBtn.setOnClickListener(v -> {
             if (!fbSwitch.isChecked()) {
