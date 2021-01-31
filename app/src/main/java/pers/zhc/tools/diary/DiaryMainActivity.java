@@ -434,7 +434,7 @@ public class DiaryMainActivity extends BaseActivity {
                                 ToastUtils.show(this, R.string.please_type_correct_value);
                                 return;
                             }
-                            changeDate(dateString, newDate);
+                            changeDate(date.getDateString(), newDate);
                             dialog.dismiss();
                             refresh();
                         })
@@ -466,7 +466,7 @@ public class DiaryMainActivity extends BaseActivity {
     @Override
     public void finish() {
         try {
-            if (diaryDatabase != null) {
+            if (diaryDatabase != null && !diaryDatabase.isClosed()) {
                 diaryDatabase.close();
             }
         } catch (Exception e) {

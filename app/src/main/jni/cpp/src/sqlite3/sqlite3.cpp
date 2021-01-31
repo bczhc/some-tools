@@ -1,12 +1,12 @@
-#include <string>
 #include "../../third_party/my-cpp-lib/third_party/sqlite3-single-c/sqlite3.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_Sqlite3.h"
-#include "../../third_party/my-cpp-lib/Sqlite3.h"
+#include "../../third_party/my-cpp-lib/sqlite3.h"
 #include "../jni_help.h"
-#include <iostream>
+#include "../../third_party/my-cpp-lib/string.h"
 
 using namespace bczhc;
 using namespace std;
+using namespace string;
 
 class CB : public Sqlite3::SqliteCallback {
 private:
@@ -34,6 +34,7 @@ public:
         for (int i = 0; i < colNum; ++i) {
             jstring s = env->NewStringUTF(content[i]);
             env->SetObjectArrayElement(contentArray, i, s);
+            env->DeleteLocalRef(s);
         }
         return (int) env->CallIntMethod(callbackObject, callbackMId, contentArray);
     }
@@ -51,10 +52,10 @@ JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
     const char *file = env->GetStringUTFChars(path, (jboolean *) nullptr);
     int code = db->open(file);
     if (code) {
-        std::string msg = "Open or create database failed.";
-        msg.append(" code: ");
-        msg.append(to_string(code));
-        throwException(env, msg.c_str());
+        String msg = "Open or create database failed.";
+        msg.append(" code: ")
+                .append(String::toString(code));
+        throwException(env, msg.getCString());
     }
     env->ReleaseStringUTFChars(path, file);
     return (jlong) db;
@@ -65,10 +66,10 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
     auto *db = (Sqlite3 *) id;
     int code = db->close();
     if (code) {
-        std::string msg = "Close database failed";
-        msg.append(" code: ");
-        msg.append(to_string(code));
-        throwException(env, msg.c_str());
+        String msg = "Close database failed";
+        msg.append(" code: ")
+                .append(String::toString(code));
+        throwException(env, msg.getCString());
     }
     delete db;
 }

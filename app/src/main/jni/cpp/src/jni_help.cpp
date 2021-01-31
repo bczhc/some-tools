@@ -5,7 +5,6 @@
 #include "jni_help.h"
 #include "../third_party/my-cpp-lib/string.h"
 
->>>>>>> Stashed changes
 using namespace bczhc;
 
 void Log(JNIEnv *env, const char *tag, const char *msg) {

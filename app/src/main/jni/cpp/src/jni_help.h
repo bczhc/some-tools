@@ -8,7 +8,6 @@
 #include <jni.h>
 #include "../third_party/my-cpp-lib/string.h"
 
->>>>>>> Stashed changes
 using namespace bczhc::string;
 
 //void Log(JNIEnv *env, const String& tag, const String& msg);
