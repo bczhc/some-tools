@@ -6,6 +6,7 @@ import androidx.annotation.Size;
 import java.util.ArrayList;
 
 import pers.zhc.tools.pi.JNICallback;
+import pers.zhc.tools.stcflash.JNIInterface;
 import pers.zhc.u.math.util.ComplexValue;
 
 /**
@@ -228,5 +229,13 @@ public class JNI {
         }
 
         public static native int toCall2(Object instance);
+    }
+
+    public static class StcFlash {
+        static {
+            loadLib();
+        }
+
+        public static native void burn(String hexFilePath, JNIInterface jniInterface);
     }
 }

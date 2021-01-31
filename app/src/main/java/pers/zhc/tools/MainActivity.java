@@ -35,6 +35,7 @@ import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.pi.Pi;
+import pers.zhc.tools.stcflash.FlashMainActivity;
 import pers.zhc.tools.test.DocumentProviderTest;
 import pers.zhc.tools.test.InputEvent;
 import pers.zhc.tools.test.MathExpressionEvaluationTest;
@@ -155,7 +156,8 @@ public class MainActivity extends BaseActivity {
                 R.string.regular_expression_test,
                 R.string.wubi_test,
                 R.string.wubi_input_method,
-                R.string.usb_serial_test
+                R.string.usb_serial_test,
+                R.string.stc_flash
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -186,7 +188,8 @@ public class MainActivity extends BaseActivity {
                 RegExpTest.class,
                 WubiInput.class,
                 WubiInputMethodActivity.class,
-                UsbSerialTest.class
+                UsbSerialTest.class,
+                FlashMainActivity.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

@@ -13,7 +13,7 @@ extern "C" {
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_call
-        (JNIEnv *, jclass);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_JniTest
@@ -21,7 +21,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_call
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_toCall
-        (JNIEnv *, jclass);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_JniTest
@@ -29,7 +29,7 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_toCall
  * Signature: (Ljava/lang/Object;)I
  */
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_toCall2
-        (JNIEnv *, jclass, jobject);
+  (JNIEnv *, jclass, jobject);
 
 #ifdef __cplusplus
 }

@@ -3,7 +3,7 @@
 //
 
 #include "jni_help.h"
-#include "../third_party/my-cpp-lib/string.h"
+#include "../third_party/my-cpp-lib/string.hpp"
 
 using namespace bczhc;
 

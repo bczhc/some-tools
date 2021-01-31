@@ -17,9 +17,14 @@ add_library(
         third_party/my-cpp-lib/io.cpp
         third_party/my-cpp-lib/string.cpp
         third_party/my-cpp-lib/app/characterReverser/reverseCharacters.cpp
+        third_party/my-cpp-lib/app/stc_flash/stc_flash_lib.cpp
+        third_party/my-cpp-lib/utils.cpp
+        third_party/my-cpp-lib/number_parser.cpp
+        third_party/my-cpp-lib/file.cpp
 )
 target_link_libraries(myLib sqlite3)
 
 file(GLOB sources src/*.cpp src/**/*.cpp)
+message("sources: ${sources}")
 add_library(Main SHARED ${sources})
 target_link_libraries(Main myLib sqlite3)

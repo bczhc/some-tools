@@ -6,7 +6,7 @@
 #define JNI_JNI_HELP_H
 
 #include <jni.h>
-#include "../third_party/my-cpp-lib/string.h"
+#include "../third_party/my-cpp-lib/string.hpp"
 
 using namespace bczhc::string;
 
