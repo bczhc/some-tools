@@ -280,4 +280,21 @@
     <string name="add_file">添加文件</string>
     <string name="description">描述</string>
     <string name="create_attachment">创建附件</string>
+    <string name="associated_diary">"关联的日记日期（yyyyMMdd格式，可用逗号分隔多个） "</string>
+    <string name="usb_serial_test">usb串口测试</string>
+    <string name="empty_device">empty device</string>
+    <string name="empty_driver">empty driver</string>
+    <string name="null_connection">null connection</string>
+    <string name="stc_flash">stc烧写</string>
+    <string name="connect">连接</string>
+    <string name="null_port">null port</string>
+    <string name="hex_file_path">hex文件路径</string>
+    <string name="burn">烧写</string>
+    <string name="please_connect_first">请先连接</string>
+    <string name="connected">已连接</string>
+    <string name="permission_denied">permission denied</string>
+    <string name="null_device">null device</string>
+    <string name="send">send</string>
+    <string name="receive">receive</string>
+    <string name="data_to_be_sent">data to be send</string>
 </resources>

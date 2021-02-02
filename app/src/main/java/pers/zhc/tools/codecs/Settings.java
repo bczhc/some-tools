@@ -5,22 +5,35 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
-import pers.zhc.tools.utils.ToastUtils;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.utils.ToastUtils;
 
 import static pers.zhc.tools.utils.Common.showException;
 import static pers.zhc.tools.utils.DisplayUtil.px2sp;

@@ -3,9 +3,10 @@ package pers.zhc.tools.floatingdrawing;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import pers.zhc.tools.BaseActivity;
 
 import java.util.Objects;
+
+import pers.zhc.tools.BaseActivity;
 
 /**
  * @author bczhc

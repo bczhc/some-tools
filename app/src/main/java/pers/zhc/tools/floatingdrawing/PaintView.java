@@ -4,13 +4,31 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.Path;
+import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
+import java.util.LinkedList;
+import java.util.Map;
+
 import pers.zhc.tools.R;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
@@ -21,10 +39,6 @@ import pers.zhc.u.CanDoHandler;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
-
-import java.io.*;
-import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * @author bczhc & (cv...)...
@@ -196,7 +210,8 @@ public class PaintView extends View {
         final long currentTimeMillis = System.currentTimeMillis();
         if (putCreationTime) {
             savePathDatabase.exec("INSERT INTO info VALUES(" + currentTimeMillis + "," + currentTimeMillis + ")", null);
-        } else savePathDatabase.exec("UPDATE info set modification_timestamp=" + currentTimeMillis, null);
+        } else
+            savePathDatabase.exec("UPDATE info set modification_timestamp=" + currentTimeMillis, null);
     }
 
     float getStrokeWidth() {

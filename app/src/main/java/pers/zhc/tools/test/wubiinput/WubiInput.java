@@ -6,17 +6,19 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.ScrollEditText;
-import pers.zhc.tools.utils.sqlite.MySQLite3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.ScrollEditText;
+import pers.zhc.tools.utils.sqlite.MySQLite3;
 
 public class WubiInput extends BaseActivity {
     private MySQLite3 dictDB;

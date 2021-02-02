@@ -4,15 +4,17 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.File;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
-
-import java.io.File;
 
 /**
  * @author bczhc

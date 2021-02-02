@@ -29,6 +29,19 @@
                       android:id="@+id/file_list_ll"
                       android:orientation="vertical"
         />
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5sp"
+        >
+            <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:textSize="20sp"
+                      android:hint="@string/associated_diary"
+                      android:inputType="text"
+                      tools:ignore="Autofill"
+                      android:id="@+id/associated_diary_et"
+            />
+        </com.google.android.material.textfield.TextInputLayout>
         <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:hint="@string/description"
                   android:id="@+id/description_et"

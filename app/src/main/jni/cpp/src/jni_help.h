@@ -6,11 +6,14 @@
 #define JNI_JNI_HELP_H
 
 #include <jni.h>
-#include "../third_party/my-cpp-lib/string.h"
+#include "../third_party/my-cpp-lib/string.hpp"
+
 using namespace bczhc::string;
 
-//void Log(JNIEnv *env, const String& tag, const String& msg);
+namespace jnihelp {
+    void log(JNIEnv *&env, const char *tag, const char *format, ...);
 
-void Log(JNIEnv *env, const char *tag, const char *msg);
+    void throwException(JNIEnv *&env, const char *format, ...);
+}
 
 #endif //JNI_JNI_HELP_H

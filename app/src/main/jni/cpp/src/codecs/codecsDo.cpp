@@ -6,6 +6,7 @@
 //
 
 #include "./codecsDo.h"
+#include <cstdio>
 
 using namespace bczhc;
 
@@ -32,13 +33,14 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_qmcDecode
             .append(" -> ")
             .append(f2);
     sQ = sQString.getCString();
-    Log(env, "", sQ);
-    Log(env, "", "JNI————解码……");
+    jnihelp::log(env, "", sQ);
+    jnihelp::log(env, "", "JNI————解码……");
     int rC;
     const char *u1, *u2;
     u1 = String::toUpperCase(f1).getCString(), u2 = String::toUpperCase(f2).getCString();
     char *nN = NULL;
-    if (!strcmp(u1, u2)) NewFileName(&nN, f1), rC = decode(f1, nN, env, callback), remove(f1), rename(nN, f1);
+    if (!strcmp(u1, u2))
+        NewFileName(&nN, f1), rC = decode(f1, nN, env, callback), remove(f1), rename(nN, f1);
     else
         rC = decode(f1, f2, env, callback);
     if (mode) remove(f1);
@@ -55,7 +57,8 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_kwmDecode
     const char *u1, *u2;
     u1 = String::toUpperCase(fN).getCString(), u2 = String::toUpperCase(dFN).getCString();
     char *nN = NULL;
-    if (!strcmp(u1, u2)) NewFileName(&nN, fN), stt = kwm(env, fN, nN, callback), remove(fN), rename(nN, fN);
+    if (!strcmp(u1, u2))
+        NewFileName(&nN, fN), stt = kwm(env, fN, nN, callback), remove(fN), rename(nN, fN);
     else stt = kwm(env, fN, dFN, callback);
     if (mode) remove(fN);
     env->ReleaseStringUTFChars(f, fN);

@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ScrollView;
+
 import pers.zhc.tools.R;
 
 public class ScrollEditText extends ScrollView implements EditTextInterface {
