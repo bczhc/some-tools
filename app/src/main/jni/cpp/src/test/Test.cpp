@@ -62,5 +62,14 @@ void setSpeed(int fd, unsigned int speed) {
 }
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_call
-        (JNIEnv *env, jclass) {
+        (JNIEnv *env, jclass, jint f) {
+    int fd = (int) f;
+    try {
+        init(fd);
+        setSpeed(fd, 2400);
+        uchar b[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        write(fd, b, 10);
+    } catch (const String &e) {
+        jnihelp::log(env, "jni error", "exception: %s", e.getCString());
+    }
 }

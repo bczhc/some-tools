@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_call
-        (JNIEnv *, jclass);
+        (JNIEnv *, jclass, jint f);
 
 
 #ifdef __cplusplus

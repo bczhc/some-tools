@@ -74,14 +74,14 @@ public class UsbSerialTest extends BaseActivity {
         usbManager.requestPermission(first, permissionIntent);
 
         sendBtn.setOnClickListener(v -> {
-            try {
+            /*try {
                 String s = et.getText().toString();
                 port.write(s.getBytes(StandardCharsets.UTF_8), 0);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-//            JNI.JniTest.call(usbDeviceConnection.getFileDescriptor());
-//            System.out.println("name = " + name);
+            }*/
+            JNI.JniTest.call(usbDeviceConnection.getFileDescriptor());
+            System.out.println("name = " + name);
 //            JNI.JniTest.call(name);
         });
 
@@ -134,6 +134,7 @@ public class UsbSerialTest extends BaseActivity {
                 break;
             }
             int readLen = port.read(buf, (int) (timeout - goneTime));
+
             if (readLen == 0 && goneTime >= timeout) {
                 // timeout occurred
                 break;

@@ -4,6 +4,7 @@
 
 #include "../jni_h/pers_zhc_tools_jni_JNI_StcFlash.h"
 #include "serial_jni.h"
+#include "../jni_help.h"
 
 using namespace bczhc;
 
@@ -13,9 +14,11 @@ Array<uchar> serial::jniImpl::read(JNIEnv *&env, int size, jobject &jniInterface
     auto b = (jbyteArray) env->CallObjectMethod(jniInterface, mid, (jint) size);
     const jsize length = env->GetArrayLength(b);
     Array<uchar> r(length);
+    jbyte *arr = env->GetByteArrayElements(b, nullptr);
     for (int i = 0; i < length; ++i) {
-        r[i] = (uchar) *(env->GetByteArrayElements(b, nullptr));
+        r[i] = arr[i];
     }
+    env->ReleaseByteArrayElements(b, arr, 0);
     env->DeleteLocalRef(cls), env->DeleteLocalRef(b);
     return r;
 }
@@ -29,7 +32,12 @@ ssize_t serial::jniImpl::write(JNIEnv *&env, uchar *buf, ssize_t size, jobject &
         env->SetByteArrayRegion(arr, (int32_t) 0, (int32_t) size, (const int8_t *) buf);
     }
     const jint &readLen = env->CallIntMethod(jniInterface, mid, arr);
-    env->DeleteLocalRef(cls);
+    Array<uchar> w((int) size);
+    for (int i = 0; i < size; ++i) {
+        w[i] = buf[i];
+    }
+    jnihelp::log(env, "jni", "read: %s", w.toString().getCString());
+    env->DeleteLocalRef(cls), env->DeleteLocalRef(arr);
     return (ssize_t) readLen;
 }
 
@@ -85,8 +93,17 @@ uint32_t serial::jniImpl::getTimeout(JNIEnv *env, jobject jniInterface) {
     return (uint32_t) r;
 }
 
+void serial::jniImpl::flush(JNIEnv *&env, jobject &jniInterface) {
+    jclass cls = env->GetObjectClass(jniInterface);
+    jmethodID mid = env->GetMethodID(cls, "flush", "()V");
+    env->CallVoidMethod(jniInterface, mid);
+    env->DeleteLocalRef(cls);
+}
+
 Array<uchar> serial::SerialJNI::read(ssize_t size) const {
-    return jniImpl::read(this->env, (int) size, this->jniInterface);
+    const Array<uchar> r = jniImpl::read(this->env, (int) size, this->jniInterface);
+    jnihelp::log(env, "jni-read", "size: %zd, read %s", size, r.toString().getCString());
+    return r;
 }
 
 ssize_t serial::SerialJNI::write(uchar *buf, ssize_t size) const {
@@ -110,7 +127,7 @@ unsigned int serial::SerialJNI::getBaud() const {
 }
 
 void serial::SerialJNI::flush() const {
-    // empty implementation
+    jniImpl::flush(this->env, this->jniInterface);
 }
 
 void serial::SerialJNI::setTimeout(uint32_t t) {
@@ -126,4 +143,3 @@ char serial::SerialJNI::getParity() const {
 }
 
 serial::SerialJNI::SerialJNI(JNIEnv *&env, jobject &jniInterface) : env(env), jniInterface(jniInterface) {}
-

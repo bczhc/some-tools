@@ -27,6 +27,8 @@ namespace bczhc::serial {
         char getParity(JNIEnv *&env, jobject jniInterface);
 
         uint32_t getTimeout(JNIEnv *env, jobject jniInterface);
+
+        void flush(JNIEnv *&env, jobject &jniInterface);
     }
 
     class SerialJNI : public Serial {

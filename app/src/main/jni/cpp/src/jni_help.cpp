@@ -3,7 +3,6 @@
 //
 
 #include "jni_help.h"
-#include "../third_party/my-cpp-lib/string.hpp"
 #include <cstdio>
 
 using namespace bczhc;
@@ -23,6 +22,7 @@ void jnihelp::log(JNIEnv *&env, const char *tag, const char *format, ...) {
                                                "(Ljava/lang/String;Ljava/lang/String;)I");
         env->CallStaticIntMethod(mClass, mid, tagS, str);
         env->DeleteLocalRef(mClass);
+        env->DeleteLocalRef(str), env->DeleteLocalRef(tagS);
     }
     free(msg);
     va_end(args);
