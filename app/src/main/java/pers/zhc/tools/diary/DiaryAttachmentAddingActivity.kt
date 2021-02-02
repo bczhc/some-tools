@@ -2,38 +2,45 @@ package pers.zhc.tools.diary
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
-import java.io.File
 
 class DiaryAttachmentAddingActivity : BaseActivity() {
     private lateinit var fileListLL: LinearLayout
     lateinit var linearLayout: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.diary_attachment_adding_activity)
         val titleEt = title_et!!
         val addFileBtn = add_file_btn!!
         fileListLL = file_list_ll!!
         val descriptionEt = description_et!!
         val createAttachmentBtn = create_attachment_btn!!
+        val associatedDiaryET = associated_diary_et!!
+
+        val intent = intent
+        val associatedDiary = intent.getStringExtra("associated_diary")
+        if (associatedDiary != null) associatedDiaryET.setText(associatedDiary)
+        val id = intent.getLongExtra("id", System.currentTimeMillis())
 
         addFileBtn.setOnClickListener {
             startActivityForResult(Intent(this, FilePicker::class.java), RequestCode.START_ACTIVITY_0)
         }
+
+        createAttachmentBtn.setOnClickListener {
+        }
     }
 
-    override fun startActivityForResult(intent: Intent?, requestCode: Int) {
-        super.startActivityForResult(intent, requestCode)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCode.START_ACTIVITY_0) {
-            intent!!
-            val result = intent.getStringExtra("result") ?: return
+            data!!
+            val result = data.getStringExtra("result") ?: return
             val textView = getTextView()
             textView.text = result
             textView.background = getDrawable(R.drawable.view_stroke)

@@ -11,18 +11,18 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
-import pers.zhc.tools.filepicker.FilePicker;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtil;
-import pers.zhc.tools.utils.DisplayUtil;
-import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.u.FileU;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +31,15 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.filepicker.FilePicker;
+import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.tools.utils.DisplayUtil;
+import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.u.FileU;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 

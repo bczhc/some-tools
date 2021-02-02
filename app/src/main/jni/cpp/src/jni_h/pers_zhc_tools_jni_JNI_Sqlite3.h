@@ -31,6 +31,14 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
   (JNIEnv *, jclass, jlong, jstring, jobject);
 
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    checkIfCorrupt
+ * Signature: (J)Z
+ */
+JNIEXPORT jboolean JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_checkIfCorrupt
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif

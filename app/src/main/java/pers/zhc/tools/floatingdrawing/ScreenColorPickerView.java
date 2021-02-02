@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
 import androidx.annotation.Nullable;
+
 import pers.zhc.tools.BaseView;
 
 public class ScreenColorPickerView extends BaseView {

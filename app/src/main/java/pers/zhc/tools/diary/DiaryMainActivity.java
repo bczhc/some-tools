@@ -13,12 +13,28 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.*;
-import android.widget.*;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
@@ -29,11 +45,6 @@ import pers.zhc.tools.utils.sqlite.MySQLite3;
 import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author bczhc
@@ -46,20 +57,29 @@ public class DiaryMainActivity extends BaseActivity {
     private String[] week;
 
     static MySQLite3 getDiaryDatabase(Context ctx) {
-        String createTableSql = "CREATE TABLE IF NOT EXISTS diary(\n" +
-                "    date INTEGER,\n" +
-                "    content TEXT NOT NULL\n" +
-                ")";
         MySQLite3 database;
         database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-        try {
-            database.exec(createTableSql);
-        } catch (Exception ignored) {
+        if (database.checkIfCorrupt()) {
             System.out.println(Common.getInternalDatabaseDir(ctx, "diary.db").delete());
             database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-            database.exec(createTableSql);
             ToastUtils.show(ctx, R.string.corrupted_database_and_recreate_new);
         }
+
+        database.exec("CREATE TABLE IF NOT EXISTS diary(\n" +
+                "    date INTEGER,\n" +
+                "    content TEXT NOT NULL\n" +
+                ")");
+        database.exec("CREATE TABLE IF NOT EXISTS attachment_info (\n" +
+                "    id INTEGER PRIMARY KEY,\n" +
+                "    title TEXT NOT NULL,\n" +
+                "    associated_diary_date INTEGER,\n" +
+                "    description TEXT NOT NULL\n" +
+                ")");
+        database.exec("CREATE TABLE IF NOT EXISTS attachment_file (\n" +
+                "    id INTEGER,\n" +
+                "    relative_path TEXT NOT NULL,\n" +
+                "    type TEXT NOT NULL\n" +
+                ")");
         return database;
     }
 

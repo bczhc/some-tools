@@ -14,3 +14,6 @@ local.properties
 app/.cxx
 **/CMakeFiles
 build
+app/src/main/jni/cpp/*
+!app/src/main/jni/cpp/third-party/
+!app/src/main/jni/cpp/src/

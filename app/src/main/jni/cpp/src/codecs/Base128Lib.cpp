@@ -3,7 +3,7 @@
 //
 
 #include "Base128Lib.h"
-#include "../../third_party/my-cpp-lib/string.h"
+#include "../../third_party/my-cpp-lib/string.hpp"
 #include "../../third_party/my-cpp-lib/file.h"
 
 using namespace bczhc;
@@ -26,7 +26,8 @@ void e1(char *Dest, const char buf[7]) {
     Dest[5] = (char) (((buf[4] & 31) << 2) | ((buf[5] & 255) >> 6));
     Dest[6] = (char) (((buf[5] & 63) << 1) | ((buf[6] & 255) >> 7));*/
     for (int i = 1; i < 7; ++i) {
-        Dest[i] = (char) (((buf[i - 1] & e_table_l[i - 1]) << (7 - i)) | ((buf[i] & 255) >> (i + 1)));
+        Dest[i] = (char) (((buf[i - 1] & e_table_l[i - 1]) << (7 - i)) |
+                          ((buf[i] & 255) >> (i + 1)));
     }
     Dest[7] = (char) (buf[6] & 127);
 }

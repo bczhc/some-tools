@@ -127,5 +127,5 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
 
     FourierSeries fs(f, epicyclesCount, period);
     fs.calc(cb, integralN, threadNum);
-    Log(env, "jni---", "finished fourier series calculate");
+    jnihelp::log(env, "jni---", "finished fourier series calculate");
 }
