@@ -23,6 +23,7 @@ class FlashMainActivity : BaseActivity() {
         private const val ACTION_USB_PERMISSION = "pers.zhc.tools.USB_PERMISSION"
     }
 
+    private lateinit var serialPool: SerialPool
     private lateinit var connectSwitch: SwitchCompat
     private lateinit var usbManager: UsbManager
     private var port: UsbSerialPort? = null
@@ -60,6 +61,7 @@ class FlashMainActivity : BaseActivity() {
                             }
                             port!!.open(connection)
                             port!!.setParameters(1200, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE)
+                            serialPool = SerialPool(port!!)
                         }
                     } else {
                         connectSwitch.isChecked = false
@@ -138,10 +140,7 @@ class FlashMainActivity : BaseActivity() {
                     return@Thread
                 }
                 val hexFilePath = hexFilePathET.text.toString()
-                val jniInterface = JNIInterface(port)
-
-//                Test.f(port!!)
-//                return@Thread
+                val jniInterface = JNIInterface(port, serialPool)
                 try {
                     JNI.StcFlash.burn(hexFilePath, jniInterface, echoCallback)
                 } catch (e: Exception) {
@@ -153,6 +152,7 @@ class FlashMainActivity : BaseActivity() {
 
     override fun finish() {
         if (port != null && port!!.isOpen) {
+            serialPool.stop()
             port!!.close()
         }
         super.finish()
