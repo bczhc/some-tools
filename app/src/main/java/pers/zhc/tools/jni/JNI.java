@@ -221,14 +221,7 @@ public class JNI {
             loadLib();
         }
 
-        public static native void call();
-
-        public static native int toCall();
-
-        public static void forJNI() {
-        }
-
-        public static native int toCall2(Object instance);
+        public static native void call(int fd);
     }
 
     public static class StcFlash {

@@ -291,4 +291,10 @@
     <string name="hex_file_path">hex文件路径</string>
     <string name="burn">烧写</string>
     <string name="please_connect_first">请先连接</string>
+    <string name="connected">已连接</string>
+    <string name="permission_denied">permission denied</string>
+    <string name="null_device">null device</string>
+    <string name="send">send</string>
+    <string name="receive">receive</string>
+    <string name="data_to_be_sent">data to be send</string>
 </resources>

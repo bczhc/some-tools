@@ -3,6 +3,9 @@ package pers.zhc.tools.stcflash;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 
 import java.io.IOException;
+import java.util.Arrays;
+
+import pers.zhc.tools.test.UsbSerialTest;
 
 /**
  * The properties in the class are all the values defined in {@link UsbSerialPort}
@@ -14,7 +17,7 @@ public class JNIInterface {
      * 0 means infinite.
      */
     private int timeout = 0;
-    private UsbSerialPort port;
+    private final UsbSerialPort port;
 
     private static final byte NATIVE_PARITY_NONE = 'N';
     private static final byte NATIVE_PARITY_EVEN = 'E';
@@ -51,30 +54,39 @@ public class JNIInterface {
     }
 
     public byte[] read(int size) throws IOException {
-        byte[] t = new byte[size];
-        int readLen = port.read(t, timeout);
-        byte[] r = new byte[readLen];
-        System.arraycopy(t, 0, r, 0, readLen);
+        long start = System.currentTimeMillis();
+        byte[] r = UsbSerialTest.timeoutRead(port, size, timeout);
+        long end = System.currentTimeMillis();
+
+        System.out.println("size + \" \" + timeout + \" \" + Arrays.toString(r) + \" \" + (end - start) = " + size + " " + timeout + " " + Arrays.toString(r) + " " + (end - start));
         return r;
+
     }
 
     public int write(byte[] data) throws IOException {
-        return port.write(data, timeout);
+        return port.write(data, 0);
     }
 
     public int getBaud() {
         return baud;
     }
 
-    public void flush() {
-        // no need
+    public void flush() throws IOException {
+        try {
+            port.purgeHwBuffers(true, true);
+        } catch (UnsupportedOperationException ignored) {
+        }
     }
 
     public void setTimeout(int timeout) {
         this.timeout = timeout == -1 ? 0 : timeout;
     }
 
-    public void setParity(byte p) {
+    public int getTimeout() {
+        return this.timeout;
+    }
+
+    public void setParity(byte p) throws IOException {
         for (int i = 0; i < nativeParityArray.length; i++) {
             byte b = nativeParityArray[i];
             if (b == p) {
@@ -82,6 +94,7 @@ public class JNIInterface {
                 break;
             }
         }
+        port.setParameters(baud, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, parity);
     }
 
     public byte getParity() throws Exception {

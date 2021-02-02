@@ -120,6 +120,7 @@ public class BaseActivity extends AppCompatActivity {
         public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 6;
         public static final int REQUEST_CAPTURE_SCREEN = 7;
         public static final int REQUEST_OVERLAY = 8;
+        public static final int REQUEST_USB_PERMISSION = 9;
     }
 
     public static class BroadcastIntent {
