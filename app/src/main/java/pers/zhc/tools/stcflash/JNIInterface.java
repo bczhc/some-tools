@@ -1,16 +1,17 @@
 package pers.zhc.tools.stcflash;
 
 import com.hoho.android.usbserial.driver.UsbSerialPort;
+import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import java.io.IOException;
-import java.util.Arrays;
-
-import pers.zhc.tools.test.UsbSerialTest;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * The properties in the class are all the values defined in {@link UsbSerialPort}
  */
 public class JNIInterface {
+    private final SerialPool serialPool;
     private int baud = 0;
     private int parity = UsbSerialPort.PARITY_NONE;
     /**
@@ -44,8 +45,10 @@ public class JNIInterface {
             UsbSerialPort.PARITY_SPACE
     };
 
-    public JNIInterface(UsbSerialPort port) {
+    public JNIInterface(UsbSerialPort port, SerialPool serialPool) {
         this.port = port;
+        this.serialPool = serialPool;
+        this.serialPool.run();
     }
 
     public void setSpeed(int baud) throws IOException {
@@ -53,14 +56,8 @@ public class JNIInterface {
         this.baud = baud;
     }
 
-    public byte[] read(int size) throws IOException {
-        long start = System.currentTimeMillis();
-        byte[] r = UsbSerialTest.timeoutRead(port, size, timeout);
-        long end = System.currentTimeMillis();
-
-        System.out.println("size + \" \" + timeout + \" \" + Arrays.toString(r) + \" \" + (end - start) = " + size + " " + timeout + " " + Arrays.toString(r) + " " + (end - start));
-        return r;
-
+    public byte[] read(int size) {
+        return serialPool.read(size, timeout);
     }
 
     public int write(byte[] data) throws IOException {
@@ -76,6 +73,7 @@ public class JNIInterface {
             port.purgeHwBuffers(true, true);
         } catch (UnsupportedOperationException ignored) {
         }
+        serialPool.flush();
     }
 
     public void setTimeout(int timeout) {

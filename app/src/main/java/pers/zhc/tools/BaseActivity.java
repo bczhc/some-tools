@@ -22,8 +22,9 @@ import pers.zhc.tools.utils.PermissionRequester;
 
 /**
  * @author bczhc
- * 代码首先是给人读的，只是恰好可以执行！
- * Machine does not care, but I care!
+ * <p>代码首先是给人读的，只是恰好可以执行！</p>
+ * <p>Machine does not care, but I care!</p>
+ * <p>I love reinventing whells!</p>
  */
 public class BaseActivity extends AppCompatActivity {
     public final App app = new App();
