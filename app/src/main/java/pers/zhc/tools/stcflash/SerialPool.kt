@@ -38,7 +38,10 @@ class SerialPool(private var port: UsbSerialPort?) {
 
     fun run() {
         run = true
-        thread.start()
+        dataQueue.clear()
+        if (!thread.isAlive) {
+            thread.start()
+        }
     }
 
     fun stop() {
