@@ -29,6 +29,7 @@ class FlashMainActivity : BaseActivity() {
     private var port: UsbSerialPort? = null
     private var device: UsbDevice? = null
     private lateinit var permissionIntent: PendingIntent
+    private var burning = false
 
     private val usbReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -142,7 +143,9 @@ class FlashMainActivity : BaseActivity() {
                 val hexFilePath = hexFilePathET.text.toString()
                 val jniInterface = JNIInterface(port, serialPool)
                 try {
-                    JNI.StcFlash.burn(hexFilePath, jniInterface, echoCallback)
+                    burning = true
+                    JNI.StcFlash.burn(device!!.deviceName, hexFilePath, jniInterface, echoCallback)
+                    burning = false
                 } catch (e: Exception) {
                     Common.showException(e, this)
                 }
@@ -151,9 +154,12 @@ class FlashMainActivity : BaseActivity() {
     }
 
     override fun finish() {
+        if (burning) {
+            ToastUtils.show(this, R.string.please_wait_until_burning_finished)
+            return
+        }
         if (port != null && port!!.isOpen) {
             serialPool.stop()
-            port!!.close()
         }
         super.finish()
     }

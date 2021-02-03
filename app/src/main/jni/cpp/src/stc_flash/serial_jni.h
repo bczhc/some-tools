@@ -35,8 +35,9 @@ namespace bczhc::serial {
     private:
         JNIEnv *&env;
         jobject &jniInterface;
+        String portName;
     public:
-        SerialJNI(JNIEnv *&env, jobject &jniInterface);
+        SerialJNI(JNIEnv *&env, jobject &jniInterface, const String &portName);
 
         [[nodiscard]] Array<uchar> read(ssize_t size) const override;
 
@@ -57,6 +58,8 @@ namespace bczhc::serial {
         void setParity(char p) override;
 
         [[nodiscard]] char getParity() const override;
+
+        [[nodiscard]] String getPortName() const override;
     };
 }
 
