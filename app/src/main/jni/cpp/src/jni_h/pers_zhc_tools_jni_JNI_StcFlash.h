@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
-  (JNIEnv *, jclass, jstring, jobject jniInterface, jobject echoCallback);
+  (JNIEnv *, jclass, jstring, jstring, jobject jniInterface, jobject echoCallback);
 
 #ifdef __cplusplus
 }

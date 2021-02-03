@@ -235,6 +235,6 @@ public class JNI {
             void flush();
         }
 
-        public static native void burn(String hexFilePath, JNIInterface jniInterface, EchoCallback echoCallback);
+        public static native void burn(String portPath, String hexFilePath, JNIInterface jniInterface, EchoCallback echoCallback);
     }
 }

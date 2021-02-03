@@ -12,7 +12,7 @@
 #pragma ide diagnostic ignored "LocalValueEscapesScope"
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
-        (JNIEnv *env, jclass, jstring hexFilePathS, jobject jniInterface, jobject echoCallback) {
+        (JNIEnv *env, jclass, jstring portNameJS, jstring hexFilePathS, jobject jniInterface, jobject echoCallback) {
     class CB : public EchoCallback {
     private:
         JNIEnv *&env;
@@ -42,10 +42,13 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
     } cb(env, echoCallback);
     try {
         const char *hexFilePath = env->GetStringUTFChars(hexFilePathS, nullptr);
-        SerialJNI serialImpl(env, jniInterface);
+        const char* portNameCS = env->GetStringUTFChars(portNameJS, nullptr);
+        String portName = portNameCS;
+        SerialJNI serialImpl(env, jniInterface, portName);
 
         run(hexFilePath, &cb, &serialImpl);
         env->ReleaseStringUTFChars(hexFilePathS, hexFilePath);
+        env->ReleaseStringUTFChars(portNameJS, portNameCS);
     } catch (const String &e) {
         cb.print(e.getCString()), cb.flush();
         jnihelp::log(env, "jni exception", e.getCString());

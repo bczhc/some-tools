@@ -23,11 +23,13 @@ class FlashMainActivity : BaseActivity() {
         private const val ACTION_USB_PERMISSION = "pers.zhc.tools.USB_PERMISSION"
     }
 
+    private lateinit var serialPool: SerialPool
     private lateinit var connectSwitch: SwitchCompat
     private lateinit var usbManager: UsbManager
     private var port: UsbSerialPort? = null
     private var device: UsbDevice? = null
     private lateinit var permissionIntent: PendingIntent
+    private var burning = false
 
     private val usbReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -60,6 +62,7 @@ class FlashMainActivity : BaseActivity() {
                             }
                             port!!.open(connection)
                             port!!.setParameters(1200, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE)
+                            serialPool = SerialPool(port!!)
                         }
                     } else {
                         connectSwitch.isChecked = false
@@ -138,12 +141,11 @@ class FlashMainActivity : BaseActivity() {
                     return@Thread
                 }
                 val hexFilePath = hexFilePathET.text.toString()
-                val jniInterface = JNIInterface(port)
-
-//                Test.f(port!!)
-//                return@Thread
+                val jniInterface = JNIInterface(port, serialPool)
                 try {
-                    JNI.StcFlash.burn(hexFilePath, jniInterface, echoCallback)
+                    burning = true
+                    JNI.StcFlash.burn(device!!.deviceName, hexFilePath, jniInterface, echoCallback)
+                    burning = false
                 } catch (e: Exception) {
                     Common.showException(e, this)
                 }
@@ -152,8 +154,12 @@ class FlashMainActivity : BaseActivity() {
     }
 
     override fun finish() {
+        if (burning) {
+            ToastUtils.show(this, R.string.please_wait_until_burning_finished)
+            return
+        }
         if (port != null && port!!.isOpen) {
-            port!!.close()
+            serialPool.stop()
         }
         super.finish()
     }

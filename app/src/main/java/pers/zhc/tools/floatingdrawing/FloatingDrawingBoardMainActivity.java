@@ -34,12 +34,7 @@ import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -529,7 +524,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         childTextViews[4].setOnTouchListener(new View.OnTouchListener()
         {
             @Override
-            public boolean onTouch(View v,MotionEvent event){
+            public boolean onTouch(View v, MotionEvent event){
             if(event.getAction() == MotionEvent.ACTION_UP&onUndo[0])
                 {
                     onUndo[0]=false;

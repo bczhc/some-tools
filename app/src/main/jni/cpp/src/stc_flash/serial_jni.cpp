@@ -142,4 +142,8 @@ char serial::SerialJNI::getParity() const {
     return jniImpl::getParity(this->env, this->jniInterface);
 }
 
-serial::SerialJNI::SerialJNI(JNIEnv *&env, jobject &jniInterface) : env(env), jniInterface(jniInterface) {}
+serial::SerialJNI::SerialJNI(JNIEnv *&env, jobject &jniInterface, const String &portName) : env(env), jniInterface(jniInterface), portName(portName) {}
+
+String serial::SerialJNI::getPortName() const {
+    return this->portName;
+}
