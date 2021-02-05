@@ -100,7 +100,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         this.context = context;
         this.width = width;
         this.height = height;
-        int perViewHeight = this.height * 2 / 11;
+        int perViewHeight = this.height /4;
         oppositeColorPaint = new Paint();
         setCurrentX();
         hsvaViews = new View[]{
@@ -180,7 +180,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         LinearLayout[] linearLayouts = new LinearLayout[hsvaViews.length];
         for (int i = 0; i < linearLayouts.length; i++) {
             linearLayouts[i] = new LinearLayout(this.context);
-            linearLayouts[i].setLayoutParams(new LinearLayout.LayoutParams(this.width, 0, 1));
+            linearLayouts[i].setLayoutParams(new LinearLayout.LayoutParams(this.width,LinearLayout.LayoutParams.WRAP_CONTENT, 1));
             linearLayouts[i].addView(hsvaViews[i]);
             ll.addView(linearLayouts[i]);
         }
