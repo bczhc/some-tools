@@ -1,8 +1,8 @@
 package pers.zhc.tools.utils.sqlite;
 
-import pers.zhc.tools.jni.JNI;
-
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import pers.zhc.tools.jni.JNI;
 
 /**
  * @author bczhc
@@ -48,5 +48,9 @@ public class MySQLite3 {
             e.printStackTrace();
         }
         return r.get();
+    }
+
+    public boolean checkIfCorrupt() {
+        return JNI.Sqlite3.checkIfCorrupt(id);
     }
 }

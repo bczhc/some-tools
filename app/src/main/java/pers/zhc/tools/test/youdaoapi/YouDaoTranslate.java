@@ -6,13 +6,15 @@ import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.SpinnerAdapter;
+
 import androidx.annotation.Nullable;
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
-import pers.zhc.tools.utils.ScrollEditText;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.utils.ScrollEditText;
 
 public class YouDaoTranslate extends BaseActivity {
     @Override

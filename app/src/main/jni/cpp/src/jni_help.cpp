@@ -3,24 +3,38 @@
 //
 
 #include "jni_help.h"
-#include "../third_party/my-cpp-lib/string.h"
+#include <cstdio>
+
 using namespace bczhc;
 
-void Log(JNIEnv *env, const char *tag, const char* msg) {
+void jnihelp::log(JNIEnv *&env, const char *tag, const char *format, ...) {
+    va_list args{};
+    va_start(args, format);
+    char *msg = nullptr;
+    vasprintf(&msg, format, args);
     if (env == nullptr) {
         printf("%s: %s\n", tag, msg);
     } else {
         jstring str = env->NewStringUTF(msg);
         jstring tagS = env->NewStringUTF(tag);
         jclass mClass = env->FindClass("android/util/Log");
-        jmethodID mid = env->GetStaticMethodID(mClass, "d", "(Ljava/lang/String;Ljava/lang/String;)I");
+        jmethodID mid = env->GetStaticMethodID(mClass, "d",
+                                               "(Ljava/lang/String;Ljava/lang/String;)I");
         env->CallStaticIntMethod(mClass, mid, tagS, str);
-        env->DeleteLocalRef(str);
-        env->DeleteLocalRef(tagS);
         env->DeleteLocalRef(mClass);
+        env->DeleteLocalRef(str), env->DeleteLocalRef(tagS);
     }
+    free(msg);
+    va_end(args);
 }
 
-//void Log(JNIEnv *env, const String& tag, const String& msg) {
-//    Log(env, tag.getCString(), msg.getCString());
-//}
+void jnihelp::throwException(JNIEnv *&env, const char *format, ...) {
+    va_list args{};
+    va_start(args, format);
+    jclass exceptionClass = env->FindClass("java/lang/Exception");
+    char *msg = nullptr;
+    vasprintf(&msg, format, args);
+    env->ThrowNew(exceptionClass, msg);
+    free(msg);
+    va_end(args);
+}

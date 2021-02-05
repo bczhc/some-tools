@@ -2,10 +2,12 @@
 package pers.zhc.tools.jni;
 
 import androidx.annotation.Size;
-import pers.zhc.tools.pi.JNICallback;
-import pers.zhc.u.math.util.ComplexValue;
 
 import java.util.ArrayList;
+
+import pers.zhc.tools.pi.JNICallback;
+import pers.zhc.tools.stcflash.JNIInterface;
+import pers.zhc.u.math.util.ComplexValue;
 
 /**
  * @author bczhc
@@ -151,6 +153,14 @@ public class JNI {
          */
         public static native void exec(long id, String cmd, SqliteExecCallback callback);
 
+        /**
+         * Check if the database is corrupted.
+         *
+         * @param id id
+         * @return result
+         */
+        public static native boolean checkIfCorrupt(long id);
+
         public interface SqliteExecCallback {
             /**
              * Callback when {@link Sqlite3#exec(long, String, SqliteExecCallback)} is called.
@@ -211,13 +221,20 @@ public class JNI {
             loadLib();
         }
 
-        public static native void call();
+        public static native void call(int fd);
+    }
 
-        public static native int toCall();
-
-        public static void forJNI() {
+    public static class StcFlash {
+        static {
+            loadLib();
         }
 
-        public static native int toCall2(Object instance);
+        public interface EchoCallback {
+            void print(String s);
+
+            void flush();
+        }
+
+        public static native void burn(String portPath, String hexFilePath, JNIInterface jniInterface, EchoCallback echoCallback);
     }
 }

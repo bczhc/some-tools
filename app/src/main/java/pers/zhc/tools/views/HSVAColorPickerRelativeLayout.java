@@ -15,9 +15,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.appcompat.app.AlertDialog;
+
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
@@ -137,7 +139,8 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
                 String s = editText.getText().toString();
                 try {
                     if (s.charAt(0) == '#') s = s.substring(1);
-                    if (s.length() < 6 || s.length() > 8) throw new Exception("Illegal color hex string.");
+                    if (s.length() < 6 || s.length() > 8)
+                        throw new Exception("Illegal color hex string.");
                     if (s.length() == 6) s = "#FF" + s;
                     else if (s.length() == 7) s = "#0" + s;
                     else {

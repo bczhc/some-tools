@@ -2,18 +2,24 @@ package pers.zhc.tools.epicycles;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.Path;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.floatingdrawing.MyCanvas;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.u.math.fourier.EpicyclesSequence;
 import pers.zhc.u.math.util.CoordinateDouble;
-
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @SuppressLint("ViewConstructor")
 class EpicyclesView extends BaseView {

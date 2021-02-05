@@ -7,16 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+
+import java.util.ArrayList;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.u.ComplexDefinite;
 import pers.zhc.u.math.util.ComplexValue;
-
-import java.util.ArrayList;
 
 /**
  * @author bczhc

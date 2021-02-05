@@ -8,6 +8,7 @@ import android.os.Handler;
  */
 public class BaseApplication extends Application {
     public static Handler handler;
+
     @Override
     public void onCreate() {
         super.onCreate();

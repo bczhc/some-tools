@@ -7,14 +7,15 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.TextView;
-import pers.zhc.tools.R;
-import pers.zhc.tools.test.wubiinput.WubiInput;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.sqlite.MySQLite3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import pers.zhc.tools.R;
+import pers.zhc.tools.test.wubiinput.WubiInput;
+import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.sqlite.MySQLite3;
 
 public class WubiIME extends InputMethodService {
     private final static String[] chinesePunctuationStrings = {
@@ -92,7 +93,7 @@ public class WubiIME extends InputMethodService {
     private String lastWord;
     private TextToSpeech tts = null;
 
-//    private static final String shiftWithNumberInChinese = "！·#￥%…—*（）—+";
+    //    private static final String shiftWithNumberInChinese = "！·#￥%…—*（）—+";
     //    private boolean switchTypingMode = true;
     private boolean composing = false;
     private final KeyEventResolver keyEventResolver = new KeyEventResolver(new KeyEventResolverCallback() {
@@ -243,7 +244,8 @@ public class WubiIME extends InputMethodService {
         if (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z) return 1;
         if (keyCode == KeyEvent.KEYCODE_DEL) return 3;
         if (keyCode == KeyEvent.KEYCODE_SPACE) return 4;
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) return 5;
+        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
+            return 5;
         for (int punctuationKeyCode : punctuationKeyCodes) {
             if (punctuationKeyCode == keyCode) {
                 return 2;

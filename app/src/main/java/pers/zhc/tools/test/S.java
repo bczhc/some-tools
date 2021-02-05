@@ -2,10 +2,21 @@ package pers.zhc.tools.test;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.Bundle;
-import android.view.*;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.WindowManager;
+
 import androidx.annotation.Nullable;
+
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener;

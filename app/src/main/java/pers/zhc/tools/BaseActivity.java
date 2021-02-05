@@ -4,22 +4,27 @@ import android.Manifest;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import org.jetbrains.annotations.NotNull;
-import pers.zhc.tools.crashhandler.CrashHandler;
-import pers.zhc.tools.utils.ExternalJNI;
-import pers.zhc.tools.utils.PermissionRequester;
 
-import java.io.*;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Stack;
 
+import pers.zhc.tools.crashhandler.CrashHandler;
+import pers.zhc.tools.utils.ExternalJNI;
+import pers.zhc.tools.utils.PermissionRequester;
+
 /**
  * @author bczhc
- * 代码首先是给人读的，只是恰好可以执行！
- * Machine does not care, but I care!
+ * <p>代码首先是给人读的，只是恰好可以执行！</p>
+ * <p>Machine does not care, but I care!</p>
+ * <p>I love reinventing whells!</p>
  */
 public class BaseActivity extends AppCompatActivity {
     public final App app = new App();
@@ -116,6 +121,7 @@ public class BaseActivity extends AppCompatActivity {
         public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 6;
         public static final int REQUEST_CAPTURE_SCREEN = 7;
         public static final int REQUEST_OVERLAY = 8;
+        public static final int REQUEST_USB_PERMISSION = 9;
     }
 
     public static class BroadcastIntent {
