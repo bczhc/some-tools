@@ -37,6 +37,7 @@ import static pers.zhc.tools.utils.Common.showException;
 
 /**
  * @author bczhc
+ * Shitcode!
  */
 @SuppressLint("ViewConstructor")
 public class FilePickerRelativeLayout extends RelativeLayout {
@@ -133,6 +134,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                             result = f.getAbsolutePath();
                             ok.performClick();
                         } else {
+                            result = null;
                             File[] listFiles = getFileList(f);
                             this.currentPath = f;
                             fillViews(listFiles);
@@ -208,6 +210,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = getFileList(currentFile);
                                 fillViews(listFiles1);
+                                result = null;
                             }
                             ctx.runOnUiThread(() -> pathView.setText(ctx.getString(R.string.str
                                     , result == null ? (finalCurrentPathString + ("/".equals(finalCurrentPathString) ? "" : File.separatorChar)) : result)));

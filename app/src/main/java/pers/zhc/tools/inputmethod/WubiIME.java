@@ -138,6 +138,7 @@ public class WubiIME extends InputMethodService {
                 case 3:
                     //backspace
                     Common.debugAssert(composing);
+                    Common.debugAssert(wubiCodeSB.length() != 0);
                     wubiCodeSB.deleteCharAt(wubiCodeSB.length() - 1);
                     update();
                     if (wubiCodeSB.length() == 0) composing = false;
