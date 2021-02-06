@@ -39,6 +39,81 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_exec
 JNIEXPORT jboolean JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_checkIfCorrupt
   (JNIEnv *, jclass, jlong);
 
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    compileStatement
+ * Signature: (JLjava/lang/String;)J
+ */
+JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_compileStatement
+  (JNIEnv *, jclass, jlong, jstring);
+
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    bind
+ * Signature: (JII)V
+ */
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bind__JII
+  (JNIEnv *, jclass, jlong, jint, jint);
+
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    bind
+ * Signature: (JIJ)V
+ */
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bind__JIJ
+  (JNIEnv *, jclass, jlong, jint, jlong);
+
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    bind
+ * Signature: (JID)V
+ */
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bind__JID
+  (JNIEnv *, jclass, jlong, jint, jdouble);
+
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    bindText
+ * Signature: (JILjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bindText
+  (JNIEnv *, jclass, jlong, jint, jstring);
+
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    bindNull
+ * Signature: (JI)V
+ */
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bindNull
+  (JNIEnv *, jclass, jlong, jint);
+
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    reset
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_reset
+  (JNIEnv *, jclass, jlong);
+
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    bindBlob
+ * Signature: (JI[BI)V
+ */
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bindBlob
+  (JNIEnv *, jclass, jlong, jint, jbyteArray, jint);
+
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    step
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_step
+  (JNIEnv *, jclass, jlong);
+
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_finalize
+  (JNIEnv *, jclass, jlong);
+
 #ifdef __cplusplus
 }
 #endif

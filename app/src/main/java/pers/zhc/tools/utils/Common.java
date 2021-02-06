@@ -1,10 +1,12 @@
 package pers.zhc.tools.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.core.content.FileProvider;
@@ -21,9 +23,14 @@ import pers.zhc.tools.BuildConfig;
 public class Common {
     private static final String TAG = Common.class.getName();
 
-    public static void showException(Exception e, Context ctx) {
+    public static void showException(Exception e, Activity activity) {
         e.printStackTrace();
-        BaseApplication.handler.post(() -> ToastUtils.show(ctx, e.toString()));
+        activity.runOnUiThread(() -> ToastUtils.show(activity, e.toString()));
+    }
+
+    public static void showException(Exception e, Context ctx, Handler handler) {
+        e.printStackTrace();
+        handler.post(() -> ToastUtils.show(ctx, e.toString()));
     }
 
     public static String getExternalStoragePath(Context ctx) {

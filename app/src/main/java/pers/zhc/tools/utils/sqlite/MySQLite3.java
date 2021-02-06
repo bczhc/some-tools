@@ -53,4 +53,9 @@ public class MySQLite3 {
     public boolean checkIfCorrupt() {
         return JNI.Sqlite3.checkIfCorrupt(id);
     }
+
+    public Statement compileStatement(String sql) throws Exception {
+        long statementId = JNI.Sqlite3.compileStatement(this.id, sql);
+        return new Statement(statementId);
+    }
 }

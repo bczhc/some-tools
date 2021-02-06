@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     pers_zhc_tools_jni_JNI_StcFlash
  * Method:    burn
- * Signature: (Ljava/lang/String;)V
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lpers/zhc/tools/stcflash/JNIInterface;Lpers/zhc/tools/jni/JNI/StcFlash/EchoCallback;)V
  */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
-  (JNIEnv *, jclass, jstring, jstring, jobject jniInterface, jobject echoCallback);
+  (JNIEnv *, jclass, jstring, jstring, jobject, jobject);
 
 #ifdef __cplusplus
 }

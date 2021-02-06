@@ -1,6 +1,7 @@
 package pers.zhc.tools.diary
 
 import android.content.Intent
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -22,6 +23,8 @@ class DiaryAttachmentAddingActivity : BaseActivity() {
         val descriptionEt = description_et!!
         val createAttachmentBtn = create_attachment_btn!!
         val associatedDiaryET = associated_diary_et!!
+        val rawRatio = raw_ratio!!
+        val textRatio = text_ratio!!
 
         val intent = intent
         val associatedDiary = intent.getStringExtra("associated_diary")

@@ -1,6 +1,7 @@
 package pers.zhc.tools.floatingdrawing;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -338,7 +339,7 @@ public class PaintView extends View {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                Common.showException(e, ctx);
+                Common.showException(e, (Activity) ctx);
             } finally {
                 closeStream(fileOutputStream[0]);
                 System.gc();

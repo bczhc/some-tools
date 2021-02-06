@@ -298,4 +298,6 @@
     <string name="receive">receive</string>
     <string name="data_to_be_sent">data to be send</string>
     <string name="please_wait_until_burning_finished">请等待烧录结束</string>
+    <string name="type">类型</string>
+    <string name="raw">原始</string>
 </resources>

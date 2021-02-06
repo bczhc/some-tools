@@ -1,20 +1,20 @@
 package pers.zhc.tools.filepicker;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.WindowManager;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.File;
-
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.ToastUtils;
+
+import java.io.File;
 
 /**
  * @author bczhc
@@ -26,6 +26,7 @@ import pers.zhc.tools.utils.ToastUtils;
 public class FilePicker extends BaseActivity {
     public static final int PICK_FILE = 1;
     public static final int PICK_FOLDER = 2;
+    public static final int RESULT_CODE = 3;
     private FilePickerRelativeLayout filePickerRelativeLayout;
 
     @Override
@@ -57,12 +58,15 @@ public class FilePicker extends BaseActivity {
                 , intent.getIntExtra("option", PICK_FILE)
                 , new File(initialPath)
                 , () -> {
+            Intent r = new Intent();
+            r.putExtra("result", (String) null);
+            setResult(RESULT_CODE, r);
             finish();
             overridePendingTransition(0, R.anim.fade_out);
         }, s -> {
             Intent r = new Intent();
             r.putExtra("result", s);
-            setResult(3, r);
+            setResult(RESULT_CODE, r);
             finish();
             overridePendingTransition(0, R.anim.fade_out);
         }, null);

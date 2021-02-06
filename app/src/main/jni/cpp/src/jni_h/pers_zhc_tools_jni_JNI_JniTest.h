@@ -7,10 +7,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+/*
+ * Class:     pers_zhc_tools_jni_JNI_JniTest
+ * Method:    call
+ * Signature: (I)V
+ */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_call
-        (JNIEnv *, jclass, jint f);
-
+  (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus
 }
