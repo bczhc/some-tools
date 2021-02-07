@@ -7,33 +7,47 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import pers.zhc.tools.R;
 import pers.zhc.tools.test.wubiinput.WubiInput;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.sqlite.MySQLite3;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * @author bczhc
+ */
 public class WubiIME extends InputMethodService {
-    private final static String[] chinesePunctuationStrings = {
+    /**
+     * Chinese punctuation array
+     */
+    private final static String[] punctuationStrings = {
             "。",
             "，",
             "、",
             "【",
-            "】"
+            "】",
+            "/",
+            "-",
+            "=",
+            "`"
     };
+
     /**
-     * On-to-one correspondence with {@link WubiIME#chinesePunctuationStrings}
+     * On-to-one correspondence with {@link WubiIME#punctuationStrings}
      */
     private final static int[] punctuationKeyCodes = {
             KeyEvent.KEYCODE_PERIOD,
             KeyEvent.KEYCODE_COMMA,
             KeyEvent.KEYCODE_BACKSLASH,
             KeyEvent.KEYCODE_LEFT_BRACKET,
-            KeyEvent.KEYCODE_RIGHT_BRACKET
+            KeyEvent.KEYCODE_RIGHT_BRACKET,
+            KeyEvent.KEYCODE_SLASH,
+            KeyEvent.KEYCODE_MINUS,
+            KeyEvent.KEYCODE_EQUALS,
+            KeyEvent.KEYCODE_GRAVE
     };
     /**
      * punctuations that needs to input with shift key
@@ -49,10 +63,14 @@ public class WubiIME extends InputMethodService {
             "￥",
             "%",
             "……",
-            "—",
+            "——",
             "*",
             "（",
-            "）"
+            "）",
+            "「",
+            "」",
+            "——",
+            "+"
     };
     /**
      * On-to-one correspondence with {@link WubiIME#chinesePunctuationWithShiftStrings}
@@ -71,7 +89,11 @@ public class WubiIME extends InputMethodService {
             KeyEvent.KEYCODE_7,
             KeyEvent.KEYCODE_8,
             KeyEvent.KEYCODE_9,
-            KeyEvent.KEYCODE_0
+            KeyEvent.KEYCODE_0,
+            KeyEvent.KEYCODE_LEFT_BRACKET,
+            KeyEvent.KEYCODE_RIGHT_BRACKET,
+            KeyEvent.KEYCODE_MINUS,
+            KeyEvent.KEYCODE_EQUALS
     };
     /**
      * The keys only matter when composing, otherwise it'll be consumed by the next receiver.
@@ -79,7 +101,6 @@ public class WubiIME extends InputMethodService {
     private final static int[] keysMatterWhenComposing = {
             KeyEvent.KEYCODE_BACK,
             KeyEvent.KEYCODE_DEL,
-            KeyEvent.KEYCODE_SPACE,
             KeyEvent.KEYCODE_ENTER
     };
     private final StringBuilder wubiCodeSB = new StringBuilder();
@@ -87,181 +108,306 @@ public class WubiIME extends InputMethodService {
     private final List<String> candidates = new ArrayList<>();
     private MySQLite3 wubiDictDB = null;
     private TextView candidateTV, wubiCodeTV;
-    private boolean isAlphabetsMode = false, switchTypingMode = false;
+    private boolean alphabetMode = false;
     private InputConnection ic;
-    private int inputRangeCode;
     private String lastWord;
     private TextToSpeech tts = null;
+    private boolean tempEnglishMode = false;
 
-    //    private static final String shiftWithNumberInChinese = "！·#￥%…—*（）—+";
-    //    private boolean switchTypingMode = true;
     private boolean composing = false;
     private final KeyEventResolver keyEventResolver = new KeyEventResolver(new KeyEventResolverCallback() {
         @Override
-        public void onKeyDown(KeyEvent event) {
+        public boolean onKey(KeyEvent event) {
+            int action = event.getAction();
+            int keyCode = event.getKeyCode();
             char c = (char) event.getUnicodeChar();
-            int keyCode = event.getKeyCode();
-            if (!composing) {
-                //start to input
-                if (inputRangeCode == 1/*A-Z*/) composing = true;
-                resetWubiCodeAndCandidates();
-            }
-            switch (inputRangeCode) {
-                case 1:
-                    //A-Z
-                    //on the fifth code
-                    if (wubiCodeSB.length() == 4) {
-                        commitTheFirstCandidate();
-                        resetWubiCodeAndCandidates();
-                    }
-                    wubiCodeSB.append(c);
-                    update();
-                    //on the fourth code & have the only one candidate word
-                    if (wubiCodeSB.length() == 4 && candidates.size() == 1) {
-                        commitTheFirstCandidate();
-                        clearInputMethodText();
-                        composing = false;
-                    }
-                    break;
-                case 2:
-                    //punctuation
-                    if (keyEventResolver.isHoldShift()) break;
-                    commitTheFirstCandidate();
-                    for (int i = 0; i < punctuationKeyCodes.length; i++) {
-                        if (keyCode == punctuationKeyCodes[i]) {
-                            commitText(chinesePunctuationStrings[i]);
-                        }
-                    }
-                    clearInputMethodText();
-                    composing = false;
-                    break;
-                case 3:
-                    //backspace
-                    Common.debugAssert(composing);
-                    Common.debugAssert(wubiCodeSB.length() != 0);
-                    wubiCodeSB.deleteCharAt(wubiCodeSB.length() - 1);
-                    update();
-                    if (wubiCodeSB.length() == 0) composing = false;
-                    break;
-                case 4:
-                    //space
-                    commitTheFirstCandidate();
-                    clearInputMethodText();
-                    composing = false;
-                    break;
-                //case 6, 7: commit the second or the third candidate word
-                case 6:
-                    if (composing) {
-                        commitCandidate(1);
-                        clearInputMethodText();
-                        composing = false;
-                    } else if (!keyEventResolver.isHoldShift()) commitText("；");
-                    break;
-                case 7:
-                    if (composing) {
-                        commitCandidate(2);
-                        clearInputMethodText();
-                        composing = false;
-                    } else {
-                        if (keyEventResolver.isHoldShift()) {
-                            commitText(quotation.getDoubleQuotation());
-                        } else {
-                            commitText(quotation.getSingleQuotation());
-                        }
-                    }
-                    break;
-                case 9:
-                    //enter
-                    //clean wubi code
-                    clearInputMethodText();
-                    composing = false;
-                    break;
-                case 10:
-                    //0-9
-                    if (composing) {
-                        commitCandidate(keyCode - KeyEvent.KEYCODE_1);
-                        clearInputMethodText();
-                        composing = false;
-                    } else if (!keyEventResolver.isHoldShift())
-                        commitText(String.valueOf(keyCode - KeyEvent.KEYCODE_0));
-                    break;
-            }
-        }
 
-        @Override
-        public void onKeyDownWithShift(KeyEvent event) {
-            int keyCode = event.getKeyCode();
-            for (int i = 0; i < punctuationWithShiftKeyCodes.length; i++) {
-                if (keyCode == punctuationWithShiftKeyCodes[i]) {
-                    commitTheFirstCandidate();
-                    commitText(chinesePunctuationWithShiftStrings[i]);
-                    clearInputMethodText();
-                    composing = false;
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (checkToSwitchTypingMode(keyCode)) return true;
+            }
+            // some keys won't be consumed
+            if (!checkIfConsumedKeys(event)) return false;
+            InputRange inputRange = checkInputRange(keyCode);
+
+            if (action == KeyEvent.ACTION_DOWN) {
+                // number 0-9 keys
+                if (inputRange == InputRange.NUM0_9 && !keyEventResolver.isHoldShift() && !composing) {
+                    return false;
+                }
+                if (keyEventResolver.isHoldShift()) {
+                    // on shift hold routines
+                    for (int i = 0; i < punctuationWithShiftKeyCodes.length; i++) {
+                        if (keyCode == punctuationWithShiftKeyCodes[i]) {
+                            commitTheFirstCandidate();
+                            commitText(chinesePunctuationWithShiftStrings[i]);
+                            clear();
+                            composing = false;
+                            return true;
+                        }
+                    }
+                    if (keyCode == KeyEvent.KEYCODE_APOSTROPHE) {
+                        commitTheFirstCandidate();
+                        commitText(quotation.getDoubleQuotation());
+                        clear();
+                        composing = false;
+                        return true;
+                    }
+                }
+                if (!composing && inputRange == InputRange.A_Z) {
+                    // start to input
+                    composing = true;
+                }
+                if (!composing) {
+                    // space
+                    if (inputRange == InputRange.SPACE && !keyEventResolver.isHoldShift()) {
+                        commitText(" ");
+                        return true;
+                    }
+                    // single quotation
+                    if (inputRange == InputRange.APOSTROPHE) {
+                        commitText(quotation.getSingleQuotation());
+                    }
+                    // check and commit Chinese punctuations
+                    commitPunctuations(event);
+                    if (inputRange == InputRange.SEMICOLON) {
+                        // temporary English mode
+                        wubiCodeTV.setText(R.string.temporary_english_mode);
+                        tempEnglishMode = true;
+                        composing = true;
+                    }
+                    return true;
+                }
+                // routines below are for composing
+                if (!tempEnglishMode)
+                    // Chinese input mode
+                    switch (inputRange) {
+                        case A_Z:
+                            if (keyEventResolver.isHoldShift()) {
+                                // when capitalized, start temporary English input mode
+                                tempEnglishMode = true;
+                                composing = true;
+                                candidateTV.setText(String.valueOf(c));
+                                wubiCodeTV.setText(R.string.temporary_english_mode);
+                                return true;
+                            }
+                            // on the fifth code
+                            if (wubiCodeSB.length() == 4) {
+                                commitTheFirstCandidate();
+                                clear();
+                            }
+                            wubiCodeSB.append(c);
+                            update();
+                            // on the fourth code & have the only one candidate word
+                            if (wubiCodeSB.length() == 4 && candidates.size() == 1) {
+                                commitTheFirstCandidate();
+                                clear();
+                                composing = false;
+                            }
+                            break;
+                        case PUNCTUATION:
+                            commitTheFirstCandidate();
+                            for (int i = 0; i < punctuationKeyCodes.length; i++) {
+                                if (keyCode == punctuationKeyCodes[i]) {
+                                    commitText(punctuationStrings[i]);
+                                }
+                            }
+                            clear();
+                            composing = false;
+                            break;
+                        case BACKSPACE:
+                            Common.debugAssert(wubiCodeSB.length() != 0);
+                            wubiCodeSB.deleteCharAt(wubiCodeSB.length() - 1);
+                            update();
+                            if (wubiCodeSB.length() == 0) composing = false;
+                            break;
+                        case SPACE:
+                            commitTheFirstCandidate();
+                            clear();
+                            composing = false;
+                            break;
+                        // case SEMICOLON, APOSTROPHE: commit the second or the third candidate word
+                        case SEMICOLON:
+                            commitCandidate(1);
+                            clear();
+                            composing = false;
+                            break;
+                        case APOSTROPHE:
+                            commitCandidate(2);
+                            clear();
+                            composing = false;
+                            break;
+                        case ENTER:
+                            // clean wubi code
+                            clear();
+                            composing = false;
+                            break;
+                        case NUM0_9:
+                            commitCandidate(keyCode - KeyEvent.KEYCODE_1);
+                            clear();
+                            composing = false;
+                            break;
+                        default:
+                    }
+                else {
+                    // temporary English mode
+                    switch (inputRange) {
+                        case ENTER:
+                            // temporary English mode, commit!
+                            commitText(candidateTV.getText().toString());
+                            clear();
+                            composing = false;
+                            tempEnglishMode = false;
+                            break;
+                        case BACKSPACE:
+                            // delete the last character
+                            CharSequence sequence = candidateTV.getText();
+                            int length = sequence.length();
+                            if (length == 0) {
+                                // exit
+                                tempEnglishMode = false;
+                                composing = false;
+                                clear();
+                                return true;
+                            }
+                            CharSequence s = sequence.subSequence(0, length - 1);
+                            candidateTV.setText(s);
+                            break;
+                        case SEMICOLON:
+                            // commit Chinese semicolon and exit temporary English mode
+                            if (candidateTV.getText().toString().isEmpty()) {
+                                commitText("；");
+                                composing = false;
+                                tempEnglishMode = false;
+                                clear();
+                                return true;
+                            }
+                            // otherwise, input ";"
+                        default:
+                            // input alphabet
+                            String text = candidateTV.getText().toString() + c;
+                            candidateTV.setText(text);
+                    }
+                    return true;
                 }
             }
+            return true;
         }
 
-        @Override
-        public void onkeyUp(KeyEvent event) {
+        /**
+         * Check if the keys should be consumed and handled.
+         * @param event key event
+         * @return {@code true} if should be consumed, {@code false} otherwise.
+         */
+        private boolean checkIfConsumedKeys(KeyEvent event) {
+            int keyCode = event.getKeyCode();
+            if (keyCode == KeyEvent.KEYCODE_BACK) return false;
+
+            // No key should be consumed by WubiIME when in alphabet mode, but SPACE should be consumed when having checked typing mode.
+            if (alphabetMode) return false;
+            if (!composing) {
+                for (int code : keysMatterWhenComposing) {
+                    if (keyCode == code) {
+                        return false;
+                    }
+                }
+            }
+
+            InputRange inputRange = checkInputRange(keyCode);
+            if (inputRange == InputRange.SHIFT) return false;
+            return inputRange != InputRange.OTHERS;
         }
 
         @Override
         public void onShift(KeyEvent event) {
-            int action = event.getAction();
-            if (action == KeyEvent.ACTION_DOWN) {
-                //down
-                switchTypingMode = true;
-            } else {
-                if (switchTypingMode) {
-                    isAlphabetsMode = !isAlphabetsMode;
-                }
-                //up
-                clearWubiCodeSB();
-                clearInputMethodText();
-                if (candidateTV != null) {
-                    candidateTV.setText(isAlphabetsMode ? R.string.alphabet_mode : R.string.nul);
-                }
-            }
+        }
+
+        @Override
+        public void onCtrl(KeyEvent event) {
+
         }
     });
 
     /**
-     * @param keyCode key code
-     * @return <p>
-     * 1: A-Z
-     * 2: punctuation
-     * 3: backspace
-     * 4: space
-     * 5: shift
-     * 6: semicolon
-     * 7: apostrophe
-     * 9: enter
-     * 10: 0-9
-     * 8: someMattersWithShift, preventing returning 0 and will be consumed by the next receiver.
-     * 0: others
-     * </p>
+     * Reset wubi code, candidate words, and input method text.
      */
-    static int checkInputRange(int keyCode) {
-        if (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z) return 1;
-        if (keyCode == KeyEvent.KEYCODE_DEL) return 3;
-        if (keyCode == KeyEvent.KEYCODE_SPACE) return 4;
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
-            return 5;
-        for (int punctuationKeyCode : punctuationKeyCodes) {
-            if (punctuationKeyCode == keyCode) {
-                return 2;
+    private void clear() {
+        resetWubiCodeAndCandidates();
+        clearInputMethodText();
+    }
+
+    /**
+     * Check the key and switch typing mode.
+     *
+     * @param keyCode key code
+     * @return {@code true} if switched, {@code false} otherwise.
+     */
+    private boolean checkToSwitchTypingMode(int keyCode) {
+        if (keyEventResolver.isHoldShift() && checkInputRange(keyCode) == InputRange.SPACE) {
+            alphabetMode = !alphabetMode;
+            clearWubiCodeSB();
+            clearInputMethodText();
+            if (candidateTV != null) {
+                candidateTV.setText(alphabetMode ? R.string.alphabet_mode : R.string.nul);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Commit the punctuations ({@link WubiIME#punctuationStrings}) when not composing.
+     *
+     * @param event event
+     */
+    private void commitPunctuations(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        for (int i = 0; i < punctuationKeyCodes.length; i++) {
+            if (keyCode == punctuationKeyCodes[i]) {
+                commitText(punctuationStrings[i]);
             }
         }
-        if (keyCode == KeyEvent.KEYCODE_SEMICOLON) return 6;
-        if (keyCode == KeyEvent.KEYCODE_APOSTROPHE) return 7;
-        if (keyCode == KeyEvent.KEYCODE_ENTER) return 9;
-        if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) return 10;
+    }
 
-        for (int code : punctuationWithShiftKeyCodes) {
-            if (code == keyCode) return 8;
+    public enum InputRange {
+        A_Z,
+        PUNCTUATION,
+        BACKSPACE,
+        SPACE,
+        SHIFT,
+        SEMICOLON,
+        APOSTROPHE,
+        ENTER,
+        NUM0_9,
+        CTRL,
+        SOME_MATTERS_WITH_SHIFT,
+        OTHERS
+    }
+
+    /**
+     * @param keyCode key code
+     * @return {@link WubiIME.InputRange}
+     */
+    static InputRange checkInputRange(int keyCode) {
+        if (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z) return InputRange.A_Z;
+        if (keyCode == KeyEvent.KEYCODE_DEL) return InputRange.BACKSPACE;
+        if (keyCode == KeyEvent.KEYCODE_SPACE) return InputRange.SPACE;
+        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
+            return InputRange.SHIFT;
+        for (int punctuationKeyCode : punctuationKeyCodes) {
+            if (punctuationKeyCode == keyCode) {
+                return InputRange.PUNCTUATION;
+            }
         }
-        if (keyCode == KeyEvent.KEYCODE_BACK) return 8;
-        return 0;
+        if (keyCode == KeyEvent.KEYCODE_SEMICOLON) return InputRange.SEMICOLON;
+        if (keyCode == KeyEvent.KEYCODE_APOSTROPHE) return InputRange.APOSTROPHE;
+        if (keyCode == KeyEvent.KEYCODE_ENTER) return InputRange.ENTER;
+        if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) return InputRange.NUM0_9;
+        if (keyCode == KeyEvent.KEYCODE_CTRL_LEFT || keyCode == KeyEvent.KEYCODE_CTRL_RIGHT) return InputRange.CTRL;
+        for (int code : punctuationWithShiftKeyCodes) {
+            if (code == keyCode) return InputRange.SOME_MATTERS_WITH_SHIFT;
+        }
+        if (keyCode == KeyEvent.KEYCODE_BACK) return InputRange.SOME_MATTERS_WITH_SHIFT;
+        return InputRange.OTHERS;
     }
 
     @Override
@@ -321,29 +467,12 @@ public class WubiIME extends InputMethodService {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) return false;
-        if (checkInputRange(keyCode) != 5/*shift*/) {
-            //cancel the switch of typing mode if shift key is pressing
-            switchTypingMode = false;
-        }
-        if (checkInputRange(keyCode) != 5 && isAlphabetsMode) return false;
-        if (!composing) {
-            for (int code : keysMatterWhenComposing) {
-                if (keyCode == code) {
-                    return false;
-                }
-            }
-        }
-        inputRangeCode = checkInputRange(keyCode);
-        keyEventResolver.onKeyDown(event);
-        return inputRangeCode != 0;
+        return keyEventResolver.onKeyDown(event);
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) return false;
-        keyEventResolver.onKeyUp(event);
-        return inputRangeCode != 0;
+        return keyEventResolver.onKeyUp(event);
     }
 
     private void commitTheFirstCandidate() {

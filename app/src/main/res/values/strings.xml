@@ -300,4 +300,5 @@
     <string name="please_wait_until_burning_finished">请等待烧录结束</string>
     <string name="type">类型</string>
     <string name="raw">原始</string>
+    <string name="temporary_english_mode">临时英文</string>
 </resources>
