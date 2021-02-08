@@ -193,9 +193,9 @@ public class JNI {
              * Callback when {@link Sqlite3#exec(long, String, SqliteExecCallback)} is called.
              *
              * @param contents content in database
-             * @return whether to continue search:
-             * 0: interrupt searching
-             * 1: continue
+             * @return whether to continue searching:
+             * 0: continue
+             * non-zero: interrupt searching
              */
             int callback(String[] contents);
         }
@@ -263,5 +263,18 @@ public class JNI {
         }
 
         public static native void burn(String portPath, String hexFilePath, JNIInterface jniInterface, EchoCallback echoCallback);
+    }
+
+    public static class Diary {
+        static {
+            loadLib();
+        }
+
+        /**
+         * Use SHA256 blah blah.
+         * @param str the text to be digested
+         * @return result
+         */
+        public static native String myDigest(String str);
     }
 }

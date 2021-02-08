@@ -2,49 +2,36 @@ package pers.zhc.tools.diary;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
+import android.view.*;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
+import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.utils.sqlite.MySQLite3;
 import pers.zhc.tools.utils.sqlite.SQLite;
+import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author bczhc
@@ -52,7 +39,8 @@ import pers.zhc.u.Latch;
 public class DiaryMainActivity extends BaseActivity {
     static MySQLite3 diaryDatabase;
     private LinearLayout ll;
-    private String currentPassword;
+    @NonNull
+    private String currentPasswordDigest = "";
     private boolean isUnlocked = false;
     private String[] week;
 
@@ -86,20 +74,22 @@ public class DiaryMainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final SQLiteDatabase passwordDatabase = getPasswordDatabase();
-        final Cursor cursor = passwordDatabase.rawQuery("SELECT pw FROM passwords where k=?", new String[]{"diary"});
-        if (cursor.moveToFirst()) {
-            currentPassword = cursor.getString(cursor.getColumnIndex("pw"));
-        }
-        cursor.close();
+
+        final MySQLite3 passwordDatabase = openPasswordDatabase();
+        passwordDatabase.exec("SELECT digest FROM password where k='diary'", contents -> {
+            currentPasswordDigest = contents[0];
+            return 0;
+        });
+        passwordDatabase.close();
+
         this.week = getResources().getStringArray(R.array.weeks);
-        if (currentPassword == null || currentPassword.isEmpty()) {
+        if (currentPasswordDigest.isEmpty()) {
             load();
             return;
         }
         setContentView(R.layout.password_view);
         EditText passwordET = findViewById(R.id.password_et);
-        String finalPassword = currentPassword;
+        String finalPassword = currentPasswordDigest;
         passwordET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -114,7 +104,7 @@ public class DiaryMainActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 final String text = s.toString();
-                if (finalPassword.equals(text)) {
+                if (JNI.Diary.myDigest(text).equals(finalPassword)) {
                     passwordET.setEnabled(false);
                     load();
                 }
@@ -139,33 +129,43 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
 
-    private SQLiteDatabase getPasswordDatabase() {
-        final SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
-                Common.getInternalDatabaseDir(this, "passwords.db"), null);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            db.disableWriteAheadLogging();
-        }
-        db.execSQL("CREATE TABLE IF NOT EXISTS passwords(\n" +
-                "    k text not null,\n" +
-                "    pw text not null\n" +
+    @NotNull
+    private MySQLite3 openPasswordDatabase() {
+        MySQLite3 pwDB = MySQLite3.open(Common.getInternalDatabaseDir(this, "passwords.db").getPath());
+        pwDB.exec("CREATE TABLE IF NOT EXISTS password\n" +
+                "(\n" +
+                "    " +
+                "--" +
+                "key\n" +
+                "    k      TEXT NOT NULL PRIMARY KEY,\n" +
+                "    " +
+                "--password digest\n" +
+                "    digest TEXT NOT NULL\n" +
                 ")");
-        return db;
+        return pwDB;
     }
 
     private void setPassword(String password) {
-        final SQLiteDatabase passwordDatabase = getPasswordDatabase();
-        final boolean exist = SQLite.checkRecordExistence(passwordDatabase, "passwords", "k", "diary");
-        ContentValues cv = new ContentValues();
-        cv.put("k", "diary");
-        cv.put("pw", password);
-        if (exist) {
-            passwordDatabase.update("passwords", cv, "k=?", new String[]{"diary"});
-        } else {
-            try {
-                passwordDatabase.insertOrThrow("passwords", null, cv);
-            } catch (SQLException e) {
-                Common.showException(e, this);
-            }
+        final MySQLite3 passwordDatabase = openPasswordDatabase();
+        final boolean exist = SQLite.checkRecordExistence(passwordDatabase, "password", "k", "diary");
+        if (!exist) {
+            passwordDatabase.exec("INSERT INTO password\n" +
+                    "VALUES ('diary', '')");
+        }
+        String digest;
+        // avoid my digest algorithm's calculation of an empty string
+        if (password.isEmpty()) digest = "";
+        else digest = JNI.Diary.myDigest(password);
+        try {
+            Statement statement = passwordDatabase.compileStatement("UPDATE password\n" +
+                    "SET digest=?\n" +
+                    "WHERE k = 'diary'");
+            statement.reset();
+            statement.bindText(1, digest);
+            statement.step();
+            statement.release();
+        } catch (Exception e) {
+            Common.showException(e, this);
         }
     }
 
@@ -290,13 +290,12 @@ public class DiaryMainActivity extends BaseActivity {
         EditText newPasswordET = view.findViewById(R.id.new_password);
         Button confirm = view.findViewById(R.id.confirm);
         confirm.setOnClickListener(v -> {
-            if (oldPasswordET.getText().toString().equals(currentPassword == null ? "" : currentPassword)) {
+            String old = oldPasswordET.getText().toString();
+            if (currentPasswordDigest.isEmpty() || currentPasswordDigest.equals(JNI.Diary.myDigest(old))) {
                 setPassword(newPasswordET.getText().toString());
                 ToastUtils.show(this, R.string.change_success);
                 dialog.dismiss();
-            } else {
-                ToastUtils.show(this, R.string.password_not_matching);
-            }
+            } else ToastUtils.show(this, R.string.password_not_matching);
         });
         dialog.setContentView(view);
         dialog.show();

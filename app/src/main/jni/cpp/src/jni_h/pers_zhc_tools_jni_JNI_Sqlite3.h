@@ -111,6 +111,11 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bindBlob
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_step
   (JNIEnv *, jclass, jlong);
 
+/*
+ * Class:     pers_zhc_tools_jni_JNI_Sqlite3
+ * Method:    finalize
+ * Signature: (J)V
+ */
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_finalize
   (JNIEnv *, jclass, jlong);
 

@@ -19,8 +19,10 @@ add_library(
         third_party/my-cpp-lib/app/characterReverser/reverseCharacters.cpp
         third_party/my-cpp-lib/app/stc_flash/stc_flash_lib.cpp
         third_party/my-cpp-lib/utils.cpp
-        third_party/my-cpp-lib/number_parser.cpp
         third_party/my-cpp-lib/file.cpp
+        third_party/my-cpp-lib/third_party/crypto-algorithms/sha256.c
+        third_party/my-cpp-lib/exception.cpp
+        third_party/my-cpp-lib/app/base128/Base128Lib.cpp
 )
 target_link_libraries(myLib sqlite3)
 
