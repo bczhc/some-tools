@@ -6,37 +6,28 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
+import android.widget.*;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.Collator;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.Documents;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.Collator;
+import java.util.*;
+
 import static pers.zhc.tools.utils.Common.showException;
 
 /**
  * @author bczhc
+ * Shitcode!
  */
 @SuppressLint("ViewConstructor")
 public class FilePickerRelativeLayout extends RelativeLayout {
@@ -62,6 +53,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     private EditText headEditText;
     private @DrawableRes
     int unselectedDrawable;
+    private CheckBox regexCB;
 
     public FilePickerRelativeLayout(Context context, int type, @Documents.Nullable File initialPath
             , Runnable cancelAction, OnPickedResultActionInterface pickedResultAction
@@ -83,6 +75,11 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         this.addView(view);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
+        regexCB = findViewById(R.id.regex_cb);
+        regexCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            File[] fileList = getFileList(FilePickerRelativeLayout.this.currentPath);
+            fillViews(fileList);
+        });
         headEditText = findViewById(R.id.file_name_et);
         headEditText.setText(initFileName);
         headEditText.addTextChangedListener(new TextWatcher() {
@@ -133,6 +130,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                             result = f.getAbsolutePath();
                             ok.performClick();
                         } else {
+                            result = null;
                             File[] listFiles = getFileList(f);
                             this.currentPath = f;
                             fillViews(listFiles);
@@ -208,6 +206,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = getFileList(currentFile);
                                 fillViews(listFiles1);
+                                result = null;
                             }
                             ctx.runOnUiThread(() -> pathView.setText(ctx.getString(R.string.str
                                     , result == null ? (finalCurrentPathString + ("/".equals(finalCurrentPathString) ? "" : File.separatorChar)) : result)));
@@ -306,15 +305,20 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         return r.toArray(new File[0]);
     }
 
-    private File[] filter(File[] files, String regex) {
+    private File[] filter(File[] files, String filterStr) {
+        boolean useRegExp = regexCB.isChecked();
         List<File> fileList = new LinkedList<>();
         for (File file : files) {
-            if ("".equals(regex)) {
+            if ("".equals(filterStr)) {
                 fileList.add(file);
             } else {
                 boolean match = true;
                 try {
-                    match = file.getName().matches(regex);
+                    if (useRegExp) {
+                        match = file.getName().matches(filterStr);
+                    } else {
+                        match = file.getName().contains(filterStr);
+                    }
                 } catch (Exception ignored) {
                     ctx.runOnUiThread(() -> ToastUtils.show(ctx, R.string.wrong_regex));
                 }

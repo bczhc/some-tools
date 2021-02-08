@@ -22,7 +22,7 @@
     <string name="no_access">无此路径或无权访问</string>
     <string name="nul" translatable="false"/>
     <string name="null_string">null</string>
-    <string name="filter">过滤器：</string>
+    <string name="filter">过滤器</string>
     <string name="iFileExtension">操作文件扩展名</string>
     <string name="oFileExtension">输出文件类型</string>
     <string name="settings">Settings</string>
@@ -298,4 +298,7 @@
     <string name="receive">receive</string>
     <string name="data_to_be_sent">data to be send</string>
     <string name="please_wait_until_burning_finished">请等待烧录结束</string>
+    <string name="type">类型</string>
+    <string name="raw">原始</string>
+    <string name="temporary_english_mode">临时英文</string>
 </resources>

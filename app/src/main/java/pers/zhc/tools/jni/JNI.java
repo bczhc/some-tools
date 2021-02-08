@@ -2,12 +2,11 @@
 package pers.zhc.tools.jni;
 
 import androidx.annotation.Size;
-
-import java.util.ArrayList;
-
 import pers.zhc.tools.pi.JNICallback;
 import pers.zhc.tools.stcflash.JNIInterface;
 import pers.zhc.u.math.util.ComplexValue;
+
+import java.util.ArrayList;
 
 /**
  * @author bczhc
@@ -55,7 +54,6 @@ public class JNI {
              * @param s s
              * @param b b
              */
-            @SuppressWarnings("unused")
             void callback(String s, double b);
         }
     }
@@ -79,7 +77,6 @@ public class JNI {
              *
              * @param a pi%.4
              */
-            @SuppressWarnings("unused")
             void callback(int a);
         }
     }
@@ -134,7 +131,7 @@ public class JNI {
          * Open sqlite database.
          *
          * @param path sqlite database path, if not exists, it'll create a new sqlite database
-         * @return the associated id/address in JNI, and it's the "handler"
+         * @return the associated id which is the address of an handler object in JNI.
          */
         public static native long open(String path);
 
@@ -161,14 +158,44 @@ public class JNI {
          */
         public static native boolean checkIfCorrupt(long id);
 
+        /**
+         * Compile sqlite statement.
+         *
+         * @param id  id
+         * @param sql sqlite statement
+         * @return the address of the statement object in JNI, which is a "statement object handler"
+         */
+        public static native long compileStatement(long id, String sql) throws Exception;
+
+        /* Statement methods start: */
+        public static native void bind(long statId, int row, int a) throws Exception;
+
+        public static native void bind(long statId, int row, long a) throws Exception;
+
+        public static native void bind(long statId, int row, double a) throws Exception;
+
+        public static native void bindText(long statId, int row, String s) throws Exception;
+
+        public static native void bindNull(long statId, int row) throws Exception;
+
+        public static native void reset(long statId) throws Exception;
+
+        public static native void bindBlob(long statId, int row, byte[] bytes, int size) throws Exception;
+
+        public static native void step(long statId) throws Exception;
+
+        public static native void finalize(long statId) throws Exception;
+        /* Statement methods end. */
+
+
         public interface SqliteExecCallback {
             /**
              * Callback when {@link Sqlite3#exec(long, String, SqliteExecCallback)} is called.
              *
              * @param contents content in database
-             * @return whether to continue search:
-             * 0: interrupt searching
-             * 1: continue
+             * @return whether to continue searching:
+             * 0: continue
+             * non-zero: interrupt searching
              */
             int callback(String[] contents);
         }
@@ -236,5 +263,18 @@ public class JNI {
         }
 
         public static native void burn(String portPath, String hexFilePath, JNIInterface jniInterface, EchoCallback echoCallback);
+    }
+
+    public static class Diary {
+        static {
+            loadLib();
+        }
+
+        /**
+         * Use SHA256 blah blah.
+         * @param str the text to be digested
+         * @return result
+         */
+        public static native String myDigest(String str);
     }
 }

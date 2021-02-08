@@ -187,7 +187,7 @@ void NewFileName(char **Dest, const char *filePath) {
                 .append(" (")
                 .append(xS)
                 .append(")");
-        *Dest = (char *) malloc((size_t) (xS.size() + 1));
+        *Dest = (char *) malloc((size_t) (xS.length() + 1));
         strcpy(*Dest, xS.getCString());
         if (access(*Dest, F_OK) == EOF) break;
         ++x;

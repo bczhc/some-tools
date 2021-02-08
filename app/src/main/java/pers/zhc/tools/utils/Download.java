@@ -1,5 +1,6 @@
 package pers.zhc.tools.utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
@@ -113,11 +114,11 @@ public class Download {
                         }
                     });
                 } catch (IOException e) {
-                    Common.showException(e, ctx);
+                    Common.showException(e, (Activity) ctx);
                 }
             }).start();
         } catch (IOException e) {
-            Common.showException(e, ctx);
+            Common.showException(e, (Activity) ctx);
         }
     }
 }

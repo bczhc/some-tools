@@ -5,6 +5,7 @@ import android.view.KeyEvent;
 public class KeyEventResolver {
     private final KeyEventResolverCallback callback;
     private boolean holdShift = false;
+    private boolean holdCtrl = false;
 
     public KeyEventResolver(KeyEventResolverCallback callback) {
         this.callback = callback;
@@ -14,21 +15,27 @@ public class KeyEventResolver {
         return holdShift;
     }
 
-    public void onKeyDown(KeyEvent event) {
-        int keyCode = event.getKeyCode();
-        if (WubiIME.checkInputRange(keyCode) == 5/*shift*/) {
-            holdShift = true;
-            callback.onShift(event);
-        } else if (holdShift) callback.onKeyDownWithShift(event);
-        callback.onKeyDown(event);
+    public boolean isHoldCtrl() {
+        return holdCtrl;
     }
 
-    public void onKeyUp(KeyEvent event) {
-        int keyCode = event.getKeyCode();
-        if (WubiIME.checkInputRange(keyCode) == 5/*shift*/) {
-            holdShift = false;
+    public boolean onKeyDown(KeyEvent event) {
+        WubiIME.InputRange inputRange = WubiIME.checkInputRange(event.getKeyCode());
+        if (inputRange == WubiIME.InputRange.SHIFT) {
             callback.onShift(event);
+            holdShift = true;
         }
-        callback.onkeyUp(event);
+        if (inputRange == WubiIME.InputRange.CTRL) {
+            callback.onCtrl(event);
+            holdCtrl = true;
+        }
+        return callback.onKey(event);
+    }
+
+    public boolean onKeyUp(KeyEvent event) {
+        WubiIME.InputRange inputRange = WubiIME.checkInputRange(event.getKeyCode());
+        if (inputRange == WubiIME.InputRange.SHIFT) holdShift = false;
+        if (inputRange == WubiIME.InputRange.CTRL) holdCtrl = false;
+        return callback.onKey(event);
     }
 }

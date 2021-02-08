@@ -33,10 +33,12 @@ import java.util.TimerTask;
 
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ScrollEditText;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.utils.sqlite.MySQLite3;
 import pers.zhc.tools.utils.sqlite.SQLite;
+import pers.zhc.tools.utils.sqlite.Statement;
 
 /**
  * @author bczhc
@@ -51,13 +53,18 @@ public class DiaryTakingActivity extends BaseActivity {
     private EditText et;
     private TextView charactersCountTV;
     private MyDate mDate;
-    private Timer savingTimer;
+    private Statement compiledStatement;
+    private ScheduledSaver saver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        savingTimer = new Timer();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_taking_activity);
+        try {
+            compiledStatement = diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?");
+        } catch (Exception ignored) {
+            Common.debugAssert(false);
+        }
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
         et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         Handler debounceHandler = new Handler();
@@ -124,15 +131,8 @@ public class DiaryTakingActivity extends BaseActivity {
         mDate = new MyDate(date);
         initDB();
         prepareContent();
-        savingTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (live) {
-                    save();
-                    Log.d(TAG, "saved diary");
-                }
-            }
-        }, 10000);
+        saver = new ScheduledSaver();
+        saver.start();
     }
 
     private void showCharactersCount() {
@@ -204,12 +204,6 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        save();
-        super.onBackPressed();
-    }
-
-    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         save();
         super.onSaveInstanceState(outState);
@@ -220,14 +214,30 @@ public class DiaryTakingActivity extends BaseActivity {
             runOnUiThread(() -> ToastUtils.show(this, R.string.closed));
             return;
         }
-        diaryDatabase.exec("UPDATE diary SET content='" + et.getText().toString().replace("'", "''") + "' WHERE date='" + mDate.getDateString() + "'");
+        updateDiary(et.getText().toString(), mDate.getDateString());
+    }
+
+    private void updateDiary(String content, String dateString) {
+        try {
+            compiledStatement.reset();
+            compiledStatement.bindText(1, content);
+            compiledStatement.bindText(2, dateString);
+            compiledStatement.step();
+        } catch (Exception e) {
+            Common.showException(e, this);
+        }
     }
 
     @Override
     public void finish() {
-        save();
         live = false;
-        savingTimer.cancel();
+        saver.stop();
+        save();
+        try {
+            compiledStatement.release();
+        } catch (Exception e) {
+            Common.showException(e, this);
+        }
         super.finish();
     }
 
@@ -279,6 +289,37 @@ public class DiaryTakingActivity extends BaseActivity {
 
         public String getDateString() {
             return add0(year) + add0(month) + add0(day);
+        }
+    }
+
+    private class ScheduledSaver implements Runnable {
+        @Override
+        public void run() {
+            while (live) {
+                if (Thread.interrupted()) break;
+                save();
+                try {
+                    //noinspection BusyWait
+                    Thread.sleep(10000);
+                } catch (InterruptedException ignored) {
+                    break;
+                }
+                Log.d(TAG, "save diary...");
+            }
+        }
+
+        private final Thread t;
+
+        public ScheduledSaver() {
+            t = new Thread(this);
+        }
+
+        private void start() {
+            t.start();
+        }
+
+        private void stop() {
+            t.interrupt();
         }
     }
 }

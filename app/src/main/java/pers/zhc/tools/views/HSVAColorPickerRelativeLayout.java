@@ -15,11 +15,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.appcompat.app.AlertDialog;
-
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ColorUtils;
@@ -102,8 +100,9 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         this.context = context;
         this.width = width;
         this.height = height;
-        int perViewHeight = this.height * 2 / 11;
+        int perViewHeight = this.height / 4;
         oppositeColorPaint = new Paint();
+        oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(alpha, currentHSV)));
         setCurrentX();
         hsvaViews = new View[]{
                 new HView(context, width, perViewHeight),
@@ -149,6 +148,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
                     final int parsedColor = Color.parseColor(s);
                     Color.colorToHSV(parsedColor, currentHSV);
                     alpha = Color.alpha(parsedColor);
+                    setCurrentX();
                     invalidateAllViews();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -183,7 +183,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         LinearLayout[] linearLayouts = new LinearLayout[hsvaViews.length];
         for (int i = 0; i < linearLayouts.length; i++) {
             linearLayouts[i] = new LinearLayout(this.context);
-            linearLayouts[i].setLayoutParams(new LinearLayout.LayoutParams(this.width, 0, 1));
+            linearLayouts[i].setLayoutParams(new LinearLayout.LayoutParams(this.width, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
             linearLayouts[i].addView(hsvaViews[i]);
             ll.addView(linearLayouts[i]);
         }
@@ -271,7 +271,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         public boolean onTouchEvent(MotionEvent event) {
             final float x = event.getX();
             currentHSV[0] = limitValue(x * 360F / ((float) hW), 0, 360);
-            currentXPos[0] = x;
+            currentXPos[0] = limitValue(x, 0, hW);
             invalidateAllViews();
             return true;
         }
@@ -312,7 +312,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         public boolean onTouchEvent(MotionEvent event) {
             final float x = event.getX();
             currentHSV[1] = limitValue(x / ((float) sW), 0, 1F);
-            currentXPos[1] = x;
+            currentXPos[1] = limitValue(x, 0, sW);
             invalidateAllViews();
             return true;
         }
@@ -353,7 +353,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         public boolean onTouchEvent(MotionEvent event) {
             final float x = event.getX();
             currentHSV[2] = limitValue(x / ((float) vW), 0, 1);
-            currentXPos[2] = x;
+            currentXPos[2] = limitValue(x, 0, vW);
             invalidateAllViews();
             return true;
         }
@@ -394,7 +394,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         public boolean onTouchEvent(MotionEvent event) {
             final float x = event.getX();
             alpha = limitValue(((int) (x * 255)) / aW, 0, 255);
-            currentXPos[3] = x;
+            currentXPos[3] = limitValue(x, 0, aW);
             invalidateAllViews();
             return true;
         }

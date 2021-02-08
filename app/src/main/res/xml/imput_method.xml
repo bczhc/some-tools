@@ -16,6 +16,6 @@
 <!-- for the Search Manager. -->
 <input-method xmlns:android="http://schemas.android.com/apk/res/android"
     android:isDefault="true"
-    android:settingsActivity="pers.zhc.tools.inputmethod.WubiCodeSettingActivity">
+    android:settingsActivity="pers.zhc.tools.inputmethod.WubiInputMethodActivity">
 
 </input-method>

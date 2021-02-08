@@ -7,12 +7,9 @@ import android.os.Handler;
  * @author bczhc
  */
 public class BaseApplication extends Application {
-    public static Handler handler;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        handler = new Handler();
         /*new Handler(Looper.getMainLooper()).post(() -> {
             while (true) {
                 try {

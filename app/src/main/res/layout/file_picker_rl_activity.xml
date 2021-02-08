@@ -8,15 +8,25 @@
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/textView"
     />
-    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/file_name_et" tools:ignore="Autofill,LabelFor,TextFields"
-              android:layout_below="@id/textView"
-              android:hint="@string/filter_with_regex"
-    />
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_below="@id/textView"
+                    android:id="@+id/rl2"
+    >
+        <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:id="@+id/file_name_et" tools:ignore="Autofill,LabelFor,TextFields"
+                  android:hint="@string/filter"
+                  android:layout_toStartOf="@id/regex_cb"
+        />
+        <CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="@string/regex"
+                  android:id="@+id/regex_cb"
+                  android:layout_alignParentEnd="true"
+        />
+    </RelativeLayout>
     <ScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/scrollView2"
-                android:layout_below="@id/file_name_et"
+                android:layout_below="@id/rl2"
                 android:layout_above="@id/ll_bottom"
     >
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
