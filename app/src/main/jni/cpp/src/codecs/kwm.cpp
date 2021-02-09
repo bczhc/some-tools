@@ -7,7 +7,6 @@
 #include "../../third_party/my-cpp-lib/file.h"
 
 using namespace bczhc;
-using namespace file;
 
 #define dl int64_t
 #define usi uint32_t

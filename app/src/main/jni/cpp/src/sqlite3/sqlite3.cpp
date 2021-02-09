@@ -1,15 +1,15 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
+
 #include "../../third_party/my-cpp-lib/third_party/sqlite3-single-c/sqlite3.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_Sqlite3.h"
-#include "../../third_party/my-cpp-lib/sqlite3.h"
+#include "../../third_party/my-cpp-lib/sqlite3.hpp"
 #include "../jni_help.h"
 #include "../../third_party/my-cpp-lib/string.hpp"
 #include <cassert>
 
 using namespace bczhc;
 using namespace std;
-using namespace string;
 
 class CB : public Sqlite3::SqliteCallback {
 private:
@@ -51,17 +51,18 @@ void throwException(JNIEnv *env, const char *msg) {
 
 JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_open
         (JNIEnv *env, jclass, jstring path) {
-    auto *db = new Sqlite3;
     const char *file = env->GetStringUTFChars(path, (jboolean *) nullptr);
-    int code = db->open(file);
-    if (code) {
+    try {
+        auto *db = new Sqlite3(file);
+        return (jlong) db;
+    } catch (const SqliteException &e) {
         String msg = "Open or create database failed.";
         msg.append(" code: ")
-                .append(String::toString(code));
+                .append(String::toString(e.returnCode));
         throwException(env, msg.getCString());
     }
     env->ReleaseStringUTFChars(path, file);
-    return (jlong) db;
+    return (jlong) 0;
 }
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_close
@@ -156,6 +157,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bind__JID
 class ByteCopier {
 public:
     char *bytes = nullptr;
+
     explicit ByteCopier(const char *src, size_t size) {
         bytes = new char[size];
         for (int i = 0; i < size; ++i) {
@@ -208,7 +210,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bindBlob
 }
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_step
-        (JNIEnv * env, jclass, jlong statId) {
+        (JNIEnv *env, jclass, jlong statId) {
     int status = ((Stat *) statId)->step();
     if (status != SQLITE_DONE) {
         String msg = "Execution of step failed, error code :";

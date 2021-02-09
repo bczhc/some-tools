@@ -96,6 +96,10 @@ public class CodecsActivity extends BaseActivity {
             case RequestCode.START_ACTIVITY_1:
                 if (data != null) {
                     String folder = data.getStringExtra("result");
+                    if (folder == null) {
+                        // cancelled
+                        break;
+                    }
                     System.out.println("folder = " + folder);
                     setF(folder);
                 }
@@ -104,6 +108,10 @@ public class CodecsActivity extends BaseActivity {
                 if (data != null) {
                     try {
                         String path = data.getStringExtra("result");
+                        if (path == null) {
+                            // cancelled
+                            break;
+                        }
                         System.out.println("path = " + path);
                         setF(path);
 

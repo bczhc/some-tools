@@ -7,8 +7,6 @@
 #include "../../third_party/my-cpp-lib/file.h"
 
 using namespace bczhc;
-using namespace string;
-using namespace file;
 
 #include "./codecsDo.h"
 #include "qmcLib.h"

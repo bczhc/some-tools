@@ -8,7 +8,7 @@
 #include <jni.h>
 #include "../third_party/my-cpp-lib/string.hpp"
 
-using namespace bczhc::string;
+using namespace bczhc;
 
 namespace jnihelp {
     void log(JNIEnv *&env, const char *tag, const char *format, ...);

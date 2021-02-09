@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.Collator;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import static pers.zhc.tools.utils.Common.showException;
 
@@ -307,25 +310,28 @@ public class FilePickerRelativeLayout extends RelativeLayout {
 
     private File[] filter(File[] files, String filterStr) {
         boolean useRegExp = regexCB.isChecked();
+        Pattern pattern = null;
+        if (useRegExp) {
+            try {
+                pattern = Pattern.compile(filterStr);
+                ctx.runOnUiThread(() -> headEditText.setBackgroundResource(R.drawable.edittext_right));
+            } catch (PatternSyntaxException ignored) {
+                ctx.runOnUiThread(() -> headEditText.setBackgroundResource(R.drawable.edittext_wrong));
+            }
+        } else ctx.runOnUiThread(() -> headEditText.setBackgroundResource(R.drawable.edittext_right));
         List<File> fileList = new LinkedList<>();
         for (File file : files) {
-            if ("".equals(filterStr)) {
+            if (filterStr.isEmpty()) {
                 fileList.add(file);
-                headEditText.setBackgroundResource(R.drawable.edittext_right);
             } else {
                 boolean match = true;
-                try {
-
-                    if (useRegExp) {
-                        match = file.getName().matches(filterStr);
-                        headEditText.setBackgroundResource(R.drawable.edittext_right);
-                    } else {
-                        match = file.getName().contains(filterStr);
-                        headEditText.setBackgroundResource(R.drawable.edittext_right);
+                if (useRegExp) {
+                    if (pattern != null /* compile succeeded */) {
+                        Matcher matcher = pattern.matcher(file.getName());
+                        match = matcher.matches();
                     }
-                } catch (Exception ignored) {
-                   ctx.runOnUiThread(() -> headEditText.setBackgroundResource(R.drawable.edittext_wrong));
-                    ctx.runOnUiThread(() -> ToastUtils.show(ctx, R.string.wrong_regex));
+                } else {
+                    match = file.getName().contains(filterStr);
                 }
                 if (match) {
                     fileList.add(file);

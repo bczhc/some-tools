@@ -5,7 +5,6 @@
 #include "../../third_party/my-cpp-lib/concurrent.h"
 
 using namespace bczhc;
-using namespace concurrent;
 
 class Point {
 public:
@@ -74,7 +73,6 @@ public:
     }
 };
 
-using namespace linearlist;
 
 jobject globalCallback;
 JavaVM *globalJvm;

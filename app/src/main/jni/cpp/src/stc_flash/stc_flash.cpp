@@ -44,7 +44,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
         const char *hexFilePath = env->GetStringUTFChars(hexFilePathS, nullptr);
         const char* portNameCS = env->GetStringUTFChars(portNameJS, nullptr);
         String portName = portNameCS;
-        SerialJNI serialImpl(env, jniInterface, portName);
+        serial::SerialJNI serialImpl(env, jniInterface, portName);
 
         run(hexFilePath, &cb, &serialImpl);
         env->ReleaseStringUTFChars(hexFilePathS, hexFilePath);

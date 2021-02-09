@@ -12,8 +12,6 @@ extern "C" {
 #include <cassert>
 
 using namespace bczhc;
-using namespace array;
-using namespace string;
 
 Array<uchar> sha256Encode(uchar *data, size_t size) {
     assert(sizeof(uchar) == sizeof(BYTE));
@@ -64,7 +62,7 @@ String encode(const String &str) {
         b[i] = c[i - o];
     }
     Array<uchar> d(40);
-    for (i = 0; i < b.length() / 7; ++i) base128::encode7bytes(d.elements + i * 8, b.elements + i * 7);
+    for (i = 0; i < b.length() / 7; ++i) encode7bytes(d.elements + i * 8, b.elements + i * 7);
     return sha256EncodeToString(hexArrToStr(d.elements, d.length()) + salt);
 }
 
