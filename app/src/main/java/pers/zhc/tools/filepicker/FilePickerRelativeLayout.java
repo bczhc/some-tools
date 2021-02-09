@@ -311,15 +311,20 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         for (File file : files) {
             if ("".equals(filterStr)) {
                 fileList.add(file);
+                headEditText.setBackgroundResource(R.drawable.edittext_right);
             } else {
                 boolean match = true;
                 try {
+
                     if (useRegExp) {
                         match = file.getName().matches(filterStr);
+                        headEditText.setBackgroundResource(R.drawable.edittext_right);
                     } else {
                         match = file.getName().contains(filterStr);
+                        headEditText.setBackgroundResource(R.drawable.edittext_right);
                     }
                 } catch (Exception ignored) {
+                   ctx.runOnUiThread(() -> headEditText.setBackgroundResource(R.drawable.edittext_wrong));
                     ctx.runOnUiThread(() -> ToastUtils.show(ctx, R.string.wrong_regex));
                 }
                 if (match) {
