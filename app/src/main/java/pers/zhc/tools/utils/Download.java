@@ -82,7 +82,6 @@ public class Download {
                 , false);
         RelativeLayout rl = View.inflate(ctx, R.layout.progress_bar, null)
                 .findViewById(R.id.rl);
-        //TODO duplicated code
         rl.setLayoutParams(new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 

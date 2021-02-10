@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="match_parent"
         android:layout_width="match_parent" android:id="@+id/main">
-    <Switch android:layout_width="wrap_content" android:layout_height="50sp"
+    <androidx.appcompat.widget.SwitchCompat android:layout_width="wrap_content" android:layout_height="50sp"
             android:text="@string/floating_board"
             android:textSize="17sp"
             android:layout_marginTop="10sp"

@@ -29,25 +29,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.Infos;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRelativeLayout;
 import pers.zhc.tools.utils.*;
 import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
-import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
-import pers.zhc.u.common.MultipartUploader;
-import pers.zhc.u.common.ReadIS;
 
-import java.io.*;
-import java.net.URL;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -82,7 +79,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private Runnable importPathFileDoneAction;
     private long currentInstanceMillisecond;
     private TextView[] childTextViews;
-    private Switch fbSwitch;
+    private SwitchCompat fbSwitch;
     private String[] strings;
     private WindowManager.LayoutParams lp;
     private WindowManager.LayoutParams lp2;
@@ -99,82 +96,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private boolean isCapturing = false;
     private Intent captureScreenResultData = null;
     private boolean panelColorFollowPainting;
+    private FloatingViewOnTouchListener floatingViewOnTouchListener;
 
-    @SuppressWarnings("unused")
-    private static void uploadPaths(Context context) {
-        try {
-            InputStream is = new URL(Infos.ZHC_URL_STRING + "/upload/list.zhc?can=").openStream();
-            if (is.read() != 1) {
-                is.close();
-                return;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<String> stringList = new ArrayList<>();
-        try {
-            URL getListUrl = new URL(Infos.ZHC_URL_STRING + "/upload/list.zhc");
-            InputStream is = getListUrl.openStream();
-            StringBuilder sb = new StringBuilder();
-            new ReadIS(is, "UTF-8").read(sb::append);
-            String s = sb.toString();
-            System.out.println("sb.toString() = " + s);
-            try {
-                JSONObject jsonObject = new JSONObject(s);
-                JSONArray jsonArray = jsonObject.getJSONArray("files");
-                int length = jsonArray.length();
-                for (int i = 0; i < length; i++) {
-                    JSONObject object = jsonArray.getJSONObject(i);
-                    stringList.add(object.getString("md5"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File pathDir = new File(Common.getExternalStoragePath(context) + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
-        File[] listFiles = pathDir.listFiles();
-        if (listFiles != null) {
-            for (File file : listFiles) {
-                if (file.isDirectory()) {
-                    continue;
-                }
-                try {
-                    String fileMd5String = Digest.getFileMd5String(file);
-                    if (!listStringContain(stringList, fileMd5String)) {
-                        InputStream is = new FileInputStream(file);
-                        byte[] headInformation = null;
-                        try {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("name", file.getName());
-                            headInformation = jsonObject.toString().getBytes();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        if (headInformation == null) {
-                            headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
-                        }
-                        MultipartUploader.formUpload(Infos.ZHC_URL_STRING + "/upload/upload.zhc", headInformation, is);
-                        is.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private static boolean listStringContain(List<String> list, String s) {
-        for (String s1 : list) {
-            if (s.equals(s1)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static void setSelectedEditTextWithCurrentTimeMillisecond(EditText et) {
+    public static void setSelectedEditTextWithCurrentTimeMillisecond(@NotNull EditText et) {
         @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         et.setText(String.format(et.getContext().getString(R.string.str), format));
         Selection.selectAll(et.getText());
@@ -217,26 +141,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         init();
     }
 
-    @Override
-    protected byte ckV() {
-        new Thread(() -> {
-            byte b = super.ckV();
-            if (b == 0) {
-                try {
-                    runOnUiThread(this::stopFloatingWindow);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                finish();
-            }
-        }).start();
-        return 1;
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     private void init() {
-        ckV();
-        //        NotificationClickReceiver notificationClickReceiver = new NotificationClickReceiver();
-//        registerReceiver(this.notificationClickReceiver, new IntentFilter("pers.zhc.tools.START_SERVICE"));
         currentInstanceMillisecond = System.currentTimeMillis();
         internalPathDir = getFilesDir().getPath() + File.separatorChar + "path";
         File currentInternalPathDir = new File(internalPathDir);
@@ -275,7 +181,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         dpi = (int) getResources().getDisplayMetrics().density;
         View keepNotBeingKilledView = new View(this);
         keepNotBeingKilledView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
-        pv = new PaintView(this, width, height, currentInternalPathFile);
+        pv = new PaintView(this);
         pv.setOnColorChangedCallback(color -> {
             if (this.panelColorFollowPainting) {
                 float[] hsv = new float[3];
@@ -348,7 +254,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         float proportionX = ((float) 75) / ((float) 720);
         float proportionY = ((float) 75) / ((float) 1360);
         this.iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
-//        iv.setImageBitmap(icon);
         iv.setImageIcon(Icon.createWithResource(this, R.drawable.ic_db));
         iv.setOnClickListener(v -> {
             fbLinearLayout.removeAllViews();
@@ -356,7 +261,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             measureFB_LL();
         });
         this.fbMeasuredSpec = new FloatingViewOnTouchListener.ViewSpec();
-        FloatingViewOnTouchListener floatingViewOnTouchListener = new FloatingViewOnTouchListener(lp2, wm, fbLinearLayout, width, height, fbMeasuredSpec);
+        floatingViewOnTouchListener = new FloatingViewOnTouchListener(lp2, wm, fbLinearLayout, width, height, fbMeasuredSpec);
         iv.setOnTouchListener(floatingViewOnTouchListener);
         for (int i = 0; i < strings.length; i++) {
             childTextViews[i] = new TextView(this);
@@ -370,7 +275,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             childTextViews[i].setTextColor(panelTextColor);
             childTextViews[i].setOnTouchListener(floatingViewOnTouchListener);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                 childTextViews[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
                 childTextViews[i].setGravity(Gravity.CENTER);
             } else {
@@ -378,7 +282,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             }
             int finalI = i;
             childTextViews[i].setOnClickListener(v1 -> {
-                ckV();
                 switch (finalI) {
                     case 0:
                         fbLinearLayout.removeAllViews();
@@ -441,78 +344,125 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             smallLL.addView(childTextViews[i]);
             optionsLinearLayout.addView(smallLL);
         }
-        //添加撤销，恢复按钮长按事件
-        final Boolean[] onUndo = {false};
-        childTextViews[4].setOnLongClickListener(v -> {
-            final int[] time = {470};//执行间隔
-            final Thread Thread = new Thread() {
-                @Override
-                public void run() {
-                    Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(FloatingDrawingBoardMainActivity.this.VIBRATOR_SERVICE);
-                    vibrator.vibrate(100);
-                    while (onUndo[0]) {
-                        if (time[0] > 70) {
-                            time[0] -= 36;
+        // 添加撤销，恢复按钮长按事件
+        final boolean[] onUndo = {false};
+        final boolean[] onRedo = {false};
+        // for undo and redo motion event resolving...
+        final float[][] prevXY = {{Float.NaN, Float.NaN}, {Float.NaN, Float.NaN}};
+        // undo and redo
+        final boolean[][] interruptLongClickAction = {{false}, {false}};
+        LongClickResolver[] longClickResolver = new LongClickResolver[]{
+                new LongClickResolver(() -> {
+                    if (interruptLongClickAction[0][0]) return;
+                    final int[] time = {470};//执行间隔
+                    final Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(VIBRATOR_SERVICE);
+                            vibrator.vibrate(100);
+                            while (onUndo[0]) {
+                                if (time[0] > 70) {
+                                    time[0] -= 36;
+                                }
+                                pv.undo();
+                                try {
+                                    //noinspection BusyWait
+                                    sleep(time[0]);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
-                        pv.undo();
-                        try {
-                            sleep(time[0]);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                    };
+                    thread.start();
+                    onUndo[0] = true;
+                }),
+                new LongClickResolver(() -> {
+                    if (interruptLongClickAction[1][0]) return;
+                    final int[] time = {470};//执行间隔
+                    final Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(VIBRATOR_SERVICE);
+                            vibrator.vibrate(100);
+                            while (onRedo[0]) {
+                                if (time[0] > 70) {
+                                    time[0] -= 36;
+                                }
+                                pv.redo();
+                                try {
+                                    //noinspection BusyWait
+                                    sleep(time[0]);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
+                    };
+                    thread.start();
+                    onRedo[0] = true;
+                })
+        };
+
+        childTextViews[4].setOnTouchListener((v, event) -> {
+            floatingViewOnTouchListener.onTouch(v, event);
+            int action = event.getAction();
+            float x = event.getX();
+            float y = event.getY();
+            longClickResolver[0].onTouch(event);
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    // initialize
+                    prevXY[0][0] = x;
+                    prevXY[0][1] = y;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (x - prevXY[0][0] > 1 || y - prevXY[0][1] > 1) {
+                        onUndo[0] = false;
+                        interruptLongClickAction[0][0] = true;
+                    } else
+                        prevXY[0][0] = x;
+                    prevXY[0][1] = y;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (onUndo[0]) {
+                        onUndo[0] = false;
                     }
-                }
-            };
-            ckV();
-            Thread.start();
-            onUndo[0] = true;
+                    interruptLongClickAction[0][0] = false;
+                    break;
+                default:
+            }
             return true;
         });
-        childTextViews[4].setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP & onUndo[0]) {
-                    onUndo[0] = false;
-                }
-                return false;
-            }
-        });
-        final Boolean[] onRedo = {false};
-        childTextViews[5].setOnLongClickListener(v -> {
-            final int[] time = {470};//执行间隔
-            final Thread Thread = new Thread() {
-                @Override
-                public void run() {
-                    Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(FloatingDrawingBoardMainActivity.this.VIBRATOR_SERVICE);
-                    vibrator.vibrate(100);
-                    while (onRedo[0]) {
-                        if (time[0] > 70) {
-                            time[0] -= 36;
-                        }
-                        pv.redo();
-                        try {
-                            sleep(time[0]);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
+        childTextViews[5].setOnTouchListener((v, event) -> {
+            floatingViewOnTouchListener.onTouch(v, event);
+            int action = event.getAction();
+            float x = event.getX();
+            float y = event.getY();
+            longClickResolver[1].onTouch(event);
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    // initialize
+                    prevXY[1][0] = x;
+                    prevXY[1][1] = y;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (x - prevXY[1][0] > 1 || y - prevXY[1][1] > 1) {
+                        onRedo[0] = false;
+                        interruptLongClickAction[0][0] = true;
+                    } else
+                        prevXY[1][0] = x;
+                    prevXY[1][1] = y;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (onRedo[0]) {
+                        onRedo[0] = false;
                     }
-                }
-            };
-            ckV();
-            Thread.start();
-            onRedo[0] = true;
-            return true;
-        });
-        childTextViews[5].setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP & onRedo[0]) {
-                    onRedo[0] = false;
-                }
-                return false;
+                    interruptLongClickAction[1][0] = false;
+                    break;
+                default:
             }
+            return true;
         });
 
         Button readCacheFileBtn = findViewById(R.id.open_cache_path_file);
@@ -863,7 +813,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        pv.configPathDatabase();
     }
 
     void toggleDrawAndControlMode() {
@@ -896,7 +845,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         stopFloatingWindow();
         FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMillisecond);
         this.fbSwitch.setChecked(false);
-        pv.releasePathDatabase();
     }
 
     private void hide() {
@@ -1210,8 +1158,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v2 -> importPath(moreOptionsDialog, pathDir),
                 v3 -> new PermissionRequester(() -> {
-                    pv.commitDatabase();
-                    pv.beginDatabaseTransaction();
                     EditText et = new EditText(this);
                     setSelectedEditTextWithCurrentTimeMillisecond(et);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -1265,7 +1211,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private void setLayer() {
         Dialog dialog = new Dialog(this);
         View view = View.inflate(this, R.layout.layer_layout, null);
-        @SuppressWarnings("unused") LinearLayout linearLayout = view.findViewById(R.id.ll);
+        LinearLayout linearLayout = view.findViewById(R.id.ll);
         dialog.setContentView(view);
         DialogUtil.setDialogAttr(dialog, false
                 , ((int) (width * .8F)), ((int) (height * .8F)), true);
@@ -1333,7 +1279,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     }
                 });
                 Runnable importAction = () -> {
-                    Handler handler = new Handler();
                     Dialog importPathFileProgressDialog = new Dialog(this);
                     setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                     importPathFileProgressDialog.setCanceledOnTouchOutside(false);
@@ -1375,7 +1320,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
-    private void setFilePickerDialog(Dialog dialog, FilePickerRelativeLayout filePickerRelativeLayout) {
+    private void setFilePickerDialog(@NotNull Dialog dialog, FilePickerRelativeLayout filePickerRelativeLayout) {
         dialog.setOnKeyListener((dialog1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_UP) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {

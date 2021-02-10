@@ -301,4 +301,5 @@
     <string name="type">类型</string>
     <string name="raw">原始</string>
     <string name="temporary_english_mode">临时英文</string>
+    <string name="drawing_board_test">画版测试</string>
 </resources>

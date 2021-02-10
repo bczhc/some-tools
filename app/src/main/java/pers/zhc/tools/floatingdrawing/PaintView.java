@@ -5,52 +5,39 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PaintFlagsDrawFilter;
-import android.graphics.Path;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
+import android.graphics.*;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.util.LinkedList;
-import java.util.Map;
-
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.utils.sqlite.MySQLite3;
 import pers.zhc.u.CanDoHandler;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
 import pers.zhc.u.common.Documents;
+
+import java.io.*;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * @author bczhc & (cv...)...
  */
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
-    private final File internalPathFile;
-    private final int height;
-    private final int width;
+    private final File internalPathFile = null;
+    private int height = -1;
+    private int width = -1;
     private final Context ctx;
-    boolean isEraserMode;
+    boolean isEraserMode = false;
     private Paint mPaint;
     private Path mPath;
     private Paint eraserPaint;
@@ -60,6 +47,9 @@ public class PaintView extends View {
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private Map<String, MyCanvas> canvasMap;
     private MyCanvas headCanvas;
+    /**
+     * HEAD, a reference
+     */
     private Bitmap headBitmap;
     /**
      * 上次的坐标
@@ -81,14 +71,20 @@ public class PaintView extends View {
     private OnColorChangedCallback onColorChangedCallback = null;
     private Bitmap transBitmap;
     private MyCanvas transCanvas;
-    private MySQLite3 savePathDatabase;
 
-    public PaintView(Context context, int width, int height, File internalPathFile) {
-        super(context);
-        ctx = context;
-        this.internalPathFile = internalPathFile;
-        this.width = width;
-        this.height = height;
+    public PaintView(Context context) {
+        this(context, null);
+    }
+
+    /**
+     * For XML inflation
+     *
+     * @param context context
+     * @param attrs   xml attributes
+     */
+    public PaintView(Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
+        super(context, attrs);
+        this.ctx = context;
         init();
     }
 
@@ -96,8 +92,18 @@ public class PaintView extends View {
         this.onColorChangedCallback = onColorChangedCallback;
     }
 
-    /***
-     * 初始化
+    private void createBitmap() {
+        System.gc();
+        headBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        backgroundBitmap = Bitmap.createBitmap(headBitmap);
+        headCanvas = new MyCanvas(headBitmap);
+        mBackgroundCanvas = new Canvas(backgroundBitmap);
+        //抗锯齿
+        headCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+    }
+
+    /**
+     * Initialize.
      */
     private void init() {
         setEraserMode(false);
@@ -122,20 +128,6 @@ public class PaintView extends View {
         //同上
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
-        //保存签名的画布
-        //拿到控件的宽和高
-        post(() -> {
-            //获取PaintView的宽和高
-            //由于橡皮擦使用的是 Color.TRANSPARENT ,不能使用RGB-565
-            System.gc();
-            headBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            backgroundBitmap = Bitmap.createBitmap(headBitmap);
-            headCanvas = new MyCanvas(headBitmap);
-            mBackgroundCanvas = new Canvas(backgroundBitmap);
-            //抗锯齿
-            headCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-            //背景色
-        });
 
         undoList = new LinkedList<>();
         redoList = new LinkedList<>();
@@ -192,45 +184,22 @@ public class PaintView extends View {
         });
     }
 
-    void configPathDatabase() {
-        savePathDatabase = MySQLite3.open(internalPathFile.getPath());
-        savePathDatabase.exec("CREATE TABLE IF NOT EXISTS info (\n" +
-                "    " +
-                "version text,\n" +
-                "    creation_timestamp long,\n" +
-                "    modification_timestamp long\n" +
-                ");", null);
-        savePathDatabase.exec("CREATE TABLE IF NOT EXISTS path (\n" +
-                "    mark char,\n" +
-                "    num1 number,\n" +
-                "    num2 number\n" +
-                ");", null);
-        beginDatabaseTransaction();
-        boolean putCreationTime = false;
-        if (!savePathDatabase.hasTable("info")) putCreationTime = true;
-        final long currentTimeMillis = System.currentTimeMillis();
-        if (putCreationTime) {
-            savePathDatabase.exec("INSERT INTO info VALUES(" + currentTimeMillis + "," + currentTimeMillis + ")", null);
-        } else
-            savePathDatabase.exec("UPDATE info set modification_timestamp=" + currentTimeMillis, null);
-    }
-
-    float getStrokeWidth() {
+    public float getStrokeWidth() {
         return this.mPaint.getStrokeWidth();
     }
 
-    void setStrokeWidth(float width) {
+    public void setStrokeWidth(float width) {
         mPaint.setStrokeWidth(width);
     }
 
-    int getPaintColor() {
+    public int getPaintColor() {
         return this.mPaint.getColor();
     }
 
     /**
      * 设置画笔颜色
      */
-    void setPaintColor(@ColorInt int color) {
+    public void setPaintColor(@ColorInt int color) {
         mPaint.setColor(color);
         if (this.onColorChangedCallback != null) {
             onColorChangedCallback.change(color);
@@ -240,7 +209,7 @@ public class PaintView extends View {
     /**
      * 撤销操作
      */
-    void undo() {
+    public void undo() {
         if (!undoList.isEmpty()) {
             clearPaint();//清除之前绘制内容
             PathBean lastPb = undoList.removeLast();//将最后一个移除
@@ -256,25 +225,12 @@ public class PaintView extends View {
                 postInvalidate();
             }
         }
-        pathInsert(0xC1);
-    }
-
-    private void pathInsert(int mark, float num1, int num2) {
-        savePathDatabase.exec("INSERT INTO path VALUES(" + mark + "," + num1 + "," + num2 + ")", null);
-    }
-
-    private void pathInsert(int mark) {
-        savePathDatabase.exec("INSERT INTO path VALUES(" + mark + ",null,null)", null);
-    }
-
-    private void pathInsert(int mark, float num1, float num2) {
-        savePathDatabase.exec("INSERT INTO path VALUES(" + mark + "," + num1 + "," + num2 + ")", null);
     }
 
     /**
      * 恢复操作
      */
-    void redo() {
+    public void redo() {
         if (!redoList.isEmpty()) {
             PathBean pathBean = redoList.removeLast();
             headCanvas.drawPath(pathBean.path, pathBean.paint);
@@ -283,21 +239,20 @@ public class PaintView extends View {
                 postInvalidate();
             }
         }
-        pathInsert(0xC2);
     }
 
-    int getEraserAlpha() {
+    public int getEraserAlpha() {
         return this.eraserPaint.getAlpha();
     }
 
-    void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
+    public void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
         this.eraserPaint.setAlpha(alpha);
     }
 
     /**
      * 清空，包括撤销和恢复操作列表
      */
-    void clearAll() {
+    public void clearAll() {
         clearPaint();
         mLastY = 0f;
         //清空 撤销 ，恢复 操作列表
@@ -309,7 +264,7 @@ public class PaintView extends View {
     /**
      * 设置橡皮擦模式
      */
-    void setEraserMode(boolean isEraserMode) {
+    public void setEraserMode(boolean isEraserMode) {
         this.isEraserMode = isEraserMode;
         this.mPaintRef = isEraserMode ? eraserPaint : mPaint;
     }
@@ -317,7 +272,7 @@ public class PaintView extends View {
     /**
      * 导出图片
      */
-    void exportImg(File f, int exportedWidth, int exportHeight) {
+    public void exportImg(File f, int exportedWidth, int exportHeight) {
         Handler handler = new Handler();
         ToastUtils.show(ctx, R.string.saving);
         System.gc();
@@ -357,16 +312,14 @@ public class PaintView extends View {
     /**
      * 是否可以撤销
      */
-    @SuppressWarnings("unused")
-    public boolean isCanUndo() {
+    public boolean canUndo() {
         return undoList.isEmpty();
     }
 
     /**
      * 是否可以恢复
      */
-    @SuppressWarnings("unused")
-    public boolean isCanRedo() {
+    public boolean canRedo() {
         return redoList.isEmpty();
     }
 
@@ -392,6 +345,7 @@ public class PaintView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if (headBitmap == null) createBitmap();
         if (dontDrawWhileImporting) {
             return;
         }
@@ -437,23 +391,39 @@ public class PaintView extends View {
     }
 
     /**
+     * Measure width or height
+     *
+     * @param measureSpec measure spec
+     * @return measured size
+     */
+    private int measure(int measureSpec) {
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+        int measuredSize = 0;
+        switch (specMode) {
+            case MeasureSpec.EXACTLY:
+                measuredSize = specSize;
+                break;
+            case MeasureSpec.UNSPECIFIED:
+            case MeasureSpec.AT_MOST:
+                measuredSize = 200;
+                break;
+            default:
+        }
+        return measuredSize;
+    }
+
+    /**
      * 测量
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int wSpecMode = MeasureSpec.getMode(widthMeasureSpec);
-        int wSpecSize = MeasureSpec.getSize(widthMeasureSpec);
-        int hSpecMode = MeasureSpec.getMode(heightMeasureSpec);
-        int hSpecSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        if (wSpecMode == MeasureSpec.EXACTLY && hSpecMode == MeasureSpec.EXACTLY) {
-            setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
-        } else if (wSpecMode == MeasureSpec.AT_MOST) {
-            setMeasuredDimension(200, hSpecSize);
-        } else if (hSpecMode == MeasureSpec.AT_MOST) {
-            setMeasuredDimension(wSpecSize, 200);
-        }
+        int measuredW = measure(widthMeasureSpec);
+        int measuredH = measure(heightMeasureSpec);
+        setMeasuredDimension(measuredW, measuredH);
+        this.width = measuredW;
+        this.height = measuredH;
     }
 
     /**
@@ -463,7 +433,7 @@ public class PaintView extends View {
      * @param doneAction          完成回调接口
      * @param floatValueInterface 进度回调接口
      *                            路径存储结构：
-     *                            <p>一条笔迹中一个记录点或一个操作记录为数据库一条记录，参阅 {@link #configPathDatabase()}</p>
+     *                            <p>一条笔迹中一个记录点或一个操作记录为数据库一条记录，参阅 {@link }</p>
      *                            <p>标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2</p>
      *                            <p>按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；
      *                            撤销为0xC1，恢复为0xC2。(byte)</p>
@@ -473,7 +443,7 @@ public class PaintView extends View {
      *                            <p>如果标记为0xC1或0xC2，则后8字节忽略。</p>
      */
     @SuppressWarnings("BusyWait")
-    void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
+    public void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
         dontDrawWhileImporting = speedDelayMillis == 0;
         if (floatValueInterface != null) {
             floatValueInterface.f(0F);
@@ -680,7 +650,7 @@ public class PaintView extends View {
         thread.start();
     }
 
-    private void importPathVer3(SQLiteDatabase db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
+    private void importPathVer3(@NotNull SQLiteDatabase db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
         Cursor cursor = db.rawQuery("SELECT * FROM path", null);
         final int markColumnIndex = cursor.getColumnIndex("mark");
         final int num1ColumnIndex = cursor.getColumnIndex("num1");
@@ -741,7 +711,6 @@ public class PaintView extends View {
                     mLastX = x;
                     mLastY = y;
                 }
-                pathInsert(0xB3, x, y);
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
@@ -751,11 +720,12 @@ public class PaintView extends View {
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
-                    undoList.add(pb);//将路径对象存入集合
+                    // for undoing
+                    undoList.add(pb);
+                    redoList.clear();
                     mPath.reset();
                     mPath = null;
                 }
-                pathInsert(0xB2, x, y);
                 break;
             case MotionEvent.ACTION_DOWN:
                 //路径
@@ -763,22 +733,20 @@ public class PaintView extends View {
                 mLastX = x;
                 mLastY = y;
                 mPath.moveTo(mLastX, mLastY);
-                pathInsert(isEraserMode ? 0xA2 : 0xA1, mPaintRef.getStrokeWidth(), mPaintRef.getColor());
-                pathInsert(0xB1, x, y);
                 break;
         }
         postInvalidate();
     }
 
-    float getEraserStrokeWidth() {
+    public float getEraserStrokeWidth() {
         return eraserPaint.getStrokeWidth();
     }
 
-    void setEraserStrokeWidth(float w) {
+    public void setEraserStrokeWidth(float w) {
         eraserPaint.setStrokeWidth(w);
     }
 
-    void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
+    public void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
         System.gc();
         Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
         mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
@@ -790,7 +758,7 @@ public class PaintView extends View {
         postInvalidate();
     }
 
-    void resetTransform() {
+    public void resetTransform() {
         headCanvas.reset();
         redrawCanvas();
         postInvalidate();
@@ -820,16 +788,16 @@ public class PaintView extends View {
         return this.isLockingStroke;
     }
 
-    void bitmapResolution(Point point) {
+    public void bitmapResolution(@NotNull Point point) {
         point.x = headBitmap.getWidth();
         point.y = headBitmap.getHeight();
     }
 
-    void setLockStrokeMode(boolean mode) {
+    public void setLockStrokeMode(boolean mode) {
         this.isLockingStroke = mode;
     }
 
-    void lockStroke() {
+    public void lockStroke() {
         if (isLockingStroke) {
             this.lockedStrokeWidth = getStrokeWidth();
             this.lockedEraserStrokeWidth = getEraserStrokeWidth();
@@ -838,7 +806,7 @@ public class PaintView extends View {
         }
     }
 
-    void setCurrentStrokeWidthWithLockedStrokeWidth() {
+    public void setCurrentStrokeWidthWithLockedStrokeWidth() {
         if (isLockingStroke) {
             float mCanvasScale = headCanvas.getScale();
             setStrokeWidth(lockedStrokeWidth * scaleWhenLocked / mCanvasScale);
@@ -846,36 +814,23 @@ public class PaintView extends View {
         }
     }
 
-    @SuppressWarnings("unused")
-    void changeHead(String id) {
+    public void changeHead(String id) {
         headCanvas = canvasMap.get(id);
         headBitmap = bitmapMap.get(headCanvas);
     }
 
-    float getScale() {
+    public float getScale() {
         return headCanvas.getScale();
     }
 
-    float getZoomedStrokeWidthInUse() {
+    public float getZoomedStrokeWidthInUse() {
         return getScale() * getStrokeWidthInUse();
-    }
-
-    public void releasePathDatabase() {
-        savePathDatabase.close();
-    }
-
-    public void commitDatabase() {
-        savePathDatabase.exec("COMMIT", null);
-    }
-
-    public void beginDatabaseTransaction() {
-        savePathDatabase.exec("BEGIN TRANSACTION", null);
     }
 
     /**
      * 路径集合
      */
-    static class PathBean {
+    public static class PathBean {
         final Path path;
         final Paint paint;
 
