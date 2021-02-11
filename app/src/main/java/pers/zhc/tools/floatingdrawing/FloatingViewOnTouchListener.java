@@ -3,7 +3,6 @@ package pers.zhc.tools.floatingdrawing;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-
 import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
 
 public class FloatingViewOnTouchListener implements View.OnTouchListener {
@@ -25,6 +24,8 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
         this.viewSpec = viewSpec;
     }
 
+    private boolean performClick = true;
+
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -32,6 +33,7 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
         float rawY = event.getRawY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                performClick = true;
                 lastRawX = (int) rawX;
                 lastRawY = (int) rawY;
                 paramX = layoutParams.x;
@@ -59,12 +61,20 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
                 wm.updateViewLayout(view, layoutParams);
                 break;
             case MotionEvent.ACTION_UP:
-                if (Math.abs(lastRawX - rawX) < 1 && Math.abs(lastRawY - rawY) < 1) {
+                if (performClick && Math.abs(lastRawX - rawX) < 1 && Math.abs(lastRawY - rawY) < 1) {
                     v.performClick();
                 }
                 break;
         }
         return true;
+    }
+
+    /**
+     * <p>Cancel performing click this time.</p>
+     * <p>Enable performing click again automatically when {@link MotionEvent#ACTION_DOWN} received next time.</p>
+     */
+    public void cancelPerformClick() {
+        performClick = false;
     }
 
     public static class ViewSpec {

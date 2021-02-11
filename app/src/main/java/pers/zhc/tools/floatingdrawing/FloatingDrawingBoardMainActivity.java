@@ -352,8 +352,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         // undo and redo
         final boolean[][] interruptLongClickAction = {{false}, {false}};
         LongClickResolver[] longClickResolver = new LongClickResolver[]{
-                new LongClickResolver(() -> {
+                new LongClickResolver(this, () -> {
                     if (interruptLongClickAction[0][0]) return;
+                    floatingViewOnTouchListener.cancelPerformClick();
                     final int[] time = {470};//执行间隔
                     final Thread thread = new Thread() {
                         @Override
@@ -377,8 +378,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     thread.start();
                     onUndo[0] = true;
                 }),
-                new LongClickResolver(() -> {
+                new LongClickResolver(this, () -> {
                     if (interruptLongClickAction[1][0]) return;
+                    floatingViewOnTouchListener.cancelPerformClick();
                     final int[] time = {470};//执行间隔
                     final Thread thread = new Thread() {
                         @Override
@@ -420,14 +422,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     if (x - prevXY[0][0] > 1 || y - prevXY[0][1] > 1) {
                         onUndo[0] = false;
                         interruptLongClickAction[0][0] = true;
-                    } else
-                        prevXY[0][0] = x;
+                    }
+                    prevXY[0][0] = x;
                     prevXY[0][1] = y;
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (onUndo[0]) {
-                        onUndo[0] = false;
-                    }
+                    onUndo[0] = false;
                     interruptLongClickAction[0][0] = false;
                     break;
                 default:
@@ -450,14 +450,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     if (x - prevXY[1][0] > 1 || y - prevXY[1][1] > 1) {
                         onRedo[0] = false;
                         interruptLongClickAction[0][0] = true;
-                    } else
-                        prevXY[1][0] = x;
+                    }
+                    prevXY[1][0] = x;
                     prevXY[1][1] = y;
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (onRedo[0]) {
-                        onRedo[0] = false;
-                    }
+                    onRedo[0] = false;
                     interruptLongClickAction[1][0] = false;
                     break;
                 default:
