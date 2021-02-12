@@ -88,16 +88,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private void getExceptionStackTraceString(@NotNull StringBuilder sb, @NotNull Thread t, @NotNull Throwable e) {
         StackTraceElement[] ses = e.getStackTrace();
-        if (ses.length != 0) {
-            sb.append("Exception in thread \"").append(t.getName()).append("\" ").append(e.toString()).append('\n');
-            for (StackTraceElement se : ses) {
-                sb.append("\tat ").append(se).append('\n');
-            }
-        } else {
-            Throwable ec = e.getCause();
-            if (ec != null) {
-                getExceptionStackTraceString(sb, t, ec);
-            }
+        sb.append("Exception in thread \"").append(t.getName()).append("\" ").append(e.toString()).append('\n');
+        for (StackTraceElement se : ses) {
+            sb.append("\tat ").append(se).append('\n');
+        }
+        Throwable ec = e.getCause();
+        if (ec != null) {
+            getExceptionStackTraceString(sb, t, ec);
         }
     }
 }

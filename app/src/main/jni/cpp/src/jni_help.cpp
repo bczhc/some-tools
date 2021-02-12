@@ -7,7 +7,7 @@
 
 using namespace bczhc;
 
-void jnihelp::log(JNIEnv *&env, const char *tag, const char *format, ...) {
+void bczhc::log(JNIEnv *&env, const char *tag, const char *format, ...) {
     va_list args{};
     va_start(args, format);
     char *msg = nullptr;
@@ -28,7 +28,7 @@ void jnihelp::log(JNIEnv *&env, const char *tag, const char *format, ...) {
     va_end(args);
 }
 
-void jnihelp::throwException(JNIEnv *&env, const char *format, ...) {
+void bczhc::throwException(JNIEnv *&env, const char *format, ...) {
     va_list args{};
     va_start(args, format);
     jclass exceptionClass = env->FindClass("java/lang/Exception");

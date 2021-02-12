@@ -167,26 +167,76 @@ public class JNI {
          */
         public static native long compileStatement(long id, String sql) throws Exception;
 
-        /* Statement methods start: */
-        public static native void bind(long statId, int row, int a) throws Exception;
+        public static class Statement {
+            static {
+                loadLib();
+            }
 
-        public static native void bind(long statId, int row, long a) throws Exception;
+            /* Statement methods start: */
+            public static native void bind(long stmtId, int row, int a) throws Exception;
 
-        public static native void bind(long statId, int row, double a) throws Exception;
+            public static native void bind(long stmtId, int row, long a) throws Exception;
 
-        public static native void bindText(long statId, int row, String s) throws Exception;
+            public static native void bind(long stmtId, int row, double a) throws Exception;
 
-        public static native void bindNull(long statId, int row) throws Exception;
+            public static native void bindText(long stmtId, int row, String s) throws Exception;
 
-        public static native void reset(long statId) throws Exception;
+            public static native void bindNull(long stmtId, int row) throws Exception;
 
-        public static native void bindBlob(long statId, int row, byte[] bytes, int size) throws Exception;
+            public static native void reset(long stmtId) throws Exception;
 
-        public static native void step(long statId) throws Exception;
+            public static native void bindBlob(long stmtId, int row, byte[] bytes, int size) throws Exception;
 
-        public static native void finalize(long statId) throws Exception;
-        /* Statement methods end. */
+            public static native void step(long stmtId) throws Exception;
 
+            public static native void finalize(long stmtId) throws Exception;
+
+            /**
+             * Get cursor.
+             *
+             * @param stmtId native statement object address
+             * @return native cursor object address
+             */
+            public static native long getCursor(long stmtId);
+
+            /**
+             * Call this rather than {@link #step(long)} when the statement returns values like `select` statements.
+             *
+             * @param stmtId statement native address
+             * @return {@value pers.zhc.tools.utils.sqlite.SQLite3#SQLITE_ROW} if succeeded, otherwise others.
+             */
+            public static native int stepRow(long stmtId);
+
+            /**
+             * @param stmtId statement native address
+             * @param name   column name
+             * @return index, the leftmost value is 0
+             */
+            public static native int getIndexByColumnName(long stmtId, String name);
+            /* Statement methods end. */
+        }
+
+        public static class Cursor {
+            static {
+                loadLib();
+            }
+
+            /* Cursor methods start. */
+            public static native void reset(long cursorId) throws Exception;
+
+            public static native boolean step(long cursorId) throws Exception;
+
+            public static native byte[] getBlob(long cursorId, int column);
+
+            public static native String getText(long cursorId, int column);
+
+            public static native double getDouble(long cursorId, int column);
+
+            public static native long getLong(long cursorId, int column);
+
+            public static native int getInt(long cursorId, int column);
+            /* Cursor methods end. */
+        }
 
         public interface SqliteExecCallback {
             /**
@@ -272,6 +322,7 @@ public class JNI {
 
         /**
          * Use SHA256 blah blah.
+         *
          * @param str the text to be digested
          * @return result
          */

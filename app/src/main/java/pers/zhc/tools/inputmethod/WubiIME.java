@@ -10,7 +10,7 @@ import android.widget.TextView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.test.wubiinput.WubiInput;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.sqlite.MySQLite3;
+import pers.zhc.tools.utils.sqlite.SQLite3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +106,7 @@ public class WubiIME extends InputMethodService {
     private final StringBuilder wubiCodeSB = new StringBuilder();
     private final Quotation quotation = new Quotation();
     private final List<String> candidates = new ArrayList<>();
-    private MySQLite3 wubiDictDB = null;
+    private SQLite3 wubiDictDB = null;
     private TextView candidateTV, wubiCodeTV;
     private boolean alphabetMode = false;
     private InputConnection ic;

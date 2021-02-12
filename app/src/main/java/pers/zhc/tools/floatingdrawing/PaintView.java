@@ -3,8 +3,6 @@ package pers.zhc.tools.floatingdrawing;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.*;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -19,6 +17,9 @@ import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.sqlite.Cursor;
+import pers.zhc.tools.utils.sqlite.SQLite3;
+import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.u.CanDoHandler;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
@@ -33,11 +34,10 @@ import java.util.Map;
  */
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
-    private final File internalPathFile = null;
     private int height = -1;
     private int width = -1;
     private final Context ctx;
-    boolean isEraserMode = false;
+    boolean eraserMode = false;
     private Paint mPaint;
     private Path mPath;
     private Paint eraserPaint;
@@ -71,6 +71,7 @@ public class PaintView extends View {
     private OnColorChangedCallback onColorChangedCallback = null;
     private Bitmap transBitmap;
     private MyCanvas transCanvas;
+    private PathSaver pathSaver = null;
 
     public PaintView(Context context) {
         this(context, null);
@@ -184,22 +185,22 @@ public class PaintView extends View {
         });
     }
 
-    public float getStrokeWidth() {
+    public float getDrawingStrokeWidth() {
         return this.mPaint.getStrokeWidth();
     }
 
-    public void setStrokeWidth(float width) {
+    public void setDrawingStrokeWidth(float width) {
         mPaint.setStrokeWidth(width);
     }
 
-    public int getPaintColor() {
+    public int getDrawingColor() {
         return this.mPaint.getColor();
     }
 
     /**
      * 设置画笔颜色
      */
-    public void setPaintColor(@ColorInt int color) {
+    public void setDrawingColor(@ColorInt int color) {
         mPaint.setColor(color);
         if (this.onColorChangedCallback != null) {
             onColorChangedCallback.change(color);
@@ -210,6 +211,7 @@ public class PaintView extends View {
      * 撤销操作
      */
     public void undo() {
+        pathSaver.undo();
         if (!undoList.isEmpty()) {
             clearPaint();//清除之前绘制内容
             PathBean lastPb = undoList.removeLast();//将最后一个移除
@@ -231,6 +233,7 @@ public class PaintView extends View {
      * 恢复操作
      */
     public void redo() {
+        pathSaver.redo();
         if (!redoList.isEmpty()) {
             PathBean pathBean = redoList.removeLast();
             headCanvas.drawPath(pathBean.path, pathBean.paint);
@@ -265,8 +268,12 @@ public class PaintView extends View {
      * 设置橡皮擦模式
      */
     public void setEraserMode(boolean isEraserMode) {
-        this.isEraserMode = isEraserMode;
+        this.eraserMode = isEraserMode;
         this.mPaintRef = isEraserMode ? eraserPaint : mPaint;
+    }
+
+    public boolean isEraserMode() {
+        return eraserMode;
     }
 
     /**
@@ -359,7 +366,7 @@ public class PaintView extends View {
                             float mCanvasScale = headCanvas.getScale();
                             canvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
                             canvas.scale(mCanvasScale, mCanvasScale);
-                            if (isEraserMode) {
+                            if (eraserMode) {
                                 canvas.drawPath(mPath, eraserPaint);
                             } else {
                                 canvas.drawPath(mPath, mPaint);
@@ -432,15 +439,6 @@ public class PaintView extends View {
      * @param f                   路径文件
      * @param doneAction          完成回调接口
      * @param floatValueInterface 进度回调接口
-     *                            路径存储结构：
-     *                            <p>一条笔迹中一个记录点或一个操作记录为数据库一条记录，参阅 {@link }</p>
-     *                            <p>标记，绘画路径开始为0xA1，橡皮擦路径开始为0xA2</p>
-     *                            <p>按下事件（紧接着绘画路径开始后）为0xB1，抬起事件（路径结束）为0xB2，移动事件（路径中）为0xB3；
-     *                            撤销为0xC1，恢复为0xC2。(byte)</p>
-     *                            <p>如果标记为0xA1，排列结构：标记(byte)+笔迹宽度(float)+颜色(int)</p>
-     *                            <p>如果标记为0xA2，排列结构：标记(byte)+橡皮擦宽度(float)+像皮擦颜色（alpha信息）(int)</p>
-     *                            <p>如果标记为0xB1或0xB2或0xB3，排列结构：标记(byte)+x坐标(float)+y坐标(float)</p>
-     *                            <p>如果标记为0xC1或0xC2，则后8字节忽略。</p>
      */
     @SuppressWarnings("BusyWait")
     public void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
@@ -456,11 +454,13 @@ public class PaintView extends View {
         canDoHandler.start();
         Handler handler = new Handler();
         Thread thread = new Thread(() -> {
-            try {
-                SQLiteDatabase db = SQLiteDatabase.openDatabase(f.getPath(), null, SQLiteDatabase.OPEN_READONLY);
-                importPathVer3(db, canDoHandler, doneAction, speedDelayMillis);
+            SQLite3 open = SQLite3.open(f.getPath());
+            if (!open.checkIfCorrupt()) {
+                importPathVer3(open, canDoHandler, doneAction, speedDelayMillis);
+                dontDrawWhileImporting = false;
+                redrawCanvas();
+                postInvalidate();
                 return;
-            } catch (Exception ignored) {
             }
             RandomAccessFile raf = null;
             try {
@@ -502,11 +502,11 @@ public class PaintView extends View {
                                     strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
                                     color = JNI.FloatingBoard.byteArrayToInt(bytes, 8);
                                     setEraserMode(p1 == 2);
-                                    if (isEraserMode) {
+                                    if (eraserMode) {
                                         setEraserStrokeWidth(strokeWidth);
                                     } else {
-                                        setStrokeWidth(strokeWidth);
-                                        setPaintColor(color);
+                                        setDrawingStrokeWidth(strokeWidth);
+                                        setDrawingColor(color);
                                     }
                                     break;
                                 case 3:
@@ -620,8 +620,8 @@ public class PaintView extends View {
                                     }
                                     setEraserMode(bytes[24] == 1);
                                     setEraserStrokeWidth(eraserStrokeWidth);
-                                    setPaintColor(color);
-                                    setStrokeWidth(strokeWidth);
+                                    setDrawingColor(color);
+                                    setDrawingStrokeWidth(strokeWidth);
                                     onTouchAction(motionAction, x, y);
                                     canDoHandler.push(((float) read) * 100F / ((float) length));
                                     break;
@@ -631,7 +631,7 @@ public class PaintView extends View {
                 }
                 canDoHandler.stop();
                 doneAction.run();
-                ((FloatingDrawingBoardMainActivity) ctx).strokeColorHSVA.set(getPaintColor());
+                ((FloatingDrawingBoardMainActivity) ctx).strokeColorHSVA.set(getDrawingColor());
             } catch (IOException | InterruptedException e) {
                 handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
             } finally {
@@ -650,47 +650,80 @@ public class PaintView extends View {
         thread.start();
     }
 
-    private void importPathVer3(@NotNull SQLiteDatabase db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
-        Cursor cursor = db.rawQuery("SELECT * FROM path", null);
-        final int markColumnIndex = cursor.getColumnIndex("mark");
-        final int num1ColumnIndex = cursor.getColumnIndex("num1");
-        final int num2ColumnIndex = cursor.getColumnIndex("num2");
-        if (cursor.moveToFirst()) {
-            do {
-                switch (cursor.getShort(markColumnIndex)) {
-                    case 0xA1:
-                        setEraserMode(false);
-                        mPaintRef.setStrokeWidth(cursor.getFloat(num1ColumnIndex));
-                        mPaintRef.setColor(cursor.getInt(num2ColumnIndex));
-                        break;
-                    case 0xA2:
-                        setEraserMode(true);
-                        mPaintRef.setStrokeWidth(cursor.getFloat(num1ColumnIndex));
-                        mPaintRef.setColor(cursor.getInt(num2ColumnIndex));
-                        break;
-                    case 0xB1:
-                        onTouchAction(MotionEvent.ACTION_DOWN, cursor.getInt(num1ColumnIndex), cursor.getInt(num2ColumnIndex));
-                        break;
-                    case 0xB2:
-                        onTouchAction(MotionEvent.ACTION_UP, cursor.getInt(num1ColumnIndex), cursor.getInt(num2ColumnIndex));
-                        break;
-                    case 0xB3:
-                        onTouchAction(MotionEvent.ACTION_MOVE, cursor.getInt(num1ColumnIndex), cursor.getInt(num2ColumnIndex));
-                        break;
-                    case 0xC1:
-                        undo();
-                        break;
-                    case 0xC2:
-                        redo();
-                        break;
-                }
-            } while (cursor.moveToNext());
+    private void importPathVer3(@NotNull SQLite3 db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
+        int[] recordNum = {0};
+        db.exec("SELECT * FROM path", contents -> {
+            ++recordNum[0];
+            return 0;
+        });
+        System.out.println("record num: " + recordNum[0]);
+        dontDrawWhileImporting = speedDelayMillis == 0;
+        Statement statement;
+        try {
+            statement = db.compileStatement("SELECT * FROM path");
+        } catch (Exception e) {
+            Common.showException(e, (Activity) ctx);
+            return;
         }
-        cursor.close();
-        dontDrawWhileImporting = false;
-        redrawCanvas();
-        postInvalidate();
+
+        Cursor cursor = statement.getCursor();
+        int c = 0;
+        while (cursor.step()) {
+            int mark = cursor.getInt(0);
+            int p1 = cursor.getInt(1);
+            int p2 = cursor.getInt(2);
+
+            switch (mark) {
+                case 0x01:
+                    setDrawingColor(p1);
+                    setDrawingStrokeWidth(Float.intBitsToFloat(p2));
+                    setEraserMode(false);
+                    break;
+                case 0x02:
+                case 0x12:
+                    onTouchAction(MotionEvent.ACTION_DOWN, Float.intBitsToFloat(p1), Float.intBitsToFloat(p2));
+                    break;
+                case 0x03:
+                case 0x13:
+                    onTouchAction(MotionEvent.ACTION_MOVE, Float.intBitsToFloat(p1), Float.intBitsToFloat(p2));
+                    break;
+                case 0x04:
+                case 0x14:
+                    onTouchAction(MotionEvent.ACTION_UP, Float.intBitsToFloat(p1), Float.intBitsToFloat(p2));
+                    break;
+                case 0x11:
+                    setEraserMode(true);
+                    setEraserAlpha(p1);
+                    setEraserStrokeWidth(Float.intBitsToFloat(p2));
+                    break;
+                case 0x20:
+                    undo();
+                    break;
+                case 0x30:
+                    redo();
+                    break;
+                default:
+            }
+
+            ++c;
+            canDoHandler.push(((float) c) / ((float) recordNum[0]) * 100F);
+            if (!dontDrawWhileImporting) {
+                try {
+                    //noinspection BusyWait
+                    Thread.sleep(speedDelayMillis);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         doneAction.run();
+
+        try {
+            statement.release();
+        } catch (Exception e) {
+            Common.showException(e, (Activity) ctx);
+        }
     }
 
     private void onTouchAction(int motionAction, float x, float y) {
@@ -700,7 +733,16 @@ public class PaintView extends View {
         x = (x - startPointX) / canvasScale;
         y = (y - startPointY) / canvasScale;
         switch (motionAction) {
+            case MotionEvent.ACTION_DOWN:
+                pathSaver.onTouchDown(x, y);
+                //路径
+                mPath = new Path();
+                mLastX = x;
+                mLastY = y;
+                mPath.moveTo(mLastX, mLastY);
+                break;
             case MotionEvent.ACTION_MOVE:
+                pathSaver.onTouchMove(x, y);
                 if (mPath != null) {
                     float dx = Math.abs(x - mLastX);
                     float dy = Math.abs(y - mLastY);
@@ -713,6 +755,7 @@ public class PaintView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                pathSaver.onTouchUp(x, y);
                 if (mPath != null) {
                     if (!dontDrawWhileImporting) {
                         headCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
@@ -727,13 +770,7 @@ public class PaintView extends View {
                     mPath = null;
                 }
                 break;
-            case MotionEvent.ACTION_DOWN:
-                //路径
-                mPath = new Path();
-                mLastX = x;
-                mLastY = y;
-                mPath.moveTo(mLastX, mLastY);
-                break;
+            default:
         }
         postInvalidate();
     }
@@ -799,7 +836,7 @@ public class PaintView extends View {
 
     public void lockStroke() {
         if (isLockingStroke) {
-            this.lockedStrokeWidth = getStrokeWidth();
+            this.lockedStrokeWidth = getDrawingStrokeWidth();
             this.lockedEraserStrokeWidth = getEraserStrokeWidth();
             this.scaleWhenLocked = headCanvas.getScale();
             setCurrentStrokeWidthWithLockedStrokeWidth();
@@ -809,7 +846,7 @@ public class PaintView extends View {
     public void setCurrentStrokeWidthWithLockedStrokeWidth() {
         if (isLockingStroke) {
             float mCanvasScale = headCanvas.getScale();
-            setStrokeWidth(lockedStrokeWidth * scaleWhenLocked / mCanvasScale);
+            setDrawingStrokeWidth(lockedStrokeWidth * scaleWhenLocked / mCanvasScale);
             setEraserStrokeWidth(lockedEraserStrokeWidth * scaleWhenLocked / mCanvasScale);
         }
     }
@@ -838,5 +875,196 @@ public class PaintView extends View {
             this.path = path;
             this.paint = paint;
         }
+    }
+
+    /**
+     * Enable to save path, so that you can export path file later.
+     *
+     * @param tempFile the temporary file to record the strokes, etc. If this parameter is null, the method call is invalid.
+     */
+    public void enableSavePath(String tempFile) {
+        if (tempFile == null) return;
+        pathSaver = new PathSaver(SQLite3.open(tempFile));
+    }
+
+    /**
+     * Path saver.
+     * <p>One record structure in data saved:</p>
+     * <h3>&lt;mark&gt;(1bytes) &lt;p1&gt;(4bytes) &lt;p2&gt;(4bytes)</h3>
+     * When {@link MotionEvent#getAction()} is {@link MotionEvent#ACTION_DOWN}, it'll record 2 records.
+     * <ul>
+     *     <li>
+     *         drawing:<br/>
+     *         let action = {@link MotionEvent#getAction()}<br/>
+     *         if action is:
+     *         <ul>
+     *             <li>
+     *                 {@link MotionEvent#ACTION_DOWN}:
+     *                 <ul>
+     *                     record 1:
+     *                     <li>mark: {@code 0x01}</li>
+     *                     <li>p1: paint color as {@code int}</li>
+     *                     <li>p2: stroke width, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                 </ul>
+     *                 <ul>
+     *                     record 2:
+     *                     <li>mark: {@code 0x02}</li>
+     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                 </ul>
+     *             </li>
+     *             <li>
+     *                 {@link MotionEvent#ACTION_MOVE}:
+     *                 <ul>
+     *                     <li>mark: {@code 0x03}</li>
+     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                 </ul>
+     *             </li>
+     *             <li>
+     *                 {@link MotionEvent#ACTION_UP}
+     *                 <ul>
+     *                     <li>mark {@code 0x04}</li>
+     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                 </ul>
+     *             </li>
+     *         </ul>
+     *     </li>
+     *     <li>
+     *         erasing:<br/>
+     *         let action = {@link MotionEvent#getAction()}<br/>
+     *         if action is:
+     *         <ul>
+     *             <li>
+     *                 {@link MotionEvent#ACTION_DOWN}:
+     *                 <ul>
+     *                     record 1:
+     *                     <li>mark: {@code 0x11}</li>
+     *                     <li>p1: eraser transparency (alpha value) as {@code int}</li>
+     *                     <li>p2: stroke width, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                 </ul>
+     *                 <ul>
+     *                     record 2:
+     *                     <li>mark: {@code 0x12}</li>
+     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                 </ul>
+     *             </li>
+     *             <li>
+     *                 {@link MotionEvent#ACTION_MOVE}:
+     *                 <ul>
+     *                     <li>mark: {@code 0x13}</li>
+     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                 </ul>
+     *             </li>
+     *             <li>
+     *                 {@link MotionEvent#ACTION_UP}
+     *                 <ul>
+     *                     <li>mark {@code 0x14}</li>
+     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                 </ul>
+     *             </li>
+     *         </ul>
+     *     </li>
+     *     <li>
+     *         Undo:
+     *         <ul>
+     *             <li>mark: {@code 0x20}</li>
+     *             <li>p1: {@code 0x00}</li>
+     *             <li>p2: {@code 0x00}</li>
+     *         </ul>
+     *     </li>
+     *     <li>
+     *         Redo:
+     *         <ul>
+     *             <li>mark: {@code 0x30}</li>
+     *             <li>p1: {@code 0x00}</li>
+     *             <li>p2: {@code 0x00}</li>
+     *         </ul>
+     *     </li>
+     * </ul>
+     */
+    private class PathSaver {
+        private final SQLite3 tempPathDatabase;
+        private Statement statement;
+
+        private void configureDatabase() {
+            // create table
+            tempPathDatabase.exec("CREATE TABLE IF NOT EXISTS path\n" +
+                    "(\n" +
+                    "    mark INTEGER,\n" +
+                    "    p1   INTEGER,\n" +
+                    "    p2   INTEGER\n" +
+                    ")");
+            tempPathDatabase.exec("BEGIN TRANSACTION");
+            // prepare statement
+            try {
+                statement = tempPathDatabase.compileStatement("INSERT INTO path\n" +
+                        "VALUES (?, ?, ?)");
+            } catch (Exception e) {
+                Common.showException(e, (Activity) PaintView.this.ctx);
+            }
+        }
+
+        private PathSaver(SQLite3 tempPathDatabase) {
+            this.tempPathDatabase = tempPathDatabase;
+            configureDatabase();
+        }
+
+        private void undo() {
+            insert(0x20, 0x00, 0x00);
+        }
+
+        private void redo() {
+            insert(0x30, 0x00, 0x00);
+        }
+
+        private void insert(int mark, int p1, int p2) {
+            try {
+                statement.reset();
+                statement.bind(1, mark);
+                statement.bind(2, p1);
+                statement.bind(3, p2);
+                statement.step();
+            } catch (Exception e) {
+                Common.showException(e, (Activity) PaintView.this.ctx);
+            }
+        }
+
+        private void onTouchDown(float x, float y) {
+            insert(eraserMode ? 0x11 : 0x01, getDrawingColor(), Float.floatToRawIntBits(getStrokeWidthInUse()));
+            insert(eraserMode ? 0x12 : 0x02, Float.floatToRawIntBits(x), Float.floatToRawIntBits(y));
+        }
+
+        private void onTouchMove(float x, float y) {
+            insert(eraserMode ? 0x13 : 0x03, Float.floatToRawIntBits(x), Float.floatToRawIntBits(y));
+        }
+
+        private void onTouchUp(float x, float y) {
+            insert(eraserMode ? 0x14 : 0x04, Float.floatToRawIntBits(x), Float.floatToRawIntBits(y));
+        }
+
+        private void commitDatabase() {
+            tempPathDatabase.exec("COMMIT");
+            tempPathDatabase.exec("BEGIN TRANSACTION");
+        }
+    }
+
+    public void commitPathDatabase() {
+        if (pathSaver != null) {
+            pathSaver.commitDatabase();
+        }
+    }
+
+    public void closePathDatabase() {
+        if (pathSaver == null) return;
+        try {
+            pathSaver.commitDatabase();
+        } catch (Exception ignored) {
+        }
+        pathSaver.tempPathDatabase.close();
     }
 }

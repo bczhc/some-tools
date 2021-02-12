@@ -171,10 +171,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         });
         clearPathBtn.performLongClick();
         Point point = new Point();
-        /*//noinspection deprecation
-        width = this.getWindowManager().getDefaultDisplay().getWidth();
-        //noinspection deprecation
-        height = this.getWindowManager().getDefaultDisplay().getHeight();*/
         getWindowManager().getDefaultDisplay().getSize(point);
         width = point.x;
         height = point.y;
@@ -189,9 +185,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 setPanelColor(color);
             }
         });
-        pv.setStrokeWidth(10F);
+        pv.setDrawingStrokeWidth(10F);
         pv.setEraserStrokeWidth(10F);
-        pv.setPaintColor(Color.RED);
+        pv.setDrawingColor(Color.RED);
         wm = (WindowManager) this.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         setSwitch();
         strings = getResources().getStringArray(R.array.btn_string);
@@ -237,7 +233,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         } catch (IOException ignored) {
         }
         importPathFileDoneAction = () -> {
-            if (pv.isEraserMode) {
+            if (pv.eraserMode) {
                 childTextViews[6].setText(R.string.eraser_mode);
                 strings[6] = getString(R.string.eraser_mode);
             } else {
@@ -273,7 +269,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             childTextViews[i].setText(strings[i]);
             childTextViews[i].setBackgroundColor(panelColor);
             childTextViews[i].setTextColor(panelTextColor);
-            childTextViews[i].setOnTouchListener(floatingViewOnTouchListener);
+            childTextViews[i].setOnTouchListener((v, e) -> {
+                if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                    // commit path temporary database in time, preventing data lose
+                    pv.commitPathDatabase();
+                }
+                return floatingViewOnTouchListener.onTouch(v, e);
+            });
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 childTextViews[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
                 childTextViews[i].setGravity(Gravity.CENTER);
@@ -305,7 +307,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         pv.redo();
                         break;
                     case 6:
-                        if (pv.isEraserMode) {
+                        if (pv.eraserMode) {
                             pv.setEraserMode(false);
                             childTextViews[finalI].setText(R.string.drawing_mode);
                             strings[finalI] = getString(R.string.drawing_mode);
@@ -338,7 +340,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     default:
                         break;
                 }
-                System.out.println("i = " + finalI);
             });
             smallLL.setGravity(Gravity.CENTER);
             smallLL.addView(childTextViews[i]);
@@ -360,7 +361,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         @Override
                         public void run() {
                             Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(VIBRATOR_SERVICE);
-                            vibrator.vibrate(100);
+                            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
                             while (onUndo[0]) {
                                 if (time[0] > 70) {
                                     time[0] -= 36;
@@ -386,7 +387,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         @Override
                         public void run() {
                             Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(VIBRATOR_SERVICE);
-                            vibrator.vibrate(100);
+                            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
                             while (onRedo[0]) {
                                 if (time[0] > 70) {
                                     time[0] -= 36;
@@ -487,7 +488,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         };
         TextView checkForUpdateTV = findViewById(R.id.check_for_update_tv);
         checkForUpdateTV.setOnClickListener(v -> super.checkForUpdate());
-        strokeColorHSVA.set(pv.getPaintColor());
+        strokeColorHSVA.set(pv.getDrawingColor());
         panelColorHSVA.set(panelColor);
         panelTextColorHSVA.set(panelTextColor);
     }
@@ -547,7 +548,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             this.panelColorFollowPainting = isChecked;
             panelColorBtn.setEnabled(!this.panelColorFollowPainting);
             if (isChecked) {
-                setPanelColor(pv.getPaintColor());
+                setPanelColor(pv.getDrawingColor());
             } else setPanelColor(panelColorHSVA.getColor());
             if (invertColorChecked) {
                 setPanelTextColor(ColorUtils.invertColor(panelColor));
@@ -567,7 +568,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void setColor() {
         Dialog dialog;
-        if (pv.isEraserMode) {
+        if (pv.eraserMode) {
             dialog = new Dialog(this);
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -613,7 +614,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 @Override
                 public void onColorPicked(float h, float s, float v, int alpha) {
                     strokeColorHSVA.set(alpha, h, s, v);
-                    pv.setPaintColor(strokeColorHSVA.getColor());
+                    pv.setDrawingColor(strokeColorHSVA.getColor());
                 }
             };
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
@@ -783,12 +784,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 new AbstractCheckOverlayPermission(this) {
                     @Override
                     public void granted() {
+                        pv.enableSavePath(currentInternalPathFile.getPath());
                         startFloatingWindow();
                     }
 
                     @Override
                     public void denied() {
                         fbSwitch.setChecked(false);
+                        pv.closePathDatabase();
                     }
                 };
             } else {
@@ -865,7 +868,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             nb.setSmallIcon(Icon.createWithBitmap(icon))
                     .setContentTitle(getString(R.string.drawing_board))
                     .setContentText(getString(R.string.appear_f_b, date));
-//            Intent intent = new Intent(this, NotificationClickReceiver.class);
             Intent intent = new Intent();
             final int backgroundReceiverFlag = 0x01000000;
             intent.addFlags(backgroundReceiverFlag);
@@ -911,7 +913,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         for (int i = 0; i < radioButtons.length; i++) {
             radioButtons[i] = (RadioButton) rg.getChildAt(i);
         }
-        radioButtons[pv.isEraserMode ? 1 : 0].setChecked(true);
+        radioButtons[pv.eraserMode ? 1 : 0].setChecked(true);
         CheckBox lockStrokeCB = mainLL.findViewById(R.id.cb);
         lockStrokeCB.setChecked(pv.isLockingStroke());
         lockStrokeCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -922,7 +924,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         SeekBar sb = mainLL.findViewById(R.id.sb);
         TextView tv = mainLL.findViewById(R.id.tv);
-        final int[] checked = {pv.isEraserMode ? R.id.radio2 : R.id.radio1};
+        final int[] checked = {pv.eraserMode ? R.id.radio2 : R.id.radio1};
         tv.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
@@ -931,10 +933,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 try {
                     float edit = Float.parseFloat(et.getText().toString());
                     double a = Math.log(edit * pv.getScale()) / Math.log(1.07D);
-                    strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getPaintColor());
+                    strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getDrawingColor());
                     sb.setProgress((int) a);
                     if (checked[0] == R.id.radio1) {
-                        pv.setStrokeWidth(edit);
+                        pv.setDrawingStrokeWidth(edit);
                     } else if (checked[0] == R.id.radio2) {
                         pv.setEraserStrokeWidth(edit);
                     }
@@ -956,7 +958,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             ad.show();
         });
         float pvStrokeWidthInUse = pv.getStrokeWidthInUse();
-        strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getPaintColor());
+        strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getDrawingColor());
         tv.setText(getString(R.string.stroke_width_info, pvStrokeWidthInUse, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
         sb.setProgress((int) (Math.log(pvStrokeWidthInUse * pv.getScale()) / Math.log(1.07D)));
         sb.setMax(100);
@@ -968,13 +970,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     float pow = (float) Math.pow(1.07D, progress);
                     pow /= pv.getScale();
                     if (checked[0] == R.id.radio1) {
-                        pv.setStrokeWidth(pow);
+                        pv.setDrawingStrokeWidth(pow);
                     } else {
                         pv.setEraserStrokeWidth(pow);
                     }
                     pv.lockStroke();
                     tv.setText(getString(R.string.stroke_width_info, pow, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
-                    strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getPaintColor());
+                    strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getDrawingColor());
                 }
             }
 
@@ -990,8 +992,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         });
         rg.setOnCheckedChangeListener((group, checkedId) -> {
             checked[0] = checkedId;
-            float strokeWidth = (checkedId == R.id.radio1) ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
-            strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getPaintColor());
+            float strokeWidth = (checkedId == R.id.radio1) ? pv.getDrawingStrokeWidth() : pv.getEraserStrokeWidth();
+            strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getDrawingColor());
             tv.setText(getString(R.string.stroke_width_info, strokeWidth, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
             sb.setProgress((int) (Math.log(strokeWidth * pv.getScale()) / Math.log(1.07D)));
         });
@@ -1209,7 +1211,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private void setLayer() {
         Dialog dialog = new Dialog(this);
         View view = View.inflate(this, R.layout.layer_layout, null);
-        LinearLayout linearLayout = view.findViewById(R.id.ll);
         dialog.setContentView(view);
         DialogUtil.setDialogAttr(dialog, false
                 , ((int) (width * .8F)), ((int) (height * .8F)), true);

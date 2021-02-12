@@ -3,7 +3,6 @@ package pers.zhc.tools.test;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
@@ -22,8 +21,8 @@ public class DrawingBoardTest extends BaseActivity {
         runOnUiThread(() -> {
             PaintView pv = new PaintView(this);
             pv.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            pv.setStrokeWidth(10F);
-            pv.setPaintColor(Color.RED);
+            pv.setDrawingStrokeWidth(10F);
+            pv.setDrawingColor(Color.RED);
             layout.addView(pv);
         });
     }

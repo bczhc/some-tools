@@ -1,15 +1,12 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
 
-#include <cassert>
 #include "../../third_party/my-cpp-lib/third_party/sqlite3-single-c/sqlite3.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_Sqlite3.h"
 #include "../../third_party/my-cpp-lib/sqlite3.hpp"
 
 using namespace bczhc;
 using namespace std;
-
-using Stat = Sqlite3::Statement;
 
 class CB : public Sqlite3::SqliteCallback {
 private:
@@ -99,21 +96,12 @@ JNIEXPORT jboolean JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_checkIfCorru
     return (jboolean) ((Sqlite3 *) id)->checkIfCorrupt();
 }
 
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bind__JIJ
-        (JNIEnv *env, jclass, jlong statId, jint row, jlong a) {
-    try {
-        ((Stat *) statId)->bind((int) row, (int64_t) a);
-    } catch (const SqliteException &e) {
-        throwException(env, e.what());
-    }
-}
-
 JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_compileStatement
         (JNIEnv *env, jclass, jlong id, jstring statJS) {
     try {
         const char *statement = env->GetStringUTFChars(statJS, nullptr);
         Sqlite3::Statement stat = ((Sqlite3 *) id)->compileStatement(statement);
-        auto newStat = new Stat(stat);
+        auto newStat = new Sqlite3::Statement(stat);
         auto r = (int64_t) newStat;
         env->ReleaseStringUTFChars(statJS, statement);
         return (jlong) r;
@@ -121,100 +109,4 @@ JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_compileStatemen
         throwException(env, e.what());
     }
     return (jlong) nullptr;
-}
-
-String getBindErrorMsg(int status) {
-    String msg = "Binding failed, error code: ";
-    return msg += String::toString(status) += '.';
-}
-
-void throwBindErrorException(JNIEnv *&env, int status) {
-    String s = getBindErrorMsg(status);
-    throwException(env, s.getCString());
-}
-
-void checkBindStatus(JNIEnv *&env, int status) {
-    if (status != SQLITE_OK) {
-        throwBindErrorException(env, status);
-    }
-}
-
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bind__JII
-        (JNIEnv *env, jclass, jlong statId, jint row, jint a) {
-    try {
-        ((Stat *) statId)->bind((int) row, (int32_t) a);
-    } catch (const SqliteException &e) {
-        throwException(env, e.what());
-    }
-}
-
-
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bind__JID
-        (JNIEnv *env, jclass, jlong statId, jint row, jdouble a) {
-    try {
-        ((Stat *) statId)->bind((int) row, (double) a);
-    } catch (const SqliteException &e) {
-        throwException(env, e.what());
-    }
-}
-
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bindText
-        (JNIEnv *env, jclass, jlong statId, jint row, jstring js) {
-    const char *s = env->GetStringUTFChars(js, nullptr);
-    try {
-        ((Stat *) statId)->bindText((int) row, s, SQLITE_TRANSIENT);
-        env->ReleaseStringUTFChars(js, s);
-    } catch (const SqliteException &e) {
-        throwException(env, e.what());
-    }
-}
-
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bindNull
-        (JNIEnv *env, jclass, jlong statId, jint row) {
-    try {
-        ((Stat *) statId)->bindNull((int) row);
-    } catch (const SqliteException &e) {
-        throwException(env, e.what());
-    }
-}
-
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_reset
-        (JNIEnv *env, jclass, jlong statId) {
-    try {
-        ((Stat *) statId)->reset();
-    } catch (const SqliteException &e) {
-        throwException(env, e.what());
-    }
-}
-
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_bindBlob
-        (JNIEnv *env, jclass, jlong statId, jint row, jbyteArray jBytes, jint size) {
-    jbyte *bytes = env->GetByteArrayElements(jBytes, nullptr);
-    assert(sizeof(jbyte) == sizeof(char));
-    char *b = (char *) bytes;
-    try {
-        ((Stat *) statId)->bindBlob((int) row, b, (int) size);
-        env->ReleaseByteArrayElements(jBytes, bytes, 0);
-    } catch (const SqliteException &e) {
-        throwException(env, e.what());
-    }
-}
-
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_step
-        (JNIEnv *env, jclass, jlong statId) {
-    try {
-        ((Stat *) statId)->step();
-    } catch (const SqliteException &e) {
-        throwException(env, e.what());
-    }
-}
-
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_finalize
-        (JNIEnv *env, jclass, jlong statId) {
-    try {
-        ((Stat *) statId)->release();
-        delete (Stat *) statId;
-    } catch (const SqliteException &e) {
-        throwException(env, e.what());
-    }
 }

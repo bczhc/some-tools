@@ -1,22 +1,31 @@
 package pers.zhc.tools.utils.sqlite;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.jni.JNI;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author bczhc
  */
-public class MySQLite3 {
+public class SQLite3 {
     private long id;
     private boolean isClosed = false;
+    private String databasePath;
 
-    private MySQLite3() {
+    /**
+     * SQLITE_ROW native defined value.
+     */
+    public static final int SQLITE_ROW = 100;
+
+    private SQLite3() {
     }
 
-    public static MySQLite3 open(String path) {
-        final MySQLite3 db = new MySQLite3();
+    @NotNull
+    public static SQLite3 open(String path) {
+        final SQLite3 db = new SQLite3();
         db.id = JNI.Sqlite3.open(path);
+        db.databasePath = path;
         return db;
     }
 
@@ -57,5 +66,9 @@ public class MySQLite3 {
     public Statement compileStatement(String sql) throws Exception {
         long statementId = JNI.Sqlite3.compileStatement(this.id, sql);
         return new Statement(statementId);
+    }
+
+    public String getDatabasePath() {
+        return databasePath;
     }
 }
