@@ -26,7 +26,6 @@ import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.u.CanDoHandler;
 import pers.zhc.u.Random;
 import pers.zhc.u.ValueInterface;
-import pers.zhc.u.common.Documents;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -807,7 +806,7 @@ public class PaintView extends View {
                     mPath.reset();
                     mPath = null;
                 }
-                pathSaver.transferToPathTable();
+                pathSaver.transferToPathTableAndClear();
                 break;
             default:
         }
@@ -1172,10 +1171,11 @@ public class PaintView extends View {
                     "FROM tmp");
         }
 
-        private void transferToPathTable() {
+        private void transferToPathTableAndClear() {
             pathDatabase.exec("INSERT INTO path\n" +
                     "SELECT *\n" +
                     "FROM tmp");
+            clearTmpTable();
         }
     }
 

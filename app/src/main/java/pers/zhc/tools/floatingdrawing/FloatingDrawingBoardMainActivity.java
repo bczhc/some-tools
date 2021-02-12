@@ -364,7 +364,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         @Override
                         public void run() {
                             Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(VIBRATOR_SERVICE);
-                            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+                            } else {
+                                //noinspection deprecation
+                                vibrator.vibrate(100);
+                            }
                             while (onUndo[0]) {
                                 if (time[0] > 70) {
                                     time[0] -= 36;
@@ -390,7 +395,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         @Override
                         public void run() {
                             Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(VIBRATOR_SERVICE);
-                            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+                            } else {
+                                //noinspection deprecation
+                                vibrator.vibrate(100);
+                            }
                             while (onRedo[0]) {
                                 if (time[0] > 70) {
                                     time[0] -= 36;
