@@ -37,6 +37,9 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRelativeLayout;
 import pers.zhc.tools.utils.*;
+import pers.zhc.tools.utils.sqlite.Cursor;
+import pers.zhc.tools.utils.sqlite.SQLite3;
+import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
@@ -843,6 +846,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void exit() {
+        pv.closePathDatabase();
         stopFloatingWindow();
         FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMillisecond);
         this.fbSwitch.setChecked(false);
@@ -1038,7 +1042,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 R.string.export_path,
                 R.string.reset_transform,
                 R.string.manage_layer,
-                R.string.hide_panel
+                R.string.hide_panel,
+                R.string.drawing_statistics
         };
         File fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
         if (!fbDir.exists()) {
@@ -1054,11 +1059,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                 v0 -> new PermissionRequester(() -> {
-                    Dialog dialog = new Dialog(this);
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.setCancelable(false);
-                    FilePickerRelativeLayout filePickerRelativeLayout = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, imageDir, dialog::dismiss, s -> {
-                        dialog.dismiss();
+                    Dialog dialog = getFilePickerDialog(imageDir, s -> {
                         AlertDialog.Builder importImageOptionsDialogBuilder = new AlertDialog.Builder(this);
                         LinearLayout linearLayout = new LinearLayout(this);
                         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -1114,8 +1115,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 .create();
                         setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         importImageOptionsDialog.show();
-                    }, null);
-                    setFilePickerDialog(dialog, filePickerRelativeLayout);
+                    });
+                    dialog.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v1 -> new PermissionRequester(() -> {
@@ -1190,7 +1191,36 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     hide();
                     moreOptionsDialog.dismiss();
                 }, (dialog1, which) -> {
-                }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show()
+                }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show(),
+                v7 -> {
+                    ToastUtils.show(this, R.string.choose_path_v_3_0_file);
+                    Dialog dialog = getFilePickerDialog(pathDir, s -> {
+                        if (s == null) return;
+                        SQLite3 db = SQLite3.open(s);
+                        if (db.checkIfCorrupt()) {
+                            ToastUtils.show(this, R.string.unsupported_path);
+                            return;
+                        }
+                        String infoStr = getPathV3_0StatisticsInfoStr(db);
+                        db.close();
+
+                        // show info dialog
+                        Dialog d = new Dialog(this);
+                        DialogUtil.setDialogAttr(d, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+                        View v = View.inflate(this, R.layout.path_file_info_view, null);
+                        Button confirmBtn = v.findViewById(R.id.confirm);
+                        confirmBtn.setOnClickListener(v1 -> d.dismiss());
+
+                        TextView infoTV = v.findViewById(R.id.tv);
+                        infoTV.setText(infoStr);
+
+                        d.setCanceledOnTouchOutside(false);
+                        d.setContentView(v);
+                        d.show();
+                    });
+                    dialog.show();
+                }
         };
         Button[] buttons = new Button[textsRes.length];
         for (int i = 0; i < buttons.length; i++) {
@@ -1208,6 +1238,86 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         moreOptionsDialog.show();
     }
 
+    private int getSelectedStatisticsIntData(SQLite3 db, int mark) {
+        int r = 0;
+        try {
+            Statement statement = db.compileStatement("SELECT COUNT(*)\n" +
+                    "FROM path\n" +
+                    "WHERE mark is ?");
+            statement.reset();
+            statement.bind(1, mark);
+            Cursor cursor = statement.getCursor();
+            cursor.step();
+            r = cursor.getInt(0);
+            statement.release();
+        } catch (Exception e) {
+            Common.showException(e, this);
+        }
+        return r;
+    }
+
+    private String getPathV3_0StatisticsInfoStr(SQLite3 db) {
+        /*
+         * infos:
+         * create time
+         * total recorded points number,
+         * total recorded paths number,
+         * drawing paths number,
+         * erasing paths number,
+         * undo times,
+         * redo times
+         */
+
+        int[] totalPointsNum = {0};
+        int drawingPathsNum = getSelectedStatisticsIntData(db, 0x01);
+        int erasingPathsNum = getSelectedStatisticsIntData(db, 0x11);
+        int totalPathsNum = drawingPathsNum + erasingPathsNum;
+        String[] createTime = new String[1];
+        db.exec("SELECT create_timestamp\n" +
+                "FROM info", contents -> {
+            createTime[0] = new Date(Long.parseLong(contents[0])).toString();
+            return 0;
+        });
+        db.exec("SELECT COUNT(*)\n" +
+                "FROM path\n" +
+                "WHERE mark IS NOT 0x01\n" +
+                "  AND mark IS NOT 0x11\n" +
+                "  AND mark IS NOT 0x20\n" +
+                "  AND mark IS NOT 0x30", contents -> {
+            totalPointsNum[0] = Integer.parseInt(contents[0]);
+            return 0;
+        });
+
+        return getString(R.string.path_info_string
+                , createTime[0]
+                , totalPointsNum[0]
+                , totalPathsNum
+                , drawingPathsNum
+                , erasingPathsNum
+                , getSelectedStatisticsIntData(db, 0x20)
+                , getSelectedStatisticsIntData(db, 0x30));
+    }
+
+    /**
+     * Get the dialog containing file picker relative layout, call {@link Dialog#show()} to show.
+     *
+     * @param initialPath          initial path
+     * @param onPickedResultAction callback called when on picked
+     * @return dialog
+     */
+    @NotNull
+    private Dialog getFilePickerDialog(File initialPath, FilePickerRelativeLayout.OnPickedResultActionInterface onPickedResultAction) {
+        Dialog dialog = new Dialog(this);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        FilePickerRelativeLayout fp = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, initialPath, dialog::dismiss, s -> {
+            dialog.dismiss();
+            onPickedResultAction.result(s);
+        }, null);
+        setFilePickerDialog(dialog, fp);
+        return dialog;
+    }
+
     private void setLayer() {
         Dialog dialog = new Dialog(this);
         View view = View.inflate(this, R.layout.layer_layout, null);
@@ -1219,11 +1329,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void importPath(@Nullable Dialog moreOptionsDialog, File pathDir) {
         new PermissionRequester(() -> {
-            Dialog dialog = new Dialog(this);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            FilePickerRelativeLayout filePickerRelativeLayout = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
-                dialog.dismiss();
+            Dialog dialog = getFilePickerDialog(pathDir, s -> {
                 if (currentInternalPathFile.getAbsolutePath().equals(s)) {
                     ToastUtils.show(this, R.string.can_not_import_itself);
                     return;
@@ -1313,8 +1419,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 AlertDialog ad = adb.create();
                 setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
                 ad.show();
-            }, null);
-            setFilePickerDialog(dialog, filePickerRelativeLayout);
+            });
+            dialog.show();
         }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
@@ -1330,7 +1436,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         });
         setDialogAttr(dialog, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .8)), true);
         dialog.setContentView(filePickerRelativeLayout);
-        dialog.show();
     }
 
     @Override

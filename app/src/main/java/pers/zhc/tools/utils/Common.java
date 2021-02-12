@@ -8,14 +8,11 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-
 import androidx.core.content.FileProvider;
+import pers.zhc.tools.BuildConfig;
 
 import java.io.File;
 import java.util.Objects;
-
-import pers.zhc.tools.BaseApplication;
-import pers.zhc.tools.BuildConfig;
 
 /**
  * @author bczhc
@@ -26,6 +23,12 @@ public class Common {
     public static void showException(Exception e, Activity activity) {
         e.printStackTrace();
         activity.runOnUiThread(() -> ToastUtils.show(activity, e.toString()));
+    }
+
+    public static void showException(Exception e, Context ctx) {
+        if (ctx instanceof Activity) {
+            ((Activity) ctx).runOnUiThread(() -> ToastUtils.show(ctx, e.toString()));
+        } else throw new ClassCastException();
     }
 
     public static void showException(Exception e, Context ctx, Handler handler) {

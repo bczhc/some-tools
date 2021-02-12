@@ -36,7 +36,9 @@ public:
             env->SetObjectArrayElement(contentArray, i, s);
             env->DeleteLocalRef(s);
         }
-        return (int) env->CallIntMethod(callbackObject, callbackMId, contentArray);
+        auto r = (int) env->CallIntMethod(callbackObject, callbackMId, contentArray);
+        env->DeleteLocalRef(contentArray);
+        return r;
     }
 };
 

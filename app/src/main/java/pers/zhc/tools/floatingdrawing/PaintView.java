@@ -262,6 +262,11 @@ public class PaintView extends View {
         redoList.clear();
         undoList.clear();
         mBackgroundCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+
+        // reset path database
+        String dbPath = pathSaver.tempPathDatabase.getDatabasePath();
+        System.out.println("new File(dbPath).delete() = " + new File(dbPath).delete());
+        pathSaver = new PathSaver(SQLite3.open(dbPath));
     }
 
     /**
@@ -652,11 +657,10 @@ public class PaintView extends View {
 
     private void importPathVer3(@NotNull SQLite3 db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
         int[] recordNum = {0};
-        db.exec("SELECT * FROM path", contents -> {
-            ++recordNum[0];
+        db.exec("SELECT COUNT(*) FROM path", contents -> {
+            recordNum[0] = Integer.parseInt(contents[0]);
             return 0;
         });
-        System.out.println("record num: " + recordNum[0]);
         dontDrawWhileImporting = speedDelayMillis == 0;
         Statement statement;
         try {
@@ -999,6 +1003,23 @@ public class PaintView extends View {
                     "    p1   INTEGER,\n" +
                     "    p2   INTEGER\n" +
                     ")");
+            tempPathDatabase.exec("CREATE TABLE IF NOT EXISTS info\n" +
+                    "(\n" +
+                    "    version          TEXT NOT NULL,\n" +
+                    "    create_timestamp INTEGER\n" +
+                    ")");
+
+            try {
+                Statement statement = tempPathDatabase.compileStatement("INSERT INTO info VALUES(?,?)");
+                statement.reset();
+                statement.bindText(1, "3.0");
+                statement.bind(2, System.currentTimeMillis());
+                statement.step();
+                statement.release();
+            } catch (Exception e) {
+                Common.showException(e, (Activity) ctx);
+            }
+
             tempPathDatabase.exec("BEGIN TRANSACTION");
             // prepare statement
             try {
@@ -1060,11 +1081,19 @@ public class PaintView extends View {
     }
 
     public void closePathDatabase() {
+        try {
+            pathSaver.statement.release();
+        } catch (Exception e) {
+            Common.showException(e, (Activity) ctx);
+        }
         if (pathSaver == null) return;
         try {
             pathSaver.commitDatabase();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Common.showException(e, ctx);
         }
-        pathSaver.tempPathDatabase.close();
+        if (!pathSaver.tempPathDatabase.isClosed()) {
+            pathSaver.tempPathDatabase.close();
+        }
     }
 }

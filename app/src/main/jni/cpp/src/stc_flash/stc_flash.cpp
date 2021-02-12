@@ -30,6 +30,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
         void print(const char *s) override {
             jstring jString = env->NewStringUTF(s);
             env->CallVoidMethod(echoCallback, printMId, jString);
+            env->DeleteLocalRef(jString);
         }
 
         void flush() override {

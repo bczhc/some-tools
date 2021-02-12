@@ -43,7 +43,9 @@ JNIEXPORT jbyteArray JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_00024Curso
 JNIEXPORT jstring JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_00024Cursor_getText
         (JNIEnv *env, jclass, jlong cId, jint c) {
     auto s = ((Cursor *) cId)->getText((int) c);
-    return env->NewStringUTF(s);
+    auto ret = env->NewStringUTF(s);
+    env->DeleteLocalRef(ret);
+    return ret;
 }
 
 JNIEXPORT jdouble JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_00024Cursor_getDouble
