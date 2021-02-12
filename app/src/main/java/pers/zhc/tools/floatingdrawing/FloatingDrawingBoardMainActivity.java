@@ -921,7 +921,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         CheckBox lockStrokeCB = mainLL.findViewById(R.id.cb);
         lockStrokeCB.setChecked(pv.isLockingStroke());
         lockStrokeCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            pv.setLockStrokeMode(isChecked);
+            pv.setLockingStroke(isChecked);
             pv.lockStroke();
         });
         StrokeWatchView strokeWatchView = new StrokeWatchView(this);

@@ -43,6 +43,10 @@ public class Cursor {
         return JNI.Sqlite3.Cursor.getDouble(cursorId, column);
     }
 
+    public float getFloat(int column) {
+        return (float) JNI.Sqlite3.Cursor.getDouble(cursorId, column);
+    }
+
     public long getLong(int column) {
         return JNI.Sqlite3.Cursor.getLong(cursorId, column);
     }

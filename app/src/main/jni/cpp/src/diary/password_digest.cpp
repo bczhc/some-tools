@@ -71,7 +71,5 @@ JNIEXPORT jstring JNICALL Java_pers_zhc_tools_jni_JNI_00024Diary_myDigest
     const char *s = env->GetStringUTFChars(js, nullptr);
     auto r = encode(s);
     env->ReleaseStringUTFChars(js, s);
-    auto ret = env->NewStringUTF(r.getCString());
-    env->DeleteLocalRef(ret);
-    return ret;
+    return env->NewStringUTF(r.getCString());
 }

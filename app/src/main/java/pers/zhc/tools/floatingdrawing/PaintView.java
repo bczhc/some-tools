@@ -10,8 +10,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 import pers.zhc.tools.R;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
@@ -64,10 +67,15 @@ public class PaintView extends View {
     private Canvas mBackgroundCanvas;
     private GestureResolver gestureResolver;
     private boolean dontDrawWhileImporting = false;
-    private boolean isLockingStroke = false;
-    private float lockedStrokeWidth = 0F;
+    private boolean lockingStroke = false;
+    /**
+     * locked absolute drawing stroke width
+     */
+    private float lockedDrawingStrokeWidth;
+    /**
+     * locked absolute eraser stroke width
+     */
     private float lockedEraserStrokeWidth;
-    private float scaleWhenLocked = 1F;
     private OnColorChangedCallback onColorChangedCallback = null;
     private Bitmap transBitmap;
     private MyCanvas transCanvas;
@@ -162,6 +170,9 @@ public class PaintView extends View {
                 if (transBitmap == null) {
                     transBitmap = Bitmap.createBitmap(headBitmap);
                     transCanvas = new MyCanvas(transBitmap);
+                }
+                if (pathSaver != null) {
+                    pathSaver.clearTmpTable();
                 }
             }
 
@@ -264,7 +275,7 @@ public class PaintView extends View {
         mBackgroundCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
         // reset path database
-        String dbPath = pathSaver.tempPathDatabase.getDatabasePath();
+        String dbPath = pathSaver.pathDatabase.getDatabasePath();
         System.out.println("new File(dbPath).delete() = " + new File(dbPath).delete());
         pathSaver = new PathSaver(SQLite3.open(dbPath));
     }
@@ -674,31 +685,29 @@ public class PaintView extends View {
         int c = 0;
         while (cursor.step()) {
             int mark = cursor.getInt(0);
-            int p1 = cursor.getInt(1);
-            int p2 = cursor.getInt(2);
 
             switch (mark) {
                 case 0x01:
-                    setDrawingColor(p1);
-                    setDrawingStrokeWidth(Float.intBitsToFloat(p2));
+                    setDrawingColor(cursor.getInt(1));
+                    setDrawingStrokeWidth(cursor.getFloat(2));
                     setEraserMode(false);
                     break;
                 case 0x02:
                 case 0x12:
-                    onTouchAction(MotionEvent.ACTION_DOWN, Float.intBitsToFloat(p1), Float.intBitsToFloat(p2));
+                    onTouchAction(MotionEvent.ACTION_DOWN, cursor.getFloat(1), cursor.getFloat(2));
                     break;
                 case 0x03:
                 case 0x13:
-                    onTouchAction(MotionEvent.ACTION_MOVE, Float.intBitsToFloat(p1), Float.intBitsToFloat(p2));
+                    onTouchAction(MotionEvent.ACTION_MOVE, cursor.getFloat(1), cursor.getFloat(2));
                     break;
                 case 0x04:
                 case 0x14:
-                    onTouchAction(MotionEvent.ACTION_UP, Float.intBitsToFloat(p1), Float.intBitsToFloat(p2));
+                    onTouchAction(MotionEvent.ACTION_UP, cursor.getFloat(1), cursor.getFloat(2));
                     break;
                 case 0x11:
                     setEraserMode(true);
-                    setEraserAlpha(p1);
-                    setEraserStrokeWidth(Float.intBitsToFloat(p2));
+                    setEraserAlpha(cursor.getInt(1));
+                    setEraserStrokeWidth(cursor.getFloat(2));
                     break;
                 case 0x20:
                     undo();
@@ -718,6 +727,31 @@ public class PaintView extends View {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        String extraStr = null;
+        try {
+            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
+                    "FROM info");
+            Cursor infoCursor = infoStatement.getCursor();
+            if (infoCursor.step()) {
+                extraStr = infoCursor.getText(0);
+            }
+            infoStatement.release();
+        } catch (Exception e) {
+            Common.showException(e, ctx);
+        }
+        if (extraStr != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(extraStr);
+                boolean isLockingStroke = jsonObject.getBoolean("isLockingStroke");
+                setLockingStroke(isLockingStroke);
+                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
+                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
+                setCurrentStrokeWidthWithLockedStrokeWidth();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
 
@@ -773,6 +807,7 @@ public class PaintView extends View {
                     mPath.reset();
                     mPath = null;
                 }
+                pathSaver.transferToPathTable();
                 break;
             default:
         }
@@ -787,7 +822,7 @@ public class PaintView extends View {
         eraserPaint.setStrokeWidth(w);
     }
 
-    public void importImage(@Documents.NotNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
+    public void importImage(@NonNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
         System.gc();
         Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
         mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
@@ -826,7 +861,7 @@ public class PaintView extends View {
     }
 
     public boolean isLockingStroke() {
-        return this.isLockingStroke;
+        return this.lockingStroke;
     }
 
     public void bitmapResolution(@NotNull Point point) {
@@ -834,24 +869,24 @@ public class PaintView extends View {
         point.y = headBitmap.getHeight();
     }
 
-    public void setLockStrokeMode(boolean mode) {
-        this.isLockingStroke = mode;
+    public void setLockingStroke(boolean mode) {
+        this.lockingStroke = mode;
     }
 
     public void lockStroke() {
-        if (isLockingStroke) {
-            this.lockedStrokeWidth = getDrawingStrokeWidth();
-            this.lockedEraserStrokeWidth = getEraserStrokeWidth();
-            this.scaleWhenLocked = headCanvas.getScale();
+        if (lockingStroke) {
+            float scale = headCanvas.getScale();
+            this.lockedDrawingStrokeWidth = getDrawingStrokeWidth() * scale;
+            this.lockedEraserStrokeWidth = getEraserStrokeWidth() * scale;
             setCurrentStrokeWidthWithLockedStrokeWidth();
         }
     }
 
     public void setCurrentStrokeWidthWithLockedStrokeWidth() {
-        if (isLockingStroke) {
-            float mCanvasScale = headCanvas.getScale();
-            setDrawingStrokeWidth(lockedStrokeWidth * scaleWhenLocked / mCanvasScale);
-            setEraserStrokeWidth(lockedEraserStrokeWidth * scaleWhenLocked / mCanvasScale);
+        if (lockingStroke) {
+            float canvasScale = headCanvas.getScale();
+            setDrawingStrokeWidth(lockedDrawingStrokeWidth / canvasScale);
+            setEraserStrokeWidth(lockedEraserStrokeWidth / canvasScale);
         }
     }
 
@@ -908,29 +943,29 @@ public class PaintView extends View {
      *                     record 1:
      *                     <li>mark: {@code 0x01}</li>
      *                     <li>p1: paint color as {@code int}</li>
-     *                     <li>p2: stroke width, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p2: stroke width as {@code float}</li>
      *                 </ul>
      *                 <ul>
      *                     record 2:
      *                     <li>mark: {@code 0x02}</li>
-     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
-     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p1: x touch point coordinates as {@code float}</li>
+     *                     <li>p2: y touch point coordinates as {@code float}</li>
      *                 </ul>
      *             </li>
      *             <li>
      *                 {@link MotionEvent#ACTION_MOVE}:
      *                 <ul>
      *                     <li>mark: {@code 0x03}</li>
-     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
-     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p1: x touch point coordinates as {@code float}</li>
+     *                     <li>p2: y touch point coordinates as {@code float}</li>
      *                 </ul>
      *             </li>
      *             <li>
      *                 {@link MotionEvent#ACTION_UP}
      *                 <ul>
      *                     <li>mark {@code 0x04}</li>
-     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
-     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p1: x touch point coordinates as {@code float}</li>
+     *                     <li>p2: y touch point coordinates as {@code float}</li>
      *                 </ul>
      *             </li>
      *         </ul>
@@ -946,29 +981,29 @@ public class PaintView extends View {
      *                     record 1:
      *                     <li>mark: {@code 0x11}</li>
      *                     <li>p1: eraser transparency (alpha value) as {@code int}</li>
-     *                     <li>p2: stroke width, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p2: stroke width as {@code float}</li>
      *                 </ul>
      *                 <ul>
      *                     record 2:
      *                     <li>mark: {@code 0x12}</li>
-     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
-     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p1: x touch point coordinates as {@code float}</li>
+     *                     <li>p2: y touch point coordinates as {@code float}</li>
      *                 </ul>
      *             </li>
      *             <li>
      *                 {@link MotionEvent#ACTION_MOVE}:
      *                 <ul>
      *                     <li>mark: {@code 0x13}</li>
-     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
-     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p1: x touch point coordinates as {@code float}</li>
+     *                     <li>p2: y touch point coordinates as {@code float}</li>
      *                 </ul>
      *             </li>
      *             <li>
      *                 {@link MotionEvent#ACTION_UP}
      *                 <ul>
      *                     <li>mark {@code 0x14}</li>
-     *                     <li>p1: x touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
-     *                     <li>p2: y touch point coordinates, int value, converted by calling {@link Float#floatToRawIntBits(float)}</li>
+     *                     <li>p1: x touch point coordinates as {@code float}</li>
+     *                     <li>p2: y touch point coordinates as {@code float}</li>
      *                 </ul>
      *             </li>
      *         </ul>
@@ -992,97 +1027,168 @@ public class PaintView extends View {
      * </ul>
      */
     private class PathSaver {
-        private final SQLite3 tempPathDatabase;
-        private Statement statement;
+        private final SQLite3 pathDatabase;
+        private Statement pathStatement;
+
+        private void setExtraInfos() {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("isLockingStroke", isLockingStroke());
+                jsonObject.put("lockedDrawingStrokeWidth", lockedDrawingStrokeWidth);
+                jsonObject.put("lockedEraserStrokeWidth", lockedEraserStrokeWidth);
+                String extraString = jsonObject.toString();
+
+                Statement infoStatement = pathDatabase.compileStatement("UPDATE info\n" +
+                        "SET extra_infos = ?");
+                infoStatement.bindText(1, extraString);
+                infoStatement.step();
+                infoStatement.release();
+            } catch (Exception e) {
+                Common.showException(e, ctx);
+            }
+        }
 
         private void configureDatabase() {
             // create table
-            tempPathDatabase.exec("CREATE TABLE IF NOT EXISTS path\n" +
+            pathDatabase.exec("CREATE TABLE IF NOT EXISTS path\n" +
                     "(\n" +
                     "    mark INTEGER,\n" +
-                    "    p1   INTEGER,\n" +
-                    "    p2   INTEGER\n" +
+                    "    p1   NUMERIC,\n" +
+                    "    p2   NUMERIC\n" +
                     ")");
-            tempPathDatabase.exec("CREATE TABLE IF NOT EXISTS info\n" +
+            // for storing records to be saved before ACTION_UP, to prevent recording paths while zooming
+            pathDatabase.exec("CREATE TABLE IF NOT EXISTS tmp\n" +
+                    "(\n" +
+                    "    mark INTEGER,\n" +
+                    "    p1   NUMERIC,\n" +
+                    "    p2   NUMERIC\n" +
+                    ")");
+            pathDatabase.exec("CREATE TABLE IF NOT EXISTS info\n" +
                     "(\n" +
                     "    version          TEXT NOT NULL,\n" +
-                    "    create_timestamp INTEGER\n" +
+                    "    create_timestamp INTEGER,\n" +
+                    "    extra_infos      TEXT NOT NULL\n" +
                     ")");
 
             try {
-                Statement statement = tempPathDatabase.compileStatement("INSERT INTO info VALUES(?,?)");
-                statement.reset();
-                statement.bindText(1, "3.0");
-                statement.bind(2, System.currentTimeMillis());
-                statement.step();
-                statement.release();
+                Statement infoStatement = pathDatabase.compileStatement("INSERT INTO info VALUES(?,?,?)");
+                infoStatement.reset();
+                infoStatement.bindText(1, "3.0");
+                infoStatement.bind(2, System.currentTimeMillis());
+                infoStatement.bindText(3, "");
+                infoStatement.step();
+                infoStatement.release();
             } catch (Exception e) {
                 Common.showException(e, (Activity) ctx);
             }
 
-            tempPathDatabase.exec("BEGIN TRANSACTION");
+            pathDatabase.exec("BEGIN TRANSACTION");
             // prepare statement
             try {
-                statement = tempPathDatabase.compileStatement("INSERT INTO path\n" +
+                pathStatement = pathDatabase.compileStatement("INSERT INTO tmp\n" +
                         "VALUES (?, ?, ?)");
             } catch (Exception e) {
                 Common.showException(e, (Activity) PaintView.this.ctx);
             }
         }
 
-        private PathSaver(SQLite3 tempPathDatabase) {
-            this.tempPathDatabase = tempPathDatabase;
+        private PathSaver(SQLite3 pathDatabase) {
+            this.pathDatabase = pathDatabase;
             configureDatabase();
         }
 
         private void undo() {
-            insert(0x20, 0x00, 0x00);
+            insert(0x20);
         }
 
         private void redo() {
-            insert(0x30, 0x00, 0x00);
+            insert(0x30);
         }
 
-        private void insert(int mark, int p1, int p2) {
+        private void insert(int mark) {
             try {
-                statement.reset();
-                statement.bind(1, mark);
-                statement.bind(2, p1);
-                statement.bind(3, p2);
-                statement.step();
+                pathStatement.reset();
+                pathStatement.bind(1, mark);
+                pathStatement.bind(2, 0);
+                pathStatement.bind(3, 0);
+                pathStatement.step();
             } catch (Exception e) {
                 Common.showException(e, (Activity) PaintView.this.ctx);
             }
         }
 
+        @SuppressWarnings("DuplicatedCode")
+        private void insert(int mark, int p1, float p2) {
+            try {
+                pathStatement.reset();
+                pathStatement.bind(1, mark);
+                pathStatement.bind(2, p1);
+                pathStatement.bind(3, p2);
+                pathStatement.step();
+            } catch (Exception e) {
+                Common.showException(e, PaintView.this.ctx);
+            }
+        }
+
+        @SuppressWarnings("DuplicatedCode")
+        private void insert(int mark, float p1, float p2) {
+            try {
+                pathStatement.reset();
+                pathStatement.bind(1, mark);
+                pathStatement.bind(2, p1);
+                pathStatement.bind(3, p2);
+                pathStatement.step();
+            } catch (Exception e) {
+                Common.showException(e, PaintView.this.ctx);
+            }
+        }
+
         private void onTouchDown(float x, float y) {
-            insert(eraserMode ? 0x11 : 0x01, getDrawingColor(), Float.floatToRawIntBits(getStrokeWidthInUse()));
-            insert(eraserMode ? 0x12 : 0x02, Float.floatToRawIntBits(x), Float.floatToRawIntBits(y));
+            if (eraserMode) {
+                insert(0x11, getEraserAlpha(), getEraserStrokeWidth());
+                insert(0x12, x, y);
+            } else {
+                insert(0x01, getDrawingColor(), getDrawingStrokeWidth());
+                insert(0x02, x, y);
+            }
         }
 
         private void onTouchMove(float x, float y) {
-            insert(eraserMode ? 0x13 : 0x03, Float.floatToRawIntBits(x), Float.floatToRawIntBits(y));
+            insert(eraserMode ? 0x13 : 0x03, x, y);
         }
 
         private void onTouchUp(float x, float y) {
-            insert(eraserMode ? 0x14 : 0x04, Float.floatToRawIntBits(x), Float.floatToRawIntBits(y));
+            insert(eraserMode ? 0x14 : 0x04, x, y);
         }
 
         private void commitDatabase() {
-            tempPathDatabase.exec("COMMIT");
-            tempPathDatabase.exec("BEGIN TRANSACTION");
+            pathDatabase.exec("COMMIT");
+            pathDatabase.exec("BEGIN TRANSACTION");
+        }
+
+        private void clearTmpTable() {
+            pathDatabase.exec("-- noinspection SqlWithoutWhere\n" +
+                    "DELETE\n" +
+                    "FROM tmp");
+        }
+
+        private void transferToPathTable() {
+            pathDatabase.exec("INSERT INTO path\n" +
+                    "SELECT *\n" +
+                    "FROM tmp");
         }
     }
 
     public void commitPathDatabase() {
         if (pathSaver != null) {
+            pathSaver.setExtraInfos();
             pathSaver.commitDatabase();
         }
     }
 
     public void closePathDatabase() {
         try {
-            pathSaver.statement.release();
+            pathSaver.pathStatement.release();
         } catch (Exception e) {
             Common.showException(e, (Activity) ctx);
         }
@@ -1092,8 +1198,9 @@ public class PaintView extends View {
         } catch (Exception e) {
             Common.showException(e, ctx);
         }
-        if (!pathSaver.tempPathDatabase.isClosed()) {
-            pathSaver.tempPathDatabase.close();
+        pathSaver.pathDatabase.exec("DROP TABLE tmp");
+        if (!pathSaver.pathDatabase.isClosed()) {
+            pathSaver.pathDatabase.close();
         }
     }
 }
