@@ -10,7 +10,7 @@
 
 namespace bczhc::serial {
     namespace jniImpl {
-        Array<uchar> read(JNIEnv *&env, int size, jobject &jniInterface);
+        SArray<uchar> read(JNIEnv *&env, int size, jobject &jniInterface);
 
         ssize_t write(JNIEnv *&env, uchar *buf, ssize_t size, jobject &jniInterface);
 
@@ -39,7 +39,7 @@ namespace bczhc::serial {
     public:
         SerialJNI(JNIEnv *&env, jobject &jniInterface, const String &portName);
 
-        [[nodiscard]] Array<uchar> read(ssize_t size) const override;
+        [[nodiscard]] SArray<uchar> read(ssize_t size) const override;
 
         ssize_t write(uchar *buf, ssize_t size) const override;
 

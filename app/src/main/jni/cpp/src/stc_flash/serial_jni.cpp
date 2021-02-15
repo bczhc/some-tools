@@ -8,12 +8,12 @@
 
 using namespace bczhc;
 
-Array<uchar> serial::jniImpl::read(JNIEnv *&env, int size, jobject &jniInterface) {
+SArray<uchar> serial::jniImpl::read(JNIEnv *&env, int size, jobject &jniInterface) {
     jclass cls = env->GetObjectClass(jniInterface);
     jmethodID mid = env->GetMethodID(cls, "read", "(I)[B");
     auto b = (jbyteArray) env->CallObjectMethod(jniInterface, mid, (jint) size);
     const jsize length = env->GetArrayLength(b);
-    Array<uchar> r(length);
+    SArray<uchar> r(length);
     jbyte *arr = env->GetByteArrayElements(b, nullptr);
     for (int i = 0; i < length; ++i) {
         r[i] = arr[i];
@@ -100,9 +100,9 @@ void serial::jniImpl::flush(JNIEnv *&env, jobject &jniInterface) {
     env->DeleteLocalRef(cls);
 }
 
-Array<uchar> serial::SerialJNI::read(ssize_t size) const {
-    const Array<uchar> r = jniImpl::read(this->env, (int) size, this->jniInterface);
-    log(env, "jni-read", "size: %zd, read %s", size, r.toString().getCString());
+SArray<uchar> serial::SerialJNI::read(ssize_t size) const {
+    SArray<uchar> r = jniImpl::read(this->env, (int) size, this->jniInterface);
+    log(env, "jni-read", "size: %zd, read %s", size, r->toString().getCString());
     return r;
 }
 
