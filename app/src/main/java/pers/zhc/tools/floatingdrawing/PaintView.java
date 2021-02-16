@@ -193,6 +193,9 @@ public class PaintView extends View {
                 postInvalidate();
             }
         });
+
+        // default sqlite is in memory
+        pathSaver = new PathSaver(SQLite3.open(""));
     }
 
     public float getDrawingStrokeWidth() {
@@ -922,6 +925,11 @@ public class PaintView extends View {
      */
     public void enableSavePath(String tempFile) {
         if (tempFile == null) return;
+        try {
+            // clear the old one
+            this.closePathDatabase();
+        } catch (Exception ignored) {
+        }
         pathSaver = new PathSaver(SQLite3.open(tempFile));
     }
 

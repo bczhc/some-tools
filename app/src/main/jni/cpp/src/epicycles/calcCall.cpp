@@ -16,7 +16,7 @@ public:
 
 class F : public ComplexFunctionInterface {
 private:
-    SArrayList<Point> &list;
+    ArrayList<Point> &list;
     double period, scale{};
     double pathsTotalLength{};
     double *sumLength = nullptr;
@@ -44,12 +44,12 @@ private:
 
 public:
 
-    explicit F(SArrayList<Point> &list, double period) : list(list), period(period) {
-        listLength = list->length();
+    explicit F(ArrayList<Point> &list, double period) : list(list), period(period) {
+        listLength = list.length();
         sumLength = new double[listLength];
         for (int i = 0; i < listLength; ++i) {
-            Point next = i == listLength - 1 ? list->get(0) : list->get(i + 1);
-            Point currPoint = list->get(i);
+            Point next = i == listLength - 1 ? list.get(0) : list.get(i + 1);
+            Point currPoint = list.get(i);
             pathsTotalLength += getPathLength(currPoint, next);
             sumLength[i] = pathsTotalLength;
         }
@@ -64,8 +64,8 @@ public:
         double mapToLength = t * pathsTotalLength / period;
         int index = search(sumLength, listLength, mapToLength);
         Point r = linearMoveBetweenTwoPoints(
-                list->get(index),
-                index == listLength - 1 ? list->get(0) : list->get(index + 1),
+                list.get(index),
+                index == listLength - 1 ? list.get(0) : list.get(index + 1),
                 index == 0 ? mapToLength : (mapToLength - sumLength[index - 1]));
         dest.re = r.x, dest.im = r.y;
     }
@@ -83,7 +83,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
     jmethodID sizeMId = env->GetMethodID(listCLass, "size", "()I");
     int length = (int) env->CallIntMethod(points, sizeMId);
     jmethodID getMId = env->GetMethodID(listCLass, "get", "(I)Ljava/lang/Object;");
-    SArrayList<Point> list;
+    ArrayList<Point> list;
     for (int i = 0; i < length; ++i) {
         jobject complexValueObj = env->CallObjectMethod(points, getMId, (jint) i);
         jclass complexValueClass = env->GetObjectClass(complexValueObj);
@@ -91,7 +91,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
         jfieldID imFId = env->GetFieldID(complexValueClass, "im", "D");
         Point p(env->GetDoubleField(complexValueObj, reFId),
                 env->GetDoubleField(complexValueObj, imFId));
-        list->insert(p);
+        list.insert(p);
         env->DeleteLocalRef(complexValueObj);
         env->DeleteLocalRef(complexValueClass);
     }
