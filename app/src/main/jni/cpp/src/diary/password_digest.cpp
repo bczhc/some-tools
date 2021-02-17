@@ -12,8 +12,6 @@ extern "C" {
 #include <cassert>
 
 using namespace bczhc;
-using namespace array;
-using namespace string;
 
 Array<uchar> sha256Encode(uchar *data, size_t size) {
     assert(sizeof(uchar) == sizeof(BYTE));
@@ -21,7 +19,7 @@ Array<uchar> sha256Encode(uchar *data, size_t size) {
     SHA256_CTX ctx{};
     sha256_init(&ctx);
     sha256_update(&ctx, (BYTE *) data, size);
-    sha256_final(&ctx, buf.elements);
+    sha256_final(&ctx, buf.getData());
     return buf;
 }
 
@@ -41,7 +39,7 @@ String hexArrToStr(const uchar *a, size_t size) {
 
 String sha256EncodeToString(const String &str) {
     const Array<uchar> a = sha256Encode(str);
-    return hexArrToStr(a.elements, a.length());
+    return hexArrToStr(a.getData(), a.length());
 }
 
 String encode(const String &str) {
@@ -64,8 +62,8 @@ String encode(const String &str) {
         b[i] = c[i - o];
     }
     Array<uchar> d(40);
-    for (i = 0; i < b.length() / 7; ++i) base128::encode7bytes(d.elements + i * 8, b.elements + i * 7);
-    return sha256EncodeToString(hexArrToStr(d.elements, d.length()) + salt);
+    for (i = 0; i < b.length() / 7; ++i) encode7bytes(d.getData() + i * 8, b.getData() + i * 7);
+    return sha256EncodeToString(hexArrToStr(d.getData(), d.length()) + salt);
 }
 
 JNIEXPORT jstring JNICALL Java_pers_zhc_tools_jni_JNI_00024Diary_myDigest

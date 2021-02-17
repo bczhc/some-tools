@@ -4,10 +4,9 @@
 
 #include <jni.h>
 #include "./codecsDo.h"
-#include "../../third_party/my-cpp-lib/file.h"
+#include "../../third_party/my-cpp-lib/file.hpp"
 
 using namespace bczhc;
-using namespace file;
 
 #define dl int64_t
 #define usi uint32_t

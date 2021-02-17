@@ -4,21 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.utils.Common;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
-import pers.zhc.tools.utils.Common;
 
 /**
  * @author bczhc
@@ -66,7 +63,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
         final Intent intent = new Intent();
-        final String stackTraceString = getExceptionStackTraceString(e);
+        final String stackTraceString = getExceptionStackTraceString(t, e);
         intent.setClass(ctx, CrashReportActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         final long currentTimeMillis = System.currentTimeMillis();
@@ -83,17 +80,21 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         System.exit(1);
     }
 
-    private String getExceptionStackTraceString(Throwable e) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        PrintWriter pw = new PrintWriter(byteArrayOutputStream);
-        e.printStackTrace(pw);
-        Throwable cause = e.getCause();
-        while (cause != null) {
-            cause.printStackTrace(pw);
-            cause = cause.getCause();
+    private String getExceptionStackTraceString(Thread t, Throwable e) {
+        StringBuilder sb = new StringBuilder();
+        getExceptionStackTraceString(sb, t, e);
+        return sb.toString();
+    }
+
+    private void getExceptionStackTraceString(@NotNull StringBuilder sb, @NotNull Thread t, @NotNull Throwable e) {
+        StackTraceElement[] ses = e.getStackTrace();
+        sb.append("Exception in thread \"").append(t.getName()).append("\" ").append(e.toString()).append('\n');
+        for (StackTraceElement se : ses) {
+            sb.append("\tat ").append(se).append('\n');
         }
-        pw.flush();
-        pw.close();
-        return byteArrayOutputStream.toString();
+        Throwable ec = e.getCause();
+        if (ec != null) {
+            getExceptionStackTraceString(sb, t, ec);
+        }
     }
 }

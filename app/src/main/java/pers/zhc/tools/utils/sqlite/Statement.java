@@ -17,7 +17,7 @@ public class Statement {
      * @throws Exception if failed.
      */
     public void bind(int row, int a) throws Exception {
-        JNI.Sqlite3.bind(statementId, row, a);
+        JNI.Sqlite3.Statement.bind(statementId, row, a);
     }
 
     /**
@@ -28,7 +28,7 @@ public class Statement {
      * @throws Exception if failed.
      */
     public void bind(int row, long a) throws Exception {
-        JNI.Sqlite3.bind(statementId, row, a);
+        JNI.Sqlite3.Statement.bind(statementId, row, a);
     }
 
     /**
@@ -39,7 +39,7 @@ public class Statement {
      * @throws Exception if failed.
      */
     public void bind(int row, double a) throws Exception {
-        JNI.Sqlite3.bind(statementId, row, a);
+        JNI.Sqlite3.Statement.bind(statementId, row, a);
     }
 
     /**
@@ -50,7 +50,7 @@ public class Statement {
      * @throws Exception if failed.
      */
     public void bindText(int row, String s) throws Exception {
-        JNI.Sqlite3.bindText(statementId, row, s);
+        JNI.Sqlite3.Statement.bindText(statementId, row, s);
     }
 
     /**
@@ -60,7 +60,7 @@ public class Statement {
      * @throws Exception if failed.
      */
     public void bindNull(int row) throws Exception {
-        JNI.Sqlite3.bindNull(statementId, row);
+        JNI.Sqlite3.Statement.bindNull(statementId, row);
     }
 
     /**
@@ -69,7 +69,7 @@ public class Statement {
      * @throws Exception if failed.
      */
     public void reset() throws Exception {
-        JNI.Sqlite3.reset(statementId);
+        JNI.Sqlite3.Statement.reset(statementId);
     }
 
     /**
@@ -92,7 +92,7 @@ public class Statement {
      * @throws Exception if failed.
      */
     public void bindBlob(int row, byte[] bytes, int size) throws Exception {
-        JNI.Sqlite3.bindBlob(statementId, row, bytes, size);
+        JNI.Sqlite3.Statement.bindBlob(statementId, row, bytes, size);
     }
 
     /**
@@ -101,13 +101,26 @@ public class Statement {
      * @throws Exception if failed.
      */
     public void step() throws Exception {
-        JNI.Sqlite3.step(statementId);
+        JNI.Sqlite3.Statement.step(statementId);
     }
 
     /**
      * Release native resource, origin: `finalize()`.
+     * You should guarantee it's close before closing the database.
      */
     public void release() throws Exception {
-        JNI.Sqlite3.finalize(statementId);
+        JNI.Sqlite3.Statement.finalize(statementId);
+    }
+
+    public int stepRow() {
+        return JNI.Sqlite3.Statement.stepRow(statementId);
+    }
+
+    public Cursor getCursor() {
+        return new Cursor(JNI.Sqlite3.Statement.getCursor(statementId));
+    }
+
+    public int getIndexByColumnName(String name) {
+        return JNI.Sqlite3.Statement.getIndexByColumnName(statementId, name);
     }
 }

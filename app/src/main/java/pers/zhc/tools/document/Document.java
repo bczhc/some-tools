@@ -11,27 +11,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
+import android.widget.*;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
@@ -40,6 +23,13 @@ import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.DisplayUtil;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.FileU;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
@@ -169,7 +159,12 @@ public class Document extends BaseActivity {
                 break;
             case RequestCode.START_ACTIVITY_2:
                 if (data != null) {
-                    File file = new File(Objects.requireNonNull(data.getStringExtra("result")));
+                    String result = data.getStringExtra("result");
+                    if (result == null) {
+                        // cancelled
+                        break;
+                    }
+                    File file = new File(result);
                     try {
                         FileU.FileCopy(file, dbFile, true);
                     } catch (IOException e) {
@@ -200,6 +195,10 @@ public class Document extends BaseActivity {
             case RequestCode.START_ACTIVITY_3:
                 if (data != null) {
                     final String destFileDir = data.getStringExtra("result");
+                    if (destFileDir == null) {
+                        // cancelled
+                        break;
+                    }
                     String dbPath = db.getPath();
                     File file = new File(dbPath);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);

@@ -2,10 +2,8 @@
 #include "../../third_party/my-cpp-lib/math/fourier_series.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_FourierSeries.h"
 #include "../jni_help.h"
-#include "../../third_party/my-cpp-lib/concurrent.h"
 
 using namespace bczhc;
-using namespace concurrent;
 
 class Point {
 public:
@@ -18,7 +16,7 @@ public:
 
 class F : public ComplexFunctionInterface {
 private:
-    SequentialList<Point> &list;
+    ArrayList<Point> &list;
     double period, scale{};
     double pathsTotalLength{};
     double *sumLength = nullptr;
@@ -46,7 +44,7 @@ private:
 
 public:
 
-    explicit F(SequentialList<Point> &list, double period) : list(list), period(period) {
+    explicit F(ArrayList<Point> &list, double period) : list(list), period(period) {
         listLength = list.length();
         sumLength = new double[listLength];
         for (int i = 0; i < listLength; ++i) {
@@ -65,19 +63,17 @@ public:
         t = t - (t >= period ? floor(t / period) * period : 0);
         double mapToLength = t * pathsTotalLength / period;
         int index = search(sumLength, listLength, mapToLength);
-        Point r = linearMoveBetweenTwoPoints(list.get(index),
-                                             index == listLength - 1 ? list.get(0) : list.get(
-                                                     index + 1),
-                                             index == 0 ? mapToLength : (mapToLength -
-                                                                         sumLength[index - 1]));
+        Point r = linearMoveBetweenTwoPoints(
+                list.get(index),
+                index == listLength - 1 ? list.get(0) : list.get(index + 1),
+                index == 0 ? mapToLength : (mapToLength - sumLength[index - 1]));
         dest.re = r.x, dest.im = r.y;
     }
 };
 
-using namespace linearlist;
 
-jobject globalCallback;
-JavaVM *globalJvm;
+static jobject globalCallback;
+static JavaVM *globalJvm;
 
 JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
         (JNIEnv *env, jclass cls, jobject points, jdouble period, jint epicyclesCount,
@@ -87,7 +83,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
     jmethodID sizeMId = env->GetMethodID(listCLass, "size", "()I");
     int length = (int) env->CallIntMethod(points, sizeMId);
     jmethodID getMId = env->GetMethodID(listCLass, "get", "(I)Ljava/lang/Object;");
-    SequentialList<Point> list;
+    ArrayList<Point> list;
     for (int i = 0; i < length; ++i) {
         jobject complexValueObj = env->CallObjectMethod(points, getMId, (jint) i);
         jclass complexValueClass = env->GetObjectClass(complexValueObj);
@@ -96,7 +92,11 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
         Point p(env->GetDoubleField(complexValueObj, reFId),
                 env->GetDoubleField(complexValueObj, imFId));
         list.insert(p);
+        env->DeleteLocalRef(complexValueObj);
+        env->DeleteLocalRef(complexValueClass);
     }
+
+    env->DeleteLocalRef(listCLass);
 
     F f(list, period);
 
@@ -114,18 +114,11 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
             jmethodID callbackMId = env->GetMethodID(callbackClass, "callback", "(DDD)V");
             env->CallVoidMethod(globalCallback, callbackMId, (jdouble) n, (jdouble) re,
                                 (jdouble) im);
-            /*String s = to_string(n).c_str();
-            s.append(" ")
-                    .append(to_string(re))
-                    .append(" ")
-                    .append(to_string(im));
-            Log(env, "jni---", s.getCString());*/
-            //TODO String concatenating seems having a bug.
             globalJvm->DetachCurrentThread();
         }
     } cb;
 
     FourierSeries fs(f, epicyclesCount, period);
     fs.calc(cb, integralN, threadNum);
-    jnihelp::log(env, "jni---", "finished fourier series calculate");
+    log(env, "jni---", "Fourier series calculation finished.");
 }

@@ -4,7 +4,6 @@
 
 #include "../jni_h/pers_zhc_tools_jni_JNI_StcFlash.h"
 #include "serial_jni.h"
-#include "../jni_help.h"
 
 using namespace bczhc;
 
@@ -36,7 +35,6 @@ ssize_t serial::jniImpl::write(JNIEnv *&env, uchar *buf, ssize_t size, jobject &
     for (int i = 0; i < size; ++i) {
         w[i] = buf[i];
     }
-    jnihelp::log(env, "jni", "read: %s", w.toString().getCString());
     env->DeleteLocalRef(cls), env->DeleteLocalRef(arr);
     return (ssize_t) readLen;
 }
@@ -102,7 +100,6 @@ void serial::jniImpl::flush(JNIEnv *&env, jobject &jniInterface) {
 
 Array<uchar> serial::SerialJNI::read(ssize_t size) const {
     const Array<uchar> r = jniImpl::read(this->env, (int) size, this->jniInterface);
-    jnihelp::log(env, "jni-read", "size: %zd, read %s", size, r.toString().getCString());
     return r;
 }
 

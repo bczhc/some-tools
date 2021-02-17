@@ -28,15 +28,13 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ScrollEditText;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.utils.sqlite.MySQLite3;
+import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.tools.utils.sqlite.Statement;
 
@@ -46,7 +44,7 @@ import pers.zhc.tools.utils.sqlite.Statement;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class DiaryTakingActivity extends BaseActivity {
 
-    private final MySQLite3 diaryDatabase = DiaryMainActivity.diaryDatabase;
+    private final SQLite3 diaryDatabase = DiaryMainActivity.diaryDatabase;
     boolean live = true;
     boolean speak = false;
     private TextToSpeech tts;

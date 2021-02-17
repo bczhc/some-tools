@@ -30,6 +30,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
         void print(const char *s) override {
             jstring jString = env->NewStringUTF(s);
             env->CallVoidMethod(echoCallback, printMId, jString);
+            env->DeleteLocalRef(jString);
         }
 
         void flush() override {
@@ -44,14 +45,14 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
         const char *hexFilePath = env->GetStringUTFChars(hexFilePathS, nullptr);
         const char* portNameCS = env->GetStringUTFChars(portNameJS, nullptr);
         String portName = portNameCS;
-        SerialJNI serialImpl(env, jniInterface, portName);
+        serial::SerialJNI serialImpl(env, jniInterface, portName);
 
         run(hexFilePath, &cb, &serialImpl);
         env->ReleaseStringUTFChars(hexFilePathS, hexFilePath);
         env->ReleaseStringUTFChars(portNameJS, portNameCS);
     } catch (const String &e) {
         cb.print(e.getCString()), cb.flush();
-        jnihelp::log(env, "jni exception", e.getCString());
+        log(env, "jni exception", e.getCString());
         jclass exceptionClass = env->FindClass("java/lang/Exception");
         String msg = "JNI error: ";
         msg += e;

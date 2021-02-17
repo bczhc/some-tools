@@ -10,4 +10,7 @@
         <attr name="focusable" format="boolean"/>
         <attr name="text" format="string"/>
     </declare-styleable>
+    <declare-styleable name="ColorShowRL">
+        <attr name="showedColor" format="string"/>
+    </declare-styleable>
 </resources>

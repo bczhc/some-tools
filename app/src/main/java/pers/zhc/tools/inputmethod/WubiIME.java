@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.TextView;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.test.wubiinput.WubiInput;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.sqlite.MySQLite3;
+import pers.zhc.tools.utils.sqlite.SQLite3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +107,7 @@ public class WubiIME extends InputMethodService {
     private final StringBuilder wubiCodeSB = new StringBuilder();
     private final Quotation quotation = new Quotation();
     private final List<String> candidates = new ArrayList<>();
-    private MySQLite3 wubiDictDB = null;
+    private SQLite3 wubiDictDB = null;
     private TextView candidateTV, wubiCodeTV;
     private boolean alphabetMode = false;
     private InputConnection ic;
@@ -122,8 +123,13 @@ public class WubiIME extends InputMethodService {
             int keyCode = event.getKeyCode();
             char c = (char) event.getUnicodeChar();
 
+            if (keyCode == KeyEvent.KEYCODE_BACK && isInputViewShown()) {
+                hideWindow();
+                return true;
+            }
+
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                if (checkToSwitchTypingMode(keyCode)) return true;
+                if (checkToSwitchTypingMode(event)) return true;
             }
             // some keys won't be consumed
             if (!checkIfConsumedKeys(event)) return false;
@@ -131,10 +137,10 @@ public class WubiIME extends InputMethodService {
 
             if (action == KeyEvent.ACTION_DOWN) {
                 // number 0-9 keys
-                if (inputRange == InputRange.NUM0_9 && !keyEventResolver.isHoldShift() && !composing) {
+                if (inputRange == InputRange.NUM0_9 && !event.isShiftPressed() && !composing) {
                     return false;
                 }
-                if (keyEventResolver.isHoldShift()) {
+                if (event.isShiftPressed()) {
                     // on shift hold routines
                     for (int i = 0; i < punctuationWithShiftKeyCodes.length; i++) {
                         if (keyCode == punctuationWithShiftKeyCodes[i]) {
@@ -159,7 +165,7 @@ public class WubiIME extends InputMethodService {
                 }
                 if (!composing) {
                     // space
-                    if (inputRange == InputRange.SPACE && !keyEventResolver.isHoldShift()) {
+                    if (inputRange == InputRange.SPACE && !event.isShiftPressed()) {
                         commitText(" ");
                         return true;
                     }
@@ -182,7 +188,7 @@ public class WubiIME extends InputMethodService {
                     // Chinese input mode
                     switch (inputRange) {
                         case A_Z:
-                            if (keyEventResolver.isHoldShift()) {
+                            if (event.isShiftPressed()) {
                                 // when capitalized, start temporary English input mode
                                 tempEnglishMode = true;
                                 composing = true;
@@ -338,11 +344,11 @@ public class WubiIME extends InputMethodService {
     /**
      * Check the key and switch typing mode.
      *
-     * @param keyCode key code
+     * @param event key event
      * @return {@code true} if switched, {@code false} otherwise.
      */
-    private boolean checkToSwitchTypingMode(int keyCode) {
-        if (keyEventResolver.isHoldShift() && checkInputRange(keyCode) == InputRange.SPACE) {
+    private boolean checkToSwitchTypingMode(@NotNull KeyEvent event) {
+        if (event.isShiftPressed() && checkInputRange(event.getKeyCode()) == InputRange.SPACE) {
             alphabetMode = !alphabetMode;
             clearWubiCodeSB();
             clearInputMethodText();
@@ -359,7 +365,7 @@ public class WubiIME extends InputMethodService {
      *
      * @param event event
      */
-    private void commitPunctuations(KeyEvent event) {
+    private void commitPunctuations(@NotNull KeyEvent event) {
         int keyCode = event.getKeyCode();
         for (int i = 0; i < punctuationKeyCodes.length; i++) {
             if (keyCode == punctuationKeyCodes[i]) {
@@ -414,6 +420,12 @@ public class WubiIME extends InputMethodService {
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         ic = getCurrentInputConnection();
         quotation.reset();
+
+
+        clear();
+        if (alphabetMode) candidateTV.setText(R.string.alphabet_mode);
+        tempEnglishMode = false;
+        composing = false;
     }
 
     @Override
@@ -421,12 +433,30 @@ public class WubiIME extends InputMethodService {
         if (wubiDictDB == null) {
             wubiDictDB = WubiInput.getWubiDictDatabase(this);
         }
+        return super.onCreateInputView();
+    }
+
+    @Override
+    public View onCreateCandidatesView() {
         View candidateView = View.inflate(this, R.layout.wubi_input_method_candidate_view, null);
         candidateTV = candidateView.findViewById(R.id.candidates);
         wubiCodeTV = candidateView.findViewById(R.id.code);
-        setCandidatesView(candidateView);
         setCandidatesViewShown(true);
-        return super.onCreateInputView();
+        return candidateView;
+    }
+
+
+    @Override
+    public void onComputeInsets(InputMethodService.Insets outInsets) {
+        super.onComputeInsets(outInsets);
+        if (!isFullscreenMode()) {
+            outInsets.contentTopInsets = outInsets.visibleTopInsets;
+        }
+    }
+
+    @Override
+    public boolean onEvaluateInputViewShown() {
+        return true;
     }
 
     /**
@@ -515,7 +545,7 @@ public class WubiIME extends InputMethodService {
      *
      * @param wubiCodeStr wubi code string
      */
-    private void fetchCandidatesAndSetToField(String wubiCodeStr) {
+    private void fetchCandidatesAndSetToField(@NotNull String wubiCodeStr) {
         candidates.clear();
         if (wubiCodeStr.isEmpty()) return;
         //Z key: repeat last word
