@@ -6,19 +6,19 @@ import android.content.DialogInterface;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+import org.jetbrains.annotations.NotNull;
+import pers.zhc.tools.R;
 
 import java.util.Objects;
-
-import pers.zhc.tools.R;
 
 /**
  * @author bczhc
@@ -62,15 +62,25 @@ public class DialogUtil {
         }
     }
 
+    @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId, int width, int height, boolean applicationOverlay) {
+        return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, null, titleId, width, height, applicationOverlay);
+    }
+
+    @NotNull
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, @Nullable View view, int titleId, int width, int height, boolean applicationOverlay) {
         AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
-        AlertDialog ad = adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId).create();
+        adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId);
+        if (view != null) {
+            adb.setView(view);
+        }
+        AlertDialog ad = adb.create();
         setDialogAttr(ad, false, width, height, applicationOverlay);
         ad.setCanceledOnTouchOutside(true);
         return ad;
     }
 
-    public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(EditText editText, Dialog ad) {
+    public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         ad.setOnShowListener(dialog -> imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0));
         ad.setOnDismissListener(dialog -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0));

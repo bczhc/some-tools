@@ -41,9 +41,9 @@ public class ColorShowRL extends RelativeLayout {
         this.addView(ll);
     }
 
-    public void setColor(int color) {
+    public void setColor(int color,String name) {
         colorShowView.setColor(color);
-        hexTV.setText(ColorUtils.getHexString(color, true));
+        hexTV.setText(name);
         int measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         hexTV.measure(measureSpec, measureSpec);
         colorShowView.setDiameter(hexTV.getMeasuredWidth());

@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="gravity" format="flags">
+        <flag name="top" value="0"/>
+        <flag name="center" value="1"/>
+    </attr>
+    <attr name="hint" format="string"/>
+    <attr name="cursorVisible" format="boolean"/>
+    <attr name="focusable" format="boolean"/>
+    <attr name="text" format="string"/>
+    <attr name="showedColor" format="string"/>
+    <attr name="textSize" format="dimension"/>
+
     <declare-styleable name="ScrollEditText">
-        <attr name="gravity" format="flags">
-            <flag name="top" value="0"/>
-            <flag name="center" value="1"/>
-        </attr>
-        <attr name="hint" format="string"/>
-        <attr name="cursorVisible" format="boolean"/>
-        <attr name="focusable" format="boolean"/>
-        <attr name="text" format="string"/>
+        <attr name="gravity"/>
+        <attr name="hint"/>
+        <attr name="cursorVisible"/>
+        <attr name="focusable"/>
+        <attr name="text"/>
     </declare-styleable>
     <declare-styleable name="ColorShowRL">
-        <attr name="showedColor" format="string"/>
+        <attr name="showedColor"/>
+    </declare-styleable>
+    <declare-styleable name="SmartHintEditText">
+        <attr name="hint"/>
+        <attr name="text"/>
+        <attr name="textSize"/>
+        <attr name="android:inputType"/>
     </declare-styleable>
 </resources>

@@ -21,22 +21,23 @@ class WubiInputMethodActivity : BaseActivity() {
 
     private fun ready() {
         val onClickListeners = arrayOf(
-                View.OnClickListener {
-                    startActivity(Intent("android.settings.INPUT_METHOD_SETTINGS"))
-                },
-                View.OnClickListener {
-                    (applicationContext.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
-                },
-                View.OnClickListener {
-                    startActivity(Intent(this, WubiCodeSettingActivity::class.java))
-                },
-                View.OnClickListener {
-                    startActivity(Intent(this, WubiInputMethodTTSSettingActivity::class.java))
-                }
+            View.OnClickListener {
+                startActivity(Intent("android.settings.INPUT_METHOD_SETTINGS"))
+            },
+            View.OnClickListener {
+                (applicationContext.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
+            },
+            View.OnClickListener {
+                startActivity(Intent(this, WubiCodeSettingActivity::class.java))
+            },
+            View.OnClickListener {
+                startActivity(Intent(this, WubiInputMethodTTSSettingActivity::class.java))
+            }
         )
 
 
-        class MyArrayAdapter(context: Context, val resource: Int, objects: Array<out String>) : ArrayAdapter<String>(context, resource, objects) {
+        class MyArrayAdapter(context: Context, val resource: Int, objects: Array<out String>) :
+            ArrayAdapter<String>(context, resource, objects) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = View.inflate(this@WubiInputMethodActivity, resource, null)
                 val textView = view.findViewById<TextView>(android.R.id.text1)

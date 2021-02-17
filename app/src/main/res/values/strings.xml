@@ -148,6 +148,7 @@
     <string name="set_theme">设置主题</string>
     <string name="set">设置</string>
     <string name="please_enter_color_hex">请输入颜色十六进制</string>
+    <string name="color_naming">颜色命名</string>
     <string name="math_expression_evaluation_test">数学表达式解析测试</string>
     <string name="crash">crash</string>
     <string name="some_tools_app">some-tools-app</string>
@@ -307,4 +308,16 @@
     <string name="unsupported_path">不支持的path</string>
     <string name="choose_path_v_3_0_file">选择pathV3.0文件</string>
     <string name="path_info_string">创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d</string>
+    <string name="wubi_code_database_info">"共有%1$d条记录 "</string>
+    <string name="enter_wubi_code">输入五笔编码</string>
+    <string name="candidate_word">候选字词</string>
+    <string name="candidate_word_title_tv">候选字词：</string>
+    <string name="insert_index_1_leftmost">插入索引（从1开始）</string>
+    <string name="char_or_word">字或词</string>
+    <string name="enter_candidate_word">输入候选词</string>
+    <string name="add_successfully">添加成功</string>
+    <string name="add_failed">添加失败</string>
+    <string name="delete_successfully">删除成功</string>
+    <string name="new_add">新增</string>
+    <string name="wubi_code">五笔编码</string>
 </resources>

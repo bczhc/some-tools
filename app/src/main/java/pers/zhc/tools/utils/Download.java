@@ -114,10 +114,12 @@ public class Download {
                     });
                 } catch (IOException e) {
                     Common.showException(e, (Activity) ctx);
+                    downloadDialog.dismiss();
                 }
             }).start();
         } catch (IOException e) {
             Common.showException(e, (Activity) ctx);
+            downloadDialog.dismiss();
         }
     }
 }

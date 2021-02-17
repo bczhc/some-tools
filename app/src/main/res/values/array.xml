@@ -51,6 +51,7 @@
         <item>文本转语音（TTS）</item>
     </array>
     <array name="wubi_code_settings">
-        <item>下载编码库</item>
+        <item>使用默认编码库</item>
+        <item>修改编码库</item>
     </array>
 </resources>
