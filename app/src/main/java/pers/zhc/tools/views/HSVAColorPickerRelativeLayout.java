@@ -164,9 +164,9 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
             AlertDialog ad = adb.create();
             ad.setButton(AlertDialog.BUTTON_NEUTRAL, this.context.getString(R.string.save_color), (dialog, which) -> {
 
-    LinearLayout save_color_ll=new LinearLayout(this.context);
-    HorizontalScrollView save_color_hsv=new HorizontalScrollView(this.context);
-    save_color_hsv.addView(save_color_ll);
+    LinearLayout saveColorLL=new LinearLayout(this.context);
+    HorizontalScrollView saveColorHSV=new HorizontalScrollView(this.context);
+    saveColorHSV.addView(saveColorLL);
     String s = editText.getText().toString();
     try {
         if (s.charAt(0) == '#') s = s.substring(1);
@@ -180,17 +180,24 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
 
         if(((LinearLayout)this.getChildAt(0)).getChildCount() == 5)
         {
-            TextView save_color_tv=new TextView(this.context);
-            save_color_tv.setText(s.toString());
-            save_color_ll.addView(save_color_tv);
-            ((LinearLayout)this.getChildAt(0)).addView(save_color_hsv);
+            ColorShowRL colorShowRL = new ColorShowRL(this.context) ;
+            LinearLayout.LayoutParams params= new LinearLayout.LayoutParams (LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(20,20,20,20);
+            colorShowRL.setLayoutParams(params);
+            colorShowRL.setColor(Color.parseColor(s));
+            saveColorLL.addView(colorShowRL);
+            ((LinearLayout)this.getChildAt(0)).addView(saveColorHSV);
         }
         else
         {
-            TextView save_color_tv=new TextView(this.context);
-            save_color_tv.setText(s.toString());
-         ((LinearLayout)((((HorizontalScrollView)((LinearLayout)this.getChildAt(0)).getChildAt(5))).getChildAt(0))).addView(save_color_tv);
-        }
+
+            ColorShowRL colorShowRL = new ColorShowRL(this.context) ;
+            LinearLayout.LayoutParams params= new LinearLayout.LayoutParams (LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(20,20,20,20);
+            colorShowRL.setLayoutParams(params);
+            colorShowRL.setColor(Color.parseColor(s));
+            ((LinearLayout)((((HorizontalScrollView)((LinearLayout)this.getChildAt(0)).getChildAt(5))).getChildAt(0))).addView(colorShowRL);
+            }
     } catch (Exception e) {
         e.printStackTrace();
         ToastUtils.show(this.context, R.string.please_type_correct_value);
