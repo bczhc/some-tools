@@ -11,7 +11,9 @@ import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.test.wubiinput.WubiInput;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
+import pers.zhc.tools.utils.sqlite.Statement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -304,7 +306,7 @@ public class WubiIME extends InputMethodService {
          * @param event key event
          * @return {@code true} if should be consumed, {@code false} otherwise.
          */
-        private boolean checkIfConsumedKeys(KeyEvent event) {
+        private boolean checkIfConsumedKeys(@NotNull KeyEvent event) {
             int keyCode = event.getKeyCode();
             if (keyCode == KeyEvent.KEYCODE_BACK) return false;
 
@@ -545,22 +547,30 @@ public class WubiIME extends InputMethodService {
      *
      * @param wubiCodeStr wubi code string
      */
-    private void fetchCandidatesAndSetToField(@NotNull String wubiCodeStr) {
+    public void fetchCandidatesAndSetToField(@NotNull String wubiCodeStr) {
         candidates.clear();
         if (wubiCodeStr.isEmpty()) return;
         //Z key: repeat last word
         if (wubiCodeSB.toString().equals("z")) {
             candidates.add(lastWord);
         } else try {
-            wubiDictDB.exec(String.format("SELECT word FROM wubi_code_%s WHERE code IS '%s'"
-                    , wubiCodeStr.charAt(0), wubiCodeStr), contents -> {
-                String[] split = contents[0].split("\\|");
-                candidates.addAll(Arrays.asList(split));
-                return 0;
-            });
+            String[] fetched = fetchCandidates(wubiDictDB, wubiCodeStr);
+            this.candidates.addAll(Arrays.asList(fetched));
         } catch (Exception ignored) {
-            //no such table xxx
+            // no such table xxx
         }
+    }
+
+    public static String[] fetchCandidates(@NotNull SQLite3 wubiDictDatabase, @NotNull String wubiCodeStr) throws Exception {
+        String tableName = "wubi_code_" + wubiCodeStr.charAt(0);
+        Statement statement = wubiDictDatabase.compileStatement("SELECT word FROM " + tableName +" WHERE code IS ?");
+        statement.bindText(1, wubiCodeStr);
+        statement.stepRow();
+        Cursor cursor = statement.getCursor();
+        String selected = cursor.getText(0);
+        statement.release();
+
+        return selected.split("\\|");
     }
 
     /**

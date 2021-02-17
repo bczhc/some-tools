@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="10sp"
+              android:gravity="center_horizontal"
+>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/wubi_code_database_info"
+              android:id="@+id/wubi_code_database_info"
+              android:textSize="15sp"
+    />
+    <pers.zhc.tools.utils.SmartHintEditText
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            app:hint="@string/wubi_code"
+            android:inputType="text"
+            android:id="@+id/wubi_code_shet"
+    />
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+    >
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="@string/candidate_word_title_tv"
+                  android:textSize="30sp"
+                  android:layout_toStartOf="@id/add_btn"
+                  android:layout_alignParentStart="true"
+        />
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/add"
+                android:id="@+id/add_btn"
+                android:layout_alignParentEnd="true"
+        />
+    </RelativeLayout>
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:id="@+id/wubi_candidates_ll"
+        />
+    </ScrollView>
+</LinearLayout>
