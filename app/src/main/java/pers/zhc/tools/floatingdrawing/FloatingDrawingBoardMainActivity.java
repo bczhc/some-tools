@@ -467,7 +467,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             ckV();
             Thread.start();
             onUndo[0] = true;
-            return true;
+            return false;
         });
         childTextViews[4].setOnTouchListener(new View.OnTouchListener() {
             @Override
