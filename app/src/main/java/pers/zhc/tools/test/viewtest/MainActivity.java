@@ -14,6 +14,6 @@ public class MainActivity extends BaseActivity {
         ColorShowRL colorShowRL = new ColorShowRL(this);
         colorShowRL.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         this.setContentView(colorShowRL);
-        colorShowRL.setColor(Color.RED);
+        colorShowRL.setColor(Color.RED,"#FFFF0000");
     }
 }

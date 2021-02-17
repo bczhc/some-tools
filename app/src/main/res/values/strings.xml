@@ -148,6 +148,7 @@
     <string name="set_theme">设置主题</string>
     <string name="set">设置</string>
     <string name="please_enter_color_hex">请输入颜色十六进制</string>
+    <string name="color_naming">颜色命名</string>
     <string name="math_expression_evaluation_test">数学表达式解析测试</string>
     <string name="crash">crash</string>
     <string name="some_tools_app">some-tools-app</string>
