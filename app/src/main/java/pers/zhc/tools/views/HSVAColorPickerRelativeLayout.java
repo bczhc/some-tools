@@ -24,6 +24,7 @@ import pers.zhc.tools.utils.ColorUtils;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.DisplayUtil;
 import pers.zhc.tools.utils.ToastUtils;
+import android.widget.HorizontalScrollView;
 
 
 @SuppressWarnings("SameParameterValue")
@@ -135,7 +136,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
             editText.setText(hexString);
             adb.setView(editText);
             adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                String s = editText.getText().toString();
+               String s = editText.getText().toString();
                 try {
                     if (s.charAt(0) == '#') s = s.substring(1);
                     if (s.length() < 6 || s.length() > 8)
@@ -160,6 +161,38 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
             adb.setTitle(R.string.please_enter_color_hex);
             AlertDialog ad = adb.create();
             ad.setButton(AlertDialog.BUTTON_NEUTRAL, this.context.getString(R.string.save_color), (dialog, which) -> {
+
+    LinearLayout save_color_ll=new LinearLayout(this.context);
+    HorizontalScrollView save_color_hsv=new HorizontalScrollView(this.context);
+    save_color_hsv.addView(save_color_ll);
+    String s = editText.getText().toString();
+    try {
+        if (s.charAt(0) == '#') s = s.substring(1);
+        if (s.length() < 6 || s.length() > 8)
+            throw new Exception("Illegal color hex string.");
+        if (s.length() == 6) s = "#FF" + s;
+        else if (s.length() == 7) s = "#0" + s;
+        else {
+            s = "#" + s;
+        }
+
+        if(((LinearLayout)this.getChildAt(0)).getChildCount() == 5)
+        {
+            TextView save_color_tv=new TextView(this.context);
+            save_color_tv.setText(s.toString());
+            save_color_ll.addView(save_color_tv);
+            ((LinearLayout)this.getChildAt(0)).addView(save_color_hsv);
+        }
+        else
+        {
+            TextView save_color_tv=new TextView(this.context);
+            save_color_tv.setText(s.toString());
+         ((LinearLayout)((((HorizontalScrollView)((LinearLayout)this.getChildAt(0)).getChildAt(5))).getChildAt(0))).addView(save_color_tv);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        ToastUtils.show(this.context, R.string.please_type_correct_value);
+    }
 
             });
             DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
