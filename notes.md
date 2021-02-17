@@ -7,3 +7,32 @@ JNI开发：注意线程之间的资源通信，JNIEnv不能共享，需要使�
 还有一些对象也不能共享，需要使用NewGlobalRef。详见官网说明
 <https://developer.android.google.cn/training/articles/perf-jni?hl=zh_cn>
 
+JNI dev:
+
+Objects returned to Java don't need to be released because of the GC.
+
+wrong:
+```
+auto ret = env->NewStringUTF(s);
+env->DeleteLocalRef(ret);
+return ret;
+```
+right:
+```
+return env->NewStringUTF(s);
+```
+
+Objects that are newed and passed to a callback should be released. I've tested on Android 7 and Android 8, and if you don't release it, it may cause 512-max-reference overflow on Android 7. (Safe on Android 8, so f**k Google.)
+wrong:
+```
+jstring s = env->NewStringUTF(str);
+env->CallVoidMethod(callback, mid, s, (jdouble) d);
+return;
+```
+right:
+```
+jstring s = env->NewStringUTF(str);
+env->CallVoidMethod(callback, mid, s, (jdouble) d);
+env->DeleteLocalRef(s);
+return;
+```

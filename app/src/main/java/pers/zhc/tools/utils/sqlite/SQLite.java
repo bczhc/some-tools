@@ -14,7 +14,7 @@ public class SQLite {
         return r;
     }
 
-    public static boolean checkRecordExistence(MySQLite3 database, String tableName, String columnName, String value) {
+    public static boolean checkRecordExistence(SQLite3 database, String tableName, String columnName, String value) {
         final boolean[] r = {false};
         try {
             database.exec("SELECT * FROM " + tableName + " WHERE " + columnName + "='" + value.replace("'", "''") + '\'', contents -> {

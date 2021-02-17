@@ -10,7 +10,7 @@
 
 using namespace bczhc;
 
-namespace jnihelp {
+namespace bczhc {
     void log(JNIEnv *&env, const char *tag, const char *format, ...);
 
     void throwException(JNIEnv *&env, const char *format, ...);

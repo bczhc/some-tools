@@ -58,7 +58,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     int unselectedDrawable;
     private CheckBox regexCB;
 
-    public FilePickerRelativeLayout(Context context, int type, @Documents.Nullable File initialPath
+    public FilePickerRelativeLayout(Context context, int type, @Nullable File initialPath
             , Runnable cancelAction, OnPickedResultActionInterface pickedResultAction
             , @Nullable String initFileName) {
         super(context);

@@ -36,14 +36,7 @@ import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.stcflash.FlashMainActivity;
-import pers.zhc.tools.test.DocumentProviderTest;
-import pers.zhc.tools.test.InputEvent;
-import pers.zhc.tools.test.MathExpressionEvaluationTest;
-import pers.zhc.tools.test.RegExpTest;
-import pers.zhc.tools.test.SensorTest;
-import pers.zhc.tools.test.SurfaceViewTest;
-import pers.zhc.tools.test.TTS;
-import pers.zhc.tools.test.UsbSerialTest;
+import pers.zhc.tools.test.*;
 import pers.zhc.tools.test.jni.Test;
 import pers.zhc.tools.test.malloctest.MAllocTest;
 import pers.zhc.tools.test.pressuretest.PressureTest;
@@ -157,7 +150,8 @@ public class MainActivity extends BaseActivity {
                 R.string.wubi_test,
                 R.string.wubi_input_method,
                 R.string.usb_serial_test,
-                R.string.stc_flash
+                R.string.stc_flash,
+                R.string.drawing_board_test
         };
         final Class<?>[] classes = new Class[]{
                 CodecsActivity.class,
@@ -189,7 +183,8 @@ public class MainActivity extends BaseActivity {
                 WubiInput.class,
                 WubiInputMethodActivity.class,
                 UsbSerialTest.class,
-                FlashMainActivity.class
+                FlashMainActivity.class,
+                DrawingBoardTest.class
         };
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {

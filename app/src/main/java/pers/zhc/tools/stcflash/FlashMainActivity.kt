@@ -8,12 +8,16 @@ import android.content.IntentFilter
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Bundle
+import android.widget.CompoundButton
+import android.widget.EditText
 import androidx.appcompat.widget.SwitchCompat
 import com.hoho.android.usbserial.driver.UsbSerialPort
 import com.hoho.android.usbserial.driver.UsbSerialProber
+import kotlinx.android.synthetic.main.file_picker_rl_activity.*
 import kotlinx.android.synthetic.main.stc_flash_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.ToastUtils
@@ -30,6 +34,8 @@ class FlashMainActivity : BaseActivity() {
     private var device: UsbDevice? = null
     private lateinit var permissionIntent: PendingIntent
     private var burning = false
+    private lateinit var switchListener: CompoundButton.OnCheckedChangeListener
+    private lateinit var hexFilePathET: EditText
 
     private val usbReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -43,29 +49,34 @@ class FlashMainActivity : BaseActivity() {
                             val availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager)
                             if (availableDrivers.isEmpty()) {
                                 ToastUtils.show(this@FlashMainActivity, getString(R.string.empty_driver))
-                                connectSwitch.isChecked = false
+                                setSwitchChecked(false)
                                 return@apply
                             }
                             val usbSerialDriver = availableDrivers[0]
                             val connection = usbManager.openDevice(usbSerialDriver.device)
                             if (connection == null) {
                                 ToastUtils.show(this@FlashMainActivity, getString(R.string.null_connection))
-                                connectSwitch.isChecked = false
+                                setSwitchChecked(false)
                                 return@apply
                             }
 
                             port = usbSerialDriver.ports[0]
                             if (port == null) {
                                 ToastUtils.show(this@FlashMainActivity, getString(R.string.null_port))
-                                connectSwitch.isChecked = false
+                                setSwitchChecked(false)
                                 return@apply
                             }
                             port!!.open(connection)
-                            port!!.setParameters(1200, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE)
+                            port!!.setParameters(
+                                1200,
+                                UsbSerialPort.DATABITS_8,
+                                UsbSerialPort.STOPBITS_1,
+                                UsbSerialPort.PARITY_NONE
+                            )
                             serialPool = SerialPool(port!!)
                         }
                     } else {
-                        connectSwitch.isChecked = false
+                        setSwitchChecked(false)
                         ToastUtils.show(context, R.string.permission_denied)
                     }
                 }
@@ -74,7 +85,8 @@ class FlashMainActivity : BaseActivity() {
     }
 
     private fun registerUsbReceiver() {
-        permissionIntent = PendingIntent.getBroadcast(this, RequestCode.REQUEST_USB_PERMISSION, Intent(ACTION_USB_PERMISSION), 0)
+        permissionIntent =
+            PendingIntent.getBroadcast(this, RequestCode.REQUEST_USB_PERMISSION, Intent(ACTION_USB_PERMISSION), 0)
         val filter = IntentFilter(ACTION_USB_PERMISSION)
         registerReceiver(usbReceiver, filter)
     }
@@ -92,9 +104,16 @@ class FlashMainActivity : BaseActivity() {
         registerUsbReceiver()
         setContentView(R.layout.stc_flash_activity)
         connectSwitch = connect_switch!!
-        val hexFilePathET = hex_file_path_et!!
+        hexFilePathET = hex_file_path_et!!
         val burnBtn = burn_btn!!
         val callbackET = callback_et!!
+        val pickFileBtn = pick_file_btn!!
+
+        pickFileBtn.setOnClickListener {
+            val intent = Intent(this, FilePicker::class.java)
+            intent.putExtra("option", FilePicker.PICK_FILE)
+            startActivityFromChild(this, intent, RequestCode.START_ACTIVITY_0)
+        }
 
         val echoCallback = object : JNI.StcFlash.EchoCallback {
             override fun print(s: String?) {
@@ -110,8 +129,7 @@ class FlashMainActivity : BaseActivity() {
             }
         }
 
-        connectSwitch.setOnClickListener {
-            val isChecked = connectSwitch.isChecked
+        switchListener = CompoundButton.OnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
                 requestUsbPermission()
@@ -119,8 +137,8 @@ class FlashMainActivity : BaseActivity() {
                 val deviceList = usbManager.deviceList
                 if (deviceList.size <= 0) {
                     ToastUtils.show(this, R.string.null_device)
-                    connectSwitch.isChecked = false
-                    return@setOnClickListener
+                    setSwitchChecked(false)
+                    return@OnCheckedChangeListener
                 }
             } else {
                 try {
@@ -130,6 +148,8 @@ class FlashMainActivity : BaseActivity() {
                 port = null
             }
         }
+
+        connectSwitch.setOnCheckedChangeListener(switchListener)
 
         burnBtn.setOnClickListener {
             callbackET.text = getString(R.string.nul)
@@ -153,6 +173,12 @@ class FlashMainActivity : BaseActivity() {
         }
     }
 
+    fun setSwitchChecked(checked: Boolean) {
+        this.connectSwitch.setOnCheckedChangeListener(null)
+        this.connectSwitch.isChecked = checked
+        this.connectSwitch.setOnCheckedChangeListener(this.switchListener)
+    }
+
     override fun finish() {
         if (burning) {
             ToastUtils.show(this, R.string.please_wait_until_burning_finished)
@@ -162,5 +188,13 @@ class FlashMainActivity : BaseActivity() {
             serialPool.stop()
         }
         super.finish()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null) {
+            val picked = data.getStringExtra("result") ?: return
+            hexFilePathET.setText(picked)
+        }
     }
 }

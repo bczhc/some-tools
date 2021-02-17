@@ -22,7 +22,7 @@ import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.utils.sqlite.MySQLite3;
+import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.u.FileU;
@@ -37,19 +37,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author bczhc
  */
 public class DiaryMainActivity extends BaseActivity {
-    static MySQLite3 diaryDatabase;
+    static SQLite3 diaryDatabase;
     private LinearLayout ll;
     @NonNull
     private String currentPasswordDigest = "";
     private boolean isUnlocked = false;
     private String[] week;
 
-    static MySQLite3 getDiaryDatabase(Context ctx) {
-        MySQLite3 database;
-        database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
+    static SQLite3 getDiaryDatabase(Context ctx) {
+        SQLite3 database;
+        database = SQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
         if (database.checkIfCorrupt()) {
             System.out.println(Common.getInternalDatabaseDir(ctx, "diary.db").delete());
-            database = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
+            database = SQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
             ToastUtils.show(ctx, R.string.corrupted_database_and_recreate_new);
         }
 
@@ -75,7 +75,7 @@ public class DiaryMainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final MySQLite3 passwordDatabase = openPasswordDatabase();
+        final SQLite3 passwordDatabase = openPasswordDatabase();
         passwordDatabase.exec("SELECT digest FROM password where k='diary'", contents -> {
             currentPasswordDigest = contents[0];
             return 0;
@@ -130,8 +130,8 @@ public class DiaryMainActivity extends BaseActivity {
 
 
     @NotNull
-    private MySQLite3 openPasswordDatabase() {
-        MySQLite3 pwDB = MySQLite3.open(Common.getInternalDatabaseDir(this, "passwords.db").getPath());
+    private SQLite3 openPasswordDatabase() {
+        SQLite3 pwDB = SQLite3.open(Common.getInternalDatabaseDir(this, "passwords.db").getPath());
         pwDB.exec("CREATE TABLE IF NOT EXISTS password\n" +
                 "(\n" +
                 "    " +
@@ -146,7 +146,7 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     private void setPassword(String password) {
-        final MySQLite3 passwordDatabase = openPasswordDatabase();
+        final SQLite3 passwordDatabase = openPasswordDatabase();
         final boolean exist = SQLite.checkRecordExistence(passwordDatabase, "password", "k", "diary");
         if (!exist) {
             passwordDatabase.exec("INSERT INTO password\n" +

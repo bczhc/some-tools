@@ -29,25 +29,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.Infos;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRelativeLayout;
 import pers.zhc.tools.utils.*;
+import pers.zhc.tools.utils.sqlite.Cursor;
+import pers.zhc.tools.utils.sqlite.SQLite3;
+import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
-import pers.zhc.u.Digest;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
-import pers.zhc.u.common.MultipartUploader;
-import pers.zhc.u.common.ReadIS;
 
-import java.io.*;
-import java.net.URL;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -82,7 +82,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private Runnable importPathFileDoneAction;
     private long currentInstanceMillisecond;
     private TextView[] childTextViews;
-    private Switch fbSwitch;
+    private SwitchCompat fbSwitch;
     private String[] strings;
     private WindowManager.LayoutParams lp;
     private WindowManager.LayoutParams lp2;
@@ -99,82 +99,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private boolean isCapturing = false;
     private Intent captureScreenResultData = null;
     private boolean panelColorFollowPainting;
+    private FloatingViewOnTouchListener floatingViewOnTouchListener;
 
-    @SuppressWarnings("unused")
-    private static void uploadPaths(Context context) {
-        try {
-            InputStream is = new URL(Infos.ZHC_URL_STRING + "/upload/list.zhc?can=").openStream();
-            if (is.read() != 1) {
-                is.close();
-                return;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        List<String> stringList = new ArrayList<>();
-        try {
-            URL getListUrl = new URL(Infos.ZHC_URL_STRING + "/upload/list.zhc");
-            InputStream is = getListUrl.openStream();
-            StringBuilder sb = new StringBuilder();
-            new ReadIS(is, "UTF-8").read(sb::append);
-            String s = sb.toString();
-            System.out.println("sb.toString() = " + s);
-            try {
-                JSONObject jsonObject = new JSONObject(s);
-                JSONArray jsonArray = jsonObject.getJSONArray("files");
-                int length = jsonArray.length();
-                for (int i = 0; i < length; i++) {
-                    JSONObject object = jsonArray.getJSONObject(i);
-                    stringList.add(object.getString("md5"));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File pathDir = new File(Common.getExternalStoragePath(context) + File.separator + context.getString(R.string.drawing_board) + File.separator + "path");
-        File[] listFiles = pathDir.listFiles();
-        if (listFiles != null) {
-            for (File file : listFiles) {
-                if (file.isDirectory()) {
-                    continue;
-                }
-                try {
-                    String fileMd5String = Digest.getFileMd5String(file);
-                    if (!listStringContain(stringList, fileMd5String)) {
-                        InputStream is = new FileInputStream(file);
-                        byte[] headInformation = null;
-                        try {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("name", file.getName());
-                            headInformation = jsonObject.toString().getBytes();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        if (headInformation == null) {
-                            headInformation = ("unknown" + System.currentTimeMillis()).getBytes();
-                        }
-                        MultipartUploader.formUpload(Infos.ZHC_URL_STRING + "/upload/upload.zhc", headInformation, is);
-                        is.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private static boolean listStringContain(List<String> list, String s) {
-        for (String s1 : list) {
-            if (s.equals(s1)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static void setSelectedEditTextWithCurrentTimeMillisecond(EditText et) {
+    public static void setSelectedEditTextWithCurrentTimeMillisecond(@NotNull EditText et) {
         @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         et.setText(String.format(et.getContext().getString(R.string.str), format));
         Selection.selectAll(et.getText());
@@ -217,26 +144,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         init();
     }
 
-    @Override
-    protected byte ckV() {
-        new Thread(() -> {
-            byte b = super.ckV();
-            if (b == 0) {
-                try {
-                    runOnUiThread(this::stopFloatingWindow);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                finish();
-            }
-        }).start();
-        return 1;
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     private void init() {
-        ckV();
-        //        NotificationClickReceiver notificationClickReceiver = new NotificationClickReceiver();
-//        registerReceiver(this.notificationClickReceiver, new IntentFilter("pers.zhc.tools.START_SERVICE"));
         currentInstanceMillisecond = System.currentTimeMillis();
         internalPathDir = getFilesDir().getPath() + File.separatorChar + "path";
         File currentInternalPathDir = new File(internalPathDir);
@@ -265,17 +174,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         });
         clearPathBtn.performLongClick();
         Point point = new Point();
-        /*//noinspection deprecation
-        width = this.getWindowManager().getDefaultDisplay().getWidth();
-        //noinspection deprecation
-        height = this.getWindowManager().getDefaultDisplay().getHeight();*/
         getWindowManager().getDefaultDisplay().getSize(point);
         width = point.x;
         height = point.y;
         dpi = (int) getResources().getDisplayMetrics().density;
         View keepNotBeingKilledView = new View(this);
         keepNotBeingKilledView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
-        pv = new PaintView(this, width, height, currentInternalPathFile);
+        pv = new PaintView(this);
         pv.setOnColorChangedCallback(color -> {
             if (this.panelColorFollowPainting) {
                 float[] hsv = new float[3];
@@ -283,9 +188,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 setPanelColor(color);
             }
         });
-        pv.setStrokeWidth(10F);
+        pv.setDrawingStrokeWidth(10F);
         pv.setEraserStrokeWidth(10F);
-        pv.setPaintColor(Color.RED);
+        pv.setDrawingColor(Color.RED);
         wm = (WindowManager) this.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         setSwitch();
         strings = getResources().getStringArray(R.array.btn_string);
@@ -331,7 +236,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         } catch (IOException ignored) {
         }
         importPathFileDoneAction = () -> {
-            if (pv.isEraserMode) {
+            if (pv.eraserMode) {
                 childTextViews[6].setText(R.string.eraser_mode);
                 strings[6] = getString(R.string.eraser_mode);
             } else {
@@ -348,7 +253,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         float proportionX = ((float) 75) / ((float) 720);
         float proportionY = ((float) 75) / ((float) 1360);
         this.iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
-//        iv.setImageBitmap(icon);
         iv.setImageIcon(Icon.createWithResource(this, R.drawable.ic_db));
         iv.setOnClickListener(v -> {
             fbLinearLayout.removeAllViews();
@@ -356,7 +260,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             measureFB_LL();
         });
         this.fbMeasuredSpec = new FloatingViewOnTouchListener.ViewSpec();
-        FloatingViewOnTouchListener floatingViewOnTouchListener = new FloatingViewOnTouchListener(lp2, wm, fbLinearLayout, width, height, fbMeasuredSpec);
+        floatingViewOnTouchListener = new FloatingViewOnTouchListener(lp2, wm, fbLinearLayout, width, height, fbMeasuredSpec);
         iv.setOnTouchListener(floatingViewOnTouchListener);
         for (int i = 0; i < strings.length; i++) {
             childTextViews[i] = new TextView(this);
@@ -368,9 +272,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             childTextViews[i].setText(strings[i]);
             childTextViews[i].setBackgroundColor(panelColor);
             childTextViews[i].setTextColor(panelTextColor);
-            childTextViews[i].setOnTouchListener(floatingViewOnTouchListener);
+            childTextViews[i].setOnTouchListener((v, e) -> {
+                if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                    // commit path temporary database in time, preventing data lose
+                    pv.commitPathDatabase();
+                }
+                return floatingViewOnTouchListener.onTouch(v, e);
+            });
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    childTVs[i].setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                 childTextViews[i].setAutoSizeTextTypeUniformWithConfiguration(1, 200, 1, TypedValue.COMPLEX_UNIT_SP);
                 childTextViews[i].setGravity(Gravity.CENTER);
             } else {
@@ -378,7 +287,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             }
             int finalI = i;
             childTextViews[i].setOnClickListener(v1 -> {
-                ckV();
                 switch (finalI) {
                     case 0:
                         fbLinearLayout.removeAllViews();
@@ -402,7 +310,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         pv.redo();
                         break;
                     case 6:
-                        if (pv.isEraserMode) {
+                        if (pv.eraserMode) {
                             pv.setEraserMode(false);
                             childTextViews[finalI].setText(R.string.drawing_mode);
                             strings[finalI] = getString(R.string.drawing_mode);
@@ -435,84 +343,138 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     default:
                         break;
                 }
-                System.out.println("i = " + finalI);
             });
             smallLL.setGravity(Gravity.CENTER);
             smallLL.addView(childTextViews[i]);
             optionsLinearLayout.addView(smallLL);
         }
-        //添加撤销，恢复按钮长按事件
-        final Boolean[] onUndo = {false};
-        childTextViews[4].setOnLongClickListener(v -> {
-            final int[] time = {470};//执行间隔
-            final Thread Thread = new Thread() {
-                @Override
-                public void run() {
-                    Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(FloatingDrawingBoardMainActivity.this.VIBRATOR_SERVICE);
-                    vibrator.vibrate(100);
-                    while (onUndo[0]) {
-                        if (time[0] > 70) {
-                            time[0] -= 36;
+        // 添加撤销，恢复按钮长按事件
+        final boolean[] onUndo = {false};
+        final boolean[] onRedo = {false};
+        // for undo and redo motion event resolving...
+        final float[][] prevXY = {{Float.NaN, Float.NaN}, {Float.NaN, Float.NaN}};
+        // undo and redo
+        final boolean[][] interruptLongClickAction = {{false}, {false}};
+        LongClickResolver[] longClickResolver = new LongClickResolver[]{
+                new LongClickResolver(this, () -> {
+                    if (interruptLongClickAction[0][0]) return;
+                    floatingViewOnTouchListener.cancelPerformClick();
+                    final int[] time = {470};//执行间隔
+                    final Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(VIBRATOR_SERVICE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+                            } else {
+                                //noinspection deprecation
+                                vibrator.vibrate(100);
+                            }
+                            while (onUndo[0]) {
+                                if (time[0] > 70) {
+                                    time[0] -= 36;
+                                }
+                                pv.undo();
+                                try {
+                                    //noinspection BusyWait
+                                    sleep(time[0]);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
-                        pv.undo();
-                        try {
-                            sleep(time[0]);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                    };
+                    thread.start();
+                    onUndo[0] = true;
+                }),
+                new LongClickResolver(this, () -> {
+                    if (interruptLongClickAction[1][0]) return;
+                    floatingViewOnTouchListener.cancelPerformClick();
+                    final int[] time = {470};//执行间隔
+                    final Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(VIBRATOR_SERVICE);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+                            } else {
+                                //noinspection deprecation
+                                vibrator.vibrate(100);
+                            }
+                            while (onRedo[0]) {
+                                if (time[0] > 70) {
+                                    time[0] -= 36;
+                                }
+                                pv.redo();
+                                try {
+                                    //noinspection BusyWait
+                                    sleep(time[0]);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
+                    };
+                    thread.start();
+                    onRedo[0] = true;
+                })
+        };
+
+        childTextViews[4].setOnTouchListener((v, event) -> {
+            floatingViewOnTouchListener.onTouch(v, event);
+            int action = event.getAction();
+            float x = event.getX();
+            float y = event.getY();
+            longClickResolver[0].onTouch(event);
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    // initialize
+                    prevXY[0][0] = x;
+                    prevXY[0][1] = y;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (x - prevXY[0][0] > 1 || y - prevXY[0][1] > 1) {
+                        onUndo[0] = false;
+                        interruptLongClickAction[0][0] = true;
                     }
-                }
-            };
-            ckV();
-            Thread.start();
-            onUndo[0] = true;
-            return false;
-        });
-        childTextViews[4].setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP & onUndo[0]) {
+                    prevXY[0][0] = x;
+                    prevXY[0][1] = y;
+                    break;
+                case MotionEvent.ACTION_UP:
                     onUndo[0] = false;
-                }
-                return false;
+                    interruptLongClickAction[0][0] = false;
+                    break;
+                default:
             }
-        });
-        final Boolean[] onRedo = {false};
-        childTextViews[5].setOnLongClickListener(v -> {
-            final int[] time = {470};//执行间隔
-            final Thread Thread = new Thread() {
-                @Override
-                public void run() {
-                    Vibrator vibrator = (Vibrator) FloatingDrawingBoardMainActivity.this.getSystemService(FloatingDrawingBoardMainActivity.this.VIBRATOR_SERVICE);
-                    vibrator.vibrate(100);
-                    while (onRedo[0]) {
-                        if (time[0] > 70) {
-                            time[0] -= 36;
-                        }
-                        pv.redo();
-                        try {
-                            sleep(time[0]);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            };
-            ckV();
-            Thread.start();
-            onRedo[0] = true;
             return true;
         });
-        childTextViews[5].setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP & onRedo[0]) {
+        childTextViews[5].setOnTouchListener((v, event) -> {
+            floatingViewOnTouchListener.onTouch(v, event);
+            int action = event.getAction();
+            float x = event.getX();
+            float y = event.getY();
+            longClickResolver[1].onTouch(event);
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    // initialize
+                    prevXY[1][0] = x;
+                    prevXY[1][1] = y;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (x - prevXY[1][0] > 1 || y - prevXY[1][1] > 1) {
+                        onRedo[0] = false;
+                        interruptLongClickAction[0][0] = true;
+                    }
+                    prevXY[1][0] = x;
+                    prevXY[1][1] = y;
+                    break;
+                case MotionEvent.ACTION_UP:
                     onRedo[0] = false;
-                }
-                return false;
+                    interruptLongClickAction[1][0] = false;
+                    break;
+                default:
             }
+            return true;
         });
 
         Button readCacheFileBtn = findViewById(R.id.open_cache_path_file);
@@ -539,7 +501,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         };
         TextView checkForUpdateTV = findViewById(R.id.check_for_update_tv);
         checkForUpdateTV.setOnClickListener(v -> super.checkForUpdate());
-        strokeColorHSVA.set(pv.getPaintColor());
+        strokeColorHSVA.set(pv.getDrawingColor());
         panelColorHSVA.set(panelColor);
         panelTextColorHSVA.set(panelTextColor);
     }
@@ -599,7 +561,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             this.panelColorFollowPainting = isChecked;
             panelColorBtn.setEnabled(!this.panelColorFollowPainting);
             if (isChecked) {
-                setPanelColor(pv.getPaintColor());
+                setPanelColor(pv.getDrawingColor());
             } else setPanelColor(panelColorHSVA.getColor());
             if (invertColorChecked) {
                 setPanelTextColor(ColorUtils.invertColor(panelColor));
@@ -619,7 +581,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void setColor() {
         Dialog dialog;
-        if (pv.isEraserMode) {
+        if (pv.eraserMode) {
             dialog = new Dialog(this);
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -665,7 +627,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 @Override
                 public void onColorPicked(float h, float s, float v, int alpha) {
                     strokeColorHSVA.set(alpha, h, s, v);
-                    pv.setPaintColor(strokeColorHSVA.getColor());
+                    pv.setDrawingColor(strokeColorHSVA.getColor());
                 }
             };
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
@@ -835,12 +797,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 new AbstractCheckOverlayPermission(this) {
                     @Override
                     public void granted() {
+                        pv.enableSavePath(currentInternalPathFile.getPath());
                         startFloatingWindow();
                     }
 
                     @Override
                     public void denied() {
                         fbSwitch.setChecked(false);
+                        pv.closePathDatabase();
                     }
                 };
             } else {
@@ -863,7 +827,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        pv.configPathDatabase();
     }
 
     void toggleDrawAndControlMode() {
@@ -893,10 +856,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void exit() {
+        pv.closePathDatabase();
         stopFloatingWindow();
         FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMillisecond);
         this.fbSwitch.setChecked(false);
-        pv.releasePathDatabase();
     }
 
     private void hide() {
@@ -919,7 +882,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             nb.setSmallIcon(Icon.createWithBitmap(icon))
                     .setContentTitle(getString(R.string.drawing_board))
                     .setContentText(getString(R.string.appear_f_b, date));
-//            Intent intent = new Intent(this, NotificationClickReceiver.class);
             Intent intent = new Intent();
             final int backgroundReceiverFlag = 0x01000000;
             intent.addFlags(backgroundReceiverFlag);
@@ -965,18 +927,18 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         for (int i = 0; i < radioButtons.length; i++) {
             radioButtons[i] = (RadioButton) rg.getChildAt(i);
         }
-        radioButtons[pv.isEraserMode ? 1 : 0].setChecked(true);
+        radioButtons[pv.eraserMode ? 1 : 0].setChecked(true);
         CheckBox lockStrokeCB = mainLL.findViewById(R.id.cb);
         lockStrokeCB.setChecked(pv.isLockingStroke());
         lockStrokeCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            pv.setLockStrokeMode(isChecked);
+            pv.setLockingStroke(isChecked);
             pv.lockStroke();
         });
         StrokeWatchView strokeWatchView = new StrokeWatchView(this);
         strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         SeekBar sb = mainLL.findViewById(R.id.sb);
         TextView tv = mainLL.findViewById(R.id.tv);
-        final int[] checked = {pv.isEraserMode ? R.id.radio2 : R.id.radio1};
+        final int[] checked = {pv.eraserMode ? R.id.radio2 : R.id.radio1};
         tv.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
@@ -985,10 +947,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 try {
                     float edit = Float.parseFloat(et.getText().toString());
                     double a = Math.log(edit * pv.getScale()) / Math.log(1.07D);
-                    strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getPaintColor());
+                    strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getDrawingColor());
                     sb.setProgress((int) a);
                     if (checked[0] == R.id.radio1) {
-                        pv.setStrokeWidth(edit);
+                        pv.setDrawingStrokeWidth(edit);
                     } else if (checked[0] == R.id.radio2) {
                         pv.setEraserStrokeWidth(edit);
                     }
@@ -1010,7 +972,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             ad.show();
         });
         float pvStrokeWidthInUse = pv.getStrokeWidthInUse();
-        strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getPaintColor());
+        strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getDrawingColor());
         tv.setText(getString(R.string.stroke_width_info, pvStrokeWidthInUse, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
         sb.setProgress((int) (Math.log(pvStrokeWidthInUse * pv.getScale()) / Math.log(1.07D)));
         sb.setMax(100);
@@ -1022,13 +984,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     float pow = (float) Math.pow(1.07D, progress);
                     pow /= pv.getScale();
                     if (checked[0] == R.id.radio1) {
-                        pv.setStrokeWidth(pow);
+                        pv.setDrawingStrokeWidth(pow);
                     } else {
                         pv.setEraserStrokeWidth(pow);
                     }
                     pv.lockStroke();
                     tv.setText(getString(R.string.stroke_width_info, pow, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
-                    strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getPaintColor());
+                    strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getDrawingColor());
                 }
             }
 
@@ -1044,8 +1006,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         });
         rg.setOnCheckedChangeListener((group, checkedId) -> {
             checked[0] = checkedId;
-            float strokeWidth = (checkedId == R.id.radio1) ? pv.getStrokeWidth() : pv.getEraserStrokeWidth();
-            strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getPaintColor());
+            float strokeWidth = (checkedId == R.id.radio1) ? pv.getDrawingStrokeWidth() : pv.getEraserStrokeWidth();
+            strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getDrawingColor());
             tv.setText(getString(R.string.stroke_width_info, strokeWidth, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
             sb.setProgress((int) (Math.log(strokeWidth * pv.getScale()) / Math.log(1.07D)));
         });
@@ -1090,7 +1052,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 R.string.export_path,
                 R.string.reset_transform,
                 R.string.manage_layer,
-                R.string.hide_panel
+                R.string.hide_panel,
+                R.string.drawing_statistics
         };
         File fbDir = new File(Common.getExternalStoragePath(this) + File.separator + getString(R.string.drawing_board));
         if (!fbDir.exists()) {
@@ -1106,11 +1069,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                 v0 -> new PermissionRequester(() -> {
-                    Dialog dialog = new Dialog(this);
-                    dialog.setCanceledOnTouchOutside(false);
-                    dialog.setCancelable(false);
-                    FilePickerRelativeLayout filePickerRelativeLayout = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, imageDir, dialog::dismiss, s -> {
-                        dialog.dismiss();
+                    Dialog dialog = getFilePickerDialog(imageDir, s -> {
                         AlertDialog.Builder importImageOptionsDialogBuilder = new AlertDialog.Builder(this);
                         LinearLayout linearLayout = new LinearLayout(this);
                         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -1166,8 +1125,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 .create();
                         setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                         importImageOptionsDialog.show();
-                    }, null);
-                    setFilePickerDialog(dialog, filePickerRelativeLayout);
+                    });
+                    dialog.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v1 -> new PermissionRequester(() -> {
@@ -1210,8 +1169,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
                 v2 -> importPath(moreOptionsDialog, pathDir),
                 v3 -> new PermissionRequester(() -> {
-                    pv.commitDatabase();
-                    pv.beginDatabaseTransaction();
                     EditText et = new EditText(this);
                     setSelectedEditTextWithCurrentTimeMillisecond(et);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -1244,7 +1201,36 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     hide();
                     moreOptionsDialog.dismiss();
                 }, (dialog1, which) -> {
-                }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show()
+                }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show(),
+                v7 -> {
+                    ToastUtils.show(this, R.string.choose_path_v_3_0_file);
+                    Dialog dialog = getFilePickerDialog(pathDir, s -> {
+                        if (s == null) return;
+                        SQLite3 db = SQLite3.open(s);
+                        if (db.checkIfCorrupt()) {
+                            ToastUtils.show(this, R.string.unsupported_path);
+                            return;
+                        }
+                        String infoStr = getPathV3_0StatisticsInfoStr(db);
+                        db.close();
+
+                        // show info dialog
+                        Dialog d = new Dialog(this);
+                        DialogUtil.setDialogAttr(d, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+                        View v = View.inflate(this, R.layout.path_file_info_view, null);
+                        Button confirmBtn = v.findViewById(R.id.confirm);
+                        confirmBtn.setOnClickListener(v1 -> d.dismiss());
+
+                        TextView infoTV = v.findViewById(R.id.tv);
+                        infoTV.setText(infoStr);
+
+                        d.setCanceledOnTouchOutside(false);
+                        d.setContentView(v);
+                        d.show();
+                    });
+                    dialog.show();
+                }
         };
         Button[] buttons = new Button[textsRes.length];
         for (int i = 0; i < buttons.length; i++) {
@@ -1262,10 +1248,89 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         moreOptionsDialog.show();
     }
 
+    private int getSelectedStatisticsIntData(SQLite3 db, int mark) {
+        int r = 0;
+        try {
+            Statement statement = db.compileStatement("SELECT COUNT(*)\n" +
+                    "FROM path\n" +
+                    "WHERE mark is ?");
+            statement.reset();
+            statement.bind(1, mark);
+            Cursor cursor = statement.getCursor();
+            cursor.step();
+            r = cursor.getInt(0);
+            statement.release();
+        } catch (Exception e) {
+            Common.showException(e, this);
+        }
+        return r;
+    }
+
+    private String getPathV3_0StatisticsInfoStr(SQLite3 db) {
+        /*
+         * infos:
+         * create time
+         * total recorded points number,
+         * total recorded paths number,
+         * drawing paths number,
+         * erasing paths number,
+         * undo times,
+         * redo times
+         */
+
+        int[] totalPointsNum = {0};
+        int drawingPathsNum = getSelectedStatisticsIntData(db, 0x01);
+        int erasingPathsNum = getSelectedStatisticsIntData(db, 0x11);
+        int totalPathsNum = drawingPathsNum + erasingPathsNum;
+        String[] createTime = new String[1];
+        db.exec("SELECT create_timestamp\n" +
+                "FROM info", contents -> {
+            createTime[0] = new Date(Long.parseLong(contents[0])).toString();
+            return 0;
+        });
+        db.exec("SELECT COUNT(*)\n" +
+                "FROM path\n" +
+                "WHERE mark IS NOT 0x01\n" +
+                "  AND mark IS NOT 0x11\n" +
+                "  AND mark IS NOT 0x20\n" +
+                "  AND mark IS NOT 0x30", contents -> {
+            totalPointsNum[0] = Integer.parseInt(contents[0]);
+            return 0;
+        });
+
+        return getString(R.string.path_info_string
+                , createTime[0]
+                , totalPointsNum[0]
+                , totalPathsNum
+                , drawingPathsNum
+                , erasingPathsNum
+                , getSelectedStatisticsIntData(db, 0x20)
+                , getSelectedStatisticsIntData(db, 0x30));
+    }
+
+    /**
+     * Get the dialog containing file picker relative layout, call {@link Dialog#show()} to show.
+     *
+     * @param initialPath          initial path
+     * @param onPickedResultAction callback called when on picked
+     * @return dialog
+     */
+    @NotNull
+    private Dialog getFilePickerDialog(File initialPath, FilePickerRelativeLayout.OnPickedResultActionInterface onPickedResultAction) {
+        Dialog dialog = new Dialog(this);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        FilePickerRelativeLayout fp = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, initialPath, dialog::dismiss, s -> {
+            dialog.dismiss();
+            onPickedResultAction.result(s);
+        }, null);
+        setFilePickerDialog(dialog, fp);
+        return dialog;
+    }
+
     private void setLayer() {
         Dialog dialog = new Dialog(this);
         View view = View.inflate(this, R.layout.layer_layout, null);
-        @SuppressWarnings("unused") LinearLayout linearLayout = view.findViewById(R.id.ll);
         dialog.setContentView(view);
         DialogUtil.setDialogAttr(dialog, false
                 , ((int) (width * .8F)), ((int) (height * .8F)), true);
@@ -1274,11 +1339,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void importPath(@Nullable Dialog moreOptionsDialog, File pathDir) {
         new PermissionRequester(() -> {
-            Dialog dialog = new Dialog(this);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            FilePickerRelativeLayout filePickerRelativeLayout = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, pathDir, dialog::dismiss, s -> {
-                dialog.dismiss();
+            Dialog dialog = getFilePickerDialog(pathDir, s -> {
                 if (currentInternalPathFile.getAbsolutePath().equals(s)) {
                     ToastUtils.show(this, R.string.can_not_import_itself);
                     return;
@@ -1333,7 +1394,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     }
                 });
                 Runnable importAction = () -> {
-                    Handler handler = new Handler();
                     Dialog importPathFileProgressDialog = new Dialog(this);
                     setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                     importPathFileProgressDialog.setCanceledOnTouchOutside(false);
@@ -1369,13 +1429,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 AlertDialog ad = adb.create();
                 setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
                 ad.show();
-            }, null);
-            setFilePickerDialog(dialog, filePickerRelativeLayout);
+            });
+            dialog.show();
         }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
-    private void setFilePickerDialog(Dialog dialog, FilePickerRelativeLayout filePickerRelativeLayout) {
+    private void setFilePickerDialog(@NotNull Dialog dialog, FilePickerRelativeLayout filePickerRelativeLayout) {
         dialog.setOnKeyListener((dialog1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_UP) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -1386,7 +1446,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         });
         setDialogAttr(dialog, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .8)), true);
         dialog.setContentView(filePickerRelativeLayout);
-        dialog.show();
     }
 
     @Override

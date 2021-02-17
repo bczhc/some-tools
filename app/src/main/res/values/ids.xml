@@ -3,5 +3,4 @@
     <item name="bar" type="id"/>
     <item name="bar_l" type="id"/>
     <item name="view" type="id"/>
-    <item neme="hsva_color_picker_view" type="id"/>
 </resources>

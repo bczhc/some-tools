@@ -18,13 +18,13 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ScrollEditText;
-import pers.zhc.tools.utils.sqlite.MySQLite3;
+import pers.zhc.tools.utils.sqlite.SQLite3;
 
 public class WubiInput extends BaseActivity {
-    private MySQLite3 dictDB;
+    private SQLite3 dictDB;
 
-    public static MySQLite3 getWubiDictDatabase(Context ctx) {
-        MySQLite3 dictDB = MySQLite3.open(Common.getInternalDatabaseDir(ctx, "wubi_code.db").getPath());
+    public static SQLite3 getWubiDictDatabase(Context ctx) {
+        SQLite3 dictDB = SQLite3.open(Common.getInternalDatabaseDir(ctx, "wubi_code.db").getPath());
         dictDB.exec("BEGIN");
         return dictDB;
     }

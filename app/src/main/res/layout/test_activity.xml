@@ -1,38 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <ImageView
-            android:id="@+id/cancel_deletion"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-            android:layout_width="22sp"
-            android:layout_height="22sp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginTop="15sp"
-            android:layout_marginStart="20sp"
-            android:layout_centerVertical="true"
+        android:layout_height="match_parent">
+    <pers.zhc.tools.views.ColorShowView
+            android:layout_width="1111sp"
+            android:layout_height="122sp"
     />
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20sp"
-            android:text="未选择笔记"
-            android:textStyle="bold"
-            android:textSize="17sp"
-            android:layout_alignLeft="@id/cancel_deletion"
-            android:layout_centerVertical="true"
-    />
-
-    <CheckBox
-            android:id="@+id/cv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-    />
-
 </RelativeLayout>

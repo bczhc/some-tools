@@ -89,19 +89,6 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected byte ckV() {
-        try {
-            URLConnection urlConnection = new URL(Infos.ZHC_URL_STRING + "/i.zhc?t=tools_v").openConnection();
-            InputStream is = urlConnection.getInputStream();
-            byte[] b = new byte[urlConnection.getContentLength()];
-            System.out.println("is.read(b) = " + is.read(b));
-            return b[0];
-        } catch (IOException ignored) {
-
-        }
-        return 1;
-    }
-
     protected interface CheckForUpdateResultInterface {
         /**
          * callback
