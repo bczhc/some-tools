@@ -127,6 +127,8 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
         tv.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         tv.setBackgroundColor(Color.WHITE);
         tv.setId(R.id.tv);
+        class ColorParseException extends Exception {
+        }
         barRL.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this.context);
             EditText editText = new EditText(this.context);

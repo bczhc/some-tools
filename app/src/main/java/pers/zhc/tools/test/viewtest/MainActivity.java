@@ -1,19 +1,19 @@
 package pers.zhc.tools.test.viewtest;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ProgressBar;
-
+import android.view.ViewGroup;
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
+import pers.zhc.tools.views.ColorShowRL;
 
 public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_activity);
+        ColorShowRL colorShowRL = new ColorShowRL(this);
+        colorShowRL.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        this.setContentView(colorShowRL);
+        colorShowRL.setColor(Color.RED);
     }
 }
