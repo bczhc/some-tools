@@ -60,6 +60,8 @@ public class Document extends BaseActivity {
         deleteBtn.setOnClickListener(v -> {
             if (state.equals("del")) {
                 try {
+                    int x=sv.getScrollX();
+                    int y=sv.getScrollY();
                     for (int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++) {
                         LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
                         if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
@@ -68,6 +70,7 @@ public class Document extends BaseActivity {
                         }
                     }
                     setSVViews();
+                    sv.scrollTo(x,y);
                     topView = findViewById(R.id.note_top_view);
                     topView.removeAllViews();
                 } catch (Exception e) {
@@ -253,6 +256,8 @@ public class Document extends BaseActivity {
     }
 
     private void setSVViews() {
+        final int x=sv.getScrollX();
+        final int y=sv.getScrollY();         
         db = getDB(this);
         sv.removeAllViews();
         LinearLayout linearLayout = new LinearLayout(this);
@@ -339,8 +344,8 @@ public class Document extends BaseActivity {
                                                     db.execSQL("DELETE FROM doc WHERE t=" + millisecond);
                                                 } catch (Exception e) {
                                                     Common.showException(e, this);
-                                                }
-                                                setSVViews();
+                                                }        
+                                                setSVViews();      
                                                 dialog.dismiss();
                                             }, (dialog1, which) -> {
                                             }, R.string.whether_to_delete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
@@ -375,6 +380,21 @@ public class Document extends BaseActivity {
                     runOnUiThread(() -> linearLayout.addView(finalLlWithTimestamp1));
                 } while (cursor.moveToNext());
                 cursor.close();
+            });
+            sv.post(new Runnable() {
+            @Override
+            public void run() {
+            sv.scrollTo(x,y);
+                sv.scrollTo(x,y);
+                sv.scrollTo(x,y);
+                sv.scrollTo(x,y);
+                sv.scrollTo(x,y);
+                sv.scrollTo(x,y);
+                sv.scrollTo(x,y);
+                sv.scrollTo(x,y);
+                sv.scrollTo(x,y);
+            }
+
             });
         }
     }
