@@ -339,8 +339,8 @@ public class Document extends BaseActivity {
                                                     db.execSQL("DELETE FROM doc WHERE t=" + millisecond);
                                                 } catch (Exception e) {
                                                     Common.showException(e, this);
-                                                }        
-                                                setSVViews();      
+                                                }
+                                                setSVViews();
                                                 dialog.dismiss();
                                             }, (dialog1, which) -> {
                                             }, R.string.whether_to_delete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
