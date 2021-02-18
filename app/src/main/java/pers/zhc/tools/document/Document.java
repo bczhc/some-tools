@@ -376,7 +376,6 @@ public class Document extends BaseActivity {
                 } while (cursor.moveToNext());
                 cursor.close();
             });
-            });
         }
     }
 
