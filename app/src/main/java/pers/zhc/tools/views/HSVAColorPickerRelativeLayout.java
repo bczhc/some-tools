@@ -138,7 +138,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
             editText.setText(hexString);
             adb.setView(editText);
             adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
-               String s = editText.getText().toString();
+                String s = editText.getText().toString();
                 try {
                     if (s.charAt(0) == '#') s = s.substring(1);
                     if (s.length() < 6 || s.length() > 8)
@@ -164,58 +164,55 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
             AlertDialog ad = adb.create();
             ad.setButton(AlertDialog.BUTTON_NEUTRAL, this.context.getString(R.string.save_color), (dialog, which) -> {
 //保存颜色
-    LinearLayout saveColorLL=new LinearLayout(this.context);
-    HorizontalScrollView saveColorHSV=new HorizontalScrollView(this.context);
-    saveColorHSV.addView(saveColorLL);
-   final String[] s ={editText.getText().toString()};
-    try {
-        if (s[0].charAt(0) == '#') s[0] = s[0].substring(1);
-        if (s[0].length() < 6 || s[0].length() > 8)
-            throw new Exception("Illegal color hex string.");
-        if (s[0].length() == 6) s[0] = "#FF" + s[0];
-        else if (s[0].length() == 7) s[0] = "#0" + s[0];
-        else {
-            s[0] = "#" + s[0];
-        }
-        AlertDialog.Builder adb1 = new AlertDialog.Builder(this.context);
-        EditText nameET=new EditText(this.context);
-        nameET.setText(s[0]);
-        adb1.setView(nameET);
-        adb1.setPositiveButton(R.string.confirm, (dialog1, which1) -> {
-        if(((LinearLayout)this.getChildAt(0)).getChildCount() == 5)
-        {
-            //未保存过颜色时，创建HorizontalScrollView和linearlayout
-            ColorShowRL colorShowRL = new ColorShowRL(this.context) ;
-            LinearLayout.LayoutParams params= new LinearLayout.LayoutParams (LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(20,20,20,20);
-            colorShowRL.setLayoutParams(params);
-            colorShowRL.setColor(Color.parseColor(s[0]),nameET.getText().toString());
-            saveColorLL.addView(colorShowRL);
-            ((LinearLayout)this.getChildAt(0)).addView(saveColorHSV);
-        }
-        else
-        {
-            //保存过颜色就直接往里面加colorShowRL
-            ColorShowRL colorShowRL = new ColorShowRL(this.context) ;
-            LinearLayout.LayoutParams params= new LinearLayout.LayoutParams (LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(20,20,20,20);
-            colorShowRL.setLayoutParams(params);
-            colorShowRL.setColor(Color.parseColor(s[0]),nameET.getText().toString());
-            ((LinearLayout)((((HorizontalScrollView)((LinearLayout)this.getChildAt(0)).getChildAt(5))).getChildAt(0))).addView(colorShowRL);//往saveColorLL里面添加
-            }
-      });
-        adb1.setNegativeButton(R.string.cancel, (dialog1, which1) -> {
-        });
-        adb1.setTitle(R.string.color_naming);
-       AlertDialog ad1= adb1.create();
-        DialogUtil.setDialogAttr(ad1, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
-        DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(editText, ad1);
-        Selection.selectAll(nameET.getText());
-        ad1.show();
-    } catch (Exception e) {
-        e.printStackTrace();
-        ToastUtils.show(this.context, R.string.please_type_correct_value);
-    }
+                LinearLayout saveColorLL = new LinearLayout(this.context);
+                HorizontalScrollView saveColorHSV = new HorizontalScrollView(this.context);
+                saveColorHSV.addView(saveColorLL);
+                final String[] s = {editText.getText().toString()};
+                try {
+                    if (s[0].charAt(0) == '#') s[0] = s[0].substring(1);
+                    if (s[0].length() < 6 || s[0].length() > 8)
+                        throw new Exception("Illegal color hex string.");
+                    if (s[0].length() == 6) s[0] = "#FF" + s[0];
+                    else if (s[0].length() == 7) s[0] = "#0" + s[0];
+                    else {
+                        s[0] = "#" + s[0];
+                    }
+                    AlertDialog.Builder adb1 = new AlertDialog.Builder(this.context);
+                    EditText nameET = new EditText(this.context);
+                    nameET.setText(s[0]);
+                    adb1.setView(nameET);
+                    adb1.setPositiveButton(R.string.confirm, (dialog1, which1) -> {
+                        if (((LinearLayout) this.getChildAt(0)).getChildCount() == 5) {
+                            //未保存过颜色时，创建HorizontalScrollView和linearlayout
+                            ColorShowRL colorShowRL = new ColorShowRL(this.context);
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            params.setMargins(20, 20, 20, 20);
+                            colorShowRL.setLayoutParams(params);
+                            colorShowRL.setColor(Color.parseColor(s[0]), nameET.getText().toString());
+                            saveColorLL.addView(colorShowRL);
+                            ((LinearLayout) this.getChildAt(0)).addView(saveColorHSV);
+                        } else {
+                            //保存过颜色就直接往里面加colorShowRL
+                            ColorShowRL colorShowRL = new ColorShowRL(this.context);
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            params.setMargins(20, 20, 20, 20);
+                            colorShowRL.setLayoutParams(params);
+                            colorShowRL.setColor(Color.parseColor(s[0]), nameET.getText().toString());
+                            ((LinearLayout) ((((HorizontalScrollView) ((LinearLayout) this.getChildAt(0)).getChildAt(5))).getChildAt(0))).addView(colorShowRL);//往saveColorLL里面添加
+                        }
+                    });
+                    adb1.setNegativeButton(R.string.cancel, (dialog1, which1) -> {
+                    });
+                    adb1.setTitle(R.string.color_naming);
+                    AlertDialog ad1 = adb1.create();
+                    DialogUtil.setDialogAttr(ad1, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
+                    DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(editText, ad1);
+                    Selection.selectAll(nameET.getText());
+                    ad1.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ToastUtils.show(this.context, R.string.please_type_correct_value);
+                }
 
             });
             DialogUtil.setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);

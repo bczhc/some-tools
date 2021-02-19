@@ -563,7 +563,7 @@ public class WubiIME extends InputMethodService {
 
     public static String[] fetchCandidates(@NotNull SQLite3 wubiDictDatabase, @NotNull String wubiCodeStr) throws Exception {
         String tableName = "wubi_code_" + wubiCodeStr.charAt(0);
-        Statement statement = wubiDictDatabase.compileStatement("SELECT word FROM " + tableName +" WHERE code IS ?");
+        Statement statement = wubiDictDatabase.compileStatement("SELECT word FROM " + tableName + " WHERE code IS ?");
         statement.bindText(1, wubiCodeStr);
         statement.stepRow();
         Cursor cursor = statement.getCursor();

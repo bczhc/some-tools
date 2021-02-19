@@ -114,7 +114,7 @@ public class UsbSerialTest extends BaseActivity {
         super.finish();
     }
 
-    private static final byte[] buf = new byte[64*4];
+    private static final byte[] buf = new byte[64 * 4];
 
     public static byte[] timeoutRead(UsbSerialPort port, int size, int timeout) throws IOException {
         try {
@@ -122,7 +122,7 @@ public class UsbSerialTest extends BaseActivity {
                 throw new Exception("fd is -1");
             }
             JNI.JniTest.call(fd);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         int haveRead = 0;
