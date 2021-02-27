@@ -17,26 +17,22 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
-
 import org.jetbrains.annotations.NotNull;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ScrollEditText;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.utils.sqlite.SQLite3;
-import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.tools.utils.sqlite.Statement;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author bczhc
@@ -121,6 +117,7 @@ public class DiaryTakingActivity extends BaseActivity {
             actionBar.show();
         }
         final Intent intent = getIntent();
+        setResult(0, intent);
         int[] date = intent.getIntArrayExtra("date");
         if (date == null) {
             final Calendar calendar = Calendar.getInstance();
@@ -165,8 +162,7 @@ public class DiaryTakingActivity extends BaseActivity {
             ToastUtils.show(this, R.string.closed);
             return;
         }
-        boolean newRec = !SQLite.checkRecordExistence(diaryDatabase, "diary", "date", mDate.getDateString());
-        if (newRec) {
+        if (getIntent().getBooleanExtra("newRec", true)) {
             diaryDatabase.exec("INSERT INTO diary VALUES('" + mDate.getDateString() + "','')");
         }
     }
