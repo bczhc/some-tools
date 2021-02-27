@@ -1,5 +1,6 @@
 package pers.zhc.tools.inputmethod
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,11 +13,13 @@ import android.widget.TextView
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.Download
 import pers.zhc.tools.utils.ToastUtils
 import java.io.File
 import java.io.IOException
 import java.net.URL
+import java.util.concurrent.atomic.AtomicReference
 
 class WubiCodeSettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,17 +42,22 @@ class WubiCodeSettingActivity : BaseActivity() {
         listView.onItemClickListener = AdapterView.OnItemClickListener { _, view, position, _ ->
             arrayOf(
                 View.OnClickListener {
-                    try {
-                        val wubiDatabaseURL = URL(Common.getGithubRawFileURLString("bczhc", "master", "wubi_code.db"))
-                        val localWubiDatabaseFile = getLocalWubiDatabasePath(this)
-                        Download.startDownloadWithDialog(this, wubiDatabaseURL, File(localWubiDatabaseFile)) {
-                            runOnUiThread {
-                                ToastUtils.show(this, R.string.downloading_done)
+                    val dialog = AtomicReference<Dialog>()
+                    dialog.set(DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
+                        try {
+                            val wubiDatabaseURL = URL(Common.getGithubRawFileURLString("bczhc", "master", "wubi_code.db"))
+                            val localWubiDatabaseFile = getLocalWubiDatabasePath(this)
+                            Download.startDownloadWithDialog(this, wubiDatabaseURL, File(localWubiDatabaseFile)) {
+                                runOnUiThread {
+                                    ToastUtils.show(this, R.string.downloading_done)
+                                }
                             }
+                        } catch (e: IOException) {
+                            dialog.get().dismiss()
+                            Common.showException(e, this)
                         }
-                    } catch (e: IOException) {
-                        Common.showException(e, this)
-                    }
+                    }, R.string.whether_to_download))
+                    dialog.get().show()
                 },
                 View.OnClickListener {
                     startActivity(Intent(this, WubiDatabaseEditActivity::class.java))

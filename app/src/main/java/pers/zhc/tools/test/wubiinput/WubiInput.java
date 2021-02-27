@@ -1,38 +1,29 @@
 package pers.zhc.tools.test.wubiinput;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.inputmethod.WubiIME;
+import pers.zhc.tools.utils.ScrollEditText;
+import pers.zhc.tools.utils.sqlite.SQLite3;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.ScrollEditText;
-import pers.zhc.tools.utils.sqlite.SQLite3;
-
 public class WubiInput extends BaseActivity {
     private SQLite3 dictDB;
-
-    public static SQLite3 getWubiDictDatabase(Context ctx) {
-        SQLite3 dictDB = SQLite3.open(Common.getInternalDatabaseDir(ctx, "wubi_code.db").getPath());
-        dictDB.exec("BEGIN");
-        return dictDB;
-    }
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dictDB = getWubiDictDatabase(this);
+        dictDB = WubiIME.getWubiDictDatabase(this);
         setContentView(R.layout.wubi_input_activity);
         TextView candidateTV = findViewById(R.id.candidate);
         EditText wubiCodeET = findViewById(R.id.code);

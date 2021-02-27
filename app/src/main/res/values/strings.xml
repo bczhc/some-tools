@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">tools</string>
+    <string name="app_name" translatable="false">tools</string>
     <string name="str" translatable="false">%1$s</string>
     <string name="progress_tv" translatable="false">%1$f%%</string>
     <string name="select_file_or_directory">选择文件/目录</string>
@@ -10,7 +10,6 @@
     <string name="cancel">取消</string>
     <string name="encode_done">编码完成</string>
     <string name="decode_done">解码完成</string>
-    <!--    <string name="percent_100">100%</string>-->
     <string name="null_file">为空文件</string>
     <string name="native_error">内部错误</string>
     <string name="file_open_error">打开文件错误</string>
@@ -26,7 +25,7 @@
     <string name="iFileExtension">操作文件扩展名</string>
     <string name="oFileExtension">输出文件类型</string>
     <string name="settings">Settings</string>
-    <string name="saving_success">保存成功</string>
+    <string name="saving_succeeded">保存成功</string>
     <string name="expression_error">json表达错误</string>
     <string name="json_solve_error">json解析失败：</string>
     <!--    <string name="pathEdit">输入路径</string>-->
@@ -38,7 +37,7 @@
     <string name="toast" translatable="false">Toast</string>
     <string name="copy">复制</string>
     <string name="html_clipboard_unsupported">android版本不支持HTML放入剪切板</string>
-    <string name="copying_success">复制成功</string>
+    <string name="copying_succeeded">复制成功</string>
     <string name="html_content">html内容</string>
     <string name="put_in_clipboard">放入剪切板</string>
     <string name="tv_millis" translatable="false">%1dms</string>
@@ -77,21 +76,21 @@
     <string name="delete">删除</string>
     <string name="export">导出</string>
     <string name="import_">导入</string>
-    <string name="importing_success">导入成功</string>
-    <string name="exporting_success">导出成功</string>
+    <string name="importing_succeeded">导入成功</string>
+    <string name="exporting_succeeded">导出成功</string>
     <string name="importing_canceled">导入取消</string>
     <string name="drawing_board">画板</string>
-    <string name="copying_failure">复制失败</string>
+    <string name="copying_failed">复制失败</string>
     <string name="whether_to_delete">是否删除</string>
-    <string name="recording_success">记录成功</string>
+    <string name="recording_succeeded">记录成功</string>
     <string name="modification_record">修改记录</string>
-    <string name="updating_success">更新成功</string>
+    <string name="updating_succeeded">更新成功</string>
     <string name="save_image">保存图片</string>
     <string name="export_image">导出图片</string>
     <string name="save_path">保存路径</string>
     <string name="export_path">导出路径</string>
     <string name="import_path">导入路径</string>
-    <string name="saving_failure">保存失败</string>
+    <string name="saving_failed">保存失败</string>
     <string name="select_path_file">选择路径文件</string>
     <string name="type_file_name">输入文件名</string>
     <string name="type_stroke_width__pixels">输入画笔宽度(pixels)</string>
@@ -99,7 +98,7 @@
     <string name="drawing_paint_stroke_width">画笔大小</string>
     <string name="clear_application_caches">清除应用缓存（正在活动悬浮窗的会保留）\n(%1$fkB)</string>
     <string name="import_image">导入图片</string>
-    <string name="importing_failure">导入失败</string>
+    <string name="importing_failed">导入失败</string>
     <string name="set__top__left__scaled_width__scaled_height">设置左起始点、顶起始点、缩放宽度、缩放高度</string>
     <string name="board_w_h_info_and_bitmap_w_h_info">画板宽高：%1$d, %2$d%3$s图片宽高：%4$d, %5$d</string>
     <string name="left_starting_point">左起始点</string>
@@ -133,7 +132,6 @@
     <string name="thread_num">线程数</string>
     <string name="please_type_correct_value">请输入正确的值</string>
     <string name="fourier_series_in_complex">复平面内傅里叶级数展开</string>
-    <string name="s">s</string>
     <string name="appear_f_b">显示悬浮窗%1$s</string>
     <string name="hide_notification">隐藏通知</string>
     <string name="sort">排序</string>
@@ -158,7 +156,7 @@
     <string name="crash_bar">崩溃了……</string>
     <string name="upload">上传</string>
     <string name="upload_crash_report">上传崩溃报告</string>
-    <string name="uploading_failure">上传失败</string>
+    <string name="uploading_failed">上传失败</string>
     <string name="uploading">正在上传</string>
     <string name="upload_done">上传完成</string>
     <string name="please_choose">请选择…</string>
@@ -230,13 +228,13 @@
     <string name="password">密码</string>
     <string name="diary">日记</string>
     <string name="write_diary">写日记</string>
-    <string name="test">test</string>
+    <string name="test">测试</string>
     <string name="saved">已保存</string>
     <string name="record_time">记录时间</string>
     <string name="old_password">原密码</string>
     <string name="new_password">新密码</string>
     <string name="password_not_matching">密码不匹配</string>
-    <string name="change_success">修改成功</string>
+    <string name="change_succeeded">修改成功</string>
     <string name="enter_new_date">输入新的日期（yyyyMMdd格式）</string>
     <string name="change_date">修改日期</string>
     <string name="save_color">保存颜色</string>
@@ -272,7 +270,7 @@
     <string name="alphabet_mode">字母模式</string>
     <string name="wubi_input_method">五笔输入法</string>
     <string name="checking_local_needed_files">检查本地所需文件中</string>
-    <string name="shortcut_unsupport">不支持快捷方式</string>
+    <string name="shortcut_unsupported">不支持快捷方式</string>
     <string name="enable_tts">启用文本转语音</string>
     <string name="downloading_done">下载完成</string>
     <string name="attachment">附件</string>
@@ -315,9 +313,11 @@
     <string name="insert_index_1_leftmost">插入索引（从1开始）</string>
     <string name="char_or_word">字或词</string>
     <string name="enter_candidate_word">输入候选词</string>
-    <string name="add_successfully">添加成功</string>
-    <string name="add_failed">添加失败</string>
-    <string name="delete_successfully">删除成功</string>
-    <string name="new_add">新增</string>
+    <string name="adding_succeeded">添加成功</string>
+    <string name="adding_failed">添加失败</string>
+    <string name="deleting_succeeded">删除成功</string>
+    <string name="add_new_sth">新增</string>
     <string name="wubi_code">五笔编码</string>
+    <string name="deleting_failed">删除失败</string>
+    <string name="whether_to_download">是否下载</string>
 </resources>

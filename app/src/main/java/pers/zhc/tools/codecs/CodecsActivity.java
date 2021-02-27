@@ -131,7 +131,7 @@ public class CodecsActivity extends BaseActivity {
                         this.runOnUiThread(() -> toast(this.getString(R.string.json_solve_error) + e.toString()));
                     }
 //                    this.creat();
-                    ToastUtils.show(this, R.string.saving_success);
+                    ToastUtils.show(this, R.string.saving_succeeded);
                 }
                 break;
         }

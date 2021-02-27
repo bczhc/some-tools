@@ -1,5 +1,6 @@
 package pers.zhc.tools.inputmethod;
 
+import android.content.Context;
 import android.inputmethodservice.InputMethodService;
 import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
@@ -7,9 +8,9 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
-import pers.zhc.tools.test.wubiinput.WubiInput;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
@@ -109,7 +110,7 @@ public class WubiIME extends InputMethodService {
     private final StringBuilder wubiCodeSB = new StringBuilder();
     private final Quotation quotation = new Quotation();
     private final List<String> candidates = new ArrayList<>();
-    private SQLite3 wubiDictDB = null;
+    private static SQLite3 wubiDictDB = null;
     private TextView candidateTV, wubiCodeTV;
     private boolean alphabetMode = false;
     private InputConnection ic;
@@ -433,9 +434,17 @@ public class WubiIME extends InputMethodService {
     @Override
     public View onCreateInputView() {
         if (wubiDictDB == null) {
-            wubiDictDB = WubiInput.getWubiDictDatabase(this);
+            wubiDictDB = getWubiDictDatabase(this);
         }
         return super.onCreateInputView();
+    }
+
+    @NotNull
+    public static synchronized SQLite3 getWubiDictDatabase(Context ctx) {
+        if (wubiDictDB == null || wubiDictDB.isClosed()) {
+            wubiDictDB = SQLite3.open(Common.getInternalDatabaseDir(ctx, "wubi_code.db").getPath());
+        }
+        return wubiDictDB;
     }
 
     @Override
@@ -555,22 +564,38 @@ public class WubiIME extends InputMethodService {
             candidates.add(lastWord);
         } else try {
             String[] fetched = fetchCandidates(wubiDictDB, wubiCodeStr);
-            this.candidates.addAll(Arrays.asList(fetched));
-        } catch (Exception ignored) {
-            // no such table xxx
+            if (fetched != null) {
+                this.candidates.addAll(Arrays.asList(fetched));
+            }
+        } catch (RuntimeException ignored) {
+            // no such table
         }
     }
 
-    public static String[] fetchCandidates(@NotNull SQLite3 wubiDictDatabase, @NotNull String wubiCodeStr) throws Exception {
-        String tableName = "wubi_code_" + wubiCodeStr.charAt(0);
-        Statement statement = wubiDictDatabase.compileStatement("SELECT word FROM " + tableName + " WHERE code IS ?");
-        statement.bindText(1, wubiCodeStr);
-        statement.stepRow();
-        Cursor cursor = statement.getCursor();
-        String selected = cursor.getText(0);
-        statement.release();
-
-        return selected.split("\\|");
+    /**
+     * Fetch wubi candidate words.
+     * @param wubiDictDatabase wubi dictionary database
+     * @param wubiCodeStr      wubi code
+     * @return fetched candidates string arr, null if not found the specified wubi code (no such column)
+     * @throws RuntimeException sqlite error, such as io error or no such table error.
+     */
+    @Nullable
+    public static String[] fetchCandidates(@NotNull SQLite3 wubiDictDatabase, @NotNull String wubiCodeStr) throws RuntimeException {
+        String[] r = null;
+        try {
+            String tableName = "wubi_code_" + wubiCodeStr.charAt(0);
+            Statement statement = wubiDictDatabase.compileStatement("SELECT word FROM " + tableName + " WHERE code IS ?");
+            statement.bindText(1, wubiCodeStr);
+            Cursor cursor = statement.getCursor();
+            if (cursor.step()) {
+                String selected = cursor.getText(0);
+                r = selected.split("\\|");
+            }
+            statement.release();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return r;
     }
 
     /**

@@ -10,21 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
+import androidx.annotation.StringRes;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
-
-import pers.zhc.tools.characterscounter.CounterTest;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.crashhandler.CrashTest;
@@ -36,18 +25,24 @@ import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.stcflash.FlashMainActivity;
-import pers.zhc.tools.test.*;
+import pers.zhc.tools.test.DrawingBoardTest;
+import pers.zhc.tools.test.RegExpTest;
+import pers.zhc.tools.test.SensorTest;
+import pers.zhc.tools.test.TTS;
 import pers.zhc.tools.test.jni.Test;
 import pers.zhc.tools.test.malloctest.MAllocTest;
-import pers.zhc.tools.test.pressuretest.PressureTest;
-import pers.zhc.tools.test.service.ServiceActivity;
-import pers.zhc.tools.test.theme.SetTheme;
 import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
-import pers.zhc.tools.test.wubiinput.WubiInput;
-import pers.zhc.tools.test.youdaoapi.YouDaoTranslate;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.u.common.ReadIS;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author bczhc
@@ -66,7 +61,7 @@ public class MainActivity extends BaseActivity {
 
     private void shortcut(int texts, Class<?> theClass, int id) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-            ToastUtils.show(this, R.string.shortcut_unsupport);
+            ToastUtils.show(this, R.string.shortcut_unsupported);
             return;
         }
         if (shortcutManager == null) {
@@ -118,74 +113,42 @@ public class MainActivity extends BaseActivity {
         shortcutManager.setDynamicShortcuts(newShortCutInfoList);
     }
 
+    private static class AnActivity {
+        private final @StringRes
+        int textIntRes;
+        private final Class<?> activityClass;
+
+        public AnActivity(int textIntRes, Class<?> activityClass) {
+            this.textIntRes = textIntRes;
+            this.activityClass = activityClass;
+        }
+    }
+
     private void init() {
         LinearLayout ll = findViewById(R.id.ll);
-        final int[] texts = new int[]{
-                R.string.some_codecs,
-                R.string.generate_pi,
-                R.string.toast,
-                R.string.put_in_clipboard,
-                R.string.floating_drawing_board,
-                R.string.fourier_series_calc,
-                R.string.notes,
-                R.string.fourier_series_in_complex,
-                R.string.s,
-                R.string.view_test,
-                R.string.set_theme,
-                R.string.math_expression_evaluation_test,
-                R.string.sensor_test,
-                R.string.input_event,
-                R.string.surface_view_test,
-                R.string.serviceTest,
-                R.string.you_dao_translate_interface_invoke,
-                R.string.crash_test,
-                R.string.m_alloc_test,
-                R.string.diary,
-                R.string.pressure_test,
-                R.string.document_provider_test,
-                R.string.characters_counter_test,
-                R.string.type_test,
-                R.string.tts_test,
-                R.string.regular_expression_test,
-                R.string.wubi_test,
-                R.string.wubi_input_method,
-                R.string.usb_serial_test,
-                R.string.stc_flash,
-                R.string.drawing_board_test
+
+        AnActivity[] activities = {
+                new AnActivity(R.string.some_codecs, CodecsActivity.class),
+                new AnActivity(R.string.generate_pi, Pi.class),
+                new AnActivity(R.string.toast, ToastTest.class),
+                new AnActivity(R.string.put_in_clipboard, Clip.class),
+                new AnActivity(R.string.floating_drawing_board, FloatingDrawingBoardMainActivity.class),
+                new AnActivity(R.string.fourier_series_calc, FunctionDrawingBoard.class),
+                new AnActivity(R.string.notes, Document.class),
+                new AnActivity(R.string.fourier_series_in_complex, EpicyclesEdit.class),
+                new AnActivity(R.string.test, Test.class),
+                new AnActivity(R.string.sensor_test, SensorTest.class),
+                new AnActivity(R.string.crash_test, CrashTest.class),
+                new AnActivity(R.string.m_alloc_test, MAllocTest.class),
+                new AnActivity(R.string.diary, DiaryMainActivity.class),
+                new AnActivity(R.string.type_test, TypeTest.class),
+                new AnActivity(R.string.tts_test, TTS.class),
+                new AnActivity(R.string.regular_expression_test, RegExpTest.class),
+                new AnActivity(R.string.wubi_input_method, WubiInputMethodActivity.class),
+                new AnActivity(R.string.stc_flash, FlashMainActivity.class),
+                new AnActivity(R.string.drawing_board_test, DrawingBoardTest.class)
         };
-        final Class<?>[] classes = new Class[]{
-                CodecsActivity.class,
-                Pi.class,
-                ToastTest.class,
-                Clip.class,
-                FloatingDrawingBoardMainActivity.class,
-                FunctionDrawingBoard.class,
-                Document.class,
-                EpicyclesEdit.class,
-                Test.class,
-                pers.zhc.tools.test.viewtest.MainActivity.class,
-                SetTheme.class,
-                MathExpressionEvaluationTest.class,
-                SensorTest.class,
-                InputEvent.class,
-                SurfaceViewTest.class,
-                ServiceActivity.class,
-                YouDaoTranslate.class,
-                CrashTest.class,
-                MAllocTest.class,
-                DiaryMainActivity.class,
-                PressureTest.class,
-                DocumentProviderTest.class,
-                CounterTest.class,
-                TypeTest.class,
-                TTS.class,
-                RegExpTest.class,
-                WubiInput.class,
-                WubiInputMethodActivity.class,
-                UsbSerialTest.class,
-                FlashMainActivity.class,
-                DrawingBoardTest.class
-        };
+
         CountDownLatch mainTextLatch = new CountDownLatch(1);
         new Thread(() -> {
             JSONObject jsonObject = null;
@@ -220,21 +183,23 @@ public class MainActivity extends BaseActivity {
         }).start();
         new Thread(() -> {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            for (int i = 0; i < texts.length; i++) {
+
+            for (int i = 0; i < activities.length; i++) {
+                AnActivity activity = activities[i];
                 Button btn = new Button(this);
-                btn.setText(texts[i]);
+                btn.setText(activity.textIntRes);
                 btn.setTextSize(25F);
                 btn.setAllCaps(false);
                 btn.setLayoutParams(lp);
-                int finalI = i;
                 btn.setOnClickListener(v -> {
                     Intent intent = new Intent();
-                    intent.setClass(this, classes[finalI]);
+                    intent.setClass(this, activity.activityClass);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_bottom, 0);
                 });
+                int finalI = i;
                 btn.setOnLongClickListener(v -> {
-                    shortcut(texts[finalI], classes[finalI], finalI);
+                    shortcut(activity.textIntRes, activity.activityClass, finalI);
                     return true;
                 });
                 runOnUiThread(() -> ll.addView(btn));

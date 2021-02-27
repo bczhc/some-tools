@@ -71,7 +71,7 @@ public class CrashReportActivity extends BaseActivity {
             if (cm != null) {
                 ClipData cd = ClipData.newPlainText("exception", content);
                 cm.setPrimaryClip(cd);
-                ToastUtils.show(this, R.string.copying_success);
+                ToastUtils.show(this, R.string.copying_succeeded);
             }
             // for debugging
             System.err.println(exception);
@@ -135,9 +135,9 @@ public class CrashReportActivity extends BaseActivity {
             } catch (IOException e) {
                 e.printStackTrace();
                 runOnUiThread(() -> {
-                    ToastUtils.showError(this, R.string.uploading_failure, e);
+                    ToastUtils.showError(this, R.string.uploading_failed, e);
                     uploadStateTextView.setTextColor(Color.RED);
-                    uploadStateTextView.setText(R.string.uploading_failure);
+                    uploadStateTextView.setText(R.string.uploading_failed);
                 });
             }
         }).start();

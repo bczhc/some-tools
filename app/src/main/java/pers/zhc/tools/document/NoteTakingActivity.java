@@ -74,7 +74,7 @@ public class NoteTakingActivity extends Document {
                 cv.put("content", content_et.getText().toString());
                 try {
                     db.insertOrThrow("doc", null, cv);
-                    ToastUtils.show(this, R.string.recording_success);
+                    ToastUtils.show(this, R.string.recording_succeeded);
                 } catch (SQLException e) {
                     Common.showException(e, this);
                 }
@@ -84,7 +84,7 @@ public class NoteTakingActivity extends Document {
                     values.put("title", title_et.getText().toString());
                     values.put("content", content_et.getText().toString());
                     db.update("doc", values, "t=?", new String[]{String.valueOf(millisecond)});
-                    ToastUtils.show(this, R.string.updating_success);
+                    ToastUtils.show(this, R.string.updating_succeeded);
                 } catch (Exception e) {
                     Common.showException(e, this);
                 }

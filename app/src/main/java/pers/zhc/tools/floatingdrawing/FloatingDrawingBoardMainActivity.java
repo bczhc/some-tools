@@ -243,7 +243,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 childTextViews[6].setText(R.string.drawing_mode);
                 strings[6] = getString(R.string.drawing_mode);
             }
-            ToastUtils.show(this, R.string.importing_success);
+            ToastUtils.show(this, R.string.importing_succeeded);
         };
         this.optionsLinearLayout = new LinearLayout(this);
         optionsLinearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -1077,7 +1077,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         EditText[] editTexts = new EditText[4];
                         Bitmap imageBitmap;
                         if ((imageBitmap = BitmapFactory.decodeFile(s)) == null) {
-                            ToastUtils.show(this, R.string.importing_failure);
+                            ToastUtils.show(this, R.string.importing_failed);
                             return;
                         }
                         Point point = new Point();
@@ -1113,7 +1113,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                             throw new Exception("math expression invalid");
                                         }
                                         pv.importImage(imageBitmap, ((float) c1), ((float) c2), ((int) c3), ((int) c4));
-                                        ToastUtils.show(this, R.string.importing_success);
+                                        ToastUtils.show(this, R.string.importing_succeeded);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                         ToastUtils.show(this, R.string.type_error);
@@ -1183,9 +1183,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             e.printStackTrace();
                         }
                         if (pathFile.exists()) {
-                            ToastUtils.show(this, getString(R.string.saving_success) + "\n" + pathFile.toString());
+                            ToastUtils.show(this, getString(R.string.saving_succeeded) + "\n" + pathFile.toString());
                         } else {
-                            ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failure), et.toString()));
+                            ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
                         }
                         moreOptionsDialog.dismiss();
                     }).setNegativeButton(R.string.cancel, (dialog, which) -> {

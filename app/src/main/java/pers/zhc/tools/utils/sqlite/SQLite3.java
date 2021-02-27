@@ -34,6 +34,11 @@ public class SQLite3 {
         isClosed = true;
     }
 
+    /**
+     * execute SQLite statement with callback
+     * @param cmd statement
+     * @param callback callback
+     */
     public void exec(String cmd, JNI.Sqlite3.SqliteExecCallback callback) {
         JNI.Sqlite3.exec(this.id, cmd, callback);
     }
@@ -57,6 +62,19 @@ public class SQLite3 {
             e.printStackTrace();
         }
         return r.get();
+    }
+
+    public boolean hasRecord(String selectSql) {
+        int[] c = {0};
+        try {
+            this.exec(selectSql, contents -> {
+                ++c[0];
+                return 1;
+            });
+        } catch (Exception ignored) {
+            // terminate exception
+        }
+        return c[0] != 0;
     }
 
     public boolean checkIfCorrupt() {

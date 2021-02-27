@@ -53,12 +53,17 @@ class WubiDatabaseEditActivity : BaseActivity() {
         var wubiCodeStr = ""
 
         val setCandidateWords = AtomicReference<Runnable>()
-        setCandidateWords.set(Runnable {
+        setCandidateWords.set {
             wubiCodeStr = wubiCodeET.text.toString()
             var fetchCandidates: Array<String>? = null
+            candidateList.clear()
             try {
                 fetchCandidates = WubiIME.fetchCandidates(dictDatabase, wubiCodeStr)
             } catch (_: Exception) {
+                wubiCandidatesLL.removeAllViews()
+            }
+            if (fetchCandidates == null) {
+                // no such column
                 wubiCandidatesLL.removeAllViews()
             }
             if (fetchCandidates != null && fetchCandidates.isNotEmpty()) {
@@ -74,6 +79,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
                     tv.textSize = 20F
                     tv.text = String.format("%d. %s", i + 1, fetchCandidates[i])
                     tv.setOnLongClickListener {
+                        // delete word
                         val deleteDialog = DialogUtil.createConfirmationAlertDialog(
                             this,
                             { _, _ ->
@@ -81,9 +87,9 @@ class WubiDatabaseEditActivity : BaseActivity() {
                                 val wordsCombinedStr = getWordsCombinedStr(candidateList)
                                 try {
                                     updateWordRecord(dictDatabase, wubiCodeET.text.toString(), wordsCombinedStr)
-                                    ToastUtils.show(this, R.string.delete_successfully)
+                                    ToastUtils.show(this, R.string.deleting_succeeded)
                                 } catch (e: Exception) {
-                                    ToastUtils.showError(this, R.string.add_failed, e)
+                                    ToastUtils.showError(this, R.string.deleting_failed, e)
                                 } finally {
                                     setCandidateWords.get().run()
                                 }
@@ -99,10 +105,9 @@ class WubiDatabaseEditActivity : BaseActivity() {
                     }
                     wubiCandidatesLL.addView(tv)
                 }
-                candidateList.clear()
                 fetchCandidates.forEach { candidateList.add(it) }
             }
-        })
+        }
 
         wubiCodeET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -142,16 +147,16 @@ class WubiDatabaseEditActivity : BaseActivity() {
 
                     try {
                         updateWordRecord(dictDatabase, wubiCodeStr, newWordStr)
-                        ToastUtils.show(this, R.string.add_successfully)
+                        ToastUtils.show(this, R.string.adding_succeeded)
                     } catch (e: Exception) {
-                        ToastUtils.showError(this, R.string.add_failed, e)
+                        ToastUtils.showError(this, R.string.adding_failed, e)
                     } finally {
                         setCandidateWords.get().run()
                     }
                 },
                 { _, _ -> },
                 inflate,
-                R.string.new_add,
+                R.string.add_new_sth,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 false
@@ -159,14 +164,33 @@ class WubiDatabaseEditActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Update wubi word record.
+     *
+     * If no such column found, it'll create a new record.
+     *
+     * When after deleting and there's no candidates left, it'll delete the column.
+     */
     private fun updateWordRecord(dictDatabase: SQLite3, wubiCodeStr: String, newWordStr: String) {
-        val statement = dictDatabase.compileStatement(
-            "UPDATE wubi_code_${wubiCodeStr[0]} SET word = ? WHERE code is ?"
-        )
-        statement.bindText(1, newWordStr)
-        statement.bindText(2, wubiCodeStr)
-        statement.step()
-        statement.release()
+        val hasRecord = dictDatabase.hasRecord("SELECT * FROM wubi_code_${wubiCodeStr[0]} WHERE code is '$wubiCodeStr'")
+        if (hasRecord) {
+            // update record
+            val statement = dictDatabase.compileStatement(
+                "UPDATE wubi_code_${wubiCodeStr[0]} SET word = ? WHERE code is ?"
+            )
+            statement.bindText(1, newWordStr)
+            statement.bindText(2, wubiCodeStr)
+            statement.step()
+            statement.release()
+        } else {
+            // add new record
+            dictDatabase.exec("INSERT INTO wubi_code_${wubiCodeStr[0]} VALUES('$wubiCodeStr', '$newWordStr')")
+        }
+
+        if (!newWordStr.matches(Regex("\\|"))) {
+            // have deleted the last left word
+            dictDatabase.exec("DELETE FROM wubi_code_${wubiCodeStr[0]} WHERE code is '$wubiCodeStr'")
+        }
     }
 
     private fun getWordsCombinedStr(candidateList: List<String>): String {

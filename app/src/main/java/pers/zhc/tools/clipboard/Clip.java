@@ -29,10 +29,10 @@ public class Clip extends BaseActivity {
                 ClipData cd = ClipData.newHtmlText("", getString(R.string.html_content), s);
                 try {
                     Objects.requireNonNull(cm).setPrimaryClip(cd);
-                    ToastUtils.show(this, getString(R.string.copying_success));
+                    ToastUtils.show(this, getString(R.string.copying_succeeded));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ToastUtils.show(this, R.string.copying_failure);
+                    ToastUtils.show(this, R.string.copying_failed);
                 }
             } else {
                 ToastUtils.show(this, getString(R.string.html_clipboard_unsupported));

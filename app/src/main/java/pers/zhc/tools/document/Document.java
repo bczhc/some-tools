@@ -174,7 +174,7 @@ public class Document extends BaseActivity {
                     }
                     final AlertDialog confirmationAlertDialog = DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
                                 setSVViews();
-                                ToastUtils.show(this, R.string.importing_success);
+                                ToastUtils.show(this, R.string.importing_succeeded);
                             }, (dialog, which) -> {
                                 ToastUtils.show(this, R.string.importing_canceled);
                             }, R.string.whether_to_import_notes
@@ -185,10 +185,10 @@ public class Document extends BaseActivity {
                             confirmationAlertDialog.show();
                         } else {
                             setSVViews();
-                            ToastUtils.show(this, R.string.importing_success);
+                            ToastUtils.show(this, R.string.importing_succeeded);
                         }
                     } else {
-                        ToastUtils.show(this, R.string.copying_failure);
+                        ToastUtils.show(this, R.string.copying_failed);
                     }
                 }
                 break;
@@ -233,7 +233,7 @@ public class Document extends BaseActivity {
                             File destFile = new File(destFileDir + File.separator + filename.getText() + ".db");
                             FileU.FileCopy(file, destFile);
                             if (destFile.exists()) {
-                                ToastUtils.show(this, getString(R.string.exporting_success) + "\n" + destFile.getCanonicalPath());
+                                ToastUtils.show(this, getString(R.string.exporting_succeeded) + "\n" + destFile.getCanonicalPath());
                             }
                         } catch (IOException e) {
                             Common.showException(e, this);

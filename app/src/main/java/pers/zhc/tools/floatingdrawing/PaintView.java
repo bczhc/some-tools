@@ -326,9 +326,9 @@ public class PaintView extends View {
             }
             handler.post(() -> {
                 if (f.exists()) {
-                    ToastUtils.show(ctx, ctx.getString(R.string.saving_success) + "\n" + f.toString());
+                    ToastUtils.show(ctx, ctx.getString(R.string.saving_succeeded) + "\n" + f.toString());
                 } else {
-                    ToastUtils.show(ctx, R.string.saving_failure);
+                    ToastUtils.show(ctx, R.string.saving_failed);
                 }
             });
         }).start();
@@ -829,7 +829,7 @@ public class PaintView extends View {
         Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
         mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
         if (backgroundBitmap == null) {
-            ToastUtils.show(ctx, ctx.getString(R.string.importing_failure));
+            ToastUtils.show(ctx, ctx.getString(R.string.importing_failed));
         } else {
             headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         }

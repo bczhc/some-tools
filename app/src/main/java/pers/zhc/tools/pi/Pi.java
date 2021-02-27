@@ -71,7 +71,7 @@ public class Pi extends BaseActivity {
                 } else {
                     ToastUtils.show(this, "null");
                 }
-                ToastUtils.show(this, R.string.copying_success);
+                ToastUtils.show(this, R.string.copying_succeeded);
             } else {
                 ToastUtils.show(this, R.string.null_string);
             }

@@ -7,6 +7,7 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -78,6 +79,12 @@ public class DialogUtil {
         setDialogAttr(ad, false, width, height, applicationOverlay);
         ad.setCanceledOnTouchOutside(true);
         return ad;
+    }
+
+    @NotNull
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, int titleId) {
+        return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
+        }, titleId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
     }
 
     public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {

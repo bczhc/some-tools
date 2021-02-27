@@ -251,9 +251,9 @@ public class DiaryMainActivity extends BaseActivity {
         }).start();
         latch.await();
         if (status.get()) {
-            ToastUtils.show(this, R.string.importing_success);
+            ToastUtils.show(this, R.string.importing_succeeded);
         } else {
-            ToastUtils.show(this, R.string.copying_failure);
+            ToastUtils.show(this, R.string.copying_failed);
         }
         diaryDatabase = getDiaryDatabase(this);
         refresh();
@@ -275,9 +275,9 @@ public class DiaryMainActivity extends BaseActivity {
         }).start();
         latch.await();
         if (status.get()) {
-            ToastUtils.show(this, R.string.exporting_success);
+            ToastUtils.show(this, R.string.exporting_succeeded);
         } else {
-            ToastUtils.show(this, R.string.copying_failure);
+            ToastUtils.show(this, R.string.copying_failed);
         }
     }
 
@@ -293,7 +293,7 @@ public class DiaryMainActivity extends BaseActivity {
             String old = oldPasswordET.getText().toString();
             if (currentPasswordDigest.isEmpty() || currentPasswordDigest.equals(JNI.Diary.myDigest(old))) {
                 setPassword(newPasswordET.getText().toString());
-                ToastUtils.show(this, R.string.change_success);
+                ToastUtils.show(this, R.string.change_succeeded);
                 dialog.dismiss();
             } else ToastUtils.show(this, R.string.password_not_matching);
         });
