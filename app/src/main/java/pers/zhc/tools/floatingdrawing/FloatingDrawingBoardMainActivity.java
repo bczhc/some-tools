@@ -146,6 +146,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void init() {
+
         currentInstanceMillisecond = System.currentTimeMillis();
         internalPathDir = getFilesDir().getPath() + File.separatorChar + "path";
         File currentInternalPathDir = new File(internalPathDir);

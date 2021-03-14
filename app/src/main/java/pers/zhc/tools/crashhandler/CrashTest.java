@@ -14,8 +14,6 @@ public class CrashTest extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //noinspection NumericOverflow,divzero
-        final int r = 1 / 0;
-        ToastUtils.show(this, String.valueOf(r));
+        throw new RuntimeException("test");
     }
 }
