@@ -47,15 +47,12 @@
             </intent-filter>
         </receiver>
 
-        <service
-                android:name=".test.service.MyService"
-                android:enabled="true"
-                android:exported="true"
-                android:icon="@drawable/ic_zhc_logo"
-                android:label="s1"
-                android:process=":service"
-                tools:ignore="ExportedService"/>
-        <!-- Declares the input imput_method service -->
+        <service android:name=".test.Demo$MyService"
+                 android:exported="false"
+                 android:description="@string/my_service"
+        />
+
+        <!-- Declares the input input_method service -->
         <service
                 android:name=".inputmethod.WubiIME"
                 android:permission="android.permission.BIND_INPUT_METHOD">
@@ -64,7 +61,7 @@
             </intent-filter>
             <meta-data
                     android:name="android.view.im"
-                    android:resource="@xml/imput_method"/>
+                    android:resource="@xml/input_method"/>
         </service>
         <provider
                 android:name="androidx.core.content.FileProvider"
@@ -419,7 +416,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".test.jni.Test"
+                android:name=".test.Demo"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/AppTheme">
             <intent-filter>

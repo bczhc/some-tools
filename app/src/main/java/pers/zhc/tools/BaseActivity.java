@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.LinkedList;
 import java.util.Stack;
 
 import pers.zhc.tools.crashhandler.CrashHandler;
@@ -55,7 +56,6 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * onConfigurationChanged
-     * the package:android.content.res.Configuration.
      *
      * @param newConfig, The new device configuration.
      *                   当设备配置信息有改动（比如屏幕方向的改变，实体键盘的推开或合上等）时，

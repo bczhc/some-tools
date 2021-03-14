@@ -29,7 +29,7 @@ import pers.zhc.tools.test.DrawingBoardTest;
 import pers.zhc.tools.test.RegExpTest;
 import pers.zhc.tools.test.SensorTest;
 import pers.zhc.tools.test.TTS;
-import pers.zhc.tools.test.jni.Test;
+import pers.zhc.tools.test.Demo;
 import pers.zhc.tools.test.malloctest.MAllocTest;
 import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
@@ -136,7 +136,7 @@ public class MainActivity extends BaseActivity {
                 new AnActivity(R.string.fourier_series_calc, FunctionDrawingBoard.class),
                 new AnActivity(R.string.notes, Document.class),
                 new AnActivity(R.string.fourier_series_in_complex, EpicyclesEdit.class),
-                new AnActivity(R.string.test, Test.class),
+                new AnActivity(R.string.test, Demo.class),
                 new AnActivity(R.string.sensor_test, SensorTest.class),
                 new AnActivity(R.string.crash_test, CrashTest.class),
                 new AnActivity(R.string.m_alloc_test, MAllocTest.class),

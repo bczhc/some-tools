@@ -1,33 +1,41 @@
 package pers.zhc.tools.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
-
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 
 public class ToastUtils {
     private static Toast toast;
 
     public static void show(Context ctx, @StringRes int strRes) {
-        if (ToastUtils.toast != null) {
-            ToastUtils.toast.cancel();
-        }
-        ToastUtils.toast = Toast.makeText(ctx, strRes, Toast.LENGTH_SHORT);
-        ToastUtils.toast.show();
+        show(ctx, ctx.getString(strRes));
     }
 
-    public static void show(Context ctx, @NonNull CharSequence charSequence) {
-        ((AppCompatActivity) ctx).runOnUiThread(() -> {
-            if (ToastUtils.toast != null) {
-                ToastUtils.toast.cancel();
-            }
-            ToastUtils.toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
-            ToastUtils.toast.show();
-        });
+    /**
+     * Toast.
+     *
+     * @param ctx          context
+     * @param charSequence string
+     */
+    public static void show(Context ctx, @NotNull CharSequence charSequence) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    /**
+     * Toast on UI Thread.
+     *
+     * @param activity     activity
+     * @param charSequence string
+     */
+    public static void show(Activity activity, @NotNull CharSequence charSequence) {
+        activity.runOnUiThread(() -> show((Context) activity, charSequence));
     }
 
     public static void showError(Context ctx, @StringRes int error_msg_resId, Exception e) {
