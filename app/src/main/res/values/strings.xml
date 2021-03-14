@@ -320,4 +320,5 @@
     <string name="wubi_code">五笔编码</string>
     <string name="deleting_failed">删除失败</string>
     <string name="whether_to_download">是否下载</string>
+    <string name="my_service">My service</string>
 </resources>
