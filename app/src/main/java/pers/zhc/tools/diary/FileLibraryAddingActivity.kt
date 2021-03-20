@@ -46,7 +46,7 @@ class FileLibraryAddingActivity : BaseActivity() {
             val description = descriptionET.text.toString()
 
             val hasRecord =
-                diaryDatabase.hasRecord("SELECT * FROM diary_attachment_file WHERE identifier IS $identifier")
+                diaryDatabase.hasRecord("SELECT * FROM diary_attachment_file WHERE identifier IS '$identifier'")
             if (hasRecord) {
                 DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
                     val statement =
@@ -73,6 +73,7 @@ class FileLibraryAddingActivity : BaseActivity() {
                 statement.release()
 
                 ToastUtils.show(this, R.string.adding_done)
+                finish()
             }
         }
     }

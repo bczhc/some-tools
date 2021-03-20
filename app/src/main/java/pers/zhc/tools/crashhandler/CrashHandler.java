@@ -32,8 +32,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     static void save2File(Context ctx, String filename, String content) {
-        final File crashDir = new File(Common.getExternalStoragePath(ctx), ctx.getString(R.string.some_tools_app)
-                + File.separatorChar + ctx.getString(R.string.crash));
+        final File crashDir = new File(Common.getAppMainExternalStoragePath(ctx) + File.separatorChar + "crash");
         if (!crashDir.exists()) {
             Log.d(CrashHandler.class.getName(), "save2File: " + crashDir.mkdirs());
         }

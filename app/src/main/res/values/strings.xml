@@ -149,7 +149,6 @@
     <string name="color_naming">颜色命名</string>
     <string name="math_expression_evaluation_test">数学表达式解析测试</string>
     <string name="crash">crash</string>
-    <string name="some_tools_app">some-tools-app</string>
     <string name="crash_sorry_toast_information">很抱歉,程序出现异常</string>
     <string name="upload_crash_report_done">上传崩溃报告成功</string>
     <string name="sensor_test">传感器测试</string>
@@ -331,6 +330,10 @@
     <string name="storage_type">存储类型</string>
     <string name="storage_type_is">存储类型：%1$s</string>
     <string name="add_time_is">添加时间：%1$s</string>
-    <string name="description_is">描述：%1$s</string>
+    <string name="description_is">描述：</string>
     <string name="attachment_local_storage_path_is">附件本地存储目录：</string>
+    <string name="change">修改</string>
+    <string name="restore_to_default">恢复默认</string>
+    <string name="pick_folder">选择目录</string>
+    <string name="creating_succeeded">创建成功</string>
 </resources>

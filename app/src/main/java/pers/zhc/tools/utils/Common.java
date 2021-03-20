@@ -91,5 +91,14 @@ public class Common {
         }
     }
 
-//    public static void
+    @NotNull
+    public static String getAppMainExternalStoragePath(Context ctx) {
+        return getExternalStoragePath(ctx) + File.separatorChar + "some-tools-app";
+    }
+
+    @NotNull
+    @Contract("_ -> new")
+    public static File getAppMainExternalStoragePathFile(Context ctx) {
+        return new File(getExternalStoragePath(ctx), "some-tools-app");
+    }
 }

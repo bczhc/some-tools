@@ -36,7 +36,8 @@ public class SQLite3 {
 
     /**
      * execute SQLite statement with callback
-     * @param cmd statement
+     *
+     * @param cmd      statement
      * @param callback callback
      */
     public void exec(String cmd, JNI.Sqlite3.SqliteExecCallback callback) {
@@ -88,5 +89,13 @@ public class SQLite3 {
 
     public String getDatabasePath() {
         return databasePath;
+    }
+
+    public void beginTransaction() {
+        this.exec("BEGIN TRANSACTION ");
+    }
+
+    public void commit() {
+        this.exec("COMMIT ");
     }
 }

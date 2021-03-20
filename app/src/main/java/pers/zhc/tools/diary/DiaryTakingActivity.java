@@ -90,6 +90,9 @@ public class DiaryTakingActivity extends BaseActivity {
                             case "，":
                                 changed = "逗号";
                                 break;
+                            case "\n":
+                                changed = "换行";
+                                break;
                             default:
                                 break;
                         }

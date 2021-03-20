@@ -1,44 +1,81 @@
 package pers.zhc.tools.diary
 
 import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.TextView
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.filepicker.FilePicker
+import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.sqlite.SQLite3
+import java.util.*
 
 class DiaryAttachmentAddingActivity : BaseActivity() {
+    private lateinit var descriptionET: EditText
+    private lateinit var titleET: EditText
+    private lateinit var fileIdentifierList: LinkedList<String>
+    private lateinit var diaryDatabase: SQLite3
     private lateinit var fileListLL: LinearLayout
     lateinit var linearLayout: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.diary_attachment_adding_activity)
-        val titleEt = title_et!!
+        titleET = title_et!!
         fileListLL = file_list_ll!!
-        val descriptionEt = description_et!!
+        descriptionET = description_et!!
         val createAttachmentBtn = create_attachment_btn!!
+        val pickFileBtn = pick_file_btn
+
+        fileIdentifierList = LinkedList<String>()
+
+        diaryDatabase = DiaryMainActivity.getDiaryDatabase(this)
+
+        pickFileBtn.setOnClickListener {
+            val intent = Intent(this, FileLibraryActivity::class.java)
+            intent.putExtra("pick", true)
+            // pick file from the file library
+            startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
+        }
+
+        createAttachmentBtn.setOnClickListener {
+            createAttachment()
+            ToastUtils.show(this, R.string.creating_succeeded)
+            finish()
+        }
+    }
+
+    private fun createAttachment() {
+        val attachmentId = System.currentTimeMillis()
+        diaryDatabase.beginTransaction()
+        val statement =
+            diaryDatabase.compileStatement("INSERT INTO diary_attachment_file_reference(attachment_id, file_identifier)\nVALUES (?, ?)")
+        fileIdentifierList.forEach {
+            statement.reset()
+            statement.bind(1, attachmentId)
+            statement.bindText(2, it)
+            statement.step()
+        }
+        diaryDatabase.commit()
+        statement.release()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RequestCode.START_ACTIVITY_0) {
-            data!!
-            val result = data.getStringExtra("result") ?: return
-            val textView = getTextView()
-            textView.text = result
-            textView.background = getDrawable(R.drawable.view_stroke)
-            fileListLL.addView(textView)
-        }
-    }
+        data!!
+        when (requestCode) {
+            RequestCode.START_ACTIVITY_0 -> {
+                // pick file from the file library
+                val fileInfo = data.getSerializableExtra("fileInfo") as FileLibraryActivity.FileInfo
+                val filePreviewView = FileLibraryActivity.getFilePreviewView(this, fileInfo)
+                filePreviewView.background = getDrawable(R.drawable.view_stroke)
+                fileListLL.addView(filePreviewView)
+                fileIdentifierList.add(fileInfo.identifier)
+            }
+            else -> {
 
-    private fun getTextView(): TextView {
-        val textView = TextView(this)
-        textView.textSize = 20F
-        textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        return textView
+            }
+        }
     }
 }

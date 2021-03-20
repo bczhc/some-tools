@@ -764,8 +764,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 fileList.add(file);
             }
         }
-        File crashPath = new File(Common.getExternalStoragePath(this) + File.separatorChar
-                + this.getString(R.string.some_tools_app) + File.separatorChar + this.getString(R.string.crash));
+        File crashPath = new File(Common.getAppMainExternalStoragePath(this) + File.separatorChar + this.getString(R.string.crash));
         File[] crashFiles = crashPath.listFiles();
         if (crashFiles != null) {
             fileList.addAll(Arrays.asList(crashFiles));
