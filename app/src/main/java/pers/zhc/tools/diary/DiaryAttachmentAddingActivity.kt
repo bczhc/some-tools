@@ -18,25 +18,9 @@ class DiaryAttachmentAddingActivity : BaseActivity() {
 
         setContentView(R.layout.diary_attachment_adding_activity)
         val titleEt = title_et!!
-        val addFileBtn = add_file_btn!!
         fileListLL = file_list_ll!!
         val descriptionEt = description_et!!
         val createAttachmentBtn = create_attachment_btn!!
-        val associatedDiaryET = associated_diary_et!!
-        val rawRatio = raw_ratio!!
-        val textRatio = text_ratio!!
-
-        val intent = intent
-        val associatedDiary = intent.getStringExtra("associated_diary")
-        if (associatedDiary != null) associatedDiaryET.setText(associatedDiary)
-        val id = intent.getLongExtra("id", System.currentTimeMillis())
-
-        addFileBtn.setOnClickListener {
-            startActivityForResult(Intent(this, FilePicker::class.java), RequestCode.START_ACTIVITY_0)
-        }
-
-        createAttachmentBtn.setOnClickListener {
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

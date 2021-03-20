@@ -42,4 +42,8 @@ class SmartHintEditText : TextInputLayout {
 
         this.minimumWidth = measuredWidth
     }
+
+    override fun getEditText(): EditText {
+        return super.getEditText()!!
+    }
 }

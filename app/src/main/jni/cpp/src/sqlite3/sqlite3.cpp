@@ -43,7 +43,7 @@ public:
 };
 
 void throwException(JNIEnv *env, const char *msg) {
-    jclass exceptionClass = env->FindClass("java/lang/Exception");
+    jclass exceptionClass = env->FindClass("java/lang/RuntimeException");
     env->ThrowNew(exceptionClass, msg);
     env->DeleteLocalRef(exceptionClass);
 }

@@ -81,7 +81,7 @@ public class SQLite3 {
         return JNI.Sqlite3.checkIfCorrupt(id);
     }
 
-    public Statement compileStatement(String sql) throws Exception {
+    public Statement compileStatement(String sql) {
         long statementId = JNI.Sqlite3.compileStatement(this.id, sql);
         return new Statement(statementId);
     }

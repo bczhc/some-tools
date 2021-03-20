@@ -21,27 +21,14 @@
         </com.google.android.material.textfield.TextInputLayout>
         <Button android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="@string/add_file"
-                android:id="@+id/add_file_btn"
+                android:text="@string/pick_file"
+                android:id="@+id/pick_file_btn"
                 android:layout_marginTop="5sp"
         />
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:id="@+id/file_list_ll"
                       android:orientation="vertical"
         />
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5sp"
-        >
-            <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:textSize="20sp"
-                      android:hint="@string/associated_diary"
-                      android:inputType="text"
-                      tools:ignore="Autofill"
-                      android:id="@+id/associated_diary_et"
-            />
-        </com.google.android.material.textfield.TextInputLayout>
         <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:hint="@string/description"
                   android:id="@+id/description_et"
@@ -50,25 +37,6 @@
                   android:gravity="top"
                   tools:ignore="Autofill"
         />
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:text="@string/type"
-                  android:textSize="20sp"
-                  android:textColor="@color/black"
-        />
-        <RadioGroup android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-        >
-            <RadioButton android:layout_width="0sp" android:layout_height="wrap_content"
-                         android:text="@string/raw"
-                         android:id="@+id/raw_ratio"
-                         android:layout_weight="1"
-            />
-            <RadioButton android:layout_width="0sp" android:layout_height="wrap_content"
-                         android:text="@string/text"
-                         android:id="@+id/text_ratio"
-                         android:layout_weight="1"
-            />
-        </RadioGroup>
         <Button android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:text="@string/create_attachment"
                 android:textSize="20sp"

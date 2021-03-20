@@ -20,9 +20,7 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
 import pers.zhc.tools.jni.JNI;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtil;
-import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.*;
 import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
@@ -31,6 +29,7 @@ import pers.zhc.u.Latch;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -38,7 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author bczhc
  */
 public class DiaryMainActivity extends BaseActivity {
-    static SQLite3 diaryDatabase;
+    static SQLite3 diaryDatabase = null;
     private LinearLayout ll;
     @NonNull
     private String currentPasswordDigest = "";
@@ -47,30 +46,54 @@ public class DiaryMainActivity extends BaseActivity {
 
     @NotNull
     static SQLite3 getDiaryDatabase(Context ctx) {
+        if (diaryDatabase != null && !diaryDatabase.isClosed()) return diaryDatabase;
+
+        // otherwise open or reopen database (recreate sqlite3 object)
         SQLite3 database;
         database = SQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
         if (database.checkIfCorrupt()) {
+            database.close();
             System.out.println(Common.getInternalDatabaseDir(ctx, "diary.db").delete());
             database = SQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
             ToastUtils.show(ctx, R.string.corrupted_database_and_recreate_new);
         }
 
-        database.exec("CREATE TABLE IF NOT EXISTS diary(\n" +
-                "    date INTEGER PRIMARY KEY,\n" +
+        // main diary content table
+        database.exec("CREATE TABLE IF NOT EXISTS diary\n" +
+                "(\n" +
+                "    date    INTEGER PRIMARY KEY,\n" +
                 "    content TEXT NOT NULL\n" +
                 ")");
-        database.exec("CREATE TABLE IF NOT EXISTS attachment_info (\n" +
-                "    id INTEGER PRIMARY KEY,\n" +
-                "    title TEXT NOT NULL,\n" +
-                "    associated_diary_date INTEGER,\n" +
+        // diary attachment file info table
+        // identifier: sha1 + file length
+        database.exec("CREATE TABLE IF NOT EXISTS diary_attachment_file\n" +
+                "(\n" +
+                "    identifier    TEXT NOT NULL PRIMARY KEY,\n" +
+                "    add_timestamp INTEGER,\n" +
+                "    filename      TEXT NOT NULL,\n" +
+                "    storage_type  INTEGER,\n" +
+                "    description   TEXT NOT NULL\n" +
+                ")");
+        // diary attachment file reference table, an attachment can have multiple file reference
+        database.exec("CREATE TABLE IF NOT EXISTS diary_attachment_file_reference\n" +
+                "(\n" +
+                "    attachment_id   INTEGER,\n" +
+                "    file_identifier TEXT NOT NULL\n" +
+                ")");
+        // diary attachment data table
+        database.exec("CREATE TABLE IF NOT EXISTS diary_attachment\n" +
+                "(\n" +
+                "    id          INTEGER PRIMARY KEY,\n" +
+                "    title       TEXT NOT NULL,\n" +
                 "    description TEXT NOT NULL\n" +
                 ")");
-        database.exec("CREATE TABLE IF NOT EXISTS attachment_file (\n" +
-                "    id INTEGER,\n" +
-                "    relative_path TEXT NOT NULL,\n" +
-                "    type TEXT NOT NULL\n" +
+        // diary attachment settings info table
+        database.exec("CREATE TABLE IF NOT EXISTS diary_attachment_info\n" +
+                "(\n" +
+                "    info_json TEXT NOT NULL PRIMARY KEY\n" +
                 ")");
-        return database;
+        diaryDatabase = database;
+        return diaryDatabase;
     }
 
     @Override
@@ -288,8 +311,8 @@ public class DiaryMainActivity extends BaseActivity {
         Dialog dialog = new Dialog(this);
         DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT
                 , ViewGroup.LayoutParams.WRAP_CONTENT, false);
-        EditText oldPasswordET = view.findViewById(R.id.old_password);
-        EditText newPasswordET = view.findViewById(R.id.new_password);
+        EditText oldPasswordET = ((SmartHintEditText) view.findViewById(R.id.old_password)).getEditText();
+        EditText newPasswordET = ((SmartHintEditText) view.findViewById(R.id.new_password)).getEditText();
         Button confirm = view.findViewById(R.id.confirm);
         confirm.setOnClickListener(v -> {
             String old = oldPasswordET.getText().toString();
@@ -543,5 +566,11 @@ public class DiaryMainActivity extends BaseActivity {
             Common.showException(e, this);
         }
         super.finish();
+    }
+
+    @NotNull
+    static String computeFileIdentifier(File f) throws IOException, NoSuchAlgorithmException {
+        String sha1String = Digest.getFileSHA1String(f);
+        return sha1String + f.length();
     }
 }

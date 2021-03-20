@@ -6,19 +6,26 @@ import android.view.Menu
 import android.view.MenuItem
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.sqlite.SQLite3
-import java.io.File
 
 class DiaryAttachmentActivity : BaseActivity() {
-    companion object {
-        var db: SQLite3? = null
-    }
+    private lateinit var diaryDatabase: SQLite3
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_attachment_activity)
-        setDatabase()
+
+        diaryDatabase = DiaryMainActivity.getDiaryDatabase(this)
+
+        checkAttachmentInfoRecord()
+    }
+
+    private fun checkAttachmentInfoRecord() {
+        val fileStoragePath = DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)
+        if (fileStoragePath == null) {
+            // record "info_json" doesn't exists, then start to set it
+            startActivity(Intent(this, DiaryAttachmentSettingsActivity::class.java))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -31,13 +38,13 @@ class DiaryAttachmentActivity : BaseActivity() {
             R.id.add -> {
                 startActivity(Intent(this, DiaryAttachmentAddingActivity::class.java))
             }
+            R.id.file_library -> {
+                startActivity(Intent(this, FileLibraryActivity::class.java))
+            }
+            R.id.setting_btn -> {
+                startActivity(Intent(this, DiaryAttachmentSettingsActivity::class.java))
+            }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun setDatabase() {
-        val dbFile = File(Common.getExternalStoragePath(this), "diary-attachment.db")
-        db = SQLite3.open(dbFile.path)
-        db!!.exec("CREATE TABLE IF NOT EXISTS diary_attachment\n(\n    title                TEXT NOT NULL,\n    file_path_json_array TEXT NOT NULL,\n    description          TEXT NOT NULL,\n    type                 INTEGER\n);");
     }
 }

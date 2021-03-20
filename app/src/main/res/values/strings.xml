@@ -24,7 +24,7 @@
     <string name="filter">过滤器</string>
     <string name="iFileExtension">操作文件扩展名</string>
     <string name="oFileExtension">输出文件类型</string>
-    <string name="settings">Settings</string>
+    <string name="settings">设置</string>
     <string name="saving_succeeded">保存成功</string>
     <string name="expression_error">json表达错误</string>
     <string name="json_solve_error">json解析失败：</string>
@@ -92,7 +92,7 @@
     <string name="import_path">导入路径</string>
     <string name="saving_failed">保存失败</string>
     <string name="select_path_file">选择路径文件</string>
-    <string name="type_file_name">输入文件名</string>
+    <string name="type_filename">输入文件名</string>
     <string name="type_stroke_width__pixels">输入画笔宽度(pixels)</string>
     <string name="eraser_paint_stroke_width">橡皮擦大小</string>
     <string name="drawing_paint_stroke_width">画笔大小</string>
@@ -173,8 +173,8 @@
     <string name="write_error">写入错误</string>
     <string name="concat">%1$s%2$s</string>
     <string name="native_file_not_exist">内部文件不存在</string>
-    <string name="file_name">文件名</string>
-    <string name="file_name_is">文件名：</string>
+    <string name="filename">文件名</string>
+    <string name="filename_is">文件名：%1$s</string>
     <string name="image_size_px_is">图片大小：(px)</string>
     <string name="asterisk">*</string>
     <string name="restart_application">重启应用</string>
@@ -321,4 +321,16 @@
     <string name="deleting_failed">删除失败</string>
     <string name="whether_to_download">是否下载</string>
     <string name="my_service">My service</string>
+    <string name="file_library">文件库</string>
+    <string name="submit">提交</string>
+    <string name="文件路径">file_path</string>
+    <string name="file_exists_alert_msg">相同文件已存在，是否更新文件信息</string>
+    <string name="adding_done">添加完成</string>
+    <string name="updating_done">更新完成</string>
+    <string name="add_time">添加时间</string>
+    <string name="storage_type">存储类型</string>
+    <string name="storage_type_is">存储类型：%1$s</string>
+    <string name="add_time_is">添加时间：%1$s</string>
+    <string name="description_is">描述：%1$s</string>
+    <string name="attachment_local_storage_path_is">附件本地存储目录：</string>
 </resources>

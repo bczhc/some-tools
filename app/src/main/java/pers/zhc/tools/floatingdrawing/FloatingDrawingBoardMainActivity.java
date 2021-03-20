@@ -1189,7 +1189,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         }
                         moreOptionsDialog.dismiss();
                     }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    }).setTitle(R.string.type_file_name).setView(et).create();
+                    }).setTitle(R.string.type_filename).setView(et).create();
                     setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                     DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, alertDialog);
                     alertDialog.show();

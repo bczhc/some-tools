@@ -31,7 +31,7 @@ void bczhc::log(JNIEnv *&env, const char *tag, const char *format, ...) {
 void bczhc::throwException(JNIEnv *&env, const char *format, ...) {
     va_list args{};
     va_start(args, format);
-    jclass exceptionClass = env->FindClass("java/lang/Exception");
+    jclass exceptionClass = env->FindClass("java/lang/RuntimeException");
     char *msg = nullptr;
     vasprintf(&msg, format, args);
     env->ThrowNew(exceptionClass, msg);

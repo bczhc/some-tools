@@ -86,10 +86,6 @@ public class JNI {
             loadLib();
         }
 
-        public static native void floatToByteArray(@Size(min = 4) byte[] dest, float f, int offset);
-
-        public static native void intToByteArray(@Size(min = 4) byte[] dest, int i, int offset);
-
         public static native float byteArrayToFloat(@Size(min = 4) byte[] bytes, int offset);
 
         public static native int byteArrayToInt(@Size(min = 4) byte[] bytes, int offset);
@@ -165,7 +161,7 @@ public class JNI {
          * @param sql sqlite statement
          * @return the address of the statement object in JNI, which is a "statement object handler"
          */
-        public static native long compileStatement(long id, String sql) throws Exception;
+        public static native long compileStatement(long id, String sql) throws RuntimeException;
 
         public static class Statement {
             static {
@@ -173,23 +169,23 @@ public class JNI {
             }
 
             /* Statement methods start: */
-            public static native void bind(long stmtId, int row, int a) throws Exception;
+            public static native void bind(long stmtId, int row, int a) throws RuntimeException;
 
-            public static native void bind(long stmtId, int row, long a) throws Exception;
+            public static native void bind(long stmtId, int row, long a) throws RuntimeException;
 
-            public static native void bind(long stmtId, int row, double a) throws Exception;
+            public static native void bind(long stmtId, int row, double a) throws RuntimeException;
 
-            public static native void bindText(long stmtId, int row, String s) throws Exception;
+            public static native void bindText(long stmtId, int row, String s) throws RuntimeException;
 
-            public static native void bindNull(long stmtId, int row) throws Exception;
+            public static native void bindNull(long stmtId, int row) throws RuntimeException;
 
-            public static native void reset(long stmtId) throws Exception;
+            public static native void reset(long stmtId) throws RuntimeException;
 
-            public static native void bindBlob(long stmtId, int row, byte[] bytes, int size) throws Exception;
+            public static native void bindBlob(long stmtId, int row, byte[] bytes, int size) throws RuntimeException;
 
-            public static native void step(long stmtId) throws Exception;
+            public static native void step(long stmtId) throws RuntimeException;
 
-            public static native void finalize(long stmtId) throws Exception;
+            public static native void finalize(long stmtId) throws RuntimeException;
 
             /**
              * Get cursor.
@@ -222,9 +218,9 @@ public class JNI {
             }
 
             /* Cursor methods start. */
-            public static native void reset(long cursorId) throws Exception;
+            public static native void reset(long cursorId) throws RuntimeException;
 
-            public static native boolean step(long cursorId) throws Exception;
+            public static native boolean step(long cursorId) throws RuntimeException;
 
             public static native byte[] getBlob(long cursorId, int column);
 
