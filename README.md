@@ -9,14 +9,17 @@ some-tools
 
 ![Android CI](https://github.com/bczhc/some-tools/workflows/Android%20CI/badge.svg)
 
-![](https://img.shields.io/github/stars/bczhc/some-tools?style=flat-square)
+![](https://img.shields.io/github/stars/bczhc/some-tools)
 
-![](https://img.shields.io/github/commit-activity/y/bczhc/some-tools?style=flat-square)
-![](https://img.shields.io/github/commit-activity/m/bczhc/some-tools?style=flat-square)
-![](https://img.shields.io/github/commit-activity/w/bczhc/some-tools?style=flat-square)
+![](https://img.shields.io/github/commit-activity/y/bczhc/some-tools)
+![](https://img.shields.io/github/commit-activity/m/bczhc/some-tools)
+![](https://img.shields.io/github/commit-activity/w/bczhc/some-tools)
 
-![](https://img.shields.io/github/languages/count/bczhc/some-tools?style=flat-square)
-![](https://img.shields.io/github/repo-size/bczhc/some-tools?style=flat-square)
-[![](https://img.shields.io/github/issues-closed-raw/bczhc/some-tools?color=red&style=flat-square)](https://github.com/bczhc/some-tools/issues?q=is%3Aissue+is%3Aclosed)
+![](https://img.shields.io/github/languages/count/bczhc/some-tools)
+![](https://img.shields.io/github/repo-size/bczhc/some-tools)
 
-[悬浮画板旧项目地址\(github\)](https://github.com/bczhc/FloatingBoard)
+[![](https://img.shields.io/github/issues-closed-raw/bczhc/some-tools?color=red&)](https://github.com/bczhc/some-tools/issues?q=is%3Aissue+is%3Aclosed)
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/bczhc/some-tools.svg)](https://github.com/bczhc/some-tools/issues?q=is%3Aissue+is%3Aopen)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/bczhc/some-tools.svg)](http://isitmaintained.com/project/bczhc/some-tools "Average time to resolve an issue")
+
+[悬浮画板旧项目地址](https://github.com/bczhc/FloatingBoard)
