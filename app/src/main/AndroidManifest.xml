@@ -439,6 +439,17 @@
             </intent-filter>
         </activity>
         <activity
+                android:name=".diary.DiaryContentPreviewActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/attachment"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
                 android:name=".test.pressuretest.PressureTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/AppTheme">

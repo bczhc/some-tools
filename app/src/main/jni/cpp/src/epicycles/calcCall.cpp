@@ -2,6 +2,7 @@
 #include "../../third_party/my-cpp-lib/math/fourier_series.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_FourierSeries.h"
 #include "../jni_help.h"
+#include "../../third_party/my-cpp-lib/array_list.hpp"
 
 using namespace bczhc;
 
@@ -12,6 +13,15 @@ public:
     Point() = default;
 
     Point(float x, float y) : x(x), y(y) {}
+
+    bool operator==(const Point &rhs) const {
+        return x == rhs.x &&
+               y == rhs.y;
+    }
+
+    bool operator!=(const Point &rhs) const {
+        return !(rhs == *this);
+    }
 };
 
 class F : public ComplexFunctionInterface {
@@ -46,6 +56,7 @@ public:
 
     explicit F(ArrayList<Point> &list, double period) : list(list), period(period) {
         listLength = list.length();
+
         sumLength = new double[listLength];
         for (int i = 0; i < listLength; ++i) {
             Point next = i == listLength - 1 ? list.get(0) : list.get(i + 1);
@@ -91,7 +102,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
         jfieldID imFId = env->GetFieldID(complexValueClass, "im", "D");
         Point p(env->GetDoubleField(complexValueObj, reFId),
                 env->GetDoubleField(complexValueObj, imFId));
-        list.insert(p);
+        list.add(p);
         env->DeleteLocalRef(complexValueObj);
         env->DeleteLocalRef(complexValueClass);
     }

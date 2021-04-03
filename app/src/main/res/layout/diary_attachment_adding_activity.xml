@@ -3,7 +3,7 @@
             xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5sp"
+            android:padding="5dp"
 >
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="vertical">
@@ -23,7 +23,7 @@
                 android:textSize="20sp"
                 android:text="@string/pick_file"
                 android:id="@+id/pick_file_btn"
-                android:layout_marginTop="5sp"
+                android:layout_marginTop="5dp"
         />
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:id="@+id/file_list_ll"
@@ -33,7 +33,7 @@
                   android:hint="@string/description"
                   android:id="@+id/description_et"
                   android:inputType="textMultiLine"
-                  android:layout_marginTop="10sp"
+                  android:layout_marginTop="10dp"
                   android:gravity="top"
                   tools:ignore="Autofill"
         />

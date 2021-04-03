@@ -19,6 +19,7 @@ import java.io.File
 class FileLibraryAddingActivity : BaseActivity() {
     private lateinit var storageTypeRG: RadioGroup
     private lateinit var descriptionET: EditText
+    private lateinit var diaryDatabaseRef: DiaryMainActivity.DiaryDatabaseRef
     private lateinit var diaryDatabase: SQLite3
     private lateinit var pickedFileET: EditText
 
@@ -29,9 +30,10 @@ class FileLibraryAddingActivity : BaseActivity() {
         val pickFileBtn = pick_file_btn!!
         descriptionET = description_et!!
         val submitBtn = submit_btn!!
-        pickedFileET = picked_file_et.editText!!
+        pickedFileET = picked_file_et.editText
         storageTypeRG = storage_type_rg!!
-        diaryDatabase = DiaryMainActivity.getDiaryDatabase(this)
+        diaryDatabaseRef = DiaryMainActivity.getDiaryDatabase(this)
+        diaryDatabase = diaryDatabaseRef.database
 
         pickFileBtn.setOnClickListener {
             val intent = Intent(this, FilePicker::class.java)

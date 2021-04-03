@@ -18,13 +18,15 @@ import java.util.*
  * @author bczhc
  */
 class FileLibraryActivity : BaseActivity() {
+    private lateinit var diaryDatabaseRef: DiaryMainActivity.DiaryDatabaseRef
     private lateinit var diaryDatabase: SQLite3
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_attachment_file_library_activity)
         val ll = ll!!
-        diaryDatabase = DiaryMainActivity.getDiaryDatabase(this)
+        diaryDatabaseRef = DiaryMainActivity.getDiaryDatabase(this)
+        diaryDatabase = diaryDatabaseRef.database
 
         val intent = intent
         val isPickingMode = intent.getBooleanExtra("pick", false)

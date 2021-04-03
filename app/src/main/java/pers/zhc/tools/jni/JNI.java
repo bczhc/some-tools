@@ -324,4 +324,29 @@ public class JNI {
          */
         public static native String myDigest(String str);
     }
+
+    public static class Struct {
+        public static final int MODE_BIG_ENDIAN = 0;
+        public static final int MODE_LITTLE_ENDIAN = 1;
+
+        public static native void packShort(short value, @Size(min = 2) byte[] dest, int offset, int mode);
+
+        public static native void packInt(int value, @Size(min = 4) byte[] dest, int offset, int mode);
+
+        public static native void packLong(long value, @Size(min = 8) byte[] dest, int offset, int mode);
+
+        public static native void packFloat(float value, @Size(min = 4) byte[] dest, int offset, int mode);
+
+        public static native void packDouble(double value, @Size(min = 8) byte[] dest, int offset, int mode);
+
+        public static native short unpackShort(@Size(min = 2) byte[] bytes, int offset, int mode);
+
+        public static native int unpackInt(@Size(min = 4) byte[] bytes, int offset, int mode);
+
+        public static native long unpackLong(@Size(min = 8) byte[] bytes, int offset, int mode);
+
+        public static native float unpackFloat(@Size(min = 4) byte[] bytes, int offset, int mode);
+
+        public static native double unpackDouble(@Size(min = 8) byte[] bytes, int offset, int mode);
+    }
 }

@@ -9,22 +9,6 @@ extern "C" {
 #endif
 /*
  * Class:     pers_zhc_tools_jni_JNI_FloatingBoard
- * Method:    floatToByteArray
- * Signature: ([BFI)V
- */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_floatToByteArray
-  (JNIEnv *, jclass, jbyteArray, jfloat, jint);
-
-/*
- * Class:     pers_zhc_tools_jni_JNI_FloatingBoard
- * Method:    intToByteArray
- * Signature: ([BII)V
- */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_intToByteArray
-  (JNIEnv *, jclass, jbyteArray, jint, jint);
-
-/*
- * Class:     pers_zhc_tools_jni_JNI_FloatingBoard
  * Method:    byteArrayToFloat
  * Signature: ([BI)F
  */

@@ -6,22 +6,28 @@ import android.view.Menu
 import android.view.MenuItem
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.sqlite.SQLite3
 
 class DiaryAttachmentActivity : BaseActivity() {
-    private lateinit var diaryDatabase: SQLite3
+    private lateinit var diaryDatabaseRef: DiaryMainActivity.DiaryDatabaseRef
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_attachment_activity)
 
-        diaryDatabase = DiaryMainActivity.getDiaryDatabase(this)
+        diaryDatabaseRef = DiaryMainActivity.getDiaryDatabase(this)
+
+        val intent = intent
+        val fromDiaryDate = intent.getIntExtra("fromDiaryDate", -1)
+        intent.hasExtra("")
+        if (fromDiaryDate == -1) {
+
+        }
 
         checkAttachmentInfoRecord()
     }
 
     private fun checkAttachmentInfoRecord() {
-        val fileStoragePath = DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)
+        val fileStoragePath = DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabaseRef.database)
         if (fileStoragePath == null) {
             // record "info_json" doesn't exists, then start to set it
             startActivity(Intent(this, DiaryAttachmentSettingsActivity::class.java))

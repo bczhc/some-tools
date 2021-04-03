@@ -6,8 +6,8 @@
               android:text="@string/layer"
               android:textSize="20sp"
               android:gravity="center"
-              android:layout_marginTop="5sp"
-              android:layout_marginBottom="5sp"
+              android:layout_marginTop="5dp"
+              android:layout_marginBottom="5dp"
               android:id="@+id/tv"
     />
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"

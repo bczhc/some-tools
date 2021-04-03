@@ -28,7 +28,10 @@ import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,32 +40,67 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author bczhc
  */
 public class DiaryMainActivity extends BaseActivity {
-    static SQLite3 diaryDatabase = null;
     private LinearLayout ll;
     @NonNull
     private String currentPasswordDigest = "";
     private boolean isUnlocked = false;
     private String[] week;
+    private static DiaryDatabaseRef diaryDatabaseRef;
 
-    @NotNull
-    static SQLite3 getDiaryDatabase(Context ctx) {
-        if (diaryDatabase != null && !diaryDatabase.isClosed()) return diaryDatabase;
+    static class DiaryDatabaseRef {
+        private int diaryDatabaseRefCount = 0;
+        private final SQLite3 db;
 
-        // otherwise open or reopen database (recreate sqlite3 object)
-        SQLite3 database;
-        database = SQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-        if (database.checkIfCorrupt()) {
-            database.close();
-            System.out.println(Common.getInternalDatabaseDir(ctx, "diary.db").delete());
-            database = SQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-            ToastUtils.show(ctx, R.string.corrupted_database_and_recreate_new);
+
+        private DiaryDatabaseRef(SQLite3 db) {
+            this.db = db;
         }
 
+        public void countRef() {
+            ++diaryDatabaseRefCount;
+        }
+
+        public void countDownRef() {
+            if (--diaryDatabaseRefCount == 0) {
+                close();
+            }
+        }
+
+        private void close() {
+            this.db.close();
+        }
+
+        public SQLite3 getDatabase() {
+            return db;
+        }
+    }
+
+    /**
+     * Get diary database.
+     * The {@link DiaryDatabaseRef} object this method returned should be called {@link DiaryDatabaseRef#countDownRef()} for the work of reference counting.
+     *
+     * @param ctx context
+     * @return diary database reference object, using reference counting.
+     */
+    @NotNull
+    static DiaryDatabaseRef getDiaryDatabase(Context ctx) {
+        if (diaryDatabaseRef == null) {
+            // initialize
+            diaryDatabaseRef = initDatabase(ctx);
+        }
+
+        diaryDatabaseRef.countRef();
+        return diaryDatabaseRef;
+    }
+
+    private static DiaryDatabaseRef initDatabase(Context ctx) {
+        SQLite3 database = SQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
         // main diary content table
         database.exec("CREATE TABLE IF NOT EXISTS diary\n" +
                 "(\n" +
-                "    date    INTEGER PRIMARY KEY,\n" +
-                "    content TEXT NOT NULL\n" +
+                "    date          INTEGER PRIMARY KEY,\n" +
+                "    content       TEXT NOT NULL,\n" +
+                "    attachment_id INTEGER\n" +
                 ")");
         // diary attachment file info table
         // identifier: sha1 + file length
@@ -92,8 +130,7 @@ public class DiaryMainActivity extends BaseActivity {
                 "(\n" +
                 "    info_json TEXT NOT NULL PRIMARY KEY\n" +
                 ")");
-        diaryDatabase = database;
-        return diaryDatabase;
+        return new DiaryDatabaseRef(database);
     }
 
     @Override
@@ -149,7 +186,7 @@ public class DiaryMainActivity extends BaseActivity {
             actionBar.setTitle(R.string.diary);
             actionBar.show();
         }
-        diaryDatabase = getDiaryDatabase(this);
+        diaryDatabaseRef = getDiaryDatabase(this);
         loadListViews();
     }
 
@@ -160,11 +197,11 @@ public class DiaryMainActivity extends BaseActivity {
         pwDB.exec("CREATE TABLE IF NOT EXISTS password\n" +
                 "(\n" +
                 "    " +
-                "--" +
+                "-- " +
                 "key\n" +
                 "    k      TEXT NOT NULL PRIMARY KEY,\n" +
                 "    " +
-                "--password digest\n" +
+                "-- password digest\n" +
                 "    digest TEXT NOT NULL\n" +
                 ")");
         return pwDB;
@@ -239,16 +276,19 @@ public class DiaryMainActivity extends BaseActivity {
                 startActivityForResult(intent2, RequestCode.START_ACTIVITY_2);
                 break;
             case R.id.sort:
-                diaryDatabase.exec("BEGIN TRANSACTION");
+                final SQLite3 diaryDatabase = diaryDatabaseRef.getDatabase();
+                diaryDatabase.beginTransaction();
                 diaryDatabase.exec("DROP TABLE IF EXISTS temp");
-                diaryDatabase.exec("CREATE TABLE IF NOT EXISTS temp(\n" +
-                        "    date INTEGER,\n" +
-                        "    content TEXT NOT NULL\n" +
+                diaryDatabase.exec("CREATE TABLE IF NOT EXISTS temp\n" +
+                        "(\n" +
+                        "    date          INTEGER,\n" +
+                        "    content       TEXT NOT NULL,\n" +
+                        "    attachment_id INTEGER\n" +
                         ")");
                 diaryDatabase.exec("INSERT INTO temp SELECT * FROM diary ORDER BY date");
                 diaryDatabase.exec("DROP TABLE diary");
                 diaryDatabase.exec("ALTER TABLE temp RENAME TO diary");
-                diaryDatabase.exec("COMMIT");
+                diaryDatabase.commit();
                 refreshListViews();
                 break;
             case R.id.attachment:
@@ -280,7 +320,7 @@ public class DiaryMainActivity extends BaseActivity {
         } else {
             ToastUtils.show(this, R.string.copying_failed);
         }
-        diaryDatabase = getDiaryDatabase(this);
+        diaryDatabaseRef = getDiaryDatabase(this);
         refreshListViews();
     }
 
@@ -327,7 +367,7 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     private void createOrOpenDiary(@Nullable DiaryTakingActivity.MyDate date) {
-        if (diaryDatabase.isClosed()) {
+        if (diaryDatabaseRef.getDatabase().isClosed()) {
             ToastUtils.show(this, R.string.closed);
             return;
         }
@@ -344,11 +384,9 @@ public class DiaryMainActivity extends BaseActivity {
         }
         intent.putExtra("date", dateInts);
         String dateString;
-        if (date == null) dateString = new DiaryTakingActivity.MyDate(dateInts).getDateString();
-        else dateString = date.getDateString();
+        if (date == null) dateString = new DiaryTakingActivity.MyDate(dateInts).getDateIntString();
+        else dateString = date.getDateIntString();
         intent.putExtra("myDateStr", dateString);
-        boolean newRec = !SQLite.checkRecordExistence(diaryDatabase, "diary", "date", dateString);
-        intent.putExtra("newRec", newRec);
         startActivityForResult(intent, RequestCode.START_ACTIVITY_0);
     }
 
@@ -370,7 +408,7 @@ public class DiaryMainActivity extends BaseActivity {
                     int index = -1;
                     for (int i = 0; i < childCount; i++) {
                         DiaryTakingActivity.MyDate date = ((TextViewWithDate) ((RelativeLayout) ll.getChildAt(i)).getChildAt(0)).date;
-                        if (date.getDateString().equals(myDateStr)) {
+                        if (date.getDateIntString().equals(myDateStr)) {
                             index = i;
                             break;
                         }
@@ -414,7 +452,7 @@ public class DiaryMainActivity extends BaseActivity {
 
     private RelativeLayout getChildRLByDate(String dateString) {
         RelativeLayout[] r = {null};
-        diaryDatabase.exec("SELECT * FROM diary WHERE date is " + dateString, contents -> {
+        diaryDatabaseRef.getDatabase().exec("SELECT * FROM diary WHERE date is " + dateString, contents -> {
             r[0] = getChildRL(contents);
             return 0;
         });
@@ -474,7 +512,7 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     private void loadListViews() {
-        new Thread(() -> diaryDatabase.exec("SELECT * FROM diary", contents -> {
+        new Thread(() -> diaryDatabaseRef.getDatabase().exec("SELECT * FROM diary", contents -> {
             try {
                 RelativeLayout childRL = getChildRL(contents);
 
@@ -488,11 +526,9 @@ public class DiaryMainActivity extends BaseActivity {
 
     private void setChildRL(DiaryTakingActivity.MyDate date, @NotNull RelativeLayout childRL) {
         childRL.setOnClickListener(v -> {
-            try {
-                createOrOpenDiary(date);
-            } catch (Exception e) {
-                Common.showException(e, this);
-            }
+            Intent intent = new Intent(this, DiaryContentPreviewActivity.class);
+            intent.putExtra("dateInt", date.getDateInt());
+            startActivity(intent);
         });
         childRL.setOnLongClickListener(v -> {
             Dialog dialog = new Dialog(this);
@@ -521,10 +557,10 @@ public class DiaryMainActivity extends BaseActivity {
                                 ToastUtils.show(this, R.string.please_type_correct_value);
                                 return;
                             }
-                            changeDate(date.getDateString(), newDate);
+                            changeDate(date.getDateIntString(), newDate);
                             dialog.dismiss();
                             // update view
-                            RelativeLayout newChildRL = getChildRLByDate(newDate.getDateString());
+                            RelativeLayout newChildRL = getChildRLByDate(newDate.getDateIntString());
                             int indexOfChild = this.ll.indexOfChild(childRL);
                             this.ll.removeViewAt(indexOfChild);
                             this.ll.addView(newChildRL, indexOfChild);
@@ -538,7 +574,7 @@ public class DiaryMainActivity extends BaseActivity {
                 d2.show();
             });
             deleteBtn.setOnClickListener(v1 -> DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
-                        diaryDatabase.exec("DELETE FROM diary WHERE date='" + date.getDateString() + '\'');
+                        diaryDatabaseRef.getDatabase().exec("DELETE FROM diary WHERE date='" + date.getDateIntString() + '\'');
                         dialog.dismiss();
                         // update view
                         this.ll.removeView(childRL);
@@ -552,25 +588,21 @@ public class DiaryMainActivity extends BaseActivity {
     }
 
     private void changeDate(String oldDateString, @NotNull DiaryTakingActivity.MyDate newDate) {
-        diaryDatabase.exec("UPDATE diary SET date=" + newDate.getDateString() + " WHERE date=" + oldDateString);
+        diaryDatabaseRef.getDatabase().exec("UPDATE diary SET date=" + newDate.getDateIntString() + " WHERE date=" + oldDateString);
     }
 
     @Override
     public void finish() {
-        try {
-            if (diaryDatabase != null && !diaryDatabase.isClosed()) {
-                diaryDatabase.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Common.showException(e, this);
-        }
+        diaryDatabaseRef.countDownRef();
         super.finish();
     }
 
     @NotNull
     static String computeFileIdentifier(File f) throws IOException, NoSuchAlgorithmException {
-        String sha1String = Digest.getFileSHA1String(f);
-        return sha1String + f.length();
+        InputStream is = new FileInputStream(f);
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+        DigestUtil.updateInputStream(md, is);
+        final long length = f.length();
+        return "";// TODO
     }
 }

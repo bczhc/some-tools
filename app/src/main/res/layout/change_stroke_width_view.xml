@@ -18,10 +18,6 @@
                      android:id="@+id/radio2"
         />
     </RadioGroup>
-    <!--<TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/stroke_width_info"
-              android:layout_marginLeft="2dp"
-              android:layout_marginStart="10sp"/>-->
     <CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content"
               android:text="@string/lock_stroke"
               android:id="@+id/cb"

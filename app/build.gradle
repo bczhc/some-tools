@@ -4,7 +4,6 @@ import pers.zhc.plugins.MyPlugin2
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'jacoco-android'
 apply plugin: MyPlugin2
 
 android {
@@ -87,13 +86,6 @@ android {
     return true
 }
 
-/*jacoco {
-    toolVersion = "0.8.4"
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}*/
 
 repositories {
     maven { url 'https://jitpack.io' }

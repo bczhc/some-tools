@@ -39,12 +39,12 @@
                   android:id="@+id/ll_bottom"
                   android:layout_alignParentBottom="true"
     >
-        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+        <Button android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/cancel"
                 android:text="@string/cancel"
                 tools:ignore="ButtonStyle"/>
-        <Button android:layout_width="0sp" android:layout_height="wrap_content"
+        <Button android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/pick"
                 android:text="@string/confirm"

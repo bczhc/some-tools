@@ -95,7 +95,7 @@ public class Statement {
 
     /**
      * Release native resource, origin: `finalize()`.
-     * You should guarantee it's close before closing the database.
+     * You should guarantee it's released before closing the database.
      */
     public void release() {
         JNI.Sqlite3.Statement.finalize(statementId);

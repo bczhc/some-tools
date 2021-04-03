@@ -7,6 +7,6 @@
           android:layout_height="wrap_content"
           android:ellipsize="marquee"
           android:textSize="20sp"
-          android:layout_margin="5sp"
+          android:layout_margin="5dp"
           android:background="@drawable/view_stroke"
 />

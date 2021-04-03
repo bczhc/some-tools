@@ -19,46 +19,47 @@ import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ScrollEditText;
-import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author bczhc
  */
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class DiaryTakingActivity extends BaseActivity {
 
-    private final SQLite3 diaryDatabase = DiaryMainActivity.diaryDatabase;
+    private SQLite3 diaryDatabase;
     boolean live = true;
     boolean speak = false;
     private TextToSpeech tts;
     private EditText et;
     private TextView charactersCountTV;
-    private MyDate mDate;
-    private Statement compiledStatement;
+    private int dateInt;
+    private Statement updateStatement;
     private ScheduledSaver saver;
+    private Map<String, String> ttsReplaceDict = null;
+    private DiaryMainActivity.DiaryDatabaseRef diaryDatabaseRef;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_taking_activity);
-        try {
-            compiledStatement = diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?");
-        } catch (Exception ignored) {
-            Common.debugAssert(false);
-        }
+        diaryDatabaseRef = DiaryMainActivity.getDiaryDatabase(this);
+        diaryDatabase = diaryDatabaseRef.getDatabase();
+
+        updateStatement = this.diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?");
+
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
         et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         Handler debounceHandler = new Handler();
@@ -76,25 +77,24 @@ public class DiaryTakingActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (ttsReplaceDict == null) {
+                    ttsReplaceDict = new HashMap<>();
+                    ttsReplaceDict.put("。", "句点");
+                    ttsReplaceDict.put("，", "逗号");
+                    ttsReplaceDict.put("\n", "换行");
+                    ttsReplaceDict.put("[", "左方括号");
+                    ttsReplaceDict.put("]", "右方括号");
+                }
+
                 if (speak) {
                     if (count < before) {
                         //delete
                         tts.speak(getString(R.string.deleted_xxx, last.subSequence(start, start + before)), TextToSpeech.QUEUE_FLUSH, null, "");
                     } else {
                         //insert
-                        CharSequence changed = s.subSequence(start, start + count);
-                        switch (changed.toString()) {
-                            case "。":
-                                changed = "句点";
-                                break;
-                            case "，":
-                                changed = "逗号";
-                                break;
-                            case "\n":
-                                changed = "换行";
-                                break;
-                            default:
-                                break;
+                        String changed = s.subSequence(start, start + count).toString();
+                        if (ttsReplaceDict.containsKey(changed)) {
+                            changed = ttsReplaceDict.get(changed);
                         }
                         tts.speak(changed, TextToSpeech.QUEUE_ADD, null, String.valueOf(System.currentTimeMillis()));
                     }
@@ -103,9 +103,9 @@ public class DiaryTakingActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
+
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
@@ -119,16 +119,24 @@ public class DiaryTakingActivity extends BaseActivity {
             actionBar.setCustomView(charactersCountTV);
             actionBar.show();
         }
+
         final Intent intent = getIntent();
-        setResult(0, intent);
         int[] date = intent.getIntArrayExtra("date");
-        if (date == null) {
-            final Calendar calendar = Calendar.getInstance();
-            date = new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)};
+        if ((dateInt = intent.getIntExtra("dateInt", -1)) == -1) {
+            throw new RuntimeException("No dateInt provided.");
         }
-        mDate = new MyDate(date);
-        initDB();
+
+        final Statement statement = this.diaryDatabase.compileStatement("SELECT COUNT()\n" +
+                "FROM diary\n" +
+                "WHERE \"date\" IS ?");
+        final boolean hasRecord = this.diaryDatabase.hasRecord(statement);
+        statement.release();
+
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("newRec", hasRecord);
+
         prepareContent();
+
         saver = new ScheduledSaver();
         saver.start();
     }
@@ -138,36 +146,23 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void prepareContent() {
-        if (diaryDatabase.isClosed()) {
-            ToastUtils.show(this, R.string.closed);
-            return;
+        final Statement statement = diaryDatabase.compileStatement("SELECT content\n" +
+                "FROM diary\n" +
+                "WHERE \"date\" IS ?");
+        statement.bind(1, dateInt);
+        final Cursor cursor = statement.getCursor();
+        if (cursor.step()) {
+            final String content = cursor.getText(0);
+            et.setText(content);
         }
-        final String[] content = {null};
-        diaryDatabase.exec("SELECT content FROM diary WHERE date='" + mDate.getDateString() + "'", contents -> {
-            if (content[0] == null)
-                content[0] = contents[0];
-            return 0;
-        });
-        if (content[0] != null) {
-            et.setText(content[0]);
-            showCharactersCount();
-        }
+        statement.release();
+        showCharactersCount();
     }
 
-    private void recordTime() {
+    private void insertTime() {
         final Date date = new Date();
         @SuppressLint("SimpleDateFormat") final String time = new SimpleDateFormat("[HH:mm]").format(date);
         et.getText().insert(et.getSelectionStart(), getString(R.string.str, time));
-    }
-
-    private void initDB() {
-        if (diaryDatabase.isClosed()) {
-            ToastUtils.show(this, R.string.closed);
-            return;
-        }
-        if (getIntent().getBooleanExtra("newRec", true)) {
-            diaryDatabase.exec("INSERT INTO diary VALUES('" + mDate.getDateString() + "','')");
-        }
     }
 
     @Override
@@ -194,8 +189,16 @@ public class DiaryTakingActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.record_time) {
-            recordTime();
+        switch (item.getItemId()) {
+            case R.id.record_time:
+                insertTime();
+                break;
+            case R.id.attachment:
+                Intent intent = new Intent(this, DiaryAttachmentActivity.class);
+                intent.putExtra("dateInt", dateInt);
+                startActivity(intent);
+                break;
+            default:
         }
         return true;
     }
@@ -207,19 +210,15 @@ public class DiaryTakingActivity extends BaseActivity {
     }
 
     private void save() {
-        if (diaryDatabase.isClosed()) {
-            runOnUiThread(() -> ToastUtils.show(this, R.string.closed));
-            return;
-        }
-        updateDiary(et.getText().toString(), mDate.getDateString());
+        updateDiary(et.getText().toString(), dateInt);
     }
 
-    private void updateDiary(String content, String dateString) {
+    private void updateDiary(String content, int dateString) {
         try {
-            compiledStatement.reset();
-            compiledStatement.bindText(1, content);
-            compiledStatement.bindText(2, dateString);
-            compiledStatement.step();
+            updateStatement.reset();
+            updateStatement.bindText(1, content);
+            updateStatement.bind(2, dateString);
+            updateStatement.step();
         } catch (Exception e) {
             Common.showException(e, this);
         }
@@ -230,11 +229,8 @@ public class DiaryTakingActivity extends BaseActivity {
         live = false;
         saver.stop();
         save();
-        try {
-            compiledStatement.release();
-        } catch (Exception e) {
-            Common.showException(e, this);
-        }
+        updateStatement.release();
+        diaryDatabaseRef.countDownRef();
         super.finish();
     }
 
@@ -284,8 +280,12 @@ public class DiaryTakingActivity extends BaseActivity {
             return String.valueOf(a);
         }
 
-        public String getDateString() {
+        public String getDateIntString() {
             return add0(year) + add0(month) + add0(day);
+        }
+
+        public int getDateInt() {
+            return year * 10000 + month * 100 + day;
         }
     }
 

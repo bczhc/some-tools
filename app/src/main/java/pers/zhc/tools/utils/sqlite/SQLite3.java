@@ -78,6 +78,18 @@ public class SQLite3 {
         return c[0] != 0;
     }
 
+    /**
+     * Get if a record is exist.
+     *
+     * @param statement <p>select SQLite statement, note it must select `count()`</p>
+     *                  <p>E.g.: SELECT COUNT() FROM table_xxx WHERE blah blah</p>
+     * @return existence boolean
+     */
+    public boolean hasRecord(Statement statement) {
+        statement.stepRow();
+        return statement.getCursor().getLong(0) != 0;
+    }
+
     public boolean checkIfCorrupt() {
         return JNI.Sqlite3.checkIfCorrupt(id);
     }

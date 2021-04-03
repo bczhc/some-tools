@@ -15,7 +15,7 @@ class DiaryAttachmentAddingActivity : BaseActivity() {
     private lateinit var descriptionET: EditText
     private lateinit var titleET: EditText
     private lateinit var fileIdentifierList: LinkedList<String>
-    private lateinit var diaryDatabase: SQLite3
+    private lateinit var diaryDatabaseRef: DiaryMainActivity.DiaryDatabaseRef
     private lateinit var fileListLL: LinearLayout
     lateinit var linearLayout: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +30,7 @@ class DiaryAttachmentAddingActivity : BaseActivity() {
 
         fileIdentifierList = LinkedList<String>()
 
-        diaryDatabase = DiaryMainActivity.getDiaryDatabase(this)
+        diaryDatabaseRef = DiaryMainActivity.getDiaryDatabase(this)
 
         pickFileBtn.setOnClickListener {
             val intent = Intent(this, FileLibraryActivity::class.java)
@@ -48,16 +48,16 @@ class DiaryAttachmentAddingActivity : BaseActivity() {
 
     private fun createAttachment() {
         val attachmentId = System.currentTimeMillis()
-        diaryDatabase.beginTransaction()
+        diaryDatabaseRef.database.beginTransaction()
         val statement =
-            diaryDatabase.compileStatement("INSERT INTO diary_attachment_file_reference(attachment_id, file_identifier)\nVALUES (?, ?)")
+            diaryDatabaseRef.database.compileStatement("INSERT INTO diary_attachment_file_reference(attachment_id, file_identifier)\nVALUES (?, ?)")
         fileIdentifierList.forEach {
             statement.reset()
             statement.bind(1, attachmentId)
             statement.bindText(2, it)
             statement.step()
         }
-        diaryDatabase.commit()
+        diaryDatabaseRef.database.commit()
         statement.release()
     }
 

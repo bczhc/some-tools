@@ -18,11 +18,11 @@ import java.io.File
  */
 class DiaryAttachmentSettingsActivity : BaseActivity() {
     private lateinit var storagePathTV: TextView
-    private lateinit var diaryDatabase: SQLite3
+    private lateinit var diaryDatabaseRef: DiaryMainActivity.DiaryDatabaseRef
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        diaryDatabase = DiaryMainActivity.getDiaryDatabase(this)
+        diaryDatabaseRef = DiaryMainActivity.getDiaryDatabase(this)
         setContentView(R.layout.diary_attachment_settings_activity)
 
         storagePathTV = storage_path_tv!!
@@ -30,19 +30,19 @@ class DiaryAttachmentSettingsActivity : BaseActivity() {
         val doneBtn = done_btn
         val restoreToDefaultBtn = restore_to_default_btn
 
-        var fileStoragePath = getFileStoragePath(diaryDatabase)
+        var fileStoragePath = getFileStoragePath(diaryDatabaseRef.database)
         if (fileStoragePath == null) {
             val defaultInfoJson = JSONObject()
             defaultInfoJson.put(storagePathJsonKey, getDefaultStoragePath())
 
             val statement =
-                diaryDatabase.compileStatement("INSERT INTO diary_attachment_info (info_json)\nVALUES (?)")
+                diaryDatabaseRef.database.compileStatement("INSERT INTO diary_attachment_info (info_json)\nVALUES (?)")
             statement.bindText(1, defaultInfoJson.toString())
             statement.step()
             statement.release()
         }
 
-        fileStoragePath = getFileStoragePath(diaryDatabase)
+        fileStoragePath = getFileStoragePath(diaryDatabaseRef.database)
         storagePathTV.text = getString(R.string.str, fileStoragePath)
 
         changeBtn.setOnClickListener {
@@ -85,7 +85,7 @@ class DiaryAttachmentSettingsActivity : BaseActivity() {
     }
 
     private fun changeStoragePath(newStoragePath: String) {
-        var statement = diaryDatabase.compileStatement("SELECT info_json\nFROM diary_attachment_info")
+        var statement = diaryDatabaseRef.database.compileStatement("SELECT info_json\nFROM diary_attachment_info")
         statement.stepRow()
         val infoJSON = statement.cursor.getText(statement.getIndexByColumnName("info_json"))
         statement.release()
@@ -93,12 +93,12 @@ class DiaryAttachmentSettingsActivity : BaseActivity() {
         val infoJONObject = JSONObject(infoJSON)
         infoJONObject.put(storagePathJsonKey, newStoragePath)
 
-        statement = diaryDatabase.compileStatement("UPDATE diary_attachment_info\nSET info_json = ?")
+        statement = diaryDatabaseRef.database.compileStatement("UPDATE diary_attachment_info\nSET info_json = ?")
         statement.bindText(1, infoJONObject.toString())
         statement.step()
         statement.release()
 
-        val fileStoragePath = getFileStoragePath(diaryDatabase)
+        val fileStoragePath = getFileStoragePath(diaryDatabaseRef.database)
         storagePathTV.text = getString(R.string.str, fileStoragePath)
     }
 
