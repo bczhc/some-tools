@@ -1,7 +1,8 @@
 package pers.zhc.tools.utils;
 
-import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 import androidx.annotation.StringRes;
 import org.jetbrains.annotations.NotNull;
@@ -21,25 +22,18 @@ public class ToastUtils {
      * @param charSequence string
      */
     public static void show(Context ctx, @NotNull CharSequence charSequence) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
-        toast.show();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> {
+            if (toast != null) {
+                toast.cancel();
+            }
+            toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
+            toast.show();
+        });
     }
 
-    /**
-     * Toast on UI Thread.
-     *
-     * @param activity     activity
-     * @param charSequence string
-     */
-    public static void show(Activity activity, @NotNull CharSequence charSequence) {
-        activity.runOnUiThread(() -> show((Context) activity, charSequence));
-    }
-
-    public static void showError(Context ctx, @StringRes int error_msg_resId, Exception e) {
-        ToastUtils.show(ctx, ctx.getString(R.string.concat, ctx.getString(error_msg_resId)
+    public static void showError(Context ctx, @StringRes int errorMsgResId, @NotNull Exception e) {
+        ToastUtils.show(ctx, ctx.getString(R.string.concat, ctx.getString(errorMsgResId)
                 , "\n" + e.toString()));
     }
 }

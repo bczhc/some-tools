@@ -21,12 +21,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import org.jetbrains.annotations.NotNull;
-import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ScrollEditText;
 import pers.zhc.tools.utils.sqlite.Cursor;
-import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
 
 import java.text.SimpleDateFormat;
@@ -37,9 +35,8 @@ import java.util.Map;
 /**
  * @author bczhc
  */
-public class DiaryTakingActivity extends BaseActivity {
+public class DiaryTakingActivity extends DiaryBaseActivity {
 
-    private SQLite3 diaryDatabase;
     boolean live = true;
     boolean speak = false;
     private TextToSpeech tts;
@@ -49,14 +46,11 @@ public class DiaryTakingActivity extends BaseActivity {
     private Statement updateStatement;
     private ScheduledSaver saver;
     private Map<String, String> ttsReplaceDict = null;
-    private DiaryMainActivity.DiaryDatabaseRef diaryDatabaseRef;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_taking_activity);
-        diaryDatabaseRef = DiaryMainActivity.getDiaryDatabase(this);
-        diaryDatabase = diaryDatabaseRef.getDatabase();
 
         updateStatement = this.diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?");
 
@@ -121,7 +115,6 @@ public class DiaryTakingActivity extends BaseActivity {
         }
 
         final Intent intent = getIntent();
-        int[] date = intent.getIntArrayExtra("date");
         if ((dateInt = intent.getIntExtra("dateInt", -1)) == -1) {
             throw new RuntimeException("No dateInt provided.");
         }
@@ -230,7 +223,6 @@ public class DiaryTakingActivity extends BaseActivity {
         saver.stop();
         save();
         updateStatement.release();
-        diaryDatabaseRef.countDownRef();
         super.finish();
     }
 

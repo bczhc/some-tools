@@ -69,7 +69,8 @@
     <string name="type_n_num">输入合成正弦波项数</string>
     <string name="record">记录</string>
     <string name="notes">笔记</string>
-    <string name="insert_record">增加记录</string>
+    <string name="add_record">增加记录</string>
+    <string name="insert_record">插入记录</string>
     <string name="title">标题</string>
     <string name="content">内容</string>
     <string name="dismiss_x" translatable="false">×</string>
@@ -263,7 +264,7 @@
     <string name="regular_expression_test">正则表达式测试</string>
     <string name="text">文本</string>
     <string name="regex">正则表达式</string>
-    <string name="corrupted_database_and_recreate_new">数据库损坏，已重新创建新的数据库</string>
+    <string name="corrupted_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
     <string name="wubi_test">五笔测试</string>
     <string name="something_went_wrong">something went wrong</string>
     <string name="alphabet_mode">字母模式</string>
@@ -339,4 +340,6 @@
     <string name="reseting_succeeded">重置成功</string>
     <string name="cancel_picking_btn">取消选择按扭</string>
     <string name="edit">编辑</string>
+    <string name="calculating_file_digest">正在计算文件摘要</string>
+    <string name="copying_file">复制文件中</string>
 </resources>

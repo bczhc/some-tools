@@ -129,14 +129,14 @@ public class JNI {
          * @param path sqlite database path, if not exists, it'll create a new sqlite database
          * @return the associated id which is the address of an handler object in JNI.
          */
-        public static native long open(String path);
+        public static native long open(String path) throws RuntimeException;
 
         /**
          * Close sqlite database
          *
          * @param id the associated id
          */
-        public static native void close(long id);
+        public static native void close(long id) throws RuntimeException;
 
         /**
          * Execute a sqlite command.
@@ -144,7 +144,7 @@ public class JNI {
          * @param id  the associated id
          * @param cmd command
          */
-        public static native void exec(long id, String cmd, SqliteExecCallback callback);
+        public static native void exec(long id, String cmd, SqliteExecCallback callback)throws RuntimeException;
 
         /**
          * Check if the database is corrupted.
@@ -326,6 +326,10 @@ public class JNI {
     }
 
     public static class Struct {
+        static {
+            loadLib();
+        }
+
         public static final int MODE_BIG_ENDIAN = 0;
         public static final int MODE_LITTLE_ENDIAN = 1;
 

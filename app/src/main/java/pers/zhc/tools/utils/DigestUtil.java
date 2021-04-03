@@ -21,8 +21,7 @@ public class DigestUtil {
         is.close();
 
         byte[] sha1Bytes = md.digest();
-        StringBuilder digestString = bytesToHexString(sha1Bytes);
-        return digestString.toString();
+        return bytesToHexString(sha1Bytes);
     }
 
     /**
@@ -42,12 +41,12 @@ public class DigestUtil {
     }
 
     @NotNull
-    private static StringBuilder bytesToHexString(byte[] sha1Bytes) {
+    public static String bytesToHexString(byte[] sha1Bytes) {
         StringBuilder digestString = new StringBuilder();
         for (byte sha1Byte : sha1Bytes) {
             String str = Integer.toHexString(sha1Byte < 0 ? (256 + sha1Byte) : sha1Byte);
             digestString.append(str.length() == 1 ? ('0' + str) : str);
         }
-        return digestString;
+        return digestString.toString();
     }
 }

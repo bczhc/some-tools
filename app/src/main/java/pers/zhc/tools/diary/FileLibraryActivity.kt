@@ -8,25 +8,18 @@ import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.diary_attachment_file_library_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_file_library_file_preview_view.view.*
-import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.sqlite.SQLite3
 import java.io.Serializable
 import java.util.*
 
 /**
  * @author bczhc
  */
-class FileLibraryActivity : BaseActivity() {
-    private lateinit var diaryDatabaseRef: DiaryMainActivity.DiaryDatabaseRef
-    private lateinit var diaryDatabase: SQLite3
-
+class FileLibraryActivity : DiaryBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_attachment_file_library_activity)
         val ll = ll!!
-        diaryDatabaseRef = DiaryMainActivity.getDiaryDatabase(this)
-        diaryDatabase = diaryDatabaseRef.database
 
         val intent = intent
         val isPickingMode = intent.getBooleanExtra("pick", false)
@@ -50,7 +43,8 @@ class FileLibraryActivity : BaseActivity() {
             filePreviewView.setOnClickListener {
                 if (isPickingMode) {
                     val resultIntent = Intent()
-                    resultIntent.putExtra("fileInfo", FileInfo(filename, addTimestamp, storageType, description, identifier))
+                    resultIntent.putExtra("fileInfo",
+                        FileInfo(filename, addTimestamp, storageType, description, identifier))
                     setResult(0, resultIntent)
                     finish()
                 }

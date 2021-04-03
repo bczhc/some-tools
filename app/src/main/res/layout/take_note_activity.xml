@@ -28,7 +28,7 @@
     >
         <Button android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:id="@+id/insert_record"
+                android:id="@+id/add_record"
         />
     </LinearLayout>
 </RelativeLayout>

@@ -1,26 +1,27 @@
 package pers.zhc.tools.diary
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RadioGroup
 import kotlinx.android.synthetic.main.diary_attachment_file_library_adding_file_activity.*
-import pers.zhc.tools.BaseActivity
+import kotlinx.android.synthetic.main.diary_file_library_copy_progress_view.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.utils.FileUtil
 import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.utils.sqlite.SQLite3
 import java.io.File
 
 /**
  * @author bczhc
  */
-class FileLibraryAddingActivity : BaseActivity() {
+class FileLibraryAddingActivity : DiaryBaseActivity() {
     private lateinit var storageTypeRG: RadioGroup
     private lateinit var descriptionET: EditText
-    private lateinit var diaryDatabaseRef: DiaryMainActivity.DiaryDatabaseRef
-    private lateinit var diaryDatabase: SQLite3
     private lateinit var pickedFileET: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +33,6 @@ class FileLibraryAddingActivity : BaseActivity() {
         val submitBtn = submit_btn!!
         pickedFileET = picked_file_et.editText
         storageTypeRG = storage_type_rg!!
-        diaryDatabaseRef = DiaryMainActivity.getDiaryDatabase(this)
-        diaryDatabase = diaryDatabaseRef.database
 
         pickFileBtn.setOnClickListener {
             val intent = Intent(this, FilePicker::class.java)
@@ -42,7 +41,26 @@ class FileLibraryAddingActivity : BaseActivity() {
         }
 
         submitBtn.setOnClickListener {
+            val progressView = View.inflate(this, R.layout.diary_file_library_copy_progress_view, null)
+            val msgTV = progressView.msg_tv
+
+            val dialog = Dialog(this)
+            DialogUtil.setDialogAttr(dialog,
+                false,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                false
+            )
+            dialog.setContentView(progressView)
+            dialog.setCanceledOnTouchOutside(false)
+            dialog.setCancelable(false)
+            dialog.show()
+
+            msgTV.setText(R.string.calculating_file_digest)
+
             val identifier = DiaryMainActivity.computeFileIdentifier(File(pickedFileET.text.toString()))
+
+            msgTV.setText(R.string.insert_record)
             val filename = File(pickedFileET.text.toString()).name
             val storageTypeOrdinal = getStorageTypeEnum().enumInt
             val description = descriptionET.text.toString()
@@ -74,6 +92,12 @@ class FileLibraryAddingActivity : BaseActivity() {
                 statement.step()
                 statement.release()
 
+                msgTV.setText(R.string.copying_file)
+                FileUtil.copy(pickedFileET.text.toString(),
+                    DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)!!)
+
+                msgTV.setText(R.string.done)
+                dialog.dismiss()
                 ToastUtils.show(this, R.string.adding_done)
                 finish()
             }
