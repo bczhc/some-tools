@@ -332,6 +332,7 @@
     <string name="storage_type_is">存储类型：%1$s</string>
     <string name="add_time_is">添加时间：%1$s</string>
     <string name="description_is">描述：</string>
+    <string name="description_is_text">描述：%1$s</string>
     <string name="attachment_local_storage_path_is">附件本地存储目录：</string>
     <string name="change">修改</string>
     <string name="restore_to_default">恢复默认</string>
@@ -346,4 +347,5 @@
     <string name="date_format" translatable="false" formatted="false"><![CDATA[yyyy.MM.dd]]></string>
     <string name="image">图像</string>
     <string name="audio">音频</string>
+    <string name="title_is">标题：%1$s</string>
 </resources>

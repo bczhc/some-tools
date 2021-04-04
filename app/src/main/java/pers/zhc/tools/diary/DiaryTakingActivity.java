@@ -23,7 +23,7 @@ import androidx.appcompat.app.ActionBar;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.ScrollEditText;
+import pers.zhc.tools.views.ScrollEditText;
 import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.Statement;
 
@@ -113,6 +113,9 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
             actionBar.setCustomView(charactersCountTV);
             actionBar.show();
         }
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
         final Intent intent = getIntent();
         if ((dateInt = intent.getIntExtra("dateInt", -1)) == -1) {

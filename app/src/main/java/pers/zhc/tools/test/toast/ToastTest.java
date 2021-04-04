@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
-import pers.zhc.tools.utils.ScrollEditText;
+import pers.zhc.tools.views.ScrollEditText;
 import pers.zhc.tools.utils.ToastUtils;
 
 /**

@@ -316,8 +316,9 @@ public class CodecsActivity extends BaseActivity {
 
     private void setTSpinner() {
         Spinner dT = findViewById(R.id.dT);
-        SpinnerAdapter adapter = new ArrayAdapter<>(this, R.layout.adapter_layout
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1
                 , this.spinnerData);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
         dT.setAdapter(adapter);
         dT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

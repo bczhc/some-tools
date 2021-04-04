@@ -86,9 +86,13 @@ public class Common {
     }
 
     public static void debugAssert(boolean condition) {
-        if (BuildConfig.DEBUG && !condition) {
-            throw new AssertionError("Assertion failed");
+        if (BuildConfig.DEBUG) {
+            doAssert(condition);
         }
+    }
+
+    public static void doAssert(boolean condition) {
+        if (!condition) throw new AssertionError("Assertion failed");
     }
 
     @NotNull

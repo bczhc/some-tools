@@ -10,7 +10,7 @@
               tools:ignore="Autofill,LabelFor,TextFields"
               android:hint="@string/title"
     />
-    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent"
+    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent"
                                          android:layout_height="match_parent"
                                          android:layout_margin="10dp"
                                          android:layout_above="@id/ll_bottom"

@@ -61,7 +61,7 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
     private fun createAttachment() {
         val attachmentId = System.currentTimeMillis()
         diaryDatabase.beginTransaction()
-        val statement =
+        var statement =
             diaryDatabase.compileStatement("INSERT INTO diary_attachment_file_reference(attachment_id, file_identifier)\nVALUES (?, ?)")
         fileIdentifierList.forEach {
             statement.reset()
@@ -71,8 +71,16 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         }
         diaryDatabase.commit()
         statement.release()
-    }
 
+        statement =
+            diaryDatabase.compileStatement("INSERT INTO diary_attachment(id, title, description)\nVALUES (?, ?, ?)")
+        statement.bind(1, attachmentId)
+        statement.bindText(2, titleET.text.toString())
+        statement.bindText(3, descriptionET.text.toString())
+        statement.step()
+        statement.release()
+    }
+    
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // no file picked

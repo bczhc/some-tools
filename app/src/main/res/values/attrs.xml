@@ -10,6 +10,8 @@
     <attr name="text" format="string"/>
     <attr name="showedColor" format="string"/>
     <attr name="textSize" format="dimension"/>
+    <attr name="backgroundColor" format="color"/>
+    <attr name="sliderColor" format="color"/>
 
     <declare-styleable name="ScrollEditText">
         <attr name="gravity"/>
@@ -26,5 +28,9 @@
         <attr name="text"/>
         <attr name="textSize"/>
         <attr name="android:inputType"/>
+    </declare-styleable>
+    <declare-styleable name="RightDragView">
+        <attr name="backgroundColor"/>
+        <attr name="sliderColor"/>
     </declare-styleable>
 </resources>

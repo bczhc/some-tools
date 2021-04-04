@@ -12,7 +12,7 @@
               android:id="@+id/wubi_code_database_info"
               android:textSize="15sp"
     />
-    <pers.zhc.tools.utils.SmartHintEditText
+    <pers.zhc.tools.views.SmartHintEditText
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             app:hint="@string/wubi_code"
             android:inputType="text"

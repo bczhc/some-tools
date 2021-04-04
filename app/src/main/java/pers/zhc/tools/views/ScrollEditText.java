@@ -1,4 +1,4 @@
-package pers.zhc.tools.utils;
+package pers.zhc.tools.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 
 import pers.zhc.tools.R;
+import pers.zhc.tools.utils.EditTextInterface;
 
 public class ScrollEditText extends ScrollView implements EditTextInterface {
     private EditText editText;

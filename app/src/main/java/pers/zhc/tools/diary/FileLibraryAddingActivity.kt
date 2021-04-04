@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import kotlinx.android.synthetic.main.adapter_layout.view.*
 import kotlinx.android.synthetic.main.diary_attachment_file_library_adding_file_activity.*
 import kotlinx.android.synthetic.main.diary_file_library_copy_progress_view.view.*
 import pers.zhc.tools.R
@@ -43,15 +42,27 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         }
 
         storageTypeValues = FileLibraryActivity.StorageType.values()
+        storageTypeValues[0].toString()
         val arrayAdapter =
             object : ArrayAdapter<FileLibraryActivity.StorageType>(this, android.R.layout.simple_list_item_1, storageTypeValues) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                     val view = super.getView(position, convertView, parent)
-                    val item = getItem(position)!!
-                    view.text1.setText(item.textResInt)
+                    setMyView(position, view)
                     return view
                 }
+
+                private fun setMyView(position: Int, view: View) {
+                    val item = getItem(position)!!
+                    view.findViewById<TextView>(android.R.id.text1).setText(item.textResInt)
+                }
+
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val dropDownView = super.getDropDownView(position, convertView, parent)
+                    setMyView(position, dropDownView)
+                    return dropDownView
+                }
             }
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1)
 
         spinner.adapter = arrayAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

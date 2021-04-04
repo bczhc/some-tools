@@ -82,7 +82,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
         AUDIO(3, R.string.audio);
 
         companion object {
-            operator fun get(enumInt: Int): StorageType {
+            fun get(enumInt: Int): StorageType {
                 val values = values()
                 values.forEach {
                     if (it.enumInt == enumInt) return it

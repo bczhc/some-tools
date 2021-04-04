@@ -6,14 +6,14 @@
               android:layout_height="match_parent">
     <Spinner android:layout_width="match_parent" android:layout_height="wrap_content"
              android:id="@+id/type"/>
-    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent" android:layout_height="0dp"
+    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="0dp"
                                          app:hint="@string/to_translate_content"
                                          app:gravity="top"
                                          android:id="@+id/content"
                                          android:layout_weight="1"
                                          android:fillViewport="true"
     />
-    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent" android:layout_height="0dp"
+    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="0dp"
                                          app:gravity="top"
                                          android:id="@+id/out"
                                          android:layout_weight="1"

@@ -5,16 +5,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.SpinnerAdapter;
-
 import androidx.annotation.Nullable;
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
+import pers.zhc.tools.views.ScrollEditText;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
-import pers.zhc.tools.utils.ScrollEditText;
 
 public class YouDaoTranslate extends BaseActivity {
     @Override
@@ -24,7 +21,8 @@ public class YouDaoTranslate extends BaseActivity {
         EditText et = ((ScrollEditText) findViewById(R.id.content)).getEditText();
         ScrollEditText out = findViewById(R.id.out);
         List<String> data = new ArrayList<>();
-        SpinnerAdapter adapter = new ArrayAdapter<>(this, R.layout.adapter_layout, data);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, data);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
         et.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

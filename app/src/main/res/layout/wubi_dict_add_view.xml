@@ -6,13 +6,13 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
 >
-    <pers.zhc.tools.utils.SmartHintEditText
+    <pers.zhc.tools.views.SmartHintEditText
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:id="@+id/index_shet"
             android:layout_centerHorizontal="true"
             app:hint="@string/insert_index_1_leftmost"
             android:inputType="number"/>
-    <pers.zhc.tools.utils.SmartHintEditText
+    <pers.zhc.tools.views.SmartHintEditText
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_below="@id/index_shet"
             android:layout_centerHorizontal="true"

@@ -15,7 +15,7 @@
               android:gravity="center"
               android:layout_gravity="center"
               tools:ignore="Autofill,LabelFor,TextFields"/>
-    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
+    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
                                          android:fillViewport="true"
                                          app:gravity="top"
                                          android:id="@+id/scroll_et"

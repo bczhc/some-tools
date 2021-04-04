@@ -23,6 +23,7 @@ import pers.zhc.tools.utils.*;
 import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
+import pers.zhc.tools.views.SmartHintEditText;
 import pers.zhc.u.FileU;
 import pers.zhc.u.Latch;
 

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
+    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
                                          android:layout_above="@id/toast"
                                          android:id="@+id/toast_et"
                                          android:layout_margin="10dp"
