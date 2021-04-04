@@ -227,18 +227,38 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
     }
 
     static class MyDate {
-        int year, month, day;
+        private int year, month, day;
 
-        public MyDate(int date) {
-            year = date / 10000;
-            month = (date / 100) % 100;
-            day = date % 100;
+        public MyDate(int dateInt) {
+            set(dateInt);
         }
 
-        public MyDate(int[] date) {
+        public MyDate(@NotNull int[] date) {
+            set(date);
+        }
+
+        public void set(int dateInt) {
+            year = dateInt / 10000;
+            month = (dateInt / 100) % 100;
+            day = dateInt % 100;
+        }
+
+        public void set(@NotNull int[] date) {
             year = date[0];
             month = date[1];
             day = date[2];
+        }
+
+        public int getYear() {
+            return year;
+        }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public int getDay() {
+            return day;
         }
 
         @Override

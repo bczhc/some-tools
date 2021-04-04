@@ -4,14 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.diary_content_preview_activity.*
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.DisplayUtil
 
 /**
  * @author bczhc
  */
 class DiaryContentPreviewActivity : DiaryBaseActivity() {
+    private lateinit var bottomAttachmentLL: LinearLayout
     private lateinit var contentTV: TextView
     private var dateInt: Int = -1
 
@@ -20,6 +24,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         setContentView(R.layout.diary_content_preview_activity)
 
         contentTV = content_tv!!
+        bottomAttachmentLL = bottom_attachment_ll!!
 
         val intent = intent
         val dateInt = intent.getIntExtra("dateInt", -1)
@@ -28,6 +33,13 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
 
         val content = fetchContent(dateInt)
         contentTV.text = content
+        contentTV.textSize = DisplayUtil.px2sp(this, EditText(this).textSize).toFloat()
+
+        showBottomAttachment()
+    }
+
+    private fun showBottomAttachment() {
+        // TODO: 4/4/21 Not yet implemented.
     }
 
     private fun fetchContent(dateInt: Int): String {
@@ -52,6 +64,11 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
                 intent.putExtra("dateInt", dateInt)
                 startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
             }
+            R.id.attachment -> {
+                val intent = Intent(this, DiaryAttachmentActivity::class.java)
+                intent.putExtra("dateInt", dateInt)
+                startActivity(intent)
+            }
             else -> {
             }
         }
@@ -60,7 +77,6 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        data!!
         when (requestCode) {
             RequestCode.START_ACTIVITY_0 -> {
                 // start diary taking activity

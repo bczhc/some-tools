@@ -1,6 +1,6 @@
 package pers.zhc.tools.diary
 
-    import android.content.Intent
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -15,6 +15,11 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
     private lateinit var fileIdentifierList: LinkedList<String>
     private lateinit var fileListLL: LinearLayout
     lateinit var linearLayout: LinearLayout
+
+    /**
+     * -1 if no dateInt specified
+     */
+    private var dateInt: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,10 +41,21 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         }
 
         createAttachmentBtn.setOnClickListener {
-            createAttachment()
+            if (dateInt == -1) {
+                createAttachment()
+            } else {
+                createAttachmentAttachedDiary()
+            }
             ToastUtils.show(this, R.string.creating_succeeded)
             finish()
         }
+
+        val intent = intent
+        dateInt = intent.getIntExtra("dateInt", -1)
+    }
+
+    private fun createAttachmentAttachedDiary() {
+        createAttachment()
     }
 
     private fun createAttachment() {
@@ -59,7 +75,9 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        data!!
+        // no file picked
+        data ?: return
+
         when (requestCode) {
             RequestCode.START_ACTIVITY_0 -> {
                 // pick file from the file library

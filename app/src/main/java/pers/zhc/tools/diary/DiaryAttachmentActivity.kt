@@ -1,19 +1,33 @@
 package pers.zhc.tools.diary
 
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import pers.zhc.tools.R
 
 class DiaryAttachmentActivity : DiaryBaseActivity() {
+    /**
+     * -1 if no dateInt specified
+     */
+    private var dateInt: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_attachment_activity)
 
         val intent = intent
-        val dateInt = intent.getIntExtra("dateInt", -1)
-        if (dateInt == -1) throw RuntimeException("No dateInt provided.")
+        dateInt = intent.getIntExtra("dateInt", -1)
+        if (dateInt != -1) {
+            val myDate = DiaryTakingActivity.MyDate(dateInt)
+            val calendar = Calendar.getInstance()
+            calendar.set(myDate.year, myDate.month - 1, myDate.day)
+            val formatter = SimpleDateFormat.getPatternInstance(getString(R.string.date_format))
+            val format = formatter.format(calendar.time)
+            title = getString(R.string.attachment_with_date_concat, format)
+        }
 
         checkAttachmentInfoRecord()
     }
@@ -34,7 +48,9 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
-                startActivity(Intent(this, DiaryAttachmentAddingActivity::class.java))
+                val intent = Intent(this, DiaryAttachmentAddingActivity::class.java)
+                intent.putExtra("dateInt", dateInt)
+                startActivity(intent)
             }
             R.id.file_library -> {
                 startActivity(Intent(this, FileLibraryActivity::class.java))

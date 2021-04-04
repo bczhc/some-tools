@@ -84,6 +84,11 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 }
             }
         });
+
+        final ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar == null) throw new AssertionError();
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(false);
     }
 
     private void load() {
@@ -208,6 +213,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             default:
                 break;
         }
+        super.onOptionsItemSelected(item);
         return true;
     }
 
@@ -228,13 +234,10 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 throw new RuntimeException("Failed to delete corrupted database file.");
             }
 
-            newDatabase = SQLite3.open(internalDatabasePath);
-            initDatabase(newDatabase);
-
             ToastUtils.show(this, R.string.corrupted_database_and_recreate_new_msg);
         }
 
-        setDiaryDatabase(SQLite3.open(internalDatabasePath));
+        setDatabase(internalDatabasePath);
         refreshListViews();
     }
 
@@ -290,7 +293,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             final int day = calendar.get(Calendar.DAY_OF_MONTH);
             dateInts = new int[]{year, month, day};
         } else {
-            dateInts = new int[]{date.year, date.month, date.day};
+            dateInts = new int[]{date.getYear(), date.getMonth(), date.getDay()};
         }
         intent.putExtra("date", dateInts);
         String dateString;
@@ -398,7 +401,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         String weekString = null;
         try {
             final Calendar calendar = Calendar.getInstance();
-            calendar.set(myDate.year, myDate.month - 1, myDate.day);
+            calendar.set(myDate.getYear(), myDate.getMonth() - 1, myDate.getDay());
             final int weekIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1;
             weekString = this.weeks[weekIndex];
         } catch (Exception e) {

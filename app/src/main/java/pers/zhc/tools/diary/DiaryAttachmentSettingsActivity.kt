@@ -2,6 +2,7 @@ package pers.zhc.tools.diary
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.TextView
 import kotlinx.android.synthetic.main.diary_attachment_settings_activity.*
 import org.json.JSONObject

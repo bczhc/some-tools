@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
+import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.diary_attachment_file_library_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_file_library_file_preview_view.view.*
 import pers.zhc.tools.R
 import java.io.Serializable
 import java.util.*
+import kotlin.NoSuchElementException
 
 /**
  * @author bczhc
@@ -72,11 +75,21 @@ class FileLibraryActivity : DiaryBaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    enum class StorageType(ordinal: Int) {
-        RAW(0),
-        TEXT(1);
+    enum class StorageType(val enumInt: Int, @StringRes val textResInt: Int) {
+        RAW(0, R.string.raw),
+        TEXT(1, R.string.text),
+        IMAGE(2, R.string.image),
+        AUDIO(3, R.string.audio);
 
-        val enumInt: Int = ordinal
+        companion object {
+            operator fun get(enumInt: Int): StorageType {
+                val values = values()
+                values.forEach {
+                    if (it.enumInt == enumInt) return it
+                }
+                throw NoSuchElementException()
+            }
+        }
     }
 
     class FileInfo(
@@ -99,11 +112,14 @@ class FileLibraryActivity : DiaryBaseActivity() {
             inflate.filename_tv.text = ctx.getString(R.string.filename_is, filename)
             inflate.add_time_tv.text = ctx.getString(R.string.add_time_is, Date(addTimestamp).toString())
             inflate.storage_type_tv.text =
-                ctx.getString(R.string.storage_type_is, ctx.getString(when (storageTypeEnumInt) {
-                    StorageType.TEXT.enumInt -> R.string.text
-                    else -> R.string.raw
-                }))
-            inflate.description_tv.text = description
+                ctx.getString(R.string.storage_type_is, ctx.getString(StorageType.get(storageTypeEnumInt).textResInt))
+            val descriptionTV = inflate.description_tv!!
+            descriptionTV.text = description
+            if (description.isNotEmpty()) {
+                val layoutParams = descriptionTV.layoutParams
+                layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
+                descriptionTV.layoutParams = layoutParams
+            }
             return inflate
         }
 

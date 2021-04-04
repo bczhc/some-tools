@@ -32,22 +32,9 @@
                   android:textSize="20sp"
                   android:textColor="@color/black"
         />
-        <RadioGroup android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/storage_type_rg"
-        >
-            <RadioButton android:layout_width="0dp" android:layout_height="wrap_content"
-                         android:text="@string/raw"
-                         android:layout_weight="1"
-                         android:id="@+id/raw_radio"
-                         android:checked="true"
-            />
-            <RadioButton android:layout_width="0dp" android:layout_height="wrap_content"
-                         android:text="@string/text"
-                         android:layout_weight="1"
-                         android:id="@+id/text_radio"
-            />
-        </RadioGroup>
+        <Spinner android:layout_width="wrap_content" android:layout_height="wrap_content"
+                 android:id="@+id/spinner"
+        />
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="@string/submit"
                 android:textSize="20sp"

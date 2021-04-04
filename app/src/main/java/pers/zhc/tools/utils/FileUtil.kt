@@ -19,7 +19,7 @@ class FileUtil {
             while (true) {
                 readLen = srcIS.read(buf)
                 if (readLen <= 0) break
-                dstOS.write(buf)
+                dstOS.write(buf, 0, readLen)
                 dstOS.flush()
             }
 
