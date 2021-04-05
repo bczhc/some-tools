@@ -57,7 +57,6 @@ open class DiaryBaseActivity() : BaseActivity() {
         }
         diaryDatabaseRef = DiaryDatabaseRef(database)
         initDatabase(database)
-
     }
 
     class DiaryDatabaseRef internal constructor(val database: SQLite3) {
@@ -75,6 +74,10 @@ open class DiaryBaseActivity() : BaseActivity() {
 
         internal fun close() {
             database.close()
+        }
+
+        fun getRefCount(): Int {
+            return this.diaryDatabaseRefCount
         }
 
         /**

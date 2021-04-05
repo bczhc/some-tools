@@ -137,7 +137,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                 data ?: return
 
                 val pickedAttachmentId = data.getLongExtra("pickedAttachmentId", -1)
-                if (pickedAttachmentId == -1L) throw AssertionError()
+                Common.doAssert(pickedAttachmentId != -1L)
                 attachAttachment(pickedAttachmentId)
                 ToastUtils.show(this, R.string.adding_succeeded)
             }

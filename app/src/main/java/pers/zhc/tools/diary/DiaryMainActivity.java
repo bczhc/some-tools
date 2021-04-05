@@ -88,7 +88,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         });
 
         final ActionBar actionBar = this.getSupportActionBar();
-        if (actionBar == null) throw new AssertionError();
+        Common.doAssert(actionBar != null);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
     }
@@ -163,7 +163,12 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             final String s = et.getText().toString();
             try {
                 final int dateInt = Integer.parseInt(s);
-                checkDuplication(dateInt);
+
+                if (checkRecordExistence(dateInt)) {
+                    showDuplicateConfirmDialog(dateInt);
+                } else {
+                    createDiary(dateInt);
+                }
             } catch (NumberFormatException e) {
                 ToastUtils.show(this, R.string.please_type_correct_value);
             }
@@ -171,18 +176,14 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         promptDialog.show();
     }
 
-    private void checkDuplication(int dateInt) {
-        final boolean hasRecord = checkRecordExistence(dateInt);
-
-        if (hasRecord) {
-            Dialog[] dialog = {null};
-            dialog[0] = DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
-                openDiaryPreview(dateInt);
-                dialog[0].dismiss();
-            }, R.string.diary_duplicate_dialog_title);
-            DialogUtil.setDialogAttr(dialog[0], false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-            dialog[0].show();
-        }
+    private void showDuplicateConfirmDialog(int dateInt) {
+        Dialog[] dialog = {null};
+        dialog[0] = DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
+            openDiaryPreview(dateInt);
+            dialog[0].dismiss();
+        }, R.string.diary_duplicate_dialog_title);
+        DialogUtil.setDialogAttr(dialog[0], false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        dialog[0].show();
     }
 
     private boolean checkRecordExistence(int dateInt) {
@@ -218,25 +219,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 startActivityForResult(intent2, RequestCode.START_ACTIVITY_2);
                 break;
             case R.id.sort:
-                final Statement statement = diaryDatabase.compileStatement("SELECT sql\n" +
-                        "FROM sqlite_master\n" +
-                        "WHERE type IS 'table'\n" +
-                        "  AND tbl_name IS 'diary'");
-                final Cursor cursor = statement.getCursor();
-                Common.doAssert(cursor.step());
-                final String diaryTableSql = cursor.getText(statement.getIndexByColumnName("sql"));
-                statement.release();
-
-                final String tmpTableSql = diaryTableSql.replaceFirst(" diary ", " tmp ");
-                diaryDatabase.exec(tmpTableSql);
-
-                diaryDatabase.beginTransaction();
-                diaryDatabase.exec("DROP TABLE IF EXISTS tmp");
-                diaryDatabase.exec("INSERT INTO tmp SELECT * FROM diary ORDER BY \"date\"");
-                diaryDatabase.exec("DROP TABLE diary");
-                diaryDatabase.exec("ALTER TABLE tmp RENAME TO diary");
-                diaryDatabase.commit();
-                refreshListViews();
+                sort();
                 break;
             case R.id.attachment:
                 startActivity(new Intent(this, DiaryAttachmentActivity.class));
@@ -248,16 +231,50 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         return true;
     }
 
+    private void sort() {
+        diaryDatabase.exec("DROP TABLE IF EXISTS tmp");
+
+        diaryDatabase.beginTransaction();
+        final Statement statement = diaryDatabase.compileStatement("SELECT sql\n" +
+                "FROM sqlite_master\n" +
+                "WHERE type IS 'table'\n" +
+                "  AND tbl_name IS 'diary'");
+        final Cursor cursor = statement.getCursor();
+        Common.doAssert(cursor.step());
+        final String diaryTableSql = cursor.getText(statement.getIndexByColumnName("sql"));
+        statement.release();
+
+        final String tmpTableSql = diaryTableSql.replaceFirst("diary", "tmp");
+        diaryDatabase.exec(tmpTableSql);
+
+        diaryDatabase.exec("INSERT INTO tmp SELECT * FROM diary ORDER BY \"date\"");
+        diaryDatabase.exec("DROP TABLE diary");
+        diaryDatabase.exec("ALTER TABLE tmp RENAME TO diary");
+        diaryDatabase.commit();
+        refreshListViews();
+    }
+
     private void writeDiary() {
         final boolean recordExistence = checkRecordExistence(getCurrentDateInt());
         if (recordExistence) {
             openDiaryPreview(getCurrentDateInt());
         } else {
-            createDiary();
+            createDiary(getCurrentDateInt());
         }
     }
 
     private void importDiary(File file) {
+        final DiaryDatabaseRef diaryDatabaseRef = DiaryBaseActivity.Companion.getDiaryDatabaseRef();
+        Common.doAssert(diaryDatabaseRef != null);
+        final int refCount = diaryDatabaseRef.getRefCount();
+        // the only one reference is for the current activity
+        if (refCount > 1) {
+            ToastUtils.show(this, getString(R.string.diary_import_ref_count_not_zero_msg, refCount));
+            return;
+        }
+        diaryDatabaseRef.countDownRef();
+        Common.doAssert(diaryDatabaseRef.isAbandoned());
+
         final Latch latch = new Latch();
         latch.suspend();
         new Thread(() -> {
@@ -278,6 +295,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         }
 
         setDatabase(internalDatabasePath);
+        DiaryMainActivity.Companion.getDiaryDatabaseRef().countRef();
         refreshListViews();
     }
 
@@ -328,10 +346,10 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         return date.getDateInt();
     }
 
-    private void createDiary() {
+    private void createDiary(int dateInt) {
         Intent intent = new Intent(this, DiaryTakingActivity.class);
         // use the current time
-        intent.putExtra("dateInt", getCurrentDateInt());
+        intent.putExtra("dateInt", dateInt);
         startActivityForResult(intent, RequestCode.START_ACTIVITY_0);
     }
 
@@ -342,7 +360,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             case RequestCode.START_ACTIVITY_0:
                 // on diary taking activity returned
                 // it must be an activity which intends to create a new diary record
-                if (data == null) throw new AssertionError();
+                Common.doAssert(data != null);
                 int dateInt = data.getIntExtra("dateInt", -1);
 
                 RelativeLayout childRL = getChildRLByDate(dateInt);
