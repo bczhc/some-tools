@@ -411,7 +411,7 @@
         <activity
                 android:name=".diary.FileLibraryActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/attachment"
+                android:label="@string/file_library"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -422,7 +422,7 @@
         <activity
                 android:name=".diary.FileLibraryAddingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/attachment"
+                android:label="@string/file_library"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -433,7 +433,7 @@
         <activity
                 android:name=".diary.DiaryAttachmentSettingsActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/attachment"
+                android:label="@string/settings"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -444,7 +444,7 @@
         <activity
                 android:name=".diary.DiaryContentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/attachment"
+                android:label="@string/preview"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

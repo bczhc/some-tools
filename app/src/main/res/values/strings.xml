@@ -348,4 +348,5 @@
     <string name="image">图像</string>
     <string name="audio">音频</string>
     <string name="title_is">标题：%1$s</string>
+    <string name="preview">预览</string>
 </resources>

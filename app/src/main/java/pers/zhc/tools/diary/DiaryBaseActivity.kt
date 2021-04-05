@@ -10,7 +10,7 @@ import pers.zhc.tools.utils.sqlite.SQLite3
 /**
  * @author bczhc
  */
-open class DiaryBaseActivity : BaseActivity() {
+open class DiaryBaseActivity() : BaseActivity() {
     companion object {
         var diaryDatabaseRef: DiaryDatabaseRef? = null
 

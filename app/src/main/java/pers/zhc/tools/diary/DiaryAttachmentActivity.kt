@@ -41,7 +41,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
             calendar.set(myDate.year, myDate.month - 1, myDate.day)
             val formatter = SimpleDateFormat.getPatternInstance(getString(R.string.date_format))
             val format = formatter.format(calendar.time)
-            title = getString(R.string.attachment_with_date_concat, format)
+            if (!pickMode) title = getString(R.string.attachment_with_date_concat, format)
         }
 
         checkAttachmentInfoRecord()
@@ -54,7 +54,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         if (dateInt == -1 || pickMode) {
             statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment")
         } else {
-            statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment\nWHERE \"date\" IS ?")
+            statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment\nWHERE id IS (SELECT referred_attachment_id FROM diary_attachment_mapping WHERE diary_date IS ?);")
             statement.bind(1, dateInt)
         }
         val idColumnIndex = statement.getIndexByColumnName("id")
@@ -108,7 +108,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
-                if (dateInt == -1) {
+                if (dateInt == -1 || pickMode) {
                     val intent = Intent(this, DiaryAttachmentAddingActivity::class.java)
                     intent.putExtra("dateInt", dateInt)
                     startActivity(intent)

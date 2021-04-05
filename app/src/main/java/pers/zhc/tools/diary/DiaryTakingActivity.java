@@ -28,6 +28,7 @@ import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.Statement;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
         et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         Handler debounceHandler = new Handler();
-        et.addTextChangedListener(new TextWatcher() {
+        final TextWatcher watcher = new TextWatcher() {
             private String last;
 
             @Override
@@ -98,7 +99,8 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
             }
-        });
+        };
+        et.addTextChangedListener(watcher);
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -112,10 +114,9 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
             }
             actionBar.setCustomView(charactersCountTV);
             actionBar.show();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
         }
-
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
 
         final Intent intent = getIntent();
         if ((dateInt = intent.getIntExtra("dateInt", -1)) == -1) {
@@ -125,16 +126,33 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         final Statement statement = this.diaryDatabase.compileStatement("SELECT COUNT()\n" +
                 "FROM diary\n" +
                 "WHERE \"date\" IS ?");
+        statement.bind(1, dateInt);
         final boolean hasRecord = this.diaryDatabase.hasRecord(statement);
         statement.release();
 
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("newRec", hasRecord);
+        final boolean newRec = !hasRecord;
+        resultIntent.putExtra("newRec", newRec);
+        resultIntent.putExtra("dateInt", dateInt);
+        setResult(0, resultIntent);
 
         prepareContent();
 
+        if (newRec) {
+            createNewRecord();
+        }
+
         saver = new ScheduledSaver();
         saver.start();
+    }
+
+    private void createNewRecord() {
+        final Statement statement = diaryDatabase.compileStatement("INSERT INTO diary(\"date\", content)\n" +
+                "VALUES (?, ?)");
+        statement.bind(1, dateInt);
+        statement.bindText(2, "");
+        statement.step();
+        statement.release();
     }
 
     private void showCharactersCount() {
@@ -162,7 +180,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(@NotNull Menu menu) {
         MenuItem item = menu.findItem(R.id.speak_switch);
         Switch speakSwitch = new Switch(this);
         speakSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -238,6 +256,14 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
         public MyDate(@NotNull int[] date) {
             set(date);
+        }
+
+        public MyDate(@NotNull Date date) {
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            this.year = calendar.get(Calendar.YEAR);
+            this.month = calendar.get(Calendar.MONTH) + 1;
+            this.day = calendar.get(Calendar.DAY_OF_MONTH);
         }
 
         public void set(int dateInt) {

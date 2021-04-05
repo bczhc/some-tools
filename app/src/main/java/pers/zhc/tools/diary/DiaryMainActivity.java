@@ -20,6 +20,7 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.*;
+import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
@@ -34,6 +35,7 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -157,7 +159,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void createSpecificDateDiary() {
+    private void showCreateSpecificDateDiaryDialog() {
         final AlertDialog promptDialog = DialogUtil.createPromptDialog(this, R.string.enter_specific_date, (et, alertDialog) -> {
             final String s = et.getText().toString();
             try {
@@ -177,7 +179,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 createOrOpenDiary(null);
                 break;
             case R.id.create:
-                createSpecificDateDiary();
+                showCreateSpecificDateDiaryDialog();
                 break;
             case R.id.password:
                 changePassword();
@@ -286,21 +288,11 @@ public class DiaryMainActivity extends DiaryBaseActivity {
 
     private void createOrOpenDiary(@Nullable DiaryTakingActivity.MyDate date) {
         Intent intent = new Intent(this, DiaryTakingActivity.class);
-        final int[] dateInts;
         if (date == null) {
-            final Calendar calendar = Calendar.getInstance();
-            final int year = calendar.get(Calendar.YEAR);
-            final int month = calendar.get(Calendar.MONTH) + 1;
-            final int day = calendar.get(Calendar.DAY_OF_MONTH);
-            dateInts = new int[]{year, month, day};
-        } else {
-            dateInts = new int[]{date.getYear(), date.getMonth(), date.getDay()};
+            // use the current time
+            date = new DiaryTakingActivity.MyDate(new Date(System.currentTimeMillis()));
         }
-        intent.putExtra("date", dateInts);
-        String dateString;
-        if (date == null) dateString = new DiaryTakingActivity.MyDate(dateInts).getDateIntString();
-        else dateString = date.getDateIntString();
-        intent.putExtra("myDateStr", dateString);
+        intent.putExtra("dateInt", date.getDateInt());
         startActivityForResult(intent, RequestCode.START_ACTIVITY_0);
     }
 
@@ -311,10 +303,10 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             case RequestCode.START_ACTIVITY_0:
                 // on diary taking activity returned
                 if (data == null) throw new AssertionError();
-                String myDateStr = data.getStringExtra("myDateStr");
+                int dateInt = data.getIntExtra("dateInt", -1);
                 boolean isNewDiary = data.getBooleanExtra("newRec", true);
 
-                RelativeLayout childRL = getChildRLByDate(myDateStr);
+                RelativeLayout childRL = getChildRLByDate(dateInt);
                 if (isNewDiary) {
                     ll.addView(childRL);
                 } else {
@@ -322,7 +314,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                     int index = -1;
                     for (int i = 0; i < childCount; i++) {
                         DiaryTakingActivity.MyDate date = ((TextViewWithDate) ((RelativeLayout) ll.getChildAt(i)).getChildAt(0)).date;
-                        if (date.getDateIntString().equals(myDateStr)) {
+                        if (date.getDateInt() == dateInt) {
                             index = i;
                             break;
                         }
@@ -364,13 +356,20 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         loadListViews();
     }
 
-    private RelativeLayout getChildRLByDate(String dateString) {
-        RelativeLayout[] r = {null};
-        diaryDatabase.exec("SELECT * FROM diary WHERE date is " + dateString, contents -> {
-            r[0] = getChildRL(contents);
-            return 0;
-        });
-        return r[0];
+    @NotNull
+    private RelativeLayout getChildRLByDate(int dateInt) {
+        final Statement statement = diaryDatabase.compileStatement("SELECT *\n" +
+                "FROM diary\n" +
+                "WHERE \"date\" IS ?");
+        statement.bind(1, dateInt);
+        final Cursor cursor = statement.getCursor();
+        String content;
+        if (cursor.step()) {
+            content = cursor.getText(statement.getIndexByColumnName("content"));
+        } else content = "";
+        statement.release();
+
+        return getChildRL(new DiaryTakingActivity.MyDate(dateInt), content);
     }
 
     private static class TextViewWithDate extends AppCompatTextView {
@@ -474,7 +473,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                             changeDate(date.getDateIntString(), newDate);
                             dialog.dismiss();
                             // update view
-                            RelativeLayout newChildRL = getChildRLByDate(newDate.getDateIntString());
+                            RelativeLayout newChildRL = getChildRLByDate(newDate.getDateInt());
                             int indexOfChild = this.ll.indexOfChild(childRL);
                             this.ll.removeViewAt(indexOfChild);
                             this.ll.addView(newChildRL, indexOfChild);
