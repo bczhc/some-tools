@@ -349,4 +349,5 @@
     <string name="audio">音频</string>
     <string name="title_is">标题：%1$s</string>
     <string name="preview">预览</string>
+    <string name="diary_duplicate_dialog_title">已有该日期日记，是否打开？</string>
 </resources>

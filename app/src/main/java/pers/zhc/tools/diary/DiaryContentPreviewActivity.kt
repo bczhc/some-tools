@@ -88,4 +88,12 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
             }
         }
     }
+
+    override fun finish() {
+        val resultIntent = Intent()
+        resultIntent.putExtra("dateInt", dateInt)
+        setResult(0, resultIntent)
+
+        super.finish()
+    }
 }
