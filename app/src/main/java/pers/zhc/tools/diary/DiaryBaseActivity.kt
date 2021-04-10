@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import org.intellij.lang.annotations.Language
 import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.sqlite.SQLite3
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @author bczhc
@@ -67,6 +70,13 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
             statements.forEach {
                 database.exec(it)
             }
+        }
+
+        fun getDateFromDateInt(dateInt: Int): Date {
+            val myDate = DiaryTakingActivity.MyDate(dateInt)
+            val calendar = Calendar.getInstance()
+            calendar.set(myDate.year, myDate.month - 1, myDate.day)
+            return calendar.time
         }
     }
 
@@ -146,4 +156,6 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
         if (item.itemId == android.R.id.home) onBackPressed()
         return super.onOptionsItemSelected(item)
     }
+
+
 }

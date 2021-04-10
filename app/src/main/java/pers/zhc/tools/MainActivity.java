@@ -25,11 +25,7 @@ import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.stcflash.FlashMainActivity;
-import pers.zhc.tools.test.DrawingBoardTest;
-import pers.zhc.tools.test.RegExpTest;
-import pers.zhc.tools.test.SensorTest;
-import pers.zhc.tools.test.TTS;
-import pers.zhc.tools.test.Demo;
+import pers.zhc.tools.test.*;
 import pers.zhc.tools.test.malloctest.MAllocTest;
 import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
@@ -53,9 +49,15 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tools_activity_main);
         init();
+
     }
 
 

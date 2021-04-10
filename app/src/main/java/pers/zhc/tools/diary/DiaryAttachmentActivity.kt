@@ -1,8 +1,6 @@
 package pers.zhc.tools.diary
 
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,6 +12,8 @@ import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.sqlite.Statement
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DiaryAttachmentActivity : DiaryBaseActivity() {
     private var pickMode: Boolean = false
@@ -36,11 +36,8 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         dateInt = intent.getIntExtra("dateInt", -1)
         pickMode = intent.getBooleanExtra("pickMode", false)
         if (dateInt != -1 && !pickMode) {
-            val myDate = DiaryTakingActivity.MyDate(dateInt)
-            val calendar = Calendar.getInstance()
-            calendar.set(myDate.year, myDate.month - 1, myDate.day)
-            val formatter = SimpleDateFormat.getPatternInstance(getString(R.string.diary_attachment_with_date_format_title))
-            val format = formatter.format(calendar.time)
+            val formatter = SimpleDateFormat(getString(R.string.diary_attachment_with_date_format_title))
+            val format = formatter.format(getDateFromDateInt(dateInt))
             title = format
         }
 
@@ -54,7 +51,8 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         if (dateInt == -1 || pickMode) {
             statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment")
         } else {
-            statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment\nWHERE id IS (SELECT referred_attachment_id FROM diary_attachment_mapping WHERE diary_date IS ?);")
+            statement =
+                diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment\nWHERE id IS (SELECT referred_attachment_id FROM diary_attachment_mapping WHERE diary_date IS ?);")
             statement.bind(1, dateInt)
         }
         val idColumnIndex = statement.getIndexByColumnName("id")

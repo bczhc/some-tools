@@ -78,7 +78,7 @@
         <activity
                 android:name="pers.zhc.tools.MainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
