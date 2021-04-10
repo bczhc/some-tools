@@ -1,34 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">tools</string>
-    <string name="str" translatable="false">%1$s</string>
-    <string name="progress_tv" translatable="false">%1$f%%</string>
-    <string name="select_file_or_directory">选择文件/目录</string>
-    <string name="encode">编码</string>
-    <string name="decode">解码</string>
-    <string name="confirm">确认</string>
-    <string name="cancel">取消</string>
-    <string name="encode_done">编码完成</string>
-    <string name="decode_done">解码完成</string>
-    <string name="null_file">为空文件</string>
-    <string name="native_error">内部错误</string>
-    <string name="file_open_error">打开文件错误</string>
-    <string name="incorrect_file_extension">格式不正确</string>
-    <string name="all_file_encoded_done">所有文件编码完成！</string>
-    <string name="all_file_decoded_done">所有文件解码完成！</string>
-    <string name="have_task">正在进行任务</string>
-    <string name="type_path">输入路径</string>
-    <string name="no_access">无此路径或无权访问</string>
+    <string name="select_file_or_directory_btn_text">选择文件/目录</string>
+    <string name="encode_btn_text">编码</string>
+    <string name="decode_btn_text">解码</string>
+    <string name="confirm_btn_text">确认</string>
+    <string name="cancel_btn_text">取消</string>
+    <string name="encode_done_msg">编码完成</string>
+    <string name="decode_done_msg">解码完成</string>
+    <string name="null_file_alert_msg">为空文件</string>
+    <string name="native_error_alert_msg">内部错误</string>
+    <string name="file_open_error_msg">打开文件错误</string>
+    <string name="incorrect_file_extension_alert_msg">格式不正确</string>
+    <string name="all_file_encoded_done_msg">所有文件编码完成！</string>
+    <string name="all_file_decoded_done_msg">所有文件解码完成！</string>
+    <string name="executing_task_msg">正在进行任务</string>
+    <string name="type_path_dialog_title">输入路径</string>
+    <string name="no_access_alert_msg">无此路径或无权访问</string>
     <string name="nul" translatable="false"/>
-    <string name="null_string">null</string>
-    <string name="filter">过滤器</string>
-    <string name="iFileExtension">操作文件扩展名</string>
-    <string name="oFileExtension">输出文件类型</string>
+    <string name="null_string" translatable="false">null</string>
+    <string name="filter_text_view_text">过滤器</string>
+    <string name="input_file_extension_text_view_text">操作文件扩展名</string>
+    <string name="output_file_extension_text_view_text">输出文件类型</string>
     <string name="settings">设置</string>
     <string name="saving_succeeded">保存成功</string>
     <string name="expression_error">json表达错误</string>
     <string name="json_solve_error">json解析失败：</string>
-    <!--    <string name="pathEdit">输入路径</string>-->
     <string name="delete_old_file">完成后是否删除原文件</string>
     <string name="generate_pi">计算Pi</string>
     <string name="calc">计算</string>

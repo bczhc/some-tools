@@ -228,7 +228,7 @@ public class Document extends BaseActivity {
                         }
                     });
                     adb.setView(inflate);
-                    adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                    adb.setPositiveButton(R.string.confirm_btn_text, (dialog, which) -> {
                         try {
                             File destFile = new File(destFileDir + File.separator + filename.getText() + ".db");
                             FileU.FileCopy(file, destFile);
@@ -238,7 +238,7 @@ public class Document extends BaseActivity {
                         } catch (IOException e) {
                             Common.showException(e, this);
                         }
-                    }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    }).setNegativeButton(R.string.cancel_btn_text, (dialog, which) -> {
 
                     });
                     Dialog ad = adb.create();

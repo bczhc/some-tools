@@ -51,7 +51,7 @@ public class RequestCaptureScreenActivity extends AppCompatActivity {
                 requestPermissionInterface.onRequestCallback(requestCode, resultCode, data);
             }
         } else {
-            ToastUtils.show(this, R.string.native_error);
+            ToastUtils.show(this, R.string.native_error_alert_msg);
         }
         finish();
     }

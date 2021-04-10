@@ -71,7 +71,7 @@ public class DialogUtil {
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, @Nullable View view, int titleId, int width, int height, boolean applicationOverlay) {
         AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
-        adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId);
+        adb.setPositiveButton(R.string.confirm_btn_text, positiveAction).setNegativeButton(R.string.cancel_btn_text, negativeAction).setTitle(titleId);
         if (view != null) {
             adb.setView(view);
         }
@@ -107,8 +107,8 @@ public class DialogUtil {
         EditText et = new EditText(ctx);
         adb.setTitle(strId)
                 .setView(et)
-                .setPositiveButton(R.string.confirm, (dialog, which) -> callback.confirm(et, ad[0]))
-                .setNegativeButton(R.string.cancel, negativeAction);
+                .setPositiveButton(R.string.confirm_btn_text, (dialog, which) -> callback.confirm(et, ad[0]))
+                .setNegativeButton(R.string.cancel_btn_text, negativeAction);
         ad[0] = adb.create();
         return ad[0];
     }

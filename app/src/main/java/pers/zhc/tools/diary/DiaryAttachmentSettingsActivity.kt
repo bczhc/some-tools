@@ -41,7 +41,7 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
         }
 
         fileStoragePath = getFileStoragePath(diaryDatabase)
-        storagePathTV.text = getString(R.string.str, fileStoragePath)
+        storagePathTV.text = fileStoragePath
 
         changeBtn.setOnClickListener {
             ToastUtils.show(this, R.string.pick_folder)
@@ -97,7 +97,7 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
         statement.release()
 
         val fileStoragePath = getFileStoragePath(diaryDatabase)
-        storagePathTV.text = getString(R.string.str, fileStoragePath)
+        storagePathTV.text = fileStoragePath
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

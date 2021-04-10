@@ -12,7 +12,6 @@
     />
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:textSize="20sp"
-              android:text="@string/str"
               android:id="@+id/storage_path_tv"
               android:gravity="center"
     />

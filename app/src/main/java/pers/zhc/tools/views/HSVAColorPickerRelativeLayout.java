@@ -137,7 +137,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
             String hexString = ColorUtils.getHexString(color, true);
             editText.setText(hexString);
             adb.setView(editText);
-            adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
+            adb.setPositiveButton(R.string.confirm_btn_text, (dialog, which) -> {
                 String s = editText.getText().toString();
                 try {
                     if (s.charAt(0) == '#') s = s.substring(1);
@@ -158,7 +158,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
                     ToastUtils.show(this.context, R.string.please_type_correct_value);
                 }
             });
-            adb.setNegativeButton(R.string.cancel, (dialog, which) -> {
+            adb.setNegativeButton(R.string.cancel_btn_text, (dialog, which) -> {
             });
             adb.setTitle(R.string.please_enter_color_hex);
             AlertDialog ad = adb.create();
@@ -181,7 +181,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
                     EditText nameET = new EditText(this.context);
                     nameET.setText(s[0]);
                     adb1.setView(nameET);
-                    adb1.setPositiveButton(R.string.confirm, (dialog1, which1) -> {
+                    adb1.setPositiveButton(R.string.confirm_btn_text, (dialog1, which1) -> {
                         if (((LinearLayout) this.getChildAt(0)).getChildCount() == 5) {
                             //未保存过颜色时，创建HorizontalScrollView和linearlayout
                             ColorShowRL colorShowRL = new ColorShowRL(this.context);
@@ -201,7 +201,7 @@ public class HSVAColorPickerRelativeLayout extends RelativeLayout {
                             ((LinearLayout) ((((HorizontalScrollView) ((LinearLayout) this.getChildAt(0)).getChildAt(5))).getChildAt(0))).addView(colorShowRL);//往saveColorLL里面添加
                         }
                     });
-                    adb1.setNegativeButton(R.string.cancel, (dialog1, which1) -> {
+                    adb1.setNegativeButton(R.string.cancel_btn_text, (dialog1, which1) -> {
                     });
                     adb1.setTitle(R.string.color_naming);
                     AlertDialog ad1 = adb1.create();

@@ -529,7 +529,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 AlertDialog.Builder adb = new AlertDialog.Builder(this);
                 EditText dateET = new EditText(this);
                 final AlertDialog d2 = adb.setTitle(R.string.enter_new_date)
-                        .setPositiveButton(R.string.confirm, (dialog1, which) -> {
+                        .setPositiveButton(R.string.confirm_btn_text, (dialog1, which) -> {
                             final String dateString = dateET.getText().toString();
                             final DiaryTakingActivity.MyDate newDate;
                             try {
@@ -546,7 +546,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                             this.ll.removeViewAt(indexOfChild);
                             this.ll.addView(newChildRL, indexOfChild);
                         })
-                        .setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                        .setNegativeButton(R.string.cancel_btn_text, (dialog1, which) -> {
                         })
                         .setView(dateET)
                         .create();

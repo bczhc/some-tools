@@ -22,7 +22,7 @@
             android:layout_toLeftOf="@id/positive"
             android:id="@+id/negative"
             android:layout_toStartOf="@id/positive"
-            android:text="@string/cancel"
+            android:text="@string/cancel_btn_text"
             android:background="@android:color/background_light"
             android:layout_below="@id/et"
     />

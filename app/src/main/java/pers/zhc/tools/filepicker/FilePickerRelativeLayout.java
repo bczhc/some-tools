@@ -16,7 +16,6 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.u.common.Documents;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,8 +124,8 @@ public class FilePickerRelativeLayout extends RelativeLayout {
             ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.str, ("/storage/emulated/".equals(s) ? s + "0" : s))));
             et.setSelection(et.getText().length());
             et.setLayoutParams(lp);
-            AlertDialog alertDialog = ad.setTitle(R.string.type_path)
-                    .setPositiveButton(R.string.confirm, (dialog, which) -> {
+            AlertDialog alertDialog = ad.setTitle(R.string.type_path_dialog_title)
+                    .setPositiveButton(R.string.confirm_btn_text, (dialog, which) -> {
                         String etText = et.getText().toString();
                         File f = new File(etText);
                         if (f.isFile() && type == 1) {
@@ -139,7 +138,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                             fillViews(listFiles);
                         }
                     })
-                    .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    .setNegativeButton(R.string.cancel_btn_text, (dialog, which) -> {
                     })
                     .setView(et).create();
             DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
@@ -174,7 +173,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
             try {
                 length = listFiles[0].length;
             } catch (Exception e) {
-                ctx.runOnUiThread(() -> ToastUtils.show(ctx, R.string.no_access));
+                ctx.runOnUiThread(() -> ToastUtils.show(ctx, R.string.no_access_alert_msg));
                 e.printStackTrace();
             }
             textViews = new TextViewWithExtra[length];

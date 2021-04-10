@@ -101,9 +101,9 @@ public class Settings extends BaseActivity {
                     ContextCompat.getColor(this, R.color.s2),
             };
             int[] textViewsText = new int[]{
-                    R.string.filter,
-                    R.string.iFileExtension,
-                    R.string.oFileExtension
+                    R.string.filter_text_view_text,
+                    R.string.input_file_extension_text_view_text,
+                    R.string.output_file_extension_text_view_text
             };
             for (int i = 0; i < length; i++) {
                 int finalI = i;

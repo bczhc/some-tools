@@ -942,7 +942,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
             et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
+            adb.setPositiveButton(R.string.confirm_btn_text, (dialog, which) -> {
                 try {
                     float edit = Float.parseFloat(et.getText().toString());
                     double a = Math.log(edit * pv.getScale()) / Math.log(1.07D);
@@ -958,7 +958,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 } catch (Exception e) {
                     Common.showException(e, this);
                 }
-            }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+            }).setNegativeButton(R.string.cancel_btn_text, (dialog, which) -> {
             }).setTitle(R.string.type_stroke_width__pixels).setView(et);
             AlertDialog ad = adb.create();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1102,7 +1102,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         linearLayout.addView(infoTV);
                         AlertDialog importImageOptionsDialog = importImageOptionsDialogBuilder.setView(linearLayout)
                                 .setTitle(R.string.set__top__left__scaled_width__scaled_height)
-                                .setPositiveButton(R.string.confirm, (dialog1, which) -> {
+                                .setPositiveButton(R.string.confirm_btn_text, (dialog1, which) -> {
                                     try {
                                         double c1 = (float) new Expression(completeParentheses(editTexts[0].getText().toString())).calculate();
                                         double c2 = (float) new Expression(completeParentheses(editTexts[1].getText().toString())).calculate();
@@ -1119,7 +1119,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                     }
                                     moreOptionsDialog.dismiss();
                                 })
-                                .setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                                .setNegativeButton(R.string.cancel_btn_text, (dialog1, which) -> {
                                 })
                                 .create();
                         setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -1145,7 +1145,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     heightEditText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
                     AlertDialog ad = adb.setTitle(R.string.export_image)
-                            .setPositiveButton(R.string.confirm, (dialog, which) -> {
+                            .setPositiveButton(R.string.confirm_btn_text, (dialog, which) -> {
                                 Expression expression = new Expression();
                                 expression.setExpressionString(completeParentheses(widthEditText.getText().toString()));
                                 imageW[0] = ((int) expression.calculate());
@@ -1159,7 +1159,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 File imageFile = new File(imageDir.toString() + File.separator + filenameEditText.getText().toString() + ".png");
                                 pv.exportImg(imageFile, imageW[0], imageH[0]);
                                 moreOptionsDialog.dismiss();
-                            }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                            }).setNegativeButton(R.string.cancel_btn_text, (dialog, which) -> {
                             }).setView(linearLayout).create();
                     setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                     DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(filenameEditText, ad);
@@ -1171,7 +1171,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     EditText et = new EditText(this);
                     setSelectedEditTextWithCurrentTimeMillisecond(et);
                     AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                    AlertDialog alertDialog = adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                    AlertDialog alertDialog = adb.setPositiveButton(R.string.confirm_btn_text, (dialog, which) -> {
                         File pathFile = new File(pathDir.toString() + File.separator + et.getText().toString() + ".path");
                         try {
                             if (!currentInternalPathFile.exists()) {
@@ -1187,7 +1187,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
                         }
                         moreOptionsDialog.dismiss();
-                    }).setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    }).setNegativeButton(R.string.cancel_btn_text, (dialog, which) -> {
                     }).setTitle(R.string.type_filename).setView(et).create();
                     setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                     DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, alertDialog);
@@ -1421,7 +1421,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         moreOptionsDialog.dismiss();
                     }
                 };
-                adb.setPositiveButton(R.string.confirm, (dialog1, which) -> importAction.run()).setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                adb.setPositiveButton(R.string.confirm_btn_text, (dialog1, which) -> importAction.run()).setNegativeButton(R.string.cancel_btn_text, (dialog1, which) -> {
                     speedDelayMillis.set(0);
                     importAction.run();
                 }).setTitle(R.string.type_importing_sleep_time).setView(inflate);

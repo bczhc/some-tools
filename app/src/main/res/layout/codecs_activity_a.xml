@@ -22,7 +22,7 @@
                           android:orientation="horizontal"
             >
                 <Button
-                        android:text="@string/decode"
+                        android:text="@string/decode_btn_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/dB"

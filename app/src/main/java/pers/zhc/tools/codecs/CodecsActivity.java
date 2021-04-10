@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -335,8 +334,8 @@ public class CodecsActivity extends BaseActivity {
                     };
                     ll.removeAllViews();
                     setDBOnClickEvent(null, 2, base128_btn);
-                    base128_btn[0].setText(R.string.encode);
-                    base128_btn[1].setText(R.string.decode);
+                    base128_btn[0].setText(R.string.encode_btn_text);
+                    base128_btn[1].setText(R.string.decode_btn_text);
                     LinearLayout[] linearLayouts = new LinearLayout[]{
                             new LinearLayout(CodecsActivity.this),
                             new LinearLayout(CodecsActivity.this)
@@ -382,7 +381,7 @@ public class CodecsActivity extends BaseActivity {
         Button btn = new Button(CodecsActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         btn.setLayoutParams(lp);
-        btn.setText(R.string.decode);
+        btn.setText(R.string.decode_btn_text);
         btn.setId(R.id.dB);
         this.dB = btn;
         CodecsActivity.this.setDBOnClickEvent(btn, 1, null);
@@ -407,7 +406,7 @@ public class CodecsActivity extends BaseActivity {
         return v -> {
             allButtonsAction(o, buttons, INVISIBLE);
             if (isRunning) {
-                toast(R.string.have_task);
+                toast(R.string.executing_task_msg);
                 return;
             }
             if (isFolder) {
@@ -433,7 +432,7 @@ public class CodecsActivity extends BaseActivity {
                                             if (file.length() != 0L) {
                                                 int status = jniCall.jniDecode(fPath, x, o == 1 ? this.dT : dT, this.savedConfig, jniCallback);
                                                 if (status == -1) {
-                                                    runOnUiThread(() -> toast(R.string.file_open_error));
+                                                    runOnUiThread(() -> toast(R.string.file_open_error_msg));
                                                 }
                                             }
                                         }
@@ -447,7 +446,7 @@ public class CodecsActivity extends BaseActivity {
                             }
                             runOnUiThread(() -> {
 //                                tv.setText(R.string.percent_100);
-                                toast(o == 1 ? R.string.all_file_decoded_done : (dT == 21 ? R.string.all_file_encoded_done : R.string.all_file_decoded_done));
+                                toast(o == 1 ? R.string.all_file_decoded_done_msg : (dT == 21 ? R.string.all_file_encoded_done_msg : R.string.all_file_decoded_done_msg));
                                 allButtonsAction(o, buttons, VISIBLE);
                                 String folder = this.folder.toString();
                                 this.mainTv.setText(String.format(getString(R.string.str), folder));
@@ -488,7 +487,7 @@ public class CodecsActivity extends BaseActivity {
                 try {
                     if (dF == null) {
                         runOnUiThread(() -> {
-                            toast(R.string.incorrect_file_extension);
+                            toast(R.string.incorrect_file_extension_alert_msg);
                             allButtonsAction(o, buttons, VISIBLE);
                         });
                         return;
@@ -503,17 +502,17 @@ public class CodecsActivity extends BaseActivity {
                                 int status = 2;
                                 if (size0) {
                                     runOnUiThread(() -> {
-                                        toast(R.string.null_file);
+                                        toast(R.string.null_file_alert_msg);
                                         allButtonsAction(o, buttons, VISIBLE);
                                     });
                                 } else {
                                     status = jniCall.jniDecode(f, finalDF, o == 1 ? this.dT : dT, savedConfig, jniCallback);
                                 }
                                 if (status == -1 || status == 255) {
-                                    runOnUiThread(() -> toast(R.string.file_open_error));
+                                    runOnUiThread(() -> toast(R.string.file_open_error_msg));
                                 }
                                 if (status == 1) {
-                                    runOnUiThread(() -> toast(R.string.native_error));
+                                    runOnUiThread(() -> toast(R.string.native_error_alert_msg));
                                 }
                             } catch (Exception e) {
                                 showException(e, CodecsActivity.this);
@@ -524,7 +523,7 @@ public class CodecsActivity extends BaseActivity {
                             if (!size0 && new File(finalDF).exists() && finalDF.length() > 0) {
                                 runOnUiThread(() -> {
 //                                    tv.setText(R.string.percent_100);
-                                    toast(o == 1 ? R.string.decode_done : (dT == 21 ? R.string.encode_done : R.string.decode_done));
+                                    toast(o == 1 ? R.string.decode_done_msg : (dT == 21 ? R.string.encode_done_msg : R.string.decode_done_msg));
                                     reset();
                                 });
                             }
