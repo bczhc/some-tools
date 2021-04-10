@@ -125,6 +125,6 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
                 save()
                 super.onBackPressed()
             }, R.string.diary_setting_storage_path_changed_dialog_msg).show()
-        }
+        } else super.onBackPressed()
     }
 }

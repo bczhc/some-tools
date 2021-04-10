@@ -37,8 +37,8 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
-    <style name="BlackTheme" parent="Theme.AppCompat">
-        <item name="windowNoTitle">true</item>
+    <style name="DarkTheme" parent="Theme.AppCompat">
+<!--        <item name="windowNoTitle">true</item>-->
     </style>
     <style name="dialog_with_background_dim_false">
         <!--activity不变暗-->
@@ -46,5 +46,8 @@
     </style>
     <style name="MyActionOverFlowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_db</item>
+    </style>
+
+    <style name="Test" parent="Theme.AppCompat.DayNight">
     </style>
 </resources>

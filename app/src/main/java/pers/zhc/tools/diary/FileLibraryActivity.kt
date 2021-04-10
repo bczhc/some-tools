@@ -7,10 +7,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.diary_attachment_file_library_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_file_library_file_preview_view.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.utils.ToastUtils
 import java.io.Serializable
 import java.util.*
 import kotlin.NoSuchElementException
@@ -19,13 +22,15 @@ import kotlin.NoSuchElementException
  * @author bczhc
  */
 class FileLibraryActivity : DiaryBaseActivity() {
+    private var isPickingMode: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_attachment_file_library_activity)
         val ll = ll!!
 
         val intent = intent
-        val isPickingMode = intent.getBooleanExtra("pick", false)
+        isPickingMode = intent.getBooleanExtra("pick", false)
 
         val statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment_file")
         val filenameIndex = statement.getIndexByColumnName("filename")
@@ -43,15 +48,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
             val identifier = cursor.getText(identifierIndex)
 
             val filePreviewView = getFilePreviewView(filename, additionTimestamp, storageType, description, identifier)
-            filePreviewView.setOnClickListener {
-                if (isPickingMode) {
-                    val resultIntent = Intent()
-                    resultIntent.putExtra("fileInfo",
-                        FileInfo(filename, additionTimestamp, storageType, description, identifier))
-                    setResult(0, resultIntent)
-                    finish()
-                }
-            }
+            setPreviewViewListener(filePreviewView, identifier)
             ll.addView(filePreviewView)
         }
         statement.release()
@@ -62,9 +59,10 @@ class FileLibraryActivity : DiaryBaseActivity() {
         additionTimestamp: Long,
         storageTypeEnumInt: Int,
         description: String,
-        identifier: String
+        identifier: String,
     ): View {
-        return getFilePreviewView(this, FileInfo(filename, additionTimestamp, storageTypeEnumInt, description, identifier))
+        return getFilePreviewView(this,
+            FileInfo(filename, additionTimestamp, storageTypeEnumInt, description, identifier))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -110,9 +108,11 @@ class FileLibraryActivity : DiaryBaseActivity() {
         fun getFilePreviewView(ctx: Context, fileInfo: FileInfo): View {
             val inflate = View.inflate(ctx, R.layout.diary_attachment_file_library_file_preview_view, null)!!
             inflate.filename_tv.text = ctx.getString(R.string.filename_is, fileInfo.filename)
-            inflate.add_time_tv.text = ctx.getString(R.string.addition_time_is, Date(fileInfo.additionTimestamp).toString())
+            inflate.add_time_tv.text =
+                ctx.getString(R.string.addition_time_is, Date(fileInfo.additionTimestamp).toString())
             inflate.storage_type_tv.text =
-                ctx.getString(R.string.storage_type_is, ctx.getString(StorageType.get(fileInfo.storageTypeEnumInt).textResInt))
+                ctx.getString(R.string.storage_type_is,
+                    ctx.getString(StorageType.get(fileInfo.storageTypeEnumInt).textResInt))
             val descriptionTV = inflate.description_tv!!
             descriptionTV.text = fileInfo.description
             if (fileInfo.description.isNotEmpty()) {
@@ -120,13 +120,65 @@ class FileLibraryActivity : DiaryBaseActivity() {
                 layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
                 descriptionTV.layoutParams = layoutParams
             }
-
-            inflate.setOnClickListener {
-                val intent = Intent(ctx, FileLibraryFileDetailActivity::class.java)
-                intent.putExtra("fileInfo", fileInfo)
-                ctx.startActivity(intent)
-            }
             return inflate
         }
+    }
+
+    fun setPreviewViewListener(view: View, identifier: String) {
+        view.setOnClickListener {
+            if (isPickingMode) {
+                val resultIntent = Intent()
+                resultIntent.putExtra("fileIdentifier", identifier)
+                setResult(0, resultIntent)
+                finish()
+            } else {
+                val intent = Intent(this, FileLibraryFileDetailActivity::class.java)
+                intent.putExtra("fileIdentifier", identifier)
+                this.startActivity(intent)
+            }
+        }
+
+        view.setOnLongClickListener {
+            val pm = PopupMenu(this, view)
+            val menu = pm.menu
+            pm.menuInflater.inflate(R.menu.file_library_popup_menu, menu)
+            pm.show()
+
+            pm.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.delete_btn -> {
+                        delete(identifier)
+                    }
+                    else -> {
+                    }
+                }
+                return@setOnMenuItemClickListener true
+            }
+            return@setOnLongClickListener true
+        }
+    }
+
+    private fun delete(identifier: String) {
+        DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
+            var statement =
+                diaryDatabase.compileStatement("SELECT COUNT()\nFROM diary_attachment_file\nWHERE diary_attachment_file.identifier IS ?\n  AND diary_attachment_file.identifier IN\n      (SELECT diary_attachment_file_reference.file_identifier FROM diary_attachment_file_reference);")
+            statement.bindText(1, identifier)
+            diaryDatabase
+            val hasRecord = diaryDatabase.hasRecord(statement)
+            statement.release()
+
+            if (hasRecord) {
+                // alert
+                ToastUtils.show(this, R.string.diary_file_library_has_file_reference_alert_msg)
+                return@createConfirmationAlertDialog
+            } else {
+                // delete
+                statement =
+                    diaryDatabase.compileStatement("DELETE\nFROM diary_attachment_file\nWHERE identifier IS ?;")
+                statement.bindText(1, identifier)
+                statement.step()
+                statement.release()
+            }
+        }, R.string.whether_to_delete).show()
     }
 }

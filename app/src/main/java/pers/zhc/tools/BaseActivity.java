@@ -1,15 +1,23 @@
 package pers.zhc.tools;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 import pers.zhc.tools.crashhandler.CrashHandler;
+import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ExternalJNI;
 import pers.zhc.tools.utils.PermissionRequester;
+import pers.zhc.tools.utils.sqlite.Cursor;
+import pers.zhc.tools.utils.sqlite.SQLite3;
+import pers.zhc.tools.utils.sqlite.Statement;
 
 import java.util.Stack;
 
@@ -26,6 +34,11 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        setTheme();
+
+        setTheme(R.style.DarkTheme);
+
         app.addActivity(this);
         CrashHandler.install(this);
         ExternalJNI.ex(this);
@@ -34,6 +47,16 @@ public class BaseActivity extends AppCompatActivity {
         if (Infos.LAUNCHER_CLASS.equals(this.getClass())) {
             checkForUpdate();
         }
+    }
+
+    private void setTheme() {
+        final JSONObject appInfo = getAppInfo(this);
+        try {
+            appInfo.getString("theme");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        setTheme(R.style.DarkTheme);
     }
 
     protected void checkForUpdate() {
@@ -130,6 +153,62 @@ public class BaseActivity extends AppCompatActivity {
                     activity.finish();
                 }
             }
+        }
+    }
+
+    @NotNull
+    @Contract("_ -> new")
+    public static JSONObject getAppInfo(Context ctx) {
+        String infoJson = null;
+        final String appInfoDatabaseFile = Common.getInternalDatabaseDir(ctx, "app_info.db").getPath();
+        SQLite3 appInfoDatabase = SQLite3.open(appInfoDatabaseFile);
+
+        Statement statement = appInfoDatabase.compileStatement("SELECT COUNT()\n" +
+                "FROM sqlite_master\n" +
+                "WHERE type IS 'table'\n" +
+                "  AND tbl_name IS 'app_info';");
+        final boolean hasRecord = appInfoDatabase.hasRecord(statement);
+        statement.release();
+
+        if (!hasRecord) {
+            initAppInfoDatabase(appInfoDatabase);
+        } else {
+            statement = appInfoDatabase.compileStatement("SELECT info_json\n" +
+                    "FROM app_info");
+            final Cursor cursor = statement.getCursor();
+            Common.doAssertion(cursor.step());
+            infoJson = cursor.getText(statement.getIndexByColumnName("info_json"));
+            statement.release();
+        }
+        appInfoDatabase.close();
+
+        try {
+            Common.doAssertion(infoJson != null);
+            return new JSONObject(infoJson);
+        } catch (JSONException ignored) {
+            throw new AssertionError();
+        }
+    }
+
+    private static void initAppInfoDatabase(@NotNull SQLite3 appInfoDatabase) {
+        Statement statement;
+        appInfoDatabase.exec("CREATE TABLE IF NOT EXISTS app_info\n" +
+                "(\n" +
+                "    info_json TEXT NOT NULL PRIMARY KEY\n" +
+                ")");
+
+        JSONObject jsonObject = new JSONObject();
+
+        statement = appInfoDatabase.compileStatement("SELECT COUNT()\n" +
+                "FROM app_info");
+        final boolean hasRecord = appInfoDatabase.hasRecord(statement);
+        statement.release();
+        if (!hasRecord) {
+            statement = appInfoDatabase.compileStatement("INSERT INTO app_info(info_json)\n" +
+                    "VALUES (?)");
+            statement.bindText(1, jsonObject.toString());
+            statement.step();
+            statement.release();
         }
     }
 }

@@ -10,5 +10,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        BaseActivity.getAppInfo(this);
     }
 }

@@ -17,8 +17,53 @@ open class DiaryBaseActivity : BaseActivity() {
         @JvmStatic
         protected fun initDatabase(database: SQLite3) {
             @Language("SQLite") val statements =
-                "PRAGMA foreign_keys = ON;\n-- main diary content table\nCREATE TABLE IF NOT EXISTS diary\n(\n    \"date\"  INTEGER PRIMARY KEY,\n    content TEXT NOT NULL\n);\n-- diary attachment file info table\n-- identifier: SHA1(hex(file).concat(packIntLittleEndian(file.length)))\nCREATE TABLE IF NOT EXISTS diary_attachment_file\n(\n    identifier         TEXT NOT NULL PRIMARY KEY,\n    addition_timestamp INTEGER UNIQUE,\n    filename           TEXT NOT NULL,\n    storage_type       INTEGER,\n    description        TEXT NOT NULL\n);\n-- diary attachment file reference table; an attachment can have multiple file references\nCREATE TABLE IF NOT EXISTS diary_attachment_file_reference\n(\n    attachment_id   INTEGER,\n    file_identifier TEXT NOT NULL,\n\n    FOREIGN KEY (attachment_id) REFERENCES diary_attachment (id),\n    FOREIGN KEY (file_identifier) REFERENCES diary_attachment_file (identifier)\n);\n-- diary attachment data table\nCREATE TABLE IF NOT EXISTS diary_attachment\n(\n    id          INTEGER PRIMARY KEY,\n    title       TEXT NOT NULL,\n    description TEXT NOT NULL\n);\n-- diary attachment settings info table\nCREATE TABLE IF NOT EXISTS diary_attachment_info\n(\n    info_json TEXT NOT NULL PRIMARY KEY\n);\n-- a mapping table between diary and attachment; a diary can have multiple attachments\nCREATE TABLE IF NOT EXISTS diary_attachment_mapping\n(\n    diary_date             INTEGER,\n    referred_attachment_id INTEGER,\n\n    FOREIGN KEY (diary_date) REFERENCES diary (\"date\"),\n    FOREIGN KEY (referred_attachment_id) REFERENCES diary_attachment (id)\n)".split(
-                    ";\n")
+                """PRAGMA foreign_keys = ON;
+-- main diary content table
+CREATE TABLE IF NOT EXISTS diary
+(
+    "date"  INTEGER PRIMARY KEY,
+    content TEXT NOT NULL
+);
+-- diary attachment file info table
+-- identifier: SHA1(hex(file).concat(packIntLittleEndian(file.length)))
+CREATE TABLE IF NOT EXISTS diary_attachment_file
+(
+    identifier         TEXT NOT NULL PRIMARY KEY,
+    addition_timestamp INTEGER UNIQUE,
+    filename           TEXT NOT NULL,
+    storage_type       INTEGER,
+    description        TEXT NOT NULL
+);
+-- diary attachment file reference table; an attachment can have multiple file references
+CREATE TABLE IF NOT EXISTS diary_attachment_file_reference
+(
+    attachment_id   INTEGER,
+    file_identifier TEXT NOT NULL,
+
+    FOREIGN KEY (attachment_id) REFERENCES diary_attachment (id),
+    FOREIGN KEY (file_identifier) REFERENCES diary_attachment_file (identifier)
+);
+-- diary attachment data table
+CREATE TABLE IF NOT EXISTS diary_attachment
+(
+    id          INTEGER PRIMARY KEY,
+    title       TEXT NOT NULL,
+    description TEXT NOT NULL
+);
+-- diary attachment settings info table
+CREATE TABLE IF NOT EXISTS diary_attachment_info
+(
+    info_json TEXT NOT NULL PRIMARY KEY
+);
+-- a mapping table between diary and attachment; a diary can have multiple attachments
+CREATE TABLE IF NOT EXISTS diary_attachment_mapping
+(
+    diary_date             INTEGER,
+    referred_attachment_id INTEGER,
+
+    FOREIGN KEY (diary_date) REFERENCES diary ("date"),
+    FOREIGN KEY (referred_attachment_id) REFERENCES diary_attachment (id)
+)""".split(";\n")
             statements.forEach {
                 database.exec(it)
             }
@@ -30,12 +75,13 @@ open class DiaryBaseActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (diaryDatabaseRef.isAbandoned()) {
+
+        if (!diaryDatabaseRef.isInitialized() || diaryDatabaseRef.isAbandoned()) {
             internalDatabasePath = Common.getInternalDatabaseDir(this, "diary.db").path
             setDatabase(internalDatabasePath)
         }
-        diaryDatabaseRef!!.countRef()
-        this.diaryDatabase = diaryDatabaseRef!!.database
+        diaryDatabaseRef.countRef()
+        this.diaryDatabase = diaryDatabaseRef.database
 
         val actionBar = this.supportActionBar!!
         actionBar.setDisplayHomeAsUpEnabled(true)
@@ -43,7 +89,7 @@ open class DiaryBaseActivity : BaseActivity() {
     }
 
     override fun finish() {
-        diaryDatabaseRef!!.countDownRef()
+        diaryDatabaseRef.countDownRef()
         super.finish()
     }
 
@@ -52,21 +98,14 @@ open class DiaryBaseActivity : BaseActivity() {
      */
     protected fun setDatabase(path: String) {
         val database = SQLite3.open(path)
-        diaryDatabaseRef.close()
-        diaryDatabaseRef = DiaryDatabaseRef(database)
+        diaryDatabaseRef.set(database)
         initDatabase(database)
-
+        this.diaryDatabase = diaryDatabaseRef.database
     }
 
     class DiaryDatabaseRef {
-        private lateinit var database: SQLite3
+        internal lateinit var database: SQLite3
         private var diaryDatabaseRefCount = 0
-
-        constructor(database: SQLite3) {
-            this.database = database
-        }
-
-        constructor()
 
         fun countRef() {
             ++diaryDatabaseRefCount
@@ -94,7 +133,11 @@ open class DiaryBaseActivity : BaseActivity() {
             return this.diaryDatabaseRefCount == 0
         }
 
-        fun set(database: SQLite3) {
+        fun isInitialized(): Boolean {
+            return this::database.isInitialized
+        }
+
+        internal fun set(database: SQLite3) {
             this.database = database
         }
     }

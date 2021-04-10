@@ -1,6 +1,8 @@
 package pers.zhc.tools.diary
 
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -37,7 +39,12 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
 
         showBottomAttachment()
 
-        title = getString(R.string.diary_preview_with_date_format_title, dateInt)
+        val myDate = DiaryTakingActivity.MyDate(dateInt)
+        val calendar = Calendar.getInstance()
+        calendar.set(myDate.year, myDate.month - 1, myDate.day)
+        val formatter = SimpleDateFormat.getPatternInstance(getString(R.string.diary_preview_with_date_format_title))
+        val format = formatter.format(calendar.time)
+        title = format
     }
 
     private fun showBottomAttachment() {

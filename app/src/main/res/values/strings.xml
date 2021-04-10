@@ -364,5 +364,6 @@
     <string name="file_not_exist_alert_msg">文件不存在</string>
     <string name="browser_file">预览文件</string>
     <string name="browser">预览</string>
+    <string name="diary_file_library_has_file_reference_alert_msg">存在文件引用，无法删除。</string>
     <!-- module end -->
 </resources>

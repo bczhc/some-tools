@@ -267,7 +267,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
 
     private void importDiary(File file) {
         final DiaryDatabaseRef diaryDatabaseRef = DiaryBaseActivity.Companion.getDiaryDatabaseRef();
-        Common.doAssertion(diaryDatabaseRef != null);
+
         final int refCount = diaryDatabaseRef.getRefCount();
         // the only one reference is for the current activity
         if (refCount > 1) {
@@ -297,7 +297,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         }
 
         setDatabase(internalDatabasePath);
-        DiaryMainActivity.Companion.getDiaryDatabaseRef().countRef();
+        diaryDatabaseRef.countRef();
         refreshListViews();
     }
 

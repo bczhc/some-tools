@@ -337,7 +337,7 @@
         <activity
                 android:name=".crashhandler.CrashReportActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/BlackTheme">
+                android:theme="@style/DarkTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -368,7 +368,7 @@
                 android:name=".diary.DiaryMainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/DarkTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
