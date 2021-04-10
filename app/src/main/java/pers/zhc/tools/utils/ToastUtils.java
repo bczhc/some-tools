@@ -22,14 +22,18 @@ public class ToastUtils {
      * @param charSequence string
      */
     public static void show(Context ctx, @NotNull CharSequence charSequence) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> {
-            if (toast != null) {
-                toast.cancel();
-            }
-            toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
-            toast.show();
-        });
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> uiThreadToast(ctx, charSequence));
+        } else uiThreadToast(ctx, charSequence);
+    }
+
+    private static void uiThreadToast(Context ctx, @NotNull CharSequence charSequence) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public static void showError(Context ctx, @StringRes int errorMsgResId, @NotNull Exception e) {

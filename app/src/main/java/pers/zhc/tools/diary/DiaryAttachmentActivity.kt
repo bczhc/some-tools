@@ -35,13 +35,13 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         val intent = intent
         dateInt = intent.getIntExtra("dateInt", -1)
         pickMode = intent.getBooleanExtra("pickMode", false)
-        if (dateInt != -1) {
+        if (dateInt != -1 && !pickMode) {
             val myDate = DiaryTakingActivity.MyDate(dateInt)
             val calendar = Calendar.getInstance()
             calendar.set(myDate.year, myDate.month - 1, myDate.day)
-            val formatter = SimpleDateFormat.getPatternInstance(getString(R.string.date_format))
+            val formatter = SimpleDateFormat.getPatternInstance(getString(R.string.diary_attachment_with_date_format_title))
             val format = formatter.format(calendar.time)
-            if (!pickMode) title = getString(R.string.attachment_with_date_concat, format)
+            title = format
         }
 
         checkAttachmentInfoRecord()
@@ -137,7 +137,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                 data ?: return
 
                 val pickedAttachmentId = data.getLongExtra("pickedAttachmentId", -1)
-                Common.doAssert(pickedAttachmentId != -1L)
+                Common.doAssertion(pickedAttachmentId != -1L)
                 attachAttachment(pickedAttachmentId)
                 ToastUtils.show(this, R.string.adding_succeeded)
             }
@@ -150,7 +150,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
      * attach an attachment to diary
      */
     private fun attachAttachment(pickedAttachmentId: Long) {
-        Common.doAssert(dateInt != -1)
+        Common.doAssertion(dateInt != -1)
         val statement =
             diaryDatabase.compileStatement("INSERT INTO diary_attachment_mapping(diary_date, referred_attachment_id)\nVALUES (?, ?)")
         statement.bind(1, dateInt)

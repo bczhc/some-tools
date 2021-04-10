@@ -214,7 +214,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
                 break;
             default:
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

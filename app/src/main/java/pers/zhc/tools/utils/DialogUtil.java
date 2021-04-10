@@ -117,4 +117,39 @@ public class DialogUtil {
         return createPromptDialog(ctx, strId, callback, (dialog, which) -> {
         });
     }
+
+    @NotNull
+    public static AlertDialog createAlertDialogWithNeutralButton(Context ctx,
+                                                                 DialogInterface.OnClickListener positiveAction,
+                                                                 DialogInterface.OnClickListener negativeAction,
+                                                                 @StringRes int titleStrRes) {
+        return createAlertDialogWithNeutralButton(ctx, positiveAction, negativeAction, (dialog, which) -> {
+        }, titleStrRes);
+    }
+
+    @NotNull
+    public static AlertDialog createAlertDialogWithNeutralButton(Context ctx,
+                                                                 DialogInterface.OnClickListener positiveAction,
+                                                                 DialogInterface.OnClickListener negativeAction,
+                                                                 DialogInterface.OnClickListener neutralButtonAction,
+                                                                 @StringRes int titleStrRes) {
+        return createAlertDialogWithNeutralButton(ctx, R.string.yes, positiveAction, R.string.no, negativeAction, R.string.cancel, neutralButtonAction, titleStrRes);
+    }
+
+    @NotNull
+    public static AlertDialog createAlertDialogWithNeutralButton(Context ctx,
+                                                                 @StringRes int positiveButtonText,
+                                                                 DialogInterface.OnClickListener positiveAction,
+                                                                 @StringRes int negativeButtonText,
+                                                                 DialogInterface.OnClickListener negativeAction,
+                                                                 @StringRes int neutralButtonText,
+                                                                 DialogInterface.OnClickListener neutralButtonAction,
+                                                                 @StringRes int titleStrRes) {
+        AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
+        adb.setPositiveButton(positiveButtonText, positiveAction)
+                .setNegativeButton(negativeButtonText, negativeAction)
+                .setNeutralButton(neutralButtonText, neutralButtonAction)
+                .setTitle(titleStrRes);
+        return adb.create();
+    }
 }

@@ -88,7 +88,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         });
 
         final ActionBar actionBar = this.getSupportActionBar();
-        Common.doAssert(actionBar != null);
+        Common.doAssertion(actionBar != null);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
     }
@@ -181,7 +181,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         dialog[0] = DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
             openDiaryPreview(dateInt);
             dialog[0].dismiss();
-        }, R.string.diary_duplicate_dialog_title);
+        }, R.string.duplicated_diary_dialog_title);
         DialogUtil.setDialogAttr(dialog[0], false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
         dialog[0].show();
     }
@@ -240,7 +240,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 "WHERE type IS 'table'\n" +
                 "  AND tbl_name IS 'diary'");
         final Cursor cursor = statement.getCursor();
-        Common.doAssert(cursor.step());
+        Common.doAssertion(cursor.step());
         final String diaryTableSql = cursor.getText(statement.getIndexByColumnName("sql"));
         statement.release();
 
@@ -257,7 +257,9 @@ public class DiaryMainActivity extends DiaryBaseActivity {
     private void writeDiary() {
         final boolean recordExistence = checkRecordExistence(getCurrentDateInt());
         if (recordExistence) {
-            openDiaryPreview(getCurrentDateInt());
+            final Intent intent = new Intent(this, DiaryTakingActivity.class);
+            intent.putExtra("dateInt", getCurrentDateInt());
+            startActivityForResult(intent, RequestCode.START_ACTIVITY_4);
         } else {
             createDiary(getCurrentDateInt());
         }
@@ -265,7 +267,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
 
     private void importDiary(File file) {
         final DiaryDatabaseRef diaryDatabaseRef = DiaryBaseActivity.Companion.getDiaryDatabaseRef();
-        Common.doAssert(diaryDatabaseRef != null);
+        Common.doAssertion(diaryDatabaseRef != null);
         final int refCount = diaryDatabaseRef.getRefCount();
         // the only one reference is for the current activity
         if (refCount > 1) {
@@ -273,7 +275,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             return;
         }
         diaryDatabaseRef.countDownRef();
-        Common.doAssert(diaryDatabaseRef.isAbandoned());
+        Common.doAssertion(diaryDatabaseRef.isAbandoned());
 
         final Latch latch = new Latch();
         latch.suspend();
@@ -360,7 +362,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             case RequestCode.START_ACTIVITY_0:
                 // on diary taking activity returned
                 // it must be an activity which intends to create a new diary record
-                Common.doAssert(data != null);
+                Common.doAssertion(data != null);
                 int dateInt = data.getIntExtra("dateInt", -1);
 
                 RelativeLayout childRL = getChildRLByDate(dateInt);
@@ -391,36 +393,42 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             case RequestCode.START_ACTIVITY_3:
                 // on preview activity returned
                 // refresh the view in the LinearLayout
-                Common.doAssert(data != null);
-
-                // view with this dateInt needs to be refreshed
+            case RequestCode.START_ACTIVITY_4:
+                // "write diary" action: start a diary taking activity directly
+                // on the activity above returned
+                // refresh the corresponding view
+                Common.doAssertion(data != null);
                 dateInt = data.getIntExtra("dateInt", -1);
-                Common.doAssert(dateInt != -1);
-                final int childCount = ll.getChildCount();
-                RelativeLayoutWithDate target = null;
-                for (int i = 0; i < childCount; i++) {
-                    final RelativeLayoutWithDate child = ((RelativeLayoutWithDate) ll.getChildAt(i));
-                    if (child.dateInt == dateInt) {
-                        target = child;
-                    }
-                }
-                Common.doAssert(target != null);
-
-                final Statement statement = diaryDatabase.compileStatement("SELECT content\n" +
-                        "FROM diary\n" +
-                        "WHERE \"date\" IS ?");
-                statement.bind(1, dateInt);
-                final Cursor cursor = statement.getCursor();
-                final boolean step = cursor.step();
-                Common.doAssert(step);
-                final String newContent = cursor.getText(statement.getIndexByColumnName("content"));
-                statement.release();
-
-                ((LimitCharacterTextView) target.getChildAt(1)).setTextLimited(newContent);
+                Common.doAssertion(dateInt != -1);
+                updateDiaryView(dateInt);
                 break;
             default:
                 break;
         }
+    }
+
+    private void updateDiaryView(int dateInt) {
+        final int childCount = ll.getChildCount();
+        RelativeLayoutWithDate target = null;
+        for (int i = 0; i < childCount; i++) {
+            final RelativeLayoutWithDate child = ((RelativeLayoutWithDate) ll.getChildAt(i));
+            if (child.dateInt == dateInt) {
+                target = child;
+            }
+        }
+        Common.doAssertion(target != null);
+
+        final Statement statement = diaryDatabase.compileStatement("SELECT content\n" +
+                "FROM diary\n" +
+                "WHERE \"date\" IS ?");
+        statement.bind(1, dateInt);
+        final Cursor cursor = statement.getCursor();
+        final boolean step = cursor.step();
+        Common.doAssertion(step);
+        final String newContent = cursor.getText(statement.getIndexByColumnName("content"));
+        statement.release();
+
+        ((LimitCharacterTextView) target.getChildAt(1)).setTextLimited(newContent);
     }
 
     private void refreshListViews() {

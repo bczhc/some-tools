@@ -87,11 +87,11 @@ public class Common {
 
     public static void debugAssert(boolean condition) {
         if (BuildConfig.DEBUG) {
-            doAssert(condition);
+            doAssertion(condition);
         }
     }
 
-    public static void doAssert(boolean condition) {
+    public static void doAssertion(boolean condition) {
         if (!condition) throw new AssertionError("Assertion failed");
     }
 

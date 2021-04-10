@@ -2,13 +2,13 @@ package pers.zhc.tools.diary
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import android.widget.TextView
 import kotlinx.android.synthetic.main.diary_attachment_settings_activity.*
 import org.json.JSONObject
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.sqlite.SQLite3
 import java.io.File
@@ -18,6 +18,7 @@ import java.io.File
  */
 class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
     private lateinit var storagePathTV: TextView
+    private lateinit var oldPathStr: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +43,7 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
 
         fileStoragePath = getFileStoragePath(diaryDatabase)
         storagePathTV.text = getString(R.string.str, fileStoragePath)
+        oldPathStr = storagePathTV.text.toString()
 
         changeBtn.setOnClickListener {
             ToastUtils.show(this, R.string.pick_folder)
@@ -51,10 +53,19 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
         }
 
         restoreToDefaultBtn.setOnClickListener {
-            changeStoragePath(getDefaultStoragePath())
+            storagePathTV.text = getDefaultStoragePath()
         }
 
-        doneBtn.setOnClickListener { finish() }
+        doneBtn.setOnClickListener { save() }
+    }
+
+    private fun save() {
+        DialogUtil.createAlertDialogWithNeutralButton(this, { _, _ ->
+            ToastUtils.show(this, R.string.saving_succeeded)
+        }, { _, _ ->
+            changeStoragePath(storagePathTV.text.toString())
+            ToastUtils.show(this, R.string.saving_succeeded)
+        }, R.string.diary_attachment_setting_move_file_dialog_title).show()
     }
 
     companion object {
@@ -104,6 +115,16 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         data!!
         val result = data.getStringExtra("result") ?: return
-        changeStoragePath(result)
+        storagePathTV.text = result
+    }
+
+    override fun onBackPressed() {
+        if (storagePathTV.text.toString() != oldPathStr) {
+            // has changed the storage path
+            DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
+                save()
+                super.onBackPressed()
+            }, R.string.diary_setting_storage_path_changed_dialog_msg).show()
+        }
     }
 }

@@ -36,6 +36,8 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         contentTV.textSize = DisplayUtil.px2sp(this, EditText(this).textSize).toFloat()
 
         showBottomAttachment()
+
+        title = getString(R.string.diary_preview_with_date_format_title, dateInt)
     }
 
     private fun showBottomAttachment() {

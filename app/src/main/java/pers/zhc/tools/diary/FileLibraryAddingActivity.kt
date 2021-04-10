@@ -79,6 +79,11 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
             val progressView = View.inflate(this, R.layout.diary_file_library_copy_progress_view, null)
             val msgTV = progressView.msg_tv
 
+            if (!File(pickedFileET.text.toString()).exists()) {
+                ToastUtils.show(this, R.string.file_not_exist_alert_msg)
+                return@setOnClickListener
+            }
+
             val dialog = Dialog(this)
             DialogUtil.setDialogAttr(dialog,
                 false,
@@ -154,7 +159,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         description: String,
     ) {
         val statement =
-            diaryDatabase.compileStatement("INSERT INTO diary_attachment_file (identifier, add_timestamp, filename, storage_type, description)\nVALUES (?, ?, ?, ?, ?)")
+            diaryDatabase.compileStatement("INSERT INTO diary_attachment_file (identifier, addition_timestamp, filename, storage_type, description)\nVALUES (?, ?, ?, ?, ?)")
         statement.reset()
         statement.bindText(1, identifier)
         statement.bind(2, System.currentTimeMillis())

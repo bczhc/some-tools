@@ -389,7 +389,7 @@
         <activity
                 android:name=".diary.DiaryAttachmentActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/attachment"
+                android:label="@string/diary_attachment_library_activity_label_name"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -400,7 +400,7 @@
         <activity
                 android:name=".diary.DiaryAttachmentAddingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/attachment"
+                android:label="@string/diary_attachment_library_activity_label_name"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -445,6 +445,28 @@
                 android:name=".diary.DiaryContentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/preview"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.FileLibraryFileDetailActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/file_library"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.FileBrowserActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/browser"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

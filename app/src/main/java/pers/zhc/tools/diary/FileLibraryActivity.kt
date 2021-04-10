@@ -29,7 +29,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
 
         val statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment_file")
         val filenameIndex = statement.getIndexByColumnName("filename")
-        val addTimestampIndex = statement.getIndexByColumnName("add_timestamp")
+        val additionTimestampIndex = statement.getIndexByColumnName("addition_timestamp")
         val descriptionIndex = statement.getIndexByColumnName("description")
         val storageTypeIndex = statement.getIndexByColumnName("storage_type")
         val identifierIndex = statement.getIndexByColumnName("identifier")
@@ -37,17 +37,17 @@ class FileLibraryActivity : DiaryBaseActivity() {
         val cursor = statement.cursor
         while (cursor.step()) {
             val filename = cursor.getText(filenameIndex)
-            val addTimestamp = cursor.getLong(addTimestampIndex)
+            val additionTimestamp = cursor.getLong(additionTimestampIndex)
             val description = cursor.getText(descriptionIndex)
             val storageType = cursor.getInt(storageTypeIndex)
             val identifier = cursor.getText(identifierIndex)
 
-            val filePreviewView = getFilePreviewView(filename, addTimestamp, storageType, description)
+            val filePreviewView = getFilePreviewView(filename, additionTimestamp, storageType, description, identifier)
             filePreviewView.setOnClickListener {
                 if (isPickingMode) {
                     val resultIntent = Intent()
                     resultIntent.putExtra("fileInfo",
-                        FileInfo(filename, addTimestamp, storageType, description, identifier))
+                        FileInfo(filename, additionTimestamp, storageType, description, identifier))
                     setResult(0, resultIntent)
                     finish()
                 }
@@ -57,8 +57,14 @@ class FileLibraryActivity : DiaryBaseActivity() {
         statement.release()
     }
 
-    fun getFilePreviewView(filename: String, addTimestamp: Long, storageTypeEnumInt: Int, description: String): View {
-        return getFilePreviewView(this, filename, addTimestamp, storageTypeEnumInt, description)
+    fun getFilePreviewView(
+        filename: String,
+        additionTimestamp: Long,
+        storageTypeEnumInt: Int,
+        description: String,
+        identifier: String
+    ): View {
+        return getFilePreviewView(this, FileInfo(filename, additionTimestamp, storageTypeEnumInt, description, identifier))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -94,41 +100,33 @@ class FileLibraryActivity : DiaryBaseActivity() {
 
     class FileInfo(
         val filename: String,
-        val addTimestamp: Long,
+        val additionTimestamp: Long,
         val storageTypeEnumInt: Int,
         val description: String,
         val identifier: String,
     ) : Serializable
 
     companion object {
-        fun getFilePreviewView(
-            ctx: Context,
-            filename: String,
-            addTimestamp: Long,
-            storageTypeEnumInt: Int,
-            description: String,
-        ): View {
+        fun getFilePreviewView(ctx: Context, fileInfo: FileInfo): View {
             val inflate = View.inflate(ctx, R.layout.diary_attachment_file_library_file_preview_view, null)!!
-            inflate.filename_tv.text = ctx.getString(R.string.filename_is, filename)
-            inflate.add_time_tv.text = ctx.getString(R.string.add_time_is, Date(addTimestamp).toString())
+            inflate.filename_tv.text = ctx.getString(R.string.filename_is, fileInfo.filename)
+            inflate.add_time_tv.text = ctx.getString(R.string.addition_time_is, Date(fileInfo.additionTimestamp).toString())
             inflate.storage_type_tv.text =
-                ctx.getString(R.string.storage_type_is, ctx.getString(StorageType.get(storageTypeEnumInt).textResInt))
+                ctx.getString(R.string.storage_type_is, ctx.getString(StorageType.get(fileInfo.storageTypeEnumInt).textResInt))
             val descriptionTV = inflate.description_tv!!
-            descriptionTV.text = description
-            if (description.isNotEmpty()) {
+            descriptionTV.text = fileInfo.description
+            if (fileInfo.description.isNotEmpty()) {
                 val layoutParams = descriptionTV.layoutParams
                 layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
                 descriptionTV.layoutParams = layoutParams
             }
-            return inflate
-        }
 
-        fun getFilePreviewView(ctx: Context, fileInfo: FileInfo): View {
-            return getFilePreviewView(ctx,
-                fileInfo.filename,
-                fileInfo.addTimestamp,
-                fileInfo.storageTypeEnumInt,
-                fileInfo.description)
+            inflate.setOnClickListener {
+                val intent = Intent(ctx, FileLibraryFileDetailActivity::class.java)
+                intent.putExtra("fileInfo", fileInfo)
+                ctx.startActivity(intent)
+            }
+            return inflate
         }
     }
 }

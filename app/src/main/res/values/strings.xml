@@ -305,7 +305,8 @@
     <string name="choose_path_file">选择path文件</string>
     <string name="unsupported_path">不支持的path</string>
     <string name="choose_path_v_3_0_file">选择pathV3.0文件</string>
-    <string name="path_info_string">创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d</string>
+    <string name="path_info_string">创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d
+    </string>
     <string name="wubi_code_database_info">"共有%1$d条记录 "</string>
     <string name="enter_wubi_code">输入五笔编码</string>
     <string name="candidate_word">候选字词</string>
@@ -327,10 +328,10 @@
     <string name="file_exists_alert_msg">相同文件已存在，是否更新文件信息</string>
     <string name="adding_done">添加完成</string>
     <string name="updating_done">更新完成</string>
-    <string name="add_time">添加时间</string>
+    <string name="addition_time">添加时间</string>
     <string name="storage_type">存储类型</string>
     <string name="storage_type_is">存储类型：%1$s</string>
-    <string name="add_time_is">添加时间：%1$s</string>
+    <string name="addition_time_is">添加时间：%1$s</string>
     <string name="description_is">描述：</string>
     <string name="description_is_text">描述：%1$s</string>
     <string name="attachment_local_storage_path_is">附件本地存储目录：</string>
@@ -344,11 +345,24 @@
     <string name="calculating_file_digest">正在计算文件摘要</string>
     <string name="copying_file">复制文件中</string>
     <string name="attachment_with_date_concat">附件-%1$s</string>
-    <string name="date_format" translatable="false" formatted="false"><![CDATA[yyyy.MM.dd]]></string>
     <string name="image">图像</string>
     <string name="audio">音频</string>
     <string name="title_is">标题：%1$s</string>
     <string name="preview">预览</string>
-    <string name="diary_duplicate_dialog_title">已有该日期日记，是否打开？</string>
+    <!-- new -->
+
+    <!-- module: diary -->
+    <string name="duplicated_diary_dialog_title">已有该日期日记，是否打开？</string>
     <string name="diary_import_ref_count_not_zero_msg">数据库还有%1$d个连接引用，不能关闭，导入终止。</string>
+    <string name="diary_attachment_with_date_format_title">附件-yyyy.MM.dd</string>
+    <string name="diary_preview_with_date_format_title">预览-yyyy.MM.dd</string>
+    <string name="diary_attachment_library_activity_label_name">附件库</string>
+    <string name="diary_attachment_library_menu_btn_text">@string/diary_attachment_library_activity_label_name</string>
+    <string name="diary_attachment_activity_label_name">附件</string>
+    <string name="diary_setting_storage_path_changed_dialog_msg">路径已经修改，是否保存？</string>
+    <string name="diary_attachment_setting_move_file_dialog_title">是否要移动文件\n如果不移动文件，可能会导致文件引用丢失</string>
+    <string name="file_not_exist_alert_msg">文件不存在</string>
+    <string name="browser_file">预览文件</string>
+    <string name="browser">预览</string>
+    <!-- module end -->
 </resources>
