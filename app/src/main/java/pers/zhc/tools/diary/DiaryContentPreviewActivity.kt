@@ -1,5 +1,6 @@
 package pers.zhc.tools.diary
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -11,7 +12,6 @@ import kotlinx.android.synthetic.main.diary_content_preview_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
 import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * @author bczhc
@@ -35,7 +35,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
 
         val content = fetchContent(dateInt)
         contentTV.text = content
-        contentTV.textSize = DisplayUtil.px2sp(this, EditText(this).textSize).toFloat()
+        contentTV.textSize = getEditTextTextSize(this)
 
         showBottomAttachment()
 
@@ -101,5 +101,12 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         setResult(0, resultIntent)
 
         super.finish()
+    }
+
+    companion object {
+        /**
+         * in sp
+         */
+        fun getEditTextTextSize(ctx: Context) = DisplayUtil.px2sp(ctx, EditText(ctx).textSize).toFloat()
     }
 }

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.ToastUtils
@@ -91,7 +93,7 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
                 // pick file from the file library
                 val fileInfo = data.getSerializableExtra("fileInfo") as FileLibraryActivity.FileInfo
                 val filePreviewView = FileLibraryActivity.getFilePreviewView(this, fileInfo)
-                filePreviewView.background = getDrawable(R.drawable.view_stroke)
+                filePreviewView.background = ContextCompat.getDrawable(this, R.drawable.view_stroke)
                 fileListLL.addView(filePreviewView)
                 fileIdentifierList.add(fileInfo.identifier)
             }

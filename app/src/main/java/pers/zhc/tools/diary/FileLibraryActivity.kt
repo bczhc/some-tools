@@ -3,6 +3,7 @@ package pers.zhc.tools.diary
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -60,7 +61,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
         storageTypeEnumInt: Int,
         description: String,
         identifier: String,
-    ): View {
+    ): LinearLayoutWithFileInfo {
         return getFilePreviewView(this,
             FileInfo(filename, additionTimestamp, storageTypeEnumInt, description, identifier))
     }
@@ -73,7 +74,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
-                startActivity(Intent(this, FileLibraryAddingActivity::class.java))
+                startActivityForResult(Intent(this, FileLibraryAddingActivity::class.java), RequestCode.START_ACTIVITY_0)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -105,8 +106,9 @@ class FileLibraryActivity : DiaryBaseActivity() {
     ) : Serializable
 
     companion object {
-        fun getFilePreviewView(ctx: Context, fileInfo: FileInfo): View {
+        fun getFilePreviewView(ctx: Context, fileInfo: FileInfo): LinearLayoutWithFileInfo {
             val inflate = View.inflate(ctx, R.layout.diary_attachment_file_library_file_preview_view, null)!!
+                .findViewById<LinearLayoutWithFileInfo>(R.id.ll)
             inflate.filename_tv.text = ctx.getString(R.string.filename_is, fileInfo.filename)
             inflate.add_time_tv.text =
                 ctx.getString(R.string.addition_time_is, Date(fileInfo.additionTimestamp).toString())
@@ -120,11 +122,12 @@ class FileLibraryActivity : DiaryBaseActivity() {
                 layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT
                 descriptionTV.layoutParams = layoutParams
             }
+            inflate.fileInfo = fileInfo
             return inflate
         }
     }
 
-    fun setPreviewViewListener(view: View, identifier: String) {
+    fun setPreviewViewListener(view: LinearLayoutWithFileInfo, identifier: String) {
         view.setOnClickListener {
             if (isPickingMode) {
                 val resultIntent = Intent()
@@ -181,4 +184,22 @@ class FileLibraryActivity : DiaryBaseActivity() {
             }
         }, R.string.whether_to_delete).show()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // on FileLibraryAddingActivity returned
+        if (requestCode == RequestCode.START_ACTIVITY_0) {
+            // not submit
+            data ?: return
+
+
+        }
+    }
+}
+
+class LinearLayoutWithFileInfo : LinearLayout {
+    var fileInfo: FileLibraryActivity.FileInfo? = null
+
+    constructor(context: Context?) : super(context)
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 }

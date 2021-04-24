@@ -85,12 +85,6 @@ public class Common {
         return String.format("https://hub.fastgit.org/%s/store/blob/%s/%s?raw=true", username, branch, filePathInRepo);
     }
 
-    public static void debugAssert(boolean condition) {
-        if (BuildConfig.DEBUG) {
-            doAssertion(condition);
-        }
-    }
-
     public static void doAssertion(boolean condition) {
         if (!condition) throw new AssertionError("Assertion failed");
     }
