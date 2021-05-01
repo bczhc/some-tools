@@ -47,11 +47,6 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".test.Demo$MyService"
-                 android:exported="false"
-                 android:description="@string/my_service"
-        />
-
         <!-- Declares the input input_method service -->
         <service
                 android:name=".inputmethod.WubiIME"
@@ -625,6 +620,28 @@
                 android:name=".inputmethod.WubiDatabaseEditActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".bus.BusQueryMainActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/bus_query_label"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".bus.BusLineDetailActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/bus_query_label"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

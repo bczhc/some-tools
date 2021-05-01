@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.DisplayUtil
 
 /**
  * @author bczhc
@@ -25,13 +26,13 @@ class SmartHintEditText : TextInputLayout {
             val ta = context.obtainStyledAttributes(attrs, R.styleable.SmartHintEditText)
             val hint = ta.getString(R.styleable.SmartHintEditText_hint)
             val text = ta.getText(R.styleable.SmartHintEditText_text)
-            val textSize = ta.getDimension(R.styleable.SmartHintEditText_textSize, -1F)
+            val textSize = ta.getDimensionPixelSize(R.styleable.SmartHintEditText_textSize, -1)
             ta.recycle()
             if (hint != null) mET!!.hint = hint
             if (text != null) mET!!.setText(text)
             mET!!.inputType = inputType
-            if (textSize != -1F) {
-                mET!!.textSize = textSize
+            if (textSize != -1) {
+                mET!!.textSize = DisplayUtil.px2sp(context, textSize.toFloat()).toFloat()
             }
         }
         val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)

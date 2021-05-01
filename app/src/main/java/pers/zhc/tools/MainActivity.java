@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import org.json.JSONException;
 import org.json.JSONObject;
+import pers.zhc.tools.bus.BusQueryMainActivity;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.crashhandler.CrashTest;
@@ -148,7 +149,8 @@ public class MainActivity extends BaseActivity {
                 new AnActivity(R.string.regular_expression_test, RegExpTest.class),
                 new AnActivity(R.string.wubi_input_method, WubiInputMethodActivity.class),
                 new AnActivity(R.string.stc_flash, FlashMainActivity.class),
-                new AnActivity(R.string.drawing_board_test, DrawingBoardTest.class)
+                new AnActivity(R.string.drawing_board_test, DrawingBoardTest.class),
+                new AnActivity(R.string.bus_query_label, BusQueryMainActivity.class)
         };
 
         CountDownLatch mainTextLatch = new CountDownLatch(1);

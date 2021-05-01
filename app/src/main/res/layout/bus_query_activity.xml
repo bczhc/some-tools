@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+    >
+        <pers.zhc.tools.views.SmartHintEditText android:layout_width="match_parent" android:layout_height="wrap_content"
+                                                android:id="@+id/line_num_et"
+                                                android:inputType="numberDecimal"
+                                                app:hint="@string/bus_line_edit_text_hint"
+                                                android:layout_toStartOf="@id/query_btn"
+        />
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/bus_query_btn"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/query_btn"
+        />
+    </RelativeLayout>
+    <ListView android:layout_width="match_parent" android:layout_height="match_parent"
+              android:id="@+id/lines_lv"
+    />
+</LinearLayout>
