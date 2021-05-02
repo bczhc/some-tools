@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
@@ -69,9 +70,17 @@ public class DialogUtil {
     }
 
     @NotNull
-    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, @Nullable View view, int titleId, int width, int height, boolean applicationOverlay) {
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, String title, int width, int height, boolean applicationOverlay) {
+        return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, null, title, width, height, applicationOverlay);
+    }
+
+    @NotNull
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, @Nullable View view, String title, int width, int height, boolean applicationOverlay) {
+        final TextView titleTV = new TextView(ctx);
+        titleTV.setTextSize(20);
+        titleTV.setText(title);
         AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
-        adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setTitle(titleId);
+        adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setCustomTitle(titleTV);
         if (view != null) {
             adb.setView(view);
         }
@@ -82,9 +91,20 @@ public class DialogUtil {
     }
 
     @NotNull
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, @Nullable View view, int titleId, int width, int height, boolean applicationOverlay) {
+        return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, view, ctx.getString(titleId), width, height, applicationOverlay);
+    }
+
+    @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, int titleId) {
         return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
         }, titleId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+    }
+
+    @NotNull
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, String title) {
+        return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
+        }, title, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
     }
 
     @NotNull

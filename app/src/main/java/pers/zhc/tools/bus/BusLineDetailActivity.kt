@@ -29,7 +29,7 @@ class BusLineDetailActivity : BaseActivity() {
         setContentView(R.layout.bus_line_detail_activity)
 
         val intent = intent
-        runPathId = intent.getStringExtra(INTENT_RUN_PATH_ID)!!
+        runPathId = intent.getStringExtra(EXTRA_RUN_PATH_ID)!!
 
         startStationNameTV = start_station_name_tv!!
         endStationNameTV = end_station_name_tv!!
@@ -77,6 +77,8 @@ class BusLineDetailActivity : BaseActivity() {
             runOnUiThread {
                 synchronized(lock) {
                     busTotalCountTV.text = getString(R.string.bus_line_bus_total_count_tv, result.size)
+
+                    busLineDetailLL.setupBusesDisplay(result)
                 }
             }
         }.start()
@@ -103,87 +105,6 @@ class BusLineDetailActivity : BaseActivity() {
         }.start()
     }
 
-    private fun syncFetchBusInfo(runPathId: String): BusInfo? {
-        val result =
-            BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/common/busQuery?flag=1&runPathId=$runPathId")
-                ?: return null
-
-        val startTime: String = when {
-            result.has("startTime1") -> {
-                result["startTime1"] as String
-            }
-            result.has("startTime") -> {
-                result["startTime"] as String
-            }
-            else -> {
-                return null
-            }
-        }
-
-        val endTime: String = when {
-            result.has("endTime1") -> {
-                result["startTime1"] as String
-            }
-            result.has("endTime") -> {
-                result["endTime"] as String
-            }
-            else -> {
-                return null
-            }
-        }
-
-        return BusInfo(result["runPathName"] as String,
-            result["startStation"] as String,
-            result["endStation"] as String,
-            startTime,
-            endTime,
-            result["busInterval"] as String)
-    }
-
-    private fun syncFetchBusRunInfo(runPathId: String): List<ABusRun>? {
-        val result =
-            BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/gpsForRPF?flag=1&rpId=$runPathId")
-                ?: return null
-        val list = result["lists"] as JSONArray
-
-        val ret = ArrayList<ABusRun>()
-
-        for (i in 0 until list.length()) {
-            val busRunJSONObject = list[i] as JSONObject
-            val busStationName = busRunJSONObject["busStationName"] as String
-            val outState = busRunJSONObject["outstate"] as String
-
-            val stopping = outState == "0"
-            ret.add(ABusRun(busStationName, stopping))
-        }
-
-        return ret
-    }
-
-    private fun syncFetchBusStationsInfo(runPathId: String, direction: Direction): List<Station>? {
-        val result =
-            BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/searchSSR?rpId=$runPathId")
-                ?: return null
-
-        val ret = ArrayList<Station>()
-        val jsonArray = when (direction) {
-            Direction.DIRECTION_1 -> {
-                result["shangxing"] as JSONArray
-            }
-            Direction.DIRECTION_2 -> {
-                result["xiaxing"] as JSONArray
-            }
-        }
-
-        for (i in 0 until jsonArray.length()) {
-            val jsonObject = jsonArray[i] as JSONObject
-            val busStationName = jsonObject["busStationName"] as String
-            ret.add(Station(busStationName))
-        }
-
-        return ret
-    }
-
     enum class Direction {
         DIRECTION_1,
         DIRECTION_2
@@ -198,9 +119,9 @@ class BusLineDetailActivity : BaseActivity() {
         val busInterval: String,
     )
 
-    class ABusRun(val busStationName: String, stopping: Boolean)
+    class ABusRun(val busStationName: String, val busStationId: String, stopping: Boolean)
 
-    class Station(val busStationName: String)
+    class Station(val busStationName: String, val busStationId: String)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.bus_line_detail_menu, menu)
@@ -211,7 +132,8 @@ class BusLineDetailActivity : BaseActivity() {
         when (item.itemId) {
             R.id.refresh -> {
                 // refresh bus line detail info
-
+                busLineDetailLL.removeAllStations()
+                asyncSetPageOnUiThread()
             }
             else -> {
             }
@@ -223,6 +145,89 @@ class BusLineDetailActivity : BaseActivity() {
         /**
          * intent string extra
          */
-        const val INTENT_RUN_PATH_ID = "runPathId"
+        const val EXTRA_RUN_PATH_ID = "runPathId"
+
+        private fun syncFetchBusInfo(runPathId: String): BusInfo? {
+            val result =
+                BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/common/busQuery?flag=1&runPathId=$runPathId")
+                    ?: return null
+
+            val startTime: String = when {
+                result.has("startTime1") -> {
+                    result["startTime1"] as String
+                }
+                result.has("startTime") -> {
+                    result["startTime"] as String
+                }
+                else -> {
+                    return null
+                }
+            }
+
+            val endTime: String = when {
+                result.has("endTime1") -> {
+                    result["startTime1"] as String
+                }
+                result.has("endTime") -> {
+                    result["endTime"] as String
+                }
+                else -> {
+                    return null
+                }
+            }
+
+            return BusInfo(result["runPathName"] as String,
+                result["startStation"] as String,
+                result["endStation"] as String,
+                startTime,
+                endTime,
+                result["busInterval"] as String)
+        }
+
+        private fun syncFetchBusRunInfo(runPathId: String): List<ABusRun>? {
+            val result =
+                BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/gpsForRPF?flag=1&rpId=$runPathId")
+                    ?: return null
+            val list = result["lists"] as JSONArray
+
+            val ret = ArrayList<ABusRun>()
+
+            for (i in 0 until list.length()) {
+                val busRunJSONObject = list[i] as JSONObject
+                val busStationName = busRunJSONObject["busStationName"] as String
+                val busStationId = busRunJSONObject["busStationId"] as String
+                val outState = busRunJSONObject["outstate"] as String
+
+                val stopping = outState == "0"
+                ret.add(ABusRun(busStationName, busStationId, stopping))
+            }
+
+            return ret
+        }
+
+        private fun syncFetchBusStationsInfo(runPathId: String, direction: Direction): List<Station>? {
+            val result =
+                BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/searchSSR?rpId=$runPathId")
+                    ?: return null
+
+            val ret = ArrayList<Station>()
+            val jsonArray = when (direction) {
+                Direction.DIRECTION_1 -> {
+                    result["shangxing"] as JSONArray
+                }
+                Direction.DIRECTION_2 -> {
+                    result["xiaxing"] as JSONArray
+                }
+            }
+
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray[i] as JSONObject
+                val busStationName = jsonObject["busStationName"] as String
+                val stationId = jsonObject["busStationId"] as String
+                ret.add(Station(busStationName, stationId))
+            }
+
+            return ret
+        }
     }
 }

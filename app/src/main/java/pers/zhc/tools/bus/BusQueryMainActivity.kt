@@ -27,8 +27,8 @@ import java.util.concurrent.CountDownLatch
 class BusQueryMainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.bus_query_activity)
+
         val linesLV = lines_lv!!
         val queryBtn = query_btn!!
         val lineNumET = line_num_et!!.editText
@@ -69,7 +69,7 @@ class BusQueryMainActivity : BaseActivity() {
             
             inflate.setOnClickListener {
                 val intent = Intent(this@BusQueryMainActivity, BusLineDetailActivity::class.java)
-                intent.putExtra(BusLineDetailActivity.INTENT_RUN_PATH_ID, busInfo.runPathId)
+                intent.putExtra(BusLineDetailActivity.EXTRA_RUN_PATH_ID, busInfo.runPathId)
                 startActivity(intent)
             }
             

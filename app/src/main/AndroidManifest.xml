@@ -60,6 +60,7 @@
                     android:name="android.view.im"
                     android:resource="@xml/input_method"/>
         </service>
+        <service android:name=".bus.BusArrivalReminderService"/>
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="pers.zhc.tools.fileprovider"

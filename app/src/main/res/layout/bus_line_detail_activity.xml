@@ -52,9 +52,13 @@
               android:textSize="20sp"
               android:id="@+id/bus_total_count_tv"
     />
-    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="match_parent">
-        <pers.zhc.tools.bus.BusLineDetailLL android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                            android:id="@+id/bus_line_detail_ll"
-        />
-    </HorizontalScrollView>
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:fillViewport="true"
+        >
+            <pers.zhc.tools.bus.BusLineDetailLL android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                                android:id="@+id/bus_line_detail_ll"
+            />
+        </HorizontalScrollView>
+    </ScrollView>
 </LinearLayout>
