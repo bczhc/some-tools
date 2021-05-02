@@ -119,7 +119,7 @@ class BusLineDetailActivity : BaseActivity() {
         val busInterval: String,
     )
 
-    class ABusRun(val busStationName: String, val busStationId: String, stopping: Boolean)
+    class ABusRun(val busStationName: String, val busStationId: String, val stopping: Boolean)
 
     class Station(val busStationName: String, val busStationId: String)
 

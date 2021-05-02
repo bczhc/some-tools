@@ -34,7 +34,7 @@ class BusLineDetailLL : LinearLayout {
 
     private fun getStationView(station: BusLineDetailActivity.Station): View {
         val inflate =
-            View.inflate(context, R.layout.bus_line_detail_station_view, null).ll_root!! as LinearLayoutWithStation
+            View.inflate(context, R.layout.bus_line_detail_station_view, null).ll_root!!
         inflate.ordinal_tv!!.text =
             context.getString(R.string.bus_line_detail_station_ordinal_tv, this.childCount + 1 /* ordinal */)
         val stationNameTV = inflate.station_name_tv!!
@@ -62,10 +62,23 @@ class BusLineDetailLL : LinearLayout {
      * [busRunList]: fetched using [BusLineDetailActivity.syncFetchBusRunInfo]
      */
     fun setupBusesDisplay(busRunList: List<BusLineDetailActivity.ABusRun>) {
-        for (i in 0 until childCount) {
-            val station = (getChildAt(i) as LinearLayoutWithStation).station
+        busRunList.forEach {
+            for (i in 0 until childCount) {
+                val child = getChildAt(i)
+                if (child !is StationLL) continue
+                val station = child.station!!
+
+                if (it.busStationId == station.busStationId) {
+                    if (it.stopping) {
+                        child.setTopNodeViewBusMarkState(TopLineNodeView.BusState.ARRIVED)
+                    } else {
+                        val topLineNodeView = TopLineNodeView(context)
+                        topLineNodeView.setBusState(TopLineNodeView.BusState.ON_ROAD)
+                        this.addView(topLineNodeView, i + 1);
+                    }
+                }
+            }
         }
-//        TODO("Not yet implemented")
     }
 }
 
@@ -79,9 +92,13 @@ private fun String.join(c: Char): String {
     return sb.toString()
 }
 
-class LinearLayoutWithStation : LinearLayout {
+class StationLL : LinearLayout {
     var station: BusLineDetailActivity.Station? = null
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
+
+    fun setTopNodeViewBusMarkState(state: TopLineNodeView.BusState) {
+        this.top_line_node_view.setBusState(state)
+    }
 }
