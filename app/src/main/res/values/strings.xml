@@ -373,5 +373,14 @@
     <string name="bus_query_btn">查询</string>
     <string name="bus_no_such_line_toast">找不到此线路</string>
     <string name="bus_request_not_success">请求不成功</string>
+    <string name="bus_line_detail_refresh_btn">刷新</string>
+    <string name="bus_line_toggle_direction_btn">切换</string>
+    <string name="bus_start_station_tv">起：%1$s</string>
+    <string name="bus_end_station_tv">终：%1$s</string>
+    <string name="bus_line_run_time_from_to_tv">首末班：%1$s-%2$s</string>
+    <string name="bus_line_run_interval_minute">班次间隔：%1$s分钟</string>
+    <string name="bus_line_bus_total_count_tv">共有%1$d辆车</string>
+    <string name="bus_line_detail_station_ordinal_tv">%1$d.</string>
+    <string name="bus_no_data">无数据</string>
     <!-- module end -->
 </resources>

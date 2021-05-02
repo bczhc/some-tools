@@ -11,9 +11,8 @@
               android:id="@+id/top"
     />
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:layout_alignParentRight="true"
-              android:textSize="20sp" android:layout_alignParentEnd="true"
-              android:layout_toRightOf="@id/top"
+              android:textSize="20sp"
+              android:layout_alignParentEnd="true"
               android:layout_toEndOf="@id/top"
               android:id="@+id/state"
     />

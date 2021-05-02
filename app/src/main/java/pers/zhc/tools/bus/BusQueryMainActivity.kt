@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.TextView
 import kotlinx.android.synthetic.main.bus_lines_list_view_item_view.view.*
 import kotlinx.android.synthetic.main.bus_query_activity.*
 import org.json.JSONArray
@@ -17,6 +16,7 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.u.common.ReadIS
+import java.io.IOException
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.CountDownLatch
@@ -46,56 +46,63 @@ class BusQueryMainActivity : BaseActivity() {
         }
     }
 
-    class BusLineInfo(val busLineName: String, val startStationName: String, val endStationName: String)
+    class BusLineInfo(
+        val busLineName: String,
+        val startStationName: String,
+        val endStationName: String,
+        val runPathId: String,
+    )
+    
+    inner class BusLineItemAdapter(context: Context, resource: Int, objects: MutableList<BusLineInfo>) :
+        ArrayAdapter<BusLineInfo>(context, resource, objects) {
+        @SuppressLint("ViewHolder")
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val inflate = View.inflate(context, R.layout.bus_lines_list_view_item_view, null)
+            val startStationNameTV = inflate.start_station_name_tv
+            val endStationNameTV = inflate.end_station_name_tv
+            val lineNumTV = inflate.line_num_tv
+
+            val busInfo = getItem(position)!!
+            startStationNameTV.text = busInfo.startStationName
+            endStationNameTV.text = busInfo.endStationName
+            lineNumTV.text = busInfo.busLineName
+            
+            inflate.setOnClickListener {
+                val intent = Intent(this@BusQueryMainActivity, BusLineDetailActivity::class.java)
+                intent.putExtra(BusLineDetailActivity.INTENT_RUN_PATH_ID, busInfo.runPathId)
+                startActivity(intent)
+            }
+            
+            return inflate
+        }
+    }
 
     private fun fetchAndSetListView(lineNum: Int, linesLV: ListView) {
-        val busesInfoJSON = fetchBusesInfoJSON(lineNum)
-        if (busesInfoJSON == null) {
-            ToastUtils.show(this, R.string.bus_no_such_line_toast)
-            return
-        }
-        val jsonObject = JSONObject(busesInfoJSON)
-        if (jsonObject["status"] as String != "SUCCESS") {
-            ToastUtils.show(this, R.string.bus_request_not_success)
-            return
-        }
-        val lines = (jsonObject["result"] as JSONObject)["lines"] as JSONArray
-
-        val busLineInfoList = ArrayList<BusLineInfo>()
-        for (i in 0 until lines.length()) {
-            val lineObject = lines[i] as JSONObject
-            val busLineName = lineObject["runPathName"] as String
-            val startStationName = lineObject["startName"] as String
-            val endStationName = lineObject["endName"] as String
-            busLineInfoList.add(BusLineInfo(busLineName, startStationName, endStationName))
-        }
-        class MyArrayAdapter(context: Context, resource: Int, objects: MutableList<BusLineInfo>) :
-            ArrayAdapter<BusLineInfo>(context, resource, objects) {
-            @SuppressLint("ViewHolder")
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val inflate = View.inflate(context, R.layout.bus_lines_list_view_item_view, null)
-                val startStationNameTV = inflate.start_station_name_tv
-                val endStationNameTV = inflate.end_station_name_tv
-                val lineNumTV = inflate.line_num_tv
-
-                val function1: (View) -> Unit = {
-                    val intent = Intent(this@BusQueryMainActivity, BusLineDetailActivity::class.java)
-                    startActivity(intent)
-                }
-                val function: (v: View) -> Unit = function1
-                inflate.setOnClickListener(function)
-
-                val busInfo = getItem(position)!!
-                startStationNameTV.text = busInfo.startStationName
-                endStationNameTV.text = busInfo.endStationName
-                lineNumTV.text = busInfo.busLineName
-
-                return inflate
+        Thread {
+            val resultJSON =
+                syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/allStationOfRPName?name=$lineNum")
+            if (resultJSON == null) {
+                ToastUtils.show(this, R.string.bus_no_data)
+                return@Thread
             }
-        }
 
-        val myArrayAdapter = MyArrayAdapter(this, android.R.layout.simple_list_item_1, busLineInfoList)
-        linesLV.adapter = myArrayAdapter
+            val lines = resultJSON["lines"] as JSONArray
+
+            val busLineInfoList = ArrayList<BusLineInfo>()
+            for (i in 0 until lines.length()) {
+                val lineObject = lines[i] as JSONObject
+                val busLineName = lineObject["runPathName"] as String
+                val startStationName = lineObject["startName"] as String
+                val endStationName = lineObject["endName"] as String
+                val runPathId = lineObject["runPathId"] as String
+                busLineInfoList.add(BusLineInfo(busLineName, startStationName, endStationName, runPathId))
+            }
+            
+            runOnUiThread {
+                val myArrayAdapter = BusLineItemAdapter(this, android.R.layout.simple_list_item_1, busLineInfoList)
+                linesLV.adapter = myArrayAdapter
+            }
+        }.start()
     }
 
     private fun fetchBusesInfoJSON(lineNumber: Int): String? {
@@ -113,5 +120,22 @@ class BusQueryMainActivity : BaseActivity() {
         }.start()
         countDownLatch.await()
         return readToString
+    }
+
+    companion object {
+        fun syncFetchResultJSON(url: String): JSONObject? {
+            try {
+                val inputStream = URL(url).openStream()
+                val read = ReadIS.readToString(inputStream, StandardCharsets.UTF_8)
+                inputStream.close()
+                val jsonObject = JSONObject(read)
+                if (jsonObject["status"] as String != "SUCCESS") {
+                    return null
+                }
+                return jsonObject["result"] as JSONObject
+            } catch (_: IOException) {
+            }
+            return null
+        }
     }
 }

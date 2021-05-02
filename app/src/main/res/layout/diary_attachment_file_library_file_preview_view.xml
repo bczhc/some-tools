@@ -27,7 +27,7 @@
               android:text="@string/description_is"
               android:textSize="20sp"
     />
-    <TextView android:layout_width="match_parent" android:layout_height="0sp"
+    <TextView android:layout_width="match_parent" android:layout_height="0dp"
               android:id="@+id/description_tv"
               android:textSize="20sp"
     />

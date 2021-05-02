@@ -8,7 +8,7 @@
     >
         <pers.zhc.tools.views.SmartHintEditText android:layout_width="match_parent" android:layout_height="wrap_content"
                                                 android:id="@+id/line_num_et"
-                                                android:inputType="numberDecimal"
+                                                android:inputType="number"
                                                 app:hint="@string/bus_line_edit_text_hint"
                                                 android:layout_toStartOf="@id/query_btn"
         />
