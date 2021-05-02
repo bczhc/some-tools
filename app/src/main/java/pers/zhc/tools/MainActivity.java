@@ -1,5 +1,6 @@
 package pers.zhc.tools;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
@@ -121,7 +122,7 @@ public class MainActivity extends BaseActivity {
         int textIntRes;
         private final Class<?> activityClass;
 
-        public AnActivity(int textIntRes, Class<?> activityClass) {
+        public AnActivity(int textIntRes, Class<? extends Activity> activityClass) {
             this.textIntRes = textIntRes;
             this.activityClass = activityClass;
         }

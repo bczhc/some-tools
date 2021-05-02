@@ -3,6 +3,7 @@ package pers.zhc.tools.bus
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import kotlinx.android.synthetic.main.bus_line_detail_activity.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -14,33 +15,50 @@ import pers.zhc.tools.utils.ToastUtils
  * @author bczhc
  */
 class BusLineDetailActivity : BaseActivity() {
+    private lateinit var runPathId: String
+    private lateinit var busLineDetailLL: BusLineDetailLL
+    private lateinit var busTotalCountTV: TextView
+    private lateinit var busIntervalTV: TextView
+    private lateinit var startStationNameTV: TextView
+    private lateinit var busRunTimeTV: TextView
+    private lateinit var endStationNameTV: TextView
+    private var currentDirection = Direction.DIRECTION_1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bus_line_detail_activity)
 
         val intent = intent
-        val runPathId = intent.getStringExtra(INTENT_RUN_PATH_ID)!!
+        runPathId = intent.getStringExtra(INTENT_RUN_PATH_ID)!!
 
-        val startStationNameTV = start_station_name_tv!!
-        val endStationNameTV = end_station_name_tv!!
+        startStationNameTV = start_station_name_tv!!
+        endStationNameTV = end_station_name_tv!!
+        busRunTimeTV = bus_run_time_tv!!
+        busIntervalTV = bus_interval_tv!!
+        busTotalCountTV = bus_total_count_tv!!
+        busLineDetailLL = bus_line_detail_ll!!
         val switchBusDirectionBtn = switch_bus_direction!!
-        val busRunTimeTV = bus_run_time_tv!!
-        val busIntervalTV = bus_interval_tv!!
-        val busTotalCountTV = bus_total_count_tv!!
-        val busLineDetailLL = bus_line_detail_ll!!
 
         switchBusDirectionBtn.setOnClickListener {
+            // reverse the value
+            currentDirection = if (currentDirection == Direction.DIRECTION_1) {
+                Direction.DIRECTION_2
+            } else Direction.DIRECTION_1
 
+            busLineDetailLL.removeAllStations()
+            asyncSetPageOnUiThread()
         }
 
+        asyncSetPageOnUiThread()
+    }
+
+    private fun asyncSetPageOnUiThread() {
         val lock = Any()
 
         Thread {
             val busInfo = syncFetchBusInfo(runPathId)!!
             runOnUiThread {
                 synchronized(lock) {
-                    startStationNameTV.text = getString(R.string.bus_start_station_tv, busInfo.startStationName)
-                    endStationNameTV.text = getString(R.string.bus_end_station_tv, busInfo.endStationName)
                     busRunTimeTV.text =
                         getString(R.string.bus_line_run_time_from_to_tv, busInfo.busStartTime, busInfo.busEndTime)
                     busIntervalTV.text = getString(R.string.bus_line_run_interval_minute, busInfo.busInterval)
@@ -64,7 +82,24 @@ class BusLineDetailActivity : BaseActivity() {
         }.start()
 
         Thread {
+            val busStationList = syncFetchBusStationsInfo(runPathId, currentDirection)
+            if (busStationList == null) {
+                ToastUtils.show(this, R.string.bus_no_data)
+                return@Thread
+            }
 
+            runOnUiThread {
+                synchronized(lock) {
+                    startStationNameTV.text =
+                        getString(R.string.bus_start_station_tv, busStationList[0].busStationName)
+                    endStationNameTV.text = getString(R.string.bus_end_station_tv,
+                        busStationList[busStationList.size - 1].busStationName)
+
+                    busStationList.forEach {
+                        busLineDetailLL.addStation(it)
+                    }
+                }
+            }
         }.start()
     }
 
@@ -116,7 +151,7 @@ class BusLineDetailActivity : BaseActivity() {
         for (i in 0 until list.length()) {
             val busRunJSONObject = list[i] as JSONObject
             val busStationName = busRunJSONObject["busStationName"] as String
-            val outState = busRunJSONObject["outState"] as String
+            val outState = busRunJSONObject["outstate"] as String
 
             val stopping = outState == "0"
             ret.add(ABusRun(busStationName, stopping))
@@ -128,10 +163,25 @@ class BusLineDetailActivity : BaseActivity() {
     private fun syncFetchBusStationsInfo(runPathId: String, direction: Direction): List<Station>? {
         val result =
             BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/searchSSR?rpId=$runPathId")
-        ?: return null
+                ?: return null
 
+        val ret = ArrayList<Station>()
+        val jsonArray = when (direction) {
+            Direction.DIRECTION_1 -> {
+                result["shangxing"] as JSONArray
+            }
+            Direction.DIRECTION_2 -> {
+                result["xiaxing"] as JSONArray
+            }
+        }
 
-        return null
+        for (i in 0 until jsonArray.length()) {
+            val jsonObject = jsonArray[i] as JSONObject
+            val busStationName = jsonObject["busStationName"] as String
+            ret.add(Station(busStationName))
+        }
+
+        return ret
     }
 
     enum class Direction {
@@ -150,7 +200,7 @@ class BusLineDetailActivity : BaseActivity() {
 
     class ABusRun(val busStationName: String, stopping: Boolean)
 
-    class Station(val busStationName: String, val orginal: Int)
+    class Station(val busStationName: String)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.bus_line_detail_menu, menu)

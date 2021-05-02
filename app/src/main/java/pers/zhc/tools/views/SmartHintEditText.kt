@@ -22,7 +22,7 @@ class SmartHintEditText : TextInputLayout {
     private fun init(attrs: AttributeSet?) {
         mET = EditText(context)
         if (attrs != null) {
-            val inputType = attrs.getAttributeIntValue("android", "inputStyle", 0x20001/* textMultiLine */)
+            val inputType = attrs.getAttributeIntValue("http://schemas.android.com/apk/res/android", "inputType", 0x20001/* textMultiLine */)
             val ta = context.obtainStyledAttributes(attrs, R.styleable.SmartHintEditText)
             val hint = ta.getString(R.styleable.SmartHintEditText_hint)
             val text = ta.getText(R.styleable.SmartHintEditText_text)

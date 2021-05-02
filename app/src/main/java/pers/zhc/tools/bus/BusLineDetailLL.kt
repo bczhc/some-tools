@@ -26,15 +26,19 @@ class BusLineDetailLL : LinearLayout {
         this.orientation = HORIZONTAL
     }
 
-    fun addStation(stationName: String) {
-        val stationView = getStationView(this.childCount + 1, stationName)
+    fun addStation(station: BusLineDetailActivity.Station) {
+        val stationView = getStationView(this.childCount + 1, station.busStationName)
         this.addView(stationView)
+    }
+
+    fun removeAllStations() {
+        this.removeAllViews()
     }
 
     private fun getStationView(ordinal: Int, stationName: String): View? {
         val inflate = View.inflate(context, R.layout.bus_line_detail_station_view, null)
         inflate.ordinal_tv!!.text = context.getString(R.string.bus_line_detail_station_ordinal_tv, ordinal)
-        inflate.station_name_tv!!.text = stationName
+        inflate.station_name_tv!!.text = stationName.join('\n')
         return inflate
     }
 
@@ -100,4 +104,14 @@ class BusLineDetailLL : LinearLayout {
             canvas.drawCircle(measuredWidth / 2F, measuredHeight / 2F, circleRadius, circlePaint)
         }
     }
+}
+
+private fun String.join(c: Char): String {
+    val sb = StringBuilder()
+    val charArray = this.toCharArray()
+    for (ch in charArray) {
+        sb.append(ch).append(c)
+    }
+    sb.deleteCharAt(sb.length - 1)
+    return sb.toString()
 }
