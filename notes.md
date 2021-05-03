@@ -50,7 +50,7 @@ Or:
     sendBroadcast(intent);
 ```
 
-When sending a broadcast using `Context#sendBroadcast`, there's no need to pass broadcast's class to `Intent` constructor, like:
+In my case (on Android 7.0, 7.1, 8.0), when sending a broadcast using `Context#sendBroadcast`, there's no need to pass broadcast's class to `Intent` constructor, like:
 ```java
     Intent intent = new Intent(this, MyBroadcastReceiver.class);
     intent.setAction(MyBroadcastReceiver.ACTION_A);
@@ -58,7 +58,7 @@ When sending a broadcast using `Context#sendBroadcast`, there's no need to pass 
 ```
 Otherwise, the destination broadcast will not receive.
 
-But, When sending a broadcast in `Notification`, the `Intent` should have the broadcast's class, as an "explicit" `Intent`:
+But the [official documentation](https://developer.android.google.cn/training/notify-user/build-notification?hl=en#Actions) is as above which doesn't work for me, it's so wired!
 ```java
 Intent snoozeIntent = new Intent(this, MyBroadcastReceiver.class);
 snoozeIntent.setAction(ACTION_SNOOZE);

@@ -1,6 +1,7 @@
 package pers.zhc.tools.bus
 
 import android.app.*
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -132,12 +133,13 @@ class BusArrivalReminderService : Service() {
         busStationLocation: String,
         subtractionDiffToDestStation: Int
     ): Notification {
-        val cancelIntent = Intent(this, BusArrivalReminderNotificationReceiver::class.java)
-        cancelIntent.action = BaseActivity.BroadcastAction.ACTION_BUS_CANCEL_CLICK
-        val cancelPI = PendingIntent.getBroadcast(this, 0, cancelIntent, 0)
+        val cancelIntent = Intent(BaseActivity.BroadcastAction.ACTION_BUS_CANCEL_CLICK)
+        cancelIntent.putExtra(BusArrivalReminderNotificationReceiver.EXTRA_NOTIFICATION_ID, notificationId)
+        val cancelPI = PendingIntent.getBroadcast(this, 2, cancelIntent, 0)
 
-        val notificationContentIntent = Intent()
+        val notificationContentIntent = Intent(this, BusLineDetailActivity::class.java)
         notificationContentIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        notificationContentIntent.putExtra(BusLineDetailActivity.EXTRA_RUN_PATH_ID, runPathId)
         val notificationContentPI = PendingIntent.getActivity(this, 0, notificationContentIntent, 0)
 
         return NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID_COMMON).apply {

@@ -3,63 +3,48 @@ package pers.zhc.tools.test;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.MyApplication;
 import pers.zhc.tools.R;
+import pers.zhc.tools.bus.BusArrivalReminderNotificationReceiver;
 
 /**
  * @author bczhc
  */
 public class Demo extends BaseActivity {
-    private MyBroadcastReceiver receiver;
-    private int i = 0;
-    private MyBroadcastReceiver broadcastReceiver;
-
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        broadcastReceiver = new MyBroadcastReceiver();
-        final IntentFilter filter = new IntentFilter();
-        filter.addAction(MyBroadcastReceiver.ACTION_A);
-        registerReceiver(broadcastReceiver, filter);
-
         final Button button = new Button(this);
         setContentView(button);
-        button.setOnClickListener(v -> createNotification());
-    }
 
-    private void createNotification() {
-        final Intent intent = new Intent(MyBroadcastReceiver.ACTION_A);
-        intent.putExtra("a", 123);
-        final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(BroadcastAction.ACTION_BUS_CANCEL_CLICK);
+        registerReceiver(new BusArrivalReminderNotificationReceiver(), filter);
 
-        final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        button.setOnClickListener(v -> {
+            final Intent intent = new Intent(BroadcastAction.ACTION_BUS_CANCEL_CLICK);
+            intent.putExtra("aa", 1234);
+            PendingIntent pi = PendingIntent.getBroadcast(this, 2, intent, 0);
 
-        final NotificationCompat.Builder nb = new NotificationCompat.Builder(this, "c1");
-        final Notification notification = nb.setSmallIcon(R.drawable.ic_db)
-                .setContentTitle("Test")
-                .setContentText("...!!!")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setChannelId("c1")
-                .addAction(R.drawable.ic_zhc_logo, "a", pendingIntent)
-                .build();
+            final NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID_COMMON);
+            final Notification notification = builder.setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentTitle("aab")
+                    .addAction(R.drawable.ic_launcher_foreground, "badsasdads", pi)
+                    .build();
 
-        i += 1;
-        manager.notify(i, notification);
-    }
-
-    @Override
-    public void finish() {
-        unregisterReceiver(this.broadcastReceiver);
-        super.finish();
+            final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(0, notification);
+        });
     }
 }

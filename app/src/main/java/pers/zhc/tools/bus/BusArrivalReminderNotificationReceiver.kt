@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.utils.Common
 
@@ -13,6 +14,8 @@ import pers.zhc.tools.utils.Common
 class BusArrivalReminderNotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         intent ?: return
+        Log.d("b", "received: $intent")
+        return
         if (intent.action == BaseActivity.BroadcastAction.ACTION_BUS_CANCEL_CLICK) {
             context!!
             Common.doAssertion(intent.hasExtra(EXTRA_NOTIFICATION_ID))
