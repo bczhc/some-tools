@@ -31,6 +31,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
@@ -882,8 +883,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     .setContentTitle(getString(R.string.drawing_board))
                     .setContentText(getString(R.string.appear_f_b, date));
             Intent intent = new Intent();
-            final int backgroundReceiverFlag = 0x01000000;
-            intent.addFlags(backgroundReceiverFlag);
+            intent.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
             intent.setAction(BroadcastIntent.START_FLOATING_BOARD);
             intent.setPackage(getPackageName());
             intent.putExtra("millisecond", currentInstanceMillisecond);

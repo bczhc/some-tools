@@ -12,27 +12,48 @@ JNI dev:
 Objects returned to Java don't need to be released because of the GC.
 
 wrong:
-```
+```c++
 auto ret = env->NewStringUTF(s);
 env->DeleteLocalRef(ret);
 return ret;
 ```
 right:
-```
+```c++
 return env->NewStringUTF(s);
 ```
 
 Objects that are newed and passed to a callback should be released. I've tested on Android 7 and Android 8, and if you don't release it, it may cause 512-max-reference overflow on Android 7. (Safe on Android 8, so f**k Google.)
 wrong:
-```
+```c++
 jstring s = env->NewStringUTF(str);
 env->CallVoidMethod(callback, mid, s, (jdouble) d);
 return;
 ```
 right:
-```
+```c++
 jstring s = env->NewStringUTF(str);
 env->CallVoidMethod(callback, mid, s, (jdouble) d);
 env->DeleteLocalRef(s);
 return;
 ```
+
+
+The right way to send a broadcast:
+```java
+    Intent intent = new Intent();
+    intent.setAction(MyBroadcastReceiver.ACTION_A);
+    sendBroadcast(intent);
+```
+Or:
+```java
+    Intent intent = new Intent(MyBroadcastReceiver.ACTION_A);
+    sendBroadcast(intent);
+```
+
+There's no need to pass broadcast's class to `Intent` constructor, like:
+```java
+    Intent intent = new Intent(this, MyBroadcastReceiver.class);
+    intent.setAction(MyBroadcastReceiver.ACTION_A);
+    sendBroadcast(intent);
+```
+Otherwise, the destination broadcast will not receive.

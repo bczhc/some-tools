@@ -1,5 +1,6 @@
 package pers.zhc.tools.bus
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,7 +10,9 @@ import org.json.JSONArray
 import org.json.JSONObject
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.ToastUtils
+import java.io.Serializable
 
 /**
  * @author bczhc
@@ -97,14 +100,34 @@ class BusLineDetailActivity : BaseActivity() {
                         busStationList[busStationList.size - 1].busStationName)
 
                     busStationList.forEach {
-                        busLineDetailLL.addStation(it)
+                        val stationLL = busLineDetailLL.addStation(it)
+
+                        stationLL.setOnClickListener {
+                            val station = stationLL.station!!
+
+                            val dialog = DialogUtil.createConfirmationAlertDialog(this,
+                                { _, _ ->
+                                    setBusArrivalReminder(station.busStationId)
+                                },
+                                getString(R.string.bus_ask_for_setting_bus_arrival_reminder_dialog_title,
+                                    station.busStationName))
+                            dialog.show()
+                        }
                     }
                 }
             }
         }.start()
     }
 
-    enum class Direction {
+    private fun setBusArrivalReminder(busStationId: String) {
+        val intent = Intent(this, BusArrivalReminderService::class.java)
+        intent.putExtra(BusArrivalReminderService.EXTRA_RUN_PATH_ID, runPathId)
+        intent.putExtra(BusArrivalReminderService.EXTRA_BUS_STATION_ID, busStationId)
+        intent.putExtra(BusArrivalReminderService.EXTRA_DIRECTION, currentDirection)
+        startService(intent)
+    }
+
+    enum class Direction : Serializable {
         DIRECTION_1,
         DIRECTION_2
     }

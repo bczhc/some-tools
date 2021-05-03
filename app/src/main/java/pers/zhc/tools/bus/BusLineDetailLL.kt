@@ -23,16 +23,17 @@ class BusLineDetailLL : LinearLayout {
         this.orientation = HORIZONTAL
     }
 
-    fun addStation(station: BusLineDetailActivity.Station) {
+    fun addStation(station: BusLineDetailActivity.Station): StationLL {
         val stationView = getStationView(station)
         this.addView(stationView)
+        return stationView
     }
 
     fun removeAllStations() {
         this.removeAllViews()
     }
 
-    private fun getStationView(station: BusLineDetailActivity.Station): View {
+    private fun getStationView(station: BusLineDetailActivity.Station): StationLL {
         val inflate =
             View.inflate(context, R.layout.bus_line_detail_station_view, null).ll_root!!
         inflate.ordinal_tv!!.text =
@@ -42,20 +43,8 @@ class BusLineDetailLL : LinearLayout {
         stationNameTV.text = station.busStationName.join('\n')
             .replace('（', '︵').replace('）', '︶')
 
-        inflate.setOnClickListener {
-            val dialog = DialogUtil.createConfirmationAlertDialog(context, { _, _ ->
-                setBusArrivalReminder(station.busStationId)
-            }, context.getString(R.string.bus_ask_for_setting_bus_arrival_reminder_dialog_title, station.busStationName))
-            dialog.show()
-        }
-
         inflate.station = station
         return inflate
-    }
-
-    private fun setBusArrivalReminder(busStationId: String) {
-        val intent = Intent(context, BusArrivalReminderService::class.java)
-        context.startService(intent)
     }
 
     /**

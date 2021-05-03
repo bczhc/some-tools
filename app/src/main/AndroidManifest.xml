@@ -16,7 +16,7 @@
     <uses-feature android:name="android.hardware.usb.host"/>
 
     <application
-            android:name=".BaseApplication"
+            android:name=".MyApplication"
             android:allowBackup="false"
             android:extractNativeLibs="true"
             android:hardwareAccelerated="true"
