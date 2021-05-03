@@ -14,8 +14,7 @@ import pers.zhc.tools.utils.Common
 class BusArrivalReminderNotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         intent ?: return
-        Log.d("b", "received: $intent")
-        return
+        Log.d(BusArrivalReminderNotificationReceiver::class.java.name, "received")
         if (intent.action == BaseActivity.BroadcastAction.ACTION_BUS_CANCEL_CLICK) {
             context!!
             Common.doAssertion(intent.hasExtra(EXTRA_NOTIFICATION_ID))

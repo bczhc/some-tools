@@ -155,7 +155,7 @@ class BusLineDetailActivity : BaseActivity() {
          */
         const val EXTRA_RUN_PATH_ID = "runPathId"
 
-        private fun syncFetchBusInfo(runPathId: String): BusInfo? {
+        fun syncFetchBusInfo(runPathId: String): BusInfo? {
             val result =
                 BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/common/busQuery?flag=1&runPathId=$runPathId")
                     ?: return null
