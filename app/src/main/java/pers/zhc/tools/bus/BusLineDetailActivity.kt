@@ -68,7 +68,7 @@ class BusLineDetailActivity : BaseActivity() {
         }.start()
 
         Thread {
-            val result = syncFetchBusRunInfo(runPathId)
+            val result = syncFetchBusRunInfo(runPathId, currentDirection)
             if (result == null) {
                 ToastUtils.show(this, R.string.bus_no_data)
                 return@Thread
@@ -76,9 +76,8 @@ class BusLineDetailActivity : BaseActivity() {
 
             runOnUiThread {
                 synchronized(lock) {
-                    busTotalCountTV.text = getString(R.string.bus_line_bus_total_count_tv, result.size)
-
                     busLineDetailLL.setupBusesDisplay(result)
+                    busTotalCountTV.text = getString(R.string.bus_line_bus_total_count_tv, result.size)
                 }
             }
         }.start()
@@ -184,9 +183,13 @@ class BusLineDetailActivity : BaseActivity() {
                 result["busInterval"] as String)
         }
 
-        private fun syncFetchBusRunInfo(runPathId: String): List<ABusRun>? {
+        private fun syncFetchBusRunInfo(runPathId: String, direction: Direction): List<ABusRun>? {
+            val flag = when (direction) {
+                Direction.DIRECTION_1 -> 1
+                Direction.DIRECTION_2 -> 3
+            }
             val result =
-                BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/gpsForRPF?flag=1&rpId=$runPathId")
+                BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/gpsForRPF?flag=$flag&rpId=$runPathId")
                     ?: return null
             val list = result["lists"] as JSONArray
 

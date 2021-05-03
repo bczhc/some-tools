@@ -76,8 +76,10 @@ class TopLineNodeView : View {
         canvas.drawRect(0F, 0F, measuredWidth, lineHeight, linePaint)
         canvas.restore()
 
-        // draw the bottom circle
-        canvas.drawCircle(measuredWidth / 2F, measuredHeight - circleRadius, circleRadius, circlePaint)
+        if (busState == null || busState == BusState.ARRIVED) {
+            // draw the bottom circle
+            canvas.drawCircle(measuredWidth / 2F, measuredHeight - circleRadius, circleRadius, circlePaint)
+        }
 
         if (busState != null) {
             // draw the bus state mark
