@@ -56,36 +56,15 @@ class BusLineDetailActivity : BaseActivity() {
     }
 
     private fun asyncSetPageOnUiThread() {
-        val lock = Any()
-
         Thread {
             val busInfo = syncFetchBusInfo(runPathId)!!
-            runOnUiThread {
-                synchronized(lock) {
-                    busRunTimeTV.text =
-                        getString(R.string.bus_line_run_time_from_to_tv, busInfo.busStartTime, busInfo.busEndTime)
-                    busIntervalTV.text = getString(R.string.bus_line_run_interval_minute, busInfo.busInterval)
-                    title = busInfo.busLineName
-                }
-            }
-        }.start()
 
-        Thread {
-            val result = syncFetchBusRunInfo(runPathId, currentDirection)
-            if (result == null) {
+            val busRunInfo = syncFetchBusRunInfo(runPathId, currentDirection)
+            if (busRunInfo == null) {
                 ToastUtils.show(this, R.string.bus_no_data)
                 return@Thread
             }
 
-            runOnUiThread {
-                synchronized(lock) {
-                    busLineDetailLL.setupBusesDisplay(result)
-                    busTotalCountTV.text = getString(R.string.bus_line_bus_total_count_tv, result.size)
-                }
-            }
-        }.start()
-
-        Thread {
             val busStationList = syncFetchBusStationsInfo(runPathId, currentDirection)
             if (busStationList == null) {
                 ToastUtils.show(this, R.string.bus_no_data)
@@ -93,36 +72,43 @@ class BusLineDetailActivity : BaseActivity() {
             }
 
             runOnUiThread {
-                synchronized(lock) {
-                    startStationNameTV.text =
-                        getString(R.string.bus_start_station_tv, busStationList[0].busStationName)
-                    endStationNameTV.text = getString(R.string.bus_end_station_tv,
-                        busStationList[busStationList.size - 1].busStationName)
+                busRunTimeTV.text =
+                    getString(R.string.bus_line_run_time_from_to_tv, busInfo.busStartTime, busInfo.busEndTime)
+                busIntervalTV.text = getString(R.string.bus_line_run_interval_minute, busInfo.busInterval)
+                title = busInfo.busLineName
 
-                    busStationList.forEach {
-                        val stationLL = busLineDetailLL.addStation(it)
+                startStationNameTV.text =
+                    getString(R.string.bus_start_station_tv, busStationList[0].busStationName)
+                endStationNameTV.text = getString(R.string.bus_end_station_tv,
+                    busStationList[busStationList.size - 1].busStationName)
 
-                        stationLL.setOnClickListener {
-                            val station = stationLL.station!!
+                busStationList.forEach {
+                    val stationLL = busLineDetailLL.addStation(it)
 
-                            val dialog = DialogUtil.createConfirmationAlertDialog(this,
-                                { _, _ ->
-                                    setBusArrivalReminder(station.busStationId)
-                                },
-                                getString(R.string.bus_ask_for_setting_bus_arrival_reminder_dialog_title,
-                                    station.busStationName))
-                            dialog.show()
-                        }
+                    stationLL.setOnClickListener {
+                        val station = stationLL.station!!
+
+                        val dialog = DialogUtil.createConfirmationAlertDialog(this,
+                            { _, _ ->
+                                setBusArrivalReminder(station)
+                            },
+                            getString(R.string.bus_ask_for_setting_bus_arrival_reminder_dialog_title,
+                                station.busStationName))
+                        dialog.show()
                     }
                 }
+
+                busLineDetailLL.setupBusesDisplay(busRunInfo)
+                busTotalCountTV.text = getString(R.string.bus_line_bus_total_count_tv, busRunInfo.size)
             }
         }.start()
     }
 
-    private fun setBusArrivalReminder(busStationId: String) {
+    private fun setBusArrivalReminder(station: Station) {
         val intent = Intent(this, BusArrivalReminderService::class.java)
         intent.putExtra(BusArrivalReminderService.EXTRA_RUN_PATH_ID, runPathId)
-        intent.putExtra(BusArrivalReminderService.EXTRA_BUS_STATION_ID, busStationId)
+        intent.putExtra(BusArrivalReminderService.EXTRA_BUS_STATION_ID, station.busStationId)
+        intent.putExtra(BusArrivalReminderService.EXTRA_BUS_STATION_NAME, station.busStationName)
         intent.putExtra(BusArrivalReminderService.EXTRA_DIRECTION, currentDirection)
         startService(intent)
     }
@@ -141,7 +127,7 @@ class BusLineDetailActivity : BaseActivity() {
         val busInterval: String,
     )
 
-    class ABusRun(val busStationName: String, val busStationId: String, val stopping: Boolean)
+    class ABusRun(val busStationName: String, val busStationId: String, val arrived: Boolean)
 
     class Station(val busStationName: String, val busStationId: String)
 
@@ -206,7 +192,7 @@ class BusLineDetailActivity : BaseActivity() {
                 result["busInterval"] as String)
         }
 
-        private fun syncFetchBusRunInfo(runPathId: String, direction: Direction): List<ABusRun>? {
+        fun syncFetchBusRunInfo(runPathId: String, direction: Direction): List<ABusRun>? {
             val flag = when (direction) {
                 Direction.DIRECTION_1 -> 1
                 Direction.DIRECTION_2 -> 3
@@ -224,14 +210,14 @@ class BusLineDetailActivity : BaseActivity() {
                 val busStationId = busRunJSONObject["busStationId"] as String
                 val outState = busRunJSONObject["outstate"] as String
 
-                val stopping = outState == "0"
-                ret.add(ABusRun(busStationName, busStationId, stopping))
+                val arrived = outState == "0"
+                ret.add(ABusRun(busStationName, busStationId, arrived))
             }
 
             return ret
         }
 
-        private fun syncFetchBusStationsInfo(runPathId: String, direction: Direction): List<Station>? {
+        fun syncFetchBusStationsInfo(runPathId: String, direction: Direction): List<Station>? {
             val result =
                 BusQueryMainActivity.syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/searchSSR?rpId=$runPathId")
                     ?: return null

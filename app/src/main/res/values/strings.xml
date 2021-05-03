@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- universal -->
+    <string name="notification_chnnel_name_common">常规</string>
+    <string name="cancel_btn">取消</string>
+    <!-- end -->
+
     <string name="app_name" translatable="false">tools</string>
     <string name="str" translatable="false">%1$s</string>
     <string name="progress_tv" translatable="false">%1$f%%</string>
@@ -383,5 +388,9 @@
     <string name="bus_line_detail_station_ordinal_tv">%1$d.</string>
     <string name="bus_no_data">无数据</string>
     <string name="bus_ask_for_setting_bus_arrival_reminder_dialog_title">设置到站提醒：%1$s？</string>
+    <string name="bus_arrival_reminder_notification_title">到站提醒：%1$s</string>
+    <string name="bus_fetch_data_failed">获取信息失败</string>
+    <string name="bus_approaching_toast_msg">公交车已接近</string>
+    <string name="bus_arrival_reminder_notification_content">公交车位置：%1$s\n还有%2$d站</string>
     <!-- module end -->
 </resources>

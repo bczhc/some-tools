@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import androidx.core.content.FileProvider;
 import org.jetbrains.annotations.Contract;
@@ -98,5 +99,14 @@ public class Common {
     @Contract("_ -> new")
     public static File getAppMainExternalStoragePathFile(Context ctx) {
         return new File(getExternalStoragePath(ctx), "some-tools-app");
+    }
+
+    public static void runOnUiThread(Context ctx, Runnable r) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            r.run();
+            return;
+        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(r);
     }
 }

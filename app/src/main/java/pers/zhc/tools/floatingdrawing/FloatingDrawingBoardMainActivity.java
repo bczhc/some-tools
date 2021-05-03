@@ -31,7 +31,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
@@ -884,7 +883,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     .setContentText(getString(R.string.appear_f_b, date));
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
-            intent.setAction(BroadcastIntent.START_FLOATING_BOARD);
+            intent.setAction(BroadcastAction.ACTION_START_FLOATING_BOARD);
             intent.setPackage(getPackageName());
             intent.putExtra("millisecond", currentInstanceMillisecond);
             boolean isDrawMode = this.childTextViews[1].getText().equals(getString(R.string.drawing_mode));
@@ -903,7 +902,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
             Intent intent = new Intent();
-            intent.setAction(BroadcastIntent.START_FLOATING_BOARD);
+            intent.setAction(BroadcastAction.ACTION_START_FLOATING_BOARD);
             intent.putExtra("millisecond", currentInstanceMillisecond);
             intent.setPackage(getPackageName());
             PendingIntent pi = getPendingIntent(intent);

@@ -105,23 +105,6 @@ class BusQueryMainActivity : BaseActivity() {
         }.start()
     }
 
-    private fun fetchBusesInfoJSON(lineNumber: Int): String? {
-        val countDownLatch = CountDownLatch(1)
-        var readToString: String? = null
-        Thread {
-            try {
-                val url = URL("http://61.177.44.242:8080/BusSysWebService/bus/allStationOfRPName?name=$lineNumber")
-                val inputStream = url.openStream()
-                readToString = ReadIS.readToString(inputStream, StandardCharsets.UTF_8)
-                inputStream.close()
-            } catch (_: Exception) {
-            }
-            countDownLatch.countDown()
-        }.start()
-        countDownLatch.await()
-        return readToString
-    }
-
     companion object {
         fun syncFetchResultJSON(url: String): JSONObject? {
             try {

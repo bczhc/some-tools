@@ -21,7 +21,7 @@ public class ToastUtils {
      * @param ctx          context
      * @param charSequence string
      */
-    public static void show(Context ctx, @NotNull CharSequence charSequence) {
+    public static synchronized void show(Context ctx, @NotNull CharSequence charSequence) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> uiThreadToast(ctx, charSequence));
@@ -38,6 +38,6 @@ public class ToastUtils {
 
     public static void showError(Context ctx, @StringRes int errorMsgResId, @NotNull Exception e) {
         ToastUtils.show(ctx, ctx.getString(R.string.concat, ctx.getString(errorMsgResId)
-                , "\n" + e.toString()));
+                , "\n" + e));
     }
 }

@@ -58,7 +58,7 @@ class BusLineDetailLL : LinearLayout {
                 val station = child.station!!
 
                 if (it.busStationId == station.busStationId) {
-                    if (it.stopping) {
+                    if (it.arrived) {
                         child.setTopNodeViewBusMarkState(TopLineNodeView.BusState.ARRIVED)
                     } else {
                         val topLineNodeView = TopLineNodeView(context)
