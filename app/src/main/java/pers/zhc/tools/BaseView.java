@@ -19,8 +19,4 @@ public class BaseView extends View {
     public BaseView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
-
-    public BaseView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
 }

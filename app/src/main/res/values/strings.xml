@@ -393,5 +393,6 @@
     <string name="bus_approaching_toast_msg">公交车已接近</string>
     <string name="bus_arrival_reminder_notification_content">公交车位置：%1$s\n还有%2$d站</string>
     <string name="bus_no_nearest_bus">没有最近的车辆</string>
+    <string name="bus_set_bus_arrival_reminder_toast">设置到站提醒成功</string>
     <!-- module end -->
 </resources>

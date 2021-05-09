@@ -25,7 +25,7 @@ class BusLineDetailActivity : BaseActivity() {
     private lateinit var startStationNameTV: TextView
     private lateinit var busRunTimeTV: TextView
     private lateinit var endStationNameTV: TextView
-    private var currentDirection = Direction.DIRECTION_1
+    private lateinit var currentDirection: Direction
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +33,11 @@ class BusLineDetailActivity : BaseActivity() {
 
         val intent = intent
         runPathId = intent.getStringExtra(EXTRA_RUN_PATH_ID)!!
+        currentDirection = if (intent.hasExtra(EXTRA_DIRECTION)) {
+            intent.getSerializableExtra(EXTRA_DIRECTION) as Direction
+        } else {
+            Direction.DIRECTION_1
+        }
 
         startStationNameTV = start_station_name_tv!!
         endStationNameTV = end_station_name_tv!!
@@ -91,6 +96,7 @@ class BusLineDetailActivity : BaseActivity() {
                         val dialog = DialogUtil.createConfirmationAlertDialog(this,
                             { _, _ ->
                                 setBusArrivalReminder(station)
+                                ToastUtils.show(this, R.string.bus_set_bus_arrival_reminder_toast)
                             },
                             getString(R.string.bus_ask_for_setting_bus_arrival_reminder_dialog_title,
                                 station.busStationName))
@@ -154,6 +160,11 @@ class BusLineDetailActivity : BaseActivity() {
          * intent string extra
          */
         const val EXTRA_RUN_PATH_ID = "runPathId"
+
+        /**
+         * intent serialized enum extra
+         */
+        const val EXTRA_DIRECTION = "direction"
 
         fun syncFetchBusInfo(runPathId: String): BusInfo? {
             val result =
