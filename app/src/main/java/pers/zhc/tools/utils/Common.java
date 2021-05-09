@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -99,6 +100,13 @@ public class Common {
     @Contract("_ -> new")
     public static File getAppMainExternalStoragePathFile(Context ctx) {
         return new File(getExternalStoragePath(ctx), "some-tools-app");
+    }
+
+    public static void createAppMainExternalPath(Context ctx) {
+        final File f = getAppMainExternalStoragePathFile(ctx);
+        if (!f.exists()) {
+            doAssertion(f.mkdirs());
+        }
     }
 
     public static void runOnUiThread(Context ctx, Runnable r) {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.diary_attachment_file_library_file_detail_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.DialogUtil
 import java.io.File
 
 /**
@@ -31,20 +32,27 @@ class FileLibraryFileDetailActivity : DiaryBaseActivity() {
         val additionTimestamp = cursor.getLong(statement.getIndexByColumnName("addition_timestamp"))
         statement.release()
 
-        val filePreviewView = FileLibraryActivity.getFilePreviewView(this, FileLibraryActivity.FileInfo(
-            filename,
-            additionTimestamp,
-            storageType,
-            description,
-            identifier
-        ))
+        val filePreviewView = FileLibraryActivity.getFilePreviewView(
+            this, FileLibraryActivity.FileInfo(
+                filename,
+                additionTimestamp,
+                storageType,
+                description,
+                identifier
+            )
+        )
         ll.addView(filePreviewView, 0)
 
         browserFileBtn.setOnClickListener {
             val path = File(DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase), identifier).path
+            if (!File(path).exists()) {
+                FileLibraryActivity.showFileNotExistDialog(this, diaryDatabase, identifier)
+                return@setOnClickListener
+            }
+
             val i = Intent(this, FileBrowserActivity::class.java)
             i.putExtra("storageType", storageType)
-            i.putExtra("filePath", path);
+            i.putExtra("filePath", path)
             startActivity(i)
         }
     }
