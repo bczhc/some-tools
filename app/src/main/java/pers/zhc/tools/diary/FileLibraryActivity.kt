@@ -15,9 +15,10 @@ import kotlinx.android.synthetic.main.diary_attachment_file_library_file_preview
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.sqlite.SQLite3
+import java.io.File
 import java.io.Serializable
 import java.util.*
-import kotlin.NoSuchElementException
 
 /**
  * @author bczhc
@@ -48,8 +49,9 @@ class FileLibraryActivity : DiaryBaseActivity() {
             val storageType = cursor.getInt(storageTypeIndex)
             val identifier = cursor.getText(identifierIndex)
 
-            val filePreviewView = getFilePreviewView(filename, additionTimestamp, storageType, description, identifier)
-            setPreviewViewListener(filePreviewView, identifier)
+            val fileInfo = FileInfo(filename, additionTimestamp, storageType, description, identifier)
+            val filePreviewView = getFilePreviewView(this, fileInfo)
+            setPreviewViewListener(filePreviewView, fileInfo)
             ll.addView(filePreviewView)
         }
         statement.release()
@@ -125,18 +127,46 @@ class FileLibraryActivity : DiaryBaseActivity() {
             inflate.fileInfo = fileInfo
             return inflate
         }
+
+        fun deleteFileRecord(db: SQLite3, identifier: String) {
+            val statement =
+                db.compileStatement("DELETE\nFROM diary_attachment_file\nWHERE identifier IS ?;")
+            statement.bindText(1, identifier)
+            statement.step()
+            statement.release()
+        }
+
+        fun getFileStoredPath(db: SQLite3, identifier: String): String {
+            val fileStoragePath = DiaryAttachmentSettingsActivity.getFileStoragePath(db)
+            return File(fileStoragePath, identifier).path
+        }
+
+        fun showFileNotExistDialog(ctx: Context, db: SQLite3, identifier: String) {
+            DialogUtil.createConfirmationAlertDialog(
+                ctx,
+                { _, _ ->
+                    deleteFileRecord(db, identifier)
+                },
+                R.string.diary_file_library_file_not_exist_dialog
+            ).show()
+        }
     }
 
-    fun setPreviewViewListener(view: LinearLayoutWithFileInfo, identifier: String) {
+    fun setPreviewViewListener(view: LinearLayoutWithFileInfo, fileInfo: FileInfo) {
         view.setOnClickListener {
+            val storedFile = File(getFileStoredPath(diaryDatabase, fileInfo.identifier))
+            if (!storedFile.exists()) {
+                showFileNotExistDialog(this, diaryDatabase, fileInfo.identifier)
+                return@setOnClickListener
+            }
             if (isPickingMode) {
                 val resultIntent = Intent()
-                resultIntent.putExtra("fileIdentifier", identifier)
+                resultIntent.putExtra("fileInfo", fileInfo)
                 setResult(0, resultIntent)
                 finish()
             } else {
                 val intent = Intent(this, FileLibraryFileDetailActivity::class.java)
-                intent.putExtra("fileIdentifier", identifier)
+                intent.putExtra("fileIdentifier", fileInfo.identifier)
                 this.startActivity(intent)
             }
         }
@@ -144,13 +174,13 @@ class FileLibraryActivity : DiaryBaseActivity() {
         view.setOnLongClickListener {
             val pm = PopupMenu(this, view)
             val menu = pm.menu
-            pm.menuInflater.inflate(R.menu.file_library_popup_menu, menu)
+            pm.menuInflater.inflate(R.menu.deletion_popup_menu, menu)
             pm.show()
 
             pm.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.delete_btn -> {
-                        delete(identifier)
+                        showDeleteDialog(fileInfo.identifier)
                     }
                     else -> {
                     }
@@ -161,12 +191,11 @@ class FileLibraryActivity : DiaryBaseActivity() {
         }
     }
 
-    private fun delete(identifier: String) {
+    private fun showDeleteDialog(identifier: String) {
         DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
-            var statement =
+            val statement =
                 diaryDatabase.compileStatement("SELECT COUNT()\nFROM diary_attachment_file\nWHERE diary_attachment_file.identifier IS ?\n  AND diary_attachment_file.identifier IN\n      (SELECT diary_attachment_file_reference.file_identifier FROM diary_attachment_file_reference);")
             statement.bindText(1, identifier)
-            diaryDatabase
             val hasRecord = diaryDatabase.hasRecord(statement)
             statement.release()
 
@@ -176,11 +205,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
                 return@createConfirmationAlertDialog
             } else {
                 // delete
-                statement =
-                    diaryDatabase.compileStatement("DELETE\nFROM diary_attachment_file\nWHERE identifier IS ?;")
-                statement.bindText(1, identifier)
-                statement.step()
-                statement.release()
+                deleteFileRecord(diaryDatabase, identifier)
             }
         }, R.string.whether_to_delete).show()
     }

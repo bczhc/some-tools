@@ -10,9 +10,11 @@ import kotlinx.android.synthetic.main.diary_attachment_file_library_adding_file_
 import kotlinx.android.synthetic.main.diary_file_library_copy_progress_view.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
+import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.FileUtil
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.sqlite.SQLite3
 import java.io.File
 
 /**
@@ -44,7 +46,11 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         storageTypeValues = FileLibraryActivity.StorageType.values()
         storageTypeValues[0].toString()
         val arrayAdapter =
-            object : ArrayAdapter<FileLibraryActivity.StorageType>(this, android.R.layout.simple_list_item_1, storageTypeValues) {
+            object : ArrayAdapter<FileLibraryActivity.StorageType>(
+                this,
+                android.R.layout.simple_list_item_1,
+                storageTypeValues
+            ) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                     val view = super.getView(position, convertView, parent)
                     setMyView(position, view)
@@ -85,7 +91,8 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
             }
 
             val dialog = Dialog(this)
-            DialogUtil.setDialogAttr(dialog,
+            DialogUtil.setDialogAttr(
+                dialog,
                 false,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -114,7 +121,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                             updateFileRecord(storageTypeOrdinal, filename, description, identifier)
                             runOnUiThread { dialog.dismiss() }
                             ToastUtils.show(this, R.string.updating_done)
-                        }, {_,_->
+                        }, { _, _ ->
                             runOnUiThread { dialog.dismiss() }
                         }, R.string.file_exists_alert_msg).show()
                     }
@@ -122,8 +129,10 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                     insertFileRecord(identifier, filename, storageTypeOrdinal, description)
 
                     runOnUiThread { msgTV.setText(R.string.copying_file) }
-                    FileUtil.copy(pickedFileET.text.toString(),
-                        File(DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)!!, identifier).path)
+                    FileUtil.copy(
+                        pickedFileET.text.toString(),
+                        File(DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)!!, identifier).path
+                    )
 
                     runOnUiThread {
                         msgTV.setText(R.string.done)

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.R
@@ -63,7 +62,16 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
     private fun createAttachment() {
         val attachmentId = System.currentTimeMillis()
         diaryDatabase.beginTransaction()
+
         var statement =
+            diaryDatabase.compileStatement("INSERT INTO diary_attachment(id, title, description)\nVALUES (?, ?, ?)")
+        statement.bind(1, attachmentId)
+        statement.bindText(2, titleET.text.toString())
+        statement.bindText(3, descriptionET.text.toString())
+        statement.step()
+        statement.release()
+
+        statement =
             diaryDatabase.compileStatement("INSERT INTO diary_attachment_file_reference(attachment_id, file_identifier)\nVALUES (?, ?)")
         fileIdentifierList.forEach {
             statement.reset()
@@ -73,16 +81,8 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         }
         diaryDatabase.commit()
         statement.release()
-
-        statement =
-            diaryDatabase.compileStatement("INSERT INTO diary_attachment(id, title, description)\nVALUES (?, ?, ?)")
-        statement.bind(1, attachmentId)
-        statement.bindText(2, titleET.text.toString())
-        statement.bindText(3, descriptionET.text.toString())
-        statement.step()
-        statement.release()
     }
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // no file picked

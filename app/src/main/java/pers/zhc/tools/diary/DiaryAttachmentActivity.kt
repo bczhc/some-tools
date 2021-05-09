@@ -6,14 +6,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.diary_attachment_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.sqlite.SQLite3
 import pers.zhc.tools.utils.sqlite.Statement
 import java.text.SimpleDateFormat
-import java.util.*
 
 class DiaryAttachmentActivity : DiaryBaseActivity() {
     private var pickMode: Boolean = false
@@ -87,6 +89,27 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                 finish()
             }
         }
+
+        inflate.setOnLongClickListener {
+            val popupMenu = PopupMenu(this, inflate)
+            popupMenu.menuInflater.inflate(R.menu.deletion_popup_menu, popupMenu.menu)
+            popupMenu.show()
+
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.delete_btn -> {
+                        DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
+                            // TODO check for the existence of diary attachment in diary table...
+                            deleteAttachment(diaryDatabase, id)
+                        }, R.string.whether_to_delete).show()
+                    }
+                    else -> {
+                    }
+                }
+                return@setOnMenuItemClickListener true
+            }
+            return@setOnLongClickListener true
+        }
         return inflate
     }
 
@@ -155,5 +178,25 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         statement.bind(2, pickedAttachmentId)
         statement.step()
         statement.release()
+    }
+
+    companion object {
+        fun deleteAttachment(db: SQLite3, attachmentId: Long) {
+            var statement =
+                db.compileStatement("DELETE\nFROM diary_attachment_mapping\nWHERE referred_attachment_id IS ?")
+            statement.bind(1, attachmentId)
+            statement.step()
+            statement.release()
+
+            statement = db.compileStatement("DELETE\nFROM diary_attachment_file_reference\nWHERE attachment_id IS ?")
+            statement.bind(1, attachmentId)
+            statement.step()
+            statement.release()
+
+            statement = db.compileStatement("DELETE\nFROM diary_attachment\nWHERE id IS ?")
+            statement.bind(1, attachmentId)
+            statement.step()
+            statement.release()
+        }
     }
 }

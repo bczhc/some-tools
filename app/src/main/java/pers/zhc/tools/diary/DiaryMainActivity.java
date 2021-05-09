@@ -224,6 +224,9 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             case R.id.attachment:
                 startActivity(new Intent(this, DiaryAttachmentActivity.class));
                 break;
+            case R.id.settings:
+                startActivity(new Intent(this, DiaryAttachmentSettingsActivity.class));
+                break;
             default:
                 break;
         }
