@@ -12,6 +12,11 @@
     <attr name="textSize" format="dimension"/>
     <attr name="backgroundColor" format="color"/>
     <attr name="sliderColor" format="color"/>
+    <attr name="busMarkDotCount" format="integer"/>
+    <attr name="busState" format="flags">
+        <flag name="arrived" value="0"/>
+        <flag name="onRoad" value="1"/>
+    </attr>
 
     <declare-styleable name="ScrollEditText">
         <attr name="gravity"/>
@@ -32,5 +37,9 @@
     <declare-styleable name="RightDragView">
         <attr name="backgroundColor"/>
         <attr name="sliderColor"/>
+    </declare-styleable>
+    <declare-styleable name="TopLineNodeView">
+        <attr name="busMarkDotCount"/>
+        <attr name="busState"/>
     </declare-styleable>
 </resources>
