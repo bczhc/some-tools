@@ -20,7 +20,7 @@ class FileLibraryFileDetailActivity : DiaryBaseActivity() {
         val browserFileBtn = browser_file_btn!!
 
         val intent = intent
-        val identifier = intent.getStringExtra("fileIdentifier")!!
+        val identifier = intent.getStringExtra(EXTRA_FILE_IDENTIFIER)!!
         val statement =
             diaryDatabase.compileStatement("SELECT * FROM diary_attachment_file WHERE identifier IS ?")
         statement.bindText(1, identifier)
@@ -55,5 +55,12 @@ class FileLibraryFileDetailActivity : DiaryBaseActivity() {
             i.putExtra("filePath", path)
             startActivity(i)
         }
+    }
+
+    companion object {
+        /**
+         * intent string extra
+         */
+        const val EXTRA_FILE_IDENTIFIER = "fileIdentifier"
     }
 }

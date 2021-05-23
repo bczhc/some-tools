@@ -186,7 +186,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
         }
     }
 
-    fun setPreviewViewListener(view: LinearLayoutWithFileInfo, fileInfo: FileInfo) {
+    fun setPreviewViewListener(view: View, fileInfo: FileInfo) {
         view.setOnClickListener {
             val storedFile = File(getFileStoredPath(diaryDatabase, fileInfo.identifier))
             if (!storedFile.exists()) {
@@ -200,7 +200,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
                 finish()
             } else {
                 val intent = Intent(this, FileLibraryFileDetailActivity::class.java)
-                intent.putExtra("fileIdentifier", fileInfo.identifier)
+                intent.putExtra(FileLibraryFileDetailActivity.EXTRA_FILE_IDENTIFIER, fileInfo.identifier)
                 this.startActivity(intent)
             }
         }
