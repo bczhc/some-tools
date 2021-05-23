@@ -371,6 +371,8 @@
     <string name="browser">预览</string>
     <string name="diary_file_library_has_file_reference_alert_msg">存在文件引用，无法删除。</string>
     <string name="diary_file_library_file_not_exist_dialog">本地文件已不存在，是否删除？</string>
+    <string name="diary_attachment_preview_activity_title_is">标题：%1$s</string>
+    <string name="diary_attachment_preview_activity_description_is">描述：\n%1$s</string>
     <!-- module end -->
 
     <!-- module bus -->

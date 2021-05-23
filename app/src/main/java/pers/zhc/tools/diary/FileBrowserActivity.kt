@@ -66,6 +66,7 @@ class FileBrowserActivity : BaseActivity() {
         val tv = TextView(this)
         tv.layoutParams =
             ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        tv.setTextIsSelectable(true)
         sv.addView(tv)
 
         tv.textSize = DiaryContentPreviewActivity.getEditTextTextSize(this)

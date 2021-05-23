@@ -18,6 +18,7 @@ import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.sqlite.SQLite3
 import java.io.File
 import java.io.Serializable
+import java.lang.RuntimeException
 import java.util.*
 
 /**
@@ -64,8 +65,10 @@ class FileLibraryActivity : DiaryBaseActivity() {
         description: String,
         identifier: String,
     ): LinearLayoutWithFileInfo {
-        return getFilePreviewView(this,
-            FileInfo(filename, additionTimestamp, storageTypeEnumInt, description, identifier))
+        return getFilePreviewView(
+            this,
+            FileInfo(filename, additionTimestamp, storageTypeEnumInt, description, identifier)
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -76,7 +79,10 @@ class FileLibraryActivity : DiaryBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
-                startActivityForResult(Intent(this, FileLibraryAddingActivity::class.java), RequestCode.START_ACTIVITY_0)
+                startActivityForResult(
+                    Intent(this, FileLibraryAddingActivity::class.java),
+                    RequestCode.START_ACTIVITY_0
+                )
             }
         }
         return super.onOptionsItemSelected(item)
@@ -115,8 +121,10 @@ class FileLibraryActivity : DiaryBaseActivity() {
             inflate.add_time_tv.text =
                 ctx.getString(R.string.addition_time_is, Date(fileInfo.additionTimestamp).toString())
             inflate.storage_type_tv.text =
-                ctx.getString(R.string.storage_type_is,
-                    ctx.getString(StorageType.get(fileInfo.storageTypeEnumInt).textResInt))
+                ctx.getString(
+                    R.string.storage_type_is,
+                    ctx.getString(StorageType.get(fileInfo.storageTypeEnumInt).textResInt)
+                )
             val descriptionTV = inflate.description_tv!!
             descriptionTV.text = fileInfo.description
             if (fileInfo.description.isNotEmpty()) {
@@ -126,6 +134,32 @@ class FileLibraryActivity : DiaryBaseActivity() {
             }
             inflate.fileInfo = fileInfo
             return inflate
+        }
+
+        fun getFileInfo(diaryDatabase: SQLite3, identifier: String): FileInfo {
+            val statement =
+                diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment_file\nWHERE identifier IS ?")
+            statement.bindText(1, identifier)
+            val filenameIndex = statement.getIndexByColumnName("filename")
+            val additionTimestampIndex = statement.getIndexByColumnName("addition_timestamp")
+            val descriptionIndex = statement.getIndexByColumnName("description")
+            val storageTypeIndex = statement.getIndexByColumnName("storage_type")
+
+            val cursor = statement.cursor
+            if (!cursor.step()) {
+                throw RuntimeException("Entry not found")
+            }
+            val filename = cursor.getText(filenameIndex)
+            val additionTimestamp = cursor.getLong(additionTimestampIndex)
+            val description = cursor.getText(descriptionIndex)
+            val storageType = cursor.getInt(storageTypeIndex)
+            statement.release()
+
+            return FileInfo(filename, additionTimestamp, storageType, description, identifier)
+        }
+
+        fun getFilePreviewView(ctx: Context, diaryDatabase: SQLite3, identifier: String): LinearLayoutWithFileInfo {
+            return getFilePreviewView(ctx, getFileInfo(diaryDatabase, identifier))
         }
 
         fun deleteFileRecord(db: SQLite3, identifier: String) {
