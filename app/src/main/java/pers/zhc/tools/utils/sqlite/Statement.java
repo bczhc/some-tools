@@ -1,5 +1,6 @@
 package pers.zhc.tools.utils.sqlite;
 
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.jni.JNI;
 
 public class Statement {
@@ -111,5 +112,27 @@ public class Statement {
 
     public int getIndexByColumnName(String name) {
         return JNI.Sqlite3.Statement.getIndexByColumnName(statementId, name);
+    }
+
+    public void bind(@NotNull Object[] binds) {
+        for (int i = 0; i < binds.length; i++) {
+            final Object bind = binds[i];
+            final int index = i + 1;
+            if (bind instanceof Integer) {
+                bind(index, (Integer) bind);
+            } else if (bind instanceof Long) {
+                bind(index, (Long) bind);
+            } else if (bind instanceof Double) {
+                bind(index, (Double) bind);
+            } else if (bind instanceof String) {
+                bindText(index, (String) bind);
+            } else if (bind == null) {
+                bindNull(index);
+            } else if (bind instanceof byte[]) {
+                bindBlob(index, (byte[]) bind);
+            } else {
+                throw new RuntimeException("Unknown binding object: " + bind);
+            }
+        }
     }
 }

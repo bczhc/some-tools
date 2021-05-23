@@ -68,27 +68,30 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
             val id = cursor.getLong(idColumnIndex)
 
             val previewView = getPreviewView(title, description, id)
+            previewView.setOnClickListener {
+                if (pickMode) {
+                    val resultIntent = Intent()
+                    resultIntent.putExtra("pickedAttachmentId", id)
+                    setResult(0, resultIntent)
+                    finish()
+                } else {
+                    val intent = Intent(this, DiaryAttachmentPreviewActivity::class.java)
+                    intent.putExtra(DiaryAttachmentPreviewActivity.EXTRA_ATTACHMENT_ID, id)
+                    startActivity(intent)
+                }
+            }
             this.linearLayout.addView(previewView)
         }
         statement.release()
     }
 
-    private fun getPreviewView(title: String?, description: String?, id: Long): View? {
-        val inflate = View.inflate(this, R.layout.diary_attachment_preview_view, null)
+    private fun getPreviewView(title: String?, description: String?, id: Long): View {
+        val inflate = View.inflate(this, R.layout.diary_attachment_preview_view, null)!!
         val titleTV = inflate.title_tv
         val descriptionTV = inflate.description_tv
 
         titleTV.text = getString(R.string.title_is, title)
         descriptionTV.text = getString(R.string.description_is_text, description)
-
-        inflate.setOnClickListener {
-            if (pickMode) {
-                val resultIntent = Intent()
-                resultIntent.putExtra("pickedAttachmentId", id)
-                setResult(0, resultIntent)
-                finish()
-            }
-        }
 
         inflate.setOnLongClickListener {
             val popupMenu = PopupMenu(this, inflate)
