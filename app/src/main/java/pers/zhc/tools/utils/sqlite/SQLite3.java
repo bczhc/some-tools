@@ -85,7 +85,7 @@ public class SQLite3 {
      *                  <p>E.g.: SELECT COUNT() FROM table_xxx WHERE blah blah</p>
      * @return existence boolean
      */
-    public boolean hasRecord(Statement statement) {
+    public boolean hasRecord(@NotNull Statement statement) {
         statement.stepRow();
         return statement.getCursor().getLong(0) != 0;
     }
@@ -97,6 +97,13 @@ public class SQLite3 {
     public Statement compileStatement(String sql) {
         long statementId = JNI.Sqlite3.compileStatement(this.id, sql);
         return new Statement(statementId);
+    }
+
+    public Statement compileStatement(String sql, @NotNull Object[] binds) {
+        long statementId = JNI.Sqlite3.compileStatement(this.id, sql);
+        final Statement statement = new Statement(statementId);
+        statement.bind(binds);
+        return statement;
     }
 
     public String getDatabasePath() {

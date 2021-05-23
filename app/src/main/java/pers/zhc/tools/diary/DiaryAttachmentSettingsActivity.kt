@@ -77,11 +77,21 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
                 return@exec 0
             }
 
-            return if (infoJSON == null) null
-            else {
+            // TODO this method should return `String` rather than nullable `String`
+            val r = if (infoJSON == null) {
+                null
+            } else {
                 val jsonObject = JSONObject(infoJSON!!)
                 jsonObject.getString(storagePathJsonKey)
             }
+            if (r != null) {
+                val file = File(r)
+                if (!file.exists()) {
+                    // TODO handle the case that the directory doesn't exist but also cannot be made
+                    file.mkdirs()
+                }
+            }
+            return r
         }
 
         const val storagePathJsonKey = "diaryAttachmentFileLibraryStoragePath"
@@ -119,6 +129,7 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
     }
 
     override fun onBackPressed() {
+        // TODO
         if (storagePathTV.text.toString() != oldPathStr) {
             // has changed the storage path
             DialogUtil.createConfirmationAlertDialog(this, { _, _ ->

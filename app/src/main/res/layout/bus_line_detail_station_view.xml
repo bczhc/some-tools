@@ -5,7 +5,7 @@
                               android:orientation="vertical"
                               android:id="@+id/ll_root"
 >
-    <view class="pers.zhc.tools.bus.TopLineNodeView"
+    <view class="pers.zhc.tools.bus.TopNodeView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:id="@+id/top_line_node_view"
@@ -14,6 +14,7 @@
                   android:gravity="center"
                   android:paddingHorizontal="10dp"
                   android:orientation="vertical"
+                  android:id="@+id/below_bus_info_ll"
     >
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:id="@+id/ordinal_tv"

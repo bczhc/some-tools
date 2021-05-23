@@ -35,9 +35,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        setTheme();
-
-        setTheme(R.style.DarkTheme);
+        setTheme(R.style.AppThemeWithBar);
 
         app.addActivity(this);
         CrashHandler.install(this);

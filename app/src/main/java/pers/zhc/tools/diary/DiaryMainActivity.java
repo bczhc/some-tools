@@ -224,6 +224,9 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             case R.id.attachment:
                 startActivity(new Intent(this, DiaryAttachmentActivity.class));
                 break;
+            case R.id.settings:
+                startActivity(new Intent(this, DiaryAttachmentSettingsActivity.class));
+                break;
             default:
                 break;
         }
@@ -231,7 +234,26 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         return true;
     }
 
+    private int getForeignKeys() {
+        final Statement fk = diaryDatabase.compileStatement("PRAGMA foreign_keys");
+        final Cursor fkCursor = fk.getCursor();
+        Common.doAssertion(fkCursor.step());
+        final int foreignKey = fkCursor.getInt(0);
+        fk.release();
+        return foreignKey;
+    }
+
+    private void setForeignKeys(int foreignKeys) {
+        final Statement fk = diaryDatabase.compileStatement("PRAGMA foreign_keys=" + foreignKeys);
+        fk.step();
+        fk.release();
+    }
+
     private void sort() {
+        final int foreignKeys = getForeignKeys();
+        // disable foreign keys constraint
+        setForeignKeys(0);
+
         diaryDatabase.exec("DROP TABLE IF EXISTS tmp");
 
         diaryDatabase.beginTransaction();
@@ -252,6 +274,9 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         diaryDatabase.exec("ALTER TABLE tmp RENAME TO diary");
         diaryDatabase.commit();
         refreshListViews();
+
+        // restore foreign keys setting
+        setForeignKeys(foreignKeys);
     }
 
     private void writeDiary() {

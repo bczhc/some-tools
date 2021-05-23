@@ -9,17 +9,28 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
+import kotlin.math.min
 
-class TopLineNodeView : View {
+class TopNodeView : View {
     private lateinit var linePaint: Paint
     private lateinit var circlePaint: Paint
-    private lateinit var busMarkCirclePaint: Paint
+    private lateinit var busMarkDotPaint: Paint
 
     private var busState: BusState? = null
+    private var busMarkDotCount = 0
 
     constructor(context: Context?) : this(context, null)
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        context!!
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.TopLineNodeView)
+        busMarkDotCount = ta.getInt(R.styleable.TopLineNodeView_busMarkDotCount, 0)
+        busState = if (ta.getInt(R.styleable.TopLineNodeView_busState, 0) == 0) {
+            BusState.ARRIVED
+        } else {
+            BusState.ON_ROAD
+        }
+        ta.recycle()
         init()
     }
 
@@ -30,7 +41,7 @@ class TopLineNodeView : View {
         circlePaint = Paint()
         circlePaint.color = Color.GRAY
 
-        busMarkCirclePaint = Paint()
+        busMarkDotPaint = Paint()
     }
 
     private fun measure(measureSpec: Int): Int {
@@ -67,29 +78,41 @@ class TopLineNodeView : View {
         val measuredWidth = measuredWidth.toFloat()
         val measuredHeight = measuredHeight.toFloat()
 
-        val circleRadius = measuredHeight / 4F / 2F
-        val lineHeight = circleRadius / 2F
+        val nodeDotRadius = measuredHeight / 4F / 2F
+        val lineHeight = nodeDotRadius / 2F
+        val busMarkDotRadius = min(
+            (measuredWidth / busMarkDotCount) / 2.0,
+            measuredHeight / 2.0 - 2 * nodeDotRadius
+        ).toFloat()
 
         // draw the bottom line
         canvas.save()
-        canvas.translate(0F, measuredHeight - circleRadius - lineHeight / 2F)
+        canvas.translate(0F, measuredHeight - nodeDotRadius - lineHeight / 2F)
         canvas.drawRect(0F, 0F, measuredWidth, lineHeight, linePaint)
         canvas.restore()
 
         if (busState == null || busState == BusState.ARRIVED) {
-            // draw the bottom circle
-            canvas.drawCircle(measuredWidth / 2F, measuredHeight - circleRadius, circleRadius, circlePaint)
+            // draw the bottom node circle
+            canvas.drawCircle(measuredWidth / 2F, measuredHeight - nodeDotRadius, nodeDotRadius, circlePaint)
         }
 
         if (busState != null) {
             // draw the bus state mark
-            val busMarkCircleRadius = measuredHeight / 2F / 2F
-            busMarkCirclePaint.color = when (busState) {
+            busMarkDotPaint.color = when (busState) {
                 BusState.ARRIVED -> ARRIVED_BUS_MARK_COLOR
                 BusState.ON_ROAD -> ON_ROAD_BUS_MARK_COLOR
                 null -> Color.TRANSPARENT
             }
-            canvas.drawCircle(measuredWidth / 2F, measuredHeight / 2F, busMarkCircleRadius, busMarkCirclePaint)
+
+            for (n in 0 until busMarkDotCount) {
+                val a = measuredWidth / busMarkDotCount.toFloat()
+                canvas.drawCircle(
+                    a * n.toFloat() + a / 2F,
+                    measuredHeight / 2F,
+                    busMarkDotRadius,
+                    busMarkDotPaint
+                )
+            }
         }
     }
 
@@ -97,6 +120,13 @@ class TopLineNodeView : View {
         this.busState = state
         invalidate()
     }
+
+    fun setBusMarkDotCount(count: Int) {
+        this.busMarkDotCount = count
+        invalidate()
+    }
+
+    fun getBusMarkDotCount() = this.busMarkDotCount
 
     enum class BusState {
         ARRIVED,

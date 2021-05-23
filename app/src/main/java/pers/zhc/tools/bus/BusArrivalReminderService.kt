@@ -39,7 +39,7 @@ class BusArrivalReminderService : BaseService() {
         busReminderList.append(notificationId, busReminder)
         busReminder.start()
 
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
     override fun onDestroy() {
