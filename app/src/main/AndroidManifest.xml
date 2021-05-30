@@ -482,6 +482,17 @@
             </intent-filter>
         </activity>
         <activity
+                android:name=".diary.DiaryFileLibraryEditTextActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/diary_file_library_text_edit_activity_label"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
                 android:name=".test.pressuretest.PressureTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/AppTheme">

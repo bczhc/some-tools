@@ -8,16 +8,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.PopupMenu
-import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.diary_attachment_file_library_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_file_library_file_preview_view.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.utils.PopupMenuUtil
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.sqlite.SQLite3
 import java.io.File
-import java.io.Serializable
 import java.lang.RuntimeException
 import java.util.*
 
@@ -36,7 +34,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
         isPickingMode = intent.getBooleanExtra("pick", false)
 
         val statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment_file")
-        val filenameIndex = statement.getIndexByColumnName("filename")
+        val filenameIndex = statement.getIndexByColumnName("content")
         val additionTimestampIndex = statement.getIndexByColumnName("addition_timestamp")
         val descriptionIndex = statement.getIndexByColumnName("description")
         val storageTypeIndex = statement.getIndexByColumnName("storage_type")
@@ -88,36 +86,15 @@ class FileLibraryActivity : DiaryBaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    enum class StorageType(val enumInt: Int, @StringRes val textResInt: Int) {
-        RAW(0, R.string.raw),
-        TEXT(1, R.string.text),
-        IMAGE(2, R.string.image),
-        AUDIO(3, R.string.audio);
-
-        companion object {
-            fun get(enumInt: Int): StorageType {
-                val values = values()
-                values.forEach {
-                    if (it.enumInt == enumInt) return it
-                }
-                throw NoSuchElementException()
-            }
-        }
-    }
-
-    class FileInfo(
-        val filename: String,
-        val additionTimestamp: Long,
-        val storageTypeEnumInt: Int,
-        val description: String,
-        val identifier: String,
-    ) : Serializable
-
     companion object {
         fun getFilePreviewView(ctx: Context, fileInfo: FileInfo): LinearLayoutWithFileInfo {
             val inflate = View.inflate(ctx, R.layout.diary_attachment_file_library_file_preview_view, null)!!
                 .findViewById<LinearLayoutWithFileInfo>(R.id.ll)
-            inflate.filename_tv.text = ctx.getString(R.string.filename_is, fileInfo.filename)
+            if (fileInfo.storageTypeEnumInt == StorageType.TEXT.enumInt) {
+                inflate.filename_tv.visibility = View.GONE
+            } else {
+                inflate.filename_tv.text = ctx.getString(R.string.filename_is, fileInfo.content)
+            }
             inflate.add_time_tv.text =
                 ctx.getString(R.string.addition_time_is, Date(fileInfo.additionTimestamp).toString())
             inflate.storage_type_tv.text =
@@ -140,7 +117,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
             val statement =
                 diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment_file\nWHERE identifier IS ?")
             statement.bindText(1, identifier)
-            val filenameIndex = statement.getIndexByColumnName("filename")
+            val contentIndex = statement.getIndexByColumnName("content")
             val additionTimestampIndex = statement.getIndexByColumnName("addition_timestamp")
             val descriptionIndex = statement.getIndexByColumnName("description")
             val storageTypeIndex = statement.getIndexByColumnName("storage_type")
@@ -149,7 +126,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
             if (!cursor.step()) {
                 throw RuntimeException("Entry not found")
             }
-            val filename = cursor.getText(filenameIndex)
+            val filename = cursor.getText(contentIndex)
             val additionTimestamp = cursor.getLong(additionTimestampIndex)
             val description = cursor.getText(descriptionIndex)
             val storageType = cursor.getInt(storageTypeIndex)
@@ -188,10 +165,13 @@ class FileLibraryActivity : DiaryBaseActivity() {
 
     fun setPreviewViewListener(view: View, fileInfo: FileInfo) {
         view.setOnClickListener {
-            val storedFile = File(getFileStoredPath(diaryDatabase, fileInfo.identifier))
-            if (!storedFile.exists()) {
-                showFileNotExistDialog(this, diaryDatabase, fileInfo.identifier)
-                return@setOnClickListener
+            // check file existence if storage type is file
+            if (fileInfo.storageTypeEnumInt != StorageType.TEXT.enumInt) {
+                val storedFile = File(getFileStoredPath(diaryDatabase, fileInfo.identifier))
+                if (!storedFile.exists()) {
+                    showFileNotExistDialog(this, diaryDatabase, fileInfo.identifier)
+                    return@setOnClickListener
+                }
             }
             if (isPickingMode) {
                 val resultIntent = Intent()
@@ -200,19 +180,17 @@ class FileLibraryActivity : DiaryBaseActivity() {
                 finish()
             } else {
                 val intent = Intent(this, FileLibraryFileDetailActivity::class.java)
-                intent.putExtra(FileLibraryFileDetailActivity.EXTRA_FILE_IDENTIFIER, fileInfo.identifier)
+                intent.putExtra(FileLibraryFileDetailActivity.EXTRA_IDENTIFIER, fileInfo.identifier)
                 this.startActivity(intent)
             }
         }
 
         view.setOnLongClickListener {
-            val pm = PopupMenu(this, view)
-            val menu = pm.menu
-            pm.menuInflater.inflate(R.menu.deletion_popup_menu, menu)
+            val pm = PopupMenuUtil.createPopupMenu(this, it, R.menu.deletion_popup_menu)
             pm.show()
 
-            pm.setOnMenuItemClickListener {
-                when (it.itemId) {
+            pm.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
                     R.id.delete_btn -> {
                         showDeleteDialog(fileInfo.identifier)
                     }
@@ -228,7 +206,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
     private fun showDeleteDialog(identifier: String) {
         DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
             val statement =
-                diaryDatabase.compileStatement("SELECT COUNT()\nFROM diary_attachment_file\nWHERE diary_attachment_file.identifier IS ?\n  AND diary_attachment_file.identifier IN\n      (SELECT diary_attachment_file_reference.file_identifier FROM diary_attachment_file_reference);")
+                diaryDatabase.compileStatement("SELECT COUNT()\nFROM diary_attachment_file\nWHERE diary_attachment_file.identifier IS ?\n  AND diary_attachment_file.identifier IN\n      (SELECT diary_attachment_file_reference.identifier FROM diary_attachment_file_reference);")
             statement.bindText(1, identifier)
             val hasRecord = diaryDatabase.hasRecord(statement)
             statement.release()
@@ -257,7 +235,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
 }
 
 class LinearLayoutWithFileInfo : LinearLayout {
-    var fileInfo: FileLibraryActivity.FileInfo? = null
+    var fileInfo: FileInfo? = null
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
@@ -31,11 +32,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * @author bczhc
@@ -182,7 +187,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             openDiaryPreview(dateInt);
             dialog[0].dismiss();
         }, R.string.duplicated_diary_dialog_title);
-        DialogUtil.setDialogAttr(dialog[0], false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        DialogUtil.setDialogAttr(dialog[0], false, MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
         dialog[0].show();
     }
 
@@ -351,7 +356,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
     private void changePassword() {
         View view = View.inflate(this, R.layout.change_password_view, null);
         Dialog dialog = new Dialog(this);
-        DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT
+        DialogUtil.setDialogAttr(dialog, false, MATCH_PARENT
                 , ViewGroup.LayoutParams.WRAP_CONTENT, false);
         EditText oldPasswordET = ((SmartHintEditText) view.findViewById(R.id.old_password)).getEditText();
         EditText newPasswordET = ((SmartHintEditText) view.findViewById(R.id.new_password)).getEditText();
@@ -490,17 +495,17 @@ public class DiaryMainActivity extends DiaryBaseActivity {
     @SuppressLint("SetTextI18n")
     private RelativeLayout getChildRL(@NotNull DiaryTakingActivity.MyDate myDate, String content) {
         RelativeLayoutWithDate childRL = new RelativeLayoutWithDate(this, myDate.getDateInt());
-        final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         childRL.setLayoutParams(layoutParams);
         TextView dateTV = new TextView(this);
         dateTV.setId(R.id.tv1);
-        RelativeLayout.LayoutParams dateLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams dateLP = new RelativeLayout.LayoutParams(MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dateTV.setLayoutParams(dateLP);
         dateTV.setTextColor(Color.parseColor("#1565C0"));
         dateTV.setTextSize(30);
         LimitCharacterTextView previewTV = new LimitCharacterTextView(this);
         previewTV.setId(R.id.tv2);
-        RelativeLayout.LayoutParams previewLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams previewLP = new RelativeLayout.LayoutParams(MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         previewLP.addRule(RelativeLayout.BELOW, R.id.tv1);
         previewTV.setLayoutParams(previewLP);
         String weekString = null;
@@ -512,7 +517,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         } catch (Exception e) {
             Common.showException(e, this);
         }
-        dateTV.setText(myDate.toString() + " " + weekString);
+        dateTV.setText(myDate + " " + weekString);
         previewTV.setTextLimited(content);
         setChildRL(myDate, childRL);
         runOnUiThread(() -> {
@@ -542,61 +547,59 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         })).start();
     }
 
+    private void popupMenuChangeDate(DiaryTakingActivity.MyDate date, View childRL) {
+        EditText dateET = new EditText(this);
+
+        final AlertDialog dialog = DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
+
+            final String dateString = dateET.getText().toString();
+            final DiaryTakingActivity.MyDate newDate;
+            try {
+                newDate = new DiaryTakingActivity.MyDate(Integer.parseInt(dateString));
+            } catch (Exception e) {
+                ToastUtils.show(this, R.string.please_type_correct_value);
+                return;
+            }
+
+            changeDate(date.getDateIntString(), newDate);
+            d.dismiss();
+
+            // update view
+            RelativeLayout newChildRL = getChildRLByDate(newDate.getDateInt());
+            int indexOfChild = this.ll.indexOfChild(childRL);
+            this.ll.removeViewAt(indexOfChild);
+            this.ll.addView(newChildRL, indexOfChild);
+
+        }, null, dateET, R.string.enter_new_date, MATCH_PARENT, WRAP_CONTENT, false);
+
+        dialog.show();
+    }
+
+    private void popupMenuDelete(DiaryTakingActivity.MyDate date, View childRL) {
+
+        DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
+            diaryDatabase.exec("DELETE FROM diary WHERE date='" + date.getDateIntString() + '\'');
+            dialog.dismiss();
+            // update view
+            this.ll.removeView(childRL);
+        }, R.string.whether_to_delete).show();
+    }
+
     private void setChildRL(DiaryTakingActivity.MyDate date, @NotNull RelativeLayout childRL) {
         childRL.setOnClickListener(v -> openDiaryPreview(date.getDateInt()));
         childRL.setOnLongClickListener(v -> {
-            Dialog dialog = new Dialog(this);
-            DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-            LinearLayout ll = new LinearLayout(this);
-            ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            ll.setOrientation(LinearLayout.VERTICAL);
-            final Button changeDateBtn = new Button(this);
-            final Button deleteBtn = new Button(this);
-            changeDateBtn.setText(R.string.change_date);
-            deleteBtn.setText(R.string.delete);
-            ll.addView(changeDateBtn);
-            ll.addView(deleteBtn);
-            changeDateBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            deleteBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            changeDateBtn.setOnClickListener(v1 -> {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                EditText dateET = new EditText(this);
-                final AlertDialog d2 = adb.setTitle(R.string.enter_new_date)
-                        .setPositiveButton(R.string.confirm, (dialog1, which) -> {
-                            final String dateString = dateET.getText().toString();
-                            final DiaryTakingActivity.MyDate newDate;
-                            try {
-                                newDate = new DiaryTakingActivity.MyDate(Integer.parseInt(dateString));
-                            } catch (Exception e) {
-                                ToastUtils.show(this, R.string.please_type_correct_value);
-                                return;
-                            }
-                            changeDate(date.getDateIntString(), newDate);
-                            dialog.dismiss();
-                            // update view
-                            RelativeLayout newChildRL = getChildRLByDate(newDate.getDateInt());
-                            int indexOfChild = this.ll.indexOfChild(childRL);
-                            this.ll.removeViewAt(indexOfChild);
-                            this.ll.addView(newChildRL, indexOfChild);
-                        })
-                        .setNegativeButton(R.string.cancel, (dialog1, which) -> {
-                        })
-                        .setView(dateET)
-                        .create();
-                DialogUtil.setDialogAttr(d2, false, ViewGroup.LayoutParams.MATCH_PARENT
-                        , ViewGroup.LayoutParams.WRAP_CONTENT, false);
-                d2.show();
+            final PopupMenu popupMenu = PopupMenuUtil.createPopupMenu(this, childRL, R.menu.diary_popup_menu);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                final int itemId = item.getItemId();
+                if (itemId == R.id.change_date_btn) {
+                    popupMenuChangeDate(date, childRL);
+                } else if (itemId == R.id.delete_btn) {
+                    popupMenuDelete(date, childRL);
+                }
+                return true;
             });
-            deleteBtn.setOnClickListener(v1 -> DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
-                        diaryDatabase.exec("DELETE FROM diary WHERE date='" + date.getDateIntString() + '\'');
-                        dialog.dismiss();
-                        // update view
-                        this.ll.removeView(childRL);
-                    }, (d, which) -> {
-                    }, R.string.whether_to_delete, ViewGroup.LayoutParams.MATCH_PARENT
-                    , ViewGroup.LayoutParams.WRAP_CONTENT, false).show());
-            dialog.setContentView(ll);
-            dialog.show();
+            popupMenu.show();
+
             return true;
         });
     }
@@ -612,15 +615,41 @@ public class DiaryMainActivity extends DiaryBaseActivity {
     }
 
     @NotNull
-    static String computeFileIdentifier(File f) throws IOException, NoSuchAlgorithmException {
+    static String computeIdentifier(File f) throws IOException {
         InputStream is = new FileInputStream(f);
-        MessageDigest md = MessageDigest.getInstance("SHA1");
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA1");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
         DigestUtil.updateInputStream(md, is);
         final long length = f.length();
         byte[] packed = new byte[8];
         JNI.Struct.packLong(length, packed, 0, JNI.Struct.MODE_LITTLE_ENDIAN);
         md.update(packed);
         return DigestUtil.bytesToHexString(md.digest());
+    }
+
+    @NotNull
+    static String computeIdentifier(@NotNull byte[] data) {
+        final long length = data.length;
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA1");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        final byte[] packed = new byte[8];
+        JNI.Struct.packLong(length, packed, 0, JNI.Struct.MODE_LITTLE_ENDIAN);
+        md.update(data);
+        md.update(packed);
+        return DigestUtil.bytesToHexString(md.digest());
+    }
+
+    @NotNull
+    static String computeIdentifier(@NotNull String s) {
+        return computeIdentifier(s.getBytes(StandardCharsets.UTF_8));
     }
 
     private static class LimitCharacterTextView extends androidx.appcompat.widget.AppCompatTextView {

@@ -38,7 +38,7 @@ class DiaryAttachmentPreviewActivity : DiaryBaseActivity() {
             "SELECT *\nFROM diary_attachment_file_reference\nWHERE attachment_id IS ?",
             arrayOf(attachmentId)
         )
-        val identifierColumnIndex = statement2.getIndexByColumnName("file_identifier")
+        val identifierColumnIndex = statement2.getIndexByColumnName("identifier")
         val cursor2 = statement2.cursor
         while (cursor2.step()) {
             val identifier = cursor2.getText(identifierColumnIndex)
@@ -46,7 +46,7 @@ class DiaryAttachmentPreviewActivity : DiaryBaseActivity() {
             filePreviewView.background = ContextCompat.getDrawable(this, R.drawable.view_stroke)
             filePreviewView.setOnClickListener {
                 val startIntent = Intent(this, FileLibraryFileDetailActivity::class.java)
-                startIntent.putExtra(FileLibraryFileDetailActivity.EXTRA_FILE_IDENTIFIER, filePreviewView.fileInfo!!.identifier)
+                startIntent.putExtra(FileLibraryFileDetailActivity.EXTRA_IDENTIFIER, filePreviewView.fileInfo!!.identifier)
                 startActivity(startIntent)
             }
             fileListLL.addView(filePreviewView)

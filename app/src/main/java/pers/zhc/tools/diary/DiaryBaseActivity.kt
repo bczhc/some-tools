@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import org.intellij.lang.annotations.Language
 import pers.zhc.tools.BaseActivity
-import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.sqlite.SQLite3
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -33,18 +31,24 @@ CREATE TABLE IF NOT EXISTS diary_attachment_file
 (
     identifier         TEXT NOT NULL PRIMARY KEY,
     addition_timestamp INTEGER UNIQUE,
-    filename           TEXT NOT NULL,
+    -- can be a file name or text content
+    content            TEXT NOT NULL,
+    -- Enum:
+    -- RAW 0
+    -- TEXT 1
+    -- IMAGE 2
+    -- AUDIO 3
     storage_type       INTEGER,
     description        TEXT NOT NULL
 );
 -- diary attachment file reference table; an attachment can have multiple file references
 CREATE TABLE IF NOT EXISTS diary_attachment_file_reference
 (
-    attachment_id   INTEGER,
-    file_identifier TEXT NOT NULL,
+    attachment_id INTEGER,
+    identifier    TEXT NOT NULL,
 
     FOREIGN KEY (attachment_id) REFERENCES diary_attachment (id),
-    FOREIGN KEY (file_identifier) REFERENCES diary_attachment_file (identifier)
+    FOREIGN KEY (identifier) REFERENCES diary_attachment_file (identifier)
 );
 -- diary attachment data table
 CREATE TABLE IF NOT EXISTS diary_attachment
@@ -66,7 +70,7 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
 
     FOREIGN KEY (diary_date) REFERENCES diary ("date"),
     FOREIGN KEY (referred_attachment_id) REFERENCES diary_attachment (id)
-)""".split(";\n")
+);""".split(";\n")
             statements.forEach {
                 database.exec(it)
             }

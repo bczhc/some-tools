@@ -72,7 +72,7 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         statement.release()
 
         statement =
-            diaryDatabase.compileStatement("INSERT INTO diary_attachment_file_reference(attachment_id, file_identifier)\nVALUES (?, ?)")
+            diaryDatabase.compileStatement("INSERT INTO diary_attachment_file_reference(attachment_id, identifier)\nVALUES (?, ?)")
         fileIdentifierList.forEach {
             statement.reset()
             statement.bind(1, attachmentId)
@@ -91,7 +91,7 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         when (requestCode) {
             RequestCode.START_ACTIVITY_0 -> {
                 // pick file from the file library
-                val fileInfo = data.getSerializableExtra("fileInfo") as FileLibraryActivity.FileInfo
+                val fileInfo = data.getSerializableExtra("fileInfo") as FileInfo
                 val filePreviewView = FileLibraryActivity.getFilePreviewView(this, fileInfo)
                 filePreviewView.background = ContextCompat.getDrawable(this, R.drawable.view_stroke)
                 fileListLL.addView(filePreviewView)

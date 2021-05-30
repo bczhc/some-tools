@@ -75,12 +75,13 @@ public class DialogUtil {
     }
 
     @NotNull
-    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, @Nullable View view, String title, int width, int height, boolean applicationOverlay) {
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, @Nullable DialogInterface.OnClickListener negativeAction, @Nullable View view, String title, int width, int height, boolean applicationOverlay) {
         final TextView titleTV = new TextView(ctx);
         titleTV.setTextSize(20);
         titleTV.setText(title);
         AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
-        adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction).setCustomTitle(titleTV);
+        adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction == null ? (dialog, which) -> {
+        } : negativeAction).setCustomTitle(titleTV);
         if (view != null) {
             adb.setView(view);
         }
@@ -91,7 +92,7 @@ public class DialogUtil {
     }
 
     @NotNull
-    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, @Nullable View view, int titleId, int width, int height, boolean applicationOverlay) {
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, @Nullable DialogInterface.OnClickListener negativeAction, @Nullable View view, int titleId, int width, int height, boolean applicationOverlay) {
         return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, view, ctx.getString(titleId), width, height, applicationOverlay);
     }
 

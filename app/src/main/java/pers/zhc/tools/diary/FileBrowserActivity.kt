@@ -5,12 +5,8 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import pers.zhc.tools.BaseActivity
-import pers.zhc.tools.diary.FileLibraryActivity.StorageType
 import pers.zhc.tools.utils.Common
-import java.io.BufferedReader
 import java.io.File
-import java.io.FileInputStream
-import java.io.InputStreamReader
 
 /**
  * @author bczhc
@@ -18,22 +14,17 @@ import java.io.InputStreamReader
 class FileBrowserActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val intent = intent
-        val storageTypeEnumInt = intent.getIntExtra("storageType", -1)
-        Common.doAssertion(storageTypeEnumInt != -1)
-        val storageType = StorageType.get(storageTypeEnumInt)
+        val fileInfo = intent.getSerializableExtra(EXTRA_FILE_INFO)!! as FileInfo
 
-        val filePath = intent.getStringExtra("filePath")!!
-        val file = File(filePath)
-        Common.doAssertion(file.exists())
-
-        when (storageType) {
+        when (StorageType.get(fileInfo.storageTypeEnumInt)) {
             StorageType.TEXT -> {
-                val tv = getTextFileContentView(file)
+                val tv = getTextFileContentView(fileInfo.content)
                 setContentView(tv)
             }
             StorageType.RAW -> {
-                getRawFileContentView(file)
+                getRawFileContentView(File(fileInfo.content))
             }
             else -> {
                 // TODO: 4/25/21 for else file formats
@@ -45,21 +36,7 @@ class FileBrowserActivity : BaseActivity() {
         TODO("Not yet implemented")
     }
 
-    private fun getTextFileContentView(file: File): ScrollView {
-        val sb = StringBuilder()
-
-        val fis = FileInputStream(file)
-        val isr = InputStreamReader(fis)
-        val br = BufferedReader(isr)
-        while (true) {
-            val read = br.readLine()
-            read ?: break
-            sb.appendLine(read)
-        }
-        br.close()
-        isr.close()
-        fis.close()
-
+    private fun getTextFileContentView(content: String): ScrollView {
         val sv = ScrollView(this)
         sv.layoutParams =
             ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -70,7 +47,14 @@ class FileBrowserActivity : BaseActivity() {
         sv.addView(tv)
 
         tv.textSize = DiaryContentPreviewActivity.getEditTextTextSize(this)
-        tv.text = sb.toString()
+        tv.text = content
         return sv
+    }
+
+    companion object {
+        /**
+         * intent serializable extra
+         */
+        const val EXTRA_FILE_INFO = "fileInfo"
     }
 }
