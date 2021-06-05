@@ -29,7 +29,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         bottomAttachmentLL = bottom_attachment_ll!!
 
         val intent = intent
-        val dateInt = intent.getIntExtra("dateInt", -1)
+        val dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)
         if (dateInt == -1) throw RuntimeException("No dateInt provided.")
         this.dateInt = dateInt
 
@@ -67,12 +67,12 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         when (item.itemId) {
             R.id.edit -> {
                 val intent = Intent(this, DiaryTakingActivity::class.java)
-                intent.putExtra("dateInt", dateInt)
+                intent.putExtra(EXTRA_DATE_INT, dateInt)
                 startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
             }
             R.id.attachment -> {
                 val intent = Intent(this, DiaryAttachmentActivity::class.java)
-                intent.putExtra("dateInt", dateInt)
+                intent.putExtra(EXTRA_DATE_INT, dateInt)
                 startActivity(intent)
             }
             else -> {
@@ -97,7 +97,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
 
     override fun finish() {
         val resultIntent = Intent()
-        resultIntent.putExtra("dateInt", dateInt)
+        resultIntent.putExtra(EXTRA_DATE_INT, dateInt)
         setResult(0, resultIntent)
 
         super.finish()
@@ -108,5 +108,10 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
          * in sp
          */
         fun getEditTextTextSize(ctx: Context) = DisplayUtil.px2sp(ctx, EditText(ctx).textSize).toFloat()
+
+        /**
+         * intent integer extra
+         */
+        const val EXTRA_DATE_INT = "dateInt"
     }
 }

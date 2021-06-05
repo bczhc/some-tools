@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.ListView
 import kotlinx.android.synthetic.main.diary_attachment_file_library_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_file_library_file_preview_view.view.*
 import pers.zhc.tools.R
@@ -17,7 +16,6 @@ import pers.zhc.tools.utils.PopupMenuUtil
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.sqlite.SQLite3
 import java.io.File
-import java.lang.RuntimeException
 import java.util.*
 
 /**
@@ -207,11 +205,10 @@ class FileLibraryActivity : DiaryBaseActivity() {
 
     private fun showDeleteDialog(identifier: String) {
         DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
-            val statement =
-                diaryDatabase.compileStatement("SELECT COUNT()\nFROM diary_attachment_file\nWHERE diary_attachment_file.identifier IS ?\n  AND diary_attachment_file.identifier IN\n      (SELECT diary_attachment_file_reference.identifier FROM diary_attachment_file_reference);")
-            statement.bindText(1, identifier)
-            val hasRecord = diaryDatabase.hasRecord(statement)
-            statement.release()
+            val hasRecord = diaryDatabase.hasRecord(
+                "SELECT *\nFROM diary_attachment_file\nWHERE diary_attachment_file.identifier IS ?\n  AND diary_attachment_file.identifier IN\n      (SELECT diary_attachment_file_reference.identifier FROM diary_attachment_file_reference);",
+                arrayOf(identifier)
+            )
 
             if (hasRecord) {
                 // alert

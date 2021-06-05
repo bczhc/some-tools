@@ -401,5 +401,6 @@
     <string name="bus_no_nearest_bus">没有最近的车辆</string>
     <string name="bus_set_bus_arrival_reminder_toast">设置到站提醒成功</string>
     <string name="diary_file_library_text_edit_activity_label">文本编辑</string>
+    <string name="tts_speak_error">TTS播放出错</string>
     <!-- module end -->
 </resources>

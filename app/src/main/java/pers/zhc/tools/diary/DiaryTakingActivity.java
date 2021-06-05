@@ -23,15 +23,11 @@ import androidx.appcompat.app.ActionBar;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.views.ScrollEditText;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.Statement;
+import pers.zhc.tools.views.ScrollEditText;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,6 +48,11 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
     private Statement updateStatement;
     private ScheduledSaver saver;
     private Map<String, String> ttsReplaceDict = null;
+
+    /**
+     * intent integer extra
+     */
+    public static String EXTRA_DATE_INT = "dateInt";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,14 +90,24 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
                 if (speak) {
                     if (count < before) {
                         //delete
-                        tts.speak(getString(R.string.deleted_xxx, last.subSequence(start, start + before)), TextToSpeech.QUEUE_FLUSH, null, "");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            final int speak = tts.speak(getString(R.string.deleted_xxx, last.subSequence(start, start + before)), TextToSpeech.QUEUE_FLUSH, null, "");
+                            if (speak != TextToSpeech.SUCCESS) {
+                                ToastUtils.show(DiaryTakingActivity.this, R.string.tts_speak_error);
+                            }
+                        }
                     } else {
                         //insert
                         String changed = s.subSequence(start, start + count).toString();
                         if (ttsReplaceDict.containsKey(changed)) {
                             changed = ttsReplaceDict.get(changed);
                         }
-                        tts.speak(changed, TextToSpeech.QUEUE_ADD, null, String.valueOf(System.currentTimeMillis()));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            final int speak = tts.speak(changed, TextToSpeech.QUEUE_ADD, null, String.valueOf(System.currentTimeMillis()));
+                            if (speak != TextToSpeech.SUCCESS) {
+                                ToastUtils.show(DiaryTakingActivity.this, R.string.tts_speak_error);
+                            }
+                        }
                     }
                 }
             }
@@ -124,21 +135,18 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         }
 
         final Intent intent = getIntent();
-        if ((dateInt = intent.getIntExtra("dateInt", -1)) == -1) {
+        if ((dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)) == -1) {
             throw new RuntimeException("No dateInt provided.");
         }
 
-        final Statement statement = this.diaryDatabase.compileStatement("SELECT COUNT()\n" +
+        final boolean hasRecord = this.diaryDatabase.hasRecord("SELECT *\n" +
                 "FROM diary\n" +
-                "WHERE \"date\" IS ?");
-        statement.bind(1, dateInt);
-        final boolean hasRecord = this.diaryDatabase.hasRecord(statement);
-        statement.release();
+                "WHERE \"date\" IS ?", new Object[]{dateInt});
 
         Intent resultIntent = new Intent();
         final boolean newRec = !hasRecord;
         resultIntent.putExtra("newRec", newRec);
-        resultIntent.putExtra("dateInt", dateInt);
+        resultIntent.putExtra(EXTRA_DATE_INT, dateInt);
         setResult(0, resultIntent);
 
         prepareContent();
@@ -208,16 +216,17 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.record_time:
-                insertTime();
-                break;
-            case R.id.attachment:
-                Intent intent = new Intent(this, DiaryAttachmentActivity.class);
-                intent.putExtra("dateInt", dateInt);
-                startActivity(intent);
-                break;
-            default:
+        int itemId = item.getItemId();
+        if (itemId == R.id.record_time) {
+
+            insertTime();
+
+        } else if (itemId == R.id.attachment) {
+
+            Intent intent = new Intent(this, DiaryAttachmentActivity.class);
+            intent.putExtra(EXTRA_DATE_INT, dateInt);
+            startActivity(intent);
+
         }
         return super.onOptionsItemSelected(item);
     }

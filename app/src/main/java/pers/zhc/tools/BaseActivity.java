@@ -162,17 +162,15 @@ public class BaseActivity extends AppCompatActivity {
         final String appInfoDatabaseFile = Common.getInternalDatabaseDir(ctx, "app_info.db").getPath();
         SQLite3 appInfoDatabase = SQLite3.open(appInfoDatabaseFile);
 
-        Statement statement = appInfoDatabase.compileStatement("SELECT COUNT()\n" +
+        final boolean hasRecord = appInfoDatabase.hasRecord("SELECT *\n" +
                 "FROM sqlite_master\n" +
                 "WHERE type IS 'table'\n" +
                 "  AND tbl_name IS 'app_info';");
-        final boolean hasRecord = appInfoDatabase.hasRecord(statement);
-        statement.release();
 
         if (!hasRecord) {
             initAppInfoDatabase(appInfoDatabase);
         } else {
-            statement = appInfoDatabase.compileStatement("SELECT info_json\n" +
+            final Statement statement = appInfoDatabase.compileStatement("SELECT info_json\n" +
                     "FROM app_info");
             final Cursor cursor = statement.getCursor();
             Common.doAssertion(cursor.step());
@@ -198,10 +196,8 @@ public class BaseActivity extends AppCompatActivity {
 
         JSONObject jsonObject = new JSONObject();
 
-        statement = appInfoDatabase.compileStatement("SELECT COUNT()\n" +
+        final boolean hasRecord = appInfoDatabase.hasRecord("SELECT *\n" +
                 "FROM app_info");
-        final boolean hasRecord = appInfoDatabase.hasRecord(statement);
-        statement.release();
         if (!hasRecord) {
             statement = appInfoDatabase.compileStatement("INSERT INTO app_info(info_json)\n" +
                     "VALUES (?)");

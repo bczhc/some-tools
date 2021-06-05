@@ -71,29 +71,25 @@ public class SQLite3 {
         return r.get();
     }
 
-    public boolean hasRecord(String selectSql) {
-        int[] c = {0};
-        try {
-            this.exec(selectSql, contents -> {
-                ++c[0];
-                return 1;
-            });
-        } catch (Exception ignored) {
-            // terminate exception
-        }
-        return c[0] != 0;
-    }
-
     /**
      * Get if a record is exist.
      *
-     * @param statement <p>select SQLite statement, note it must select `count()`</p>
-     *                  <p>E.g.: SELECT COUNT() FROM table_xxx WHERE blah blah</p>
+     * @param selectSql <p>SQLite select statement</p>
      * @return existence boolean
      */
-    public boolean hasRecord(@NotNull Statement statement) {
-        statement.stepRow();
-        return statement.getCursor().getLong(0) != 0;
+    public boolean hasRecord(String selectSql, Object[] binds) {
+        final Statement statement = compileStatement(selectSql);
+        if (binds != null) {
+            statement.bind(binds);
+        }
+        final int stepRow = statement.stepRow();
+        statement.release();
+
+        return stepRow == SQLITE_ROW;
+    }
+
+    public boolean hasRecord(String selectSql) {
+        return hasRecord(selectSql, null);
     }
 
     public boolean checkIfCorrupt() {

@@ -242,13 +242,9 @@ public class DiaryMainActivity extends DiaryBaseActivity {
     }
 
     private boolean checkRecordExistence(int dateInt) {
-        final Statement statement = diaryDatabase.compileStatement("SELECT \"date\"\n" +
+        return this.diaryDatabase.hasRecord("SELECT \"date\"\n" +
                 "FROM diary\n" +
-                "WHERE \"date\" IS ?");
-        statement.bind(1, dateInt);
-        final boolean hasRecord = diaryDatabase.hasRecord(statement);
-        statement.release();
-        return hasRecord;
+                "WHERE \"date\" IS ?", new Object[]{dateInt});
     }
 
     @Override
@@ -344,7 +340,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         final boolean recordExistence = checkRecordExistence(getCurrentDateInt());
         if (recordExistence) {
             final Intent intent = new Intent(this, DiaryTakingActivity.class);
-            intent.putExtra("dateInt", getCurrentDateInt());
+            intent.putExtra(DiaryTakingActivity.EXTRA_DATE_INT, getCurrentDateInt());
             startActivityForResult(intent, RequestCode.START_ACTIVITY_4);
         } else {
             createDiary(getCurrentDateInt());
@@ -442,7 +438,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
     private void createDiary(int dateInt) {
         Intent intent = new Intent(this, DiaryTakingActivity.class);
         // use the current time
-        intent.putExtra("dateInt", dateInt);
+        intent.putExtra(DiaryTakingActivity.EXTRA_DATE_INT, dateInt);
         startActivityForResult(intent, RequestCode.START_ACTIVITY_0);
     }
 
@@ -451,10 +447,10 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCode.START_ACTIVITY_0:
-                // on diary taking activity returned
+                // "write diary" action: on diary taking activity returned
                 // it must be an activity which intends to create a new diary record
                 Common.doAssertion(data != null);
-                int dateInt = data.getIntExtra("dateInt", -1);
+                int dateInt = data.getIntExtra(DiaryTakingActivity.EXTRA_DATE_INT, -1);
 
                 // update view
                 diaryItemDataList.add(new DiaryItemData(dateInt, queryDiaryContent(dateInt)));
@@ -485,22 +481,34 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             case RequestCode.START_ACTIVITY_3:
                 // on preview activity returned
                 // refresh the view in the LinearLayout
+                Common.doAssertion(data != null);
+                refreshDiaryItem(data);
+                break;
             case RequestCode.START_ACTIVITY_4:
-                // "write diary" action: start a diary taking activity directly by the click of the diary item
-                // on the activity above returned
+                // "write diary" action: start a diary taking activity directly when the diary of today's date already exists
                 // refresh the corresponding view
                 Common.doAssertion(data != null);
-                dateInt = data.getIntExtra("dateInt", -1);
-                Common.doAssertion(dateInt != -1);
-
-                // update view
-                final int position = getDiaryItemPosition(dateInt);
-                Common.doAssertion(position != -1);
-                recyclerViewAdapter.notifyItemChanged(position);
+                refreshDiaryItem(data);
                 break;
             default:
                 break;
         }
+    }
+
+    private void refreshDiaryItem(int dateInt) {
+        final String content = queryDiaryContent(dateInt);
+        int position = getDiaryItemPosition(dateInt);
+        diaryItemDataList.get(position).content = content;
+        recyclerViewAdapter.notifyItemChanged(position);
+    }
+
+    /**
+     * @param data intent with {@link DiaryTakingActivity#EXTRA_DATE_INT} extra
+     */
+    private void refreshDiaryItem(@NotNull Intent data) {
+        Common.doAssertion(data.hasExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT));
+        int dateInt = data.getIntExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, -1);
+        refreshDiaryItem(dateInt);
     }
 
     private int getDiaryItemPosition(int dateInt) {
@@ -586,7 +594,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
 
     private void openDiaryPreview(int dateInt) {
         Intent intent = new Intent(this, DiaryContentPreviewActivity.class);
-        intent.putExtra("dateInt", dateInt);
+        intent.putExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, dateInt);
         startActivityForResult(intent, RequestCode.START_ACTIVITY_3);
     }
 
@@ -647,7 +655,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
 
     private static class DiaryItemData {
         private int dateInt;
-        private final String content;
+        private String content;
 
         public DiaryItemData(int dateInt, String content) {
             this.dateInt = dateInt;
