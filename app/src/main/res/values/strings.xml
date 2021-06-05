@@ -375,6 +375,7 @@
     <string name="diary_attachment_preview_activity_description_is">描述：\n%1$s</string>
     <string name="diary_file_library_file_enter_text_btn">输入文本</string>
     <string name="diary_file_library_text_adding_msg">正在添加</string>
+    <string name="diary_file_library_edit_text_length_tv">长度：%1$d</string>
     <!-- module end -->
 
     <!-- module bus -->

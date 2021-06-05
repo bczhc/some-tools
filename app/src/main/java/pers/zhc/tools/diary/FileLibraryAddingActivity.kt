@@ -26,6 +26,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
     private lateinit var spinner: Spinner
     private lateinit var currentStorageType: StorageType
     private var text: String? = null
+    private lateinit var resultIdentifier: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,14 +43,14 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
 
     private fun submit() {
         if (currentStorageType == StorageType.TEXT) {
-            submitText(this.text!!)
+            syncSubmitText(if (this.text == null) "" else this.text!!)
         } else {
             val pickedFileET = topDynamicLL.picked_file_et!!.editText
-            submitFiles(File(pickedFileET.text.toString()))
+            syncSubmitFiles(File(pickedFileET.text.toString()))
         }
     }
 
-    private fun submitFiles(file: File) {
+    private fun syncSubmitFiles(file: File) {
         val progressView = View.inflate(this, R.layout.diary_file_library_add_progress_view, null)
         val msgTV = progressView.msg_tv
 
@@ -87,6 +88,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                         updateFileRecord(storageTypeEnumInt, filename, description, identifier)
                         runOnUiThread { dialog.dismiss() }
                         ToastUtils.show(this, R.string.updating_done)
+                        resultIdentifier = identifier
                     }, { _, _ ->
                         runOnUiThread { dialog.dismiss() }
                     }, R.string.file_exists_alert_msg).show()
@@ -103,6 +105,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                 runOnUiThread {
                     msgTV.setText(R.string.done)
                     dialog.dismiss()
+                    resultIdentifier = identifier
                     ToastUtils.show(this, R.string.adding_done)
                     finish()
                 }
@@ -110,7 +113,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         }.start()
     }
 
-    private fun submitText(text: String) {
+    private fun syncSubmitText(text: String) {
         val progressView = View.inflate(this, R.layout.diary_file_library_add_progress_view, null)
         progressView.msg_tv.setText(R.string.diary_file_library_text_adding_msg)
 
@@ -126,7 +129,11 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
             val identifier = DiaryMainActivity.computeIdentifier(text)
             insertDatabase(identifier, text, StorageType.TEXT.enumInt, description)
             dialog.cancel()
-            ToastUtils.show(this, R.string.adding_done)
+            resultIdentifier = identifier
+            runOnUiThread {
+                ToastUtils.show(this, R.string.adding_done)
+                finish()
+            }
         }.start()
     }
 
@@ -199,6 +206,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                 View.inflate(this, R.layout.diary_attachment_file_library_adding_file_activity_text_mode, null)
             inflate.enter_text_btn.setOnClickListener {
                 val intent = Intent(this, DiaryFileLibraryEditTextActivity::class.java)
+                intent.putExtra(DiaryFileLibraryEditTextActivity.EXTRA_INITIAL_TEXT, this.text)
                 startActivityForResult(intent, RequestCode.START_ACTIVITY_1)
             }
             inflate
@@ -250,5 +258,19 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
             else -> {
             }
         }
+    }
+
+    override fun finish() {
+        val resultIntent = Intent()
+        resultIntent.putExtra(EXTRA_RESULT_IDENTIFIER, resultIdentifier)
+        setResult(0, resultIntent)
+        super.finish()
+    }
+
+    companion object {
+        /**
+         * result string intent
+         */
+        const val EXTRA_RESULT_IDENTIFIER = "resultIdentifier"
     }
 }

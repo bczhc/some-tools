@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.ListView
 import kotlinx.android.synthetic.main.diary_attachment_file_library_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_file_library_file_preview_view.view.*
 import pers.zhc.tools.R
@@ -23,12 +24,13 @@ import java.util.*
  * @author bczhc
  */
 class FileLibraryActivity : DiaryBaseActivity() {
+    private lateinit var linearLayout: LinearLayout
     private var isPickingMode: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_attachment_file_library_activity)
-        val ll = ll!!
+        linearLayout = ll!!
 
         val intent = intent
         isPickingMode = intent.getBooleanExtra("pick", false)
@@ -52,6 +54,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
             val filePreviewView = getFilePreviewView(this, fileInfo)
             setPreviewViewListener(filePreviewView, fileInfo)
             ll.addView(filePreviewView)
+            ListView(this)
         }
         statement.release()
     }
@@ -228,6 +231,10 @@ class FileLibraryActivity : DiaryBaseActivity() {
         if (requestCode == RequestCode.START_ACTIVITY_0) {
             // not submit
             data ?: return
+
+            val resultIdentifier = data.getStringExtra(FileLibraryAddingActivity.EXTRA_RESULT_IDENTIFIER)!!
+            val filePreviewView = getFilePreviewView(this, diaryDatabase, resultIdentifier)
+            linearLayout.addView(filePreviewView)
         }
     }
 }
