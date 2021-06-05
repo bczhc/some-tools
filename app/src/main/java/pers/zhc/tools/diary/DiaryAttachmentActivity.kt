@@ -16,6 +16,7 @@ import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.sqlite.SQLite3
 import pers.zhc.tools.utils.sqlite.Statement
 import java.text.SimpleDateFormat
+import java.util.*
 
 class DiaryAttachmentActivity : DiaryBaseActivity() {
     private var pickMode: Boolean = false
@@ -38,7 +39,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         dateInt = intent.getIntExtra("dateInt", -1)
         pickMode = intent.getBooleanExtra("pickMode", false)
         if (dateInt != -1 && !pickMode) {
-            val formatter = SimpleDateFormat(getString(R.string.diary_attachment_with_date_format_title))
+            val formatter = SimpleDateFormat(getString(R.string.diary_attachment_with_date_format_title), Locale.US)
             val format = formatter.format(getDateFromDateInt(dateInt))
             title = format
         }

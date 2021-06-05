@@ -228,8 +228,6 @@ class FileLibraryActivity : DiaryBaseActivity() {
         if (requestCode == RequestCode.START_ACTIVITY_0) {
             // not submit
             data ?: return
-
-
         }
     }
 }

@@ -1,11 +1,12 @@
 package pers.zhc.tools.diary
 
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import pers.zhc.tools.BaseActivity
-import pers.zhc.tools.utils.Common
 import java.io.File
 
 /**
@@ -16,7 +17,7 @@ class FileBrowserActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         val intent = intent
-        val fileInfo = intent.getSerializableExtra(EXTRA_FILE_INFO)!! as FileInfo
+        val fileInfo = intent.getParcelableExtra<FileInfo>(EXTRA_FILE_INFO)!!
 
         when (StorageType.get(fileInfo.storageTypeEnumInt)) {
             StorageType.TEXT -> {
