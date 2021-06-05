@@ -253,7 +253,8 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                 // edit text
                 data!!
                 this.text = data.getStringExtra(DiaryFileLibraryEditTextActivity.EXTRA_RESULT)
-                topDynamicLL.length_tv?.text = text?.length.toString()
+                topDynamicLL.length_tv?.text =
+                    getString(R.string.diary_file_library_edit_text_length_tv, text?.length)
             }
             else -> {
             }

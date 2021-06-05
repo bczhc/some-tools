@@ -478,38 +478,32 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 }
                 importDiary(new File(file));
                 break;
+
             case RequestCode.START_ACTIVITY_3:
+                // START_ACTIVITY_3:
                 // on preview activity returned
                 // refresh the view in the LinearLayout
-                Common.doAssertion(data != null);
-                refreshDiaryItem(data);
-                break;
+
             case RequestCode.START_ACTIVITY_4:
+                // START_ACTIVITY_3:
                 // "write diary" action: start a diary taking activity directly when the diary of today's date already exists
                 // refresh the corresponding view
+
                 Common.doAssertion(data != null);
-                refreshDiaryItem(data);
+
+                Common.doAssertion(data.hasExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT));
+                dateInt = data.getIntExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, -1);
+
+                final String content = queryDiaryContent(dateInt);
+                int position = getDiaryItemPosition(dateInt);
+                diaryItemDataList.get(position).content = content;
+                recyclerViewAdapter.notifyItemChanged(position);
                 break;
             default:
                 break;
         }
     }
 
-    private void refreshDiaryItem(int dateInt) {
-        final String content = queryDiaryContent(dateInt);
-        int position = getDiaryItemPosition(dateInt);
-        diaryItemDataList.get(position).content = content;
-        recyclerViewAdapter.notifyItemChanged(position);
-    }
-
-    /**
-     * @param data intent with {@link DiaryTakingActivity#EXTRA_DATE_INT} extra
-     */
-    private void refreshDiaryItem(@NotNull Intent data) {
-        Common.doAssertion(data.hasExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT));
-        int dateInt = data.getIntExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, -1);
-        refreshDiaryItem(dateInt);
-    }
 
     private int getDiaryItemPosition(int dateInt) {
         for (int i = 0; i < diaryItemDataList.size(); i++) {
