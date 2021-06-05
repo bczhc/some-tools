@@ -1,57 +1,110 @@
 package pers.zhc.tools.diary
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.widget.LinearLayout
-import android.widget.PopupMenu
+import android.view.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_attachment_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.DialogUtil
-import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.sqlite.SQLite3
 import pers.zhc.tools.utils.sqlite.Statement
 import java.text.SimpleDateFormat
 import java.util.*
 
 class DiaryAttachmentActivity : DiaryBaseActivity() {
-    private var pickMode: Boolean = false
+    private lateinit var itemAdapter: MyAdapter
+    private var mode: Int = -1
+    private val itemDataList = ArrayList<ItemData>()
 
     /**
-     * -1 if no dateInt specified, which means this activity is started by [DiaryMainActivity], not [DiaryTakingActivity]
-     * If [dateInt] is -1, the add action ([R.id.add] in [onOptionsItemSelected]) will show all the attachments.
-     * Otherwise that add action will attach an attachment to a diary whose date is [dateInt]
+     * -1 if no dateInt specified, list all the attachments
      */
     private var dateInt: Int = -1
-    private lateinit var linearLayout: LinearLayout
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_attachment_activity)
 
-        this.linearLayout = ll!!
+        this.recyclerView = recycler_view!!
 
         val intent = intent
-        dateInt = intent.getIntExtra("dateInt", -1)
-        pickMode = intent.getBooleanExtra("pickMode", false)
-        if (dateInt != -1 && !pickMode) {
-            val formatter = SimpleDateFormat(getString(R.string.diary_attachment_with_date_format_title), Locale.US)
-            val format = formatter.format(getDateFromDateInt(dateInt))
-            title = format
+        Common.doAssertion(intent.hasExtra(EXTRA_MODE))
+        mode = intent.getIntExtra(EXTRA_MODE, -1)
+        if (mode == MODE_ATTACHMENT_VIEW) {
+            dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)
+
+            if (dateInt != -1) {
+                val formatter = SimpleDateFormat(getString(R.string.diary_attachment_with_date_format_title), Locale.US)
+                val format = formatter.format(getDateFromDateInt(dateInt))
+                title = format
+            }
         }
 
         checkAttachmentInfoRecord()
 
+        refreshItemDataList()
         showViews()
     }
 
     private fun showViews() {
+        itemAdapter = MyAdapter(this, itemDataList)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = itemAdapter
+
+        itemAdapter.setOnItemClickListener(object : OnItemClickListener {
+            override fun onClick(position: Int, view: View) {
+                val id = itemDataList[position].id
+                when (mode) {
+                    MODE_ATTACHMENT_VIEW -> {
+                        val intent = Intent(this@DiaryAttachmentActivity, DiaryAttachmentPreviewActivity::class.java)
+                        intent.putExtra(DiaryAttachmentPreviewActivity.EXTRA_ATTACHMENT_ID, id)
+                        startActivity(intent)
+                    }
+                    MODE_DIARY_ATTACHMENT_PICK -> {
+                        val resultIntent = Intent()
+                        resultIntent.putExtra(EXTRA_PICKED_ATTACHMENT_ID, id)
+                        setResult(0, resultIntent)
+                        finish()
+                    }
+                    else -> {
+                    }
+                }
+            }
+        })
+
+        itemAdapter.setOnItemLongClickListener(object: OnItemLongClickListener {
+            override fun onLongClick(position: Int, view: View) {
+                val id = itemDataList[position].id
+
+                val popupMenu =
+                    PopupMenuUtil.createPopupMenu(this@DiaryAttachmentActivity, view, R.menu.deletion_popup_menu)
+                popupMenu.show()
+
+                popupMenu.setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.delete_btn -> {
+                            DialogUtil.createConfirmationAlertDialog(this@DiaryAttachmentActivity, { _, _ ->
+                                // TODO check for the existence of diary attachment in diary table...
+                                deleteAttachment(diaryDatabase, id)
+                            }, R.string.whether_to_delete).show()
+                        }
+                        else -> {
+                        }
+                    }
+                    return@setOnMenuItemClickListener true
+                }
+            }
+        })
+    }
+
+    private fun refreshItemDataList() {
         val statement: Statement
-        if (dateInt == -1 || pickMode) {
+        if (dateInt == -1) {
             statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment")
         } else {
             statement =
@@ -68,53 +121,9 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
             val description = cursor.getText(descriptionColumnIndex)
             val id = cursor.getLong(idColumnIndex)
 
-            val previewView = getPreviewView(title, description, id)
-            previewView.setOnClickListener {
-                if (pickMode) {
-                    val resultIntent = Intent()
-                    resultIntent.putExtra("pickedAttachmentId", id)
-                    setResult(0, resultIntent)
-                    finish()
-                } else {
-                    val intent = Intent(this, DiaryAttachmentPreviewActivity::class.java)
-                    intent.putExtra(DiaryAttachmentPreviewActivity.EXTRA_ATTACHMENT_ID, id)
-                    startActivity(intent)
-                }
-            }
-            this.linearLayout.addView(previewView)
+            itemDataList.add(ItemData(title, description, id))
         }
         statement.release()
-    }
-
-    private fun getPreviewView(title: String?, description: String?, id: Long): View {
-        val inflate = View.inflate(this, R.layout.diary_attachment_preview_view, null)!!
-        val titleTV = inflate.title_tv
-        val descriptionTV = inflate.description_tv
-
-        titleTV.text = getString(R.string.title_is, title)
-        descriptionTV.text = getString(R.string.description_is_text, description)
-
-        inflate.setOnLongClickListener {
-            val popupMenu = PopupMenu(this, inflate)
-            popupMenu.menuInflater.inflate(R.menu.deletion_popup_menu, popupMenu.menu)
-            popupMenu.show()
-
-            popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.delete_btn -> {
-                        DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
-                            // TODO check for the existence of diary attachment in diary table...
-                            deleteAttachment(diaryDatabase, id)
-                        }, R.string.whether_to_delete).show()
-                    }
-                    else -> {
-                    }
-                }
-                return@setOnMenuItemClickListener true
-            }
-            return@setOnLongClickListener true
-        }
-        return inflate
     }
 
     private fun checkAttachmentInfoRecord() {
@@ -133,15 +142,16 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
-                if (dateInt == -1 || pickMode) {
-                    val intent = Intent(this, DiaryAttachmentAddingActivity::class.java)
-                    intent.putExtra("dateInt", dateInt)
-                    startActivity(intent)
-                } else {
-                    val intent = Intent(this, DiaryAttachmentActivity::class.java)
-                    intent.putExtra("dateInt", dateInt)
-                    intent.putExtra("pickMode", true)
-                    startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
+                when (mode) {
+                    MODE_ATTACHMENT_VIEW -> {
+                        val intent = Intent(this, DiaryAttachmentAddingActivity::class.java)
+                        startActivityForResult(intent, RequestCode.START_ACTIVITY_1)
+                    }
+                    MODE_DIARY_ATTACHMENT_PICK -> {
+                        val resultIntent = Intent()
+                    }
+                    else -> {
+                    }
                 }
             }
             R.id.file_library -> {
@@ -158,17 +168,51 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             RequestCode.START_ACTIVITY_0 -> {
+                // on picked-mode attachment activity returned
                 // no attachment picked
                 data ?: return
 
-                val pickedAttachmentId = data.getLongExtra("pickedAttachmentId", -1)
-                Common.doAssertion(pickedAttachmentId != -1L)
+                // `dateInt` indicates the specified diary to be attached attachments
+                Common.doAssertion(dateInt != -1)
+                Common.doAssertion(data.hasExtra(EXTRA_PICKED_ATTACHMENT_ID))
+
+                val pickedAttachmentId = data.getLongExtra(EXTRA_PICKED_ATTACHMENT_ID, -1)
                 attachAttachment(pickedAttachmentId)
+
+                itemDataList.add(queryAttachment(pickedAttachmentId))
+                itemAdapter.notifyItemChanged(itemDataList.size - 1)
                 ToastUtils.show(this, R.string.adding_succeeded)
+            }
+            RequestCode.START_ACTIVITY_1 -> {
+                // on attachment adding activity returned
+                // update view
+                data ?: return
+
+                Common.doAssertion(data.hasExtra(DiaryAttachmentAddingActivity.EXTRA_ATTACHMENT_ID))
+                val attachmentId = data.getLongExtra(DiaryAttachmentAddingActivity.EXTRA_ATTACHMENT_ID, -1)
+
+                itemDataList.add(queryAttachment(attachmentId))
+                itemAdapter.notifyItemChanged(itemDataList.size - 1)
             }
             else -> {
             }
         }
+    }
+
+    private fun queryAttachment(id: Long): ItemData {
+        val statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment\nWHERE id IS ?")
+        val titleColumn = statement.getIndexByColumnName("title")
+        val descriptionColumn = statement.getIndexByColumnName("description")
+        statement.bind(1, id)
+        val cursor = statement.cursor
+        Common.doAssertion(cursor.step())
+
+        val title = cursor.getText(titleColumn)
+        val description = cursor.getText(descriptionColumn)
+
+        statement.release()
+
+        return ItemData(title, description, id)
     }
 
     /**
@@ -182,6 +226,39 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         statement.bind(2, pickedAttachmentId)
         statement.step()
         statement.release()
+    }
+
+    class ItemData(val title: String, val description: String, val id: Long)
+
+    class MyAdapter(private val context: Context, private val itemDataList: List<ItemData>) :
+        AdapterWithClickListener<MyAdapter.MyViewHolder>() {
+        class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+
+        private fun createPreviewView(parent: ViewGroup): View {
+            return LayoutInflater.from(context).inflate(R.layout.diary_attachment_preview_view, parent, false)
+        }
+
+        private fun bindPreviewView(viewHolder: MyViewHolder, title: String, description: String) {
+            val view = viewHolder.itemView
+            val titleTV = view.title_tv
+            val descriptionTV = view.description_tv
+
+            titleTV.text = context.getString(R.string.title_is, title)
+            descriptionTV.text = context.getString(R.string.description_is_text, description)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {
+            return MyViewHolder(createPreviewView(parent))
+        }
+
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val item = itemDataList[position]
+            bindPreviewView(holder, item.title, item.description)
+        }
+
+        override fun getItemCount(): Int {
+            return itemDataList.size
+        }
     }
 
     companion object {
@@ -202,5 +279,32 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
             statement.step()
             statement.release()
         }
+
+        /**
+         * intent long extra
+         */
+        const val EXTRA_PICKED_ATTACHMENT_ID = "pickedAttachmentId"
+
+        /**
+         * intent int extra
+         */
+        const val EXTRA_DATE_INT = "dateInt"
+
+        /**
+         * intent int extra
+         */
+        const val EXTRA_MODE = "mode"
+
+        /**
+         * mode when this activity is started to pick an attachment for a diary to attach
+         */
+        const val MODE_DIARY_ATTACHMENT_PICK = 0
+
+        /**
+         * mode when this activity is started to list the attachments
+         * the listed attachments may be bound with [dateInt]
+         */
+        const val MODE_ATTACHMENT_VIEW = 1
     }
+
 }

@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.ToastUtils
 import java.util.*
 
@@ -15,12 +16,7 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
     private lateinit var titleET: EditText
     private lateinit var fileIdentifierList: LinkedList<String>
     private lateinit var fileListLL: LinearLayout
-    lateinit var linearLayout: LinearLayout
-
-    /**
-     * -1 if no dateInt specified
-     */
-    private var dateInt: Int = -1
+    private var attachmentId = -1L;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,32 +30,34 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
 
         fileIdentifierList = LinkedList<String>()
 
+        val intent = intent
+        Common.doAssertion(intent.hasExtra(EXTRA_ATTACHMENT_ID))
+        attachmentId = intent.getLongExtra(EXTRA_ATTACHMENT_ID, -1)
         pickFileBtn.setOnClickListener {
-            val intent = Intent(this, FileLibraryActivity::class.java)
-            intent.putExtra("pick", true)
+            val filePickerIntent = Intent(this, FileLibraryActivity::class.java)
+            filePickerIntent.putExtra("pick", true)
             // pick file from the file library
-            startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
+            startActivityForResult(filePickerIntent, RequestCode.START_ACTIVITY_0)
         }
 
         createAttachmentBtn.setOnClickListener {
-            if (dateInt == -1) {
-                createAttachment()
-            } else {
-                createAttachmentAttachedDiary()
-            }
+            val attachmentId = createAttachment()
+            val resultIntent = Intent()
+            resultIntent.putExtra(EXTRA_ATTACHMENT_ID, attachmentId)
+            setResult(0, resultIntent)
             ToastUtils.show(this, R.string.creating_succeeded)
             finish()
         }
-
-        val intent = intent
-        dateInt = intent.getIntExtra("dateInt", -1)
     }
 
     private fun createAttachmentAttachedDiary() {
         createAttachment()
     }
 
-    private fun createAttachment() {
+    /**
+     * returns attachmentId
+     */
+    private fun createAttachment(): Long {
         val attachmentId = System.currentTimeMillis()
         diaryDatabase.beginTransaction()
 
@@ -81,6 +79,8 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         }
         diaryDatabase.commit()
         statement.release()
+
+        return attachmentId
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -101,5 +101,12 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
 
             }
         }
+    }
+
+    companion object {
+        /**
+         * intent long extra
+         */
+        const val EXTRA_ATTACHMENT_ID = "attachmentId"
     }
 }

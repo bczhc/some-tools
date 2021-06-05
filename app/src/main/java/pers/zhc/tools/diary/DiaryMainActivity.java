@@ -280,7 +280,9 @@ public class DiaryMainActivity extends DiaryBaseActivity {
 
         } else if (itemId == R.id.attachment) {
 
-            startActivity(new Intent(this, DiaryAttachmentActivity.class));
+            final Intent intent = new Intent(this, DiaryAttachmentActivity.class);
+            intent.putExtra(DiaryAttachmentActivity.EXTRA_MODE, DiaryAttachmentActivity.MODE_ATTACHMENT_VIEW_ALL);
+            startActivity(intent);
 
         } else if (itemId == R.id.settings) {
 
@@ -657,12 +659,10 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         }
     }
 
-    private static class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+    private static class MyAdapter extends AdapterWithClickListener<MyAdapter.MyViewHolder> {
         private final Context context;
         private final String[] weeks;
         private final List<DiaryItemData> data;
-        private OnItemClickListener onItemClickListener = null;
-        private OnItemLongClickListener onItemLongClickListener = null;
 
         private MyAdapter(@NotNull Context context, @NotNull List<DiaryItemData> data) {
             this.context = context;
@@ -724,28 +724,11 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             previewTV.setTextLimited(content);
         }
 
-        @NonNull
         @NotNull
         @Override
-        public MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+        public MyViewHolder onCreateViewHolder(@NotNull ViewGroup parent) {
             final DiaryItemRL diaryItemRL = createDiaryItemRL();
-            final MyViewHolder holder = new MyViewHolder(diaryItemRL);
-
-            diaryItemRL.setOnClickListener(v -> {
-                if (onItemClickListener != null) {
-                    final int position = holder.getLayoutPosition();
-                    onItemClickListener.onClick(position, diaryItemRL);
-                }
-            });
-
-            diaryItemRL.setOnLongClickListener(v -> {
-                if (onItemLongClickListener != null) {
-                    final int position = holder.getLayoutPosition();
-                    onItemLongClickListener.onLongClick(position, diaryItemRL);
-                }
-                return true;
-            });
-            return holder;
+            return new MyViewHolder(diaryItemRL);
         }
 
         @Override
@@ -758,22 +741,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         public int getItemCount() {
             return this.data.size();
         }
-
-        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-            this.onItemClickListener = onItemClickListener;
-        }
-
-        public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
-            this.onItemLongClickListener = onItemLongClickListener;
-        }
-    }
-
-    private interface OnItemClickListener {
-        void onClick(int position, View view);
-    }
-
-    private interface OnItemLongClickListener {
-        void onLongClick(int position, View view);
     }
 }
 
