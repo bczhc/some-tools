@@ -48,6 +48,12 @@ public class SQLite3 {
         exec(cmd, null);
     }
 
+    public void execBind(String cmd, Object[] binds) {
+        final Statement statement = compileStatement(cmd, binds);
+        statement.step();
+        statement.release();
+    }
+
     public boolean isClosed() {
         return isClosed;
     }

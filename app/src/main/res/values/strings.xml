@@ -373,6 +373,9 @@
     <string name="diary_file_library_file_not_exist_dialog">本地文件已不存在，是否删除？</string>
     <string name="diary_attachment_preview_activity_title_is">标题：%1$s</string>
     <string name="diary_attachment_preview_activity_description_is">描述：\n%1$s</string>
+    <string name="diary_file_library_file_enter_text_btn">输入文本</string>
+    <string name="diary_file_library_text_adding_msg">正在添加</string>
+    <string name="diary_file_library_edit_text_length_tv">长度：%1$d</string>
     <!-- module end -->
 
     <!-- module bus -->
@@ -397,5 +400,6 @@
     <string name="bus_arrival_reminder_notification_content">公交车位置：%1$s\n还有%2$d站</string>
     <string name="bus_no_nearest_bus">没有最近的车辆</string>
     <string name="bus_set_bus_arrival_reminder_toast">设置到站提醒成功</string>
+    <string name="diary_file_library_text_edit_activity_label">文本编辑</string>
     <!-- module end -->
 </resources>

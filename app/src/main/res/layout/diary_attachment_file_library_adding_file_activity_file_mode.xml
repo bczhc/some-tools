@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    <pers.zhc.tools.views.SmartHintEditText
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:id="@+id/picked_file_et"
+            app:hint="@string/file_path"
+    />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/pick_file"
+            android:textSize="20sp"
+            android:id="@+id/pick_file_btn"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+    />
+</LinearLayout>
