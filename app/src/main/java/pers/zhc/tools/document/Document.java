@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -18,11 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtil;
-import pers.zhc.tools.utils.DisplayUtil;
-import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.u.FileU;
+import pers.zhc.tools.utils.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -165,13 +162,7 @@ public class Document extends BaseActivity {
                         break;
                     }
                     File file = new File(result);
-                    try {
-                        FileU.FileCopy(file, dbFile, true);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Common.showException(e, this);
-                        return;
-                    }
+                    FileUtil.copy(file, dbFile);
                     final AlertDialog confirmationAlertDialog = DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
                                 setSVViews();
                                 ToastUtils.show(this, R.string.importing_succeeded);
@@ -231,7 +222,7 @@ public class Document extends BaseActivity {
                     adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                         try {
                             File destFile = new File(destFileDir + File.separator + filename.getText() + ".db");
-                            FileU.FileCopy(file, destFile);
+                            FileUtil.copy(file, destFile);
                             if (destFile.exists()) {
                                 ToastUtils.show(this, getString(R.string.exporting_succeeded) + "\n" + destFile.getCanonicalPath());
                             }

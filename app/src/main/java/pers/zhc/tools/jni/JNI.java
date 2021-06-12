@@ -4,9 +4,6 @@ package pers.zhc.tools.jni;
 import androidx.annotation.Size;
 import pers.zhc.tools.pi.JNICallback;
 import pers.zhc.tools.stcflash.JNIInterface;
-import pers.zhc.u.math.util.ComplexValue;
-
-import java.util.ArrayList;
 
 /**
  * @author bczhc
@@ -99,25 +96,6 @@ public class JNI {
         public static native long alloc(long size);
     }
 
-    public static class FourierSeries {
-        static {
-            loadLib();
-        }
-
-        public static native void calc(ArrayList<ComplexValue> points, double period, int epicyclesCount, Callback callback, int threadNum, int integralN);
-
-        public interface Callback {
-            /**
-             * callback
-             *
-             * @param n  n
-             * @param re complex value re part
-             * @param im complex value im part
-             */
-            void callback(double n, double re, double im);
-        }
-    }
-
     public static class Sqlite3 {
         static {
             loadLib();
@@ -144,7 +122,7 @@ public class JNI {
          * @param id  the associated id
          * @param cmd command
          */
-        public static native void exec(long id, String cmd, SqliteExecCallback callback)throws RuntimeException;
+        public static native void exec(long id, String cmd, SqliteExecCallback callback) throws RuntimeException;
 
         /**
          * Check if the database is corrupted.

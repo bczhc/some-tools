@@ -12,16 +12,24 @@ import pers.zhc.tools.R
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.sqlite.SQLite3
 import pers.zhc.tools.utils.sqlite.Statement
-import java.text.SimpleDateFormat
-import java.util.*
 
 class DiaryAttachmentActivity : DiaryBaseActivity() {
     private lateinit var itemAdapter: MyAdapter
-    private var mode: Int = -1
     private val itemDataList = ArrayList<ItemData>()
 
     /**
-     * -1 if no dateInt specified, list all the attachments
+     * Be `true` if the activity is started from [DiaryContentPreviewActivity] or [DiaryTakingActivity].
+     * When is `true`, the `add` menu action button will start [DiaryAttachmentActivity] with extras: [EXTRA_PICK_MODE] = true.
+     */
+    private var fromDiary = false
+
+    /**
+     * When is true, the list item on click action will close the current activity with the extra [EXTRA_PICKED_ATTACHMENT_ID].
+     */
+    private var pickMode = false
+
+    /**
+     * -1 if no dateInt specified
      */
     private var dateInt: Int = -1
     private lateinit var recyclerView: RecyclerView
@@ -33,17 +41,11 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         this.recyclerView = recycler_view!!
 
         val intent = intent
-        Common.doAssertion(intent.hasExtra(EXTRA_MODE))
-        mode = intent.getIntExtra(EXTRA_MODE, -1)
-        if (mode == MODE_ATTACHMENT_VIEW) {
+        if (intent.hasExtra(EXTRA_DATE_INT)) {
             dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)
-
-            if (dateInt != -1) {
-                val formatter = SimpleDateFormat(getString(R.string.diary_attachment_with_date_format_title), Locale.US)
-                val format = formatter.format(getDateFromDateInt(dateInt))
-                title = format
-            }
         }
+        fromDiary = intent.getBooleanExtra(EXTRA_FROM_DIARY, false)
+        pickMode = intent.getBooleanExtra(EXTRA_PICK_MODE, false)
 
         checkAttachmentInfoRecord()
 
@@ -59,25 +61,20 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         itemAdapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onClick(position: Int, view: View) {
                 val id = itemDataList[position].id
-                when (mode) {
-                    MODE_ATTACHMENT_VIEW -> {
-                        val intent = Intent(this@DiaryAttachmentActivity, DiaryAttachmentPreviewActivity::class.java)
-                        intent.putExtra(DiaryAttachmentPreviewActivity.EXTRA_ATTACHMENT_ID, id)
-                        startActivity(intent)
-                    }
-                    MODE_DIARY_ATTACHMENT_PICK -> {
-                        val resultIntent = Intent()
-                        resultIntent.putExtra(EXTRA_PICKED_ATTACHMENT_ID, id)
-                        setResult(0, resultIntent)
-                        finish()
-                    }
-                    else -> {
-                    }
+                if (pickMode) {
+                    val resultIntent = Intent()
+                    resultIntent.putExtra(EXTRA_PICKED_ATTACHMENT_ID, id)
+                    setResult(0, resultIntent)
+                    finish()
+                } else {
+                    val intent = Intent()
+                    intent.putExtra(DiaryAttachmentPreviewActivity.EXTRA_ATTACHMENT_ID, id)
+                    startActivity(intent)
                 }
             }
         })
 
-        itemAdapter.setOnItemLongClickListener(object: OnItemLongClickListener {
+        itemAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
             override fun onLongClick(position: Int, view: View) {
                 val id = itemDataList[position].id
 
@@ -142,16 +139,13 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
-                when (mode) {
-                    MODE_ATTACHMENT_VIEW -> {
-                        val intent = Intent(this, DiaryAttachmentAddingActivity::class.java)
-                        startActivityForResult(intent, RequestCode.START_ACTIVITY_1)
-                    }
-                    MODE_DIARY_ATTACHMENT_PICK -> {
-                        val resultIntent = Intent()
-                    }
-                    else -> {
-                    }
+                if (fromDiary) {
+                    val intent = Intent(this, this.javaClass)
+                    intent.putExtra(EXTRA_PICK_MODE, true)
+                    startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
+                } else {
+                    val intent = Intent(this, DiaryAttachmentAddingActivity::class.java)
+                    startActivityForResult(intent, RequestCode.START_ACTIVITY_1)
                 }
             }
             R.id.file_library -> {
@@ -168,11 +162,12 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             RequestCode.START_ACTIVITY_0 -> {
-                // on picked-mode attachment activity returned
+                // on `add` menu action button activity returned when `fromDiary` = true (select an attachment from the attachment library)
+
                 // no attachment picked
                 data ?: return
 
-                // `dateInt` indicates the specified diary to be attached attachments
+                // `dateInt` indicates the specified diary to be attached with attachments
                 Common.doAssertion(dateInt != -1)
                 Common.doAssertion(data.hasExtra(EXTRA_PICKED_ATTACHMENT_ID))
 
@@ -189,6 +184,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                 data ?: return
 
                 Common.doAssertion(data.hasExtra(DiaryAttachmentAddingActivity.EXTRA_ATTACHMENT_ID))
+                // id of the attachment just added
                 val attachmentId = data.getLongExtra(DiaryAttachmentAddingActivity.EXTRA_ATTACHMENT_ID, -1)
 
                 itemDataList.add(queryAttachment(attachmentId))
@@ -282,29 +278,26 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
 
         /**
          * intent long extra
+         * When [EXTRA_PICK_MODE] extra is `true`, this extra will be used in the result intent extras.
          */
         const val EXTRA_PICKED_ATTACHMENT_ID = "pickedAttachmentId"
 
         /**
-         * intent int extra
+         * intent integer extra
          */
         const val EXTRA_DATE_INT = "dateInt"
 
         /**
-         * intent int extra
+         * intent boolean extra
+         * See [pickMode].
          */
-        const val EXTRA_MODE = "mode"
+        const val EXTRA_PICK_MODE = "pickMode"
 
         /**
-         * mode when this activity is started to pick an attachment for a diary to attach
+         * intent boolean extra
+         * See [fromDiary] property.
          */
-        const val MODE_DIARY_ATTACHMENT_PICK = 0
-
-        /**
-         * mode when this activity is started to list the attachments
-         * the listed attachments may be bound with [dateInt]
-         */
-        const val MODE_ATTACHMENT_VIEW = 1
+        const val EXTRA_FROM_DIARY = "fromDiary"
     }
 
 }

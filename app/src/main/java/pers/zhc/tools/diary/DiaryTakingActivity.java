@@ -224,8 +224,8 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         } else if (itemId == R.id.attachment) {
 
             Intent intent = new Intent(this, DiaryAttachmentActivity.class);
-            intent.putExtra(DiaryAttachmentActivity.EXTRA_MODE, DiaryAttachmentActivity.MODE_ATTACHMENT_VIEW_ALL);
-            intent.putExtra(EXTRA_DATE_INT, dateInt);
+            intent.putExtra(DiaryAttachmentActivity.EXTRA_FROM_DIARY, true);
+            intent.putExtra(DiaryAttachmentActivity.EXTRA_DATE_INT, dateInt);
             startActivity(intent);
 
         }

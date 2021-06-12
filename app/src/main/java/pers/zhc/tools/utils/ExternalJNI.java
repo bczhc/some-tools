@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import pers.zhc.tools.Infos;
-import pers.zhc.u.FileU;
 
 public class ExternalJNI {
     private static String downloadURL;
@@ -39,7 +38,7 @@ public class ExternalJNI {
         if (connection.getResponseCode() == 200) {
             InputStream is = connection.getInputStream();
             OutputStream os = new FileOutputStream(file, false);
-            FileU.StreamWrite(is, os);
+            IOUtilsKt.writeTo(is, os);
             os.close();
             is.close();
             System.out.println("done");
@@ -84,7 +83,7 @@ public class ExternalJNI {
             br.close();
             isr.close();
             md5IS.close();
-            String localMD5 = FileU.getMD5String(localFile);
+            String localMD5 = DigestUtil.getFileDigestString(localFile, "MD5");
             System.out.println("localMD5 = " + localMD5);
             return localMD5.equals(md5);
         } catch (IOException e) {

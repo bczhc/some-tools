@@ -1,6 +1,3 @@
 [submodule "app/src/main/jni/cpp/third_party/my-cpp-lib"]
 	path = app/src/main/jni/cpp/third_party/my-cpp-lib
 	url = https://hub.fastgit.org/bczhc/cpp.git
-[submodule "app/java"]
-	path = app/java
-	url = https://hub.fastgit.org/bczhc/java

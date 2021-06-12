@@ -31,6 +31,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.widget.ImageViewCompat;
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
@@ -41,8 +43,6 @@ import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
-import pers.zhc.u.FileU;
-import pers.zhc.u.Latch;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1176,7 +1176,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             if (!currentInternalPathFile.exists()) {
                                 throw new FileNotFoundException(getString(R.string.native_file_not_exist));
                             }
-                            FileU.FileCopy(currentInternalPathFile, pathFile);
+                            FileUtil.copy(currentInternalPathFile, pathFile);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -1403,7 +1403,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     tv.setText(R.string.importing);
                     ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
                     TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
-                    Latch latch = new Latch();
+                    SpinLatch latch = new SpinLatch();
                     pv.importPathFile(new File(s), () -> {
                         runOnUiThread(importPathFileDoneAction);
                         importPathFileProgressDialog.dismiss();

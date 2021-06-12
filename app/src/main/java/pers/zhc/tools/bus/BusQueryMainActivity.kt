@@ -15,10 +15,9 @@ import org.json.JSONObject
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.u.common.ReadIS
+import pers.zhc.tools.utils.readToString
 import java.io.IOException
 import java.net.URL
-import java.nio.charset.StandardCharsets
 
 /**
  * @author bczhc
@@ -51,7 +50,7 @@ class BusQueryMainActivity : BaseActivity() {
         val endStationName: String,
         val runPathId: String,
     )
-    
+
     inner class BusLineItemAdapter(context: Context, resource: Int, objects: MutableList<BusLineInfo>) :
         ArrayAdapter<BusLineInfo>(context, resource, objects) {
         @SuppressLint("ViewHolder")
@@ -65,13 +64,13 @@ class BusQueryMainActivity : BaseActivity() {
             startStationNameTV.text = busInfo.startStationName
             endStationNameTV.text = busInfo.endStationName
             lineNumTV.text = busInfo.busLineName
-            
+
             inflate.setOnClickListener {
                 val intent = Intent(this@BusQueryMainActivity, BusLineDetailActivity::class.java)
                 intent.putExtra(BusLineDetailActivity.EXTRA_RUN_PATH_ID, busInfo.runPathId)
                 startActivity(intent)
             }
-            
+
             return inflate
         }
     }
@@ -96,7 +95,7 @@ class BusQueryMainActivity : BaseActivity() {
                 val runPathId = lineObject["runPathId"] as String
                 busLineInfoList.add(BusLineInfo(busLineName, startStationName, endStationName, runPathId))
             }
-            
+
             runOnUiThread {
                 val myArrayAdapter = BusLineItemAdapter(this, android.R.layout.simple_list_item_1, busLineInfoList)
                 linesLV.adapter = myArrayAdapter
@@ -108,7 +107,7 @@ class BusQueryMainActivity : BaseActivity() {
         fun syncFetchResultJSON(url: String): JSONObject? {
             try {
                 val inputStream = URL(url).openStream()
-                val read = ReadIS.readToString(inputStream, StandardCharsets.UTF_8)
+                val read = inputStream.readToString()
                 inputStream.close()
                 val jsonObject = JSONObject(read)
                 if (jsonObject["status"] as String != "SUCCESS") {

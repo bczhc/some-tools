@@ -13,8 +13,14 @@ import java.security.NoSuchAlgorithmException;
  * @author bczhc
  */
 public class DigestUtil {
-    public static String getFileDigestString(File f, String algorithm) throws IOException, NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance(algorithm);
+    @NotNull
+    public static String getFileDigestString(File f, String algorithm) throws IOException {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
 
         InputStream is = new FileInputStream(f);
         updateInputStream(md, is);
@@ -31,7 +37,7 @@ public class DigestUtil {
      * @param is input stream
      * @throws IOException io exception
      */
-    public static void updateInputStream(MessageDigest md, InputStream is) throws IOException {
+    public static void updateInputStream(MessageDigest md, @NotNull InputStream is) throws IOException {
         int readLen;
         byte[] buf = new byte[40960];
 
@@ -41,7 +47,7 @@ public class DigestUtil {
     }
 
     @NotNull
-    public static String bytesToHexString(byte[] sha1Bytes) {
+    public static String bytesToHexString(@NotNull byte[] sha1Bytes) {
         StringBuilder digestString = new StringBuilder();
         for (byte sha1Byte : sha1Bytes) {
             String str = Integer.toHexString(sha1Byte < 0 ? (256 + sha1Byte) : sha1Byte);

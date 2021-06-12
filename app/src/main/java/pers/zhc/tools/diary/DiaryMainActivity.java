@@ -27,8 +27,6 @@ import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.tools.views.SmartHintEditText;
-import pers.zhc.u.FileU;
-import pers.zhc.u.Latch;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -281,7 +278,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         } else if (itemId == R.id.attachment) {
 
             final Intent intent = new Intent(this, DiaryAttachmentActivity.class);
-            intent.putExtra(DiaryAttachmentActivity.EXTRA_MODE, DiaryAttachmentActivity.MODE_ATTACHMENT_VIEW_ALL);
             startActivity(intent);
 
         } else if (itemId == R.id.settings) {
@@ -361,7 +357,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         diaryDatabaseRef.countDownRef();
         Common.doAssertion(diaryDatabaseRef.isAbandoned());
 
-        final Latch latch = new Latch();
+        final SpinLatch latch = new SpinLatch();
         latch.suspend();
         new Thread(() -> {
             FileUtil.copy(file, new File(internalDatabasePath));
@@ -392,24 +388,15 @@ public class DiaryMainActivity extends DiaryBaseActivity {
 
     private void exportDiary(File dir) {
         final File databaseFile = Common.getInternalDatabaseDir(this, "diary.db");
-        final Latch latch = new Latch();
-        latch.suspend();
-        AtomicBoolean status = new AtomicBoolean(false);
         new Thread(() -> {
             try {
-                status.set(FileU.FileCopy(databaseFile, new File(dir, "diary.db")));
-            } catch (IOException e) {
-                Common.showException(e, this);
-            } finally {
-                latch.stop();
+                FileUtil.copy(databaseFile, new File(dir, "diary.db"));
+                ToastUtils.show(this, R.string.exporting_succeeded);
+            } catch (Exception e) {
+                e.printStackTrace();
+                ToastUtils.showError(this, R.string.copying_failed, e);
             }
         }).start();
-        latch.await();
-        if (status.get()) {
-            ToastUtils.show(this, R.string.exporting_succeeded);
-        } else {
-            ToastUtils.show(this, R.string.copying_failed);
-        }
     }
 
     private void changePassword() {
