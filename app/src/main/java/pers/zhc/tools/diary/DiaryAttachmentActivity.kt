@@ -86,8 +86,15 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                     when (it.itemId) {
                         R.id.delete_btn -> {
                             DialogUtil.createConfirmationAlertDialog(this@DiaryAttachmentActivity, { _, _ ->
-                                // TODO check for the existence of diary attachment in diary table...
-                                deleteAttachment(diaryDatabase, id)
+                                // TODO check for the existence of diary attachment in diary table... (???)
+                                if (fromDiary) {
+                                    // delete from diary attached attachment records
+                                    Common.doAssertion(dateInt != -1)
+                                    deleteAttachedAttachment(diaryDatabase, dateInt, id)
+                                } else {
+                                    // delete from the attachment library
+                                    deleteAttachment(diaryDatabase, id)
+                                }
                                 itemDataList.removeAt(position)
                                 itemAdapter.notifyItemRemoved(position)
                             }, R.string.whether_to_delete).show()
@@ -172,13 +179,16 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                 // `dateInt` indicates the specified diary to be attached with attachments
                 Common.doAssertion(dateInt != -1)
                 Common.doAssertion(data.hasExtra(EXTRA_PICKED_ATTACHMENT_ID))
-
+                
                 val pickedAttachmentId = data.getLongExtra(EXTRA_PICKED_ATTACHMENT_ID, -1)
+                if (checkExistence(pickedAttachmentId)) {
+                    ToastUtils.show(this, R.string.diary_attachment_adding_already_exist_toast)
+                    return
+                }
                 attachAttachment(pickedAttachmentId)
 
                 itemDataList.add(queryAttachment(pickedAttachmentId))
                 itemAdapter.notifyItemChanged(itemDataList.size - 1)
-                ToastUtils.show(this, R.string.adding_succeeded)
             }
             RequestCode.START_ACTIVITY_1 -> {
                 // on attachment adding activity returned
@@ -195,6 +205,14 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
             else -> {
             }
         }
+    }
+
+    private fun checkExistence(attachmentId: Long): Boolean {
+        Common.doAssertion(dateInt != -1)
+        return diaryDatabase.hasRecord(
+            "SELECT *\nFROM diary_attachment_mapping\nWHERE diary_date IS ?\n  AND referred_attachment_id IS ?",
+            arrayOf(dateInt, attachmentId)
+        )
     }
 
     private fun queryAttachment(id: Long): ItemData {
@@ -262,12 +280,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     companion object {
         fun deleteAttachment(db: SQLite3, attachmentId: Long) {
             var statement =
-                db.compileStatement("DELETE\nFROM diary_attachment_mapping\nWHERE referred_attachment_id IS ?")
-            statement.bind(1, attachmentId)
-            statement.step()
-            statement.release()
-
-            statement = db.compileStatement("DELETE\nFROM diary_attachment_file_reference\nWHERE attachment_id IS ?")
+                db.compileStatement("DELETE\nFROM diary_attachment_file_reference\nWHERE attachment_id IS ?")
             statement.bind(1, attachmentId)
             statement.step()
             statement.release()
@@ -276,6 +289,13 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
             statement.bind(1, attachmentId)
             statement.step()
             statement.release()
+        }
+
+        fun deleteAttachedAttachment(db: SQLite3, diaryDateInt: Int, attachmentId: Long) {
+            db.execBind(
+                "DELETE\nFROM diary_attachment_mapping\nWHERE diary_date IS ?\n  AND referred_attachment_id IS ?",
+                arrayOf(diaryDateInt, attachmentId)
+            )
         }
 
         /**

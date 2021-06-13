@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
             return DigestUtil.bytesToHexString(md.digest())
         }
 
-        fun computeIdentifier(data: ByteArray): String {
+        private fun computeIdentifier(data: ByteArray): String {
             val length = data.size.toLong()
             val md: MessageDigest = try {
                 MessageDigest.getInstance("SHA1")

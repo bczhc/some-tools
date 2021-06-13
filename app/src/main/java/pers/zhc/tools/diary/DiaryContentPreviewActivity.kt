@@ -72,6 +72,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
             }
             R.id.attachment -> {
                 val intent = Intent(this, DiaryAttachmentActivity::class.java)
+                intent.putExtra(DiaryAttachmentActivity.EXTRA_FROM_DIARY, true)
                 intent.putExtra(EXTRA_DATE_INT, dateInt)
                 startActivity(intent)
             }
