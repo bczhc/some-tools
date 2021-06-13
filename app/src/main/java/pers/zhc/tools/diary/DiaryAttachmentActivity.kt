@@ -111,21 +111,18 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     private fun refreshItemDataList() {
         val statement: Statement
         if (dateInt == -1) {
-            statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment")
+            statement = diaryDatabase.compileStatement("SELECT id, title, description\nFROM diary_attachment")
         } else {
             statement =
-                diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment\nWHERE id IS (SELECT referred_attachment_id FROM diary_attachment_mapping WHERE diary_date IS ?);")
+                diaryDatabase.compileStatement("SELECT id, title, description\nFROM diary_attachment\n         INNER JOIN diary_attachment_mapping ON diary_attachment.id IS diary_attachment_mapping.referred_attachment_id\nWHERE diary_attachment_mapping.diary_date IS ?")
             statement.bind(1, dateInt)
         }
-        val idColumnIndex = statement.getIndexByColumnName("id")
-        val titleColumnIndex = statement.getIndexByColumnName("title")
-        val descriptionColumnIndex = statement.getIndexByColumnName("description")
 
         val cursor = statement.cursor
         while (cursor.step()) {
-            val title = cursor.getText(titleColumnIndex)
-            val description = cursor.getText(descriptionColumnIndex)
-            val id = cursor.getLong(idColumnIndex)
+            val id = cursor.getLong(0)
+            val title = cursor.getText(1)
+            val description = cursor.getText(2)
 
             itemDataList.add(ItemData(title, description, id))
         }
