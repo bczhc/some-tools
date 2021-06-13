@@ -15,7 +15,7 @@ class DiaryAttachmentPreviewActivity : DiaryBaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_attachment_preview_activity)
 
-        /*val titleTV = title_tv!!
+        val titleTV = title_tv!!
         val descriptionTV = description_tv!!
         val fileListLL = file_list_ll!!
 
@@ -46,12 +46,11 @@ class DiaryAttachmentPreviewActivity : DiaryBaseActivity() {
             filePreviewView.setOnClickListener {
                 val startIntent = Intent(this, FileLibraryFileDetailActivity::class.java)
                 startIntent.putExtra(FileLibraryFileDetailActivity.EXTRA_IDENTIFIER, identifier)
-                // TODO
                 startActivity(startIntent)
             }
             fileListLL.addView(filePreviewView)
         }
-        statement2.release()*/
+        statement2.release()
     }
 
     companion object {

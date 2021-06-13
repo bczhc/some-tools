@@ -56,7 +56,7 @@ class FileLibraryActivity : DiaryBaseActivity() {
                 }
                 if (pickMode) {
                     val resultIntent = Intent()
-                    resultIntent.putExtra("fileInfo", fileInfo)
+                    resultIntent.putExtra(EXTRA_PICKED_FILE_IDENTIFIER, fileInfo.identifier)
                     setResult(0, resultIntent)
                     finish()
                 } else {
@@ -147,6 +147,17 @@ class FileLibraryActivity : DiaryBaseActivity() {
             val view = newFilePreviewView(ctx)
             setFilePreviewView(ctx, view, fileInfo, content)
             return view
+        }
+
+        fun getFilePreviewView(ctx: Context, diaryDatabase: SQLite3, identifier: String): View {
+            val fileInfo = getFileInfo(diaryDatabase, identifier)
+            var content: String? = null
+            if (fileInfo.storageTypeEnumInt == StorageType.TEXT.enumInt) {
+                content = getTextContent(diaryDatabase, identifier)
+            }
+            val newFilePreviewView = newFilePreviewView(ctx)
+            setFilePreviewView(ctx, newFilePreviewView, fileInfo, content)
+            return newFilePreviewView
         }
 
         fun setFilePreviewView(ctx: Context, view: View, fileInfo: FileInfo, content: String?) {

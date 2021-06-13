@@ -26,7 +26,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
     private lateinit var spinner: Spinner
     private lateinit var currentStorageType: StorageType
     private var text: String? = null
-    private lateinit var resultIdentifier: String
+    private var resultIdentifier: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -256,9 +256,11 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
     }
 
     override fun finish() {
-        val resultIntent = Intent()
-        resultIntent.putExtra(EXTRA_RESULT_IDENTIFIER, resultIdentifier)
-        setResult(0, resultIntent)
+        if (resultIdentifier != null) {
+            val resultIntent = Intent()
+            resultIntent.putExtra(EXTRA_RESULT_IDENTIFIER, resultIdentifier)
+            setResult(0, resultIntent)
+        }
         super.finish()
     }
 

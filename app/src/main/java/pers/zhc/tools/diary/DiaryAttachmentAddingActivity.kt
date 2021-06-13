@@ -7,7 +7,6 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.ToastUtils
 import java.util.*
 
@@ -16,7 +15,6 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
     private lateinit var titleET: EditText
     private lateinit var fileIdentifierList: LinkedList<String>
     private lateinit var fileListLL: LinearLayout
-    private var attachmentId = -1L;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,12 +28,9 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
 
         fileIdentifierList = LinkedList<String>()
 
-        val intent = intent
-        Common.doAssertion(intent.hasExtra(EXTRA_ATTACHMENT_ID))
-        attachmentId = intent.getLongExtra(EXTRA_ATTACHMENT_ID, -1)
         pickFileBtn.setOnClickListener {
             val filePickerIntent = Intent(this, FileLibraryActivity::class.java)
-            filePickerIntent.putExtra("pick", true)
+            filePickerIntent.putExtra(FileLibraryActivity.EXTRA_PICK_MODE, true)
             // pick file from the file library
             startActivityForResult(filePickerIntent, RequestCode.START_ACTIVITY_0)
         }
@@ -43,15 +38,11 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         createAttachmentBtn.setOnClickListener {
             val attachmentId = createAttachment()
             val resultIntent = Intent()
-            resultIntent.putExtra(EXTRA_ATTACHMENT_ID, attachmentId)
+            resultIntent.putExtra(EXTRA_RESULT_ATTACHMENT_ID, attachmentId)
             setResult(0, resultIntent)
             ToastUtils.show(this, R.string.creating_succeeded)
             finish()
         }
-    }
-
-    private fun createAttachmentAttachedDiary() {
-        createAttachment()
     }
 
     /**
@@ -61,15 +52,16 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         val attachmentId = System.currentTimeMillis()
         diaryDatabase.beginTransaction()
 
-        var statement =
-            diaryDatabase.compileStatement("INSERT INTO diary_attachment(id, title, description)\nVALUES (?, ?, ?)")
-        statement.bind(1, attachmentId)
-        statement.bindText(2, titleET.text.toString())
-        statement.bindText(3, descriptionET.text.toString())
-        statement.step()
-        statement.release()
+        diaryDatabase.execBind(
+            "INSERT INTO diary_attachment(id, title, description)\nVALUES (?, ?, ?)",
+            arrayOf(
+                attachmentId,
+                titleET.text.toString(),
+                descriptionET.text.toString()
+            )
+        )
 
-        statement =
+        val statement =
             diaryDatabase.compileStatement("INSERT INTO diary_attachment_file_reference(attachment_id, identifier)\nVALUES (?, ?)")
         fileIdentifierList.forEach {
             statement.reset()
@@ -91,12 +83,11 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         when (requestCode) {
             RequestCode.START_ACTIVITY_0 -> {
                 // pick file from the file library
-                /*val fileInfo = data.getParcelableExtra("fileInfo") as FileInfo
-                TODO
-                val filePreviewView = FileLibraryActivity.getFilePreviewView(this, fileInfo)
+                val identifier = data.getStringExtra(FileLibraryActivity.EXTRA_PICKED_FILE_IDENTIFIER)!!
+                val filePreviewView = FileLibraryActivity.getFilePreviewView(this, diaryDatabase, identifier)
                 filePreviewView.background = ContextCompat.getDrawable(this, R.drawable.view_stroke)
                 fileListLL.addView(filePreviewView)
-                fileIdentifierList.add(fileInfo.identifier)*/
+                fileIdentifierList.add(identifier)
             }
             else -> {
 
@@ -106,8 +97,9 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
 
     companion object {
         /**
-         * intent long extra
+         * intent string extra
+         * the id of the added attachment
          */
-        const val EXTRA_ATTACHMENT_ID = "attachmentId"
+        const val EXTRA_RESULT_ATTACHMENT_ID = "resultAttachmentId"
     }
 }

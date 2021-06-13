@@ -67,7 +67,7 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                     setResult(0, resultIntent)
                     finish()
                 } else {
-                    val intent = Intent()
+                    val intent = Intent(this@DiaryAttachmentActivity, DiaryAttachmentPreviewActivity::class.java)
                     intent.putExtra(DiaryAttachmentPreviewActivity.EXTRA_ATTACHMENT_ID, id)
                     startActivity(intent)
                 }
@@ -88,6 +88,8 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                             DialogUtil.createConfirmationAlertDialog(this@DiaryAttachmentActivity, { _, _ ->
                                 // TODO check for the existence of diary attachment in diary table...
                                 deleteAttachment(diaryDatabase, id)
+                                itemDataList.removeAt(position)
+                                itemAdapter.notifyItemRemoved(position)
                             }, R.string.whether_to_delete).show()
                         }
                         else -> {
@@ -183,9 +185,9 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                 // update view
                 data ?: return
 
-                Common.doAssertion(data.hasExtra(DiaryAttachmentAddingActivity.EXTRA_ATTACHMENT_ID))
+                Common.doAssertion(data.hasExtra(DiaryAttachmentAddingActivity.EXTRA_RESULT_ATTACHMENT_ID))
                 // id of the attachment just added
-                val attachmentId = data.getLongExtra(DiaryAttachmentAddingActivity.EXTRA_ATTACHMENT_ID, -1)
+                val attachmentId = data.getLongExtra(DiaryAttachmentAddingActivity.EXTRA_RESULT_ATTACHMENT_ID, -1)
 
                 itemDataList.add(queryAttachment(attachmentId))
                 itemAdapter.notifyItemChanged(itemDataList.size - 1)
