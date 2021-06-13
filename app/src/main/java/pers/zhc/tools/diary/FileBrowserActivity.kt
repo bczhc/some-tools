@@ -1,18 +1,18 @@
 package pers.zhc.tools.diary
 
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.diary.FileLibraryActivity.Companion.getTextContent
+import pers.zhc.tools.utils.Common
 import java.io.File
 
 /**
  * @author bczhc
  */
-class FileBrowserActivity : BaseActivity() {
+class FileBrowserActivity : DiaryBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -21,11 +21,11 @@ class FileBrowserActivity : BaseActivity() {
 
         when (StorageType.get(fileInfo.storageTypeEnumInt)) {
             StorageType.TEXT -> {
-                val tv = getTextFileContentView(fileInfo.content)
+                val tv = getTextFileContentView(getTextContent(diaryDatabase, fileInfo.identifier))
                 setContentView(tv)
             }
             StorageType.RAW -> {
-                getRawFileContentView(File(fileInfo.content))
+                getRawFileContentView(File(fileInfo.filename!!))
             }
             else -> {
                 // TODO: 4/25/21 for else file formats
@@ -54,7 +54,7 @@ class FileBrowserActivity : BaseActivity() {
 
     companion object {
         /**
-         * intent serializable extra
+         * intent parcelable extra
          */
         const val EXTRA_FILE_INFO = "fileInfo"
     }

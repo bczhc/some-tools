@@ -4,8 +4,17 @@ import android.os.Bundle
 import android.view.MenuItem
 import org.intellij.lang.annotations.Language
 import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.DigestUtil
 import pers.zhc.tools.utils.sqlite.SQLite3
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.*
 
 /**
@@ -30,16 +39,23 @@ CREATE TABLE IF NOT EXISTS diary
 CREATE TABLE IF NOT EXISTS diary_attachment_file
 (
     identifier         TEXT NOT NULL PRIMARY KEY,
-    addition_timestamp INTEGER UNIQUE,
-    -- can be a file name or text content
-    content            TEXT NOT NULL,
     -- Enum:
     -- RAW 0
     -- TEXT 1
     -- IMAGE 2
     -- AUDIO 3
     storage_type       INTEGER,
+    addition_timestamp INTEGER UNIQUE,
+    filename           TEXT,
     description        TEXT NOT NULL
+);
+-- diary attachment text storage table
+CREATE TABLE IF NOT EXISTS diary_attachment_text
+(
+    identifier TEXT NOT NULL PRIMARY KEY,
+    content    TEXT NOT NULL,
+
+    FOREIGN KEY (identifier) REFERENCES diary_attachment_file (identifier)
 );
 -- diary attachment file reference table; an attachment can have multiple file references
 CREATE TABLE IF NOT EXISTS diary_attachment_file_reference
@@ -81,6 +97,41 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
             val calendar = Calendar.getInstance()
             calendar.set(myDate.year, myDate.month - 1, myDate.day)
             return calendar.time
+        }
+
+        @Throws(IOException::class)
+        fun computeIdentifier(f: File): String {
+            val `is`: InputStream = FileInputStream(f)
+            val md: MessageDigest
+            md = try {
+                MessageDigest.getInstance("SHA1")
+            } catch (e: NoSuchAlgorithmException) {
+                throw RuntimeException(e)
+            }
+            DigestUtil.updateInputStream(md, `is`)
+            val length = f.length()
+            val packed = ByteArray(8)
+            JNI.Struct.packLong(length, packed, 0, JNI.Struct.MODE_LITTLE_ENDIAN)
+            md.update(packed)
+            return DigestUtil.bytesToHexString(md.digest())
+        }
+
+        fun computeIdentifier(data: ByteArray): String {
+            val length = data.size.toLong()
+            val md: MessageDigest = try {
+                MessageDigest.getInstance("SHA1")
+            } catch (e: NoSuchAlgorithmException) {
+                throw RuntimeException(e)
+            }
+            val packed = ByteArray(8)
+            JNI.Struct.packLong(length, packed, 0, JNI.Struct.MODE_LITTLE_ENDIAN)
+            md.update(data)
+            md.update(packed)
+            return DigestUtil.bytesToHexString(md.digest())
+        }
+
+        fun computeIdentifier(s: String): String {
+            return computeIdentifier(s.toByteArray(StandardCharsets.UTF_8))
         }
     }
 
@@ -160,6 +211,4 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
         if (item.itemId == android.R.id.home) onBackPressed()
         return super.onOptionsItemSelected(item)
     }
-
-
 }

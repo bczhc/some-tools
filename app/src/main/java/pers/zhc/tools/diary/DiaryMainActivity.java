@@ -144,15 +144,12 @@ public class DiaryMainActivity extends DiaryBaseActivity {
     private void refreshDiaryItemDataList() {
         diaryItemDataList.clear();
 
-        final Statement statement = diaryDatabase.compileStatement("SELECT *\n" +
+        final Statement statement = diaryDatabase.compileStatement("SELECT \"date\", content\n" +
                 "FROM diary");
-        final int dateColumn = statement.getIndexByColumnName("date");
-        final int contentColumn = statement.getIndexByColumnName("content");
-
         final Cursor cursor = statement.getCursor();
         while (cursor.step()) {
-            final int date = cursor.getInt(dateColumn);
-            final String content = cursor.getText(contentColumn);
+            final int date = cursor.getInt(0);
+            final String content = cursor.getText(1);
 
             diaryItemDataList.add(new DiaryItemData(date, content));
         }
@@ -233,7 +230,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         dialog[0] = DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
             openDiaryPreview(dateInt);
             dialog[0].dismiss();
-        }, R.string.duplicated_diary_dialog_title);
+        }, R.string.diary_duplicated_diary_dialog_title);
         DialogUtil.setDialogAttr(dialog[0], false, MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
         dialog[0].show();
     }
@@ -585,44 +582,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         diaryDatabase.execBind("UPDATE diary\n" +
                 "SET \"date\"=?\n" +
                 "WHERE \"date\" IS ?", new Object[]{newDate, oldDateString});
-    }
-
-    @NotNull
-    static String computeIdentifier(File f) throws IOException {
-        InputStream is = new FileInputStream(f);
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("SHA1");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        DigestUtil.updateInputStream(md, is);
-        final long length = f.length();
-        byte[] packed = new byte[8];
-        JNI.Struct.packLong(length, packed, 0, JNI.Struct.MODE_LITTLE_ENDIAN);
-        md.update(packed);
-        return DigestUtil.bytesToHexString(md.digest());
-    }
-
-    @NotNull
-    static String computeIdentifier(@NotNull byte[] data) {
-        final long length = data.length;
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("SHA1");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        final byte[] packed = new byte[8];
-        JNI.Struct.packLong(length, packed, 0, JNI.Struct.MODE_LITTLE_ENDIAN);
-        md.update(data);
-        md.update(packed);
-        return DigestUtil.bytesToHexString(md.digest());
-    }
-
-    @NotNull
-    static String computeIdentifier(@NotNull String s) {
-        return computeIdentifier(s.getBytes(StandardCharsets.UTF_8));
     }
 
     private static class LimitCharacterTextView extends androidx.appcompat.widget.AppCompatTextView {

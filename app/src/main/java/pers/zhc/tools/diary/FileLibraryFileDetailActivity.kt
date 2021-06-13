@@ -22,7 +22,7 @@ class FileLibraryFileDetailActivity : DiaryBaseActivity() {
 
         val fileInfo = FileLibraryActivity.getFileInfo(diaryDatabase, identifier)
 
-        val filePreviewView = FileLibraryActivity.getFilePreviewView(this, fileInfo)
+        val filePreviewView = FileLibraryActivity.getFilePreviewView(this, fileInfo, null)
         ll.addView(filePreviewView, 0)
 
         browserFileBtn.setOnClickListener {

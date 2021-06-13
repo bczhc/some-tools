@@ -53,7 +53,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         statement.bind(1, dateInt)
         val cursor = statement.cursor
         cursor.step()
-        val content = cursor.getText(statement.getIndexByColumnName("content"))
+        val content = cursor.getText(0)
         statement.release()
         return content
     }

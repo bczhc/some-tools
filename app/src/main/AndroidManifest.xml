@@ -462,7 +462,7 @@
         <activity
                 android:name=".diary.FileBrowserActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/browser"
+                android:label="@string/diary_browser_label"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -473,7 +473,7 @@
         <activity
                 android:name=".diary.DiaryAttachmentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/diary_attachment_activity_label_name"
+                android:label="@string/diary_attachment_preview_activity_label"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

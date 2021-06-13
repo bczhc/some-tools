@@ -91,11 +91,12 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         when (requestCode) {
             RequestCode.START_ACTIVITY_0 -> {
                 // pick file from the file library
-                val fileInfo = data.getParcelableExtra("fileInfo") as FileInfo
+                /*val fileInfo = data.getParcelableExtra("fileInfo") as FileInfo
+                TODO
                 val filePreviewView = FileLibraryActivity.getFilePreviewView(this, fileInfo)
                 filePreviewView.background = ContextCompat.getDrawable(this, R.drawable.view_stroke)
                 fileListLL.addView(filePreviewView)
-                fileIdentifierList.add(fileInfo.identifier)
+                fileIdentifierList.add(fileInfo.identifier)*/
             }
             else -> {
 

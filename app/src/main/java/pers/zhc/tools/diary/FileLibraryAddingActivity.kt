@@ -46,16 +46,16 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
             syncSubmitText(if (this.text == null) "" else this.text!!)
         } else {
             val pickedFileET = topDynamicLL.picked_file_et!!.editText
-            syncSubmitFiles(File(pickedFileET.text.toString()))
+            syncSubmitFile(File(pickedFileET.text.toString()))
         }
     }
 
-    private fun syncSubmitFiles(file: File) {
+    private fun syncSubmitFile(file: File) {
         val progressView = View.inflate(this, R.layout.diary_file_library_add_progress_view, null)
         val msgTV = progressView.msg_tv
 
         if (!file.exists()) {
-            ToastUtils.show(this, R.string.file_not_exist_alert_msg)
+            ToastUtils.show(this, R.string.diary_file_not_exist_alert_msg)
             return
         }
 
@@ -75,14 +75,14 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         msgTV.setText(R.string.calculating_file_digest)
 
         Thread {
-            val identifier = DiaryMainActivity.computeIdentifier(file)
+            val identifier = computeIdentifier(file)
             runOnUiThread { msgTV.setText(R.string.insert_record) }
 
             val filename = file.name
             val storageTypeEnumInt = currentStorageType.enumInt
             val description = descriptionET.text.toString()
 
-            if (hasRecord(identifier)) {
+            if (hasFileRecord(identifier)) {
                 runOnUiThread {
                     DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
                         updateFileRecord(storageTypeEnumInt, filename, description, identifier)
@@ -94,7 +94,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                     }, R.string.file_exists_alert_msg).show()
                 }
             } else {
-                insertDatabase(identifier, filename, storageTypeEnumInt, description)
+                insertFileRecord(identifier, filename, storageTypeEnumInt, description)
 
                 runOnUiThread { msgTV.setText(R.string.copying_file) }
                 FileUtil.copy(
@@ -126,8 +126,8 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         dialog.show()
 
         Thread {
-            val identifier = DiaryMainActivity.computeIdentifier(text)
-            insertDatabase(identifier, text, StorageType.TEXT.enumInt, description)
+            val identifier = computeIdentifier(text)
+            insertTextRecord(identifier, text, description)
             dialog.cancel()
             resultIdentifier = identifier
             runOnUiThread {
@@ -137,26 +137,20 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         }.start()
     }
 
-    private fun insertDatabase(
-        identifier: String,
-        addition_timestamp: Long,
-        content: String,
-        storageTypeInt: Int,
-        description: String
-    ) {
-        val statement =
-            diaryDatabase.compileStatement("INSERT INTO diary_attachment_file(identifier, addition_timestamp, content, storage_type, description)\nVALUES (?, ?, ?, ?, ?)")
-        statement.bind(arrayOf(identifier, addition_timestamp, content, storageTypeInt, description))
-        statement.step()
-        statement.release()
+    private fun insertFileRecord(identifier: String, filename: String?, storageTypeInt: Int, description: String) {
+        diaryDatabase.execBind(
+            "INSERT INTO diary_attachment_file(identifier, addition_timestamp, filename, storage_type, description)\nVALUES (?, ?, ?, ?, ?)",
+            arrayOf(identifier, System.currentTimeMillis(), filename, storageTypeInt, description)
+        )
     }
 
-    private fun insertDatabase(identifier: String, content: String, storageTypeInt: Int, description: String) {
-        insertDatabase(identifier, System.currentTimeMillis(), content, storageTypeInt, description)
+    private fun insertTextRecord(identifier: String, content: String, description: String) {
+        insertFileRecord(identifier, null, StorageType.TEXT.enumInt, description)
+        diaryDatabase.execBind("INSERT INTO diary_attachment_text(identifier, content)\nVALUES (?, ?)", arrayOf(identifier, content))
     }
 
-    private fun hasRecord(identifier: String): Boolean {
-        return diaryDatabase.hasRecord("SELECT * FROM diary_attachment_file WHERE identifier IS '$identifier'")
+    private fun hasFileRecord(identifier: String): Boolean {
+        return diaryDatabase.hasRecord("SELECT * FROM diary_attachment_file WHERE identifier IS ?", arrayOf(identifier))
     }
 
     private fun addSpinner() {

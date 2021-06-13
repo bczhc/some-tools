@@ -9,7 +9,7 @@
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="20sp"
-            android:text="@string/browser_file"
+            android:text="@string/diary_browser_file_btn"
             android:id="@+id/browser_file_btn"
     />
 </LinearLayout>
