@@ -8,12 +8,11 @@ import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.ToastUtils
-import java.util.*
 
 class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
     private lateinit var descriptionET: EditText
     private lateinit var titleET: EditText
-    private lateinit var fileIdentifierList: LinkedList<String>
+    private val fileIdentifierList = ArrayList<String>()
     private lateinit var fileListLL: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,8 +24,6 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         descriptionET = description_et!!
         val createAttachmentBtn = create_attachment_btn!!
         val pickFileBtn = pick_file_btn
-
-        fileIdentifierList = LinkedList<String>()
 
         pickFileBtn.setOnClickListener {
             val filePickerIntent = Intent(this, FileLibraryActivity::class.java)
@@ -84,6 +81,10 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
             RequestCode.START_ACTIVITY_0 -> {
                 // pick file from the file library
                 val identifier = data.getStringExtra(FileLibraryActivity.EXTRA_PICKED_FILE_IDENTIFIER)!!
+                if (fileIdentifierList.contains(identifier)) {
+                    ToastUtils.show(this, R.string.diary_attachment_library_duplicate_toast)
+                    return
+                }
                 val filePreviewView = FileLibraryActivity.getFilePreviewView(this, diaryDatabase, identifier)
                 filePreviewView.background = ContextCompat.getDrawable(this, R.drawable.view_stroke)
                 fileListLL.addView(filePreviewView)

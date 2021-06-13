@@ -381,7 +381,8 @@
     <string name="diary_file_preview_description_is">描述：</string>
     <string name="diary_file_preview_content_is">内容：</string>
     <string name="diary_attachment_preview_activity_label">附件预览</string>
-    <string name="diary_attachment_adding_already_exist_toast">已存在该附件</string>
+    <string name="diary_attachment_adding_dumplicate_toast">已存在该附件</string>
+    <string name="diary_attachment_library_duplicate_toast">已添加该文件</string>
     <!-- module end -->
 
     <!-- module bus -->

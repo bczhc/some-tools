@@ -12,6 +12,8 @@ import pers.zhc.tools.R
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.sqlite.SQLite3
 import pers.zhc.tools.utils.sqlite.Statement
+import java.text.SimpleDateFormat
+import java.util.*
 
 class DiaryAttachmentActivity : DiaryBaseActivity() {
     private lateinit var itemAdapter: MyAdapter
@@ -51,6 +53,12 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
 
         refreshItemDataList()
         showViews()
+
+        if (fromDiary) {
+            title = SimpleDateFormat(getString(R.string.diary_attachment_with_date_format_title), Locale.US).format(
+                getDateFromDateInt(dateInt)
+            )
+        }
     }
 
     private fun showViews() {
@@ -176,10 +184,10 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
                 // `dateInt` indicates the specified diary to be attached with attachments
                 Common.doAssertion(dateInt != -1)
                 Common.doAssertion(data.hasExtra(EXTRA_PICKED_ATTACHMENT_ID))
-                
+
                 val pickedAttachmentId = data.getLongExtra(EXTRA_PICKED_ATTACHMENT_ID, -1)
                 if (checkExistence(pickedAttachmentId)) {
-                    ToastUtils.show(this, R.string.diary_attachment_adding_already_exist_toast)
+                    ToastUtils.show(this, R.string.diary_attachment_adding_dumplicate_toast)
                     return
                 }
                 attachAttachment(pickedAttachmentId)
