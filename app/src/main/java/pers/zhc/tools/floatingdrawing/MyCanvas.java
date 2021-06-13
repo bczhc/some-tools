@@ -88,4 +88,13 @@ public class MyCanvas extends Canvas {
         scale(toScale / scale);
         translate(toStartPointX - startPointX, toStartPointY - startPointY);
     }
+
+    @Override
+    public String toString() {
+        return "MyCanvas{" +
+                "scale=" + scale +
+                ", startPointX=" + startPointX +
+                ", startPointY=" + startPointY +
+                '}';
+    }
 }
