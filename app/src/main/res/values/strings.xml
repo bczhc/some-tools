@@ -383,6 +383,7 @@
     <string name="diary_attachment_preview_activity_label">附件预览</string>
     <string name="diary_attachment_adding_dumplicate_toast">已存在该附件</string>
     <string name="diary_attachment_library_duplicate_toast">已添加该文件</string>
+    <string name="diary_file_broser_open_file_failed">无法打开图片</string>
     <!-- module end -->
 
     <!-- module bus -->

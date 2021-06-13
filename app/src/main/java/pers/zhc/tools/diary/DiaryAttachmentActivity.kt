@@ -84,7 +84,8 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
 
         itemAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
             override fun onLongClick(position: Int, view: View) {
-                val id = itemDataList[position].id
+                val itemData = itemDataList[position]
+                val id = itemData.id
 
                 val popupMenu =
                     PopupMenuUtil.createPopupMenu(this@DiaryAttachmentActivity, view, R.menu.deletion_popup_menu)

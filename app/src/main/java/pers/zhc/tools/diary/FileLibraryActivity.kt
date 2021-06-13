@@ -272,9 +272,6 @@ class FileLibraryActivity : DiaryBaseActivity() {
                 arrayOf(identifier)
             )
 
-            itemDataList.removeAt(position)
-            recyclerViewAdapter.notifyItemRemoved(position)
-
             if (hasRecord) {
                 // alert
                 ToastUtils.show(this, R.string.diary_file_library_has_file_reference_alert_msg)
@@ -285,6 +282,14 @@ class FileLibraryActivity : DiaryBaseActivity() {
                     deleteTextRecord(identifier)
                 }
                 deleteFileRecord(diaryDatabase, identifier)
+                val fileStoragePath =
+                    DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)!!
+                if (!File(fileStoragePath, identifier).delete()) {
+                    ToastUtils.show(this, R.string.deleting_failed)
+                }
+
+                itemDataList.removeAt(position)
+                recyclerViewAdapter.notifyItemRemoved(position)
             }
         }, R.string.whether_to_delete).show()
     }
