@@ -4,29 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
-
 import androidx.appcompat.app.AppCompatActivity;
+import org.jetbrains.annotations.NotNull;
+import pers.zhc.tools.Infos;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pers.zhc.tools.Infos;
-
 public class ExternalJNI {
     private static String downloadURL;
     private static String abi;
 
-    private static void fetch(Context ctx) throws IOException {
+    private static void fetch(@NotNull Context ctx) throws IOException {
         System.out.println("download remote libs");
         System.out.println("abi = " + abi);
         File libsDir = new File(ctx.getFilesDir(), "libs");

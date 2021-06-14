@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.crashhandler.CrashHandler;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.ExternalJNI;
 import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
@@ -39,7 +38,7 @@ public class BaseActivity extends AppCompatActivity {
 
         app.addActivity(this);
         CrashHandler.install(this);
-        ExternalJNI.ex(this);
+//        ExternalJNI.ex(this);
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
         if (Infos.LAUNCHER_CLASS.equals(this.getClass())) {
