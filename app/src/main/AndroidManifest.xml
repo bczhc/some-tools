@@ -16,7 +16,7 @@
     <uses-feature android:name="android.hardware.usb.host"/>
 
     <application
-            android:name=".BaseApplication"
+            android:name=".MyApplication"
             android:allowBackup="false"
             android:extractNativeLibs="true"
             android:hardwareAccelerated="true"
@@ -55,7 +55,9 @@
         <!-- Declares the input input_method service -->
         <service
                 android:name=".inputmethod.WubiIME"
-                android:permission="android.permission.BIND_INPUT_METHOD">
+                android:permission="android.permission.BIND_INPUT_METHOD"
+                android:label="@string/wubi_input_method"
+        >
             <intent-filter>
                 <action android:name="android.view.InputMethod"/>
             </intent-filter>
@@ -63,6 +65,7 @@
                     android:name="android.view.im"
                     android:resource="@xml/input_method"/>
         </service>
+        <service android:name=".bus.BusArrivalReminderService"/>
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="pers.zhc.tools.fileprovider"
@@ -76,7 +79,7 @@
         <activity
                 android:name="pers.zhc.tools.MainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -157,6 +160,7 @@
             </intent-filter>
         </activity>
         <activity android:name="pers.zhc.tools.BaseActivity"/>
+        <activity android:name=".diary.DiaryBaseActivity"/>
         <activity
                 android:name="pers.zhc.tools.functiondrawing.FunctionDrawing"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
@@ -334,7 +338,7 @@
         <activity
                 android:name=".crashhandler.CrashReportActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/BlackTheme">
+                android:theme="@style/DarkTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -365,7 +369,7 @@
                 android:name=".diary.DiaryMainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/DarkTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -386,7 +390,7 @@
         <activity
                 android:name=".diary.DiaryAttachmentActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/attachment"
+                android:label="@string/diary_attachment_library_activity_label_name"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -397,7 +401,95 @@
         <activity
                 android:name=".diary.DiaryAttachmentAddingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/attachment"
+                android:label="@string/diary_attachment_library_activity_label_name"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.FileLibraryActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/file_library"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.FileLibraryAddingActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/file_library"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.DiaryAttachmentSettingsActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/settings"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.DiaryContentPreviewActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/preview"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.FileLibraryFileDetailActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/file_library"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.FileBrowserActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/diary_browser_label"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.DiaryAttachmentPreviewActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/diary_attachment_preview_activity_label"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".diary.DiaryFileLibraryEditTextActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/diary_file_library_text_edit_activity_label"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -556,6 +648,28 @@
                 android:name=".inputmethod.WubiDatabaseEditActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".bus.BusQueryMainActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/bus_query_label"
+                android:theme="@style/AppThemeWithBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".bus.BusLineDetailActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/bus_query_label"
                 android:theme="@style/AppThemeWithBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

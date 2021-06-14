@@ -6,7 +6,7 @@
               android:id="@+id/root"
 >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/file_name_is"
+              android:text="@string/filename_is"
               android:textSize="20sp"
     />
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -18,8 +18,7 @@
     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
         <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/width" tools:ignore="Autofill,LabelFor,TextFields"
-                  android:layout_margin="5sp"
-                  android:layout_toLeftOf="@id/asterisk"
+                  android:layout_margin="5dp"
                   android:layout_toStartOf="@id/asterisk"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:textSize="20sp"
@@ -29,8 +28,7 @@
         />
         <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/height" tools:ignore="Autofill,LabelFor,TextFields"
-                  android:layout_margin="5sp"
-                  android:layout_toRightOf="@id/asterisk"
+                  android:layout_margin="5dp"
                   android:layout_toEndOf="@id/asterisk"/>
     </RelativeLayout>
 </LinearLayout>

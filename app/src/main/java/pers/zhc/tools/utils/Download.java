@@ -24,12 +24,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
-import pers.zhc.u.Digest;
-import pers.zhc.u.interfaces.ProgressCallback;
 
 public class Download {
-    public static void download(URL url, OutputStream os, @Nullable ProgressCallback progressCallback, @Nullable Runnable doneAction) throws IOException {
+    public static void download(@NotNull URL url, OutputStream os, @Nullable ProgressCallback progressCallback, @Nullable Runnable doneAction) throws IOException {
         URLConnection connection = url.openConnection();
         byte[] buf = new byte[4096];
 
@@ -54,12 +53,12 @@ public class Download {
         }
     }
 
-    public static void checkMD5(URL md5TextFileUrl, File localFile, ResultCallback<Boolean> resultCallback) {
+    public static void checkMD5(URL md5TextFileUrl, @NotNull File localFile, ResultCallback<Boolean> resultCallback) {
         if (!localFile.exists()) resultCallback.result(false);
         AtomicReference<String> md5 = new AtomicReference<>("");
         new Thread(() -> {
-            String localFileMD5 = Digest.getFileMd5String(localFile);
             try {
+                String localFileMD5 = DigestUtil.getFileDigestString(localFile, "MD5");
                 InputStream is = md5TextFileUrl.openStream();
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
@@ -67,10 +66,10 @@ public class Download {
                 isr.close();
                 is.close();
                 br.close();
+                resultCallback.result(md5.get().equalsIgnoreCase(localFileMD5));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            resultCallback.result(md5.get().equalsIgnoreCase(localFileMD5));
         }).start();
     }
 
@@ -121,5 +120,9 @@ public class Download {
             Common.showException(e, (Activity) ctx);
             downloadDialog.dismiss();
         }
+    }
+
+    interface ProgressCallback {
+        void call(float f);
     }
 }

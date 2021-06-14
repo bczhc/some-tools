@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- universal -->
+    <string name="notification_chnnel_name_common">常规</string>
+    <string name="cancel_btn">取消</string>
+    <!-- end -->
+
     <string name="app_name" translatable="false">tools</string>
     <string name="str" translatable="false">%1$s</string>
     <string name="progress_tv" translatable="false">%1$f%%</string>
@@ -24,7 +29,7 @@
     <string name="filter">过滤器</string>
     <string name="iFileExtension">操作文件扩展名</string>
     <string name="oFileExtension">输出文件类型</string>
-    <string name="settings">Settings</string>
+    <string name="settings">设置</string>
     <string name="saving_succeeded">保存成功</string>
     <string name="expression_error">json表达错误</string>
     <string name="json_solve_error">json解析失败：</string>
@@ -69,7 +74,8 @@
     <string name="type_n_num">输入合成正弦波项数</string>
     <string name="record">记录</string>
     <string name="notes">笔记</string>
-    <string name="insert_record">增加记录</string>
+    <string name="add_record">增加记录</string>
+    <string name="insert_record">插入记录</string>
     <string name="title">标题</string>
     <string name="content">内容</string>
     <string name="dismiss_x" translatable="false">×</string>
@@ -92,7 +98,7 @@
     <string name="import_path">导入路径</string>
     <string name="saving_failed">保存失败</string>
     <string name="select_path_file">选择路径文件</string>
-    <string name="type_file_name">输入文件名</string>
+    <string name="type_filename">输入文件名</string>
     <string name="type_stroke_width__pixels">输入画笔宽度(pixels)</string>
     <string name="eraser_paint_stroke_width">橡皮擦大小</string>
     <string name="drawing_paint_stroke_width">画笔大小</string>
@@ -149,7 +155,6 @@
     <string name="color_naming">颜色命名</string>
     <string name="math_expression_evaluation_test">数学表达式解析测试</string>
     <string name="crash">crash</string>
-    <string name="some_tools_app">some-tools-app</string>
     <string name="crash_sorry_toast_information">很抱歉,程序出现异常</string>
     <string name="upload_crash_report_done">上传崩溃报告成功</string>
     <string name="sensor_test">传感器测试</string>
@@ -173,8 +178,8 @@
     <string name="write_error">写入错误</string>
     <string name="concat">%1$s%2$s</string>
     <string name="native_file_not_exist">内部文件不存在</string>
-    <string name="file_name">文件名</string>
-    <string name="file_name_is">文件名：</string>
+    <string name="filename">文件名</string>
+    <string name="filename_is">文件名：%1$s</string>
     <string name="image_size_px_is">图片大小：(px)</string>
     <string name="asterisk">*</string>
     <string name="restart_application">重启应用</string>
@@ -264,7 +269,7 @@
     <string name="regular_expression_test">正则表达式测试</string>
     <string name="text">文本</string>
     <string name="regex">正则表达式</string>
-    <string name="corrupted_database_and_recreate_new">数据库损坏，已重新创建新的数据库</string>
+    <string name="corrupted_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
     <string name="wubi_test">五笔测试</string>
     <string name="something_went_wrong">something went wrong</string>
     <string name="alphabet_mode">字母模式</string>
@@ -305,7 +310,8 @@
     <string name="choose_path_file">选择path文件</string>
     <string name="unsupported_path">不支持的path</string>
     <string name="choose_path_v_3_0_file">选择pathV3.0文件</string>
-    <string name="path_info_string">创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d</string>
+    <string name="path_info_string">创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d
+    </string>
     <string name="wubi_code_database_info">"共有%1$d条记录 "</string>
     <string name="enter_wubi_code">输入五笔编码</string>
     <string name="candidate_word">候选字词</string>
@@ -321,4 +327,88 @@
     <string name="deleting_failed">删除失败</string>
     <string name="whether_to_download">是否下载</string>
     <string name="my_service">My service</string>
+    <string name="file_library">文件库</string>
+    <string name="submit">提交</string>
+    <string name="file_path">文件路径</string>
+    <string name="file_exists_alert_msg">相同文件已存在，是否更新文件信息</string>
+    <string name="adding_done">添加完成</string>
+    <string name="updating_done">更新完成</string>
+    <string name="addition_time">添加时间</string>
+    <string name="storage_type">存储类型</string>
+    <string name="storage_type_is">存储类型：%1$s</string>
+    <string name="addition_time_is">添加时间：%1$s</string>
+    <string name="description_is_text">描述：%1$s</string>
+    <string name="attachment_local_storage_path_is">附件本地存储目录：</string>
+    <string name="change">修改</string>
+    <string name="restore_to_default">恢复默认</string>
+    <string name="pick_folder">选择目录</string>
+    <string name="creating_succeeded">创建成功</string>
+    <string name="resetting_succeeded">重置成功</string>
+    <string name="cancel_picking_btn">取消选择按扭</string>
+    <string name="edit">编辑</string>
+    <string name="calculating_file_digest">正在计算文件摘要</string>
+    <string name="copying_file">复制文件中</string>
+    <string name="attachment_with_date_concat">附件-%1$s</string>
+    <string name="image">图像</string>
+    <string name="audio">音频</string>
+    <string name="title_is">标题：%1$s</string>
+    <string name="preview">预览</string>
+
+
+    <!-- new -->
+
+    <!-- module: diary -->
+    <string name="diary_duplicated_diary_dialog_title">已有该日期日记，是否打开？</string>
+    <string name="diary_import_ref_count_not_zero_msg">数据库还有%1$d个连接引用，不能关闭，导入终止。</string>
+    <string name="diary_attachment_with_date_format_title">附件-yyyy.MM.dd</string>
+    <string name="diary_preview_with_date_format_title">预览-yyyy.MM.dd</string>
+    <string name="diary_attachment_library_activity_label_name">附件库</string>
+    <string name="diary_attachment_library_menu_btn_text">@string/diary_attachment_library_activity_label_name</string>
+    <string name="diary_attachment_activity_label_name">附件</string>
+    <string name="diary_setting_storage_path_changed_dialog_msg">路径已经修改，是否保存？</string>
+    <string name="diary_attachment_setting_move_file_dialog_title">是否要移动文件\n如果不移动文件，可能会导致文件引用丢失</string>
+    <string name="diary_file_not_exist_alert_msg">文件不存在</string>
+    <string name="diary_browser_file_btn">预览文件</string>
+    <string name="diary_browser_label">预览</string>
+    <string name="diary_file_library_has_file_reference_alert_msg">存在文件引用，无法删除。</string>
+    <string name="diary_file_library_file_not_exist_dialog">本地文件已不存在，是否删除？</string>
+    <string name="diary_attachment_preview_activity_title_is">标题：%1$s</string>
+    <string name="diary_attachment_preview_activity_description_is">描述：\n%1$s</string>
+    <string name="diary_file_library_file_enter_text_btn">输入文本</string>
+    <string name="diary_file_library_text_adding_msg">正在添加</string>
+    <string name="diary_file_library_edit_text_length_tv">长度：%1$d</string>
+    <string name="diary_file_library_storage_type_text">存储类型：文本</string>
+    <string name="diary_file_preview_description_is">描述：</string>
+    <string name="diary_file_preview_content_is">内容：</string>
+    <string name="diary_attachment_preview_activity_label">附件预览</string>
+    <string name="diary_attachment_adding_dumplicate_toast">已存在该附件</string>
+    <string name="diary_attachment_library_duplicate_toast">已添加该文件</string>
+    <string name="diary_file_broser_open_file_failed">无法打开图片</string>
+    <!-- module end -->
+
+    <!-- module bus -->
+    <string name="bus_query_label">公交查询</string>
+    <string name="bus_line_edit_text_hint">公交线路</string>
+    <string name="bus_query_btn">查询</string>
+    <string name="bus_no_such_line_toast">找不到此线路</string>
+    <string name="bus_request_not_success">请求不成功</string>
+    <string name="bus_line_detail_refresh_btn">刷新</string>
+    <string name="bus_line_toggle_direction_btn">切换</string>
+    <string name="bus_start_station_tv">起：%1$s</string>
+    <string name="bus_end_station_tv">终：%1$s</string>
+    <string name="bus_line_run_time_from_to_tv">首末班：%1$s-%2$s</string>
+    <string name="bus_line_run_interval_minute">班次间隔：%1$s分钟</string>
+    <string name="bus_line_bus_total_count_tv">共有%1$d辆车</string>
+    <string name="bus_line_detail_station_ordinal_tv">%1$d.</string>
+    <string name="bus_no_data">无数据</string>
+    <string name="bus_ask_for_setting_bus_arrival_reminder_dialog_title">设置到站提醒：%1$s？</string>
+    <string name="bus_arrival_reminder_notification_title">到站提醒：%1$s %2$s</string>
+    <string name="bus_fetch_data_failed">获取信息失败</string>
+    <string name="bus_approaching_toast_msg">公交车已接近</string>
+    <string name="bus_arrival_reminder_notification_content">公交车位置：%1$s\n还有%2$d站</string>
+    <string name="bus_no_nearest_bus">没有最近的车辆</string>
+    <string name="bus_set_bus_arrival_reminder_toast">设置到站提醒成功</string>
+    <string name="diary_file_library_text_edit_activity_label">文本编辑</string>
+    <string name="tts_speak_error">TTS播放出错</string>
+    <!-- module end -->
 </resources>

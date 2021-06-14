@@ -16,7 +16,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_above="@id/ll_bottom"
-		android:layout_margin="10sp"
+		android:layout_margin="10dp"
 		android:id="@+id/sv"
         android:layout_below="@+id/note_top_view"/>
 
@@ -27,7 +27,7 @@
 		android:id="@+id/ll_bottom">
 
 		<Button
-			android:layout_width="0sp"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:text="@string/record"
 			android:id="@+id/note_take"
@@ -35,7 +35,7 @@
 			android:layout_weight="1"/>
 
 		<Button
-			android:layout_width="0sp"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:text="@string/delete"
 			android:id="@+id/delete_btn"
@@ -43,7 +43,7 @@
 			android:layout_weight="1"/>
 
 		<Button
-			android:layout_width="0sp"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:id="@+id/export_btn"
@@ -51,7 +51,7 @@
 			tools:ignore="ButtonStyle"/>
 
 		<Button
-			android:layout_width="0sp"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:text="@string/import_"
 			android:layout_weight="1"

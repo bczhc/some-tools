@@ -31,6 +31,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.widget.ImageViewCompat;
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
@@ -41,8 +43,6 @@ import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.tools.views.HSVAColorPickerRelativeLayout;
-import pers.zhc.u.FileU;
-import pers.zhc.u.Latch;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -765,8 +765,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 fileList.add(file);
             }
         }
-        File crashPath = new File(Common.getExternalStoragePath(this) + File.separatorChar
-                + this.getString(R.string.some_tools_app) + File.separatorChar + this.getString(R.string.crash));
+        File crashPath = new File(Common.getAppMainExternalStoragePath(this) + File.separatorChar + this.getString(R.string.crash));
         File[] crashFiles = crashPath.listFiles();
         if (crashFiles != null) {
             fileList.addAll(Arrays.asList(crashFiles));
@@ -884,9 +883,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     .setContentTitle(getString(R.string.drawing_board))
                     .setContentText(getString(R.string.appear_f_b, date));
             Intent intent = new Intent();
-            final int backgroundReceiverFlag = 0x01000000;
-            intent.addFlags(backgroundReceiverFlag);
-            intent.setAction(BroadcastIntent.START_FLOATING_BOARD);
+            intent.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
+            intent.setAction(BroadcastAction.ACTION_START_FLOATING_BOARD);
             intent.setPackage(getPackageName());
             intent.putExtra("millisecond", currentInstanceMillisecond);
             boolean isDrawMode = this.childTextViews[1].getText().equals(getString(R.string.drawing_mode));
@@ -905,7 +903,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     .setContentText(getString(R.string.appear_f_b, date))
                     .setSmallIcon(R.mipmap.ic_launcher);
             Intent intent = new Intent();
-            intent.setAction(BroadcastIntent.START_FLOATING_BOARD);
+            intent.setAction(BroadcastAction.ACTION_START_FLOATING_BOARD);
             intent.putExtra("millisecond", currentInstanceMillisecond);
             intent.setPackage(getPackageName());
             PendingIntent pi = getPendingIntent(intent);
@@ -1179,7 +1177,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             if (!currentInternalPathFile.exists()) {
                                 throw new FileNotFoundException(getString(R.string.native_file_not_exist));
                             }
-                            FileU.FileCopy(currentInternalPathFile, pathFile);
+                            FileUtil.copy(currentInternalPathFile, pathFile);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -1190,7 +1188,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         }
                         moreOptionsDialog.dismiss();
                     }).setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    }).setTitle(R.string.type_file_name).setView(et).create();
+                    }).setTitle(R.string.type_filename).setView(et).create();
                     setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                     DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, alertDialog);
                     alertDialog.show();
@@ -1406,7 +1404,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     tv.setText(R.string.importing);
                     ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
                     TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
-                    Latch latch = new Latch();
+                    SpinLatch latch = new SpinLatch();
                     pv.importPathFile(new File(s), () -> {
                         runOnUiThread(importPathFileDoneAction);
                         importPathFileProgressDialog.dismiss();

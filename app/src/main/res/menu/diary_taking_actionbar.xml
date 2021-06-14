@@ -2,12 +2,17 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:id="@+id/speak_switch"
-            app:showAsAction="always"
-            android:title=""
+            app:showAsAction="ifRoom"
+            android:title="@string/nul"
     />
     <item
             android:id="@+id/record_time"
-            app:showAsAction="ifRoom"
+            app:showAsAction="never"
             android:title="@string/record_time"
+    />
+    <item
+            android:id="@+id/attachment"
+            app:showAsAction="never"
+            android:title="@string/attachment"
     />
 </menu>

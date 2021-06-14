@@ -4,7 +4,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
+    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
                                          android:id="@+id/et"
                                          app:gravity="top"
                                          app:hint="@string/content"

@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
@@ -224,7 +225,7 @@ public class WubiIME extends InputMethodService {
                             composing = false;
                             break;
                         case BACKSPACE:
-                            Common.debugAssert(wubiCodeSB.length() != 0);
+                            Common.doAssertion(wubiCodeSB.length() != 0);
                             wubiCodeSB.deleteCharAt(wubiCodeSB.length() - 1);
                             update();
                             if (wubiCodeSB.length() == 0) composing = false;
@@ -489,6 +490,36 @@ public class WubiIME extends InputMethodService {
     }
 
     /**
+     * 0-9 number superscript modifier characters
+     */
+    private static final char[] numberSuperscriptModifier = {
+            '\u2070',
+            '\u00b9',
+            '\u00b2',
+            '\u00b3',
+            '\u2074',
+            '\u2075',
+            '\u2076',
+            '\u2077',
+            '\u2078',
+            '\u2079',
+    };
+
+    @NotNull
+    @Contract("_ -> new")
+    private String toSuperscriptNumberChar(int num) {
+        if (num < 0) throw new IllegalArgumentException("number should be positive");
+        String numStr = String.valueOf(num);
+        byte[] bytes = numStr.getBytes();
+        char[] r = new char[numStr.length()];
+        for (int i = 0; i < bytes.length; i++) {
+            byte b = bytes[i];
+            r[i] = numberSuperscriptModifier[b - '0'];
+        }
+        return new String(r);
+    }
+
+    /**
      * Set the keyboard candidate words and wubi code text
      */
     private void updateInputMethodText() {
@@ -496,9 +527,9 @@ public class WubiIME extends InputMethodService {
         StringBuilder candidatesSB = new StringBuilder();
         for (int i = 0, candidatesSize = candidates.size() - 1; i < candidatesSize; i++) {
             String candidate = candidates.get(i);
-            candidatesSB.append(candidate).append('|');
+            candidatesSB.append(toSuperscriptNumberChar(i + 1)).append(candidate).append(' ');
         }
-        if (candidates.size() > 0) candidatesSB.append(candidates.get(candidates.size() - 1));
+        if (candidates.size() > 0) candidatesSB.append(toSuperscriptNumberChar(candidates.size())).append(candidates.get(candidates.size() - 1));
 
         if (wubiCodeTV != null && candidateTV != null) {
             wubiCodeTV.setText(wubiCodeStr);

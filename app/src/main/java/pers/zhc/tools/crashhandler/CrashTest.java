@@ -14,6 +14,6 @@ public class CrashTest extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        throw new RuntimeException("test");
+        throw new RuntimeException("crash test...");
     }
 }

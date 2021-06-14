@@ -4,30 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
-
 import androidx.appcompat.app.AppCompatActivity;
+import org.jetbrains.annotations.NotNull;
+import pers.zhc.tools.Infos;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pers.zhc.tools.Infos;
-import pers.zhc.u.FileU;
-
 public class ExternalJNI {
     private static String downloadURL;
     private static String abi;
 
-    private static void fetch(Context ctx) throws IOException {
+    private static void fetch(@NotNull Context ctx) throws IOException {
         System.out.println("download remote libs");
         System.out.println("abi = " + abi);
         File libsDir = new File(ctx.getFilesDir(), "libs");
@@ -39,7 +31,7 @@ public class ExternalJNI {
         if (connection.getResponseCode() == 200) {
             InputStream is = connection.getInputStream();
             OutputStream os = new FileOutputStream(file, false);
-            FileU.StreamWrite(is, os);
+            IOUtilsKt.writeTo(is, os);
             os.close();
             is.close();
             System.out.println("done");
@@ -84,7 +76,7 @@ public class ExternalJNI {
             br.close();
             isr.close();
             md5IS.close();
-            String localMD5 = FileU.getMD5String(localFile);
+            String localMD5 = DigestUtil.getFileDigestString(localFile, "MD5");
             System.out.println("localMD5 = " + localMD5);
             return localMD5.equals(md5);
         } catch (IOException e) {

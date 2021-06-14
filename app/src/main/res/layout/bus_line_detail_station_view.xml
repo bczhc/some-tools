@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pers.zhc.tools.bus.StationLL xmlns:android="http://schemas.android.com/apk/res/android"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                              android:id="@+id/ll_root"
+>
+    <view class="pers.zhc.tools.bus.TopNodeView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/top_line_node_view"
+    />
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:gravity="center"
+                  android:paddingHorizontal="10dp"
+                  android:orientation="vertical"
+                  android:id="@+id/below_bus_info_ll"
+    >
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/ordinal_tv"
+                  android:textSize="20sp"
+                  android:text="@string/bus_line_detail_station_ordinal_tv"
+        />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/station_name_tv"
+                  android:textSize="20sp"
+        />
+    </LinearLayout>
+</pers.zhc.tools.bus.StationLL>

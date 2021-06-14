@@ -36,7 +36,8 @@ public class SQLite3 {
 
     /**
      * execute SQLite statement with callback
-     * @param cmd statement
+     *
+     * @param cmd      statement
      * @param callback callback
      */
     public void exec(String cmd, JNI.Sqlite3.SqliteExecCallback callback) {
@@ -45,6 +46,12 @@ public class SQLite3 {
 
     public void exec(String cmd) {
         exec(cmd, null);
+    }
+
+    public void execBind(String cmd, Object[] binds) {
+        final Statement statement = compileStatement(cmd, binds);
+        statement.step();
+        statement.release();
     }
 
     public boolean isClosed() {
@@ -64,29 +71,52 @@ public class SQLite3 {
         return r.get();
     }
 
-    public boolean hasRecord(String selectSql) {
-        int[] c = {0};
-        try {
-            this.exec(selectSql, contents -> {
-                ++c[0];
-                return 1;
-            });
-        } catch (Exception ignored) {
-            // terminate exception
+    /**
+     * Get if a record is exist.
+     *
+     * @param selectSql <p>SQLite select statement</p>
+     * @return existence boolean
+     */
+    public boolean hasRecord(String selectSql, Object[] binds) {
+        final Statement statement = compileStatement(selectSql);
+        if (binds != null) {
+            statement.bind(binds);
         }
-        return c[0] != 0;
+        final int stepRow = statement.stepRow();
+        statement.release();
+
+        return stepRow == SQLITE_ROW;
+    }
+
+    public boolean hasRecord(String selectSql) {
+        return hasRecord(selectSql, null);
     }
 
     public boolean checkIfCorrupt() {
         return JNI.Sqlite3.checkIfCorrupt(id);
     }
 
-    public Statement compileStatement(String sql) throws Exception {
+    public Statement compileStatement(String sql) {
         long statementId = JNI.Sqlite3.compileStatement(this.id, sql);
         return new Statement(statementId);
     }
 
+    public Statement compileStatement(String sql, @NotNull Object[] binds) {
+        long statementId = JNI.Sqlite3.compileStatement(this.id, sql);
+        final Statement statement = new Statement(statementId);
+        statement.bind(binds);
+        return statement;
+    }
+
     public String getDatabasePath() {
         return databasePath;
+    }
+
+    public void beginTransaction() {
+        this.exec("BEGIN TRANSACTION ");
+    }
+
+    public void commit() {
+        this.exec("COMMIT ");
     }
 }

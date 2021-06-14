@@ -16,24 +16,28 @@ public class ToastUtils {
     }
 
     /**
-     * Toast on UI thread.
+     * Toast.
      *
      * @param ctx          context
      * @param charSequence string
      */
-    public static void show(Context ctx, @NotNull CharSequence charSequence) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(() -> {
-            if (toast != null) {
-                toast.cancel();
-            }
-            toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
-            toast.show();
-        });
+    public static synchronized void show(Context ctx, @NotNull CharSequence charSequence) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> uiThreadToast(ctx, charSequence));
+        } else uiThreadToast(ctx, charSequence);
     }
 
-    public static void showError(Context ctx, @StringRes int error_msg_resId, Exception e) {
-        ToastUtils.show(ctx, ctx.getString(R.string.concat, ctx.getString(error_msg_resId)
-                , "\n" + e.toString()));
+    private static void uiThreadToast(Context ctx, @NotNull CharSequence charSequence) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(ctx, charSequence, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    public static void showError(Context ctx, @StringRes int errorMsgResId, @NotNull Exception e) {
+        ToastUtils.show(ctx, ctx.getString(R.string.concat, ctx.getString(errorMsgResId)
+                , "\n" + e));
     }
 }

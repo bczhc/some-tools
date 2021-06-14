@@ -53,7 +53,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024StcFlash_burn
     } catch (const String &e) {
         cb.print(e.getCString()), cb.flush();
         log(env, "jni exception", e.getCString());
-        jclass exceptionClass = env->FindClass("java/lang/Exception");
+        jclass exceptionClass = env->FindClass("java/lang/RuntimeException");
         String msg = "JNI error: ";
         msg += e;
         env->ThrowNew(exceptionClass, msg.getCString());

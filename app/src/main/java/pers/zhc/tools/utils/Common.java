@@ -7,8 +7,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BuildConfig;
 
 import java.io.File;
@@ -20,7 +24,7 @@ import java.util.Objects;
 public class Common {
     private static final String TAG = Common.class.getName();
 
-    public static void showException(Exception e, Activity activity) {
+    public static void showException(@NotNull Exception e, @NotNull Activity activity) {
         e.printStackTrace();
         activity.runOnUiThread(() -> ToastUtils.show(activity, e.toString()));
     }
@@ -31,7 +35,7 @@ public class Common {
         } else throw new ClassCastException();
     }
 
-    public static void showException(Exception e, Context ctx, Handler handler) {
+    public static void showException(@NotNull Exception e, Context ctx, @NotNull Handler handler) {
         e.printStackTrace();
         handler.post(() -> ToastUtils.show(ctx, e.toString()));
     }
@@ -64,7 +68,8 @@ public class Common {
         context.startActivity(intent);
     }
 
-    public static File getInternalDatabaseDir(Context ctx) {
+    @NotNull
+    public static File getInternalDatabaseDir(@NotNull Context ctx) {
         final File dir = new File(ctx.getFilesDir().getPath() + File.separatorChar + "db");
         if (!dir.exists()) {
             Log.d(TAG, dir.mkdirs() + "");
@@ -72,6 +77,8 @@ public class Common {
         return dir;
     }
 
+    @NotNull
+    @Contract("_, _ -> new")
     public static File getInternalDatabaseDir(Context ctx, String name) {
         return new File(getInternalDatabaseDir(ctx), name);
     }
@@ -80,9 +87,34 @@ public class Common {
         return String.format("https://hub.fastgit.org/%s/store/blob/%s/%s?raw=true", username, branch, filePathInRepo);
     }
 
-    public static void debugAssert(boolean condition) {
-        if (BuildConfig.DEBUG && !condition) {
-            throw new AssertionError("Assertion failed");
+    public static void doAssertion(boolean condition) {
+        if (!condition) throw new AssertionError("Assertion failed");
+    }
+
+    @NotNull
+    public static String getAppMainExternalStoragePath(Context ctx) {
+        return getExternalStoragePath(ctx) + File.separatorChar + "some-tools-app";
+    }
+
+    @NotNull
+    @Contract("_ -> new")
+    public static File getAppMainExternalStoragePathFile(Context ctx) {
+        return new File(getExternalStoragePath(ctx), "some-tools-app");
+    }
+
+    public static void createAppMainExternalPath(Context ctx) {
+        final File f = getAppMainExternalStoragePathFile(ctx);
+        if (!f.exists()) {
+            doAssertion(f.mkdirs());
         }
+    }
+
+    public static void runOnUiThread(Context ctx, Runnable r) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            r.run();
+            return;
+        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(r);
     }
 }

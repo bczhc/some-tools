@@ -11,14 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
-import pers.zhc.tools.utils.ScrollEditText;
+import pers.zhc.tools.views.ScrollEditText;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.u.common.Documents;
 
 /**
  * @author bczhc
@@ -30,7 +30,7 @@ public class NoteTakingActivity extends Document {
     private Button insertBtn;
 
     @Override
-    protected void onCreate(@Documents.Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.take_note_activity);
         Intent intent = getIntent();
@@ -39,7 +39,7 @@ public class NoteTakingActivity extends Document {
         boolean originCreate = intent.getBooleanExtra("origin", true);
         title = title == null ? getString(R.string.nul) : title;
         content = content == null ? getString(R.string.nul) : content;
-        bottom_btn_string = bottom_btn_string == null || "".equals(bottom_btn_string) ? getString(R.string.insert_record) : bottom_btn_string;
+        bottom_btn_string = bottom_btn_string == null || "".equals(bottom_btn_string) ? getString(R.string.add_record) : bottom_btn_string;
         SQLiteDatabase db = getDB(this);
         EditText title_et = findViewById(R.id.doc_title_et);
         ScrollEditText content_et = findViewById(R.id.doc_content_et);
@@ -64,7 +64,7 @@ public class NoteTakingActivity extends Document {
         title_et.setText(String.format(getString(R.string.str), title));
         content_et.getEditText().addTextChangedListener(textWatcher);
         title_et.addTextChangedListener(textWatcher);
-        insertBtn = findViewById(R.id.insert_record);
+        insertBtn = findViewById(R.id.add_record);
         insertBtn.setText(String.format(getString(R.string.str), bottom_btn_string));
         insertBtn.setOnClickListener(v -> {
             if (originCreate) {

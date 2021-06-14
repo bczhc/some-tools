@@ -1,5 +1,6 @@
 package pers.zhc.tools.utils.sqlite;
 
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.jni.JNI;
 
 public class Statement {
@@ -14,9 +15,8 @@ public class Statement {
      *
      * @param row row, start from 1.
      * @param a   value
-     * @throws Exception if failed.
      */
-    public void bind(int row, int a) throws Exception {
+    public void bind(int row, int a) {
         JNI.Sqlite3.Statement.bind(statementId, row, a);
     }
 
@@ -25,9 +25,8 @@ public class Statement {
      *
      * @param row row, start from 1.
      * @param a   value
-     * @throws Exception if failed.
      */
-    public void bind(int row, long a) throws Exception {
+    public void bind(int row, long a) {
         JNI.Sqlite3.Statement.bind(statementId, row, a);
     }
 
@@ -36,9 +35,8 @@ public class Statement {
      *
      * @param row row, start from 1.
      * @param a   value
-     * @throws Exception if failed.
      */
-    public void bind(int row, double a) throws Exception {
+    public void bind(int row, double a) {
         JNI.Sqlite3.Statement.bind(statementId, row, a);
     }
 
@@ -47,9 +45,8 @@ public class Statement {
      *
      * @param row row, start from 1.
      * @param s   string
-     * @throws Exception if failed.
      */
-    public void bindText(int row, String s) throws Exception {
+    public void bindText(int row, String s) {
         JNI.Sqlite3.Statement.bindText(statementId, row, s);
     }
 
@@ -57,18 +54,15 @@ public class Statement {
      * Bind null value.
      *
      * @param row row, start from 1.
-     * @throws Exception if failed.
      */
-    public void bindNull(int row) throws Exception {
+    public void bindNull(int row) {
         JNI.Sqlite3.Statement.bindNull(statementId, row);
     }
 
     /**
      * Reset the values bound in the statement.
-     *
-     * @throws Exception if failed.
      */
-    public void reset() throws Exception {
+    public void reset() {
         JNI.Sqlite3.Statement.reset(statementId);
     }
 
@@ -77,9 +71,8 @@ public class Statement {
      *
      * @param row   row, start from 1.
      * @param bytes byte array
-     * @throws Exception if failed.
      */
-    public void bindBlob(int row, byte[] bytes) throws Exception {
+    public void bindBlob(int row, byte[] bytes) {
         bindBlob(row, bytes, bytes.length);
     }
 
@@ -89,26 +82,23 @@ public class Statement {
      * @param row   row, start from 1.
      * @param bytes byte array
      * @param size  bind size
-     * @throws Exception if failed.
      */
-    public void bindBlob(int row, byte[] bytes, int size) throws Exception {
+    public void bindBlob(int row, byte[] bytes, int size) {
         JNI.Sqlite3.Statement.bindBlob(statementId, row, bytes, size);
     }
 
     /**
      * Execute this statement.
-     *
-     * @throws Exception if failed.
      */
-    public void step() throws Exception {
+    public void step() {
         JNI.Sqlite3.Statement.step(statementId);
     }
 
     /**
      * Release native resource, origin: `finalize()`.
-     * You should guarantee it's close before closing the database.
+     * You should guarantee it's released before closing the database.
      */
-    public void release() throws Exception {
+    public void release() {
         JNI.Sqlite3.Statement.finalize(statementId);
     }
 
@@ -122,5 +112,27 @@ public class Statement {
 
     public int getIndexByColumnName(String name) {
         return JNI.Sqlite3.Statement.getIndexByColumnName(statementId, name);
+    }
+
+    public void bind(@NotNull Object[] binds) {
+        for (int i = 0; i < binds.length; i++) {
+            final Object bind = binds[i];
+            final int index = i + 1;
+            if (bind instanceof Integer) {
+                bind(index, (Integer) bind);
+            } else if (bind instanceof Long) {
+                bind(index, (Long) bind);
+            } else if (bind instanceof Double) {
+                bind(index, (Double) bind);
+            } else if (bind instanceof String) {
+                bindText(index, (String) bind);
+            } else if (bind == null) {
+                bindNull(index);
+            } else if (bind instanceof byte[]) {
+                bindBlob(index, (byte[]) bind);
+            } else {
+                throw new RuntimeException("Unknown binding object: " + bind);
+            }
+        }
     }
 }

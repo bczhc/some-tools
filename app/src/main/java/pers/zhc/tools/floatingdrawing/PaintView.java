@@ -13,21 +13,19 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.R;
-import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
-import pers.zhc.u.CanDoHandler;
-import pers.zhc.u.Random;
-import pers.zhc.u.ValueInterface;
+import pers.zhc.util.function.ValueInterface;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -459,10 +457,11 @@ public class PaintView extends View {
      * @param floatValueInterface 进度回调接口
      */
     @SuppressWarnings("BusyWait")
-    public void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
+    public void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {/*
+        TODO
         dontDrawWhileImporting = speedDelayMillis == 0;
         if (floatValueInterface != null) {
-            floatValueInterface.f(0F);
+                floatValueInterface.f(0F);
         }
         CanDoHandler<Float> canDoHandler = new CanDoHandler<>(aFloat -> {
             if (floatValueInterface != null && aFloat != null) {
@@ -665,10 +664,10 @@ public class PaintView extends View {
                 postInvalidate();
             }
         });
-        thread.start();
+        thread.start();*/
     }
 
-    private void importPathVer3(@NotNull SQLite3 db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
+    /*private void importPathVer3(@NotNull SQLite3 db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
         int[] recordNum = {0};
         db.exec("SELECT COUNT(*) FROM path", contents -> {
             recordNum[0] = Integer.parseInt(contents[0]);
@@ -764,7 +763,7 @@ public class PaintView extends View {
         } catch (Exception e) {
             Common.showException(e, (Activity) ctx);
         }
-    }
+    }*/
 
     private void onTouchAction(int motionAction, float x, float y) {
         float startPointX = headCanvas.getStartPointX();

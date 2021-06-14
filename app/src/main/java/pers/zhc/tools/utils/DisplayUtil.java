@@ -15,10 +15,6 @@ public class DisplayUtil {
         return (int) (dipValue * scale + 0.5f);
     }
 
-    public static int dip2px(float density,float dipValue) {
-        return (int) (dipValue * density + 0.5f);
-    }
-
     public static int px2sp(@NotNull Context context, float pxValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (pxValue / fontScale + 0.5f);

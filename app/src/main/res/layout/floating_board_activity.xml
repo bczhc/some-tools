@@ -3,10 +3,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="match_parent"
         android:layout_width="match_parent" android:id="@+id/main">
-    <androidx.appcompat.widget.SwitchCompat android:layout_width="wrap_content" android:layout_height="50sp"
+    <androidx.appcompat.widget.SwitchCompat android:layout_width="wrap_content" android:layout_height="50dp"
             android:text="@string/floating_board"
             android:textSize="17sp"
-            android:layout_marginTop="10sp"
+            android:layout_marginTop="10dp"
             android:id="@+id/f_b_switch"
             android:layout_centerHorizontal="true"
     />
@@ -15,12 +15,12 @@
             android:layout_below="@id/f_b_switch"
             android:layout_centerHorizontal="true"
             android:id="@+id/clear_path_btn"
-            android:layout_marginTop="5sp"
+            android:layout_marginTop="5dp"
     />
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_below="@id/clear_path_btn"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5sp"
+            android:layout_marginTop="5dp"
             android:id="@+id/open_cache_path_file"
             android:text="@string/open_cache_path_file"
     />
@@ -33,11 +33,10 @@
     />
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
               android:layout_alignParentTop="true"
-              android:layout_alignParentLeft="true"
               android:text="@string/check_for_update"
               android:layout_below="@id/f_b_name"
               android:layout_alignParentStart="true"
-              android:layout_margin="5sp"
+              android:layout_margin="5dp"
               android:id="@+id/check_for_update_tv"
     />
 </RelativeLayout>

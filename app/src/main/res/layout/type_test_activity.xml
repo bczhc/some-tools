@@ -9,7 +9,7 @@
               android:textSize="25sp"
               android:id="@+id/speed_tv"
     />
-    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
+    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
                                          android:layout_below="@id/speed_tv"
                                          app:gravity="top"
                                          android:fillViewport="true"

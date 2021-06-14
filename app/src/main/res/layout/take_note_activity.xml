@@ -5,14 +5,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:layout_margin="7sp"
+              android:layout_margin="7dp"
               android:id="@+id/doc_title_et"
               tools:ignore="Autofill,LabelFor,TextFields"
               android:hint="@string/title"
     />
-    <pers.zhc.tools.utils.ScrollEditText android:layout_width="match_parent"
+    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent"
                                          android:layout_height="match_parent"
-                                         android:layout_margin="10sp"
+                                         android:layout_margin="10dp"
                                          android:layout_above="@id/ll_bottom"
                                          android:layout_below="@id/doc_title_et"
                                          android:id="@+id/doc_content_et"
@@ -23,12 +23,12 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/ll_bottom" android:orientation="horizontal"
                   android:layout_alignParentBottom="true"
-                  android:layout_marginLeft="20sp"
-                  android:layout_marginRight="20sp"
+                  android:layout_marginLeft="20dp"
+                  android:layout_marginRight="20dp"
     >
         <Button android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:id="@+id/insert_record"
+                android:id="@+id/add_record"
         />
     </LinearLayout>
 </RelativeLayout>

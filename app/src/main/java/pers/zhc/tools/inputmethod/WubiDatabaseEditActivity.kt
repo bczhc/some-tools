@@ -31,7 +31,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
         val wubiCodeSHET = wubi_code_shet
         val wubiCandidatesLL = wubi_candidates_ll
         val addBtn = add_btn
-        val wubiCodeET = wubiCodeSHET.editText!!
+        val wubiCodeET = wubiCodeSHET.editText
 
         val localWubiDatabasePath = WubiCodeSettingActivity.getLocalWubiDatabasePath(this)
         val dictDatabase = SQLite3.open(localWubiDatabasePath)
@@ -124,9 +124,9 @@ class WubiDatabaseEditActivity : BaseActivity() {
         addBtn.setOnClickListener {
             val inflate = View.inflate(this, R.layout.wubi_dict_add_view, null)
             val indexSHET = inflate.index_shet
-            val indexET = indexSHET.editText!!
+            val indexET = indexSHET.editText
             val candidateSHET = inflate.candidate_shet
-            val candidateET = candidateSHET.editText!!
+            val candidateET = candidateSHET.editText
 
             DialogUtil.createConfirmationAlertDialog(
                 this,

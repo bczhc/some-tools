@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BaseView;
 
 public class ScreenColorPickerView extends BaseView {
@@ -23,12 +24,8 @@ public class ScreenColorPickerView extends BaseView {
         super(context, attrs);
     }
 
-    public ScreenColorPickerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NotNull Canvas canvas) {
         canvas.drawColor(Color.RED);
     }
 

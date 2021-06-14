@@ -1,5 +1,6 @@
 package pers.zhc.tools;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
@@ -14,17 +15,16 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import org.json.JSONException;
 import org.json.JSONObject;
+import pers.zhc.tools.bus.BusQueryMainActivity;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.crashhandler.CrashTest;
-import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.document.Document;
-import pers.zhc.tools.epicycles.EpicyclesEdit;
 import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
-import pers.zhc.tools.functiondrawing.FunctionDrawingBoard;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.stcflash.FlashMainActivity;
+import pers.zhc.tools.test.*;
 import pers.zhc.tools.test.DrawingBoardTest;
 import pers.zhc.tools.test.RegExpTest;
 import pers.zhc.tools.test.SensorTest;
@@ -33,12 +33,14 @@ import pers.zhc.tools.test.Demo;
 import pers.zhc.tools.test.malloctest.MAllocTest;
 import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
+import pers.zhc.tools.utils.IOUtilsKt;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.u.common.ReadIS;
+import pers.zhc.tools.diary.DiaryMainActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -53,9 +55,15 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tools_activity_main);
         init();
+
     }
 
 
@@ -118,7 +126,7 @@ public class MainActivity extends BaseActivity {
         int textIntRes;
         private final Class<?> activityClass;
 
-        public AnActivity(int textIntRes, Class<?> activityClass) {
+        public AnActivity(int textIntRes, Class<? extends Activity> activityClass) {
             this.textIntRes = textIntRes;
             this.activityClass = activityClass;
         }
@@ -133,9 +141,7 @@ public class MainActivity extends BaseActivity {
                 new AnActivity(R.string.toast, ToastTest.class),
                 new AnActivity(R.string.put_in_clipboard, Clip.class),
                 new AnActivity(R.string.floating_drawing_board, FloatingDrawingBoardMainActivity.class),
-                new AnActivity(R.string.fourier_series_calc, FunctionDrawingBoard.class),
                 new AnActivity(R.string.notes, Document.class),
-                new AnActivity(R.string.fourier_series_in_complex, EpicyclesEdit.class),
                 new AnActivity(R.string.test, Demo.class),
                 new AnActivity(R.string.sensor_test, SensorTest.class),
                 new AnActivity(R.string.crash_test, CrashTest.class),
@@ -146,7 +152,8 @@ public class MainActivity extends BaseActivity {
                 new AnActivity(R.string.regular_expression_test, RegExpTest.class),
                 new AnActivity(R.string.wubi_input_method, WubiInputMethodActivity.class),
                 new AnActivity(R.string.stc_flash, FlashMainActivity.class),
-                new AnActivity(R.string.drawing_board_test, DrawingBoardTest.class)
+                new AnActivity(R.string.drawing_board_test, DrawingBoardTest.class),
+                new AnActivity(R.string.bus_query_label, BusQueryMainActivity.class)
         };
 
         CountDownLatch mainTextLatch = new CountDownLatch(1);
@@ -155,10 +162,8 @@ public class MainActivity extends BaseActivity {
             try {
                 URL url = new URL(Infos.ZHC_URL_STRING + "/tools_app/i.zhc");
                 InputStream inputStream = url.openStream();
-                StringBuilder sb = new StringBuilder();
-                new ReadIS(inputStream, "utf-8").read(sb::append);
-                inputStream.close();
-                jsonObject = new JSONObject(sb.toString());
+                final String read = IOUtilsKt.readToString(inputStream, StandardCharsets.UTF_8);
+                jsonObject = new JSONObject(read);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }

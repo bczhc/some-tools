@@ -4,9 +4,6 @@ package pers.zhc.tools.jni;
 import androidx.annotation.Size;
 import pers.zhc.tools.pi.JNICallback;
 import pers.zhc.tools.stcflash.JNIInterface;
-import pers.zhc.u.math.util.ComplexValue;
-
-import java.util.ArrayList;
 
 /**
  * @author bczhc
@@ -86,10 +83,6 @@ public class JNI {
             loadLib();
         }
 
-        public static native void floatToByteArray(@Size(min = 4) byte[] dest, float f, int offset);
-
-        public static native void intToByteArray(@Size(min = 4) byte[] dest, int i, int offset);
-
         public static native float byteArrayToFloat(@Size(min = 4) byte[] bytes, int offset);
 
         public static native int byteArrayToInt(@Size(min = 4) byte[] bytes, int offset);
@@ -103,25 +96,6 @@ public class JNI {
         public static native long alloc(long size);
     }
 
-    public static class FourierSeries {
-        static {
-            loadLib();
-        }
-
-        public static native void calc(ArrayList<ComplexValue> points, double period, int epicyclesCount, Callback callback, int threadNum, int integralN);
-
-        public interface Callback {
-            /**
-             * callback
-             *
-             * @param n  n
-             * @param re complex value re part
-             * @param im complex value im part
-             */
-            void callback(double n, double re, double im);
-        }
-    }
-
     public static class Sqlite3 {
         static {
             loadLib();
@@ -133,14 +107,14 @@ public class JNI {
          * @param path sqlite database path, if not exists, it'll create a new sqlite database
          * @return the associated id which is the address of an handler object in JNI.
          */
-        public static native long open(String path);
+        public static native long open(String path) throws RuntimeException;
 
         /**
          * Close sqlite database
          *
          * @param id the associated id
          */
-        public static native void close(long id);
+        public static native void close(long id) throws RuntimeException;
 
         /**
          * Execute a sqlite command.
@@ -148,7 +122,7 @@ public class JNI {
          * @param id  the associated id
          * @param cmd command
          */
-        public static native void exec(long id, String cmd, SqliteExecCallback callback);
+        public static native void exec(long id, String cmd, SqliteExecCallback callback) throws RuntimeException;
 
         /**
          * Check if the database is corrupted.
@@ -165,7 +139,7 @@ public class JNI {
          * @param sql sqlite statement
          * @return the address of the statement object in JNI, which is a "statement object handler"
          */
-        public static native long compileStatement(long id, String sql) throws Exception;
+        public static native long compileStatement(long id, String sql) throws RuntimeException;
 
         public static class Statement {
             static {
@@ -173,23 +147,23 @@ public class JNI {
             }
 
             /* Statement methods start: */
-            public static native void bind(long stmtId, int row, int a) throws Exception;
+            public static native void bind(long stmtId, int row, int a) throws RuntimeException;
 
-            public static native void bind(long stmtId, int row, long a) throws Exception;
+            public static native void bind(long stmtId, int row, long a) throws RuntimeException;
 
-            public static native void bind(long stmtId, int row, double a) throws Exception;
+            public static native void bind(long stmtId, int row, double a) throws RuntimeException;
 
-            public static native void bindText(long stmtId, int row, String s) throws Exception;
+            public static native void bindText(long stmtId, int row, String s) throws RuntimeException;
 
-            public static native void bindNull(long stmtId, int row) throws Exception;
+            public static native void bindNull(long stmtId, int row) throws RuntimeException;
 
-            public static native void reset(long stmtId) throws Exception;
+            public static native void reset(long stmtId) throws RuntimeException;
 
-            public static native void bindBlob(long stmtId, int row, byte[] bytes, int size) throws Exception;
+            public static native void bindBlob(long stmtId, int row, byte[] bytes, int size) throws RuntimeException;
 
-            public static native void step(long stmtId) throws Exception;
+            public static native void step(long stmtId) throws RuntimeException;
 
-            public static native void finalize(long stmtId) throws Exception;
+            public static native void finalize(long stmtId) throws RuntimeException;
 
             /**
              * Get cursor.
@@ -222,9 +196,9 @@ public class JNI {
             }
 
             /* Cursor methods start. */
-            public static native void reset(long cursorId) throws Exception;
+            public static native void reset(long cursorId) throws RuntimeException;
 
-            public static native boolean step(long cursorId) throws Exception;
+            public static native boolean step(long cursorId) throws RuntimeException;
 
             public static native byte[] getBlob(long cursorId, int column);
 
@@ -327,5 +301,34 @@ public class JNI {
          * @return result
          */
         public static native String myDigest(String str);
+    }
+
+    public static class Struct {
+        static {
+            loadLib();
+        }
+
+        public static final int MODE_BIG_ENDIAN = 0;
+        public static final int MODE_LITTLE_ENDIAN = 1;
+
+        public static native void packShort(short value, @Size(min = 2) byte[] dest, int offset, int mode);
+
+        public static native void packInt(int value, @Size(min = 4) byte[] dest, int offset, int mode);
+
+        public static native void packLong(long value, @Size(min = 8) byte[] dest, int offset, int mode);
+
+        public static native void packFloat(float value, @Size(min = 4) byte[] dest, int offset, int mode);
+
+        public static native void packDouble(double value, @Size(min = 8) byte[] dest, int offset, int mode);
+
+        public static native short unpackShort(@Size(min = 2) byte[] bytes, int offset, int mode);
+
+        public static native int unpackInt(@Size(min = 4) byte[] bytes, int offset, int mode);
+
+        public static native long unpackLong(@Size(min = 8) byte[] bytes, int offset, int mode);
+
+        public static native float unpackFloat(@Size(min = 4) byte[] bytes, int offset, int mode);
+
+        public static native double unpackDouble(@Size(min = 8) byte[] bytes, int offset, int mode);
     }
 }

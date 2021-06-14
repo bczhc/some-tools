@@ -46,6 +46,7 @@ add_library(
         src/test/Test.cpp
         src/jni_help.cpp
         src/test.cpp
+        src/struct/structMain.cpp
 )
 
 target_link_libraries(Main myLib sqlite3)

@@ -4,74 +4,50 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.*;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
-import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
 import pers.zhc.tools.jni.JNI;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtil;
-import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.*;
+import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
-import pers.zhc.u.FileU;
-import pers.zhc.u.Latch;
+import pers.zhc.tools.views.SmartHintEditText;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Date;
+import java.util.List;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * @author bczhc
  */
-public class DiaryMainActivity extends BaseActivity {
-    static SQLite3 diaryDatabase;
-    private LinearLayout ll;
+public class DiaryMainActivity extends DiaryBaseActivity {
+    private RecyclerView recyclerView;
     @NonNull
     private String currentPasswordDigest = "";
     private boolean isUnlocked = false;
-    private String[] week;
-
-    @NotNull
-    static SQLite3 getDiaryDatabase(Context ctx) {
-        SQLite3 database;
-        database = SQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-        if (database.checkIfCorrupt()) {
-            System.out.println(Common.getInternalDatabaseDir(ctx, "diary.db").delete());
-            database = SQLite3.open(Common.getInternalDatabaseDir(ctx, "diary.db").getPath());
-            ToastUtils.show(ctx, R.string.corrupted_database_and_recreate_new);
-        }
-
-        database.exec("CREATE TABLE IF NOT EXISTS diary(\n" +
-                "    date INTEGER PRIMARY KEY,\n" +
-                "    content TEXT NOT NULL\n" +
-                ")");
-        database.exec("CREATE TABLE IF NOT EXISTS attachment_info (\n" +
-                "    id INTEGER PRIMARY KEY,\n" +
-                "    title TEXT NOT NULL,\n" +
-                "    associated_diary_date INTEGER,\n" +
-                "    description TEXT NOT NULL\n" +
-                ")");
-        database.exec("CREATE TABLE IF NOT EXISTS attachment_file (\n" +
-                "    id INTEGER,\n" +
-                "    relative_path TEXT NOT NULL,\n" +
-                "    type TEXT NOT NULL\n" +
-                ")");
-        return database;
-    }
+    private final List<DiaryItemData> diaryItemDataList = new ArrayList<>();
+    private MyAdapter recyclerViewAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +60,6 @@ public class DiaryMainActivity extends BaseActivity {
         });
         passwordDatabase.close();
 
-        this.week = getResources().getStringArray(R.array.weeks);
         if (currentPasswordDigest.isEmpty()) {
             load();
             return;
@@ -112,13 +87,18 @@ public class DiaryMainActivity extends BaseActivity {
                 }
             }
         });
+
+        final ActionBar actionBar = this.getSupportActionBar();
+        Common.doAssertion(actionBar != null);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(false);
     }
 
     private void load() {
         isUnlocked = true;
         setContentView(R.layout.diary_activity);
         invalidateOptionsMenu();
-        ll = findViewById(R.id.ll);
+        recyclerView = findViewById(R.id.recycler_view);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
@@ -126,8 +106,52 @@ public class DiaryMainActivity extends BaseActivity {
             actionBar.setTitle(R.string.diary);
             actionBar.show();
         }
-        diaryDatabase = getDiaryDatabase(this);
-        loadListViews();
+        loadRecyclerView();
+    }
+
+    private void loadRecyclerView() {
+        new Thread(() -> {
+            refreshDiaryItemDataList();
+
+            runOnUiThread(() -> {
+                recyclerViewAdapter = new MyAdapter(this, diaryItemDataList);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setAdapter(recyclerViewAdapter);
+
+                recyclerViewAdapter.setOnItemClickListener((position, view) ->
+                        openDiaryPreview(diaryItemDataList.get(position).dateInt)
+                );
+                recyclerViewAdapter.setOnItemLongClickListener((position, view) -> {
+                    final PopupMenu popupMenu = PopupMenuUtil.createPopupMenu(this, view, R.menu.diary_popup_menu);
+                    popupMenu.setOnMenuItemClickListener(item -> {
+                        final int itemId = item.getItemId();
+                        if (itemId == R.id.change_date_btn) {
+                            popupMenuChangeDate(position);
+                        } else if (itemId == R.id.delete_btn) {
+                            popupMenuDelete(position);
+                        }
+                        return true;
+                    });
+                    popupMenu.show();
+                });
+            });
+        }).start();
+    }
+
+    private void refreshDiaryItemDataList() {
+        diaryItemDataList.clear();
+
+        final Statement statement = diaryDatabase.compileStatement("SELECT \"date\", content\n" +
+                "FROM diary");
+        final Cursor cursor = statement.getCursor();
+        while (cursor.step()) {
+            final int date = cursor.getInt(0);
+            final String content = cursor.getText(1);
+
+            diaryItemDataList.add(new DiaryItemData(date, content));
+        }
+
+        statement.release();
     }
 
 
@@ -137,11 +161,11 @@ public class DiaryMainActivity extends BaseActivity {
         pwDB.exec("CREATE TABLE IF NOT EXISTS password\n" +
                 "(\n" +
                 "    " +
-                "--" +
+                "-- " +
                 "key\n" +
                 "    k      TEXT NOT NULL PRIMARY KEY,\n" +
                 "    " +
-                "--password digest\n" +
+                "-- password digest\n" +
                 "    digest TEXT NOT NULL\n" +
                 ")");
         return pwDB;
@@ -180,12 +204,17 @@ public class DiaryMainActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void createSpecificDateDiary() {
+    private void showCreateSpecificDateDiaryDialog() {
         final AlertDialog promptDialog = DialogUtil.createPromptDialog(this, R.string.enter_specific_date, (et, alertDialog) -> {
             final String s = et.getText().toString();
             try {
                 final int dateInt = Integer.parseInt(s);
-                createOrOpenDiary(new DiaryTakingActivity.MyDate(dateInt));
+
+                if (checkRecordExistence(dateInt)) {
+                    showDuplicateConfirmDialog(dateInt);
+                } else {
+                    createDiary(dateInt);
+                }
             } catch (NumberFormatException e) {
                 ToastUtils.show(this, R.string.please_type_correct_value);
             }
@@ -193,103 +222,184 @@ public class DiaryMainActivity extends BaseActivity {
         promptDialog.show();
     }
 
+    private void showDuplicateConfirmDialog(int dateInt) {
+        Dialog[] dialog = {null};
+        dialog[0] = DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
+            openDiaryPreview(dateInt);
+            dialog[0].dismiss();
+        }, R.string.diary_duplicated_diary_dialog_title);
+        DialogUtil.setDialogAttr(dialog[0], false, MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        dialog[0].show();
+    }
+
+    private boolean checkRecordExistence(int dateInt) {
+        return this.diaryDatabase.hasRecord("SELECT \"date\"\n" +
+                "FROM diary\n" +
+                "WHERE \"date\" IS ?", new Object[]{dateInt});
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.write_diary:
-                createOrOpenDiary(null);
-                break;
-            case R.id.create:
-                createSpecificDateDiary();
-                break;
-            case R.id.password:
-                changePassword();
-                break;
-            case R.id.export:
-                Intent intent1 = new Intent(this, FilePicker.class);
-                intent1.putExtra("option", FilePicker.PICK_FOLDER);
-                startActivityForResult(intent1, RequestCode.START_ACTIVITY_1);
-                break;
-            case R.id.import_:
-                Intent intent2 = new Intent(this, FilePicker.class);
-                intent2.putExtra("option", FilePicker.PICK_FILE);
-                startActivityForResult(intent2, RequestCode.START_ACTIVITY_2);
-                break;
-            case R.id.sort:
-                diaryDatabase.exec("BEGIN TRANSACTION");
-                diaryDatabase.exec("DROP TABLE IF EXISTS temp");
-                diaryDatabase.exec("CREATE TABLE IF NOT EXISTS temp(\n" +
-                        "    date INTEGER,\n" +
-                        "    content TEXT NOT NULL\n" +
-                        ")");
-                diaryDatabase.exec("INSERT INTO temp SELECT * FROM diary ORDER BY date");
-                diaryDatabase.exec("DROP TABLE diary");
-                diaryDatabase.exec("ALTER TABLE temp RENAME TO diary");
-                diaryDatabase.exec("COMMIT");
-                refreshListViews();
-                break;
-            case R.id.attachment:
-                startActivity(new Intent(this, DiaryAttachmentActivity.class));
-                break;
-            default:
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.write_diary) {
+
+            writeDiary();
+
+        } else if (itemId == R.id.create) {
+
+            showCreateSpecificDateDiaryDialog();
+
+        } else if (itemId == R.id.password) {
+
+            changePassword();
+
+        } else if (itemId == R.id.export) {
+
+            Intent intent1 = new Intent(this, FilePicker.class);
+            intent1.putExtra("option", FilePicker.PICK_FOLDER);
+            startActivityForResult(intent1, RequestCode.START_ACTIVITY_1);
+
+        } else if (itemId == R.id.import_) {
+
+            Intent intent2 = new Intent(this, FilePicker.class);
+            intent2.putExtra("option", FilePicker.PICK_FILE);
+            startActivityForResult(intent2, RequestCode.START_ACTIVITY_2);
+
+        } else if (itemId == R.id.sort) {
+
+            sort();
+
+        } else if (itemId == R.id.attachment) {
+
+            final Intent intent = new Intent(this, DiaryAttachmentActivity.class);
+            startActivity(intent);
+
+        } else if (itemId == R.id.settings) {
+
+            startActivity(new Intent(this, DiaryAttachmentSettingsActivity.class));
+
         }
         return true;
     }
 
+    private int getForeignKeys() {
+        final Statement fk = diaryDatabase.compileStatement("PRAGMA foreign_keys");
+        final Cursor fkCursor = fk.getCursor();
+        Common.doAssertion(fkCursor.step());
+        final int foreignKey = fkCursor.getInt(0);
+        fk.release();
+        return foreignKey;
+    }
+
+    private void setForeignKeys(int foreignKeys) {
+        final Statement fk = diaryDatabase.compileStatement("PRAGMA foreign_keys=" + foreignKeys);
+        fk.step();
+        fk.release();
+    }
+
+    private void sort() {
+        final int foreignKeys = getForeignKeys();
+        // disable foreign keys constraint
+        setForeignKeys(0);
+
+        diaryDatabase.exec("DROP TABLE IF EXISTS tmp");
+
+        diaryDatabase.beginTransaction();
+        final Statement statement = diaryDatabase.compileStatement("SELECT sql\n" +
+                "FROM sqlite_master\n" +
+                "WHERE type IS 'table'\n" +
+                "  AND tbl_name IS 'diary'");
+        final Cursor cursor = statement.getCursor();
+        Common.doAssertion(cursor.step());
+        final String diaryTableSql = cursor.getText(statement.getIndexByColumnName("sql"));
+        statement.release();
+
+        final String tmpTableSql = diaryTableSql.replaceFirst("diary", "tmp");
+        diaryDatabase.exec(tmpTableSql);
+
+        diaryDatabase.exec("INSERT INTO tmp SELECT * FROM diary ORDER BY \"date\"");
+        diaryDatabase.exec("DROP TABLE diary");
+        diaryDatabase.exec("ALTER TABLE tmp RENAME TO diary");
+        diaryDatabase.commit();
+
+        refreshList();
+
+        // restore foreign keys setting
+        setForeignKeys(foreignKeys);
+    }
+
+    private void writeDiary() {
+        final boolean recordExistence = checkRecordExistence(getCurrentDateInt());
+        if (recordExistence) {
+            final Intent intent = new Intent(this, DiaryTakingActivity.class);
+            intent.putExtra(DiaryTakingActivity.EXTRA_DATE_INT, getCurrentDateInt());
+            startActivityForResult(intent, RequestCode.START_ACTIVITY_4);
+        } else {
+            createDiary(getCurrentDateInt());
+        }
+    }
+
     private void importDiary(File file) {
-        final File databaseFile = Common.getInternalDatabaseDir(this, "diary.db");
-        final Latch latch = new Latch();
+        final DiaryDatabaseRef diaryDatabaseRef = DiaryBaseActivity.Companion.getDiaryDatabaseRef();
+
+        final int refCount = diaryDatabaseRef.getRefCount();
+        // the only one reference is for the current activity
+        if (refCount > 1) {
+            ToastUtils.show(this, getString(R.string.diary_import_ref_count_not_zero_msg, refCount));
+            return;
+        }
+        diaryDatabaseRef.countDownRef();
+        Common.doAssertion(diaryDatabaseRef.isAbandoned());
+
+        final SpinLatch latch = new SpinLatch();
         latch.suspend();
-        AtomicBoolean status = new AtomicBoolean(false);
         new Thread(() -> {
-            try {
-                status.set(FileU.FileCopy(file, databaseFile));
-            } catch (IOException e) {
-                Common.showException(e, this);
-            } finally {
-                latch.stop();
-            }
+            FileUtil.copy(file, new File(internalDatabasePath));
+            latch.stop();
         }).start();
         latch.await();
-        if (status.get()) {
-            ToastUtils.show(this, R.string.importing_succeeded);
-        } else {
-            ToastUtils.show(this, R.string.copying_failed);
+        ToastUtils.show(this, R.string.importing_succeeded);
+
+        SQLite3 newDatabase = SQLite3.open(internalDatabasePath);
+        if (newDatabase.checkIfCorrupt()) {
+            newDatabase.close();
+            if (!new File(internalDatabasePath).delete()) {
+                throw new RuntimeException("Failed to delete corrupted database file.");
+            }
+
+            ToastUtils.show(this, R.string.corrupted_database_and_recreate_new_msg);
         }
-        diaryDatabase = getDiaryDatabase(this);
-        refreshListViews();
+
+        setDatabase(internalDatabasePath);
+        diaryDatabaseRef.countRef();
+        refreshList();
+    }
+
+    private void refreshList() {
+        refreshDiaryItemDataList();
+        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     private void exportDiary(File dir) {
         final File databaseFile = Common.getInternalDatabaseDir(this, "diary.db");
-        final Latch latch = new Latch();
-        latch.suspend();
-        AtomicBoolean status = new AtomicBoolean(false);
         new Thread(() -> {
             try {
-                status.set(FileU.FileCopy(databaseFile, new File(dir, "diary.db")));
-            } catch (IOException e) {
-                Common.showException(e, this);
-            } finally {
-                latch.stop();
+                FileUtil.copy(databaseFile, new File(dir, "diary.db"));
+                ToastUtils.show(this, R.string.exporting_succeeded);
+            } catch (Exception e) {
+                e.printStackTrace();
+                ToastUtils.showError(this, R.string.copying_failed, e);
             }
         }).start();
-        latch.await();
-        if (status.get()) {
-            ToastUtils.show(this, R.string.exporting_succeeded);
-        } else {
-            ToastUtils.show(this, R.string.copying_failed);
-        }
     }
 
     private void changePassword() {
         View view = View.inflate(this, R.layout.change_password_view, null);
         Dialog dialog = new Dialog(this);
-        DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.MATCH_PARENT
+        DialogUtil.setDialogAttr(dialog, false, MATCH_PARENT
                 , ViewGroup.LayoutParams.WRAP_CONTENT, false);
-        EditText oldPasswordET = view.findViewById(R.id.old_password);
-        EditText newPasswordET = view.findViewById(R.id.new_password);
+        EditText oldPasswordET = ((SmartHintEditText) view.findViewById(R.id.old_password)).getEditText();
+        EditText newPasswordET = ((SmartHintEditText) view.findViewById(R.id.new_password)).getEditText();
         Button confirm = view.findViewById(R.id.confirm);
         confirm.setOnClickListener(v -> {
             String old = oldPasswordET.getText().toString();
@@ -303,29 +413,15 @@ public class DiaryMainActivity extends BaseActivity {
         dialog.show();
     }
 
-    private void createOrOpenDiary(@Nullable DiaryTakingActivity.MyDate date) {
-        if (diaryDatabase.isClosed()) {
-            ToastUtils.show(this, R.string.closed);
-            return;
-        }
+    private int getCurrentDateInt() {
+        DiaryTakingActivity.MyDate date = new DiaryTakingActivity.MyDate(new Date(System.currentTimeMillis()));
+        return date.getDateInt();
+    }
+
+    private void createDiary(int dateInt) {
         Intent intent = new Intent(this, DiaryTakingActivity.class);
-        final int[] dateInts;
-        if (date == null) {
-            final Calendar calendar = Calendar.getInstance();
-            final int year = calendar.get(Calendar.YEAR);
-            final int month = calendar.get(Calendar.MONTH) + 1;
-            final int day = calendar.get(Calendar.DAY_OF_MONTH);
-            dateInts = new int[]{year, month, day};
-        } else {
-            dateInts = new int[]{date.year, date.month, date.day};
-        }
-        intent.putExtra("date", dateInts);
-        String dateString;
-        if (date == null) dateString = new DiaryTakingActivity.MyDate(dateInts).getDateString();
-        else dateString = date.getDateString();
-        intent.putExtra("myDateStr", dateString);
-        boolean newRec = !SQLite.checkRecordExistence(diaryDatabase, "diary", "date", dateString);
-        intent.putExtra("newRec", newRec);
+        // use the current time
+        intent.putExtra(DiaryTakingActivity.EXTRA_DATE_INT, dateInt);
         startActivityForResult(intent, RequestCode.START_ACTIVITY_0);
     }
 
@@ -334,28 +430,14 @@ public class DiaryMainActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCode.START_ACTIVITY_0:
-                // on diary taking activity returned
-                if (data == null) throw new AssertionError();
-                String myDateStr = data.getStringExtra("myDateStr");
-                boolean isNewDiary = data.getBooleanExtra("newRec", true);
+                // "write diary" action: on diary taking activity returned
+                // it must be an activity which intends to create a new diary record
+                Common.doAssertion(data != null);
+                int dateInt = data.getIntExtra(DiaryTakingActivity.EXTRA_DATE_INT, -1);
 
-                RelativeLayout childRL = getChildRLByDate(myDateStr);
-                if (isNewDiary) {
-                    ll.addView(childRL);
-                } else {
-                    int childCount = ll.getChildCount();
-                    int index = -1;
-                    for (int i = 0; i < childCount; i++) {
-                        DiaryTakingActivity.MyDate date = ((TextViewWithDate) ((RelativeLayout) ll.getChildAt(i)).getChildAt(0)).date;
-                        if (date.getDateString().equals(myDateStr)) {
-                            index = i;
-                            break;
-                        }
-                    }
-                    Common.debugAssert(index != -1);
-                    ll.removeViewAt(index);
-                    ll.addView(childRL, index);
-                }
+                // update view
+                diaryItemDataList.add(new DiaryItemData(dateInt, queryDiaryContent(dateInt)));
+                recyclerViewAdapter.notifyItemInserted(diaryItemDataList.size() - 1);
                 break;
             case RequestCode.START_ACTIVITY_1:
                 // export
@@ -379,169 +461,190 @@ public class DiaryMainActivity extends BaseActivity {
                 }
                 importDiary(new File(file));
                 break;
+
+            case RequestCode.START_ACTIVITY_3:
+                // START_ACTIVITY_3:
+                // on preview activity returned
+                // refresh the view in the LinearLayout
+
+            case RequestCode.START_ACTIVITY_4:
+                // START_ACTIVITY_3:
+                // "write diary" action: start a diary taking activity directly when the diary of today's date already exists
+                // refresh the corresponding view
+
+                Common.doAssertion(data != null);
+
+                Common.doAssertion(data.hasExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT));
+                dateInt = data.getIntExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, -1);
+
+                final String content = queryDiaryContent(dateInt);
+                int position = getDiaryItemPosition(dateInt);
+                diaryItemDataList.get(position).content = content;
+                recyclerViewAdapter.notifyItemChanged(position);
+                break;
             default:
                 break;
         }
     }
 
-    private void refreshListViews() {
-        ll.removeAllViews();
-        loadListViews();
-    }
 
-    private RelativeLayout getChildRLByDate(String dateString) {
-        RelativeLayout[] r = {null};
-        diaryDatabase.exec("SELECT * FROM diary WHERE date is " + dateString, contents -> {
-            r[0] = getChildRL(contents);
-            return 0;
-        });
-        return r[0];
-    }
-
-    private static class TextViewWithDate extends AppCompatTextView {
-        private final DiaryTakingActivity.MyDate date;
-
-        public TextViewWithDate(Context context, @NotNull DiaryTakingActivity.MyDate date) {
-            super(context);
-            this.date = date;
+    private int getDiaryItemPosition(int dateInt) {
+        for (int i = 0; i < diaryItemDataList.size(); i++) {
+            if (diaryItemDataList.get(i).dateInt == dateInt) {
+                return i;
+            }
         }
+        return -1;
     }
 
-    @NotNull
-    @SuppressLint("SetTextI18n")
-    private RelativeLayout getChildRL(DiaryTakingActivity.MyDate myDate, String content) {
-        RelativeLayout childRL = new RelativeLayout(this);
-        final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        childRL.setLayoutParams(layoutParams);
-        TextViewWithDate dateTV = new TextViewWithDate(this, myDate);
-        dateTV.setId(R.id.tv1);
-        RelativeLayout.LayoutParams dateLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dateTV.setLayoutParams(dateLP);
-        dateTV.setTextColor(Color.parseColor("#1565C0"));
-        dateTV.setTextSize(30);
-        TextView previewTV = new TextView(this);
-        previewTV.setId(R.id.tv2);
-        RelativeLayout.LayoutParams previewLP = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        previewLP.addRule(RelativeLayout.BELOW, R.id.tv1);
-        previewTV.setLayoutParams(previewLP);
-        String weekString = null;
-        try {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.set(myDate.year, myDate.month - 1, myDate.day);
-            final int weekIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-            weekString = this.week[weekIndex];
-        } catch (Exception e) {
-            Common.showException(e, this);
-        }
-        dateTV.setText(myDate.toString() + " " + weekString);
-        previewTV.setText(content.length() > 100 ? (content.substring(0, 100) + "...") : content);
-        setChildRL(myDate, childRL);
-        runOnUiThread(() -> {
-            childRL.addView(dateTV);
-            childRL.addView(previewTV);
-        });
-        return childRL;
+    private String queryDiaryContent(int dateInt) {
+        final Statement statement = diaryDatabase.compileStatement("SELECT content\n" +
+                "FROM diary\n" +
+                "WHERE \"date\" IS ?");
+        statement.bind(1, dateInt);
+
+        final Cursor cursor = statement.getCursor();
+        Common.doAssertion(cursor.step());
+        final String content = cursor.getText(0);
+
+        statement.release();
+
+        return content;
     }
 
-    @NotNull
-    private RelativeLayout getChildRL(@NotNull String[] sqliteColumnContent) {
-        final DiaryTakingActivity.MyDate myDate = new DiaryTakingActivity.MyDate(Integer.parseInt(sqliteColumnContent[0]));
-        final String content = sqliteColumnContent[1];
-        return getChildRL(myDate, content);
-    }
+    private void popupMenuChangeDate(int position) {
+        final DiaryItemData diaryItemData = diaryItemDataList.get(position);
+        final int oldDateInt = diaryItemData.dateInt;
 
-    private void loadListViews() {
-        new Thread(() -> diaryDatabase.exec("SELECT * FROM diary", contents -> {
+        EditText dateET = new EditText(this);
+
+        final AlertDialog dialog = DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
+
+            final String dateString = dateET.getText().toString();
+            int newDateInt;
             try {
-                RelativeLayout childRL = getChildRL(contents);
-
-                runOnUiThread(() -> ll.addView(childRL));
+                newDateInt = Integer.parseInt(dateString);
             } catch (Exception e) {
-                Common.showException(e, this);
+                ToastUtils.show(this, R.string.please_type_correct_value);
+                return;
             }
-            return 0;
-        })).start();
+
+            changeDate(oldDateInt, newDateInt);
+            d.dismiss();
+
+            // update view
+            diaryItemData.dateInt = newDateInt;
+            recyclerViewAdapter.notifyItemChanged(position);
+
+        }, null, dateET, R.string.enter_new_date, MATCH_PARENT, WRAP_CONTENT, false);
+
+        dialog.show();
     }
 
-    private void setChildRL(DiaryTakingActivity.MyDate date, @NotNull RelativeLayout childRL) {
-        childRL.setOnClickListener(v -> {
-            try {
-                createOrOpenDiary(date);
-            } catch (Exception e) {
-                Common.showException(e, this);
-            }
-        });
-        childRL.setOnLongClickListener(v -> {
-            Dialog dialog = new Dialog(this);
-            DialogUtil.setDialogAttr(dialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
-            LinearLayout ll = new LinearLayout(this);
-            ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            ll.setOrientation(LinearLayout.VERTICAL);
-            final Button changeDateBtn = new Button(this);
-            final Button deleteBtn = new Button(this);
-            changeDateBtn.setText(R.string.change_date);
-            deleteBtn.setText(R.string.delete);
-            ll.addView(changeDateBtn);
-            ll.addView(deleteBtn);
-            changeDateBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            deleteBtn.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            changeDateBtn.setOnClickListener(v1 -> {
-                AlertDialog.Builder adb = new AlertDialog.Builder(this);
-                EditText dateET = new EditText(this);
-                final AlertDialog d2 = adb.setTitle(R.string.enter_new_date)
-                        .setPositiveButton(R.string.confirm, (dialog1, which) -> {
-                            final String dateString = dateET.getText().toString();
-                            final DiaryTakingActivity.MyDate newDate;
-                            try {
-                                newDate = new DiaryTakingActivity.MyDate(Integer.parseInt(dateString));
-                            } catch (Exception e) {
-                                ToastUtils.show(this, R.string.please_type_correct_value);
-                                return;
-                            }
-                            changeDate(date.getDateString(), newDate);
-                            dialog.dismiss();
-                            // update view
-                            RelativeLayout newChildRL = getChildRLByDate(newDate.getDateString());
-                            int indexOfChild = this.ll.indexOfChild(childRL);
-                            this.ll.removeViewAt(indexOfChild);
-                            this.ll.addView(newChildRL, indexOfChild);
-                        })
-                        .setNegativeButton(R.string.cancel, (dialog1, which) -> {
-                        })
-                        .setView(dateET)
-                        .create();
-                DialogUtil.setDialogAttr(d2, false, ViewGroup.LayoutParams.MATCH_PARENT
-                        , ViewGroup.LayoutParams.WRAP_CONTENT, false);
-                d2.show();
-            });
-            deleteBtn.setOnClickListener(v1 -> DialogUtil.createConfirmationAlertDialog(this, (d, which) -> {
-                        diaryDatabase.exec("DELETE FROM diary WHERE date='" + date.getDateString() + '\'');
-                        dialog.dismiss();
-                        // update view
-                        this.ll.removeView(childRL);
-                    }, (d, which) -> {
-                    }, R.string.whether_to_delete, ViewGroup.LayoutParams.MATCH_PARENT
-                    , ViewGroup.LayoutParams.WRAP_CONTENT, false).show());
-            dialog.setContentView(ll);
-            dialog.show();
-            return true;
-        });
+    private void popupMenuDelete(int position) {
+
+        final int dateInt = diaryItemDataList.get(position).dateInt;
+        DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
+
+            final Statement statement = diaryDatabase.compileStatement("DELETE\n" +
+                    "FROM diary\n" +
+                    "WHERE \"date\" IS ?");
+            statement.bind(1, dateInt);
+            statement.step();
+            statement.release();
+
+            dialog.dismiss();
+
+            // update view
+            diaryItemDataList.remove(position);
+            recyclerViewAdapter.notifyItemRemoved(position);
+        }, R.string.whether_to_delete).show();
     }
 
-    private void changeDate(String oldDateString, @NotNull DiaryTakingActivity.MyDate newDate) {
-        diaryDatabase.exec("UPDATE diary SET date=" + newDate.getDateString() + " WHERE date=" + oldDateString);
+    private void openDiaryPreview(int dateInt) {
+        Intent intent = new Intent(this, DiaryContentPreviewActivity.class);
+        intent.putExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, dateInt);
+        startActivityForResult(intent, RequestCode.START_ACTIVITY_3);
     }
 
-    @Override
-    public void finish() {
-        try {
-            if (diaryDatabase != null && !diaryDatabase.isClosed()) {
-                diaryDatabase.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Common.showException(e, this);
+    private void changeDate(int oldDateString, int newDate) {
+        diaryDatabase.execBind("UPDATE diary\n" +
+                "SET \"date\"=?\n" +
+                "WHERE \"date\" IS ?", new Object[]{newDate, oldDateString});
+    }
+
+    private static class DiaryItemData {
+        private int dateInt;
+        private String content;
+
+        public DiaryItemData(int dateInt, String content) {
+            this.dateInt = dateInt;
+            this.content = content;
         }
-        super.finish();
+    }
+
+    private static class MyAdapter extends AdapterWithClickListener<MyAdapter.MyViewHolder> {
+        private final Context context;
+        private final String[] weeks;
+        private final List<DiaryItemData> data;
+
+        private MyAdapter(@NotNull Context context, @NotNull List<DiaryItemData> data) {
+            this.context = context;
+            this.data = data;
+            this.weeks = context.getResources().getStringArray(R.array.weeks);
+        }
+
+        private static class MyViewHolder extends RecyclerView.ViewHolder {
+            public MyViewHolder(@NonNull @NotNull View itemView) {
+                super(itemView);
+            }
+        }
+
+        @NotNull
+        private View createDiaryItemRL(ViewGroup parent) {
+            return LayoutInflater.from(context).inflate(R.layout.diary_item_view, parent, false);
+        }
+
+        @SuppressLint("SetTextI18n")
+        private void bindDiaryItemRL(@NotNull View item, @NotNull DiaryTakingActivity.MyDate myDate, String content) {
+            final TextView dateTV = item.findViewById(R.id.date_tv);
+            final TextView contentTV = item.findViewById(R.id.content_tv);
+
+            String weekString = null;
+            try {
+                final Calendar calendar = Calendar.getInstance();
+                calendar.set(myDate.getYear(), myDate.getMonth() - 1, myDate.getDay());
+                final int weekIndex = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+                weekString = this.weeks[weekIndex];
+            } catch (Exception e) {
+                Common.showException(e, context);
+            }
+
+            dateTV.setText(myDate + " " + weekString);
+            contentTV.setText(limitText(content));
+        }
+
+        private String limitText(@NotNull String s) {
+            return s.length() > 100 ? (s.substring(0, 100) + "...") : s;
+        }
+
+        @NotNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NotNull ViewGroup parent) {
+            final View diaryItemRL = createDiaryItemRL(parent);
+            return new MyViewHolder(diaryItemRL);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
+            final DiaryItemData itemData = data.get(position);
+            bindDiaryItemRL(holder.itemView, new DiaryTakingActivity.MyDate(itemData.dateInt), itemData.content);
+        }
+
+        @Override
+        public int getItemCount() {
+            return this.data.size();
+        }
     }
 }
+

@@ -19,9 +19,7 @@ import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.Infos;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.u.common.MultipartUploader;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
@@ -125,21 +123,13 @@ public class CrashReportActivity extends BaseActivity {
         byte[] finalContentBytes = contentBytes;
         byte[] finalBytes = bytes;
         new Thread(() -> {
-            try {
-                final String crashUploadSite = Infos.ZHC_URL_STRING + "/tools_app/crash_report.zhc";
-                MultipartUploader.formUpload(crashUploadSite, finalBytes, finalContentBytes);
-                runOnUiThread(() -> {
-                    uploadStateTextView.setTextColor(ContextCompat.getColor(this, R.color.done_green));
-                    uploadStateTextView.setText(R.string.upload_done);
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                runOnUiThread(() -> {
-                    ToastUtils.showError(this, R.string.uploading_failed, e);
-                    uploadStateTextView.setTextColor(Color.RED);
-                    uploadStateTextView.setText(R.string.uploading_failed);
-                });
-            }
+            final String crashUploadSite = Infos.ZHC_URL_STRING + "/tools_app/crash_report.zhc";
+//                MultipartUploader.formUpload(crashUploadSite, finalBytes, finalContentBytes);
+            // TODO: 6/13/21 crash file upload
+            runOnUiThread(() -> {
+                uploadStateTextView.setTextColor(ContextCompat.getColor(this, R.color.done_green));
+                uploadStateTextView.setText(R.string.upload_done);
+            });
         }).start();
     }
 

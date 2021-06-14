@@ -5,29 +5,28 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
 	<ImageView
-            android:id="@+id/cancel_deletion"
-            app:srcCompat="@drawable/ic_window_close"
-            android:layout_width="25sp"
-            android:layout_height="25sp"
-            android:layout_marginLeft="19sp"
-            android:layout_marginStart="20sp"
-            android:layout_centerVertical="true"/>
+			android:id="@+id/cancel_deletion"
+			app:srcCompat="@drawable/ic_window_close"
+			android:layout_width="25dp"
+			android:layout_height="25dp"
+			android:layout_marginStart="20dp"
+			android:layout_centerVertical="true" android:contentDescription="@string/cancel_picking_btn"/>
 
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="32sp"
+		android:layout_marginStart="32dp"
 		android:text="@string/no_notes_were_selected"
 		android:textStyle="bold"
 		android:textSize="19sp"
 		android:layout_centerVertical="true"
-		android:layout_alignLeft="@id/cancel_deletion"
+		android:layout_alignStart="@id/cancel_deletion"
         android:id="@+id/top_tv"/>
 
 	<CheckBox
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
 		android:layout_centerVertical="true"
         android:id="@+id/choose_all"/>
 

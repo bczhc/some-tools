@@ -18,7 +18,7 @@ JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_00024Cursor_rese
 /*
  * Class:     pers_zhc_tools_jni_JNI_Sqlite3_Cursor
  * Method:    step
- * Signature: (J)V
+ * Signature: (J)Z
  */
 JNIEXPORT jboolean JNICALL Java_pers_zhc_tools_jni_JNI_00024Sqlite3_00024Cursor_step
   (JNIEnv *, jclass, jlong);
