@@ -65,12 +65,6 @@ class BusQueryMainActivity : BaseActivity() {
             endStationNameTV.text = busInfo.endStationName
             lineNumTV.text = busInfo.busLineName
 
-            inflate.setOnClickListener {
-                val intent = Intent(this@BusQueryMainActivity, BusLineDetailActivity::class.java)
-                intent.putExtra(BusLineDetailActivity.EXTRA_RUN_PATH_ID, busInfo.runPathId)
-                startActivity(intent)
-            }
-
             return inflate
         }
     }
@@ -99,6 +93,12 @@ class BusQueryMainActivity : BaseActivity() {
             runOnUiThread {
                 val myArrayAdapter = BusLineItemAdapter(this, android.R.layout.simple_list_item_1, busLineInfoList)
                 linesLV.adapter = myArrayAdapter
+
+                linesLV.setOnItemClickListener { _, _, position, _ ->
+                    val intent = Intent(this@BusQueryMainActivity, BusLineDetailActivity::class.java)
+                    intent.putExtra(BusLineDetailActivity.EXTRA_RUN_PATH_ID, busLineInfoList[position].runPathId)
+                    startActivity(intent)
+                }
             }
         }.start()
     }

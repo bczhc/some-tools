@@ -4,12 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.*;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -29,12 +30,6 @@ import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.tools.views.SmartHintEditText;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -123,7 +118,9 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
                 recyclerView.setAdapter(recyclerViewAdapter);
 
-                recyclerViewAdapter.setOnItemClickListener((position, view) -> openDiaryPreview(((DiaryItemRL) view).dateInt));
+                recyclerViewAdapter.setOnItemClickListener((position, view) ->
+                        openDiaryPreview(diaryItemDataList.get(position).dateInt)
+                );
                 recyclerViewAdapter.setOnItemLongClickListener((position, view) -> {
                     final PopupMenu popupMenu = PopupMenuUtil.createPopupMenu(this, view, R.menu.diary_popup_menu);
                     popupMenu.setOnMenuItemClickListener(item -> {
@@ -515,14 +512,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         return content;
     }
 
-    private static class DiaryItemRL extends RelativeLayout {
-        private int dateInt = -1;
-
-        public DiaryItemRL(Context context) {
-            super(context);
-        }
-    }
-
     private void popupMenuChangeDate(int position) {
         final DiaryItemData diaryItemData = diaryItemDataList.get(position);
         final int oldDateInt = diaryItemData.dateInt;
@@ -584,17 +573,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 "WHERE \"date\" IS ?", new Object[]{newDate, oldDateString});
     }
 
-    private static class LimitCharacterTextView extends androidx.appcompat.widget.AppCompatTextView {
-
-        public LimitCharacterTextView(Context context) {
-            super(context);
-        }
-
-        public void setTextLimited(@NotNull String s) {
-            super.setText(s.length() > 100 ? (s.substring(0, 100) + "...") : s);
-        }
-    }
-
     private static class DiaryItemData {
         private int dateInt;
         private String content;
@@ -620,41 +598,17 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             public MyViewHolder(@NonNull @NotNull View itemView) {
                 super(itemView);
             }
-
-            private DiaryItemRL getDiaryItemRL() {
-                return (DiaryItemRL) itemView;
-            }
         }
 
         @NotNull
-        private DiaryItemRL createDiaryItemRL() {
-            DiaryItemRL childRL = new DiaryItemRL(context);
-            final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            childRL.setLayoutParams(layoutParams);
-
-            TextView dateTV = new TextView(context);
-            dateTV.setId(R.id.tv1);
-            RelativeLayout.LayoutParams dateLP = new RelativeLayout.LayoutParams(MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            dateTV.setLayoutParams(dateLP);
-            dateTV.setTextColor(Color.parseColor("#1565C0"));
-            dateTV.setTextSize(30);
-
-            LimitCharacterTextView previewTV = new LimitCharacterTextView(context);
-            previewTV.setId(R.id.tv2);
-            RelativeLayout.LayoutParams previewLP = new RelativeLayout.LayoutParams(MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            previewLP.addRule(RelativeLayout.BELOW, R.id.tv1);
-            previewTV.setLayoutParams(previewLP);
-
-            childRL.addView(dateTV);
-            childRL.addView(previewTV);
-            return childRL;
+        private View createDiaryItemRL(ViewGroup parent) {
+            return LayoutInflater.from(context).inflate(R.layout.diary_item_view, parent, false);
         }
 
         @SuppressLint("SetTextI18n")
-        private void bindDiaryItemRL(@NotNull DiaryItemRL item, @NotNull DiaryTakingActivity.MyDate myDate, String content) {
-            final TextView dateTV = (TextView) item.getChildAt(0);
-            final LimitCharacterTextView previewTV = (LimitCharacterTextView) item.getChildAt(1);
-            item.dateInt = myDate.getDateInt();
+        private void bindDiaryItemRL(@NotNull View item, @NotNull DiaryTakingActivity.MyDate myDate, String content) {
+            final TextView dateTV = item.findViewById(R.id.date_tv);
+            final TextView contentTV = item.findViewById(R.id.content_tv);
 
             String weekString = null;
             try {
@@ -667,20 +621,24 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             }
 
             dateTV.setText(myDate + " " + weekString);
-            previewTV.setTextLimited(content);
+            contentTV.setText(limitText(content));
+        }
+
+        private String limitText(@NotNull String s) {
+            return s.length() > 100 ? (s.substring(0, 100) + "...") : s;
         }
 
         @NotNull
         @Override
         public MyViewHolder onCreateViewHolder(@NotNull ViewGroup parent) {
-            final DiaryItemRL diaryItemRL = createDiaryItemRL();
+            final View diaryItemRL = createDiaryItemRL(parent);
             return new MyViewHolder(diaryItemRL);
         }
 
         @Override
         public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
             final DiaryItemData itemData = data.get(position);
-            bindDiaryItemRL(holder.getDiaryItemRL(), new DiaryTakingActivity.MyDate(itemData.dateInt), itemData.content);
+            bindDiaryItemRL(holder.itemView, new DiaryTakingActivity.MyDate(itemData.dateInt), itemData.content);
         }
 
         @Override

@@ -39,9 +39,13 @@ class BusLineDetailLL : LinearLayout {
             context.getString(R.string.bus_line_detail_station_ordinal_tv, this.childCount + 1 /* ordinal */)
         val stationNameTV = inflate.station_name_tv!!
 
-        stationNameTV.text = station.busStationName.join('\n')
-            .replace('（', '︵').replace('）', '︶')
-            .replace('(', '︵').replace(')', '︶')
+        stationNameTV.text = station.busStationName.join('\n').apply {
+            replace('（', '︵')
+            replace('）', '︶')
+
+            replace('(', '︵')
+            replace(')', '︶')
+        }
 
         inflate.station = station
         inflate.busState = TopNodeView.BusState.ARRIVED

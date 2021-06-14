@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,10 +19,6 @@ import pers.zhc.tools.MyApplication;
 import pers.zhc.tools.R;
 import pers.zhc.tools.bus.BusArrivalReminderNotificationReceiver;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.views.ScalableImageView;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author bczhc
@@ -32,16 +27,51 @@ public class Demo extends BaseActivity {
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.demo_activity);
 
-        final ScalableImageView imageView = new ScalableImageView(this);
-        setContentView(imageView);
+        final ListView listView = findViewById(R.id.list_view);
+        final MyAdapter myAdapter = new MyAdapter(this);
+        listView.setAdapter(myAdapter);
 
-        final InputStream inputStream = getResources().openRawResource(R.raw.db);
-        imageView.setBitmap(BitmapFactory.decodeStream(inputStream));
-        try {
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            if (position == myAdapter.getCount() - 1) {
+                myAdapter.addCount();
+                myAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private static class MyAdapter extends BaseAdapter {
+        private int count = 100;
+        private final Context context;
+
+        public MyAdapter(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public int getCount() {
+            return this.count;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final View inflate = View.inflate(context, R.layout.bus_lines_list_view_item_view, null);
+            return inflate.findViewById(R.id.root_ll);
+        }
+
+        public void addCount() {
+            ++this.count;
         }
     }
 }
