@@ -46,7 +46,7 @@ jobs:
               mkdir apks
           fi
           cd apks
-          cp -v ../app/build/outputs/apk/debug/app-debug.apk some-tools.apk
+          cp -v ../../app/build/outputs/apk/debug/app-debug.apk some-tools.apk
           cd ../..
       - name: Upload apk
         uses: actions/upload-artifact@v2
