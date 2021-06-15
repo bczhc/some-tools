@@ -47,6 +47,8 @@ jobs:
           fi
           cd apks
           cp -v ../../app/build/outputs/apk/debug/app-debug.apk some-tools.apk
+          git config --global user.email "bczhc0@126.com"
+          git config --global user.name "bczhc"
           git add some-tools.apk
           git commit -m "Upload apk by GitHub Action on $(date)"
           git push origin master -f
