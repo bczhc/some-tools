@@ -42,7 +42,7 @@ jobs:
         run: |
           git clone git@gitee.com:bczhc/store
           cd store
-          if [ -d apks ]; then
+          if [ ! -d apks ]; then
               mkdir apks
           fi
           cd apks
