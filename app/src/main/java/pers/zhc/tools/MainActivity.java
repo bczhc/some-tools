@@ -130,6 +130,7 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.bus_query_label, BusQueryMainActivity.class));
         activities.add(new ActivityItem(R.string.sys_info_label, SysInfo.class));
         activities.add(new ActivityItem(R.string.magic_label, FileListActivity.class));
+        activities.add(new ActivityItem(R.string.unicode_table_label, UnicodeTable.class));
     }
 
     private void loadRecyclerView() {

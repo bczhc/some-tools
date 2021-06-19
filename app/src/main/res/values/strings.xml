@@ -357,6 +357,10 @@
 
     <!-- new -->
 
+    <!-- module: unicode_table -->
+    <string name="unicode_table_label">Unicode表</string>
+    <!-- module end -->
+
     <!-- module: diary -->
     <string name="diary_navigation_view_title">我的日记</string>
     <string name="diary_duplicated_diary_dialog_title">已有该日期日记，是否打开？</string>
