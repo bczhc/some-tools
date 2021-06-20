@@ -35,7 +35,10 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
             defaultInfoJson.put(storagePathJsonKey, getDefaultStoragePath())
 
             val statement =
-                diaryDatabase.compileStatement("INSERT INTO diary_attachment_info (info_json)\nVALUES (?)")
+                diaryDatabase.compileStatement(
+                    """INSERT INTO diary_attachment_info (info_json)
+VALUES (?)"""
+                )
             statement.bindText(1, defaultInfoJson.toString())
             statement.step()
             statement.release()
@@ -72,7 +75,10 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
         fun getFileStoragePath(diaryDatabase: SQLite3): String? {
             var infoJSON: String? = null
 
-            diaryDatabase.exec("SELECT info_json\nFROM diary_attachment_info") { content ->
+            diaryDatabase.exec(
+                """SELECT info_json
+FROM diary_attachment_info"""
+            ) { content ->
                 infoJSON = content[0]
                 return@exec 0
             }
@@ -104,7 +110,10 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
     }
 
     private fun changeStoragePath(newStoragePath: String) {
-        var statement = diaryDatabase.compileStatement("SELECT info_json\nFROM diary_attachment_info")
+        var statement = diaryDatabase.compileStatement(
+            """SELECT info_json
+FROM diary_attachment_info"""
+        )
         statement.stepRow()
         val infoJSON = statement.cursor.getText(statement.getIndexByColumnName("info_json"))
         statement.release()
@@ -112,7 +121,10 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
         val infoJONObject = JSONObject(infoJSON)
         infoJONObject.put(storagePathJsonKey, newStoragePath)
 
-        statement = diaryDatabase.compileStatement("UPDATE diary_attachment_info\nSET info_json = ?")
+        statement = diaryDatabase.compileStatement(
+            """UPDATE diary_attachment_info
+SET info_json = ?"""
+        )
         statement.bindText(1, infoJONObject.toString())
         statement.step()
         statement.release()

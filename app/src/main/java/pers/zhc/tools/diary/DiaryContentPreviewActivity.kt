@@ -49,7 +49,11 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
     }
 
     private fun fetchContent(dateInt: Int): String {
-        val statement = this.diaryDatabase.compileStatement("SELECT content\nFROM diary\nWHERE \"date\" IS ?")
+        val statement = this.diaryDatabase.compileStatement(
+            """SELECT content
+FROM diary
+WHERE "date" IS ?"""
+        )
         statement.bind(1, dateInt)
         val cursor = statement.cursor
         cursor.step()

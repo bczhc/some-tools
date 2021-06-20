@@ -139,18 +139,21 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
 
     private fun insertFileRecord(identifier: String, filename: String?, storageTypeInt: Int, description: String) {
         diaryDatabase.execBind(
-            "INSERT INTO diary_attachment_file(identifier, addition_timestamp, filename, storage_type, description)\nVALUES (?, ?, ?, ?, ?)",
+            """INSERT INTO diary_attachment_file(identifier, addition_timestamp, filename, storage_type, description)
+VALUES (?, ?, ?, ?, ?)""",
             arrayOf(identifier, System.currentTimeMillis(), filename, storageTypeInt, description)
         )
     }
 
     private fun insertTextRecord(identifier: String, content: String, description: String) {
         insertFileRecord(identifier, null, StorageType.TEXT.enumInt, description)
-        diaryDatabase.execBind("INSERT INTO diary_attachment_text(identifier, content)\nVALUES (?, ?)", arrayOf(identifier, content))
+        diaryDatabase.execBind(
+            """INSERT INTO diary_attachment_text(identifier, content)
+VALUES (?, ?)""", arrayOf(identifier, content))
     }
 
     private fun hasFileRecord(identifier: String): Boolean {
-        return diaryDatabase.hasRecord("SELECT * FROM diary_attachment_file WHERE identifier IS ?", arrayOf(identifier))
+        return diaryDatabase.hasRecord("""SELECT * FROM diary_attachment_file WHERE identifier IS ?""", arrayOf(identifier))
     }
 
     private fun addSpinner() {
@@ -225,7 +228,13 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         identifier: String,
     ) {
         val statement =
-            diaryDatabase.compileStatement("UPDATE diary_attachment_file\nSET filename     = ?,\n    storage_type = $storageTypeOrdinal,\n    description  = ?\nWHERE identifier IS ?")
+            diaryDatabase.compileStatement(
+                """UPDATE diary_attachment_file
+SET filename     = ?,
+    storage_type = $storageTypeOrdinal,
+    description  = ?
+WHERE identifier IS ?"""
+            )
         statement.reset()
         statement.bindText(1, filename)
         statement.bindText(2, description)

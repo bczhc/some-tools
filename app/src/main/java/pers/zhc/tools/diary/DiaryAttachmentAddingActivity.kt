@@ -50,7 +50,8 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         diaryDatabase.beginTransaction()
 
         diaryDatabase.execBind(
-            "INSERT INTO diary_attachment(id, title, description)\nVALUES (?, ?, ?)",
+            """INSERT INTO diary_attachment(id, title, description)
+VALUES (?, ?, ?)""",
             arrayOf(
                 attachmentId,
                 titleET.text.toString(),
@@ -59,7 +60,10 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         )
 
         val statement =
-            diaryDatabase.compileStatement("INSERT INTO diary_attachment_file_reference(attachment_id, identifier)\nVALUES (?, ?)")
+            diaryDatabase.compileStatement(
+                """INSERT INTO diary_attachment_file_reference(attachment_id, identifier)
+VALUES (?, ?)"""
+            )
         fileIdentifierList.forEach {
             statement.reset()
             statement.bind(1, attachmentId)

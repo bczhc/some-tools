@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
+import androidx.appcompat.app.AppCompatDelegate;
 
 /**
  * @author bczhc
@@ -16,6 +17,8 @@ public class MyApplication extends Application {
         super.onCreate();
 
         registerNotificationChannel();
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
     }
 
     private void registerNotificationChannel() {

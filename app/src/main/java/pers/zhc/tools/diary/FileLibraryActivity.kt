@@ -93,7 +93,10 @@ class FileLibraryActivity : DiaryBaseActivity() {
     private fun refreshItemDataList() {
         itemDataList.clear()
         val statement =
-            diaryDatabase.compileStatement("SELECT filename, addition_timestamp, description, storage_type, identifier\nFROM diary_attachment_file")
+            diaryDatabase.compileStatement(
+                """SELECT filename, addition_timestamp, description, storage_type, identifier
+FROM diary_attachment_file"""
+            )
 
         val cursor = statement.cursor
         while (cursor.step()) {
@@ -106,7 +109,11 @@ class FileLibraryActivity : DiaryBaseActivity() {
             var content: String? = null
             if (storageType == StorageType.TEXT.enumInt) {
                 val statement1 =
-                    diaryDatabase.compileStatement("SELECT content\nFROM diary_attachment_text\nWHERE identifier IS ?")
+                    diaryDatabase.compileStatement(
+                        """SELECT content
+FROM diary_attachment_text
+WHERE identifier IS ?"""
+                    )
                 statement1.bindText(1, identifier)
                 val cursor1 = statement1.cursor
                 // all text attachments are stored in the database
@@ -199,7 +206,11 @@ class FileLibraryActivity : DiaryBaseActivity() {
 
         fun getFileInfo(diaryDatabase: SQLite3, identifier: String): FileInfo {
             val statement =
-                diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment_file\nWHERE identifier IS ?")
+                diaryDatabase.compileStatement(
+                    """SELECT *
+FROM diary_attachment_file
+WHERE identifier IS ?"""
+                )
             statement.bindText(1, identifier)
             val contentIndex = statement.getIndexByColumnName("filename")
             val additionTimestampIndex = statement.getIndexByColumnName("addition_timestamp")
@@ -221,7 +232,11 @@ class FileLibraryActivity : DiaryBaseActivity() {
 
         fun getTextContent(db: SQLite3, identifier: String): String {
             val statement =
-                db.compileStatement("SELECT content\nFROM diary_attachment_text\nWHERE identifier IS ?")
+                db.compileStatement(
+                    """SELECT content
+FROM diary_attachment_text
+WHERE identifier IS ?"""
+                )
             statement.bindText(1, identifier)
             val cursor = statement.cursor
             Common.doAssertion(cursor.step())
@@ -232,7 +247,11 @@ class FileLibraryActivity : DiaryBaseActivity() {
 
         fun deleteFileRecord(db: SQLite3, identifier: String) {
             val statement =
-                db.compileStatement("DELETE\nFROM diary_attachment_file\nWHERE identifier IS ?;")
+                db.compileStatement(
+                    """DELETE
+FROM diary_attachment_file
+WHERE identifier IS ?;"""
+                )
             statement.bindText(1, identifier)
             statement.step()
             statement.release()
@@ -268,7 +287,11 @@ class FileLibraryActivity : DiaryBaseActivity() {
     private fun showDeleteDialog(identifier: String, storageType: Int, position: Int) {
         DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
             val hasRecord = diaryDatabase.hasRecord(
-                "SELECT *\nFROM diary_attachment_file\nWHERE diary_attachment_file.identifier IS ?\n  AND diary_attachment_file.identifier IN\n      (SELECT diary_attachment_file_reference.identifier FROM diary_attachment_file_reference);",
+                """SELECT *
+FROM diary_attachment_file
+WHERE diary_attachment_file.identifier IS ?
+  AND diary_attachment_file.identifier IN
+      (SELECT diary_attachment_file_reference.identifier FROM diary_attachment_file_reference);""",
                 arrayOf(identifier)
             )
 
@@ -295,7 +318,10 @@ class FileLibraryActivity : DiaryBaseActivity() {
     }
 
     private fun deleteTextRecord(identifier: String) {
-        diaryDatabase.execBind("DELETE\nFROM diary_attachment_text\nWHERE identifier IS ?", arrayOf(identifier))
+        diaryDatabase.execBind(
+            """DELETE
+FROM diary_attachment_text
+WHERE identifier IS ?""", arrayOf(identifier))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

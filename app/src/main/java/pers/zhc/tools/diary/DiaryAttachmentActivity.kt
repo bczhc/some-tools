@@ -120,10 +120,18 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     private fun refreshItemDataList() {
         val statement: Statement
         if (dateInt == -1) {
-            statement = diaryDatabase.compileStatement("SELECT id, title, description\nFROM diary_attachment")
+            statement = diaryDatabase.compileStatement(
+                """SELECT id, title, description
+FROM diary_attachment"""
+            )
         } else {
             statement =
-                diaryDatabase.compileStatement("SELECT id, title, description\nFROM diary_attachment\n         INNER JOIN diary_attachment_mapping ON diary_attachment.id IS diary_attachment_mapping.referred_attachment_id\nWHERE diary_attachment_mapping.diary_date IS ?")
+                diaryDatabase.compileStatement(
+                    """SELECT id, title, description
+FROM diary_attachment
+         INNER JOIN diary_attachment_mapping ON diary_attachment.id IS diary_attachment_mapping.referred_attachment_id
+WHERE diary_attachment_mapping.diary_date IS ?"""
+                )
             statement.bind(1, dateInt)
         }
 
@@ -216,13 +224,20 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     private fun checkExistence(attachmentId: Long): Boolean {
         Common.doAssertion(dateInt != -1)
         return diaryDatabase.hasRecord(
-            "SELECT *\nFROM diary_attachment_mapping\nWHERE diary_date IS ?\n  AND referred_attachment_id IS ?",
+            """SELECT *
+FROM diary_attachment_mapping
+WHERE diary_date IS ?
+  AND referred_attachment_id IS ?""",
             arrayOf(dateInt, attachmentId)
         )
     }
 
     private fun queryAttachment(id: Long): ItemData {
-        val statement = diaryDatabase.compileStatement("SELECT *\nFROM diary_attachment\nWHERE id IS ?")
+        val statement = diaryDatabase.compileStatement(
+            """SELECT *
+FROM diary_attachment
+WHERE id IS ?"""
+        )
         val titleColumn = statement.getIndexByColumnName("title")
         val descriptionColumn = statement.getIndexByColumnName("description")
         statement.bind(1, id)
@@ -243,7 +258,10 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     private fun attachAttachment(pickedAttachmentId: Long) {
         Common.doAssertion(dateInt != -1)
         val statement =
-            diaryDatabase.compileStatement("INSERT INTO diary_attachment_mapping(diary_date, referred_attachment_id)\nVALUES (?, ?)")
+            diaryDatabase.compileStatement(
+                """INSERT INTO diary_attachment_mapping(diary_date, referred_attachment_id)
+VALUES (?, ?)"""
+            )
         statement.bind(1, dateInt)
         statement.bind(2, pickedAttachmentId)
         statement.step()
@@ -286,12 +304,20 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
     companion object {
         fun deleteAttachment(db: SQLite3, attachmentId: Long) {
             var statement =
-                db.compileStatement("DELETE\nFROM diary_attachment_file_reference\nWHERE attachment_id IS ?")
+                db.compileStatement(
+                    """DELETE
+FROM diary_attachment_file_reference
+WHERE attachment_id IS ?"""
+                )
             statement.bind(1, attachmentId)
             statement.step()
             statement.release()
 
-            statement = db.compileStatement("DELETE\nFROM diary_attachment\nWHERE id IS ?")
+            statement = db.compileStatement(
+                """DELETE
+FROM diary_attachment
+WHERE id IS ?"""
+            )
             statement.bind(1, attachmentId)
             statement.step()
             statement.release()
@@ -299,7 +325,10 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
 
         fun deleteAttachedAttachment(db: SQLite3, diaryDateInt: Int, attachmentId: Long) {
             db.execBind(
-                "DELETE\nFROM diary_attachment_mapping\nWHERE diary_date IS ?\n  AND referred_attachment_id IS ?",
+                """DELETE
+FROM diary_attachment_mapping
+WHERE diary_date IS ?
+  AND referred_attachment_id IS ?""",
                 arrayOf(diaryDateInt, attachmentId)
             )
         }

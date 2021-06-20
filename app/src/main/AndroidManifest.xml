@@ -102,7 +102,7 @@
         <activity
                 android:name="pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/FB_AppTheme">
+                android:theme="@style/AppTheme">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -162,17 +162,6 @@
         <activity android:name="pers.zhc.tools.BaseActivity"/>
         <activity android:name=".diary.DiaryBaseActivity"/>
         <activity
-                android:name="pers.zhc.tools.functiondrawing.FunctionDrawing"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-
-            </intent-filter>
-        </activity>
-        <activity
                 android:name="pers.zhc.tools.document.Document"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:taskAffinity="pers.zhc.tools.document"
@@ -189,46 +178,6 @@
                 android:launchMode="singleTask"
                 android:taskAffinity="pers.zhc.tools.document"
                 android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name="pers.zhc.tools.functiondrawing.FunctionDrawingBoard"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppThemeNotTranslucent">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name="pers.zhc.tools.epicycles.EpicyclesTest"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppThemeNotTranslucent">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".epicycles.EpicyclesEdit"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".epicycles.ComplexGraphDrawing"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppThemeNotTranslucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -317,16 +266,6 @@
         </activity>
         <activity
                 android:name=".test.service.ServiceActivity"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".test.youdaoapi.YouDaoTranslate"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/AppTheme">
             <intent-filter>

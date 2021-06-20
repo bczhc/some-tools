@@ -279,7 +279,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             startActivity(new Intent(this, DiaryAttachmentSettingsActivity.class));
 
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private int getForeignKeys() {
