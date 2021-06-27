@@ -1,87 +1,64 @@
 package pers.zhc.tools.test;
 
-import android.annotation.SuppressLint;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardService;
-import pers.zhc.tools.utils.DisplayUtil;
-import pers.zhc.tools.utils.ToastUtils;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * @author bczhc
  */
 public class Demo extends BaseActivity {
-    private Intent serviceIntent;
-
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        serviceIntent = new Intent(this, MyService.class);
-        startService(serviceIntent);
+
+
+        WindowManager wm = (WindowManager) this.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        final MV b = new MV(this);
+        b.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.width = MATCH_PARENT;
+        lp.height = MATCH_PARENT;
+        lp.format = PixelFormat.RGBA_8888;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }
+        lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+        wm.addView(b, lp);
+
     }
 
-    public static class MyService extends Service {
-        private final String TAG = this.getClass().getName();
+    private static class MV extends View {
+        private final Paint mPaint;
 
-        @Nullable
-        @Override
-        public IBinder onBind(Intent intent) {
-            return null;
+        public MV(Context context) {
+            super(context);
+            mPaint = new Paint();
+            mPaint.setColor(Color.RED);
         }
 
         @Override
-        public int onStartCommand(Intent intent, int flags, int startId) {
-            WindowManager wm = (WindowManager) this.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-            Button b = new Button(this);
-            b.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            lp.format = PixelFormat.RGBA_8888;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            }
-            lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            wm.addView(b, lp);
-
-            return START_REDELIVER_INTENT;
-        }
-
-        @SuppressLint("DefaultLocale")
-        @Override
-        public void onConfigurationChanged(Configuration newConfig) {
-            int screenWidth = DisplayUtil.dip2px(this, newConfig.screenWidthDp);
-            int screenHeight = DisplayUtil.dip2px(this, newConfig.screenHeightDp);
-            switch (newConfig.orientation) {
-                case Configuration.ORIENTATION_LANDSCAPE:
-                case Configuration.ORIENTATION_PORTRAIT:
-                    ToastUtils.show(this, String.format("w: %d\nh: %d", screenWidth, screenHeight));
-                    break;
-                default:
-            }
+        protected void onDraw(Canvas canvas) {
+            final float width = getMeasuredWidth();
+            final float height = getMeasuredHeight();
+            canvas.drawRect(width / 4F, height / 4F, width / 4F * 3F, height / 4F * 3F, mPaint);
         }
 
         @Override
-        public void onDestroy() {
-            ToastUtils.show(this, "Service done.");
-            super.onDestroy();
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
-    }
-
-    @Override
-    public void finish() {
-//        stopService(serviceIntent);
-        super.finish();
     }
 }

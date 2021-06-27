@@ -6,6 +6,7 @@ import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.hardware.display.DisplayManager;
@@ -52,6 +53,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static pers.zhc.tools.utils.DialogUtil.setDialogAttr;
 
 /**
@@ -196,7 +199,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         strings = getResources().getStringArray(R.array.btn_string);
         childTextViews = new TextView[strings.length];
         // 更新悬浮窗位置
-        pv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        pv.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         lp = new WindowManager.LayoutParams();
         lp2 = new WindowManager.LayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -210,8 +213,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         lp.format = PixelFormat.RGBA_8888;
         lp2.format = PixelFormat.RGBA_8888;
-        lp.width = this.width;
-        lp.height = this.height;
+        lp.width = MATCH_PARENT;
+        lp.height = MATCH_PARENT;
         //noinspection deprecation
         lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
@@ -219,15 +222,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
-        lp2.width = /*(int) (width * proportionX)*/WindowManager.LayoutParams.WRAP_CONTENT;
-        lp2.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp2.width = /*(int) (width * proportionX)*/WRAP_CONTENT;
+        lp2.height = WRAP_CONTENT;
         //noinspection deprecation
         lp2.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
         fbLinearLayout = new LinearLayout(this);
         fbLinearLayout.setOrientation(LinearLayout.VERTICAL);
-        fbLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        fbLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         System.gc();
         InputStream inputStream = getResources().openRawResource(R.raw.db);
         icon = BitmapFactory.decodeStream(inputStream);
@@ -248,7 +251,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         this.optionsLinearLayout = new LinearLayout(this);
         optionsLinearLayout.setOrientation(LinearLayout.VERTICAL);
         optionsLinearLayout.setGravity(Gravity.CENTER);
-        optionsLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        optionsLinearLayout.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         iv = new ImageView(this);
         float proportionX = ((float) 75) / ((float) 720);
         float proportionY = ((float) 75) / ((float) 1360);
@@ -265,8 +268,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         for (int i = 0; i < strings.length; i++) {
             childTextViews[i] = new TextView(this);
             LinearLayout smallLL = new LinearLayout(this);
-            smallLL.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1F));
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (height / strings.length * .7));
+            smallLL.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, 0, 1F));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(WRAP_CONTENT, (int) (height / strings.length * .7));
             layoutParams.setMargins(0, 0, 0, 5);
             childTextViews[i].setLayoutParams(layoutParams);
             childTextViews[i].setText(strings[i]);
@@ -325,7 +328,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             pv.clearAll();
                             System.gc();
                         }, (dialog1, which) -> {
-                        }, R.string.whether_to_clear, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
+                        }, R.string.whether_to_clear, WRAP_CONTENT, WRAP_CONTENT, true).show();
                         break;
                     case 8:
                         pickScreenColor();
@@ -338,7 +341,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         break;
                     case 11:
                         DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> exit(), (dialog1, which) -> {
-                        }, R.string.whether_to_exit, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show();
+                        }, R.string.whether_to_exit, WRAP_CONTENT, WRAP_CONTENT, true).show();
                         break;
                     default:
                         break;
@@ -568,8 +571,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             } else setPanelTextColor(panelTextColorHSVA.getColor());
         });
         c.setContentView(inflate);
-        setDialogAttr(c, false, ViewGroup.LayoutParams.WRAP_CONTENT
-                , ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        setDialogAttr(c, false, WRAP_CONTENT
+                , WRAP_CONTENT, true);
         c.show();
     }
 
@@ -585,8 +588,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             dialog = new Dialog(this);
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                    , ViewGroup.LayoutParams.WRAP_CONTENT));
+                    MATCH_PARENT
+                    , WRAP_CONTENT));
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             TextView titleTextView = new TextView(this);
             titleTextView.setText(R.string.opacity);
@@ -612,14 +615,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             });
             dialog.setContentView(linearLayout);
             DialogUtil.setDialogAttr(dialog, false
-                    , ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    , MATCH_PARENT, WRAP_CONTENT, true);
         } else {
             dialog = new Dialog(this, R.style.dialog_with_background_dim_false);
             dialog.setCanceledOnTouchOutside(true);
             final Window dialogWindow = dialog.getWindow();
             if (dialogWindow != null) {
                 dialogWindow.setBackgroundDrawableResource(R.color.transparent);
-                dialogWindow.setAttributes(new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                dialogWindow.setAttributes(new WindowManager.LayoutParams(MATCH_PARENT, MATCH_PARENT
                         , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
             }
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
@@ -826,13 +829,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        final Intent serviceIntent = new Intent(this, FloatingDrawingBoardService.class);
-        startService(serviceIntent);
-
-        final InteractionBroadcastReceiver broadcastReceiver = new InteractionBroadcastReceiver(this);
-        final IntentFilter intentFilter = new IntentFilter(InteractionBroadcastReceiver.ACTION_FB);
-        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     void toggleDrawAndControlMode() {
@@ -940,14 +936,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             pv.lockStroke();
         });
         StrokeWatchView strokeWatchView = new StrokeWatchView(this);
-        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         SeekBar sb = mainLL.findViewById(R.id.sb);
         TextView tv = mainLL.findViewById(R.id.tv);
         final int[] checked = {pv.eraserMode ? R.id.radio2 : R.id.radio1};
         tv.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
-            et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            et.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
             adb.setPositiveButton(R.string.confirm, (dialog, which) -> {
                 try {
                     float edit = Float.parseFloat(et.getText().toString());
@@ -981,7 +977,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         tv.setText(getString(R.string.stroke_width_info, pvStrokeWidthInUse, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
         sb.setProgress((int) (Math.log(pvStrokeWidthInUse * pv.getScale()) / Math.log(1.07D)));
         sb.setMax(100);
-        setDialogAttr(mainDialog, false, ((int) (((float) width) * .8F)), ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        setDialogAttr(mainDialog, false, ((int) (((float) width) * .8F)), WRAP_CONTENT, true);
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -1017,7 +1013,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             sb.setProgress((int) (Math.log(strokeWidth * pv.getScale()) / Math.log(1.07D)));
         });
         mainLL.addView(strokeWatchView);
-        mainDialog.setContentView(mainLL, new ViewGroup.LayoutParams(((int) (((float) width) * .8F)), ViewGroup.LayoutParams.WRAP_CONTENT));
+        mainDialog.setContentView(mainLL, new ViewGroup.LayoutParams(((int) (((float) width) * .8F)), WRAP_CONTENT));
         mainDialog.show();
     }
 
@@ -1047,8 +1043,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private void moreOptions() {
         Dialog moreOptionsDialog = new Dialog(this);
         ScrollView sv = new ScrollView(this);
-        sv.setLayoutParams(new ScrollView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        setDialogAttr(moreOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        sv.setLayoutParams(new ScrollView.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        setDialogAttr(moreOptionsDialog, false, WRAP_CONTENT, WRAP_CONTENT, true);
         LinearLayout ll = new LinearLayout(this);
         int[] textsRes = new int[]{
                 R.string.import_image,
@@ -1128,7 +1124,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 .setNegativeButton(R.string.cancel, (dialog1, which) -> {
                                 })
                                 .create();
-                        setDialogAttr(importImageOptionsDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        setDialogAttr(importImageOptionsDialog, false, WRAP_CONTENT, WRAP_CONTENT, true);
                         importImageOptionsDialog.show();
                     });
                     dialog.show();
@@ -1167,7 +1163,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 moreOptionsDialog.dismiss();
                             }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                             }).setView(linearLayout).create();
-                    setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    setDialogAttr(ad, false, WRAP_CONTENT, WRAP_CONTENT, true);
                     DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(filenameEditText, ad);
                     ad.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -1195,7 +1191,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         moreOptionsDialog.dismiss();
                     }).setNegativeButton(R.string.cancel, (dialog, which) -> {
                     }).setTitle(R.string.type_filename).setView(et).create();
-                    setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    setDialogAttr(alertDialog, false, WRAP_CONTENT, WRAP_CONTENT, true);
                     DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, alertDialog);
                     alertDialog.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -1206,7 +1202,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     hide();
                     moreOptionsDialog.dismiss();
                 }, (dialog1, which) -> {
-                }, R.string.whether_to_hide, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).show(),
+                }, R.string.whether_to_hide, WRAP_CONTENT, WRAP_CONTENT, true).show(),
                 v7 -> {
                     ToastUtils.show(this, R.string.choose_path_v_3_0_file);
                     Dialog dialog = getFilePickerDialog(pathDir, s -> {
@@ -1221,7 +1217,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
                         // show info dialog
                         Dialog d = new Dialog(this);
-                        DialogUtil.setDialogAttr(d, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                        DialogUtil.setDialogAttr(d, false, WRAP_CONTENT, WRAP_CONTENT, true);
 
                         View v = View.inflate(this, R.layout.path_file_info_view, null);
                         Button confirmBtn = v.findViewById(R.id.confirm);
@@ -1245,8 +1241,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             buttons[i].setOnClickListener(onClickListeners[i]);
         }
         ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ll.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        ll.setLayoutParams(new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         sv.addView(ll);
         moreOptionsDialog.setContentView(sv);
         moreOptionsDialog.setCanceledOnTouchOutside(true);
@@ -1400,12 +1396,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 });
                 Runnable importAction = () -> {
                     Dialog importPathFileProgressDialog = new Dialog(this);
-                    setDialogAttr(importPathFileProgressDialog, false, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                    setDialogAttr(importPathFileProgressDialog, false, MATCH_PARENT, WRAP_CONTENT, true);
                     importPathFileProgressDialog.setCanceledOnTouchOutside(false);
                     RelativeLayout progressRelativeLayout = View.inflate(this, R.layout.progress_bar, null).findViewById(R.id.rl);
-                    progressRelativeLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    progressRelativeLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
                     importPathFileProgressDialog.show();
-                    importPathFileProgressDialog.setContentView(progressRelativeLayout, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), ViewGroup.LayoutParams.WRAP_CONTENT));
+                    importPathFileProgressDialog.setContentView(progressRelativeLayout, new ViewGroup.LayoutParams(((int) (((float) width) * .95F)), WRAP_CONTENT));
                     TextView tv = progressRelativeLayout.findViewById(R.id.progress_tv);
                     tv.setText(R.string.importing);
                     ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
@@ -1432,7 +1428,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     importAction.run();
                 }).setTitle(R.string.type_importing_sleep_time).setView(inflate);
                 AlertDialog ad = adb.create();
-                setDialogAttr(ad, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+                setDialogAttr(ad, false, WRAP_CONTENT, MATCH_PARENT, true);
                 ad.show();
             });
             dialog.show();
@@ -1504,14 +1500,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         public abstract void denied();
     }
 
-    /**
-     * @param orientation is a value of
-     *                    {@link android.content.res.Configuration#ORIENTATION_LANDSCAPE}
-     *                    or {@link android.content.res.Configuration#ORIENTATION_PORTRAIT}
-     */
-    void onScreenOrientationChanged(int orientation) {
-        Log.i(TAG, "onScreenOrientationChanged: orientation: " + orientation);
+    void onGlobalConfigurationChanged(@NotNull Configuration newConfig) {
+        /*final int orientation = newConfig.orientation;
+        Log.i(TAG, "onGlobalConfigurationChanged: orientation: " + orientation);
         ToastUtils.show(this, "orientation changed: " + orientation);
-        // TODO: 6/27/21 handle the change of screen orientation
+
+        pv.refreshBitmap(
+                DisplayUtil.dip2px(this, newConfig.screenWidthDp),
+                DisplayUtil.dip2px(this, newConfig.screenHeightDp)
+        );*/
     }
 }

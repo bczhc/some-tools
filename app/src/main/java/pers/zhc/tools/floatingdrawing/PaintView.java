@@ -30,7 +30,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @author bczhc & (cv...)...
+ * @author bczhc
  */
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
@@ -98,7 +98,7 @@ public class PaintView extends View {
         this.onColorChangedCallback = onColorChangedCallback;
     }
 
-    private void createBitmap() {
+    private void setupBitmap(int width, int height) {
         System.gc();
         headBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         backgroundBitmap = Bitmap.createBitmap(headBitmap);
@@ -106,6 +106,12 @@ public class PaintView extends View {
         mBackgroundCanvas = new Canvas(backgroundBitmap);
         //抗锯齿
         headCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+        redrawCanvas();
+        invalidate();
+    }
+
+    private void setupBitmap() {
+        setupBitmap(width, height);
     }
 
     /**
@@ -324,7 +330,7 @@ public class PaintView extends View {
             }
             handler.post(() -> {
                 if (f.exists()) {
-                    ToastUtils.show(ctx, ctx.getString(R.string.saving_succeeded) + "\n" + f.toString());
+                    ToastUtils.show(ctx, ctx.getString(R.string.saving_succeeded) + "\n" + f);
                 } else {
                     ToastUtils.show(ctx, R.string.saving_failed);
                 }
@@ -368,7 +374,6 @@ public class PaintView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (headBitmap == null) createBitmap();
         if (dontDrawWhileImporting) {
             return;
         }
@@ -447,6 +452,13 @@ public class PaintView extends View {
         setMeasuredDimension(measuredW, measuredH);
         this.width = measuredW;
         this.height = measuredH;
+
+        refreshBitmap(width, height);
+    }
+
+    public void refreshBitmap(int width, int height) {
+        setupBitmap(width, height);
+        invalidate();
     }
 
     /**
