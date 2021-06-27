@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.*;
 import android.graphics.drawable.Icon;
 import android.hardware.display.DisplayManager;
@@ -31,8 +32,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.widget.ImageViewCompat;
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
@@ -827,6 +826,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        final Intent serviceIntent = new Intent(this, FloatingDrawingBoardService.class);
+        startService(serviceIntent);
+
+        final InteractionBroadcastReceiver broadcastReceiver = new InteractionBroadcastReceiver(this);
+        final IntentFilter intentFilter = new IntentFilter(InteractionBroadcastReceiver.ACTION_FB);
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     void toggleDrawAndControlMode() {
@@ -1496,5 +1502,16 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         public abstract void granted();
 
         public abstract void denied();
+    }
+
+    /**
+     * @param orientation is a value of
+     *                    {@link android.content.res.Configuration#ORIENTATION_LANDSCAPE}
+     *                    or {@link android.content.res.Configuration#ORIENTATION_PORTRAIT}
+     */
+    void onScreenOrientationChanged(int orientation) {
+        Log.i(TAG, "onScreenOrientationChanged: orientation: " + orientation);
+        ToastUtils.show(this, "orientation changed: " + orientation);
+        // TODO: 6/27/21 handle the change of screen orientation
     }
 }
