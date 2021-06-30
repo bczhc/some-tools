@@ -15,11 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
@@ -33,6 +33,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.speech.tts.TextToSpeech.QUEUE_ADD;
+import static android.speech.tts.TextToSpeech.QUEUE_FLUSH;
 
 /**
  * @author bczhc
@@ -63,6 +66,20 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
         et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+
+        ttsReplaceDict = new HashMap<>();
+        ttsReplaceDict.put("。", "句号");
+        ttsReplaceDict.put("，", "逗号");
+        ttsReplaceDict.put("\n", "换行");
+        ttsReplaceDict.put("[", "左方括号");
+        ttsReplaceDict.put("]", "右方括号");
+        ttsReplaceDict.put("“", "上引号");
+        ttsReplaceDict.put("”", "下引号");
+        ttsReplaceDict.put("‘", "上引号");
+        ttsReplaceDict.put("’", "下引号");
+        ttsReplaceDict.put(" ", "空格");
+        ttsReplaceDict.put("、", "顿号");
+
         Handler debounceHandler = new Handler();
         final TextWatcher watcher = new TextWatcher() {
             private String last;
@@ -78,36 +95,17 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (ttsReplaceDict == null) {
-                    ttsReplaceDict = new HashMap<>();
-                    ttsReplaceDict.put("。", "句点");
-                    ttsReplaceDict.put("，", "逗号");
-                    ttsReplaceDict.put("\n", "换行");
-                    ttsReplaceDict.put("[", "左方括号");
-                    ttsReplaceDict.put("]", "右方括号");
-                }
-
                 if (speak) {
                     if (count < before) {
                         //delete
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            final int speak = tts.speak(getString(R.string.deleted_xxx, last.subSequence(start, start + before)), TextToSpeech.QUEUE_FLUSH, null, "");
-                            if (speak != TextToSpeech.SUCCESS) {
-                                ToastUtils.show(DiaryTakingActivity.this, R.string.tts_speak_error);
-                            }
-                        }
+                        ttsSpeak(getString(R.string.deleted_xxx, last.subSequence(start, start + before)), QUEUE_FLUSH);
                     } else {
                         //insert
                         String changed = s.subSequence(start, start + count).toString();
                         if (ttsReplaceDict.containsKey(changed)) {
                             changed = ttsReplaceDict.get(changed);
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            final int speak = tts.speak(changed, TextToSpeech.QUEUE_ADD, null, String.valueOf(System.currentTimeMillis()));
-                            if (speak != TextToSpeech.SUCCESS) {
-                                ToastUtils.show(DiaryTakingActivity.this, R.string.tts_speak_error);
-                            }
-                        }
+                        ttsSpeak(changed);
                     }
                 }
             }
@@ -159,6 +157,20 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         saver.start();
     }
 
+    private void ttsSpeak(String content, int queueMode) {
+        Common.doAssertion(tts != null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final int speak = tts.speak(content, queueMode, null, String.valueOf(System.currentTimeMillis()));
+            if (speak != TextToSpeech.SUCCESS) {
+                ToastUtils.showError(this, R.string.tts_speak_error, new Exception("Error code: " + speak));
+            }
+        }
+    }
+
+    private void ttsSpeak(String content) {
+        ttsSpeak(content, QUEUE_ADD);
+    }
+
     private void createNewRecord() {
         final Statement statement = diaryDatabase.compileStatement("INSERT INTO diary(\"date\", content)\n" +
                 "VALUES (?, ?)");
@@ -195,7 +207,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
     @Override
     public boolean onPrepareOptionsMenu(@NotNull Menu menu) {
         MenuItem item = menu.findItem(R.id.speak_switch);
-        Switch speakSwitch = new Switch(this);
+        SwitchMaterial speakSwitch = new SwitchMaterial(this);
         speakSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             speak = isChecked;
             if (isChecked) {
