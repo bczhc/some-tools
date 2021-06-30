@@ -59,14 +59,13 @@ android {
         abortOnError false
     }
 
-    def ndkDir, sdkDir = android.sdkDirectory
+    def ndkDir
+    def sdkDir = android.sdkDirectory
     try {
         ndkDir = android.ndkDirectory
     } catch (def ignored) {
-        println "Please define ndk.dir in local.properties"
-        return
+        throw new GradleException("Please define ndk.dir in local.properties")
     }
-
 
     def list = [ndkDir, sdkDir]
     def tools = BuildUtils.Tools.newInstance(list as Object[])
