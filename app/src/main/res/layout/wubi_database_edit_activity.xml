@@ -17,6 +17,7 @@
             app:hint="@string/wubi_code"
             android:inputType="text"
             android:id="@+id/wubi_code_shet"
+            style="@style/Widget.Application.TextInputLayout.FilledBox"
     />
     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
     >

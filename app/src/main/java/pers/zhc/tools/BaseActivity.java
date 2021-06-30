@@ -42,7 +42,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTheme(R.style.AppThemeWithBar);
+        setTheme(R.style.Theme_Application);
 
         app.addActivity(this);
         CrashHandler.install(this);

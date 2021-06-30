@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.edit_text.view.*
+import kotlinx.android.synthetic.main.text_input_edit_text.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
 
@@ -22,7 +22,7 @@ class SmartHintEditText : TextInputLayout {
     }
 
     private fun init(attrs: AttributeSet?) {
-        mET = View.inflate(context, R.layout.edit_text, null).et!!
+        mET = View.inflate(context, R.layout.text_input_edit_text, null).et!!
         if (attrs != null) {
             val inputType = attrs.getAttributeIntValue(
                 "http://schemas.android.com/apk/res/android",

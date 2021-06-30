@@ -57,6 +57,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         try {
             Thread.sleep(100);
+            setTheme(R.style.Theme_Application);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

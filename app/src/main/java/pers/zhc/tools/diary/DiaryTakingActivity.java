@@ -19,7 +19,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
@@ -118,21 +117,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         };
         et.addTextChangedListener(watcher);
 
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(R.string.diary);
-            charactersCountTV = new TextView(this);
-            charactersCountTV.setTextColor(Color.WHITE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                charactersCountTV.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-            }
-            actionBar.setCustomView(charactersCountTV);
-            actionBar.show();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
+        // TODO: 6/30/21 TTS ToolBar action button
 
         final Intent intent = getIntent();
         if ((dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)) == -1) {

@@ -2,6 +2,7 @@ package pers.zhc.tools.diary
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 import org.intellij.lang.annotations.Language
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.jni.JNI
@@ -147,10 +148,6 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
         }
         diaryDatabaseRef.countRef()
         this.diaryDatabase = diaryDatabaseRef.database
-
-        val actionBar = this.supportActionBar!!
-        actionBar.setDisplayHomeAsUpEnabled(true)
-        actionBar.setDisplayShowHomeEnabled(true)
     }
 
     override fun finish() {

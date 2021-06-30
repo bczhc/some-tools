@@ -47,11 +47,6 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".test.Demo$MyService"
-                 android:exported="false"
-                 android:description="@string/my_service"
-        />
-
         <!-- Declares the input input_method service -->
         <service
                 android:name=".inputmethod.WubiIME"
@@ -80,7 +75,7 @@
         <activity
                 android:name="pers.zhc.tools.MainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/SplashTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -92,7 +87,7 @@
         <activity
                 android:name="pers.zhc.tools.filepicker.FilePicker"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -103,7 +98,7 @@
         <activity
                 android:name="pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -115,11 +110,11 @@
                 android:name="pers.zhc.tools.codecs.Settings"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/settings"
-                android:theme="@style/AppTheme"/>
+                android:theme="@style/Theme.Application"/>
         <activity
                 android:name="pers.zhc.tools.pi.Pi"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -130,7 +125,7 @@
         <activity
                 android:name=".test.toast.ToastTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -141,7 +136,7 @@
         <activity
                 android:name="pers.zhc.tools.clipboard.Clip"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -152,7 +147,7 @@
         <activity
                 android:name="pers.zhc.tools.codecs.CodecsActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -166,7 +161,7 @@
                 android:name="pers.zhc.tools.document.Document"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:taskAffinity="pers.zhc.tools.document"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -178,7 +173,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:launchMode="singleTask"
                 android:taskAffinity="pers.zhc.tools.document"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -188,7 +183,7 @@
         <activity
                 android:name=".test.S"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -198,7 +193,7 @@
         <activity
                 android:name=".test.viewtest.MainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -208,7 +203,7 @@
         <activity
                 android:name=".test.theme.SetTheme"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -218,7 +213,7 @@
         <activity
                 android:name=".test.MathExpressionEvaluationTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -228,7 +223,7 @@
         <activity
                 android:name=".test.SensorTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -238,7 +233,7 @@
         <activity
                 android:name=".test.InputEvent"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -248,7 +243,7 @@
         <activity
                 android:name=".test.SurfaceViewTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -268,7 +263,7 @@
         <activity
                 android:name=".test.service.ServiceActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -288,7 +283,7 @@
         <activity
                 android:name=".crashhandler.CrashTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -298,7 +293,7 @@
         <activity
                 android:name=".test.malloctest.MAllocTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -320,7 +315,7 @@
                 android:name=".diary.DiaryTakingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -331,7 +326,7 @@
                 android:name=".diary.DiaryAttachmentActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_library_activity_label_name"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -342,7 +337,7 @@
                 android:name=".diary.DiaryAttachmentAddingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_library_activity_label_name"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -353,7 +348,7 @@
                 android:name=".diary.FileLibraryActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/file_library"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -364,7 +359,7 @@
                 android:name=".diary.FileLibraryAddingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/file_library"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -375,7 +370,7 @@
                 android:name=".diary.DiaryAttachmentSettingsActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/settings"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -386,7 +381,7 @@
                 android:name=".diary.DiaryContentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/preview"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -397,7 +392,7 @@
                 android:name=".diary.FileLibraryFileDetailActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/file_library"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -408,7 +403,7 @@
                 android:name=".diary.FileBrowserActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_browser_label"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -419,7 +414,7 @@
                 android:name=".diary.DiaryAttachmentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_preview_activity_label"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -430,7 +425,7 @@
                 android:name=".diary.DiaryFileLibraryEditTextActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_file_library_text_edit_activity_label"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -440,7 +435,7 @@
         <activity
                 android:name=".test.pressuretest.PressureTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -450,7 +445,7 @@
         <activity
                 android:name=".test.Demo"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -460,7 +455,7 @@
         <activity
                 android:name=".test.DocumentProviderTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -470,7 +465,7 @@
         <activity
                 android:name=".characterscounter.CounterTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -480,7 +475,7 @@
         <activity
                 android:name=".test.typetest.TypeTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -490,7 +485,7 @@
         <activity
                 android:name=".test.TTS"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -500,7 +495,7 @@
         <activity
                 android:name=".test.RegExpTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -511,7 +506,7 @@
                 android:name=".test.wubiinput.WubiInput"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -522,7 +517,7 @@
                 android:name=".inputmethod.WubiInputMethodActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -533,7 +528,7 @@
                 android:name=".inputmethod.WubiInputMethodTTSSettingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -544,7 +539,7 @@
                 android:name=".inputmethod.WubiCodeSettingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -554,7 +549,7 @@
         <activity
                 android:name=".test.UsbSerialTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.intent.action.MAIN"/>
@@ -563,7 +558,7 @@
         <activity
                 android:name=".stcflash.FlashMainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.intent.action.MAIN"/>
@@ -578,7 +573,7 @@
         <activity
                 android:name=".test.DrawingBoardTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.intent.action.MAIN"/>
@@ -588,7 +583,7 @@
                 android:name=".inputmethod.WubiDatabaseEditActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -599,7 +594,7 @@
                 android:name=".bus.BusQueryMainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/bus_query_label"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -610,7 +605,7 @@
                 android:name=".bus.BusLineDetailActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/bus_query_label"
-                android:theme="@style/AppThemeWithBar">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 

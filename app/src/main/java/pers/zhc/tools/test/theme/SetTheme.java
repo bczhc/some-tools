@@ -16,7 +16,7 @@ public class SetTheme extends BaseActivity {
         Button setBtn = findViewById(R.id.setting_btn);
         setBtn.setOnClickListener(v -> recreate());
         setBtn.setOnLongClickListener(v -> {
-            setTheme(R.style.AppTheme);
+            setTheme(R.style.Theme_Application);
             recreate();
             return true;
         });
