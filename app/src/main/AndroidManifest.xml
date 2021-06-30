@@ -75,7 +75,7 @@
         <activity
                 android:name="pers.zhc.tools.MainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
+                android:theme="@style/Theme.Application.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -273,7 +273,7 @@
         <activity
                 android:name=".crashhandler.CrashReportActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/DarkTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -304,7 +304,7 @@
                 android:name=".diary.DiaryMainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/DarkTheme">
+                android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -315,7 +315,7 @@
                 android:name=".diary.DiaryTakingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/Theme.Application">
+                android:theme="@style/Theme.MaterialComponents.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 

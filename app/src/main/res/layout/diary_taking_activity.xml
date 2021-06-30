@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
-                                         android:id="@+id/et"
-                                         app:gravity="top"
-                                         app:hint="@string/content"
-                                         android:fillViewport="true"
+    <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/diary"
+            app:menu="@menu/diary_taking_actionbar"
+            android:id="@+id/tool_bar"
+            style="@style/Theme.Application.Toolbar.Primary"
+    >
+        <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+        >
+            <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Application.TextView.Light"
+                    android:id="@+id/text_count_tv"
+                    android:text="adfadfssadf"
+                    android:layout_centerVertical="true"
+            />
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tts_switch"
+                    android:text="@string/voice"
+                    android:textColor="@color/white"
+                    android:layout_alignParentEnd="true"
+            />
+        </RelativeLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+    <pers.zhc.tools.views.ScrollEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/et"
+            app:gravity="top"
+            app:hint="@string/content"
+            android:fillViewport="true"
+            android:layout_below="@id/tool_bar"
     />
 </RelativeLayout>

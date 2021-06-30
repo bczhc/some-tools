@@ -2,7 +2,6 @@ package pers.zhc.tools.diary;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,10 +14,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
@@ -61,6 +61,21 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         updateStatement = this.diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?");
 
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
+        MaterialToolbar toolbar = findViewById(R.id.tool_bar);
+        charactersCountTV = toolbar.findViewById(R.id.text_count_tv);
+        SwitchMaterial ttsSwitch = toolbar.findViewById(R.id.tts_switch);
+        ttsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            speak = isChecked;
+            if (isChecked) {
+                tts = new TextToSpeech(DiaryTakingActivity.this, null);
+            }
+        });
+
+        toolbar.setOnMenuItemClickListener(item -> {
+            onMenuItemClick(item);
+            return true;
+        });
+
         et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         Handler debounceHandler = new Handler();
         final TextWatcher watcher = new TextWatcher() {
@@ -116,8 +131,6 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
             }
         };
         et.addTextChangedListener(watcher);
-
-        // TODO: 6/30/21 TTS ToolBar action button
 
         final Intent intent = getIntent();
         if ((dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)) == -1) {
@@ -178,29 +191,13 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(@NotNull Menu menu) {
-        MenuItem item = menu.findItem(R.id.speak_switch);
-        Switch speakSwitch = new Switch(this);
-        speakSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            speak = isChecked;
-            if (isChecked) {
-                tts = new TextToSpeech(DiaryTakingActivity.this, null);
-            }
-        });
-        speakSwitch.setText(R.string.voice);
-        item.setActionView(speakSwitch);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         final MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.diary_taking_actionbar, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    private void onMenuItemClick(@NotNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.record_time) {
 
@@ -214,7 +211,6 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
             startActivity(intent);
 
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
