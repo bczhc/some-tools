@@ -32,9 +32,6 @@ android {
         ndk {
             abiFilters "arm64-v8a"
         }
-        flavorDimensions '1'
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
@@ -42,7 +39,6 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles 'proguard-rules-debug.pro'
-            testCoverageEnabled true
         }
         release {
             //noinspection GroovyAssignabilityCheck
@@ -57,22 +53,19 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-        return true
     }
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
-        return true
     }
 
-    def ndkDir, sdkDir = android.sdkDirectory
+    def ndkDir
+    def sdkDir = android.sdkDirectory
     try {
         ndkDir = android.ndkDirectory
     } catch (def ignored) {
-        println "Please define ndk.dir in local.properties"
-        return
+        throw new GradleException("Please define ndk.dir in local.properties")
     }
-
 
     def list = [ndkDir, sdkDir]
     def tools = BuildUtils.Tools.newInstance(list as Object[])
@@ -85,7 +78,6 @@ android {
             setPath(file('src/main/jni/cpp/CMakeLists.txt'))
         }
     }
-    return true
 }
 
 

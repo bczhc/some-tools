@@ -1206,12 +1206,12 @@ public class PaintView extends View {
     }
 
     public void closePathDatabase() {
+        if (pathSaver == null) return;
         try {
             pathSaver.pathStatement.release();
         } catch (Exception e) {
-            Common.showException(e, (Activity) ctx);
+            Common.showException(e, ctx);
         }
-        if (pathSaver == null) return;
         try {
             pathSaver.commitDatabase();
         } catch (Exception e) {

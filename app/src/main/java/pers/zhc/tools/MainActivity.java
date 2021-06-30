@@ -17,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.bus.BusQueryMainActivity;
 import pers.zhc.tools.clipboard.Clip;
-import pers.zhc.tools.codecs.CodecsActivity;
 import pers.zhc.tools.crashhandler.CrashTest;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
@@ -137,7 +136,6 @@ public class MainActivity extends BaseActivity {
         LinearLayout ll = findViewById(R.id.ll);
 
         AnActivity[] activities = {
-                new AnActivity(R.string.some_codecs, CodecsActivity.class),
                 new AnActivity(R.string.generate_pi, Pi.class),
                 new AnActivity(R.string.toast, ToastTest.class),
                 new AnActivity(R.string.put_in_clipboard, Clip.class),

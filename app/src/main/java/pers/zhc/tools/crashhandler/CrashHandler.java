@@ -7,7 +7,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 
 import java.io.File;
@@ -87,7 +86,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private void getExceptionStackTraceString(@NotNull StringBuilder sb, @NotNull Thread t, @NotNull Throwable e) {
         StackTraceElement[] ses = e.getStackTrace();
-        sb.append("Exception in thread \"").append(t.getName()).append("\" ").append(e.toString()).append('\n');
+        sb.append("Exception in thread \"").append(t.getName()).append("\" ").append(e).append('\n');
         for (StackTraceElement se : ses) {
             sb.append("\tat ").append(se).append('\n');
         }
