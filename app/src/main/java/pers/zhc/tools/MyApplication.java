@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import androidx.appcompat.app.AppCompatDelegate;
+import pers.zhc.tools.diary.DiaryDatabase;
 
 /**
  * @author bczhc
@@ -19,6 +20,12 @@ public class MyApplication extends Application {
         registerNotificationChannel();
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+
+        init();
+    }
+
+    private void init() {
+        DiaryDatabase.init(this);
     }
 
     private void registerNotificationChannel() {

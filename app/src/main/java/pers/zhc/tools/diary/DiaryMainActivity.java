@@ -36,6 +36,7 @@ import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static pers.zhc.tools.diary.DiaryDatabase.internalDatabasePath;
 
 /**
  * @author bczhc
@@ -51,7 +52,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         final SQLite3 passwordDatabase = openPasswordDatabase();
         passwordDatabase.exec("SELECT digest FROM password where k='diary'", contents -> {
             currentPasswordDigest = contents[0];
@@ -326,17 +326,14 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         }
     }
 
-    private void importDiary(File file) {
-        final DiaryDatabaseRef diaryDatabaseRef = DiaryBaseActivity.Companion.getDiaryDatabaseRef();
-
-        final int refCount = diaryDatabaseRef.getRefCount();
+    private void importDiary(@NotNull File file) {
+        final int refCount = DiaryDatabase.Companion.getHolder().getRefCount();
         // the only one reference is for the current activity
         if (refCount > 1) {
             ToastUtils.show(this, getString(R.string.diary_import_ref_count_not_zero_msg, refCount));
             return;
         }
-        diaryDatabaseRef.countDownRef();
-        Common.doAssertion(diaryDatabaseRef.isAbandoned());
+        DiaryDatabase.Companion.releaseDatabaseRef();
 
         final SpinLatch latch = new SpinLatch();
         latch.suspend();
@@ -357,8 +354,8 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             ToastUtils.show(this, R.string.corrupted_database_and_recreate_new_msg);
         }
 
-        setDatabase(internalDatabasePath);
-        diaryDatabaseRef.countRef();
+        DiaryDatabase.Companion.changeDatabase(file.getPath());
+        diaryDatabase = DiaryDatabase.Companion.getDatabaseRef();
         refreshList();
     }
 
