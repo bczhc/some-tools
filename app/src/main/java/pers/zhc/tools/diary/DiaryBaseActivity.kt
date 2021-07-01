@@ -148,9 +148,11 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
         diaryDatabaseRef.countRef()
         this.diaryDatabase = diaryDatabaseRef.database
 
-        val actionBar = this.supportActionBar!!
-        actionBar.setDisplayHomeAsUpEnabled(true)
-        actionBar.setDisplayShowHomeEnabled(true)
+        val actionBar = this.supportActionBar
+        actionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
     }
 
     override fun finish() {

@@ -2,7 +2,6 @@ package pers.zhc.tools.diary;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
@@ -65,6 +64,21 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         updateStatement = this.diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?");
 
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
+        MaterialToolbar toolbar = findViewById(R.id.tool_bar);
+        charactersCountTV = toolbar.findViewById(R.id.text_count_tv);
+        SwitchMaterial ttsSwitch = toolbar.findViewById(R.id.tts_switch);
+        ttsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            speak = isChecked;
+            if (isChecked) {
+                tts = new TextToSpeech(DiaryTakingActivity.this, null);
+            }
+        });
+
+        toolbar.setOnMenuItemClickListener(item -> {
+            onMenuItemClick(item);
+            return true;
+        });
+
         et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
         ttsReplaceDict = new HashMap<>();
@@ -97,6 +111,15 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (ttsReplaceDict == null) {
+                    ttsReplaceDict = new HashMap<>();
+                    ttsReplaceDict.put("。", "句点");
+                    ttsReplaceDict.put("，", "逗号");
+                    ttsReplaceDict.put("\n", "换行");
+                    ttsReplaceDict.put("[", "左方括号");
+                    ttsReplaceDict.put("]", "右方括号");
+                }
+
                 if (speak) {
                     if (count < before) {
                         //delete
@@ -117,22 +140,6 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
             }
         };
         et.addTextChangedListener(watcher);
-
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(R.string.diary);
-            charactersCountTV = new TextView(this);
-            charactersCountTV.setTextColor(Color.WHITE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                charactersCountTV.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-            }
-            actionBar.setCustomView(charactersCountTV);
-            actionBar.show();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
 
         final Intent intent = getIntent();
         if ((dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)) == -1) {
@@ -207,29 +214,13 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(@NotNull Menu menu) {
-        MenuItem item = menu.findItem(R.id.speak_switch);
-        SwitchMaterial speakSwitch = new SwitchMaterial(this);
-        speakSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            speak = isChecked;
-            if (isChecked) {
-                tts = new TextToSpeech(DiaryTakingActivity.this, null);
-            }
-        });
-        speakSwitch.setText(R.string.voice);
-        item.setActionView(speakSwitch);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         final MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.diary_taking_actionbar, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    private void onMenuItemClick(@NotNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.record_time) {
 
@@ -243,7 +234,6 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
             startActivity(intent);
 
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

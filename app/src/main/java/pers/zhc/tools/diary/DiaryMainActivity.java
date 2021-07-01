@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -87,11 +86,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
                 }
             }
         });
-
-        final ActionBar actionBar = this.getSupportActionBar();
-        Common.doAssertion(actionBar != null);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(false);
     }
 
     private void load() {
@@ -99,13 +93,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         setContentView(R.layout.diary_activity);
         invalidateOptionsMenu();
         recyclerView = findViewById(R.id.recycler_view);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(R.string.diary);
-            actionBar.show();
-        }
         loadRecyclerView();
     }
 

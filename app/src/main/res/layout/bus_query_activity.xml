@@ -6,11 +6,13 @@
               android:layout_height="match_parent">
     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
     >
-        <pers.zhc.tools.views.SmartHintEditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                                                android:id="@+id/line_num_et"
-                                                android:inputType="number"
-                                                app:hint="@string/bus_line_edit_text_hint"
-                                                android:layout_toStartOf="@id/query_btn"
+        <pers.zhc.tools.views.SmartHintEditText
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:id="@+id/line_num_et"
+                android:inputType="number"
+                app:hint="@string/bus_line_edit_text_hint"
+                android:layout_toStartOf="@id/query_btn"
+                style="@style/Widget.Application.TextInputLayout.FilledBox"
         />
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="@string/bus_query_btn"

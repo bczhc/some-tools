@@ -42,8 +42,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTheme(R.style.AppThemeWithBar);
-
         app.addActivity(this);
         CrashHandler.install(this);
 //        ExternalJNI.ex(this);
@@ -61,7 +59,7 @@ public class BaseActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        setTheme(R.style.DarkTheme);
+        setTheme(R.style.Theme_Application);
     }
 
     protected void checkForUpdate() {

@@ -2,8 +2,10 @@ package pers.zhc.tools.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.text_input_edit_text.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
 
@@ -20,9 +22,13 @@ class SmartHintEditText : TextInputLayout {
     }
 
     private fun init(attrs: AttributeSet?) {
-        mET = EditText(context)
+        mET = View.inflate(context, R.layout.text_input_edit_text, null).et!!
         if (attrs != null) {
-            val inputType = attrs.getAttributeIntValue("http://schemas.android.com/apk/res/android", "inputType", 0x20001/* textMultiLine */)
+            val inputType = attrs.getAttributeIntValue(
+                "http://schemas.android.com/apk/res/android",
+                "inputType",
+                0x20001/* textMultiLine */
+            )
             val ta = context.obtainStyledAttributes(attrs, R.styleable.SmartHintEditText)
             val hint = ta.getString(R.styleable.SmartHintEditText_hint)
             val text = ta.getText(R.styleable.SmartHintEditText_text)
