@@ -79,6 +79,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         ttsReplaceDict.put("’", "下引号");
         ttsReplaceDict.put(" ", "空格");
         ttsReplaceDict.put("、", "顿号");
+        ttsReplaceDict.put("……", "省略号");
 
         Handler debounceHandler = new Handler();
         final TextWatcher watcher = new TextWatcher() {
