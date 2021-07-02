@@ -1,8 +1,6 @@
 package pers.zhc.tools.diary;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,40 +9,30 @@ import android.text.TextWatcher;
 import android.view.*;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
-import kotlin.Unit;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.diary.fragments.AttachmentFragment;
 import pers.zhc.tools.diary.fragments.DiaryFragment;
 import pers.zhc.tools.diary.fragments.FileLibraryFragment;
 import pers.zhc.tools.jni.JNI;
-import pers.zhc.tools.utils.*;
+import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtil;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.tools.views.SmartHintEditText;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * @author bczhc
@@ -168,7 +156,9 @@ public class DiaryMainActivity extends DiaryBaseActivity {
 
             } else if (itemId == R.id.attachment) {
 
-                fragmentManager.beginTransaction().replace(R.id.diary_fragment_container, new AttachmentFragment()).commit();
+                fragmentManager.beginTransaction().replace(R.id.diary_fragment_container,
+                        new AttachmentFragment(false, false, -1)
+                ).commit();
                 toolbar.setTitle(R.string.attachment);
                 currentMenuRes = R.menu.diary_attachment_actionbar;
                 invalidateOptionsMenu();
@@ -285,11 +275,5 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         final String digest = getPasswordDigest(db);
         db.close();
         return digest;
-    }
-
-    private void changeDate(int oldDateString, int newDate) {
-        diaryDatabase.execBind("UPDATE diary\n" +
-                "SET \"date\"=?\n" +
-                "WHERE \"date\" IS ?", new Object[]{newDate, oldDateString});
     }
 }

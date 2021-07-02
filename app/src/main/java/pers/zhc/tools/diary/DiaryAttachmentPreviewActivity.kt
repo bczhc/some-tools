@@ -2,7 +2,6 @@ package pers.zhc.tools.diary
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.diary_attachment_preview_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
@@ -48,7 +47,6 @@ WHERE attachment_id IS ?""",
         while (cursor2.step()) {
             val identifier = cursor2.getText(0)
             val filePreviewView = FileLibraryActivity.getFilePreviewView(this, diaryDatabase, identifier)
-            filePreviewView.background = ContextCompat.getDrawable(this, R.drawable.view_stroke)
             filePreviewView.setOnClickListener {
                 val startIntent = Intent(this, FileLibraryFileDetailActivity::class.java)
                 startIntent.putExtra(FileLibraryFileDetailActivity.EXTRA_IDENTIFIER, identifier)

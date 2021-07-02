@@ -7,7 +7,9 @@
         android:padding="5dp"
         android:background="@drawable/clickable_view_stroke"
         android:id="@+id/ll"
-        tools:ignore="InnerclassSeparator">
+        tools:ignore="InnerclassSeparator"
+        android:clickable="true"
+>
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/filename_tv"
               android:textSize="20sp"

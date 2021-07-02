@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.diary_content_preview_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
 import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @author bczhc
@@ -39,7 +40,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
 
         showBottomAttachment()
 
-        val formatter = SimpleDateFormat(getString(R.string.diary_preview_with_date_format_title))
+        val formatter = SimpleDateFormat(getString(R.string.diary_preview_with_date_format_title), Locale.US)
         val format = formatter.format(getDateFromDateInt(dateInt))
         title = format
     }

@@ -48,7 +48,7 @@ class DiaryFragment : DiaryBaseFragment() {
 
     private fun loadRecyclerView() {
         Thread {
-            queryDiaryRecord()
+            refreshItemDataList()
         }.start()
 
         Common.runOnUiThread(requireContext()) {
@@ -146,7 +146,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         startActivityForResult(intent, RequestCode.START_ACTIVITY_3)
     }
 
-    private fun queryDiaryRecord() {
+    private fun refreshItemDataList() {
         diaryItemDataList.clear()
 
         val statement = diaryDatabase.compileStatement(
@@ -356,7 +356,7 @@ WHERE "date" IS ?"""
     }
 
     private fun refreshList() {
-        queryDiaryRecord()
+        refreshItemDataList()
         recyclerViewAdapter.notifyDataSetChanged()
     }
 
