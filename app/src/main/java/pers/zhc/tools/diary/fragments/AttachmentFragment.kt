@@ -19,7 +19,6 @@ import pers.zhc.tools.diary.fragments.AttachmentFragment.Companion.EXTRA_PICK_MO
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.sqlite.SQLite3
 import pers.zhc.tools.utils.sqlite.Statement
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -55,14 +54,6 @@ class AttachmentFragment(
 
         checkAttachmentInfoRecord()
         refreshItemDataList()
-
-        if (fromDiary) {
-            (activity as DiaryBaseActivity).actionBar?.title =
-                SimpleDateFormat(getString(R.string.diary_attachment_with_date_format_title), Locale.US).format(
-                    DiaryBaseActivity.getDateFromDateInt(dateInt)
-                )
-        }
-
         loadRecyclerView()
 
         return inflate
@@ -158,7 +149,7 @@ WHERE diary_attachment_mapping.diary_date IS ?"""
         when (item.itemId) {
             R.id.add -> {
                 if (fromDiary) {
-                    val intent = Intent(context, this.javaClass)
+                    val intent = Intent(context, DiaryAttachmentActivity::class.java)
                     intent.putExtra(EXTRA_PICK_MODE, true)
                     startActivityForResult(intent, BaseActivity.RequestCode.START_ACTIVITY_0)
                 } else {

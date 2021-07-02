@@ -286,7 +286,7 @@
         </activity>
         <activity
                 android:name=".diary.DiaryMainActivity"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale|screenLayout"
                 android:label="@string/diary"
                 android:theme="@style/Theme.Application.NoActionBar">
             <intent-filter>

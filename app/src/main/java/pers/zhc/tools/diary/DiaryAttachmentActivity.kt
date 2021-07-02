@@ -1,12 +1,12 @@
 package pers.zhc.tools.diary
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import kotlinx.android.synthetic.main.diary_attachment_activity.*
-import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.fragments.AttachmentFragment
 import pers.zhc.tools.utils.*
+import java.text.SimpleDateFormat
 import java.util.*
 
 class DiaryAttachmentActivity : DiaryBaseActivity() {
@@ -21,9 +21,33 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         val fromDiary = intent.getBooleanExtra(AttachmentFragment.EXTRA_FROM_DIARY, false)
         val pickMode = intent.getBooleanExtra(AttachmentFragment.EXTRA_PICK_MODE, false)
 
+        if (fromDiary) {
+            supportActionBar?.title =
+                SimpleDateFormat(getString(R.string.diary_attachment_with_date_format_title), Locale.US).format(
+                    getDateFromDateInt(dateInt)
+                )
+        }
+
         val attachmentFragment = AttachmentFragment(fromDiary, pickMode, dateInt)
+        attachmentFragment.setOnItemPickListener {
+            val intent = Intent()
+            intent.putExtra(EXTRA_PICKED_ATTACHMENT_ID, it)
+            setResult(0, intent)
+            finish()
+        }
+
         val manager = supportFragmentManager
         manager.beginTransaction().add(R.id.container, attachmentFragment).commit()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.diary_attachment_actionbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        return false
     }
 
     companion object {
