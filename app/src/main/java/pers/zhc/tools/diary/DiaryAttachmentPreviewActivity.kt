@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.diary_attachment_preview_activity.*
 import pers.zhc.tools.R
+import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.utils.Common
 
 /**
@@ -46,7 +47,7 @@ WHERE attachment_id IS ?""",
         val cursor2 = statement2.cursor
         while (cursor2.step()) {
             val identifier = cursor2.getText(0)
-            val filePreviewView = FileLibraryActivity.getFilePreviewView(this, diaryDatabase, identifier)
+            val filePreviewView = FileLibraryFragment.getFilePreviewView(this, diaryDatabase, identifier)
             filePreviewView.setOnClickListener {
                 val startIntent = Intent(this, FileLibraryFileDetailActivity::class.java)
                 startIntent.putExtra(FileLibraryFileDetailActivity.EXTRA_IDENTIFIER, identifier)

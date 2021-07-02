@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.R
+import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.utils.ToastUtils
 
 class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
@@ -89,7 +90,7 @@ VALUES (?, ?)"""
                     ToastUtils.show(this, R.string.diary_attachment_library_duplicate_toast)
                     return
                 }
-                val filePreviewView = FileLibraryActivity.getFilePreviewView(this, diaryDatabase, identifier)
+                val filePreviewView = FileLibraryFragment.getFilePreviewView(this, diaryDatabase, identifier)
                 filePreviewView.background = ContextCompat.getDrawable(this, R.drawable.view_stroke)
                 fileListLL.addView(filePreviewView)
                 fileIdentifierList.add(identifier)

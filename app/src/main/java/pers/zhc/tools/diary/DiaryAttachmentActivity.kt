@@ -29,12 +29,6 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         }
 
         val attachmentFragment = AttachmentFragment(fromDiary, pickMode, dateInt)
-        attachmentFragment.setOnItemPickListener {
-            val intent = Intent()
-            intent.putExtra(EXTRA_PICKED_ATTACHMENT_ID, it)
-            setResult(0, intent)
-            finish()
-        }
 
         val manager = supportFragmentManager
         manager.beginTransaction().add(R.id.container, attachmentFragment).commit()

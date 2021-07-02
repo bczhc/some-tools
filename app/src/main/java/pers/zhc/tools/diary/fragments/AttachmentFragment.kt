@@ -41,7 +41,6 @@ class AttachmentFragment(
      */
     private var dateInt: Int = -1
 ) : DiaryBaseFragment() {
-    private var onItemPickedListener: OnItemPickedListener? = null
     private lateinit var itemAdapter: MyAdapter
     private val itemDataList = ArrayList<ItemData>()
 
@@ -67,7 +66,12 @@ class AttachmentFragment(
         itemAdapter.setOnItemClickListener { position, _ ->
             val id = itemDataList[position].id
             if (pickMode) {
-                onItemPickedListener?.invoke(id)
+                activity?.apply {
+                    val intent = Intent()
+                    intent.putExtra(DiaryAttachmentActivity.EXTRA_PICKED_ATTACHMENT_ID, id)
+                    setResult(0, intent)
+                    finish()
+                }
             } else {
                 val intent = Intent(context, DiaryAttachmentPreviewActivity::class.java)
                 intent.putExtra(DiaryAttachmentPreviewActivity.EXTRA_ATTACHMENT_ID, id)
@@ -254,13 +258,6 @@ VALUES (?, ?)"""
         statement.release()
     }
 
-    /**
-     * Set the listener which will be invoked when [pickMode] is true and an attachment item is clicked
-     */
-    fun setOnItemPickListener(listener: OnItemPickedListener) {
-        onItemPickedListener = listener
-    }
-
     class ItemData(val title: String, val description: String, val id: Long)
 
     class MyAdapter(private val context: Context, private val itemDataList: List<ItemData>) :
@@ -350,5 +347,3 @@ WHERE diary_date IS ?
         const val EXTRA_FROM_DIARY = "fromDiary"
     }
 }
-
-typealias OnItemPickedListener = (attachmentId: Long) -> Unit

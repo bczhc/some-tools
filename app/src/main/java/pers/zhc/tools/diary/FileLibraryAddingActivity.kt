@@ -6,10 +6,11 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import kotlinx.android.synthetic.main.diary_attachment_file_library_adding_file_activity.*
-import kotlinx.android.synthetic.main.diary_attachment_file_library_adding_file_activity_file_mode.view.*
-import kotlinx.android.synthetic.main.diary_attachment_file_library_adding_file_activity_text_mode.view.*
+import kotlinx.android.synthetic.main.diary_attachment_adding_activity.description_et
 import kotlinx.android.synthetic.main.diary_file_library_add_progress_view.view.*
+import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity.*
+import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_file_mode.view.*
+import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_text_mode.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.DialogUtil
@@ -30,7 +31,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_attachment_file_library_adding_file_activity)
+        setContentView(R.layout.diary_file_library_adding_file_activity)
 
         descriptionET = description_et!!
         val submitBtn = submit_btn!!
@@ -200,7 +201,7 @@ VALUES (?, ?)""", arrayOf(identifier, content))
     private fun changeTopView(storageType: StorageType) {
         val view = if (storageType == StorageType.TEXT) {
             val inflate =
-                View.inflate(this, R.layout.diary_attachment_file_library_adding_file_activity_text_mode, null)
+                View.inflate(this, R.layout.diary_file_library_adding_file_activity_text_mode, null)
             inflate.enter_text_btn.setOnClickListener {
                 val intent = Intent(this, DiaryFileLibraryEditTextActivity::class.java)
                 intent.putExtra(DiaryFileLibraryEditTextActivity.EXTRA_INITIAL_TEXT, this.text)
@@ -209,7 +210,7 @@ VALUES (?, ?)""", arrayOf(identifier, content))
             inflate
         } else {
             val inflate =
-                View.inflate(this, R.layout.diary_attachment_file_library_adding_file_activity_file_mode, null)
+                View.inflate(this, R.layout.diary_file_library_adding_file_activity_file_mode, null)
             inflate.pick_file_btn.setOnClickListener {
                 val intent = Intent(this, FilePicker::class.java)
                 intent.putExtra("option", FilePicker.PICK_FILE)

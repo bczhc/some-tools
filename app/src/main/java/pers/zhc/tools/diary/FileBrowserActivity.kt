@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import pers.zhc.tools.R
-import pers.zhc.tools.diary.FileLibraryActivity.Companion.getTextContent
+import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.views.ScalableImageView
 import java.io.File
@@ -24,7 +24,7 @@ class FileBrowserActivity : DiaryBaseActivity() {
 
         when (StorageType.get(fileInfo.storageTypeEnumInt)) {
             StorageType.TEXT -> {
-                val tv = getTextFileContentView(getTextContent(diaryDatabase, fileInfo.identifier))
+                val tv = getTextFileContentView(FileLibraryFragment.getTextContent(diaryDatabase, fileInfo.identifier))
                 setContentView(tv)
             }
             StorageType.RAW -> {
