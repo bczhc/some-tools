@@ -107,11 +107,6 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="pers.zhc.tools.codecs.Settings"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/settings"
-                android:theme="@style/Theme.Application"/>
-        <activity
                 android:name="pers.zhc.tools.pi.Pi"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application">
@@ -135,17 +130,6 @@
         </activity>
         <activity
                 android:name="pers.zhc.tools.clipboard.Clip"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-
-            </intent-filter>
-        </activity>
-        <activity
-                android:name="pers.zhc.tools.codecs.CodecsActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application">
             <intent-filter>
@@ -304,7 +288,7 @@
                 android:name=".diary.DiaryMainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/Theme.Application">
+                android:theme="@style/Theme.Application.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 

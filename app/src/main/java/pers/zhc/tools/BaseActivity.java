@@ -5,20 +5,13 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.LinkedList;
-import java.util.Stack;
-
 import pers.zhc.tools.crashhandler.CrashHandler;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.PermissionRequester;
@@ -83,7 +76,7 @@ public class BaseActivity extends AppCompatActivity {
      *                   而对于其他配置的更改，则系统会onDestroy()当前Activity，然后重启一个新的Activity实例。
      */
     @Override
-    public void onConfigurationChanged(@NotNull Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull @NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // 检测屏幕的方向：纵向或横向
         if (this.getResources().getConfiguration().orientation

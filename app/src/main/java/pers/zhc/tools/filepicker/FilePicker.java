@@ -16,16 +16,19 @@ import java.io.File;
 
 /**
  * @author bczhc
- * <p>Put a string extra whose key is "option" and value is {@link FilePicker#PICK_FILE} or {@link FilePicker#PICK_FOLDER}
+ * <p>Put a string extra whose key is {@link FilePicker#EXTRA_OPTION} and value is {@link FilePicker#PICK_FILE} or {@link FilePicker#PICK_FOLDER}
  * to the intent before starting this activity by invoking {@link AppCompatActivity#startActivityForResult(Intent, int)}</p>
  * <p>The data it returns in {@link AppCompatActivity#onActivityResult(int, int, Intent)} has a string extra
- * whose key is "result" and value is the picked file or folder.</p><br/>
+ * whose key is {@link FilePicker#EXTRA_RESULT} and value is the picked file or folder.</p><br/>
  */
 public class FilePicker extends BaseActivity {
     public static final int PICK_FILE = 1;
     public static final int PICK_FOLDER = 2;
     public static final int RESULT_CODE = 3;
     private FilePickerRelativeLayout filePickerRelativeLayout;
+
+    public static final String EXTRA_OPTION = "option";
+    public static final String EXTRA_RESULT = "result";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +56,17 @@ public class FilePicker extends BaseActivity {
         String initialPath = intent.getStringExtra("initialPath");
         initialPath = initialPath == null ? Common.getExternalStoragePath(this) : initialPath;
         filePickerRelativeLayout = new FilePickerRelativeLayout(this
-                , intent.getIntExtra("option", PICK_FILE)
+                , intent.getIntExtra(EXTRA_OPTION, PICK_FILE)
                 , new File(initialPath)
                 , () -> {
             Intent r = new Intent();
-            r.putExtra("result", (String) null);
+            r.putExtra(EXTRA_RESULT, (String) null);
             setResult(RESULT_CODE, r);
             finish();
             overridePendingTransition(0, R.anim.fade_out);
         }, s -> {
             Intent r = new Intent();
-            r.putExtra("result", s);
+            r.putExtra(EXTRA_RESULT, s);
             setResult(RESULT_CODE, r);
             finish();
             overridePendingTransition(0, R.anim.fade_out);

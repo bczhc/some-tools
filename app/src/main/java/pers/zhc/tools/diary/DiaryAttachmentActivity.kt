@@ -66,55 +66,51 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = itemAdapter
 
-        itemAdapter.setOnItemClickListener(object : OnItemClickListener {
-            override fun onClick(position: Int, view: View) {
-                val id = itemDataList[position].id
-                if (pickMode) {
-                    val resultIntent = Intent()
-                    resultIntent.putExtra(EXTRA_PICKED_ATTACHMENT_ID, id)
-                    setResult(0, resultIntent)
-                    finish()
-                } else {
-                    val intent = Intent(this@DiaryAttachmentActivity, DiaryAttachmentPreviewActivity::class.java)
-                    intent.putExtra(DiaryAttachmentPreviewActivity.EXTRA_ATTACHMENT_ID, id)
-                    startActivity(intent)
-                }
+        itemAdapter.setOnItemClickListener { position, _ ->
+            val id = itemDataList[position].id
+            if (pickMode) {
+                val resultIntent = Intent()
+                resultIntent.putExtra(EXTRA_PICKED_ATTACHMENT_ID, id)
+                setResult(0, resultIntent)
+                finish()
+            } else {
+                val intent = Intent(this@DiaryAttachmentActivity, DiaryAttachmentPreviewActivity::class.java)
+                intent.putExtra(DiaryAttachmentPreviewActivity.EXTRA_ATTACHMENT_ID, id)
+                startActivity(intent)
             }
-        })
+        }
 
-        itemAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
-            override fun onLongClick(position: Int, view: View) {
-                val itemData = itemDataList[position]
-                val id = itemData.id
+        itemAdapter.setOnItemLongClickListener { position, view ->
+            val itemData = itemDataList[position]
+            val id = itemData.id
 
-                val popupMenu =
-                    PopupMenuUtil.createPopupMenu(this@DiaryAttachmentActivity, view, R.menu.deletion_popup_menu)
-                popupMenu.show()
+            val popupMenu =
+                PopupMenuUtil.createPopupMenu(this@DiaryAttachmentActivity, view, R.menu.deletion_popup_menu)
+            popupMenu.show()
 
-                popupMenu.setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.delete_btn -> {
-                            DialogUtil.createConfirmationAlertDialog(this@DiaryAttachmentActivity, { _, _ ->
-                                // TODO check for the existence of diary attachment in diary table... (???)
-                                if (fromDiary) {
-                                    // delete from diary attached attachment records
-                                    Common.doAssertion(dateInt != -1)
-                                    deleteAttachedAttachment(diaryDatabase, dateInt, id)
-                                } else {
-                                    // delete from the attachment library
-                                    deleteAttachment(diaryDatabase, id)
-                                }
-                                itemDataList.removeAt(position)
-                                itemAdapter.notifyItemRemoved(position)
-                            }, R.string.whether_to_delete).show()
-                        }
-                        else -> {
-                        }
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.delete_btn -> {
+                        DialogUtil.createConfirmationAlertDialog(this@DiaryAttachmentActivity, { _, _ ->
+                            // TODO check for the existence of diary attachment in diary table... (???)
+                            if (fromDiary) {
+                                // delete from diary attached attachment records
+                                Common.doAssertion(dateInt != -1)
+                                deleteAttachedAttachment(diaryDatabase, dateInt, id)
+                            } else {
+                                // delete from the attachment library
+                                deleteAttachment(diaryDatabase, id)
+                            }
+                            itemDataList.removeAt(position)
+                            itemAdapter.notifyItemRemoved(position)
+                        }, R.string.whether_to_delete).show()
                     }
-                    return@setOnMenuItemClickListener true
+                    else -> {
+                    }
                 }
+                return@setOnMenuItemClickListener true
             }
-        })
+        }
     }
 
     private fun refreshItemDataList() {

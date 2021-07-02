@@ -10,16 +10,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toolbar;
 import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.diary.DiaryBaseActivity;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 /**
  * @author bczhc
  */
-public class Demo extends BaseActivity {
+public class Demo extends DiaryBaseActivity {
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

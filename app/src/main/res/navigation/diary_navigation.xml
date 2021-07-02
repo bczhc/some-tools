@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/diary_navigation"
+            app:startDestination="@id/diary"
+            xmlns:tools="http://schemas.android.com/tools"
+>
+    <fragment
+            android:name="pers.zhc.tools.diary.fragments.DiaryFragment"
+            tools:layout="@layout/diary_main_diary_fragment"
+    />
+</navigation>

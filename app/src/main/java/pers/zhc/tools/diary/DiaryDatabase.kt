@@ -2,6 +2,7 @@ package pers.zhc.tools.diary
 
 import android.content.Context
 import org.intellij.lang.annotations.Language
+import pers.zhc.tools.MyApplication
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.RefCountHolder
 import pers.zhc.tools.utils.sqlite.SQLite3

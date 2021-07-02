@@ -8,7 +8,7 @@
             android:layout_height="wrap_content"
             app:title="@string/diary"
             app:menu="@menu/diary_taking_actionbar"
-            android:id="@+id/tool_bar"
+            android:id="@+id/toolbar"
             style="@style/Theme.Application.Toolbar.Primary"
     >
         <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -38,6 +38,6 @@
             app:gravity="top"
             app:hint="@string/content"
             android:fillViewport="true"
-            android:layout_below="@id/tool_bar"
+            android:layout_below="@id/toolbar"
     />
 </RelativeLayout>

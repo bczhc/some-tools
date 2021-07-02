@@ -24,13 +24,5 @@
             android:id="@+id/sort"
             android:title="@string/sort"
             app:showAsAction="never"/>
-    <item
-            android:id="@+id/attachment"
-            android:title="@string/diary_attachment_library_menu_btn_text"
-            app:showAsAction="never"/>
-    <item
-            android:id="@+id/settings"
-            android:title="@string/settings"
-            app:showAsAction="never"
-    />
+
 </menu>

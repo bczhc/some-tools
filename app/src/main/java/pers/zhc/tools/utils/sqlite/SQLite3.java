@@ -1,5 +1,6 @@
 package pers.zhc.tools.utils.sqlite;
 
+import android.database.sqlite.SQLiteException;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.jni.JNI;
 
@@ -30,6 +31,10 @@ public class SQLite3 {
     }
 
     public void close() {
+        if (isClosed) {
+            throw new SQLiteException("Already closed");
+        }
+
         JNI.Sqlite3.close(this.id);
         isClosed = true;
     }

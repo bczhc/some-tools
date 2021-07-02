@@ -41,53 +41,49 @@ class FileLibraryActivity : DiaryBaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = recyclerViewAdapter
 
-        recyclerViewAdapter.setOnItemClickListener(object : OnItemClickListener {
-            override fun onClick(position: Int, view: View) {
-                val itemData = itemDataList[position]
-                val fileInfo = itemData.fileInfo
+        recyclerViewAdapter.setOnItemClickListener { position, _ ->
+            val itemData = itemDataList[position]
+            val fileInfo = itemData.fileInfo
 
-                // check file existence if storage type is file
-                if (fileInfo.storageTypeEnumInt != StorageType.TEXT.enumInt) {
-                    val storedFile = File(getFileStoredPath(diaryDatabase, fileInfo.identifier))
-                    if (!storedFile.exists()) {
-                        showFileNotExistDialog(this@FileLibraryActivity, diaryDatabase, fileInfo.identifier)
-                        return
-                    }
-                }
-                if (pickMode) {
-                    val resultIntent = Intent()
-                    resultIntent.putExtra(EXTRA_PICKED_FILE_IDENTIFIER, fileInfo.identifier)
-                    setResult(0, resultIntent)
-                    finish()
-                } else {
-                    val intent = Intent(this@FileLibraryActivity, FileLibraryFileDetailActivity::class.java)
-                    intent.putExtra(FileLibraryFileDetailActivity.EXTRA_IDENTIFIER, fileInfo.identifier)
-                    startActivity(intent)
+            // check file existence if storage type is file
+            if (fileInfo.storageTypeEnumInt != StorageType.TEXT.enumInt) {
+                val storedFile = File(getFileStoredPath(diaryDatabase, fileInfo.identifier))
+                if (!storedFile.exists()) {
+                    showFileNotExistDialog(this@FileLibraryActivity, diaryDatabase, fileInfo.identifier)
+                    return@setOnItemClickListener
                 }
             }
-        })
-
-        recyclerViewAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
-            override fun onLongClick(position: Int, view: View) {
-                val itemData = itemDataList[position]
-                val fileInfo = itemData.fileInfo
-
-                val pm = PopupMenuUtil.createPopupMenu(this@FileLibraryActivity, view, R.menu.deletion_popup_menu)
-                pm.show()
-
-                pm.setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.delete_btn -> {
-                            showDeleteDialog(fileInfo.identifier, fileInfo.storageTypeEnumInt, position)
-                        }
-                        else -> {
-                        }
-                    }
-                    return@setOnMenuItemClickListener true
-                }
-                return
+            if (pickMode) {
+                val resultIntent = Intent()
+                resultIntent.putExtra(EXTRA_PICKED_FILE_IDENTIFIER, fileInfo.identifier)
+                setResult(0, resultIntent)
+                finish()
+            } else {
+                val intent = Intent(this@FileLibraryActivity, FileLibraryFileDetailActivity::class.java)
+                intent.putExtra(FileLibraryFileDetailActivity.EXTRA_IDENTIFIER, fileInfo.identifier)
+                startActivity(intent)
             }
-        })
+        }
+
+        recyclerViewAdapter.setOnItemLongClickListener { position, view ->
+            val itemData = itemDataList[position]
+            val fileInfo = itemData.fileInfo
+
+            val pm = PopupMenuUtil.createPopupMenu(this@FileLibraryActivity, view, R.menu.deletion_popup_menu)
+            pm.show()
+
+            pm.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.delete_btn -> {
+                        showDeleteDialog(fileInfo.identifier, fileInfo.storageTypeEnumInt, position)
+                    }
+                    else -> {
+                    }
+                }
+                return@setOnMenuItemClickListener true
+            }
+            return@setOnItemLongClickListener
+        }
     }
 
     private fun refreshItemDataList() {

@@ -64,7 +64,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         updateStatement = this.diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?");
 
         et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
-        MaterialToolbar toolbar = findViewById(R.id.tool_bar);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
         charactersCountTV = toolbar.findViewById(R.id.text_count_tv);
         SwitchMaterial ttsSwitch = toolbar.findViewById(R.id.tts_switch);
         ttsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -264,89 +264,6 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         save();
         updateStatement.release();
         super.finish();
-    }
-
-    static class MyDate {
-        private int year, month, day;
-
-        public MyDate(int dateInt) {
-            set(dateInt);
-        }
-
-        public MyDate(@NotNull int[] date) {
-            set(date);
-        }
-
-        public MyDate(@NotNull Date date) {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            this.year = calendar.get(Calendar.YEAR);
-            this.month = calendar.get(Calendar.MONTH) + 1;
-            this.day = calendar.get(Calendar.DAY_OF_MONTH);
-        }
-
-        public void set(int dateInt) {
-            year = dateInt / 10000;
-            month = (dateInt / 100) % 100;
-            day = dateInt % 100;
-        }
-
-        public void set(@NotNull int[] date) {
-            year = date[0];
-            month = date[1];
-            day = date[2];
-        }
-
-        public int getYear() {
-            return year;
-        }
-
-        public int getMonth() {
-            return month;
-        }
-
-        public int getDay() {
-            return day;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            MyDate myDate = (MyDate) o;
-
-            if (year != myDate.year) return false;
-            if (month != myDate.month) return false;
-            return day == myDate.day;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = year;
-            result = 31 * result + month;
-            result = 31 * result + day;
-            return result;
-        }
-
-        @NotNull
-        @Override
-        public String toString() {
-            return year + "." + month + '.' + day;
-        }
-
-        private String add0(int a) {
-            if (a < 10) return "0" + a;
-            return String.valueOf(a);
-        }
-
-        public String getDateIntString() {
-            return add0(year) + add0(month) + add0(day);
-        }
-
-        public int getDateInt() {
-            return year * 10000 + month * 100 + day;
-        }
     }
 
     private class ScheduledSaver implements Runnable {
