@@ -42,7 +42,7 @@ jobs:
           ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
       - name: Upload apk to Gitee
         run: |
-          git clone git@gitee.com:bczhc/store
+          git clone git@gitlab.com:bczhc/store
           cd store
           if [ ! -d apks ]; then
               mkdir apks
@@ -52,7 +52,7 @@ jobs:
           git config --global user.email "bczhc0@126.com"
           git config --global user.name "bczhc"
           git add some-tools.apk
-          git commit -m "Upload apk by GitHub Action on $(date)"
+          git commit -m "Upload apk from GitHub Action on $(date)"
           git push origin master -f
           cd ../..
       - name: Upload apk
