@@ -40,6 +40,7 @@ public class Common {
         handler.post(() -> ToastUtils.show(ctx, e.toString()));
     }
 
+    @NotNull
     public static String getExternalStoragePath(Context ctx) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             //noinspection deprecation

@@ -418,4 +418,8 @@
     <string name="uptime_is_">开机时间：%1$s</string>
     <string name="processes_count_is_">总进程数量：%1$d</string>
     <!-- module end -->
+
+    <!-- module: magic -->
+    <string name="magic_label">Magic</string>
+    <!-- module end -->
 </resources>

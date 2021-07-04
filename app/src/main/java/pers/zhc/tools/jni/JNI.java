@@ -349,4 +349,81 @@ public class JNI {
          */
         public static native short getProcessesCount();
     }
+
+    public static class Magic {
+        static {
+            loadLib();
+        }
+
+        public static final int MAGIC_NONE = 0x0000000; /* No flags */
+        public static final int MAGIC_DEBUG = 0x0000001; /* Turn on debugging */
+        public static final int MAGIC_SYMLINK = 0x0000002; /* Follow symlinks */
+        public static final int MAGIC_COMPRESS = 0x0000004; /* Check inside compressed files */
+        public static final int MAGIC_DEVICES = 0x0000008; /* Look at the contents of devices */
+        public static final int MAGIC_MIME_TYPE = 0x0000010; /* Return the MIME type */
+        public static final int MAGIC_CONTINUE = 0x0000020; /* Return all matches */
+        public static final int MAGIC_CHECK = 0x0000040; /* Print warnings to stderr */
+        public static final int MAGIC_PRESERVE_ATIME = 0x0000080; /* Restore access time on exit */
+        public static final int MAGIC_RAW = 0x0000100; /* Don't convert unprintable chars */
+        public static final int MAGIC_ERROR = 0x0000200; /* Handle ENOENT etc as real errors */
+        public static final int MAGIC_MIME_ENCODING = 0x0000400; /* Return the MIME encoding */
+        public static final int MAGIC_MIME = (MAGIC_MIME_TYPE | MAGIC_MIME_ENCODING);
+        public static final int MAGIC_APPLE = 0x0000800; /* Return the Apple creator/type */
+        public static final int MAGIC_EXTENSION = 0x1000000; /* Return a /-separated list of extensions */
+        public static final int MAGIC_COMPRESS_TRANSP = 0x2000000; /* Check inside compressed files but not report compression */
+        public static final int MAGIC_NODESC = (MAGIC_EXTENSION | MAGIC_MIME | MAGIC_APPLE);
+        public static final int MAGIC_NO_CHECK_COMPRESS = 0x0001000; /* Don't check for compressed files */
+        public static final int MAGIC_NO_CHECK_TAR = 0x0002000; /* Don't check for tar files */
+        public static final int MAGIC_NO_CHECK_SOFT = 0x0004000; /* Don't check magic entries */
+        public static final int MAGIC_NO_CHECK_APPTYPE = 0x0008000; /* Don't check application type */
+        public static final int MAGIC_NO_CHECK_ELF = 0x0010000; /* Don't check for elf details */
+        public static final int MAGIC_NO_CHECK_TEXT = 0x0020000; /* Don't check for text files */
+        public static final int MAGIC_NO_CHECK_CDF = 0x0040000; /* Don't check for cdf files */
+        public static final int MAGIC_NO_CHECK_CSV = 0x0080000; /* Don't check for CSV files */
+        public static final int MAGIC_NO_CHECK_TOKENS = 0x0100000; /* Don't check tokens */
+        public static final int MAGIC_NO_CHECK_ENCODING = 0x0200000; /* Don't check text encodings */
+        public static final int MAGIC_NO_CHECK_JSON = 0x0400000; /* Don't check for JSON files */
+
+        /**
+         * Initialize libmagic
+         *
+         * @param flag the default flag
+         * @return the native object pointer address
+         */
+        public static native long init(int flag);
+
+        /**
+         * Finalize libmagic
+         *
+         * @param addr native pointer
+         */
+        public static native void close(long addr);
+
+        /**
+         * Load the magic.mgc database file
+         *
+         * @param addr native pointer
+         * @param path filepath
+         * @throws RuntimeException on failure
+         */
+        public static native void load(long addr, String path) throws RuntimeException;
+
+        /**
+         * Set the flags that are used to describe a file<br>
+         * See the constant above
+         *
+         * @param addr native pointer
+         * @param flag flag
+         */
+        public static native void setFlag(long addr, int flag);
+
+        /**
+         * Get the description of a file
+         *
+         * @param addr native pointer
+         * @param path filepath
+         * @return description
+         */
+        public static native String file(long addr, String path);
+    }
 }

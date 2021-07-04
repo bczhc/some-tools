@@ -51,6 +51,7 @@ add_library(
         src/test.cpp
         src/struct/structMain.cpp
         src/sys_info/sys_info.cpp
+        src/magic/magic.cpp
 )
 
 target_link_libraries(Main myLib sqlite3 magic)

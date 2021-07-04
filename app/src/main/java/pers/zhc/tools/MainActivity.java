@@ -27,6 +27,7 @@ import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
+import pers.zhc.tools.magic.FileListActivity;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.stcflash.FlashMainActivity;
 import pers.zhc.tools.test.*;
@@ -130,6 +131,7 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.drawing_board_test, DrawingBoardTest.class));
         activities.add(new ActivityItem(R.string.bus_query_label, BusQueryMainActivity.class));
         activities.add(new ActivityItem(R.string.sys_info_label, SysInfo.class));
+        activities.add(new ActivityItem(R.string.magic_label, FileListActivity.class));
     }
 
     private void loadRecyclerView() {
