@@ -44,6 +44,7 @@ jobs:
         run: |
           git clone git@gitlab.com:bczhc/store
           cd store
+          git reset HEAD~1 --hard
           if [ ! -d apks ]; then
               mkdir apks
           fi
