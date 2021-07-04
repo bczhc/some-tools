@@ -13,21 +13,23 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.tools.R;
+import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
 import pers.zhc.tools.utils.sqlite.Statement;
 import pers.zhc.util.function.ValueInterface;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author bczhc
@@ -461,6 +463,48 @@ public class PaintView extends View {
         invalidate();
     }
 
+    private static class CanDoHandler<MsgType> implements Runnable {
+        public interface HandlerCallback<MsgType> {
+            void callback(MsgType a);
+        }
+
+        private MsgType param;
+        private boolean aDo = false;
+        private boolean start;
+        private HandlerCallback<MsgType> handlerCallback;
+        private ExecutorService es;
+
+        public CanDoHandler(HandlerCallback<MsgType> handlerCallback) {
+            this.handlerCallback = handlerCallback;
+            es = Executors.newFixedThreadPool(1);
+        }
+
+        @Override
+        public void run() {
+            while (this.start) {
+                if (aDo) {
+                    handlerCallback.callback(param);
+                    aDo = false;
+                }
+            }
+        }
+
+        public void stop() {
+            this.start = false;
+            es.shutdownNow();
+        }
+
+        public void start() {
+            this.start = true;
+            es.execute(this);
+        }
+
+        public void push(MsgType msg) {
+            this.param = msg;
+            this.aDo = true;
+        }
+    }
+
     /**
      * 导入路径
      *
@@ -469,11 +513,10 @@ public class PaintView extends View {
      * @param floatValueInterface 进度回调接口
      */
     @SuppressWarnings("BusyWait")
-    public void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {/*
-        TODO
+    public void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
         dontDrawWhileImporting = speedDelayMillis == 0;
         if (floatValueInterface != null) {
-                floatValueInterface.f(0F);
+            floatValueInterface.f(0F);
         }
         CanDoHandler<Float> canDoHandler = new CanDoHandler<>(aFloat -> {
             if (floatValueInterface != null && aFloat != null) {
@@ -639,13 +682,13 @@ public class PaintView extends View {
                                     System.arraycopy(bytes, 20, bytes_4, 0, 4);
                                     float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
                                     if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
-                                        motionAction = Random.ran_sc(0, 2);
+                                        motionAction = randomGen(0, 2);
                                     }
                                     if (strokeWidth <= 0) {
-                                        strokeWidth = Random.ran_sc(1, 800);
+                                        strokeWidth = randomGen(1, 800);
                                     }
                                     if (eraserStrokeWidth <= 0) {
-                                        eraserStrokeWidth = Random.ran_sc(1, 800);
+                                        eraserStrokeWidth = randomGen(1, 800);
                                     }
                                     setEraserMode(bytes[24] == 1);
                                     setEraserStrokeWidth(eraserStrokeWidth);
@@ -676,10 +719,15 @@ public class PaintView extends View {
                 postInvalidate();
             }
         });
-        thread.start();*/
+        thread.start();
     }
 
-    /*private void importPathVer3(@NotNull SQLite3 db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
+    private int randomGen(int min, int max) {
+        double ran_sc_db = Math.round(Math.random() * (max - min)) + min;
+        return (int) ran_sc_db;
+    }
+
+    private void importPathVer3(@NotNull SQLite3 db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
         int[] recordNum = {0};
         db.exec("SELECT COUNT(*) FROM path", contents -> {
             recordNum[0] = Integer.parseInt(contents[0]);
@@ -775,7 +823,7 @@ public class PaintView extends View {
         } catch (Exception e) {
             Common.showException(e, (Activity) ctx);
         }
-    }*/
+    }
 
     private void onTouchAction(int motionAction, float x, float y) {
         float startPointX = headCanvas.getStartPointX();
