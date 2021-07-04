@@ -387,7 +387,7 @@
     <string name="diary_file_broser_open_file_failed">无法打开图片</string>
     <!-- module end -->
 
-    <!-- module bus -->
+    <!-- module: bus -->
     <string name="bus_query_label">公交查询</string>
     <string name="bus_line_edit_text_hint">公交线路</string>
     <string name="bus_query_btn">查询</string>
@@ -411,5 +411,11 @@
     <string name="bus_set_bus_arrival_reminder_toast">设置到站提醒成功</string>
     <string name="diary_file_library_text_edit_activity_label">文本编辑</string>
     <string name="tts_speak_error">TTS播放出错</string>
+    <!-- module end -->
+
+    <!-- module: sys_info -->
+    <string name="sys_info_label">系统信息</string>
+    <string name="uptime_is_">开机时间：%1$s</string>
+    <string name="processes_count_is_">总进程数量：%1$d</string>
     <!-- module end -->
 </resources>

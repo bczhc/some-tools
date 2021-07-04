@@ -331,4 +331,22 @@ public class JNI {
 
         public static native double unpackDouble(@Size(min = 8) byte[] bytes, int offset, int mode);
     }
+
+    public static class SysInfo {
+        static {
+            loadLib();
+        }
+
+        /**
+         * Get the seconds since boot
+         * @return seconds
+         */
+        public static native long getUptime();
+
+        /**
+         * Get the number of current processes
+         * @return count
+         */
+        public static native short getProcessesCount();
+    }
 }

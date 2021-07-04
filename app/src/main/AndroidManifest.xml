@@ -596,5 +596,16 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity
+                android:name=".test.SysInfo"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:label="@string/sys_info_label"
+                android:theme="@style/Theme.Application">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

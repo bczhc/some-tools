@@ -129,6 +129,7 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.stc_flash, FlashMainActivity.class));
         activities.add(new ActivityItem(R.string.drawing_board_test, DrawingBoardTest.class));
         activities.add(new ActivityItem(R.string.bus_query_label, BusQueryMainActivity.class));
+        activities.add(new ActivityItem(R.string.sys_info_label, SysInfo.class));
     }
 
     private void loadRecyclerView() {
