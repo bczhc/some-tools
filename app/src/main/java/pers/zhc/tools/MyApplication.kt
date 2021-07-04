@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import org.json.JSONException
 import org.json.JSONObject
 import pers.zhc.tools.crashhandler.CrashHandler
+import pers.zhc.tools.diary.DiaryDatabase
 import java.io.File
 
 /**
@@ -21,6 +22,7 @@ class MyApplication : Application() {
 
     private fun init() {
         CrashHandler.install(this)
+        DiaryDatabase.init(this)
         registerNotificationChannel()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
         initAppInfoFile()
