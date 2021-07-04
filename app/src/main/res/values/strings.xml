@@ -5,7 +5,7 @@
     <string name="cancel_btn">取消</string>
     <!-- end -->
 
-    <string name="app_name" translatable="false">tools</string>
+    <string name="app_name" translatable="false">Tools</string>
     <string name="str" translatable="false">%1$s</string>
     <string name="progress_tv" translatable="false">%1$f%%</string>
     <string name="select_file_or_directory">选择文件/目录</string>
