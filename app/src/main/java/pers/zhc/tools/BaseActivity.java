@@ -36,7 +36,6 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         app.addActivity(this);
-        CrashHandler.install(this);
 //        ExternalJNI.ex(this);
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);

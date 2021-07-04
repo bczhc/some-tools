@@ -123,7 +123,7 @@ public class CrashReportActivity extends BaseActivity {
         byte[] finalContentBytes = contentBytes;
         byte[] finalBytes = bytes;
         new Thread(() -> {
-            final String crashUploadSite = Infos.ZHC_URL_STRING + "/tools_app/crash_report.zhc";
+            final String crashUploadSite = Infos.serverURL + "/tools_app/crash_report.zhc";
 //                MultipartUploader.formUpload(crashUploadSite, finalBytes, finalContentBytes);
             // TODO: 6/13/21 crash file upload
             runOnUiThread(() -> {

@@ -421,5 +421,7 @@
 
     <!-- module: magic -->
     <string name="magic_label">Magic</string>
+    <string name="settings_server_root_url">服务器URL</string>
+    <string name="settings_resource_root_url">资源根URL</string>
     <!-- module end -->
 </resources>
