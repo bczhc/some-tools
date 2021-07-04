@@ -1,49 +1,44 @@
 package pers.zhc.tools;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import kotlin.Unit;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.bus.BusQueryMainActivity;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.crashhandler.CrashTest;
+import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.stcflash.FlashMainActivity;
 import pers.zhc.tools.test.*;
-import pers.zhc.tools.test.DrawingBoardTest;
-import pers.zhc.tools.test.RegExpTest;
-import pers.zhc.tools.test.SensorTest;
-import pers.zhc.tools.test.TTS;
-import pers.zhc.tools.test.Demo;
 import pers.zhc.tools.test.malloctest.MAllocTest;
 import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
-import pers.zhc.tools.utils.IOUtilsKt;
+import pers.zhc.tools.utils.AdapterWithClickListener;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.diary.DiaryMainActivity;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * @author bczhc
@@ -51,21 +46,16 @@ import java.util.concurrent.CountDownLatch;
 public class MainActivity extends BaseActivity {
 
     private ShortcutManager shortcutManager = null;
+    private final ArrayList<ActivityItem> activities = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        try {
-            Thread.sleep(100);
-            setTheme(R.style.Theme_Application);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tools_activity_main);
-        init();
 
+        addActivities();
+        loadRecyclerView();
     }
-
 
     private void shortcut(int texts, Class<?> theClass, int id) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
@@ -121,95 +111,90 @@ public class MainActivity extends BaseActivity {
         shortcutManager.setDynamicShortcuts(newShortCutInfoList);
     }
 
-    private static class AnActivity {
-        private final @StringRes
-        int textIntRes;
-        private final Class<?> activityClass;
+    private void addActivities() {
+        activities.add(new ActivityItem(R.string.generate_pi, Pi.class));
+        activities.add(new ActivityItem(R.string.toast, ToastTest.class));
+        activities.add(new ActivityItem(R.string.put_in_clipboard, Clip.class));
+        activities.add(new ActivityItem(R.string.floating_drawing_board, FloatingDrawingBoardMainActivity.class));
+        activities.add(new ActivityItem(R.string.notes, Document.class));
+        activities.add(new ActivityItem(R.string.test, Demo.class));
+        activities.add(new ActivityItem(R.string.sensor_test, SensorTest.class));
+        activities.add(new ActivityItem(R.string.crash_test, CrashTest.class));
+        activities.add(new ActivityItem(R.string.m_alloc_test, MAllocTest.class));
+        activities.add(new ActivityItem(R.string.diary, DiaryMainActivity.class));
+        activities.add(new ActivityItem(R.string.type_test, TypeTest.class));
+        activities.add(new ActivityItem(R.string.tts_test, TTS.class));
+        activities.add(new ActivityItem(R.string.regular_expression_test, RegExpTest.class));
+        activities.add(new ActivityItem(R.string.wubi_input_method, WubiInputMethodActivity.class));
+        activities.add(new ActivityItem(R.string.stc_flash, FlashMainActivity.class));
+        activities.add(new ActivityItem(R.string.drawing_board_test, DrawingBoardTest.class));
+        activities.add(new ActivityItem(R.string.bus_query_label, BusQueryMainActivity.class));
+    }
 
-        public AnActivity(int textIntRes, Class<? extends Activity> activityClass) {
-            this.textIntRes = textIntRes;
+    private void loadRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        final MyAdapter adapter = new MyAdapter(this, activities);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter.setOnItemClickListener((position, view) -> {
+            final ActivityItem item = activities.get(position);
+            startActivity(new Intent(this, item.activityClass));
+            return Unit.INSTANCE;
+        });
+
+        adapter.setOnItemLongClickListener((position, view) -> {
+            final ActivityItem item = activities.get(position);
+            shortcut(item.textRes, item.activityClass, position);
+            return Unit.INSTANCE;
+        });
+    }
+
+    private static class ActivityItem {
+        private @StringRes
+        final int textRes;
+        private final Class<? extends Activity> activityClass;
+
+        public ActivityItem(int textRes, Class<? extends Activity> activityClass) {
+            this.textRes = textRes;
             this.activityClass = activityClass;
         }
     }
 
-    private void init() {
-        LinearLayout ll = findViewById(R.id.ll);
+    private static class MyAdapter extends AdapterWithClickListener<MyAdapter.MyViewHolder> {
+        private final Context context;
+        private final ArrayList<ActivityItem> activities;
 
-        AnActivity[] activities = {
-                new AnActivity(R.string.generate_pi, Pi.class),
-                new AnActivity(R.string.toast, ToastTest.class),
-                new AnActivity(R.string.put_in_clipboard, Clip.class),
-                new AnActivity(R.string.floating_drawing_board, FloatingDrawingBoardMainActivity.class),
-                new AnActivity(R.string.notes, Document.class),
-                new AnActivity(R.string.test, Demo.class),
-                new AnActivity(R.string.sensor_test, SensorTest.class),
-                new AnActivity(R.string.crash_test, CrashTest.class),
-                new AnActivity(R.string.m_alloc_test, MAllocTest.class),
-                new AnActivity(R.string.diary, DiaryMainActivity.class),
-                new AnActivity(R.string.type_test, TypeTest.class),
-                new AnActivity(R.string.tts_test, TTS.class),
-                new AnActivity(R.string.regular_expression_test, RegExpTest.class),
-                new AnActivity(R.string.wubi_input_method, WubiInputMethodActivity.class),
-                new AnActivity(R.string.stc_flash, FlashMainActivity.class),
-                new AnActivity(R.string.drawing_board_test, DrawingBoardTest.class),
-                new AnActivity(R.string.bus_query_label, BusQueryMainActivity.class)
-        };
+        public MyAdapter(Context context, ArrayList<ActivityItem> activities) {
+            this.context = context;
+            this.activities = activities;
+        }
 
-        CountDownLatch mainTextLatch = new CountDownLatch(1);
-        new Thread(() -> {
-            JSONObject jsonObject = null;
-            try {
-                URL url = new URL(Infos.ZHC_URL_STRING + "/tools_app/i.zhc");
-                InputStream inputStream = url.openStream();
-                final String read = IOUtilsKt.readToString(inputStream, StandardCharsets.UTF_8);
-                jsonObject = new JSONObject(read);
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
-            try {
-                mainTextLatch.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (jsonObject != null) {
-                JSONObject finalJsonObject = jsonObject;
-                runOnUiThread(() -> {
-                    try {
-                        String mainActivityText = finalJsonObject.getString("MainActivityText");
-                        TextView tv = new TextView(this);
-                        tv.setText(getString(R.string.str, mainActivityText));
-                        ll.addView(tv);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
-        }).start();
-        new Thread(() -> {
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        @org.jetbrains.annotations.Nullable
+        @Contract(pure = true)
+        @Override
+        public MyViewHolder onCreateViewHolder(@NotNull ViewGroup parent) {
+            final View view = LayoutInflater.from(context).inflate(R.layout.main_activity_item, parent, false);
+            return new MyViewHolder(view);
+        }
 
-            for (int i = 0; i < activities.length; i++) {
-                AnActivity activity = activities[i];
-                Button btn = new Button(this);
-                btn.setText(activity.textIntRes);
-                btn.setTextSize(25F);
-                btn.setAllCaps(false);
-                btn.setLayoutParams(lp);
-                btn.setOnClickListener(v -> {
-                    Intent intent = new Intent();
-                    intent.setClass(this, activity.activityClass);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_bottom, 0);
-                });
-                int finalI = i;
-                btn.setOnLongClickListener(v -> {
-                    shortcut(activity.textIntRes, activity.activityClass, finalI);
-                    return true;
-                });
-                runOnUiThread(() -> ll.addView(btn));
+        @Override
+        public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
+            final View view = holder.itemView;
+            TextView tv = view.findViewById(R.id.tv);
+            tv.setText(activities.get(position).textRes);
+        }
+
+        @Override
+        public int getItemCount() {
+            return activities.size();
+        }
+
+        private static class MyViewHolder extends RecyclerView.ViewHolder {
+            public MyViewHolder(@NonNull @NotNull View itemView) {
+                super(itemView);
             }
-            mainTextLatch.countDown();
-        }).start();
+        }
     }
 
     @Override
