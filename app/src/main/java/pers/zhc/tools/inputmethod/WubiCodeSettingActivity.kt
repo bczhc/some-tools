@@ -45,7 +45,7 @@ class WubiCodeSettingActivity : BaseActivity() {
                     val dialog = AtomicReference<Dialog>()
                     dialog.set(DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
                         try {
-                            val wubiDatabaseURL = URL(Common.getGithubRawFileURLString("bczhc", "master", "wubi_code.db"))
+                            val wubiDatabaseURL = URL(Common.getStaticResourceUrlString("wubi_code.db"))
                             val localWubiDatabaseFile = getLocalWubiDatabasePath(this)
                             Download.startDownloadWithDialog(this, wubiDatabaseURL, File(localWubiDatabaseFile)) {
                                 runOnUiThread {

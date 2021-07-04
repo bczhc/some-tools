@@ -6,6 +6,6 @@ public class Infos {
     public static @NotNull
     String serverURL = "";
     public static @NotNull
-    String resourceURL = "";
+    String resourceURL = "https://gitlab.com/bczhc/store/-/raw/master";
     public static final Class<?> LAUNCHER_CLASS = MainActivity.class;
 }

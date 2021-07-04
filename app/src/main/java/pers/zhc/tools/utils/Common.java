@@ -14,8 +14,11 @@ import androidx.core.content.FileProvider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BuildConfig;
+import pers.zhc.tools.Infos;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Objects;
 
 /**
@@ -85,7 +88,17 @@ public class Common {
     }
 
     public static String getGithubRawFileURLString(String username, String branch, String filePathInRepo) {
-        return String.format("https://hub.fastgit.org/%s/store/blob/%s/%s?raw=true", username, branch, filePathInRepo);
+        try {
+            return String.format("https://hub.fastgit.org/%s/store/blob/%s/%s?raw=true", username, branch, URLEncoder.encode(filePathInRepo, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    public static String getStaticResourceUrlString(String username) {
+        return Infos.resourceURL + "/" + username;
     }
 
     public static void doAssertion(boolean condition) {
