@@ -3,9 +3,9 @@ project(jni)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(sqlite3 STATIC third_party/my-cpp-lib/third_party/sqlite3-single-c/sqlite3.c)
+add_library(sqlite3 SHARED third_party/my-cpp-lib/third_party/sqlite3-single-c/sqlite3.c)
 add_library(
-        myLib STATIC
+        myLib SHARED
         third_party/my-cpp-lib/math/fourier_series.cpp
         third_party/my-cpp-lib/math/epicycle.cpp
         third_party/my-cpp-lib/math/complex_value.cpp
@@ -25,6 +25,9 @@ add_library(
         third_party/my-cpp-lib/app/base128/Base128Lib.cpp
 )
 target_link_libraries(myLib sqlite3)
+
+
+add_subdirectory(third_party/libmagic)
 
 add_library(
         Main SHARED
@@ -49,4 +52,4 @@ add_library(
         src/struct/structMain.cpp
 )
 
-target_link_libraries(Main myLib sqlite3)
+target_link_libraries(Main myLib sqlite3 magic)
