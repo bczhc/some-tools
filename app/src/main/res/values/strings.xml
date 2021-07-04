@@ -423,5 +423,7 @@
     <string name="magic_label">Magic</string>
     <string name="settings_server_root_url">服务器URL</string>
     <string name="settings_resource_root_url">资源根URL</string>
+    <string name="magic_missing_database_dialog">"数据库文件缺失，是否下载？ "</string>
+    <string name="magic_load_failed_dialog">加载数据库失败，是否重新下载数据库？</string>
     <!-- module end -->
 </resources>

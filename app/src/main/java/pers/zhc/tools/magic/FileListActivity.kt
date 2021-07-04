@@ -14,7 +14,10 @@ import kotlinx.android.synthetic.main.magic_file_list_item.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.utils.Download
 import java.io.File
+import java.net.URL
 
 /**
  * @author bczhc
@@ -23,9 +26,40 @@ class FileListActivity : BaseActivity() {
     private lateinit var recyclerAdapter: MyAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var magic: Magic
+    private lateinit var magicDatabase: File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        magicDatabase = File(filesDir, "magic.mgc")
+        magic = Magic()
+        // TODO: 7/4/21 check digest (when magic.mgc has a bad integrity, then the activity will keep crashing
+        if (/*!magicDatabase.exists()*/ true/* every time download and overwrite (workaround) */) {
+
+            DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
+
+                runOnUiThread {
+                    downloadAndLoad()
+                }
+
+            }, { _, _ -> finish() }, R.string.magic_missing_database_dialog).show()
+
+        } else {
+            load()
+        }
+    }
+
+    private fun downloadAndLoad() {
+        Download.startDownloadWithDialog(
+            this, URL(Common.getStaticResourceUrlString("magic.mgc")),
+            File(filesDir, "magic.mgc")
+        ) {
+            runOnUiThread {
+                load()
+            }
+        }
+    }
+
+    fun load() {
         setContentView(R.layout.magic_file_list_activity)
 
         recyclerView = file_list_rv!!
@@ -44,9 +78,17 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun initMagic() {
-        magic = Magic()
-        // TODO: 7/4/21 load from server
-        magic.load(File(Common.getExternalStoragePath(this), "magic.mgc").path)
+        try {
+            magic.load(magicDatabase.path)
+        } catch (_: RuntimeException) {
+            DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
+
+                magic.close()
+                downloadAndLoad()
+
+            }, { _, _ -> finish() }, R.string.magic_load_failed_dialog).show()
+            return
+        }
     }
 
     override fun onBackPressed() {
