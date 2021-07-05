@@ -11,9 +11,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity.RequestCode
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
@@ -47,6 +49,9 @@ class DiaryFragment : DiaryBaseFragment() {
     }
 
     private fun loadRecyclerView() {
+        FastScrollerBuilder(recyclerView).apply {
+            setThumbDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.thumb)!!)
+        }.build()
         Thread {
             refreshItemDataList()
         }.start()

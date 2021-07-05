@@ -16,11 +16,5 @@
             android:id="@+id/file_list_rv"
             tools:listitem="@layout/magic_file_list_item"
             tools:itemCount="20"
-            android:scrollbars="vertical"
-            app:fastScrollEnabled="true"
-            app:fastScrollHorizontalThumbDrawable="@drawable/scroll_thumb"
-            app:fastScrollHorizontalTrackDrawable="@drawable/scroll_line"
-            app:fastScrollVerticalThumbDrawable="@drawable/scroll_thumb"
-            app:fastScrollVerticalTrackDrawable="@drawable/scroll_line"
     />
 </LinearLayout>

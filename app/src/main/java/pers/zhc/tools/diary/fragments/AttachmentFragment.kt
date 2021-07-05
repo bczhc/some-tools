@@ -7,10 +7,13 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
@@ -62,6 +65,10 @@ class AttachmentFragment(
         itemAdapter = MyAdapter(requireContext(), itemDataList)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = itemAdapter
+
+        FastScrollerBuilder(recyclerView).apply {
+            setThumbDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.thumb)!!)
+        }.build()
 
         itemAdapter.setOnItemClickListener { position, _ ->
             val id = itemDataList[position].id

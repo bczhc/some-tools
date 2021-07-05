@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.unicode_cell_view.view.*
 import kotlinx.android.synthetic.main.unicode_table_activity.*
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import java.util.*
@@ -28,6 +31,10 @@ class UnicodeTable : BaseActivity() {
 
         recyclerView.layoutManager = GridLayoutManager(this, 6)
         recyclerView.adapter = MyAdapter(this)
+
+        FastScrollerBuilder(recyclerView).apply {
+            setThumbDrawable(AppCompatResources.getDrawable(this@UnicodeTable, R.drawable.thumb)!!)
+        }.build()
     }
 
     class MyAdapter(private val ctx: Context) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {

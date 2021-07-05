@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.magic_file_list_activity.*
 import kotlinx.android.synthetic.main.magic_file_list_item.view.*
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
@@ -70,6 +72,10 @@ class FileListActivity : BaseActivity() {
         recyclerAdapter = MyAdapter(this, magic)
         recyclerView.adapter = recyclerAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        FastScrollerBuilder(recyclerView).apply {
+            setThumbDrawable(AppCompatResources.getDrawable(this@FileListActivity, R.drawable.thumb)!!)
+        }.build()
 
         pathTV.text = recyclerAdapter.getCurrentPath()
         recyclerAdapter.setOnPathChangedListener {
