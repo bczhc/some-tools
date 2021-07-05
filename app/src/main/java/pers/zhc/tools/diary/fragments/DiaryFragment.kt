@@ -339,6 +339,8 @@ WHERE "date" IS ?"""
             return
         }
         releaseDatabaseRef()
+        Common.doAssertion(getHolder().refCount == 0)
+
         val latch = SpinLatch()
         latch.suspend()
         Thread {
@@ -356,7 +358,8 @@ WHERE "date" IS ?"""
             ToastUtils.show(context, R.string.corrupted_database_and_recreate_new_msg)
         }
         changeDatabase(file.path)
-        diaryDatabase = getDatabaseRef()
+        (activity as DiaryBaseActivity).diaryDatabase = getDatabaseRef()
+        diaryDatabase = (activity as DiaryBaseActivity).diaryDatabase
         refreshList()
     }
 
