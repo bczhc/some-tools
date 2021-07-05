@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?selectableItemBackground"
 >
-    <ImageView android:layout_width="64dp" android:layout_height="64dp"
-               tools:ignore="ContentDescription"
-               android:id="@+id/iv"
-               tools:src="@drawable/ic_file"
-               android:layout_centerVertical="true"
-    />
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:layout_toEndOf="@id/iv"
-                  android:layout_centerVertical="true"
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:id="@+id/rl"
     >
-        <TextView android:layout_width="match_parent" android:layout_height="0dp"
-                  android:id="@+id/filename_tv"
-                  android:layout_weight="1"
-                  tools:text="file path"
-                  android:gravity="center_vertical"
+        <ImageView android:layout_width="64dp" android:layout_height="64dp"
+                   tools:ignore="ContentDescription"
+                   android:id="@+id/iv"
+                   tools:src="@drawable/ic_file"
+                   android:layout_centerVertical="true"
         />
-        <TextView android:layout_width="match_parent" android:layout_height="0dp"
-                  android:id="@+id/file_info_tv"
-                  android:layout_weight="1"
-                  tools:text="file info"
-                  android:textColor="@color/blue"
-                  android:gravity="center_vertical"
-                  style="@style/TextAppearance.MaterialComponents.Caption"
-        />
-    </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:layout_toEndOf="@id/iv"
+                      android:layout_centerVertical="true"
+        >
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:id="@+id/filename_tv"
+                      tools:text="file path"
+            />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:id="@+id/file_info_tv"
+                      tools:text="file info"
+                      android:textColor="@color/blue"
+                      style="@style/TextAppearance.MaterialComponents.Caption"
+            />
+        </LinearLayout>
+    </RelativeLayout>
     <View android:layout_width="match_parent" android:layout_height="1dp"
           android:background="#dddddd"
-          android:layout_below="@id/iv"
+          android:layout_below="@id/rl"
     />
 </RelativeLayout>
