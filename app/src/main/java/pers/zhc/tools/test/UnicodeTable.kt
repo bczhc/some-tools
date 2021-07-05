@@ -8,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.unicode_cell_view.view.*
 import kotlinx.android.synthetic.main.unicode_table_activity.*
@@ -56,8 +54,8 @@ class UnicodeTable : BaseActivity() {
             if (s.length < 4) s = "0".repeat(4 - s.length) + s
             holder.codepointTV.text = "U+$s"
 
-            Character.toChars(position, charBuf, 0)
-            holder.charTV.text = String(charBuf)
+            val len = Character.toChars(position, charBuf, 0)
+            holder.charTV.text = String(charBuf, 0, len)
         }
 
         override fun getItemCount(): Int {
