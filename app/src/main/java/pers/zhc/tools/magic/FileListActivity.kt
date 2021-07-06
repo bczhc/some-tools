@@ -1,5 +1,6 @@
 package pers.zhc.tools.magic
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.magic_file_list_activity.*
 import kotlinx.android.synthetic.main.magic_file_list_item.view.*
+import kotlinx.android.synthetic.main.magic_progress_dialog.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
@@ -29,11 +31,14 @@ class FileListActivity : BaseActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var magic: Magic
     private lateinit var magicDatabase: File
+    private lateinit var progressShower: ProgressDialogShower
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         magicDatabase = File(filesDir, "magic.mgc")
         magic = Magic()
+        progressShower = ProgressDialogShower(this)
+
         // TODO: 7/4/21 check digest (when magic.mgc has a bad integrity, then the activity will keep crashing
         if (/*!magicDatabase.exists()*/ true/* every time download and overwrite (workaround) */) {
 
@@ -43,7 +48,10 @@ class FileListActivity : BaseActivity() {
                     downloadAndLoad()
                 }
 
-            }, { _, _ -> finish() }, R.string.magic_missing_database_dialog).show()
+            }, { _, _ -> finish() }, R.string.magic_missing_database_dialog).apply {
+                setCanceledOnTouchOutside(false)
+                setCancelable(false)
+            }.show()
 
         } else {
             load()
@@ -81,6 +89,8 @@ class FileListActivity : BaseActivity() {
         recyclerAdapter.setOnPathChangedListener {
             pathTV.text = it
         }
+
+        recyclerAdapter.updateListWithProgress()
     }
 
     private fun initMagic() {
@@ -121,15 +131,14 @@ class FileListActivity : BaseActivity() {
         val file: File
     )
 
-    class MyAdapter(private val context: Context, private val magic: Magic) :
+    class MyAdapter(private val outer: FileListActivity, private val magic: Magic) :
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
         private var onPathChangedListener: OnPathChangedListener? = null
         private var currentPathFile: File
         private val fileItemList = ArrayList<FileItem>()
 
         init {
-            currentPathFile = File(Common.getExternalStoragePath(context))
-            updateList()
+            currentPathFile = File(Common.getExternalStoragePath(outer))
         }
 
         private fun setPath(path: String) {
@@ -137,23 +146,41 @@ class FileListActivity : BaseActivity() {
             onPathChangedListener?.invoke(getCurrentPath())
         }
 
-        private fun updateList() {
+        enum class ProgressType {
+            LIST,
+            DESCRIBE,
+            SORT,
+            DONE
+        }
+
+        private fun updateData(progressCallback: ProgressCallback?) {
             fileItemList.clear()
-            currentPathFile.listFiles()?.forEach {
-                val info = magic.file(it.path)
+            val listFiles = currentPathFile.listFiles() ?: arrayOf()
+
+            progressCallback?.invoke(ProgressType.LIST, -1, -1)
+            val filesCount = listFiles.size
+            progressCallback?.invoke(ProgressType.DESCRIBE, 0, filesCount)
+
+            listFiles.forEachIndexed { index, file ->
+                val info = magic.file(file.path)
                 fileItemList.add(
                     FileItem(
-                        it.name,
+                        file.name,
                         info,
-                        if (it.isDirectory) {
+                        if (file.isDirectory) {
                             FileType.FOLDER
                         } else {
                             FileType.FILE
                         },
-                        it
+                        file
                     )
                 )
+
+                progressCallback?.invoke(ProgressType.DESCRIBE, index + 1, filesCount)
             }
+
+            progressCallback?.invoke(ProgressType.SORT, -1, -1)
+
             fileItemList.sortWith { fileItem, fileItem2 ->
                 if (fileItem.fileType == fileItem2.fileType) {
                     if (!fileItem.file.isHidden && !fileItem2.file.isHidden) {
@@ -173,7 +200,15 @@ class FileListActivity : BaseActivity() {
                     }
                 }
             }
-            notifyDataSetChanged()
+
+            progressCallback?.invoke(ProgressType.DONE, filesCount, filesCount)
+        }
+
+        private fun asyncUpdateData(progressCallback: ProgressCallback?, done: Runnable) {
+            Thread {
+                updateData(progressCallback)
+                done.run()
+            }.start()
         }
 
         /**
@@ -182,7 +217,7 @@ class FileListActivity : BaseActivity() {
         fun previous(): String? {
             val parentFile = currentPathFile.parentFile ?: return null
             currentPathFile = parentFile
-            updateList()
+            updateListWithProgress()
             onPathChangedListener?.invoke(getCurrentPath())
             return currentPathFile.path
         }
@@ -202,7 +237,7 @@ class FileListActivity : BaseActivity() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-            val inflate = LayoutInflater.from(context).inflate(R.layout.magic_file_list_item, parent, false)
+            val inflate = LayoutInflater.from(outer).inflate(R.layout.magic_file_list_item, parent, false)
             return MyViewHolder(inflate)
         }
 
@@ -220,7 +255,8 @@ class FileListActivity : BaseActivity() {
             holder.itemView.setOnClickListener {
                 if (fileItem.fileType == FileType.FOLDER) {
                     setPath(fileItem.file.path)
-                    updateList()
+
+                    updateListWithProgress()
                 }
             }
         }
@@ -228,7 +264,60 @@ class FileListActivity : BaseActivity() {
         override fun getItemCount(): Int {
             return fileItemList.size
         }
+
+        fun updateListWithProgress() {
+            val progressShower = outer.progressShower
+            progressShower.show()
+            asyncUpdateData({ type, current, total ->
+                progressShower.update(type, current, total)
+            }, {
+                outer.runOnUiThread {
+                    notifyDataSetChanged()
+                    progressShower.dismiss()
+                    outer.recyclerView.smoothScrollToPosition(0)
+                }
+            })
+        }
+    }
+
+    class ProgressDialogShower(private val context: Context) {
+        private val content = View.inflate(context, R.layout.magic_progress_dialog, null)
+        private val msgTV = content.msg_tv!!
+
+        private val dialog = Dialog(context).apply {
+            setContentView(content)
+            setCanceledOnTouchOutside(true)
+            setCancelable(false)
+        }
+
+        init {
+            dialog.setContentView(content)
+        }
+
+        fun show() {
+            msgTV.setText(R.string.nul)
+            dialog.show()
+        }
+
+        fun update(type: MyAdapter.ProgressType, current: Int, total: Int) {
+            val msgStr = when (type) {
+                MyAdapter.ProgressType.LIST -> context.getString(R.string.magic_progress_listing)
+                MyAdapter.ProgressType.DESCRIBE -> context.getString(
+                    R.string.magic_progress_describing,
+                    current,
+                    total
+                )
+                MyAdapter.ProgressType.SORT -> context.getString(R.string.magic_progress_sorting)
+                MyAdapter.ProgressType.DONE -> context.getString(R.string.magic_progress_done)
+            }
+            msgTV.text = msgStr
+        }
+
+        fun dismiss() {
+            dialog.dismiss()
+        }
     }
 }
 
 typealias OnPathChangedListener = (newPath: String) -> Unit
+typealias ProgressCallback = (type: FileListActivity.MyAdapter.ProgressType, current: Int, total: Int) -> Unit
