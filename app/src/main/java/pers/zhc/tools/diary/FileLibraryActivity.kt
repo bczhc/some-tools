@@ -12,9 +12,14 @@ import pers.zhc.tools.diary.fragments.FileLibraryFragment
 class FileLibraryActivity : DiaryBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.diary_file_library_activity)
+
+        val intent = intent
+        val pickMode = intent.getBooleanExtra(EXTRA_PICK_MODE, false)
 
         val manager = supportFragmentManager
-        manager.beginTransaction().add(R.id.container, FileLibraryFragment())
+        val fileLibraryFragment = FileLibraryFragment(pickMode)
+        manager.beginTransaction().add(R.id.container, fileLibraryFragment).commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

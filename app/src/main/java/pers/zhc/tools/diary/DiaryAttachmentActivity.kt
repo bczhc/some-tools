@@ -1,11 +1,10 @@
 package pers.zhc.tools.diary
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.fragments.AttachmentFragment
-import pers.zhc.tools.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
 

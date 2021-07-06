@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_file_library_file_preview_view.view.*
@@ -26,11 +25,12 @@ import java.util.*
 /**
  * @author bczhc
  */
-class FileLibraryFragment : DiaryBaseFragment() {
+class FileLibraryFragment(
+    private var pickMode: Boolean = false
+) : DiaryBaseFragment() {
     private lateinit var recyclerViewAdapter: MyAdapter
     private lateinit var recyclerView: RecyclerView
     private var itemDataList = ArrayList<ItemData>()
-    private var pickMode = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflate = inflater.inflate(R.layout.diary_file_library_fragment, container, false)
