@@ -269,7 +269,9 @@ class FileListActivity : BaseActivity() {
             val progressShower = outer.progressShower
             progressShower.show()
             asyncUpdateData({ type, current, total ->
-                progressShower.update(type, current, total)
+                outer.runOnUiThread {
+                    progressShower.update(type, current, total)
+                }
             }, {
                 outer.runOnUiThread {
                     notifyDataSetChanged()
