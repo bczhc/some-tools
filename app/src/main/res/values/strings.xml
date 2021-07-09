@@ -438,4 +438,11 @@
     <string name="unicode_table_copying_succeeded_toast">复制成功</string>
     <string name="unicode_table_codepoint_hex_is_dialog">十六进制码点：</string>
     <!-- module end -->
+
+    <!-- module: fdb -->
+    <string name="fdb_label">悬浮画板</string>
+    <string name="fdb_switch">悬浮窗</string>
+    <string name="fdb_panel_drawing_mode">绘画</string>
+    <string name="fdb_panel_operating_mode">操控</string>
+    <!-- module end -->
 </resources>
