@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+>
+    <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/head_ll"
+    >
+        <TextView android:layout_width="0sp" android:layout_height="wrap_content"
+                  android:text="@string/hsva_color_picker"
+                  android:layout_weight="1"
+        />
+        <pers.zhc.tools.views.ColorView
+                android:layout_width="0sp" android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/color_view"
+        />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/hsva_views_ll"
+            android:orientation="vertical"
+            android:layout_below="@id/head_ll"
+    />
+</RelativeLayout>

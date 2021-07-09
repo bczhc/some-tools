@@ -7,6 +7,8 @@ import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
 import pers.zhc.tools.R
 import pers.zhc.tools.floatingdrawing.PaintView
+import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.views.HSVAColorPickerRL
 
 /**
  * @author bczhc
@@ -22,6 +24,8 @@ class FdbWindow(private val context: Context) {
 
     private var operationMode = OperationMode.Operating
     private var brushMode = BrushMode.Drawing
+
+    private var colorPickers = ColorPickers()
 
     init {
         paintViewLP.apply {
@@ -84,7 +88,16 @@ class FdbWindow(private val context: Context) {
                             }
                         }
                         2 -> {
-
+                            // color
+                        }
+                        10 -> {
+                            // more
+                        }
+                        11 -> {
+                            // exit
+                            DialogUtil.createConfirmationAlertDialog(context, { _, _ ->
+                                stopFAB()
+                            }, R.string.fdb_exit_confirmation_dialog).show()
                         }
                         else -> {
                         }
@@ -94,6 +107,8 @@ class FdbWindow(private val context: Context) {
                 }
             }
         }
+
+//        colorPickers.brush = HSVAColorPickerRL(context, )
     }
 
     fun startFAB() {
@@ -114,5 +129,12 @@ class FdbWindow(private val context: Context) {
     enum class BrushMode {
         Drawing,
         Erasing
+    }
+
+    class ColorPickers {
+        lateinit var brush: HSVAColorPickerRL
+        lateinit var panelText: HSVAColorPickerRL
+        lateinit var panel: HSVAColorPickerRL
+        lateinit var eraser: HSVAColorPickerRL
     }
 }

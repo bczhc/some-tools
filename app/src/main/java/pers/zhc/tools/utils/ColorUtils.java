@@ -1,7 +1,6 @@
 package pers.zhc.tools.utils;
 
 import android.graphics.Color;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
@@ -71,10 +70,6 @@ public class ColorUtils {
     }
 
     public static int invertColor(int color) {
-        /*float[] HSV = new float[3];
-        Color.colorToHSV(color, HSV);
-        HSV[0] = HSV[0] + 180 - (HSV[0] > 180 ? 360 : 0);
-        return Color.HSVToColor(HSV);*/
         RGB rgb = parseRGB(color);
         return parseColorInt(new RGB(255 - rgb.r, 255 - rgb.g, 255 - rgb.b));
     }
@@ -87,7 +82,7 @@ public class ColorUtils {
      * @return color int
      */
     @ColorInt
-    public static int HSVAtoColor(@FloatRange(from = 0, to = 255) int alpha,
+    public static int HSVAtoColor(@IntRange(from = 0, to = 255) int alpha,
                                   @FloatRange(from = 0, to = 360) float hue,
                                   @FloatRange(from = 0, to = 1) float saturation,
                                   @FloatRange(from = 0, to = 1) float value) {
@@ -183,6 +178,12 @@ public class ColorUtils {
             hsv[0] = h;
             hsv[1] = s;
             hsv[2] = v;
+            this.alpha = alpha;
+        }
+
+        public void set(@IntRange(from = 0, to = 255) int alpha,
+                        @FloatRange(from = 0, to = 1) float[] hsv) {
+            System.arraycopy(hsv, 0, this.hsv, 0, 3);
             this.alpha = alpha;
         }
 

@@ -444,5 +444,6 @@
     <string name="fdb_switch">悬浮窗</string>
     <string name="fdb_panel_drawing_mode">绘画</string>
     <string name="fdb_panel_operating_mode">操控</string>
+    <string name="fdb_exit_confirmation_dialog">是否退出</string>
     <!-- module end -->
 </resources>
