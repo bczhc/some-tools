@@ -10,7 +10,7 @@ import java.util.*
 /**
  * @author bczhc
  */
-class SysInfo: BaseActivity() {
+class SysInfo : BaseActivity() {
     private var runFlag = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,17 +19,16 @@ class SysInfo: BaseActivity() {
         val uptimeTV = uptime_tv!!
         val processesTV = processes_tv!!
 
-        val calender = Calendar.getInstance()
-
         Thread {
             while (runFlag) {
-                calender.set(0, 0, 0, 0, 0, JNI.SysInfo.getUptime().toInt())
-                val h = calender.get(Calendar.HOUR_OF_DAY)
-                val m = calender.get(Calendar.MINUTE)
-                val s = calender.get(Calendar.SECOND)
+                val uptime = JNI.SysInfo.getUptime().toInt()
+                val d = uptime / 3600 / 24
+                val h = uptime / 3600 - d * 24
+                val m = uptime / 60 - d * 24 * 60 - h * 60
+                val s = uptime - d * 24 * 3600 - h * 3600 - m * 60
 
                 runOnUiThread {
-                    uptimeTV.text = getString(R.string.uptime_is_, getTimeString(h, m, s))
+                    uptimeTV.text = getString(R.string.uptime_is_, getTimeString(d, h, m, s))
                     processesTV.text = getString(R.string.processes_count_is_, JNI.SysInfo.getProcessesCount())
                 }
 
@@ -46,8 +45,15 @@ class SysInfo: BaseActivity() {
         return s
     }
 
-    private fun getTimeString(h: Int, m: Int, s: Int): String {
-        return "${complete(h)}:${complete(m)}:${complete(s)}"
+    private fun getTimeString(d: Int, h: Int, m: Int, s: Int): String {
+        val sb = StringBuilder()
+        if (d == 1) {
+            sb.append("$d day, ")
+        } else if (d > 1) {
+            sb.append("$d days, ")
+        }
+        sb.append("${complete(h)}:${complete(m)}:${complete(s)}")
+        return sb.toString()
     }
 
     override fun finish() {
