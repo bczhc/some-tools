@@ -231,7 +231,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
         this.onColorPickedInterface = onColorPickedInterface;
     }
 
-    private int getColor() {
+    public int getColor() {
         return Color.HSVToColor(alpha, this.hsv);
     }
 

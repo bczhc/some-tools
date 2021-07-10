@@ -79,7 +79,7 @@ public class DialogUtil {
         final TextView titleTV = new TextView(ctx);
         titleTV.setTextSize(20);
         titleTV.setText(title);
-        AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
+        AlertDialog.Builder adb = new AlertDialog.Builder(ctx, R.style.Theme_Application_DayNight_Dialog_Alert);
         adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction == null ? (dialog, which) -> {
         } : negativeAction).setCustomTitle(titleTV);
         if (view != null) {
@@ -100,6 +100,12 @@ public class DialogUtil {
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, int titleId) {
         return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
         }, titleId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+    }
+
+    @NotNull
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, int titleId, boolean applicationOverlay) {
+        return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
+        }, titleId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, applicationOverlay);
     }
 
     @NotNull

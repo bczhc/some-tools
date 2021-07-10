@@ -1,10 +1,14 @@
 package pers.zhc.tools.fdb
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
+import android.widget.Button
+import android.widget.TextView
 import pers.zhc.tools.R
 import pers.zhc.tools.floatingdrawing.PaintView
 import pers.zhc.tools.utils.DialogUtil
@@ -96,8 +100,13 @@ class FdbWindow(private val context: Context) {
                         11 -> {
                             // exit
                             DialogUtil.createConfirmationAlertDialog(context, { _, _ ->
-                                stopFAB()
-                            }, R.string.fdb_exit_confirmation_dialog).show()
+                                if (context is FdbMainActivity) {
+                                    // also triggers `stopFAB()`
+                                    context.fdbSwitch.isChecked = false
+                                } else {
+                                    stopFAB()
+                                }
+                            }, R.string.fdb_exit_confirmation_dialog, true).show()
                         }
                         else -> {
                         }
@@ -108,7 +117,17 @@ class FdbWindow(private val context: Context) {
             }
         }
 
-//        colorPickers.brush = HSVAColorPickerRL(context, )
+        colorPickers.apply {
+            brush = HSVAColorPickerRL(context, Color.RED)
+            panel = HSVAColorPickerRL(context, Color.WHITE)
+            panelText = HSVAColorPickerRL(context, Color.parseColor("#808080"))
+        }
+
+        paintView.apply {
+            drawingStrokeWidth = 10F
+            eraserStrokeWidth = 10F
+            drawingColor = colorPickers.brush.color
+        }
     }
 
     fun startFAB() {
@@ -135,6 +154,5 @@ class FdbWindow(private val context: Context) {
         lateinit var brush: HSVAColorPickerRL
         lateinit var panelText: HSVAColorPickerRL
         lateinit var panel: HSVAColorPickerRL
-        lateinit var eraser: HSVAColorPickerRL
     }
 }
