@@ -24,6 +24,8 @@ class PanelRL : RelativeLayout {
     private lateinit var btnStrings: Array<String>
     private lateinit var mImageView: ImageView
     private var onButtonTouchedListener: ListenerFunction? = null
+    private var panelColor = 0
+    private var panelTextColor = 0
 
     constructor(context: Context?) : this(context, null)
 
@@ -103,6 +105,7 @@ class PanelRL : RelativeLayout {
     }
 
     fun setPanelColor(color: Int) {
+        panelColor = color
         val childCount = mPanelLL.childCount
         for (i in (0 until childCount)) {
             val child = mPanelLL.getChildAt(i) as TextView
@@ -111,11 +114,20 @@ class PanelRL : RelativeLayout {
     }
 
     fun setPanelTextColor(color: Int) {
+        panelTextColor = color
         val childCount = mPanelLL.childCount
         for (i in (0 until childCount)) {
             val child = mPanelLL.getChildAt(i) as TextView
             child.setTextColor(color)
         }
+    }
+
+    fun getPanelColor(): Int {
+        return panelColor
+    }
+
+    fun getPanelTextColor(): Int {
+        return panelTextColor
     }
 
     companion object {

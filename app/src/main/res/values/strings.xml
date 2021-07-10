@@ -445,5 +445,11 @@
     <string name="fdb_panel_drawing_mode">绘画</string>
     <string name="fdb_panel_operating_mode">操控</string>
     <string name="fdb_exit_confirmation_dialog">是否退出</string>
+    <string name="fdb_panel_erasing_mode">擦除</string>
+    <string name="fdb_clear_confirmation_dialog">是否清空</string>
+    <string name="fdb_panel_settings_panel_color_tv">面板颜色</string>
+    <string name="fdb_panel_settings_panel_text_color_tv">文字颜色</string>
+    <string name="fdb_panel_settings_follow_brush_color_switch">跟随笔刷颜色</string>
+    <string name="fdb_panel_settings_invert_text_color_switch">文字颜色反相</string>
     <!-- module end -->
 </resources>

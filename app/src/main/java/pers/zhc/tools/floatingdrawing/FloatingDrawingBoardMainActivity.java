@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.NotificationCompat;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
@@ -510,7 +511,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void setPanel() {
         Dialog c = new Dialog(this);
-        LinearLayout inflate = View.inflate(this, R.layout.panel_view, null).findViewById(R.id.ll);
+        LinearLayout inflate = View.inflate(this, R.layout.fdb_panel_settings_view, null).findViewById(R.id.ll);
         Button panelColorBtn = inflate.findViewById(R.id.panel_color);
         panelColorBtn.setEnabled(!this.panelColorFollowPainting);
         panelColorBtn.setOnClickListener(v2 -> {
@@ -547,7 +548,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             textsColorDialog.show();
         });
         textsColorBtn.setText(R.string.text_color);
-        Switch invertTextColor = inflate.findViewById(R.id.invert_text_color);
+        SwitchMaterial invertTextColor = inflate.findViewById(R.id.invert_text_color);
         invertTextColor.setChecked(invertColorChecked);
         invertTextColor.setOnCheckedChangeListener((buttonView, isChecked) -> {
             textsColorBtn.setEnabled(!isChecked);
@@ -555,7 +556,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             if (isChecked) setPanelTextColor(ColorUtils.invertColor(panelColor));
             else setPanelTextColor(panelTextColorHSVA.getColor());
         });
-        Switch followPaintingColor = inflate.findViewById(R.id.follow_painting_color);
+        SwitchMaterial followPaintingColor = inflate.findViewById(R.id.follow_painting_color);
         followPaintingColor.setChecked(this.panelColorFollowPainting);
         followPaintingColor.setOnCheckedChangeListener((buttonView, isChecked) -> {
             this.panelColorFollowPainting = isChecked;
