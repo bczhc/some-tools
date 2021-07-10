@@ -102,6 +102,22 @@ class PanelRL : RelativeLayout {
         return super.onInterceptTouchEvent(ev)
     }
 
+    fun setPanelColor(color: Int) {
+        val childCount = mPanelLL.childCount
+        for (i in (0 until childCount)) {
+            val child = mPanelLL.getChildAt(i) as TextView
+            child.setBackgroundColor(color)
+        }
+    }
+
+    fun setPanelTextColor(color: Int) {
+        val childCount = mPanelLL.childCount
+        for (i in (0 until childCount)) {
+            val child = mPanelLL.getChildAt(i) as TextView
+            child.setTextColor(color)
+        }
+    }
+
     companion object {
         const val MODE_IMAGE_ICON = 0
         const val MODE_PANEL = 1

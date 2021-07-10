@@ -7,7 +7,6 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -21,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 
 import java.util.Objects;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * @author bczhc
@@ -64,7 +65,11 @@ public class DialogUtil {
         }
     }
 
-    @NotNull
+    public static void setDialogAttr(Dialog d, boolean isTransparent, @Nullable Boolean applicationOverlay) {
+        setDialogAttr(d, isTransparent, WRAP_CONTENT, WRAP_CONTENT, applicationOverlay);
+    }
+
+        @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId, int width, int height, boolean applicationOverlay) {
         return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, null, titleId, width, height, applicationOverlay);
     }
@@ -99,24 +104,24 @@ public class DialogUtil {
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, int titleId) {
         return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
-        }, titleId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        }, titleId, WRAP_CONTENT, WRAP_CONTENT, false);
     }
 
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, int titleId, boolean applicationOverlay) {
         return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
-        }, titleId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, applicationOverlay);
+        }, titleId, WRAP_CONTENT, WRAP_CONTENT, applicationOverlay);
     }
 
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, String title) {
         return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
-        }, title, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        }, title, WRAP_CONTENT, WRAP_CONTENT, false);
     }
 
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId) {
-        return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, titleId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, titleId, WRAP_CONTENT, WRAP_CONTENT, false);
     }
 
     public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {

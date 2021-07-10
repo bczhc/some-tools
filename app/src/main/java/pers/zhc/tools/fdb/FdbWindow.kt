@@ -7,8 +7,6 @@ import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
-import android.widget.Button
-import android.widget.TextView
 import pers.zhc.tools.R
 import pers.zhc.tools.floatingdrawing.PaintView
 import pers.zhc.tools.utils.DialogUtil
@@ -29,7 +27,8 @@ class FdbWindow(private val context: Context) {
     private var operationMode = OperationMode.Operating
     private var brushMode = BrushMode.Drawing
 
-    private var colorPickers = ColorPickers()
+    private val colorPickers = ColorPickers()
+    private val dialogs = Dialogs()
 
     init {
         paintViewLP.apply {
@@ -93,6 +92,7 @@ class FdbWindow(private val context: Context) {
                         }
                         2 -> {
                             // color
+                            dialogs.brushColorPicker.show()
                         }
                         10 -> {
                             // more
@@ -121,6 +121,32 @@ class FdbWindow(private val context: Context) {
             brush = HSVAColorPickerRL(context, Color.RED)
             panel = HSVAColorPickerRL(context, Color.WHITE)
             panelText = HSVAColorPickerRL(context, Color.parseColor("#808080"))
+
+            brush.setOnColorPickedInterface { _, _, color ->
+                paintView.drawingColor = color
+            }
+
+            panel.setOnColorPickedInterface { _, _, color ->
+                panelRL.setPanelColor(color)
+            }
+
+            panelText.setOnColorPickedInterface { _, _, color ->
+                panelRL.setPanelTextColor(color)
+            }
+        }
+
+        dialogs.apply {
+            brushColorPicker = Dialog(context)
+            DialogUtil.setDialogAttr(brushColorPicker, true, true)
+            brushColorPicker.setContentView(colorPickers.brush)
+
+            panelTextColorPicker = Dialog(context)
+            DialogUtil.setDialogAttr(panelTextColorPicker, true, true)
+            panelTextColorPicker.setContentView(colorPickers.panelText)
+
+            panelColorPicker = Dialog(context)
+            DialogUtil.setDialogAttr(panelColorPicker, true, true)
+            panelColorPicker.setContentView(colorPickers.panel)
         }
 
         paintView.apply {
@@ -154,5 +180,11 @@ class FdbWindow(private val context: Context) {
         lateinit var brush: HSVAColorPickerRL
         lateinit var panelText: HSVAColorPickerRL
         lateinit var panel: HSVAColorPickerRL
+    }
+
+    class Dialogs {
+        lateinit var brushColorPicker: Dialog
+        lateinit var panelTextColorPicker: Dialog
+        lateinit var panelColorPicker: Dialog
     }
 }
