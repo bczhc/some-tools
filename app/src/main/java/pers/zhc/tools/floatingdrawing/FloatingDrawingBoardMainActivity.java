@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mariuszgromada.math.mxparser.Expression;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
-import pers.zhc.tools.filepicker.FilePickerRelativeLayout;
+import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.*;
 import pers.zhc.tools.utils.sqlite.Cursor;
 import pers.zhc.tools.utils.sqlite.SQLite3;
@@ -594,11 +594,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             SeekBar sb = new SeekBar(this);
             linearLayout.addView(titleTextView);
             linearLayout.addView(sb);
-            sb.setProgress(pv.getEraserAlpha() * 100 / 255);
+            sb.setProgress(pv.getEraserTransparency() * 100 / 255);
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    pv.setEraserAlpha(HSVAColorPickerRL.limitValue(progress * 255 / 100, 0, 255));
+                    pv.setEraserTransparency(HSVAColorPickerRL.limitValue(progress * 255 / 100, 0, 255));
                 }
 
                 @Override
@@ -919,7 +919,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void changeStrokeWidth() {
         Dialog mainDialog = new Dialog(this);
-        LinearLayout mainLL = View.inflate(this, R.layout.change_stroke_width_view, null).findViewById(R.id.ll);
+        LinearLayout mainLL = View.inflate(this, R.layout.fdb_stoke_width_view, null).findViewById(R.id.ll);
         RadioGroup rg = mainLL.findViewById(R.id.rg);
         RadioButton[] radioButtons = new RadioButton[2];
         for (int i = 0; i < radioButtons.length; i++) {
@@ -936,7 +936,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         strokeWatchView.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         SeekBar sb = mainLL.findViewById(R.id.sb);
         TextView tv = mainLL.findViewById(R.id.tv);
-        final int[] checked = {pv.eraserMode ? R.id.radio2 : R.id.radio1};
+        final int[] checked = {pv.eraserMode ? R.id.eraser_radio : R.id.brush_radio};
         tv.setOnClickListener(v -> {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             EditText et = new EditText(this);
@@ -947,13 +947,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     double a = Math.log(edit * pv.getScale()) / Math.log(1.07D);
                     strokeWatchView.change((edit * pv.getCanvas().getScale()), pv.getDrawingColor());
                     sb.setProgress((int) a);
-                    if (checked[0] == R.id.radio1) {
+                    if (checked[0] == R.id.brush_radio) {
                         pv.setDrawingStrokeWidth(edit);
-                    } else if (checked[0] == R.id.radio2) {
+                    } else if (checked[0] == R.id.eraser_radio) {
                         pv.setEraserStrokeWidth(edit);
                     }
                     pv.lockStroke();
-                    tv.setText(getString(R.string.stroke_width_info, edit, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
+                    tv.setText(getString(R.string.fdb_stroke_width_info, edit, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
                 } catch (Exception e) {
                     Common.showException(e, this);
                 }
@@ -971,7 +971,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         });
         float pvStrokeWidthInUse = pv.getStrokeWidthInUse();
         strokeWatchView.change((pvStrokeWidthInUse * pv.getCanvas().getScale()), pv.getDrawingColor());
-        tv.setText(getString(R.string.stroke_width_info, pvStrokeWidthInUse, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
+        tv.setText(getString(R.string.fdb_stroke_width_info, pvStrokeWidthInUse, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
         sb.setProgress((int) (Math.log(pvStrokeWidthInUse * pv.getScale()) / Math.log(1.07D)));
         sb.setMax(100);
         setDialogAttr(mainDialog, false, ((int) (((float) width) * .8F)), WRAP_CONTENT, true);
@@ -981,13 +981,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 if (fromUser) {
                     float pow = (float) Math.pow(1.07D, progress);
                     pow /= pv.getScale();
-                    if (checked[0] == R.id.radio1) {
+                    if (checked[0] == R.id.brush_radio) {
                         pv.setDrawingStrokeWidth(pow);
                     } else {
                         pv.setEraserStrokeWidth(pow);
                     }
                     pv.lockStroke();
-                    tv.setText(getString(R.string.stroke_width_info, pow, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
+                    tv.setText(getString(R.string.fdb_stroke_width_info, pow, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
                     strokeWatchView.change((pow * pv.getCanvas().getScale()), pv.getDrawingColor());
                 }
             }
@@ -1004,9 +1004,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         });
         rg.setOnCheckedChangeListener((group, checkedId) -> {
             checked[0] = checkedId;
-            float strokeWidth = (checkedId == R.id.radio1) ? pv.getDrawingStrokeWidth() : pv.getEraserStrokeWidth();
+            float strokeWidth = (checkedId == R.id.brush_radio) ? pv.getDrawingStrokeWidth() : pv.getEraserStrokeWidth();
             strokeWatchView.change(strokeWidth * pv.getCanvas().getScale(), pv.getDrawingColor());
-            tv.setText(getString(R.string.stroke_width_info, strokeWidth, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
+            tv.setText(getString(R.string.fdb_stroke_width_info, strokeWidth, pv.getZoomedStrokeWidthInUse(), pv.getScale() * 100F));
             sb.setProgress((int) (Math.log(strokeWidth * pv.getScale()) / Math.log(1.07D)));
         });
         mainLL.addView(strokeWatchView);
@@ -1067,14 +1067,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         }
         View.OnClickListener[] onClickListeners = new View.OnClickListener[]{
                 v0 -> new PermissionRequester(() -> {
-                    Dialog dialog = getFilePickerDialog(imageDir, s -> {
+                    Dialog dialog = getFilePickerDialog(imageDir, (picker, path) -> {
+
                         AlertDialog.Builder importImageOptionsDialogBuilder = new AlertDialog.Builder(this);
                         LinearLayout linearLayout = new LinearLayout(this);
                         linearLayout.setOrientation(LinearLayout.VERTICAL);
                         TextView infoTV = new TextView(this);
                         EditText[] editTexts = new EditText[4];
                         Bitmap imageBitmap;
-                        if ((imageBitmap = BitmapFactory.decodeFile(s)) == null) {
+                        if ((imageBitmap = BitmapFactory.decodeFile(path)) == null) {
                             ToastUtils.show(this, R.string.importing_failed);
                             return;
                         }
@@ -1123,6 +1124,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 .create();
                         setDialogAttr(importImageOptionsDialog, false, WRAP_CONTENT, WRAP_CONTENT, true);
                         importImageOptionsDialog.show();
+
                     });
                     dialog.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -1202,9 +1204,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 }, R.string.whether_to_hide, WRAP_CONTENT, WRAP_CONTENT, true).show(),
                 v7 -> {
                     ToastUtils.show(this, R.string.choose_path_v_3_0_file);
-                    Dialog dialog = getFilePickerDialog(pathDir, s -> {
-                        if (s == null) return;
-                        SQLite3 db = SQLite3.open(s);
+                    Dialog dialog = getFilePickerDialog(pathDir, (picker, path) -> {
+
+                        if (path == null) return;
+                        SQLite3 db = SQLite3.open(path);
                         if (db.checkIfCorrupt()) {
                             ToastUtils.show(this, R.string.unsupported_path);
                             return;
@@ -1214,7 +1217,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
                         // show info dialog
                         Dialog d = new Dialog(this);
-                        DialogUtil.setDialogAttr(d, false, WRAP_CONTENT, WRAP_CONTENT, true);
+                        setDialogAttr(d, false, WRAP_CONTENT, WRAP_CONTENT, true);
 
                         View v = View.inflate(this, R.layout.path_file_info_view, null);
                         Button confirmBtn = v.findViewById(R.id.confirm);
@@ -1226,6 +1229,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                         d.setCanceledOnTouchOutside(false);
                         d.setContentView(v);
                         d.show();
+
                     });
                     dialog.show();
                 }
@@ -1314,13 +1318,13 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
      * @return dialog
      */
     @NotNull
-    private Dialog getFilePickerDialog(File initialPath, FilePickerRelativeLayout.OnPickedResultActionInterface onPickedResultAction) {
+    private Dialog getFilePickerDialog(File initialPath, FilePickerRL.OnPickedResultActionInterface onPickedResultAction) {
         Dialog dialog = new Dialog(this);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
-        FilePickerRelativeLayout fp = new FilePickerRelativeLayout(this, FilePickerRelativeLayout.TYPE_PICK_FILE, initialPath, dialog::dismiss, s -> {
+        FilePickerRL fp = new FilePickerRL(this, FilePickerRL.TYPE_PICK_FILE, initialPath, picker -> dialog.dismiss(), (picker, path) -> {
             dialog.dismiss();
-            onPickedResultAction.result(s);
+            onPickedResultAction.result(picker, path);
         }, null);
         setFilePickerDialog(dialog, fp);
         return dialog;
@@ -1337,8 +1341,9 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     private void importPath(@Nullable Dialog moreOptionsDialog, File pathDir) {
         new PermissionRequester(() -> {
-            Dialog dialog = getFilePickerDialog(pathDir, s -> {
-                if (currentInternalPathFile.getAbsolutePath().equals(s)) {
+            Dialog dialog = getFilePickerDialog(pathDir, (picker, path) -> {
+
+                if (currentInternalPathFile.getAbsolutePath().equals(path)) {
                     ToastUtils.show(this, R.string.can_not_import_itself);
                     return;
                 }
@@ -1404,7 +1409,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
                     TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
                     SpinLatch latch = new SpinLatch();
-                    pv.importPathFile(new File(s), () -> {
+                    pv.asyncImportPathFile(new File(path), () -> {
                         runOnUiThread(importPathFileDoneAction);
                         importPathFileProgressDialog.dismiss();
                     }, aFloat -> {
@@ -1427,23 +1432,24 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 AlertDialog ad = adb.create();
                 setDialogAttr(ad, false, WRAP_CONTENT, MATCH_PARENT, true);
                 ad.show();
+
             });
             dialog.show();
         }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                 , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
-    private void setFilePickerDialog(@NotNull Dialog dialog, FilePickerRelativeLayout filePickerRelativeLayout) {
+    private void setFilePickerDialog(@NotNull Dialog dialog, FilePickerRL filePickerRL) {
         dialog.setOnKeyListener((dialog1, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_UP) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    filePickerRelativeLayout.previous();
+                    filePickerRL.previous();
                 }
             }
             return false;
         });
         setDialogAttr(dialog, false, ((int) (((float) width) * .8)), ((int) (((float) height) * .8)), true);
-        dialog.setContentView(filePickerRelativeLayout);
+        dialog.setContentView(filePickerRL);
     }
 
     @Override
@@ -1482,7 +1488,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     public static abstract class AbstractCheckOverlayPermission {
         public AbstractCheckOverlayPermission(AppCompatActivity activity) {
-            if (!Settings.canDrawOverlays(activity)) {
+            if (!Settings. canDrawOverlays(activity)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + activity.getPackageName()));
                 activity.startActivityForResult(intent, RequestCode.REQUEST_OVERLAY);

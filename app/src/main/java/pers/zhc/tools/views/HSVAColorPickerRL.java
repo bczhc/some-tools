@@ -85,7 +85,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
         return value < min ? min : (Math.min(value, max));
     }
 
-    private void setCurrentX() {
+    private void updateCurrentX() {
         currentXPos[0] = hsv[0] * width / (float) 360;
         currentXPos[1] = hsv[1] * width;
         currentXPos[2] = hsv[2] * width;
@@ -104,7 +104,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
         };
         currentXPos = new float[hsvaViews.length];
 
-        setCurrentX();
+        updateCurrentX();
 
         final View inflate = View.inflate(context, R.layout.hsva_color_picker_view, null);
         final LinearLayout hsvaViewsLL = inflate.findViewById(R.id.hsva_views_ll);
@@ -141,7 +141,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 final int parsedColor = Color.parseColor(s);
                 Color.colorToHSV(parsedColor, hsv);
                 alpha = Color.alpha(parsedColor);
-                setCurrentX();
+                updateCurrentX();
                 invalidateAllViews();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -233,6 +233,13 @@ public class HSVAColorPickerRL extends RelativeLayout {
 
     public int getColor() {
         return Color.HSVToColor(alpha, this.hsv);
+    }
+
+    public void setColor(int color) {
+        Color.colorToHSV(color, hsv);
+        alpha = Color.alpha(color);
+        updateCurrentX();
+        invalidateAllViews();
     }
 
     private static class SavedColorListView extends BaseView {

@@ -3,6 +3,7 @@ package pers.zhc.tools.floatingdrawing;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.*;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -263,11 +264,11 @@ public class PaintView extends View {
         }
     }
 
-    public int getEraserAlpha() {
+    public int getEraserTransparency() {
         return this.eraserPaint.getAlpha();
     }
 
-    public void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
+    public void setEraserTransparency(@IntRange(from = 0, to = 255) int alpha) {
         this.eraserPaint.setAlpha(alpha);
     }
 
@@ -508,32 +509,19 @@ public class PaintView extends View {
     /**
      * 导入路径
      *
-     * @param f                   路径文件
-     * @param doneAction          完成回调接口
-     * @param floatValueInterface 进度回调接口
+     * @param f                路径文件
+     * @param doneAction       完成回调接口
+     * @param progressCallback 进度回调接口 Range: [0-1]
      */
-    @SuppressWarnings("BusyWait")
-    public void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
-        dontDrawWhileImporting = speedDelayMillis == 0;
-        if (floatValueInterface != null) {
-            floatValueInterface.f(0F);
-        }
-        CanDoHandler<Float> canDoHandler = new CanDoHandler<>(aFloat -> {
-            if (floatValueInterface != null && aFloat != null) {
-                floatValueInterface.f(aFloat);
-            }
-        });
-        canDoHandler.start();
+    public void asyncImportPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> progressCallback, int speedDelayMillis) {
         Handler handler = new Handler();
-        Thread thread = new Thread(() -> {
-            SQLite3 open = SQLite3.open(f.getPath());
-            if (!open.checkIfCorrupt()) {
-                importPathVer3(open, canDoHandler, doneAction, speedDelayMillis);
-                dontDrawWhileImporting = false;
-                redrawCanvas();
-                postInvalidate();
-                return;
-            }
+
+        dontDrawWhileImporting = speedDelayMillis == 0;
+        if (progressCallback != null) {
+            progressCallback.f(0F);
+        }
+
+        final Runnable importOldPathRunnable = () -> {
             RandomAccessFile raf = null;
             try {
                 raf = new RandomAccessFile(f, "r");
@@ -598,11 +586,11 @@ public class PaintView extends View {
                                     break;
                             }
                             read += 12;
-                            canDoHandler.push(((float) read) * 100F / ((float) length));
+                            progressCallback.f((float) read / ((float) length));
                         }
                         break;
                     case "path ver 2.1":
-                        //512 * 9
+                        // 512 * 9
                         int bufferSize = 2304;
                         handler.post(() -> ToastUtils.show(ctx, R.string.import_2_1));
                         raf.skipBytes(12);
@@ -647,12 +635,12 @@ public class PaintView extends View {
                                         break;
                                 }
                                 read += 9L;
-                                canDoHandler.push(((float) read) * 100F / ((float) length));
+                                progressCallback.f((float) read / (float) length);
                             }
                         }
                         break;
                     default:
-                        handler.post(() -> ToastUtils.show(ctx, R.string.import_old));
+                        handler.post(() -> ToastUtils.show(ctx, R.string.import_path_1_0));
                         bytes = new byte[26];
                         byte[] bytes_4 = new byte[4];
                         read = 0L;
@@ -695,17 +683,16 @@ public class PaintView extends View {
                                     setDrawingColor(color);
                                     setDrawingStrokeWidth(strokeWidth);
                                     onTouchAction(motionAction, x, y);
-                                    canDoHandler.push(((float) read) * 100F / ((float) length));
+                                    progressCallback.f((float) read / (float) length);
                                     break;
                             }
                         }
                         break;
                 }
-                canDoHandler.stop();
                 doneAction.run();
-                ((FloatingDrawingBoardMainActivity) ctx).strokeColorHSVA.set(getDrawingColor());
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
+            } catch (InterruptedException ignored) {
             } finally {
                 dontDrawWhileImporting = false;
                 if (raf != null) {
@@ -718,8 +705,16 @@ public class PaintView extends View {
                 redrawCanvas();
                 postInvalidate();
             }
-        });
-        thread.start();
+        };
+
+        new Thread(() -> {
+            try {
+                importPathVer3(f.getPath(), progressCallback, speedDelayMillis);
+            } catch (SQLiteDatabaseCorruptException ignored) {
+                importOldPathRunnable.run();
+            }
+            doneAction.run();
+        }).start();
     }
 
     private int randomGen(int min, int max) {
@@ -727,20 +722,23 @@ public class PaintView extends View {
         return (int) ran_sc_db;
     }
 
-    private void importPathVer3(@NotNull SQLite3 db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
-        int[] recordNum = {0};
-        db.exec("SELECT COUNT(*) FROM path", contents -> {
-            recordNum[0] = Integer.parseInt(contents[0]);
-            return 0;
-        });
-        dontDrawWhileImporting = speedDelayMillis == 0;
-        Statement statement;
-        try {
-            statement = db.compileStatement("SELECT * FROM path");
-        } catch (Exception e) {
-            Common.showException(e, (Activity) ctx);
-            return;
+    private void importPathVer3(@NotNull String path, ValueInterface<Float> progressCallback, int speedDelayMillis) {
+        final SQLite3 db = SQLite3.open(path);
+        if (db.checkIfCorrupt()) {
+            db.close();
+            throw new SQLiteDatabaseCorruptException();
         }
+
+        final Statement statement0 = db.compileStatement("SELECT COUNT() FROM path");
+        final Cursor cursor0 = statement0.getCursor();
+        Common.doAssertion(cursor0.step());
+        int recordNum = cursor0.getInt(0);
+        statement0.release();
+
+        dontDrawWhileImporting = speedDelayMillis == 0;
+
+        Statement statement = db.compileStatement("SELECT mark, p1, p2\n" +
+                "FROM path");
 
         Cursor cursor = statement.getCursor();
         int c = 0;
@@ -767,7 +765,7 @@ public class PaintView extends View {
                     break;
                 case 0x11:
                     setEraserMode(true);
-                    setEraserAlpha(cursor.getInt(1));
+                    setEraserTransparency(cursor.getInt(1));
                     setEraserStrokeWidth(cursor.getFloat(2));
                     break;
                 case 0x20:
@@ -780,7 +778,7 @@ public class PaintView extends View {
             }
 
             ++c;
-            canDoHandler.push(((float) c) / ((float) recordNum[0]) * 100F);
+            progressCallback.f((float) c / (float) recordNum);
             if (!dontDrawWhileImporting) {
                 try {
                     //noinspection BusyWait
@@ -792,17 +790,14 @@ public class PaintView extends View {
         }
 
         String extraStr = null;
-        try {
-            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
-                    "FROM info");
-            Cursor infoCursor = infoStatement.getCursor();
-            if (infoCursor.step()) {
-                extraStr = infoCursor.getText(0);
-            }
-            infoStatement.release();
-        } catch (Exception e) {
-            Common.showException(e, ctx);
+        Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
+                "FROM info");
+        Cursor infoCursor = infoStatement.getCursor();
+        if (infoCursor.step()) {
+            extraStr = infoCursor.getText(0);
         }
+        infoStatement.release();
+
         if (extraStr != null) {
             try {
                 JSONObject jsonObject = new JSONObject(extraStr);
@@ -816,13 +811,9 @@ public class PaintView extends View {
             }
         }
 
-        doneAction.run();
+        statement.release();
 
-        try {
-            statement.release();
-        } catch (Exception e) {
-            Common.showException(e, (Activity) ctx);
-        }
+        postInvalidate();
     }
 
     private void onTouchAction(int motionAction, float x, float y) {
@@ -1211,7 +1202,7 @@ public class PaintView extends View {
 
         private void onTouchDown(float x, float y) {
             if (eraserMode) {
-                insert(0x11, getEraserAlpha(), getEraserStrokeWidth());
+                insert(0x11, getEraserTransparency(), getEraserStrokeWidth());
                 insert(0x12, x, y);
             } else {
                 insert(0x01, getDrawingColor(), getDrawingStrokeWidth());

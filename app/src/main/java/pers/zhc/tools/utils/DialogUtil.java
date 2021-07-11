@@ -19,8 +19,6 @@ import androidx.appcompat.app.AlertDialog;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 
-import java.util.Objects;
-
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
@@ -45,11 +43,8 @@ public class DialogUtil {
         } else {
             overlay = applicationOverlay;
         }
-        Window window;
-        try {
-            window = Objects.requireNonNull(d.getWindow());
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        final Window window = d.getWindow();
+        if (window == null) {
             return;
         }
         if (overlay) {

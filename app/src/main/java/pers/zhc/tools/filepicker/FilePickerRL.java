@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
@@ -32,11 +33,11 @@ import static pers.zhc.tools.utils.Common.showException;
  * Shitcode!
  */
 @SuppressLint("ViewConstructor")
-public class FilePickerRelativeLayout extends RelativeLayout {
+public class FilePickerRL extends RelativeLayout {
     public static final int TYPE_PICK_FILE = 1;
     public static final int TYPE_PICK_FOLDER = 2;
     private final File initialPath;
-    private final Runnable cancelAction;
+    private final OnCancelCallback cancelAction;
     private final OnPickedResultActionInterface pickedResultAction;
     private final int[] justPicked = new int[]{-1};
     private final @DrawableRes
@@ -57,8 +58,8 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     int unselectedDrawable;
     private CheckBox regexCB;
 
-    public FilePickerRelativeLayout(Context context, int type, @Nullable File initialPath
-            , Runnable cancelAction, OnPickedResultActionInterface pickedResultAction
+    public FilePickerRL(Context context, int type, @Nullable File initialPath
+            , OnCancelCallback cancelAction, OnPickedResultActionInterface pickedResultAction
             , @Nullable String initFileName) {
         super(context);
 //        this.currentFiles = new LinkedList<>();
@@ -79,7 +80,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
         regexCB = findViewById(R.id.regex_cb);
         regexCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            File[] fileList = getFileList(FilePickerRelativeLayout.this.currentPath);
+            File[] fileList = getFileList(FilePickerRL.this.currentPath);
             fillViews(fileList);
         });
         headEditText = findViewById(R.id.file_name_et);
@@ -97,7 +98,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
 
             @Override
             public void afterTextChanged(Editable s) {
-                File[] fileList = getFileList(FilePickerRelativeLayout.this.currentPath);
+                File[] fileList = getFileList(FilePickerRL.this.currentPath);
                 fillViews(fileList);
             }
         });
@@ -105,7 +106,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         Button ok = findViewById(R.id.pick);
         cancel.setOnClickListener(v -> {
             result = null;
-            cancelAction.run();
+            cancelAction.cancel(this);
         });
         ok.setOnClickListener(v -> {
             if (type == 2) {
@@ -114,7 +115,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                 result = dir;
             }
             if (result != null)
-                pickedResultAction.result(result);
+                pickedResultAction.result(this, result);
         });
         this.pathView = findViewById(R.id.textView);
         this.pathView.setOnClickListener((v) -> {
@@ -268,7 +269,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     public void previous() {
         result = null;
         if (currentPath.equals(new File(File.separator))) {
-            cancelAction.run();
+            cancelAction.cancel(this);
             return;
         }
         try {
@@ -344,9 +345,10 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         /**
          * onPickedResult callback
          *
-         * @param s result string
+         * @param picker this picker
+         * @param path result string
          */
-        void result(String s);
+        void result(FilePickerRL picker, String path);
     }
 
     private static class TextViewWithExtra extends AppCompatTextView {
@@ -363,5 +365,9 @@ public class FilePickerRelativeLayout extends RelativeLayout {
             super.setBackgroundResource(resId);
             this.picked = (resId == R.drawable.file_picker_view_checked);
         }
+    }
+
+    public interface OnCancelCallback {
+        void cancel(@NotNull FilePickerRL picker);
     }
 }

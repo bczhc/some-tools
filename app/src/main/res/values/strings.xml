@@ -4,6 +4,7 @@
     <string name="notification_chnnel_name_common">常规</string>
     <string name="cancel_btn">取消</string>
     <string name="empty" translatable="false"/>
+    <string name="percentage">%1$f%%</string>
     <!-- end -->
 
     <string name="app_name" translatable="false">Tools</string>
@@ -169,7 +170,7 @@
     <string name="saving">正在保存</string>
     <string name="floating_board">悬浮窗</string>
     <string name="input_event">输入事件</string>
-    <string name="import_old">使用旧path格式导入</string>
+    <string name="import_path_1_0">使用1.0版本path导入</string>
     <string name="final_resolution_is">最终分辨率为%1$d*%2$d</string>
     <string name="please_enter_multiple">请输入倍数</string>
     <string name="one">1</string>
@@ -195,7 +196,7 @@
     <string name="apk">apk</string>
     <string name="download_progress">%1$d/%2$d</string>
     <string name="can_not_import_itself">不能导入自己</string>
-    <string name="stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
+    <string name="fdb_stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
     <string name="manage_layer">管理图层</string>
     <string name="hide_panel">隐藏面板</string>
     <string name="request_permission_error">请求权限出错</string>
@@ -451,5 +452,7 @@
     <string name="fdb_panel_settings_panel_text_color_tv">文字颜色</string>
     <string name="fdb_panel_settings_follow_brush_color_switch">跟随笔刷颜色</string>
     <string name="fdb_panel_settings_invert_text_color_switch">文字颜色反相</string>
+    <string name="fdb_importing_path_succeeded_toast">导入成功</string>
+    <string name="fdb_importing_path_progress_title">正在导入</string>
     <!-- module end -->
 </resources>

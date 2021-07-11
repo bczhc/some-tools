@@ -25,7 +25,7 @@ public class FilePicker extends BaseActivity {
     public static final int PICK_FILE = 1;
     public static final int PICK_FOLDER = 2;
     public static final int RESULT_CODE = 3;
-    private FilePickerRelativeLayout filePickerRelativeLayout;
+    private FilePickerRL filePickerRL;
 
     public static final String EXTRA_OPTION = "option";
     public static final String EXTRA_RESULT = "result";
@@ -55,27 +55,27 @@ public class FilePicker extends BaseActivity {
         Intent intent = getIntent();
         String initialPath = intent.getStringExtra("initialPath");
         initialPath = initialPath == null ? Common.getExternalStoragePath(this) : initialPath;
-        filePickerRelativeLayout = new FilePickerRelativeLayout(this
+        filePickerRL = new FilePickerRL(this
                 , intent.getIntExtra(EXTRA_OPTION, PICK_FILE)
                 , new File(initialPath)
-                , () -> {
+                , p -> {
             Intent r = new Intent();
             r.putExtra(EXTRA_RESULT, (String) null);
             setResult(RESULT_CODE, r);
             finish();
             overridePendingTransition(0, R.anim.fade_out);
-        }, s -> {
+        }, (picker, path) -> {
             Intent r = new Intent();
-            r.putExtra(EXTRA_RESULT, s);
+            r.putExtra(EXTRA_RESULT, path);
             setResult(RESULT_CODE, r);
             finish();
             overridePendingTransition(0, R.anim.fade_out);
         }, null);
-        setContentView(filePickerRelativeLayout);
+        setContentView(filePickerRL);
     }
 
     @Override
     public void onBackPressed() {
-        filePickerRelativeLayout.previous();
+        filePickerRL.previous();
     }
 }
