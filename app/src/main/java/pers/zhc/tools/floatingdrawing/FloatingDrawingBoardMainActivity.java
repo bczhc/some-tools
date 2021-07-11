@@ -256,7 +256,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         float proportionX = ((float) 75) / ((float) 720);
         float proportionY = ((float) 75) / ((float) 1360);
         this.iv.setLayoutParams(new ViewGroup.LayoutParams((int) (width * proportionX), (int) (height * proportionY)));
-        iv.setImageIcon(Icon.createWithResource(this, R.drawable.ic_db));
+        iv.setImageResource(R.drawable.ic_db);
         iv.setOnClickListener(v -> {
             fbLinearLayout.removeAllViews();
             fbLinearLayout.addView(optionsLinearLayout);
@@ -536,12 +536,12 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             HSVAColorPickerRL textsColorPicker = new HSVAColorPickerRL(this, panelTextColorHSVA);
             textsColorPicker.setOnColorPickedInterface((hsv, alpha, color) -> {
                 panelTextColorHSVA.set(alpha, hsv);
-                    for (TextView childTextView : childTextViews) {
-                        if (!invertColorChecked) {
-                            panelTextColor = panelTextColorHSVA.getColor();
-                        }
-                        childTextView.setTextColor(panelTextColor);
+                for (TextView childTextView : childTextViews) {
+                    if (!invertColorChecked) {
+                        panelTextColor = panelTextColorHSVA.getColor();
                     }
+                    childTextView.setTextColor(panelTextColor);
+                }
             });
 
             textsColorDialog.setContentView(textsColorPicker, new ViewGroup.LayoutParams(((int) (width * .8)), ((int) (height * .4))));
@@ -612,7 +612,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 }
             });
             dialog.setContentView(linearLayout);
-            DialogUtil.setDialogAttr(dialog, false
+            setDialogAttr(dialog, false
                     , MATCH_PARENT, WRAP_CONTENT, true);
         } else {
             dialog = new Dialog(this, R.style.dialog_with_background_dim_false);
@@ -620,8 +620,10 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             final Window dialogWindow = dialog.getWindow();
             if (dialogWindow != null) {
                 dialogWindow.setBackgroundDrawableResource(R.color.transparent);
-                dialogWindow.setAttributes(new WindowManager.LayoutParams(MATCH_PARENT, MATCH_PARENT
-                        , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    dialogWindow.setAttributes(new WindowManager.LayoutParams(MATCH_PARENT, MATCH_PARENT
+                            , WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, 0, PixelFormat.RGBX_8888));
+                }
             }
             setDialogAttr(dialog, true, ((int) (((float) width) * .8)), ((int) (((float) height) * .4)), true);
             HSVAColorPickerRL hsvaColorPickerRL = new HSVAColorPickerRL(this, strokeColorHSVA);
@@ -1153,7 +1155,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                                 expression.setExpressionString(completeParentheses(heightEditText.getText().toString()));
                                 imageH[0] = ((int) expression.calculate());
                                 if (Double.isNaN(imageW[0]) || Double.isNaN(imageH[0]) || imageW[0] <= 0 || imageH[0] <= 0) {
-                                    ToastUtils.show(FloatingDrawingBoardMainActivity.this, R.string.please_type_correct_value);
+                                    ToastUtils.show(FloatingDrawingBoardMainActivity.this, R.string.please_enter_correct_value_toast);
                                     moreOptionsDialog.dismiss();
                                     return;
                                 }
@@ -1488,13 +1490,15 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
 
     public static abstract class AbstractCheckOverlayPermission {
         public AbstractCheckOverlayPermission(AppCompatActivity activity) {
-            if (!Settings. canDrawOverlays(activity)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + activity.getPackageName()));
-                activity.startActivityForResult(intent, RequestCode.REQUEST_OVERLAY);
-                denied();
-            } else {
-                granted();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.canDrawOverlays(activity)) {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + activity.getPackageName()));
+                    activity.startActivityForResult(intent, RequestCode.REQUEST_OVERLAY);
+                    denied();
+                } else {
+                    granted();
+                }
             }
         }
 

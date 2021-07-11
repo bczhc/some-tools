@@ -145,7 +145,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 invalidateAllViews();
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastUtils.show(this.context, R.string.please_type_correct_value);
+                ToastUtils.show(this.context, R.string.please_enter_correct_value_toast);
             }
         });
         adb.setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -201,7 +201,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 ad1.show();
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastUtils.show(this.context, R.string.please_type_correct_value);
+                ToastUtils.show(this.context, R.string.please_enter_correct_value_toast);
             }
 
         });

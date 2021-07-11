@@ -23,10 +23,7 @@ import kotlinx.android.synthetic.main.progress_bar.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.PaintView
-import pers.zhc.tools.utils.ColorUtils
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.DialogUtil
-import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.*
 import pers.zhc.tools.views.HSVAColorPickerRL
 import java.io.File
 import kotlin.math.ln
@@ -239,7 +236,6 @@ class FdbWindow(private val context: Context) {
         val lockBrushCB = inflate.cb!!
         val strokeShowView = inflate.stroke_show!!
 
-        // TODO: 7/11/21 eraser transparency adjusting
         strokeShowView.setColor(paintView.drawingColor)
         strokeShowView.setDiameter(paintView.strokeWidthInUse)
         rg.check(
@@ -271,20 +267,37 @@ class FdbWindow(private val context: Context) {
 
         updateDisplay(BrushMode.IN_USE)
 
+        val updateWidthAndDisplay = { width: Float ->
+            when (rg.checkedRadioButtonId) {
+                R.id.brush_radio -> {
+                    paintView.drawingStrokeWidth = width
+                    updateDisplay(BrushMode.DRAWING)
+                }
+                R.id.eraser_radio -> {
+                    paintView.eraserStrokeWidth = width
+                    updateDisplay(BrushMode.ERASING)
+                }
+                else -> {
+                }
+            }
+        }
+
+        infoTV.setOnClickListener {
+            createPromptDialog(R.string.fdb_stroke_width_prompt_dialog) { et, _ ->
+                val px = et.text.toString().toFloatOrNull()
+                if (px == null) {
+                    ToastUtils.show(context, R.string.please_enter_correct_value_toast)
+                    return@createPromptDialog
+                }
+                updateWidthAndDisplay(px)
+            }.show()
+        }
+
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val width = base.pow(progress.toDouble()).toFloat()
-                when (rg.checkedRadioButtonId) {
-                    R.id.brush_radio -> {
-                        paintView.drawingStrokeWidth = width
-                        updateDisplay(BrushMode.DRAWING)
-                    }
-                    R.id.eraser_radio -> {
-                        paintView.eraserStrokeWidth = width
-                        updateDisplay(BrushMode.ERASING)
-                    }
-                    else -> {
-                    }
+                if (fromUser) {
+                    val width = base.pow(progress.toDouble()).toFloat()
+                    updateWidthAndDisplay(width)
                 }
             }
 
@@ -349,10 +362,19 @@ class FdbWindow(private val context: Context) {
         return DialogUtil.createConfirmationAlertDialog(context, positiveAction, titleRes, true)
     }
 
-    private fun createDialog(view: View, transparent: Boolean = false): Dialog {
+    private fun createDialog(view: View, transparent: Boolean = false, dim: Boolean = true): Dialog {
         val dialog = Dialog(context)
         DialogUtil.setDialogAttr(dialog, transparent, true)
+        if (!dim) {
+            dialog.window?.clearFlags(FLAG_DIM_BEHIND)
+        }
         dialog.setContentView(view)
+        return dialog
+    }
+
+    private fun createPromptDialog(@StringRes titleRes: Int, callback: PromptDialogCallback): AlertDialog {
+        val dialog = DialogUtil.createPromptDialog(context, titleRes, callback)
+        DialogUtil.setDialogAttr(dialog, false, true)
         return dialog
     }
 
