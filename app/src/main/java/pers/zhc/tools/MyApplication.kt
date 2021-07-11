@@ -32,7 +32,7 @@ class MyApplication : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID_COMMON,
-                getString(R.string.notification_chnnel_name_common),
+                getString(R.string.notification_channel_name_common),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             val manager = getSystemService(NotificationManager::class.java)

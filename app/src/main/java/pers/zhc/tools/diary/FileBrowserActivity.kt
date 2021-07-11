@@ -48,7 +48,7 @@ class FileBrowserActivity : DiaryBaseActivity() {
     private fun getImageFileContentView(filepath: String): View {
         val bitmap = BitmapFactory.decodeFile(filepath)
         if (bitmap == null) {
-            ToastUtils.show(this, R.string.diary_file_broser_open_file_failed)
+            ToastUtils.show(this, R.string.diary_file_browser_open_file_failed)
             return View(this)
         }
         return ScalableImageView(this).apply {
