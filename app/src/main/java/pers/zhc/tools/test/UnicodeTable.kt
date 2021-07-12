@@ -17,7 +17,6 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtil
-import pers.zhc.tools.utils.DisplayUtil
 import pers.zhc.tools.utils.PromptDialogCallback
 import pers.zhc.tools.utils.ToastUtils
 import java.util.*
@@ -76,7 +75,7 @@ class UnicodeTable : BaseActivity() {
                     val codepoint = input.toInt(16)
                     seek(codepoint)
                 } catch (e: NumberFormatException) {
-                    ToastUtils.showError(this, R.string.please_type_correct_value, e)
+                    ToastUtils.showError(this, R.string.please_enter_correct_value_toast, e)
                 }
             })
             .show()

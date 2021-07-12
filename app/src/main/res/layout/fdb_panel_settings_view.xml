@@ -6,19 +6,21 @@
               android:id="@+id/ll"
 >
     <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/control_panel_color"
+            android:text="@string/fdb_panel_settings_panel_color_tv"
             android:id="@+id/panel_color"
     />
     <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/text_color"
+            android:text="@string/fdb_panel_settings_panel_text_color_tv"
             android:id="@+id/text_color"
     />
-    <Switch android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/follow_painting_color"
+    <com.google.android.material.switchmaterial.SwitchMaterial
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/fdb_panel_settings_follow_brush_color_switch"
             android:id="@+id/follow_painting_color"
     />
-    <Switch android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/invert_text_color"
+    <com.google.android.material.switchmaterial.SwitchMaterial
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/fdb_panel_settings_invert_text_color_switch"
             android:id="@+id/invert_text_color"
     />
 </LinearLayout>

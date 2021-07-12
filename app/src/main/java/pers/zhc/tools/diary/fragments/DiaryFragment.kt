@@ -98,7 +98,7 @@ class DiaryFragment : DiaryBaseFragment() {
                 val newDateInt = try {
                     dateString.toInt()
                 } catch (e: java.lang.Exception) {
-                    ToastUtils.show(requireContext(), R.string.please_type_correct_value)
+                    ToastUtils.show(requireContext(), R.string.please_enter_correct_value_toast)
                     return@createConfirmationAlertDialog
                 }
                 changeDate(oldDateInt, newDateInt)
@@ -212,7 +212,7 @@ FROM diary"""
                         createDiary(dateInt)
                     }
                 } catch (e: NumberFormatException) {
-                    ToastUtils.show(context, R.string.please_type_correct_value)
+                    ToastUtils.show(context, R.string.please_enter_correct_value_toast)
                 }
             }
         promptDialog.show()

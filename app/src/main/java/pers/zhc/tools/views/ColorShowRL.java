@@ -7,13 +7,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import pers.zhc.tools.utils.ColorUtils;
 
 /**
  * @author bczhc
  */
 public class ColorShowRL extends RelativeLayout {
-    private ColorShowView colorShowView;
+    private StrokeShowView strokeShowView;
     private TextView hexTV;
 
     public ColorShowRL(Context context) {
@@ -26,7 +25,7 @@ public class ColorShowRL extends RelativeLayout {
     }
 
     private void init(Context context) {
-        colorShowView = new ColorShowView(context);
+        strokeShowView = new StrokeShowView(context);
         hexTV = new TextView(context);
         LinearLayout ll = new LinearLayout(context);
 
@@ -35,17 +34,17 @@ public class ColorShowRL extends RelativeLayout {
         LinearLayout.LayoutParams llLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ll.setLayoutParams(llLP);
         ll.setOrientation(LinearLayout.VERTICAL);
-        ll.addView(colorShowView);
+        ll.addView(strokeShowView);
         ll.addView(hexTV);
 
         this.addView(ll);
     }
 
     public void setColor(int color, String name) {
-        colorShowView.setColor(color);
+        strokeShowView.setColor(color);
         hexTV.setText(name);
         int measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         hexTV.measure(measureSpec, measureSpec);
-        colorShowView.setDiameter(hexTV.getMeasuredWidth());
+        strokeShowView.setDiameter(hexTV.getMeasuredWidth());
     }
 }

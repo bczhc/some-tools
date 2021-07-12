@@ -35,6 +35,8 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="Theme.Application.DayNight.Dialog.Alert" parent="Theme.MaterialComponents.DayNight.Dialog.Alert"/>
+
     <!-- ================================================================ -->
 
     <style name="AppThemeNotTranslucent" parent="Theme.Application">

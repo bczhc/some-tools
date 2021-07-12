@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/ll"
+>
+
+    <RadioGroup android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rg">
+        <RadioButton android:layout_width="match_parent" android:layout_height="wrap_content"
+                     android:text="@string/drawing_paint_stroke_width"
+                     android:id="@+id/brush_radio"
+        />
+        <RadioButton android:layout_width="match_parent" android:layout_height="wrap_content"
+                     android:text="@string/eraser_paint_stroke_width"
+                     android:id="@+id/eraser_radio"
+        />
+    </RadioGroup>
+    <CheckBox android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="@string/lock_stroke"
+              android:id="@+id/cb"
+    />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="@string/fdb_stroke_width_info"
+              android:textSize="15sp"
+              android:id="@+id/tv"
+    />
+    <SeekBar android:layout_width="match_parent" android:layout_height="wrap_content"
+             android:id="@+id/sb"/>
+    <pers.zhc.tools.views.StrokeShowView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:id="@+id/stroke_show"
+            tools:color="@color/red"
+            tools:diameter="100.0"
+            tools:ignore="PxUsage"/>
+</LinearLayout>

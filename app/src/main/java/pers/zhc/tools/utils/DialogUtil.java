@@ -7,7 +7,6 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -20,7 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 
-import java.util.Objects;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * @author bczhc
@@ -44,11 +43,8 @@ public class DialogUtil {
         } else {
             overlay = applicationOverlay;
         }
-        Window window;
-        try {
-            window = Objects.requireNonNull(d.getWindow());
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        final Window window = d.getWindow();
+        if (window == null) {
             return;
         }
         if (overlay) {
@@ -64,7 +60,11 @@ public class DialogUtil {
         }
     }
 
-    @NotNull
+    public static void setDialogAttr(Dialog d, boolean isTransparent, @Nullable Boolean applicationOverlay) {
+        setDialogAttr(d, isTransparent, WRAP_CONTENT, WRAP_CONTENT, applicationOverlay);
+    }
+
+        @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId, int width, int height, boolean applicationOverlay) {
         return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, null, titleId, width, height, applicationOverlay);
     }
@@ -79,7 +79,7 @@ public class DialogUtil {
         final TextView titleTV = new TextView(ctx);
         titleTV.setTextSize(20);
         titleTV.setText(title);
-        AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
+        AlertDialog.Builder adb = new AlertDialog.Builder(ctx, R.style.Theme_Application_DayNight_Dialog_Alert);
         adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction == null ? (dialog, which) -> {
         } : negativeAction).setCustomTitle(titleTV);
         if (view != null) {
@@ -99,18 +99,24 @@ public class DialogUtil {
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, int titleId) {
         return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
-        }, titleId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        }, titleId, WRAP_CONTENT, WRAP_CONTENT, false);
+    }
+
+    @NotNull
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, int titleId, boolean applicationOverlay) {
+        return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
+        }, titleId, WRAP_CONTENT, WRAP_CONTENT, applicationOverlay);
     }
 
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, String title) {
         return createConfirmationAlertDialog(ctx, positiveAction, (dialog, which) -> {
-        }, title, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        }, title, WRAP_CONTENT, WRAP_CONTENT, false);
     }
 
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId) {
-        return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, titleId, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+        return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, titleId, WRAP_CONTENT, WRAP_CONTENT, false);
     }
 
     public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {
@@ -122,18 +128,18 @@ public class DialogUtil {
         editText.setFocusableInTouchMode(true);
     }
 
+    @NotNull
     public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback, DialogInterface.OnClickListener negativeAction) {
-        AlertDialog[] ad = new AlertDialog[1];
-        AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
+        AlertDialog.Builder adb = new AlertDialog.Builder(ctx, R.style.Theme_Application_DayNight_Dialog_Alert);
         EditText et = new EditText(ctx);
         adb.setTitle(strId)
                 .setView(et)
-                .setPositiveButton(R.string.confirm, (dialog, which) -> callback.confirm(et, ad[0]))
+                .setPositiveButton(R.string.confirm, (dialog, which) -> callback.confirm(et, (AlertDialog) dialog))
                 .setNegativeButton(R.string.cancel, negativeAction);
-        ad[0] = adb.create();
-        return ad[0];
+        return adb.create();
     }
 
+    @NotNull
     public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback) {
         return createPromptDialog(ctx, strId, callback, (dialog, which) -> {
         });

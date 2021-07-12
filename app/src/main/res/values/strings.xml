@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- app -->
+    <string name="notification_channel_name_common">常规</string>
+    <!-- app end -->
+
     <!-- universal -->
-    <string name="notification_chnnel_name_common">常规</string>
     <string name="cancel_btn">取消</string>
     <string name="empty" translatable="false"/>
+    <string name="percentage">%1$f%%</string>
+    <string name="please_enter_correct_value_toast">请输入正确的值</string>
+    <string name="mkdir_failed">创建文件夹失败</string>
+    <string name="saving_succeeded_dialog">保存成功</string>
+    <string name="filename_hint">文件名</string>
     <!-- end -->
 
+    <!-- old -->
     <string name="app_name" translatable="false">Tools</string>
     <string name="str" translatable="false">%1$s</string>
     <string name="progress_tv" translatable="false">%1$f%%</string>
@@ -31,10 +40,8 @@
     <string name="iFileExtension">操作文件扩展名</string>
     <string name="oFileExtension">输出文件类型</string>
     <string name="settings">设置</string>
-    <string name="saving_succeeded">保存成功</string>
     <string name="expression_error">json表达错误</string>
     <string name="json_solve_error">json解析失败：</string>
-    <!--    <string name="pathEdit">输入路径</string>-->
     <string name="delete_old_file">完成后是否删除原文件</string>
     <string name="generate_pi">计算Pi</string>
     <string name="calc">计算</string>
@@ -137,7 +144,6 @@
     <string name="epicycles_count">本轮数量</string>
     <string name="epicycles_calc_progress" translatable="false">%1$f%%--%2$d/%3$d</string>
     <string name="thread_num">线程数</string>
-    <string name="please_type_correct_value">请输入正确的值</string>
     <string name="fourier_series_in_complex">复平面内傅里叶级数展开</string>
     <string name="appear_f_b">显示悬浮窗%1$s</string>
     <string name="hide_notification">隐藏通知</string>
@@ -169,7 +175,7 @@
     <string name="saving">正在保存</string>
     <string name="floating_board">悬浮窗</string>
     <string name="input_event">输入事件</string>
-    <string name="import_old">使用旧path格式导入</string>
+    <string name="import_path_1_0">使用1.0版本path导入</string>
     <string name="final_resolution_is">最终分辨率为%1$d*%2$d</string>
     <string name="please_enter_multiple">请输入倍数</string>
     <string name="one">1</string>
@@ -195,7 +201,7 @@
     <string name="apk">apk</string>
     <string name="download_progress">%1$d/%2$d</string>
     <string name="can_not_import_itself">不能导入自己</string>
-    <string name="stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
+    <string name="fdb_stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
     <string name="manage_layer">管理图层</string>
     <string name="hide_panel">隐藏面板</string>
     <string name="request_permission_error">请求权限出错</string>
@@ -354,13 +360,21 @@
     <string name="audio">音频</string>
     <string name="title_is">标题：%1$s</string>
     <string name="preview">预览</string>
-
+    <!-- end -->
+    <!-- TODO de-generalize the names -->
 
     <!-- new -->
+
+    <!-- app settings -->
+    <string name="settings_server_root_url">服务器URL</string>
+    <string name="settings_resource_root_url">资源根URL</string>
+    <!-- end -->
 
     <!-- module: unicode_table -->
     <string name="unicode_table_label">Unicode表</string>
     <string name="unicode_table_seek_menu">定位</string>
+    <string name="unicode_table_copying_succeeded_toast">复制成功</string>
+    <string name="unicode_table_codepoint_hex_is_dialog">十六进制码点：</string>
     <!-- module end -->
 
     <!-- module: diary -->
@@ -388,9 +402,9 @@
     <string name="diary_file_preview_description_is">描述：</string>
     <string name="diary_file_preview_content_is">内容：</string>
     <string name="diary_attachment_preview_activity_label">附件预览</string>
-    <string name="diary_attachment_adding_dumplicate_toast">已存在该附件</string>
+    <string name="diary_attachment_adding_duplicate_toast">已存在该附件</string>
     <string name="diary_attachment_library_duplicate_toast">已添加该文件</string>
-    <string name="diary_file_broser_open_file_failed">无法打开图片</string>
+    <string name="diary_file_browser_open_file_failed">无法打开图片</string>
     <!-- module end -->
 
     <!-- module: bus -->
@@ -427,15 +441,33 @@
 
     <!-- module: magic -->
     <string name="magic_label">Magic</string>
-    <string name="settings_server_root_url">服务器URL</string>
-    <string name="settings_resource_root_url">资源根URL</string>
     <string name="magic_missing_database_dialog">"数据库文件缺失，是否下载？ "</string>
     <string name="magic_load_failed_dialog">加载数据库失败，是否重新下载数据库？</string>
     <string name="magic_progress_listing">正在列出文件</string>
     <string name="magic_progress_describing">正在描述文件：%1$d/%2$d</string>
     <string name="magic_progress_sorting">正在排序</string>
     <string name="magic_progress_done">完成</string>
-    <string name="unicode_table_copying_succeeded_toast">复制成功</string>
-    <string name="unicode_table_codepoint_hex_is_dialog">十六进制码点：</string>
+    <!-- module end -->
+
+    <!-- module: fdb -->
+    <string name="fdb_label">悬浮画板</string>
+    <string name="fdb_switch">悬浮窗</string>
+    <string name="fdb_panel_drawing_mode">绘画</string>
+    <string name="fdb_panel_operating_mode">操控</string>
+    <string name="fdb_exit_confirmation_dialog">是否退出</string>
+    <string name="fdb_panel_erasing_mode">擦除</string>
+    <string name="fdb_clear_confirmation_dialog">是否清空</string>
+    <string name="fdb_panel_settings_panel_color_tv">面板颜色</string>
+    <string name="fdb_panel_settings_panel_text_color_tv">文字颜色</string>
+    <string name="fdb_panel_settings_follow_brush_color_switch">跟随笔刷颜色</string>
+    <string name="fdb_panel_settings_invert_text_color_switch">文字颜色反相</string>
+    <string name="fdb_importing_path_succeeded_toast">导入成功</string>
+    <string name="fdb_importing_path_progress_title">正在导入</string>
+    <string name="fdb_stroke_width_prompt_dialog">输入笔刷大小（px)</string>
+    <string name="fdb_hide_fdb_notification_title">画板</string>
+    <string name="fdb_fdb_window_lost_toast">画板丢失了……</string>
+    <string name="fdb_hide_fdb_notification_text">点击以恢复画板\n%1$s</string>
+    <string name="fdb_hide_fdb_confirmation_dialog">是否隐藏画板</string>
+    <string name="fdb_start_fdb_button">开启悬浮窗</string>
     <!-- module end -->
 </resources>

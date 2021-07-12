@@ -17,6 +17,8 @@
         <flag name="arrived" value="0"/>
         <flag name="onRoad" value="1"/>
     </attr>
+    <attr name="color" format="color"/>
+    <attr name="diameter" format="float"/>
 
     <declare-styleable name="ScrollEditText">
         <attr name="gravity"/>
@@ -41,5 +43,9 @@
     <declare-styleable name="TopLineNodeView">
         <attr name="busMarkDotCount"/>
         <attr name="busState"/>
+    </declare-styleable>
+    <declare-styleable name="StrokeShowView">
+        <attr name="color"/>
+        <attr name="diameter"/>
     </declare-styleable>
 </resources>

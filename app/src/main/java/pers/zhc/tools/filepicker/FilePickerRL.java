@@ -12,10 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.views.SmartHintEditText;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,11 +34,11 @@ import static pers.zhc.tools.utils.Common.showException;
  * Shitcode!
  */
 @SuppressLint("ViewConstructor")
-public class FilePickerRelativeLayout extends RelativeLayout {
+public class FilePickerRL extends RelativeLayout {
     public static final int TYPE_PICK_FILE = 1;
     public static final int TYPE_PICK_FOLDER = 2;
     private final File initialPath;
-    private final Runnable cancelAction;
+    private final OnCancelCallback cancelAction;
     private final OnPickedResultActionInterface pickedResultAction;
     private final int[] justPicked = new int[]{-1};
     private final @DrawableRes
@@ -52,16 +54,19 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     private File currentPath;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
-    private EditText headEditText;
+    private EditText filterET;
     private @DrawableRes
     int unselectedDrawable;
     private CheckBox regexCB;
+    private @Nullable
+    final EditText filenameET;
+    private RelativeLayout rootView;
 
-    public FilePickerRelativeLayout(Context context, int type, @Nullable File initialPath
-            , Runnable cancelAction, OnPickedResultActionInterface pickedResultAction
-            , @Nullable String initFileName) {
+    // Shitcode!!!
+    public FilePickerRL(Context context, int type, @Nullable File initialPath
+            , OnCancelCallback cancelAction, OnPickedResultActionInterface pickedResultAction
+            , @Nullable String initFileName, boolean enableFilenameET) {
         super(context);
-//        this.currentFiles = new LinkedList<>();
         this.ctx = (AppCompatActivity) context;
         this.type = type;
         this.initialPath = initialPath;
@@ -69,22 +74,35 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         this.pickedResultAction = pickedResultAction;
         initFileName = initFileName == null ? "" : initFileName;
         init(initFileName);
+
+        final SmartHintEditText smartHintEditText = rootView.findViewById(R.id.filename_et);
+        filenameET = smartHintEditText.getEditText();
+        if (!enableFilenameET) {
+            filenameET.setVisibility(GONE);
+            filenameET.requestLayout();
+        }
+    }
+
+    public FilePickerRL(Context context, int type, @Nullable File initialPath
+            , OnCancelCallback cancelAction, OnPickedResultActionInterface pickedResultAction
+            , @Nullable String initFileName) {
+        this(context, type, initialPath, cancelAction, pickedResultAction, initFileName, false);
     }
 
     private void init(String initFileName) {
         this.unselectedDrawable = this.type == TYPE_PICK_FILE ? cannotPick : canPickUnchecked;
-        View view = View.inflate(ctx, R.layout.file_picker_rl_activity, null);
-        this.addView(view);
+        rootView = ((RelativeLayout) View.inflate(ctx, R.layout.file_picker_rl_activity, null).getRootView());
+        this.addView(rootView);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
         regexCB = findViewById(R.id.regex_cb);
         regexCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            File[] fileList = getFileList(FilePickerRelativeLayout.this.currentPath);
+            File[] fileList = getFileList(FilePickerRL.this.currentPath);
             fillViews(fileList);
         });
-        headEditText = findViewById(R.id.file_name_et);
-        headEditText.setText(initFileName);
-        headEditText.addTextChangedListener(new TextWatcher() {
+        filterET = findViewById(R.id.filter_et);
+        filterET.setText(initFileName);
+        filterET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -97,7 +115,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
 
             @Override
             public void afterTextChanged(Editable s) {
-                File[] fileList = getFileList(FilePickerRelativeLayout.this.currentPath);
+                File[] fileList = getFileList(FilePickerRL.this.currentPath);
                 fillViews(fileList);
             }
         });
@@ -105,7 +123,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         Button ok = findViewById(R.id.pick);
         cancel.setOnClickListener(v -> {
             result = null;
-            cancelAction.run();
+            cancelAction.cancel(this);
         });
         ok.setOnClickListener(v -> {
             if (type == 2) {
@@ -114,7 +132,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
                 result = dir;
             }
             if (result != null)
-                pickedResultAction.result(result);
+                pickedResultAction.result(this, result);
         });
         this.pathView = findViewById(R.id.textView);
         this.pathView.setOnClickListener((v) -> {
@@ -156,7 +174,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     private void fillViews(File[] listFilesP) {
         final File[][] listFiles = {listFilesP};
         Thread thread = new Thread(() -> {
-            listFiles[0] = filter(listFiles[0], headEditText.getText().toString());
+            listFiles[0] = filter(listFiles[0], filterET.getText().toString());
             justPicked[0] = -1;
             ctx.runOnUiThread(ll::removeAllViews);
             String currentPathString;
@@ -268,7 +286,7 @@ public class FilePickerRelativeLayout extends RelativeLayout {
     public void previous() {
         result = null;
         if (currentPath.equals(new File(File.separator))) {
-            cancelAction.run();
+            cancelAction.cancel(this);
             return;
         }
         try {
@@ -313,11 +331,11 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         if (useRegExp) {
             try {
                 pattern = Pattern.compile(filterStr);
-                ctx.runOnUiThread(() -> headEditText.setBackgroundResource(R.drawable.edittext_right));
+                ctx.runOnUiThread(() -> filterET.setBackgroundResource(R.drawable.edittext_right));
             } catch (PatternSyntaxException ignored) {
-                ctx.runOnUiThread(() -> headEditText.setBackgroundResource(R.drawable.edittext_wrong));
+                ctx.runOnUiThread(() -> filterET.setBackgroundResource(R.drawable.edittext_wrong));
             }
-        } else ctx.runOnUiThread(() -> headEditText.setBackgroundResource(R.drawable.edittext_right));
+        } else ctx.runOnUiThread(() -> filterET.setBackgroundResource(R.drawable.edittext_right));
         List<File> fileList = new LinkedList<>();
         for (File file : files) {
             if (filterStr.isEmpty()) {
@@ -344,9 +362,10 @@ public class FilePickerRelativeLayout extends RelativeLayout {
         /**
          * onPickedResult callback
          *
-         * @param s result string
+         * @param picker this picker
+         * @param path   result string
          */
-        void result(String s);
+        void result(FilePickerRL picker, String path);
     }
 
     private static class TextViewWithExtra extends AppCompatTextView {
@@ -363,5 +382,20 @@ public class FilePickerRelativeLayout extends RelativeLayout {
             super.setBackgroundResource(resId);
             this.picked = (resId == R.drawable.file_picker_view_checked);
         }
+    }
+
+    @Nullable
+    public String getFilenameText() {
+        if (filenameET == null) return null;
+        return filenameET.getText().toString();
+    }
+
+    @Nullable
+    public EditText getFilenameET() {
+        return filenameET;
+    }
+
+    public interface OnCancelCallback {
+        void cancel(@NotNull FilePickerRL picker);
     }
 }

@@ -46,6 +46,14 @@
                 <action android:name="android.intent.action.AIRPLANE_MODE"/>
             </intent-filter>
         </receiver>
+        <receiver android:name=".fdb.FdbNotificationReceiver"
+                  android:enabled="true"
+                  android:exported="false"
+        >
+            <intent-filter>
+                <action android:name="pers.zhc.tools.ACTION_FDB_SHOW"/>
+            </intent-filter>
+        </receiver>
 
         <!-- Declares the input input_method service -->
         <service
@@ -61,6 +69,8 @@
                     android:resource="@xml/input_method"/>
         </service>
         <service android:name=".bus.BusArrivalReminderService"/>
+        <service android:name=".test.Demo$MyService"/>
+        <service android:name=".fdb.FdbService"/>
 
         <provider
                 android:name="androidx.core.content.FileProvider"
@@ -634,6 +644,18 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application"
                 android:label="@string/unicode_table_label"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".fdb.FdbMainActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:theme="@style/Theme.Application"
+                android:label="@string/fdb_label"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

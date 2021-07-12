@@ -9,14 +9,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.wubi_database_edit_activity.*
-import kotlinx.android.synthetic.main.wubi_dict_add_view.*
 import kotlinx.android.synthetic.main.wubi_dict_add_view.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.sqlite.SQLite3
-import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.collections.ArrayList
 
@@ -136,7 +134,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
                     } catch (e: Exception) {
                         when (e) {
                             is NumberFormatException, is IndexOutOfBoundsException -> {
-                                ToastUtils.show(this, R.string.please_type_correct_value)
+                                ToastUtils.show(this, R.string.please_enter_correct_value_toast)
                                 return@createConfirmationAlertDialog
                             }
                             else -> throw e

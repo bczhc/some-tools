@@ -54,4 +54,17 @@
         <item>使用默认编码库</item>
         <item>修改编码库</item>
     </array>
+
+    <!-- module: FDB -->
+    <array name="fdb_more_menu">
+        <item>导入图片</item>
+        <item>导出图片</item>
+        <item>导入路径</item>
+        <item>导出路径</item>
+        <item>重置变换</item>
+        <item>管理图层</item>
+        <item>隐藏画板</item>
+        <item>绘画统计</item>
+    </array>
+    <!-- module end -->
 </resources>

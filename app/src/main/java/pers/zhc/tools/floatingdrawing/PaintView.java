@@ -3,6 +3,7 @@ package pers.zhc.tools.floatingdrawing;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.*;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -36,6 +37,11 @@ import java.util.concurrent.Executors;
  */
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        return super.dispatchTouchEvent(event);
+    }
+
     private int height = -1;
     private int width = -1;
     private final Context ctx;
@@ -66,7 +72,7 @@ public class PaintView extends View {
     private Canvas mBackgroundCanvas;
     private GestureResolver gestureResolver;
     private boolean dontDrawWhileImporting = false;
-    private boolean lockingStroke = false;
+    private boolean lockStrokeEnabled = false;
     /**
      * locked absolute drawing stroke width
      */
@@ -160,7 +166,7 @@ public class PaintView extends View {
                 if (transCanvas != null) {
                     transCanvas.invertScale(dScale, midPointX, midPointY);
                 }
-                setCurrentStrokeWidthWithLockedStrokeWidth();
+                setCurrentStrokeWidthInLocked();
             }
 
             @Override
@@ -263,11 +269,11 @@ public class PaintView extends View {
         }
     }
 
-    public int getEraserAlpha() {
+    public int getEraserTransparency() {
         return this.eraserPaint.getAlpha();
     }
 
-    public void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
+    public void setEraserTransparency(@IntRange(from = 0, to = 255) int alpha) {
         this.eraserPaint.setAlpha(alpha);
     }
 
@@ -332,7 +338,7 @@ public class PaintView extends View {
             }
             handler.post(() -> {
                 if (f.exists()) {
-                    ToastUtils.show(ctx, ctx.getString(R.string.saving_succeeded) + "\n" + f);
+                    ToastUtils.show(ctx, ctx.getString(R.string.saving_succeeded_dialog) + "\n" + f);
                 } else {
                     ToastUtils.show(ctx, R.string.saving_failed);
                 }
@@ -452,10 +458,17 @@ public class PaintView extends View {
         int measuredW = measure(widthMeasureSpec);
         int measuredH = measure(heightMeasureSpec);
         setMeasuredDimension(measuredW, measuredH);
+
+        if (width == -1 && height == -1) {
+            // init
+            this.width = measuredW;
+            this.height = measuredH;
+            refreshBitmap(width, height);
+        }
         this.width = measuredW;
         this.height = measuredH;
 
-        refreshBitmap(width, height);
+        // TODO: 7/12/21 for drawing area screen orientation adaptation
     }
 
     public void refreshBitmap(int width, int height) {
@@ -508,32 +521,20 @@ public class PaintView extends View {
     /**
      * 导入路径
      *
-     * @param f                   路径文件
-     * @param doneAction          完成回调接口
-     * @param floatValueInterface 进度回调接口
+     * @param f                路径文件
+     * @param doneAction       完成回调接口
+     * @param progressCallback 进度回调接口 Range: [0-1]
      */
     @SuppressWarnings("BusyWait")
-    public void importPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> floatValueInterface, int speedDelayMillis) {
-        dontDrawWhileImporting = speedDelayMillis == 0;
-        if (floatValueInterface != null) {
-            floatValueInterface.f(0F);
-        }
-        CanDoHandler<Float> canDoHandler = new CanDoHandler<>(aFloat -> {
-            if (floatValueInterface != null && aFloat != null) {
-                floatValueInterface.f(aFloat);
-            }
-        });
-        canDoHandler.start();
+    public void asyncImportPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> progressCallback, int speedDelayMillis) {
         Handler handler = new Handler();
-        Thread thread = new Thread(() -> {
-            SQLite3 open = SQLite3.open(f.getPath());
-            if (!open.checkIfCorrupt()) {
-                importPathVer3(open, canDoHandler, doneAction, speedDelayMillis);
-                dontDrawWhileImporting = false;
-                redrawCanvas();
-                postInvalidate();
-                return;
-            }
+
+        dontDrawWhileImporting = speedDelayMillis == 0;
+        if (progressCallback != null) {
+            progressCallback.f(0F);
+        }
+
+        final Runnable importOldPathRunnable = () -> {
             RandomAccessFile raf = null;
             try {
                 raf = new RandomAccessFile(f, "r");
@@ -598,11 +599,13 @@ public class PaintView extends View {
                                     break;
                             }
                             read += 12;
-                            canDoHandler.push(((float) read) * 100F / ((float) length));
+                            if (progressCallback != null) {
+                                progressCallback.f((float) read / ((float) length));
+                            }
                         }
                         break;
                     case "path ver 2.1":
-                        //512 * 9
+                        // 512 * 9
                         int bufferSize = 2304;
                         handler.post(() -> ToastUtils.show(ctx, R.string.import_2_1));
                         raf.skipBytes(12);
@@ -647,12 +650,14 @@ public class PaintView extends View {
                                         break;
                                 }
                                 read += 9L;
-                                canDoHandler.push(((float) read) * 100F / ((float) length));
+                                if (progressCallback != null) {
+                                    progressCallback.f((float) read / (float) length);
+                                }
                             }
                         }
                         break;
                     default:
-                        handler.post(() -> ToastUtils.show(ctx, R.string.import_old));
+                        handler.post(() -> ToastUtils.show(ctx, R.string.import_path_1_0));
                         bytes = new byte[26];
                         byte[] bytes_4 = new byte[4];
                         read = 0L;
@@ -695,19 +700,18 @@ public class PaintView extends View {
                                     setDrawingColor(color);
                                     setDrawingStrokeWidth(strokeWidth);
                                     onTouchAction(motionAction, x, y);
-                                    canDoHandler.push(((float) read) * 100F / ((float) length));
+                                    if (progressCallback != null) {
+                                        progressCallback.f((float) read / (float) length);
+                                    }
                                     break;
                             }
                         }
                         break;
                 }
-                canDoHandler.stop();
-                doneAction.run();
-                ((FloatingDrawingBoardMainActivity) ctx).strokeColorHSVA.set(getDrawingColor());
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
+            } catch (InterruptedException ignored) {
             } finally {
-                dontDrawWhileImporting = false;
                 if (raf != null) {
                     try {
                         raf.close();
@@ -715,11 +719,22 @@ public class PaintView extends View {
                         e.printStackTrace();
                     }
                 }
-                redrawCanvas();
-                postInvalidate();
             }
-        });
-        thread.start();
+        };
+
+        new Thread(() -> {
+            try {
+                importPathVer3(f.getPath(), progressCallback == null ? ((v) -> {
+                }) : progressCallback, speedDelayMillis);
+            } catch (SQLiteDatabaseCorruptException ignored) {
+                importOldPathRunnable.run();
+            }
+
+            dontDrawWhileImporting = false;
+            redrawCanvas();
+            postInvalidate();
+            doneAction.run();
+        }).start();
     }
 
     private int randomGen(int min, int max) {
@@ -727,20 +742,23 @@ public class PaintView extends View {
         return (int) ran_sc_db;
     }
 
-    private void importPathVer3(@NotNull SQLite3 db, CanDoHandler<Float> canDoHandler, Runnable doneAction, int speedDelayMillis) {
-        int[] recordNum = {0};
-        db.exec("SELECT COUNT(*) FROM path", contents -> {
-            recordNum[0] = Integer.parseInt(contents[0]);
-            return 0;
-        });
-        dontDrawWhileImporting = speedDelayMillis == 0;
-        Statement statement;
-        try {
-            statement = db.compileStatement("SELECT * FROM path");
-        } catch (Exception e) {
-            Common.showException(e, (Activity) ctx);
-            return;
+    private void importPathVer3(@NotNull String path, ValueInterface<Float> progressCallback, int speedDelayMillis) {
+        final SQLite3 db = SQLite3.open(path);
+        if (db.checkIfCorrupt()) {
+            db.close();
+            throw new SQLiteDatabaseCorruptException();
         }
+
+        final Statement statement0 = db.compileStatement("SELECT COUNT() FROM path");
+        final Cursor cursor0 = statement0.getCursor();
+        Common.doAssertion(cursor0.step());
+        int recordNum = cursor0.getInt(0);
+        statement0.release();
+
+        dontDrawWhileImporting = speedDelayMillis == 0;
+
+        Statement statement = db.compileStatement("SELECT mark, p1, p2\n" +
+                "FROM path");
 
         Cursor cursor = statement.getCursor();
         int c = 0;
@@ -767,7 +785,7 @@ public class PaintView extends View {
                     break;
                 case 0x11:
                     setEraserMode(true);
-                    setEraserAlpha(cursor.getInt(1));
+                    setEraserTransparency(cursor.getInt(1));
                     setEraserStrokeWidth(cursor.getFloat(2));
                     break;
                 case 0x20:
@@ -780,7 +798,7 @@ public class PaintView extends View {
             }
 
             ++c;
-            canDoHandler.push(((float) c) / ((float) recordNum[0]) * 100F);
+            progressCallback.f((float) c / (float) recordNum);
             if (!dontDrawWhileImporting) {
                 try {
                     //noinspection BusyWait
@@ -800,9 +818,9 @@ public class PaintView extends View {
                 extraStr = infoCursor.getText(0);
             }
             infoStatement.release();
-        } catch (Exception e) {
-            Common.showException(e, ctx);
+        } catch (RuntimeException ignored) {
         }
+
         if (extraStr != null) {
             try {
                 JSONObject jsonObject = new JSONObject(extraStr);
@@ -810,19 +828,15 @@ public class PaintView extends View {
                 setLockingStroke(isLockingStroke);
                 lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
                 lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
-                setCurrentStrokeWidthWithLockedStrokeWidth();
+                setCurrentStrokeWidthInLocked();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        doneAction.run();
+        statement.release();
 
-        try {
-            statement.release();
-        } catch (Exception e) {
-            Common.showException(e, (Activity) ctx);
-        }
+        postInvalidate();
     }
 
     private void onTouchAction(int motionAction, float x, float y) {
@@ -846,7 +860,7 @@ public class PaintView extends View {
                     float dx = Math.abs(x - mLastX);
                     float dy = Math.abs(y - mLastY);
                     if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
-                        //利用二阶贝塞尔曲线，使绘制路径更加圆滑
+                        //利用二阶贝塞尔曲线，使绘制路径更加圆滑 TODO delete L, L~1
                         mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
                     }
                     mLastX = x;
@@ -899,7 +913,7 @@ public class PaintView extends View {
         headCanvas.reset();
         redrawCanvas();
         postInvalidate();
-        setCurrentStrokeWidthWithLockedStrokeWidth();
+        setCurrentStrokeWidthInLocked();
     }
 
     /**
@@ -922,7 +936,7 @@ public class PaintView extends View {
     }
 
     public boolean isLockingStroke() {
-        return this.lockingStroke;
+        return this.lockStrokeEnabled;
     }
 
     public void bitmapResolution(@NotNull Point point) {
@@ -931,23 +945,15 @@ public class PaintView extends View {
     }
 
     public void setLockingStroke(boolean mode) {
-        this.lockingStroke = mode;
+        this.lockStrokeEnabled = mode;
     }
 
     public void lockStroke() {
-        if (lockingStroke) {
+        if (lockStrokeEnabled) {
             float scale = headCanvas.getScale();
             this.lockedDrawingStrokeWidth = getDrawingStrokeWidth() * scale;
             this.lockedEraserStrokeWidth = getEraserStrokeWidth() * scale;
-            setCurrentStrokeWidthWithLockedStrokeWidth();
-        }
-    }
-
-    public void setCurrentStrokeWidthWithLockedStrokeWidth() {
-        if (lockingStroke) {
-            float canvasScale = headCanvas.getScale();
-            setDrawingStrokeWidth(lockedDrawingStrokeWidth / canvasScale);
-            setEraserStrokeWidth(lockedEraserStrokeWidth / canvasScale);
+            setCurrentStrokeWidthInLocked();
         }
     }
 
@@ -955,6 +961,30 @@ public class PaintView extends View {
         headCanvas = canvasMap.get(id);
         headBitmap = bitmapMap.get(headCanvas);
     }
+
+    // ----------------------- new API of stroke locking -------------------------------
+
+    public void setLockStrokeEnabled(boolean enabled) {
+        lockStrokeEnabled = enabled;
+        if (enabled) {
+            lockedDrawingStrokeWidth = getDrawingStrokeWidth();
+            lockedEraserStrokeWidth = getEraserStrokeWidth();
+        }
+    }
+
+    public boolean isLockStrokeEnabled() {
+        return lockStrokeEnabled;
+    }
+
+    public void setCurrentStrokeWidthInLocked() {
+        if (lockStrokeEnabled) {
+            float canvasScale = headCanvas.getScale();
+            setDrawingStrokeWidth(lockedDrawingStrokeWidth / canvasScale);
+            setEraserStrokeWidth(lockedEraserStrokeWidth / canvasScale);
+        }
+    }
+
+    // ----------------------------------- end -----------------------------------------
 
     public float getScale() {
         return headCanvas.getScale();
@@ -1211,7 +1241,7 @@ public class PaintView extends View {
 
         private void onTouchDown(float x, float y) {
             if (eraserMode) {
-                insert(0x11, getEraserAlpha(), getEraserStrokeWidth());
+                insert(0x11, getEraserTransparency(), getEraserStrokeWidth());
                 insert(0x12, x, y);
             } else {
                 insert(0x01, getDrawingColor(), getDrawingStrokeWidth());

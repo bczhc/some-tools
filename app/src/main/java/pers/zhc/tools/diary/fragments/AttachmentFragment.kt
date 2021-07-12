@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
@@ -193,7 +192,7 @@ WHERE diary_attachment_mapping.diary_date IS ?"""
 
                 val pickedAttachmentId = data.getLongExtra(EXTRA_PICKED_ATTACHMENT_ID, -1)
                 if (checkExistence(pickedAttachmentId)) {
-                    ToastUtils.show(context, R.string.diary_attachment_adding_dumplicate_toast)
+                    ToastUtils.show(context, R.string.diary_attachment_adding_duplicate_toast)
                     return
                 }
                 attachAttachment(pickedAttachmentId)
