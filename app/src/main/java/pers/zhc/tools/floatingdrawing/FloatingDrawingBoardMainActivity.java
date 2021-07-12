@@ -1185,7 +1185,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                             e.printStackTrace();
                         }
                         if (pathFile.exists()) {
-                            ToastUtils.show(this, getString(R.string.saving_succeeded) + "\n" + pathFile.toString());
+                            ToastUtils.show(this, getString(R.string.saving_succeeded_dialog) + "\n" + pathFile.toString());
                         } else {
                             ToastUtils.show(this, getString(R.string.concat, getString(R.string.saving_failed), et.toString()));
                         }

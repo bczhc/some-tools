@@ -130,7 +130,7 @@ public class DialogUtil {
 
     @NotNull
     public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback, DialogInterface.OnClickListener negativeAction) {
-        AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
+        AlertDialog.Builder adb = new AlertDialog.Builder(ctx, R.style.Theme_Application_DayNight_Dialog_Alert);
         EditText et = new EditText(ctx);
         adb.setTitle(strId)
                 .setView(et)

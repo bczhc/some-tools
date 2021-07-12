@@ -9,6 +9,8 @@
     <string name="empty" translatable="false"/>
     <string name="percentage">%1$f%%</string>
     <string name="please_enter_correct_value_toast">请输入正确的值</string>
+    <string name="mkdir_failed">创建文件夹失败</string>
+    <string name="saving_succeeded_dialog">保存成功</string>
     <!-- end -->
 
     <!-- old -->
@@ -37,7 +39,6 @@
     <string name="iFileExtension">操作文件扩展名</string>
     <string name="oFileExtension">输出文件类型</string>
     <string name="settings">设置</string>
-    <string name="saving_succeeded">保存成功</string>
     <string name="expression_error">json表达错误</string>
     <string name="json_solve_error">json解析失败：</string>
     <string name="delete_old_file">完成后是否删除原文件</string>

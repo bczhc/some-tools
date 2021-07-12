@@ -44,13 +44,21 @@ class FdbWindow(private val context: Context) {
     private var operationMode = OperationMode.OPERATING
     private var brushMode = BrushMode.DRAWING
 
-    private val dialogViews = ColorPickers()
+    private val colorPickers = ColorPickers()
     private val dialogs = Dialogs()
 
     private var followBrushColor = false
     private var invertTextColor = false
+    private val pathFiles = object {
+        val tmpPathDir = File(context.filesDir, "path")
+        val tmpPathFile = File(tmpPathDir, System.currentTimeMillis().toString() + ".path")
+    }
 
     init {
+        if (!pathFiles.tmpPathDir.exists() && !pathFiles.tmpPathDir.mkdirs()) {
+            ToastUtils.show(context, R.string.mkdir_failed)
+        }
+
         paintViewLP.apply {
             flags = FLAG_NOT_TOUCHABLE
                 .xor(FLAG_NOT_FOCUSABLE)
@@ -165,6 +173,7 @@ class FdbWindow(private val context: Context) {
                         11 -> {
                             // exit
                             createConfirmationDialog({ _, _ ->
+                                paintView.closePathDatabase()
                                 if (context is FdbMainActivity) {
                                     // also triggers `stopFAB()`
                                     context.fdbSwitch.isChecked = false
@@ -183,7 +192,7 @@ class FdbWindow(private val context: Context) {
             }
         }
 
-        dialogViews.apply {
+        colorPickers.apply {
             brush = HSVAColorPickerRL(context, Color.RED)
             panel = HSVAColorPickerRL(context, Color.WHITE)
             panelText = HSVAColorPickerRL(context, Color.parseColor("#808080"))
@@ -202,9 +211,9 @@ class FdbWindow(private val context: Context) {
         }
 
         dialogs.apply {
-            brushColorPicker = createDialog(dialogViews.brush, true)
-            panelColorPicker = createDialog(dialogViews.panel, true)
-            panelTextColorPicker = createDialog(dialogViews.panelText, true)
+            brushColorPicker = createDialog(colorPickers.brush, true, dim = false)
+            panelColorPicker = createDialog(colorPickers.panel, true, dim = false)
+            panelTextColorPicker = createDialog(colorPickers.panelText, true, dim = false)
             panelSettings = createPanelSettingsDialog()
             moreMenu = createMoreOptionDialog()
         }
@@ -212,13 +221,20 @@ class FdbWindow(private val context: Context) {
         paintView.apply {
             drawingStrokeWidth = 10F
             eraserStrokeWidth = 10F
-            drawingColor = dialogViews.brush.color
+            drawingColor = colorPickers.brush.color
+            enableSavePath(pathFiles.tmpPathFile.path)
         }
 
         val externalStorage = Common.getExternalStoragePath(context)
         val parent = File(externalStorage, "DrawingBoard")
         externalPath.path = File(parent, "path")
         externalPath.image = File(parent, "image")
+        if ((!externalPath.path.exists() && !externalPath.path.mkdirs()) ||
+            (!externalPath.image.exists() && !externalPath.image.mkdirs())
+        ) {
+            ToastUtils.show(context, R.string.mkdir_failed)
+        }
+        // TODO: 7/11/21 handle storage permission request
     }
 
     private fun showBrushWidthAdjustingDialog() {
@@ -379,14 +395,16 @@ class FdbWindow(private val context: Context) {
     }
 
     private fun createFilePickerDialog(
+        type: Int = FilePickerRL.TYPE_PICK_FILE,
         initialPath: File,
         onPickResultCallback: (dialog: Dialog, path: String) -> Unit
     ): Dialog {
         val dialog = Dialog(context)
 
-        val filePickerRL = FilePickerRL(context, FilePickerRL.TYPE_PICK_FILE, initialPath, {
+        val filePickerRL = FilePickerRL(context, type, initialPath, {
             dialog.dismiss()
         }, { _, path ->
+            dialog.dismiss()
             onPickResultCallback(dialog, path)
         }, null)
 
@@ -446,7 +464,7 @@ class FdbWindow(private val context: Context) {
             if (isChecked) {
                 updatePanelColor(paintView.drawingColor)
             } else {
-                updatePanelColor(dialogViews.panel.color)
+                updatePanelColor(colorPickers.panel.color)
             }
         }
         invertTextColorSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -456,7 +474,7 @@ class FdbWindow(private val context: Context) {
             if (isChecked) {
                 updatePanelTextColor(ColorUtils.invertColor(panelRL.getPanelColor()))
             } else {
-                updatePanelTextColor(dialogViews.panelText.color)
+                updatePanelTextColor(colorPickers.panelText.color)
             }
         }
 
@@ -473,12 +491,13 @@ class FdbWindow(private val context: Context) {
                     }
                     1 -> {
                         // export image
+                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FOLDER, externalPath.image) {_, path ->
+                        }
                         TODO()
                     }
                     2 -> {
                         // import path
-                        createFilePickerDialog(externalPath.path) { dialog, file ->
-                            dialog.dismiss()
+                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { dialog, file ->
                             dialogs.moreMenu.dismiss()
 
                             val progressView = View.inflate(context, R.layout.progress_bar, null)
@@ -490,6 +509,8 @@ class FdbWindow(private val context: Context) {
                             val progressDialog = createDialog(progressView)
                             progressDialog.show()
 
+                            val messenger = Messenger<Float>()
+
                             paintView.asyncImportPathFile(File(file), {
                                 Common.runOnUiThread(context) {
                                     progressDialog.dismiss()
@@ -497,19 +518,42 @@ class FdbWindow(private val context: Context) {
                                         context,
                                         context.getString(R.string.fdb_importing_path_succeeded_toast)
                                     )
-                                    dialogViews.brush.color = paintView.drawingColor
+                                    colorPickers.brush.color = paintView.drawingColor
+                                    panelRL.getPanelTextView(6).text = context.getString(
+                                        if (paintView.isEraserMode) {
+                                            R.string.fdb_panel_erasing_mode
+                                        } else {
+                                            R.string.fdb_panel_drawing_mode
+                                        }
+                                    )
                                 }
                             }, { progress ->
-                                Common.runOnUiThread(context) {
-//                                progressBar.progress = (progress * 100F).toInt()
-//                                    progressTV.text = context.getString(R.string.percentage, progress * 100F)
-                                }
+                                messenger.set(progress)
                             }, 0/* TODO */)
+
+                            Thread {
+                                messenger.start { self, progress, notifier ->
+                                    progress!!
+                                    Common.runOnUiThread(context) {
+                                        progressBar.progress = (progress * 100F).toInt()
+                                        progressTV.text = context.getString(R.string.percentage, progress * 100F)
+                                        if (progress == 1F) {
+                                            self.stop()
+                                        }
+                                        notifier.finish()
+                                    }
+                                }
+                            }.start()
                         }.show()
                     }
                     3 -> {
                         // export path
-                        TODO()
+                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FOLDER, externalPath.path) { _, path ->
+
+                            val pathFile = File(path, System.currentTimeMillis().toString() + ".path")
+                            FileUtil.copy(pathFiles.tmpPathFile, pathFile)
+                            ToastUtils.show(context, R.string.saving_succeeded_dialog)
+                        }.show()
                     }
                     4 -> {
                         // reset transformation

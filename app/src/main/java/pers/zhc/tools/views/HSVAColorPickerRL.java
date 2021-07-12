@@ -283,6 +283,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
             hsvaViewsParams.height = height / hsvaViews.length;
             view.setLayoutParams(hsvaViewsParams);
         }
+        updateCurrentX();
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }

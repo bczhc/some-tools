@@ -333,7 +333,7 @@ public class PaintView extends View {
             }
             handler.post(() -> {
                 if (f.exists()) {
-                    ToastUtils.show(ctx, ctx.getString(R.string.saving_succeeded) + "\n" + f);
+                    ToastUtils.show(ctx, ctx.getString(R.string.saving_succeeded_dialog) + "\n" + f);
                 } else {
                     ToastUtils.show(ctx, R.string.saving_failed);
                 }
@@ -513,6 +513,7 @@ public class PaintView extends View {
      * @param doneAction       完成回调接口
      * @param progressCallback 进度回调接口 Range: [0-1]
      */
+    @SuppressWarnings("BusyWait")
     public void asyncImportPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> progressCallback, int speedDelayMillis) {
         Handler handler = new Handler();
 
@@ -586,7 +587,9 @@ public class PaintView extends View {
                                     break;
                             }
                             read += 12;
-                            progressCallback.f((float) read / ((float) length));
+                            if (progressCallback != null) {
+                                progressCallback.f((float) read / ((float) length));
+                            }
                         }
                         break;
                     case "path ver 2.1":
@@ -635,7 +638,9 @@ public class PaintView extends View {
                                         break;
                                 }
                                 read += 9L;
-                                progressCallback.f((float) read / (float) length);
+                                if (progressCallback != null) {
+                                    progressCallback.f((float) read / (float) length);
+                                }
                             }
                         }
                         break;
@@ -683,18 +688,18 @@ public class PaintView extends View {
                                     setDrawingColor(color);
                                     setDrawingStrokeWidth(strokeWidth);
                                     onTouchAction(motionAction, x, y);
-                                    progressCallback.f((float) read / (float) length);
+                                    if (progressCallback != null) {
+                                        progressCallback.f((float) read / (float) length);
+                                    }
                                     break;
                             }
                         }
                         break;
                 }
-                doneAction.run();
             } catch (IOException e) {
                 handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
             } catch (InterruptedException ignored) {
             } finally {
-                dontDrawWhileImporting = false;
                 if (raf != null) {
                     try {
                         raf.close();
@@ -702,17 +707,19 @@ public class PaintView extends View {
                         e.printStackTrace();
                     }
                 }
-                redrawCanvas();
-                postInvalidate();
             }
         };
 
         new Thread(() -> {
             try {
-                importPathVer3(f.getPath(), progressCallback, speedDelayMillis);
+                importPathVer3(f.getPath(), progressCallback == null ? ((v) -> {}) : progressCallback, speedDelayMillis);
             } catch (SQLiteDatabaseCorruptException ignored) {
                 importOldPathRunnable.run();
             }
+
+            dontDrawWhileImporting = false;
+            redrawCanvas();
+            postInvalidate();
             doneAction.run();
         }).start();
     }
