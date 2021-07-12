@@ -48,7 +48,7 @@ public class S extends BaseActivity {
         screenColorPickerView.measure(wMode, hMode);
         int measuredWidth = screenColorPickerView.getMeasuredWidth();
         int measuredHeight = screenColorPickerView.getMeasuredHeight();
-        FloatingViewOnTouchListener listener = new FloatingViewOnTouchListener(lp, wm, screenColorPickerView, screenWidth, screenHeight, new FloatingViewOnTouchListener.ViewSpec(measuredWidth, measuredHeight));
+        FloatingViewOnTouchListener listener = new FloatingViewOnTouchListener(lp, wm, screenColorPickerView, screenWidth, screenHeight, new FloatingViewOnTouchListener.ViewDimension(measuredWidth, measuredHeight));
         screenColorPickerView.setOnTouchListener(listener);
         lp.width = screenWidth;
         lp.height = screenHeight;

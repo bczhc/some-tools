@@ -11,17 +11,17 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
     private final int height;
     private final WindowManager wm;
     private final View view;
-    private final ViewSpec viewSpec;
+    private final ViewDimension viewDimension;
     private int lastRawX, lastRawY, paramX, paramY;
 
     public FloatingViewOnTouchListener(WindowManager.LayoutParams WM_layoutParams, WindowManager windowManager
-            , View view, int width, int height, ViewSpec viewSpec) {
+            , View view, int width, int height, ViewDimension viewDimension) {
         this.layoutParams = WM_layoutParams;
         this.wm = windowManager;
         this.width = width;
         this.height = height;
         this.view = view;
-        this.viewSpec = viewSpec;
+        this.viewDimension = viewDimension;
     }
 
     private boolean performClick = true;
@@ -45,8 +45,8 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
                 int lp2_x = paramX + dx;
                 int lp2_y = paramY + dy;
                 int constrainX, constrainY;
-                constrainX = lp2_x - HSVAColorPickerRL.limitValue(lp2_x, ((int) (-width / 2F + viewSpec.width / 2F)), ((int) (width / 2F - viewSpec.width / 2F)));
-                constrainY = lp2_y - HSVAColorPickerRL.limitValue(lp2_y, ((int) (-height / 2F + viewSpec.height / 2F)), ((int) (height / 2F - viewSpec.height / 2F)));
+                constrainX = lp2_x - HSVAColorPickerRL.limitValue(lp2_x, ((int) (-width / 2F + viewDimension.width / 2F)), ((int) (width / 2F - viewDimension.width / 2F)));
+                constrainY = lp2_y - HSVAColorPickerRL.limitValue(lp2_y, ((int) (-height / 2F + viewDimension.height / 2F)), ((int) (height / 2F - viewDimension.height / 2F)));
                 if (constrainX == 0) {
                     layoutParams.x = lp2_x;
                 } else {
@@ -77,15 +77,15 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
         performClick = false;
     }
 
-    public static class ViewSpec {
-        int width = 0, height = 0;
+    public static class ViewDimension {
+        public int width = 0, height = 0;
 
-        public ViewSpec(int width, int height) {
+        public ViewDimension(int width, int height) {
             this.width = width;
             this.height = height;
         }
 
-        public ViewSpec() {
+        public ViewDimension() {
         }
     }
 }

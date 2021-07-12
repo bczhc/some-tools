@@ -67,7 +67,7 @@ class PanelRL : RelativeLayout {
         onButtonTouchedListener?.invoke(mode, buttonIndex)
     }
 
-    fun setOnButtonTouchedListener(listener: ListenerFunction?) {
+    fun setOnButtonClickedListener(listener: ListenerFunction?) {
         this.onButtonTouchedListener = listener
     }
 

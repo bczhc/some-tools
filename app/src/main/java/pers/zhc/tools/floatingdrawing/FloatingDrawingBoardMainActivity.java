@@ -90,7 +90,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private WindowManager.LayoutParams lp2;
     private ImageView iv;
     private LinearLayout optionsLinearLayout;
-    private FloatingViewOnTouchListener.ViewSpec fbMeasuredSpec;
+    private FloatingViewOnTouchListener.ViewDimension fbMeasuredSpec;
     private String internalPathDir = null;
     private Handler backgroundHandler;
     private boolean drawMode = false;
@@ -262,7 +262,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             fbLinearLayout.addView(optionsLinearLayout);
             measureFB_LL();
         });
-        this.fbMeasuredSpec = new FloatingViewOnTouchListener.ViewSpec();
+        this.fbMeasuredSpec = new FloatingViewOnTouchListener.ViewDimension();
         floatingViewOnTouchListener = new FloatingViewOnTouchListener(lp2, wm, fbLinearLayout, width, height, fbMeasuredSpec);
         iv.setOnTouchListener(floatingViewOnTouchListener);
         for (int i = 0; i < strings.length; i++) {

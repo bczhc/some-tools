@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
+import android.util.DisplayMetrics
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -20,8 +21,11 @@ import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.ll
 import kotlinx.android.synthetic.main.fdb_stoke_width_view.view.*
 import kotlinx.android.synthetic.main.progress_bar.view.*
+import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePickerRL
+import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
+import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
 import pers.zhc.tools.floatingdrawing.PaintView
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.views.HSVAColorPickerRL
@@ -53,6 +57,8 @@ class FdbWindow(private val context: Context) {
         val tmpPathDir = File(context.filesDir, "path")
         val tmpPathFile = File(tmpPathDir, System.currentTimeMillis().toString() + ".path")
     }
+
+    val panelDimension = ViewDimension()
 
     init {
         if (!pathFiles.tmpPathDir.exists() && !pathFiles.tmpPathDir.mkdirs()) {
@@ -86,109 +92,126 @@ class FdbWindow(private val context: Context) {
             height = WRAP_CONTENT
         }
 
-        panelRL.setOnButtonTouchedListener { mode, buttonIndex ->
-            when (mode) {
-                PanelRL.MODE_IMAGE_ICON -> {
-                    panelRL.changeMode(PanelRL.MODE_PANEL)
-                }
-                PanelRL.MODE_PANEL -> {
-                    when (buttonIndex) {
-                        0 -> {
-                            // back
-                            panelRL.changeMode(PanelRL.MODE_IMAGE_ICON)
-                        }
-                        1 -> {
-                            // controlling / drawing
-                            val tv = panelRL.getPanelTextView(1)
-                            when (operationMode) {
-                                OperationMode.OPERATING -> {
-                                    paintViewLP.flags = FLAG_NOT_FOCUSABLE
-                                    wm.updateViewLayout(paintView, paintViewLP)
-
-                                    tv.text = context.getString(R.string.fdb_panel_drawing_mode)
-                                    operationMode = OperationMode.DRAWING
-                                }
-                                OperationMode.DRAWING -> {
-                                    paintViewLP.flags = FLAG_NOT_TOUCHABLE
-                                        .xor(FLAG_NOT_FOCUSABLE)
-                                    wm.updateViewLayout(paintView, paintViewLP)
-
-                                    tv.text = context.getString(R.string.fdb_panel_operating_mode)
-                                    operationMode = OperationMode.OPERATING
-                                }
-                            }
-                        }
-                        2 -> {
-                            // color
-                            dialogs.brushColorPicker.show()
-                        }
-                        3 -> {
-                            // stroke width
-                            showBrushWidthAdjustingDialog()
-                        }
-                        4 -> {
-                            // undo
-                            paintView.undo()
-                        }
-                        5 -> {
-                            // redo
-                            paintView.redo()
-                        }
-                        6 -> {
-                            // drawing / erasing
-                            val tv = panelRL.getPanelTextView(6)
-                            when (brushMode) {
-                                BrushMode.DRAWING -> {
-                                    brushMode = BrushMode.ERASING
-                                    tv.text = context.getString(R.string.fdb_panel_erasing_mode)
-                                    paintView.isEraserMode = true
-                                }
-                                BrushMode.ERASING -> {
-                                    brushMode = BrushMode.DRAWING
-                                    tv.text = context.getString(R.string.fdb_panel_drawing_mode)
-                                    paintView.isEraserMode = false
-                                }
-                                else -> {
-                                }
-                            }
-                        }
-                        7 -> {
-                            // clear
-                            createConfirmationDialog({ _, _ ->
-                                paintView.clearAll()
-                            }, R.string.fdb_clear_confirmation_dialog).show()
-                        }
-                        8 -> {
-                            // pick color
-                            TODO()
-                        }
-                        9 -> {
-                            // panel
-                            dialogs.panelSettings.show()
-                        }
-                        10 -> {
-                            // more
-                            dialogs.moreMenu.show()
-                        }
-                        11 -> {
-                            // exit
-                            createConfirmationDialog({ _, _ ->
-                                paintView.closePathDatabase()
-                                if (context is FdbMainActivity) {
-                                    // also triggers `stopFAB()`
-                                    context.fdbSwitch.isChecked = false
-                                } else {
-                                    stopFAB()
-                                }
-                            }, R.string.fdb_exit_confirmation_dialog).show()
-                        }
-                        else -> {
-                        }
+        panelRL.apply {
+            setOnButtonClickedListener { mode, buttonIndex ->
+                when (mode) {
+                    PanelRL.MODE_IMAGE_ICON -> {
+                        panelRL.changeMode(PanelRL.MODE_PANEL)
+                        updatePanelDimension()
                     }
-                    paintView.commitPathDatabase()
+                    PanelRL.MODE_PANEL -> {
+                        when (buttonIndex) {
+                            0 -> {
+                                // back
+                                panelRL.changeMode(PanelRL.MODE_IMAGE_ICON)
+                                updatePanelDimension()
+                            }
+                            1 -> {
+                                // controlling / drawing
+                                val tv = panelRL.getPanelTextView(1)
+                                when (operationMode) {
+                                    OperationMode.OPERATING -> {
+                                        paintViewLP.flags = FLAG_NOT_FOCUSABLE
+                                        wm.updateViewLayout(paintView, paintViewLP)
+
+                                        tv.text = context.getString(R.string.fdb_panel_drawing_mode)
+                                        operationMode = OperationMode.DRAWING
+                                    }
+                                    OperationMode.DRAWING -> {
+                                        paintViewLP.flags = FLAG_NOT_TOUCHABLE
+                                            .xor(FLAG_NOT_FOCUSABLE)
+                                        wm.updateViewLayout(paintView, paintViewLP)
+
+                                        tv.text = context.getString(R.string.fdb_panel_operating_mode)
+                                        operationMode = OperationMode.OPERATING
+                                    }
+                                }
+                            }
+                            2 -> {
+                                // color
+                                dialogs.brushColorPicker.show()
+                            }
+                            3 -> {
+                                // stroke width
+                                showBrushWidthAdjustingDialog()
+                            }
+                            4 -> {
+                                // undo
+                                paintView.undo()
+                            }
+                            5 -> {
+                                // redo
+                                paintView.redo()
+                            }
+                            6 -> {
+                                // drawing / erasing
+                                val tv = panelRL.getPanelTextView(6)
+                                when (brushMode) {
+                                    BrushMode.DRAWING -> {
+                                        brushMode = BrushMode.ERASING
+                                        tv.text = context.getString(R.string.fdb_panel_erasing_mode)
+                                        paintView.isEraserMode = true
+                                    }
+                                    BrushMode.ERASING -> {
+                                        brushMode = BrushMode.DRAWING
+                                        tv.text = context.getString(R.string.fdb_panel_drawing_mode)
+                                        paintView.isEraserMode = false
+                                    }
+                                    else -> {
+                                    }
+                                }
+                            }
+                            7 -> {
+                                // clear
+                                createConfirmationDialog({ _, _ ->
+                                    paintView.clearAll()
+                                }, R.string.fdb_clear_confirmation_dialog).show()
+                            }
+                            8 -> {
+                                // pick color
+                                TODO()
+                            }
+                            9 -> {
+                                // panel
+                                dialogs.panelSettings.show()
+                            }
+                            10 -> {
+                                // more
+                                dialogs.moreMenu.show()
+                            }
+                            11 -> {
+                                // exit
+                                createConfirmationDialog({ _, _ ->
+                                    paintView.closePathDatabase()
+                                    if (context is FdbMainActivity) {
+                                        // also triggers `stopFAB()`
+                                        (context as FdbMainActivity).fdbSwitch.isChecked = false
+                                    } else {
+                                        stopFAB()
+                                    }
+                                }, R.string.fdb_exit_confirmation_dialog).show()
+                            }
+                            else -> {
+                            }
+                        }
+                        paintView.commitPathDatabase()
+                    }
+                    else -> {
+                    }
                 }
-                else -> {
-                }
+            }
+
+            val displayMetrics = DisplayMetrics()
+            (context as BaseActivity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+            val screenWidth = displayMetrics.widthPixels
+            val screenHeight = displayMetrics.heightPixels
+
+            val positionUpdater =
+                FloatingViewOnTouchListener(panelLP, wm, panelRL, screenWidth, screenHeight, panelDimension)
+
+            @Suppress("ClickableViewAccessibility")
+            setOnTouchListener { v, event ->
+                return@setOnTouchListener positionUpdater.onTouch(v, event)
             }
         }
 
@@ -491,7 +514,7 @@ class FdbWindow(private val context: Context) {
                     }
                     1 -> {
                         // export image
-                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FOLDER, externalPath.image) {_, path ->
+                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FOLDER, externalPath.image) { _, path ->
                         }
                         TODO()
                     }
@@ -589,6 +612,19 @@ class FdbWindow(private val context: Context) {
             ll.addView(button)
         }
         return createDialog(inflate)
+    }
+
+    /**
+     * For preventing dragging the panel outside the screen
+     *
+     * update it on the change of the panel dimension
+     */
+    private fun updatePanelDimension() {
+        panelDimension.apply {
+            panelRL.measure(0, 0)
+            width = panelRL.measuredWidth
+            height = panelRL.measuredHeight
+        }
     }
 
     companion object {
