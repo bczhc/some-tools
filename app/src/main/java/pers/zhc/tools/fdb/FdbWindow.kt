@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
@@ -47,13 +46,13 @@ import kotlin.math.pow
  * @author bczhc
  */
 class FdbWindow(private val context: Activity) {
-    private var wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
-    private var panelRL = PanelRL(context)
-    private var panelLP = WindowManager.LayoutParams()
+    private val panelRL = PanelRL(context)
+    private val panelLP = WindowManager.LayoutParams()
 
-    private var paintView = PaintView(context)
-    private var paintViewLP = WindowManager.LayoutParams()
+    val paintView = PaintView(context)
+    private val paintViewLP = WindowManager.LayoutParams()
 
     private var operationMode = OperationMode.OPERATING
     private var brushMode = BrushMode.DRAWING

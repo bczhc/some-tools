@@ -453,10 +453,16 @@ public class PaintView extends View {
         int measuredW = measure(widthMeasureSpec);
         int measuredH = measure(heightMeasureSpec);
         setMeasuredDimension(measuredW, measuredH);
+
+        if (width == -1 && height == -1) {
+            // init
+            this.width = measuredW;
+            this.height = measuredH;
+            refreshBitmap(width, height);
+        }
         this.width = measuredW;
         this.height = measuredH;
 
-//        refreshBitmap(width, height);
         // TODO: 7/12/21 for drawing area screen orientation adaptation
     }
 
@@ -849,7 +855,7 @@ public class PaintView extends View {
                     float dx = Math.abs(x - mLastX);
                     float dy = Math.abs(y - mLastY);
                     if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
-                        //利用二阶贝塞尔曲线，使绘制路径更加圆滑
+                        //利用二阶贝塞尔曲线，使绘制路径更加圆滑 TODO delete L, L~1
                         mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
                     }
                     mLastX = x;
