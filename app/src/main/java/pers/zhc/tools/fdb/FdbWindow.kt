@@ -2,8 +2,12 @@ package pers.zhc.tools.fdb
 
 import android.app.Activity
 import android.app.Dialog
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
@@ -17,12 +21,16 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationCompat
 import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.ll
 import kotlinx.android.synthetic.main.fdb_stoke_width_view.view.*
 import kotlinx.android.synthetic.main.progress_bar.view.*
+import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
+import pers.zhc.tools.fdb.FdbNotificationReceiver.Companion.ACTION_FDB_SHOW
+import pers.zhc.tools.fdb.FdbNotificationReceiver.Companion.EXTRA_FDB_ID
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
@@ -30,6 +38,8 @@ import pers.zhc.tools.floatingdrawing.PaintView
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.views.HSVAColorPickerRL
 import java.io.File
+import java.io.IOException
+import java.util.*
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -53,9 +63,10 @@ class FdbWindow(private val context: Activity) {
 
     private var followBrushColor = false
     private var invertTextColor = false
+    private val timestamp = System.currentTimeMillis()
     private val pathFiles = object {
         val tmpPathDir = File(context.filesDir, "path")
-        val tmpPathFile = File(tmpPathDir, System.currentTimeMillis().toString() + ".path")
+        val tmpPathFile = File(tmpPathDir, "$timestamp.path")
     }
 
     private val panelDimension = ViewDimension()
@@ -183,12 +194,7 @@ class FdbWindow(private val context: Activity) {
                                 // exit
                                 createConfirmationDialog({ _, _ ->
                                     paintView.closePathDatabase()
-                                    if (context is FdbMainActivity) {
-                                        // also triggers `stopFAB()`
-                                        (context as FdbMainActivity).fdbSwitch.isChecked = false
-                                    } else {
-                                        stopFAB()
-                                    }
+                                    stopFDB()
                                 }, R.string.fdb_exit_confirmation_dialog).show()
                             }
                             else -> {
@@ -363,12 +369,12 @@ class FdbWindow(private val context: Activity) {
         return inflate
     }
 
-    fun startFAB() {
+    fun startFDB() {
         wm.addView(paintView, paintViewLP)
         wm.addView(panelRL, panelLP)
     }
 
-    fun stopFAB() {
+    private fun stopFDB() {
         wm.removeView(panelRL)
         wm.removeView(paintView)
     }
@@ -424,16 +430,17 @@ class FdbWindow(private val context: Activity) {
     private fun createFilePickerDialog(
         type: Int = FilePickerRL.TYPE_PICK_FILE,
         initialPath: File,
-        onPickResultCallback: (dialog: Dialog, path: String) -> Unit
+        enableFilenameET: Boolean = false,
+        onPickResultCallback: (dialog: Dialog, picker: FilePickerRL, path: String) -> Unit
     ): Dialog {
         val dialog = Dialog(context)
 
         val filePickerRL = FilePickerRL(context, type, initialPath, {
             dialog.dismiss()
-        }, { _, path ->
+        }, { picker, path ->
             dialog.dismiss()
-            onPickResultCallback(dialog, path)
-        }, null)
+            onPickResultCallback(dialog, picker, path)
+        }, null, enableFilenameET)
 
         dialog.apply {
             setContentView(filePickerRL)
@@ -518,13 +525,24 @@ class FdbWindow(private val context: Activity) {
                     }
                     1 -> {
                         // export image
-                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FOLDER, externalPath.image) { _, _ ->
+                        createFilePickerDialog(
+                            FilePickerRL.TYPE_PICK_FOLDER,
+                            externalPath.image,
+                            true
+                        ) { _, picker, path ->
+                            var filename = picker.filenameText!!
+                            val extension = File(filename).extension
+                            if (extension.toLowerCase(Locale.US) != ".png") {
+                                filename += ".png"
+                            }
+                            val imgFile = File(path, filename)
+
+                            paintView.exportImg(imgFile, paintView.measuredWidth, paintView.measuredHeight)
                         }
-                        TODO()
                     }
                     2 -> {
                         // import path
-                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { _, file ->
+                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { _, _, file ->
                             dialogs.moreMenu.dismiss()
 
                             val progressView = View.inflate(context, R.layout.progress_bar, null)
@@ -577,12 +595,21 @@ class FdbWindow(private val context: Activity) {
                     }
                     3 -> {
                         // export path
-                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FOLDER, externalPath.path) { _, path ->
+                        createFilePickerDialog(
+                            FilePickerRL.TYPE_PICK_FOLDER,
+                            externalPath.path,
+                            true
+                        ) { _, picker, path ->
                             dialogs.moreMenu.dismiss()
 
-                            val pathFile = File(path, System.currentTimeMillis().toString() + ".path")
-                            FileUtil.copy(pathFiles.tmpPathFile, pathFile)
-                            ToastUtils.show(context, R.string.saving_succeeded_dialog)
+                            val filename = picker.filenameText!!
+                            try {
+                                val pathFile = File(path, filename)
+                                FileUtil.copy(pathFiles.tmpPathFile, pathFile)
+                                ToastUtils.show(context, R.string.saving_succeeded_dialog)
+                            } catch (e: IOException) {
+                                Common.showException(e, context)
+                            }
                         }.show()
                     }
                     4 -> {
@@ -595,7 +622,10 @@ class FdbWindow(private val context: Activity) {
                     }
                     6 -> {
                         // hide drawing board
-                        TODO()
+                        createConfirmationDialog({ _, _ ->
+                            hideFDB()
+                            dialogs.moreMenu.dismiss()
+                        }, R.string.fdb_hide_fdb_confirmation_dialog).show()
                     }
                     7 -> {
                         // drawing statistics
@@ -621,6 +651,50 @@ class FdbWindow(private val context: Activity) {
         return createDialog(inflate)
     }
 
+    private fun hideFDB() {
+        HiddenFdbHolder.fdbWindowMap[timestamp] = this
+
+        showHideNotification()
+
+        wm.removeView(panelRL)
+    }
+
+    fun restoreFDB() {
+        wm.addView(panelRL, panelLP)
+    }
+
+    private fun showHideNotification() {
+        val intent = Intent(ACTION_FDB_SHOW)
+        intent.putExtra(EXTRA_FDB_ID, timestamp)
+
+        val notificationId = timestamp.hashCode()
+        val pi = PendingIntent.getBroadcast(context, notificationId, intent, 0)!!
+
+        val nm =
+            context.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val builder = NotificationCompat.Builder(
+            context,
+            MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL
+        )
+        builder.apply {
+            setSmallIcon(R.drawable.ic_db)
+            setContentTitle(context.getString(R.string.fdb_hide_fdb_notification_title))
+            setStyle(
+                NotificationCompat.BigTextStyle().bigText(
+                    context.getString(
+                        R.string.fdb_hide_fdb_notification_text,
+                        Date(timestamp).toString()
+                    )
+                )
+            )
+            setChannelId(MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL)
+            priority = NotificationCompat.PRIORITY_DEFAULT
+            setOngoing(false)
+            setContentIntent(pi)
+        }
+        nm.notify(notificationId, builder.build())
+    }
+
     /**
      * For preventing dragging the panel outside the screen
      *
@@ -634,10 +708,17 @@ class FdbWindow(private val context: Activity) {
         }
     }
 
+    override fun toString(): String {
+        return "FdbWindow(timestamp=$timestamp)"
+    }
+
+
     companion object {
         private val externalPath = object {
             lateinit var path: File
             lateinit var image: File
         }
     }
+
+
 }

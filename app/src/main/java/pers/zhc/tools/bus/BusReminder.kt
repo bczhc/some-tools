@@ -162,7 +162,7 @@ class BusReminder(
         val notificationContentPI = PendingIntent.getActivity(context, notificationId, notificationContentIntent, 0)!!
         
         
-        return NotificationCompat.Builder(context, MyApplication.NOTIFICATION_CHANNEL_ID_COMMON).apply {
+        return NotificationCompat.Builder(context, MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL).apply {
             setSmallIcon(R.drawable.ic_launcher_foreground)
             setContentTitle(contentTitle)
             setStyle(
@@ -170,7 +170,7 @@ class BusReminder(
             )
             setContentIntent(notificationContentPI)
             addAction(R.drawable.ic_launcher_foreground, context.getString(R.string.cancel_btn), cancelPI)
-            setChannelId(MyApplication.NOTIFICATION_CHANNEL_ID_COMMON)
+            setChannelId(MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL)
             priority = NotificationCompat.PRIORITY_DEFAULT
             setOngoing(true)
         }.build()

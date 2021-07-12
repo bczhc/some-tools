@@ -5,36 +5,22 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.android.synthetic.main.fdb_main_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.ToastUtils
 
 /**
  * @author bczhc
  */
 class FdbMainActivity : BaseActivity() {
-    lateinit var fdbSwitch: SwitchMaterial
-    private lateinit var fdbWindow: FdbWindow
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fdb_main_activity)
 
-        fdbWindow = FdbWindow(this)
-
-        fdbSwitch = fdb_switch!!
-
-        fdbSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                startFdb()
-            } else {
-                stopFdb()
-            }
+        val startButton = start_button!!
+        startButton.setOnClickListener {
+            val fdbWindow = FdbWindow(this)
+            ToastUtils.show(this, fdbWindow.toString())
+            fdbWindow.startFDB()
         }
-    }
-
-    private fun startFdb() {
-        fdbWindow.startFAB()
-    }
-
-    private fun stopFdb() {
-        fdbWindow.stopFAB()
     }
 }

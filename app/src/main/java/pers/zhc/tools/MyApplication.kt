@@ -31,7 +31,7 @@ class MyApplication : Application() {
     private fun registerNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                NOTIFICATION_CHANNEL_ID_COMMON,
+                NOTIFICATION_CHANNEL_ID_UNIVERSAL,
                 getString(R.string.notification_channel_name_common),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
@@ -69,6 +69,6 @@ class MyApplication : Application() {
             infoFile.writeText(info.toString(4))
         }
 
-        var NOTIFICATION_CHANNEL_ID_COMMON = "c1"
+        var NOTIFICATION_CHANNEL_ID_UNIVERSAL = "c1"
     }
 }

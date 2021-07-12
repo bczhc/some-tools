@@ -2,9 +2,9 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
-        android:id="@+id/linearLayout">
+        android:id="@+id/root_rl">
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/textView"
     />
@@ -13,7 +13,7 @@
                     android:id="@+id/rl2"
     >
         <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:id="@+id/file_name_et" tools:ignore="Autofill,LabelFor,TextFields"
+                  android:id="@+id/filter_et" tools:ignore="Autofill,LabelFor,TextFields"
                   android:hint="@string/filter"
                   android:layout_toStartOf="@id/regex_cb"
         />
@@ -23,10 +23,18 @@
                   android:layout_alignParentEnd="true"
         />
     </RelativeLayout>
+    <pers.zhc.tools.views.SmartHintEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Application.TextInputLayout.FilledBox"
+            app:hint="@string/filename_hint"
+            android:layout_below="@id/rl2"
+            android:id="@+id/filename_et"
+    />
     <ScrollView android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/scrollView2"
-                android:layout_below="@id/rl2"
+                android:layout_below="@id/filename_et"
                 android:layout_above="@id/ll_bottom"
     >
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"

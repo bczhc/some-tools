@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.fdb.FdbWindow;
-import pers.zhc.tools.utils.ToastUtils;
 
 /**
  * @author bczhc
@@ -48,7 +47,7 @@ public class Demo extends BaseActivity {
                 requestLayout();
 
                 final FdbWindow fdbWindow = new FdbWindow(((Activity) getContext()));
-                fdbWindow.startFAB();
+                fdbWindow.startFDB();
             });
         }
 
