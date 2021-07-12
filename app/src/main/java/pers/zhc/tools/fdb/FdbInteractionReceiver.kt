@@ -11,20 +11,7 @@ import kotlin.math.log
  */
 class FdbInteractionReceiver(private val service: FdbService) : BaseBroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        intent ?: run { Log.d(TAG, "onReceive: null intent"); return }
 
-        when (intent.action) {
-            ACTION_START_FAB -> {
-                Log.d(TAG, "onReceive: start FAB")
-                service.startFAB()
-            }
-            ACTION_STOP_FAB -> {
-                Log.d(TAG, "onReceive: stop FAB")
-                service.stopFAB()
-            }
-            else -> {
-            }
-        }
     }
 
     companion object {

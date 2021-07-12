@@ -1,5 +1,6 @@
 package pers.zhc.tools.fdb
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -21,7 +22,6 @@ import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.ll
 import kotlinx.android.synthetic.main.fdb_stoke_width_view.view.*
 import kotlinx.android.synthetic.main.progress_bar.view.*
-import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
@@ -36,7 +36,7 @@ import kotlin.math.pow
 /**
  * @author bczhc
  */
-class FdbWindow(private val context: Context) {
+class FdbWindow(private val context: Activity) {
     private var wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
     private var panelRL = PanelRL(context)
@@ -202,7 +202,7 @@ class FdbWindow(private val context: Context) {
             }
 
             val displayMetrics = DisplayMetrics()
-            (context as BaseActivity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+            this@FdbWindow.context.windowManager.defaultDisplay.getMetrics(displayMetrics)
             val screenWidth = displayMetrics.widthPixels
             val screenHeight = displayMetrics.heightPixels
 
@@ -534,6 +534,8 @@ class FdbWindow(private val context: Context) {
                             val progressBar = progressView.progress_bar!!
                             val progressTV = progressView.progress_tv!!
                             val progressDialog = createDialog(progressView)
+                            progressDialog.setCanceledOnTouchOutside(false)
+                            progressDialog.setCancelable(false)
                             progressDialog.show()
 
                             val messenger = Messenger<Float>()

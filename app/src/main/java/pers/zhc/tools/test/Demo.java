@@ -1,5 +1,6 @@
 package pers.zhc.tools.test;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BaseView;
+import pers.zhc.tools.fdb.FdbWindow;
 import pers.zhc.tools.utils.ToastUtils;
 
 /**
@@ -44,6 +46,9 @@ public class Demo extends BaseActivity {
                 d += 10;
                 invalidate();
                 requestLayout();
+
+                final FdbWindow fdbWindow = new FdbWindow(((Activity) getContext()));
+                fdbWindow.startFAB();
             });
         }
 

@@ -712,7 +712,8 @@ public class PaintView extends View {
 
         new Thread(() -> {
             try {
-                importPathVer3(f.getPath(), progressCallback == null ? ((v) -> {}) : progressCallback, speedDelayMillis);
+                importPathVer3(f.getPath(), progressCallback == null ? ((v) -> {
+                }) : progressCallback, speedDelayMillis);
             } catch (SQLiteDatabaseCorruptException ignored) {
                 importOldPathRunnable.run();
             }
@@ -797,13 +798,16 @@ public class PaintView extends View {
         }
 
         String extraStr = null;
-        Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
-                "FROM info");
-        Cursor infoCursor = infoStatement.getCursor();
-        if (infoCursor.step()) {
-            extraStr = infoCursor.getText(0);
+        try {
+            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
+                    "FROM info");
+            Cursor infoCursor = infoStatement.getCursor();
+            if (infoCursor.step()) {
+                extraStr = infoCursor.getText(0);
+            }
+            infoStatement.release();
+        } catch (RuntimeException ignored) {
         }
-        infoStatement.release();
 
         if (extraStr != null) {
             try {
