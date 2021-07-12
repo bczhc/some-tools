@@ -67,7 +67,7 @@ public class PaintView extends View {
     private Canvas mBackgroundCanvas;
     private GestureResolver gestureResolver;
     private boolean dontDrawWhileImporting = false;
-    private boolean lockingStroke = false;
+    private boolean lockStrokeEnabled = false;
     /**
      * locked absolute drawing stroke width
      */
@@ -161,7 +161,7 @@ public class PaintView extends View {
                 if (transCanvas != null) {
                     transCanvas.invertScale(dScale, midPointX, midPointY);
                 }
-                setCurrentStrokeWidthWithLockedStrokeWidth();
+                setCurrentStrokeWidthInLocked();
             }
 
             @Override
@@ -812,7 +812,7 @@ public class PaintView extends View {
                 setLockingStroke(isLockingStroke);
                 lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
                 lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
-                setCurrentStrokeWidthWithLockedStrokeWidth();
+                setCurrentStrokeWidthInLocked();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -897,7 +897,7 @@ public class PaintView extends View {
         headCanvas.reset();
         redrawCanvas();
         postInvalidate();
-        setCurrentStrokeWidthWithLockedStrokeWidth();
+        setCurrentStrokeWidthInLocked();
     }
 
     /**
@@ -920,7 +920,7 @@ public class PaintView extends View {
     }
 
     public boolean isLockingStroke() {
-        return this.lockingStroke;
+        return this.lockStrokeEnabled;
     }
 
     public void bitmapResolution(@NotNull Point point) {
@@ -929,23 +929,15 @@ public class PaintView extends View {
     }
 
     public void setLockingStroke(boolean mode) {
-        this.lockingStroke = mode;
+        this.lockStrokeEnabled = mode;
     }
 
     public void lockStroke() {
-        if (lockingStroke) {
+        if (lockStrokeEnabled) {
             float scale = headCanvas.getScale();
             this.lockedDrawingStrokeWidth = getDrawingStrokeWidth() * scale;
             this.lockedEraserStrokeWidth = getEraserStrokeWidth() * scale;
-            setCurrentStrokeWidthWithLockedStrokeWidth();
-        }
-    }
-
-    public void setCurrentStrokeWidthWithLockedStrokeWidth() {
-        if (lockingStroke) {
-            float canvasScale = headCanvas.getScale();
-            setDrawingStrokeWidth(lockedDrawingStrokeWidth / canvasScale);
-            setEraserStrokeWidth(lockedEraserStrokeWidth / canvasScale);
+            setCurrentStrokeWidthInLocked();
         }
     }
 
@@ -953,6 +945,30 @@ public class PaintView extends View {
         headCanvas = canvasMap.get(id);
         headBitmap = bitmapMap.get(headCanvas);
     }
+
+    // ----------------------- new API of stroke locking -------------------------------
+
+    public void setLockStrokeEnabled(boolean enabled) {
+        lockStrokeEnabled = enabled;
+        if (enabled) {
+            lockedDrawingStrokeWidth = getDrawingStrokeWidth();
+            lockedEraserStrokeWidth = getEraserStrokeWidth();
+        }
+    }
+
+    public boolean isLockStrokeEnabled() {
+        return lockStrokeEnabled;
+    }
+
+    public void setCurrentStrokeWidthInLocked() {
+        if (lockStrokeEnabled) {
+            float canvasScale = headCanvas.getScale();
+            setDrawingStrokeWidth(lockedDrawingStrokeWidth / canvasScale);
+            setEraserStrokeWidth(lockedEraserStrokeWidth / canvasScale);
+        }
+    }
+
+    // ----------------------------------- end -----------------------------------------
 
     public float getScale() {
         return headCanvas.getScale();

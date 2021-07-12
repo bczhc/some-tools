@@ -58,7 +58,7 @@ class FdbWindow(private val context: Context) {
         val tmpPathFile = File(tmpPathDir, System.currentTimeMillis().toString() + ".path")
     }
 
-    val panelDimension = ViewDimension()
+    private val panelDimension = ViewDimension()
 
     init {
         if (!pathFiles.tmpPathDir.exists() && !pathFiles.tmpPathDir.mkdirs()) {
@@ -356,6 +356,10 @@ class FdbWindow(private val context: Context) {
                 }
             }
         }
+
+        lockBrushCB.setOnCheckedChangeListener { _, isChecked ->
+            paintView.isLockStrokeEnabled = isChecked
+        }
         return inflate
     }
 
@@ -514,13 +518,13 @@ class FdbWindow(private val context: Context) {
                     }
                     1 -> {
                         // export image
-                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FOLDER, externalPath.image) { _, path ->
+                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FOLDER, externalPath.image) { _, _ ->
                         }
                         TODO()
                     }
                     2 -> {
                         // import path
-                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { dialog, file ->
+                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { _, file ->
                             dialogs.moreMenu.dismiss()
 
                             val progressView = View.inflate(context, R.layout.progress_bar, null)
@@ -572,6 +576,7 @@ class FdbWindow(private val context: Context) {
                     3 -> {
                         // export path
                         createFilePickerDialog(FilePickerRL.TYPE_PICK_FOLDER, externalPath.path) { _, path ->
+                            dialogs.moreMenu.dismiss()
 
                             val pathFile = File(path, System.currentTimeMillis().toString() + ".path")
                             FileUtil.copy(pathFiles.tmpPathFile, pathFile)
