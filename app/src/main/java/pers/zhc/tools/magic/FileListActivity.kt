@@ -90,7 +90,7 @@ class FileListActivity : BaseActivity() {
             pathTV.text = it
         }
 
-        recyclerAdapter.updateListWithProgress()
+        recyclerAdapter.asyncUpdateListWithProgress()
     }
 
     private fun initMagic() {
@@ -108,10 +108,12 @@ class FileListActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        val previous = recyclerAdapter.previous()
-        if (previous == null) {
+        if (recyclerAdapter.getCurrentPathFile().parentFile == null) {
             super.onBackPressed()
+            return
         }
+
+        recyclerAdapter.asyncPrevious()
     }
 
     override fun finish() {
@@ -135,7 +137,7 @@ class FileListActivity : BaseActivity() {
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
         private var onPathChangedListener: OnPathChangedListener? = null
         private var currentPathFile: File
-        private val fileItemList = ArrayList<FileItem>()
+        private var fileItemList = ArrayList<FileItem>()
 
         init {
             currentPathFile = File(Common.getExternalStoragePath(outer))
@@ -153,8 +155,13 @@ class FileListActivity : BaseActivity() {
             DONE
         }
 
-        private fun updateData(progressCallback: ProgressCallback?) {
-            fileItemList.clear()
+        fun getCurrentPathFile(): File {
+            return currentPathFile
+        }
+
+        private fun getItemList(progressCallback: ProgressCallback?): ArrayList<FileItem> {
+            val result = ArrayList<FileItem>()
+
             val listFiles = currentPathFile.listFiles() ?: arrayOf()
 
             progressCallback?.invoke(ProgressType.LIST, -1, -1)
@@ -163,7 +170,7 @@ class FileListActivity : BaseActivity() {
 
             listFiles.forEachIndexed { index, file ->
                 val info = magic.file(file.path)
-                fileItemList.add(
+                result.add(
                     FileItem(
                         file.name,
                         info,
@@ -181,7 +188,7 @@ class FileListActivity : BaseActivity() {
 
             progressCallback?.invoke(ProgressType.SORT, -1, -1)
 
-            fileItemList.sortWith { fileItem, fileItem2 ->
+            result.sortWith { fileItem, fileItem2 ->
                 if (fileItem.fileType == fileItem2.fileType) {
                     if (!fileItem.file.isHidden && !fileItem2.file.isHidden) {
                         return@sortWith fileItem.fileName.compareTo(fileItem2.fileName)
@@ -202,24 +209,23 @@ class FileListActivity : BaseActivity() {
             }
 
             progressCallback?.invoke(ProgressType.DONE, filesCount, filesCount)
+            return result
         }
 
         private fun asyncUpdateData(progressCallback: ProgressCallback?, done: Runnable) {
             Thread {
-                updateData(progressCallback)
-                done.run()
+                val itemList = getItemList(progressCallback)
+                outer.runOnUiThread {
+                    fileItemList = itemList
+                    done.run()
+                }
             }.start()
         }
 
-        /**
-         * Returns the path after doing a "previous" operation
-         */
-        fun previous(): String? {
-            val parentFile = currentPathFile.parentFile ?: return null
+        fun asyncPrevious() {
+            val parentFile = currentPathFile.parentFile!!
             currentPathFile = parentFile
-            updateListWithProgress()
-            onPathChangedListener?.invoke(getCurrentPath())
-            return currentPathFile.path
+            asyncUpdateListWithProgress()
         }
 
         fun getCurrentPath(): String {
@@ -256,7 +262,7 @@ class FileListActivity : BaseActivity() {
                 if (fileItem.fileType == FileType.FOLDER) {
                     setPath(fileItem.file.path)
 
-                    updateListWithProgress()
+                    asyncUpdateListWithProgress()
                 }
             }
         }
@@ -265,17 +271,16 @@ class FileListActivity : BaseActivity() {
             return fileItemList.size
         }
 
-        fun updateListWithProgress() {
+        fun asyncUpdateListWithProgress() {
             val progressShower = outer.progressShower
             progressShower.show()
             asyncUpdateData({ type, current, total ->
-                outer.runOnUiThread {
-                    progressShower.update(type, current, total)
-                }
+                progressShower.update(type, current, total)
             }, {
                 outer.runOnUiThread {
                     notifyDataSetChanged()
                     progressShower.dismiss()
+                    onPathChangedListener?.invoke(getCurrentPath())
                     outer.recyclerView.smoothScrollToPosition(0)
                 }
             })
