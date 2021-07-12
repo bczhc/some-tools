@@ -1,5 +1,6 @@
 package pers.zhc.tools.fdb
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -41,9 +42,6 @@ class PanelRL : RelativeLayout {
         val d = DisplayUtil.dip2px(context, 35F)
         mImageView.layoutParams = ViewGroup.LayoutParams(d, d)
         mImageView.setImageDrawable(iconDrawable)
-        mImageView.setOnClickListener {
-            onButtonTouched(MODE_IMAGE_ICON, 0)
-        }
 
         // get data string array
         btnStrings = context.resources.getStringArray(R.array.btn_string)
@@ -54,9 +52,40 @@ class PanelRL : RelativeLayout {
             val textView = View.inflate(context, R.layout.fdb_panel_btn_view, null).btn_tv!!
             textView.text = s
             mPanelLL.addView(textView)
-            textView.setOnClickListener {
-                onButtonTouched(MODE_PANEL, index)
+
+            val getOnTouchListener = {
+                var prevRawX = 0F
+                var prevRawY = 0F
+
+                ({ v: View, ev: MotionEvent ->
+                    when (ev.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            prevRawX = ev.rawX
+                            prevRawY = ev.rawY
+                        }
+                        MotionEvent.ACTION_UP -> {
+                            if (ev.rawX - prevRawX <= 1F && ev.rawY - prevRawY <= 1F) {
+                                // click
+                                onButtonTouched(
+                                    if (v === mImageView) {
+                                        MODE_IMAGE_ICON
+                                    } else {
+                                        MODE_PANEL
+                                    }, index
+                                )
+                            }
+                        }
+                        else -> {
+                        }
+                    }
+                    true
+                })
             }
+
+            @Suppress("ClickableViewAccessibility")
+            mImageView.setOnTouchListener(getOnTouchListener())
+            @Suppress("ClickableViewAccessibility")
+            textView.setOnTouchListener(getOnTouchListener())
         }
 
         changeMode(MODE_IMAGE_ICON)
@@ -100,8 +129,9 @@ class PanelRL : RelativeLayout {
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+        ev!!
         mOnTouchListener?.onTouch(this, ev)
-        return super.onInterceptTouchEvent(ev)
+        return false
     }
 
     fun setPanelColor(color: Int) {

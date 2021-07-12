@@ -62,7 +62,7 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_UP:
                 if (performClick && Math.abs(lastRawX - rawX) < 1 && Math.abs(lastRawY - rawY) < 1) {
-                    v.performClick();
+//                    v.performClick();
                 }
                 break;
         }

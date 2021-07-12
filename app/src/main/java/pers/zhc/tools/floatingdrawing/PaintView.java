@@ -37,6 +37,11 @@ import java.util.concurrent.Executors;
  */
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        return super.dispatchTouchEvent(event);
+    }
+
     private int height = -1;
     private int width = -1;
     private final Context ctx;
