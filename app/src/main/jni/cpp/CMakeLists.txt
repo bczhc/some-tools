@@ -26,7 +26,7 @@ add_library(
 )
 target_link_libraries(myLib sqlite3)
 
-
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 add_subdirectory(third_party/libmagic)
 
 add_library(
@@ -55,3 +55,5 @@ add_library(
 )
 
 target_link_libraries(Main myLib sqlite3 magic)
+
+set_target_properties(Main myLib PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
