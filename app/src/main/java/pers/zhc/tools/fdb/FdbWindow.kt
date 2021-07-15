@@ -412,7 +412,7 @@ class FdbWindow(private val context: Activity) {
     }
 
     private fun createDialog(view: View, transparent: Boolean = false, dim: Boolean = true): Dialog {
-        val dialog = Dialog(context)
+        val dialog = Dialog(context, R.style.Theme_Application_DayNight_Dialog)
         DialogUtil.setDialogAttr(dialog, transparent, true)
         if (!dim) {
             dialog.window?.clearFlags(FLAG_DIM_BEHIND)

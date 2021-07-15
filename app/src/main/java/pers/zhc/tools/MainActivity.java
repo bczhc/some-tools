@@ -35,6 +35,7 @@ import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
 import pers.zhc.tools.utils.AdapterWithClickListener;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.words.WordsMainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,9 @@ public class MainActivity extends BaseActivity {
         loadRecyclerView();
     }
 
+    /**
+     * TODO: 7/15/21 now when a shortcut was added, it could be changed or cross-positioned after a change of the main list
+     */
     private void shortcut(int texts, Class<?> theClass, int id) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
             ToastUtils.show(this, R.string.shortcut_unsupported);
@@ -133,6 +137,7 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.sys_info_label, SysInfo.class));
         activities.add(new ActivityItem(R.string.magic_label, FileListActivity.class));
         activities.add(new ActivityItem(R.string.unicode_table_label, UnicodeTable.class));
+        activities.add(new ActivityItem(R.string.words_label, WordsMainActivity.class));
     }
 
     private void loadRecyclerView() {

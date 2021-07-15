@@ -470,4 +470,8 @@
     <string name="fdb_hide_fdb_confirmation_dialog">是否隐藏画板</string>
     <string name="fdb_start_fdb_button">开启悬浮窗</string>
     <!-- module end -->
+
+    <!-- module: words -->
+    <string name="words_label">单词</string>
+    <!-- module end -->
 </resources>

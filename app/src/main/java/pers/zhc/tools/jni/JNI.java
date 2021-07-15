@@ -177,7 +177,7 @@ public class JNI {
              * Call this rather than {@link #step(long)} when the statement returns values like `select` statements.
              *
              * @param stmtId statement native address
-             * @return {@value pers.zhc.tools.utils.sqlite.SQLite3#SQLITE_ROW} if succeeded, otherwise others.
+             * @return {@link pers.zhc.tools.utils.sqlite.SQLite3#SQLITE_ROW} if succeeded, otherwise others.
              */
             public static native int stepRow(long stmtId);
 
