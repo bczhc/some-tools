@@ -9,6 +9,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import pers.zhc.tools.crashhandler.CrashHandler
 import pers.zhc.tools.diary.DiaryDatabase
+import pers.zhc.tools.words.WordsMainActivity
 import java.io.File
 
 /**
@@ -23,6 +24,8 @@ class MyApplication : Application() {
     private fun init() {
         CrashHandler.install(this)
         DiaryDatabase.init(this)
+        WordsMainActivity.init(this)
+
         registerNotificationChannel()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
         initAppInfoFile()

@@ -12,6 +12,7 @@
     <string name="mkdir_failed">创建文件夹失败</string>
     <string name="saving_succeeded_dialog">保存成功</string>
     <string name="filename_hint">文件名</string>
+    <string name="adding_succeeded">添加成功</string>
     <!-- end -->
 
     <!-- old -->
@@ -326,7 +327,6 @@
     <string name="insert_index_1_leftmost">插入索引（从1开始）</string>
     <string name="char_or_word">字或词</string>
     <string name="enter_candidate_word">输入候选词</string>
-    <string name="adding_succeeded">添加成功</string>
     <string name="adding_failed">添加失败</string>
     <string name="deleting_succeeded">删除成功</string>
     <string name="add_new_sth">新增</string>
@@ -473,5 +473,6 @@
 
     <!-- module: words -->
     <string name="words_label">单词</string>
+    <string name="words_already_have_word">该记录已存在</string>
     <!-- module end -->
 </resources>
