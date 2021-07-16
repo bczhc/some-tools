@@ -4,4 +4,8 @@
           app:showAsAction="never"
           android:id="@+id/settings"
     />
+    <item android:title="@string/app_menu_update"
+          app:showAsAction="never"
+          android:id="@+id/update"
+    />
 </menu>

@@ -31,12 +31,4 @@
               android:text="@string/drawing_board_name_is_"
               android:id="@+id/f_b_name"
     />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:layout_alignParentTop="true"
-              android:text="@string/check_for_update"
-              android:layout_below="@id/f_b_name"
-              android:layout_alignParentStart="true"
-              android:layout_margin="5dp"
-              android:id="@+id/check_for_update_tv"
-    />
 </RelativeLayout>

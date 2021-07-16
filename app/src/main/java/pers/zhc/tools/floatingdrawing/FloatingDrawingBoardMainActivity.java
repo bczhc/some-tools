@@ -502,8 +502,6 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             }
             startFloatingWindow();
         };
-        TextView checkForUpdateTV = findViewById(R.id.check_for_update_tv);
-        checkForUpdateTV.setOnClickListener(v -> super.checkForUpdate());
         strokeColorHSVA.set(pv.getDrawingColor());
         panelColorHSVA.set(panelColor);
         panelTextColorHSVA.set(panelTextColor);

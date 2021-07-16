@@ -15,7 +15,10 @@ import kotlinx.android.synthetic.main.words_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.AdapterWithClickListener
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.utils.PopupMenuUtil
 import pers.zhc.tools.utils.sqlite.SQLite3
 
 /**
@@ -36,11 +39,38 @@ class WordsMainActivity : BaseActivity() {
 
         recyclerView.adapter = listAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        listAdapter.setOnItemLongClickListener { position, view ->
+
+            val popupMenu = PopupMenuUtil.createPopupMenu(this, view, R.menu.word_item_popup_menu)
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.delete -> {
+                        DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
+
+                            deleteRecord(itemList[position].word)
+                            itemList.removeAt(position)
+                            listAdapter.notifyItemRemoved(position)
+
+                        }, R.string.words_delete_confirmation_dialog).show()
+                    }
+                    else -> {
+                        return@setOnMenuItemClickListener false
+                    }
+                }
+                return@setOnMenuItemClickListener true
+            }
+            popupMenu.show()
+        }
     }
 
     class Item(
         val word: String
     )
+
+    private fun deleteRecord(word: String) {
+        database!!.execBind("DELETE FROM word WHERE word IS ?", arrayOf(word))
+    }
 
     private fun queryItems(): ArrayList<Item> {
         val itemList = ArrayList<Item>()
@@ -71,12 +101,14 @@ class WordsMainActivity : BaseActivity() {
         nm.notify(0, notification)
     }
 
-    class MyAdapter(private val ctx: Context, private val itemList: List<Item>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+    class MyAdapter(private val ctx: Context, private val itemList: List<Item>) :
+        AdapterWithClickListener<MyAdapter.MyViewHolder>() {
+
         class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             lateinit var tv: TextView
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {
             val inflate = View.inflate(ctx, android.R.layout.simple_list_item_1, null)
             val viewHolder = MyViewHolder(inflate)
             viewHolder.tv = inflate.findViewById(android.R.id.text1)!!

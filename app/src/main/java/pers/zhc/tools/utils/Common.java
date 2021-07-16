@@ -97,8 +97,8 @@ public class Common {
 
     @NotNull
     @Contract(pure = true)
-    public static String getStaticResourceUrlString(String username) {
-        return Infos.resourceURL + "/" + username;
+    public static String getStaticResourceUrlString(String filename) {
+        return Infos.resourceURL + '/' + filename;
     }
 
     public static void doAssertion(boolean condition) {

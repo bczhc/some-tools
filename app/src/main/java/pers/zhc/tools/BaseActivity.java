@@ -39,9 +39,6 @@ public class BaseActivity extends AppCompatActivity {
 //        ExternalJNI.ex(this);
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
-        if (Infos.LAUNCHER_CLASS.equals(this.getClass())) {
-            checkForUpdate();
-        }
     }
 
     private void setTheme() {
@@ -52,9 +49,6 @@ public class BaseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         setTheme(R.style.Theme_Application);
-    }
-
-    protected void checkForUpdate() {
     }
 
     @Override
