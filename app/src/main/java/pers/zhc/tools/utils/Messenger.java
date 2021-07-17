@@ -18,15 +18,21 @@ public class Messenger<M> {
     }
 
     public void start(@NotNull MsgInterface<M> callback) {
-        AtomicBoolean finish = new AtomicBoolean(false);
-        Notifier notifier = () -> finish.set(true);
+        Notifier notifier = () -> {
+            synchronized (this) {
+                this.notify();
+            }
+        };
 
         while (!stop) {
             callback.msg(this, msg, notifier);
-            // spin to wait until finished
-            //noinspection StatementWithEmptyBody
-            while (!finish.get()) ;
-            finish.set(false);
+            synchronized (this) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

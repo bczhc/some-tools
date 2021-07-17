@@ -587,6 +587,7 @@ class FdbWindow(private val context: Activity) {
                                         if (progress == 1F) {
                                             self.stop()
                                         }
+                                        // for some devices; Strange!
                                         notifier.finish()
                                     }
                                 }
