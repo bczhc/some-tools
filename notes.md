@@ -58,7 +58,7 @@ In my case (on Android 7.0, 7.1, 8.0), when sending a broadcast using `Context#s
 ```
 Otherwise, the destination broadcast will not receive.
 
-But the [official documentation](https://developer.android.google.cn/training/notify-user/build-notification?hl=en#Actions) is as above which doesn't work for me, it's so wired!
+But the [official documentation](https://developer.android.google.cn/training/notify-user/build-notification?hl=en#Actions) is as above which doesn't work for me, it's so weird!
 ```java
 Intent snoozeIntent = new Intent(this, MyBroadcastReceiver.class);
 snoozeIntent.setAction(ACTION_SNOOZE);
