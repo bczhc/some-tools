@@ -245,8 +245,9 @@ public class PaintView extends View {
      * 撤销操作
      */
     public void undo() {
-        pathSaver.undo();
         if (!undoList.isEmpty()) {
+            pathSaver.undo();
+
             clearPaint();//清除之前绘制内容
             PathBean lastPb = undoList.removeLast();//将最后一个移除
             redoList.add(lastPb);//加入 恢复操作
@@ -267,8 +268,9 @@ public class PaintView extends View {
      * 恢复操作
      */
     public void redo() {
-        pathSaver.redo();
         if (!redoList.isEmpty()) {
+            pathSaver.redo();
+
             PathBean pathBean = redoList.removeLast();
             headCanvas.drawPath(pathBean.path, pathBean.paint);
             undoList.add(pathBean);
