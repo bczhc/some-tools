@@ -12,7 +12,6 @@ import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.KeyEvent
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowManager
@@ -556,7 +555,7 @@ class FdbWindow(private val context: Activity) {
                             progressDialog.setCancelable(false)
                             progressDialog.show()
 
-                            val messenger = Messenger<Float>()
+                            val tryDo = AsyncTryDo()
 
                             paintView.asyncImportPathFile(File(file), {
                                 Common.runOnUiThread(context) {
@@ -575,22 +574,17 @@ class FdbWindow(private val context: Activity) {
                                     )
                                 }
                             }, { progress ->
-                                messenger.set(progress)
-                            }, 0/* TODO */)
 
-                            Thread {
-                                messenger.start { self, progress, notifier ->
+                                tryDo.tryDo { _, notifier ->
                                     progress!!
-                                    Common.runOnUiThread(context) {
+                                    context.runOnUiThread {
                                         progressBar.progress = (progress * 100F).toInt()
                                         progressTV.text = context.getString(R.string.percentage, progress * 100F)
-                                        if (progress == 1F) {
-                                            self.stop()
-                                        }
                                         notifier.finish()
                                     }
                                 }
-                            }.start()
+
+                            }, 0/* TODO */)
                         }.show()
                     }
                     3 -> {
@@ -602,14 +596,7 @@ class FdbWindow(private val context: Activity) {
                         ) { _, picker, path ->
                             dialogs.moreMenu.dismiss()
 
-                            val filename = picker.filenameText!!
-                            try {
-                                val pathFile = File(path, filename)
-                                FileUtil.copy(pathFiles.tmpPathFile, pathFile)
-                                ToastUtils.show(context, R.string.saving_succeeded_dialog)
-                            } catch (e: IOException) {
-                                Common.showException(e, context)
-                            }
+                            exportPath(path, picker.filenameET!!.text.toString())
                         }.show()
                     }
                     4 -> {
@@ -649,6 +636,70 @@ class FdbWindow(private val context: Activity) {
             ll.addView(button)
         }
         return createDialog(inflate)
+    }
+
+    private fun exportPath(internalPath: String, filename: String) {
+
+        val progressView = View.inflate(context, R.layout.progress_bar, null)
+        val progressTitle = progressView.progress_bar_title!!
+        val progressBar = progressView.progress_bar!!
+        val progressTV = progressView.progress_tv!!
+
+        val dialog = createDialog(progressView).apply {
+            setCanceledOnTouchOutside(false)
+            setCancelable(false)
+        }
+        dialog.show()
+
+        val tryDo = AsyncTryDo()
+        Thread {
+            try {
+                val pathFile = File(internalPath, filename)
+                FileUtil.copy(pathFiles.tmpPathFile, pathFile)
+
+                val first = arrayOf(true, true)
+                PathProcessor.optimizePath(pathFile.path) { phase, progress ->
+                    phase!!
+                    tryDo.tryDo { _, notifier ->
+                        context.runOnUiThread {
+                            when (phase) {
+                                PathProcessor.ProgressCallback.Phase.PHASE_1 -> {
+                                    if (first[0]) {
+                                        progressTitle.text =
+                                            context.getString(R.string.fdb_process_path_progress_title, 1)
+                                        first[0] = false
+                                    }
+                                    progressBar.progress = (progress * 100F).toInt()
+                                    progressTV.text = context.getString(R.string.progress_tv, progress * 100F)
+                                }
+                                PathProcessor.ProgressCallback.Phase.PHASE_2 -> {
+                                    if (first[1]) {
+                                        progressTitle.text =
+                                            context.getString(R.string.fdb_process_path_progress_title, 2)
+                                        first[1] = false
+                                    }
+                                    progressBar.progress = (progress * 100F).toInt()
+                                    progressTV.text = context.getString(R.string.progress_tv, progress * 100F)
+                                }
+                                PathProcessor.ProgressCallback.Phase.DONE -> {
+                                    progressBar.progress = 100
+                                    progressTitle.text = context.getString(R.string.process_done)
+                                    progressTV.text = context.getString(R.string.progress_tv, 100F)
+
+                                    dialog.dismiss()
+                                }
+                            }
+                            notifier.finish()
+                        }
+                    }
+                }
+
+            } catch (e: IOException) {
+                Common.showException(e, context)
+            }
+
+            ToastUtils.show(context, R.string.fdb_importing_path_succeeded_toast)
+        }.start()
     }
 
     private fun hideFDB() {

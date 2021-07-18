@@ -9,23 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import org.jetbrains.annotations.NotNull;
+import pers.zhc.tools.R;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.jetbrains.annotations.NotNull;
-import pers.zhc.tools.R;
 
 public class Download {
     public static void download(@NotNull URL url, OutputStream os, @Nullable ProgressCallback progressCallback, @Nullable Runnable doneAction) throws IOException {
@@ -44,7 +35,7 @@ public class Download {
             os.write(buf, 0, readLen);
             totalRead += readLen;
             if (progressCallback != null) {
-                progressCallback.call(((float) totalRead) / ((float) contentLength) * 100F);
+                progressCallback.call(((float) totalRead) / ((float) contentLength));
             }
         }
         is.close();
@@ -73,6 +64,7 @@ public class Download {
         }).start();
     }
 
+    @SuppressWarnings("CodeBlock2Expr")
     public static void startDownloadWithDialog(Context ctx, URL url, File localFile, @Nullable Runnable doneAction) {
         Dialog downloadDialog = new Dialog(ctx);
 
@@ -89,7 +81,6 @@ public class Download {
         TextView barTextView = rl.findViewById(R.id.progress_bar_title);
         barTextView.setText(R.string.downloading);
         ProgressBar pb = rl.findViewById(R.id.progress_bar);
-        pb.setMax(10000);
         progressTextView.setText(R.string.please_wait);
         downloadDialog.setContentView(rl);
         downloadDialog.setCanceledOnTouchOutside(false);
@@ -98,13 +89,21 @@ public class Download {
 
         try {
             FileOutputStream os = new FileOutputStream(localFile, false);
+
+            final AsyncTryDo tryDo = new AsyncTryDo();
+
             new Thread(() -> {
                 try {
                     download(url, os, progress -> {
-                        ((AppCompatActivity) ctx).runOnUiThread(() -> {
-                            pb.setProgress(((int) (progress / 100F * 10000)));
-                            progressTextView.setText(ctx.getString(R.string.progress_tv, progress));
+
+                        tryDo.tryDo((self, notifier) -> {
+                            Common.runOnUiThread(ctx, () -> {
+                                pb.setProgress(((int) (progress * 100F)));
+                                progressTextView.setText(ctx.getString(R.string.progress_tv, progress * 100F));
+                                notifier.finish();
+                            });
                         });
+
                     }, () -> {
                         downloadDialog.dismiss();
                         if (doneAction != null) {

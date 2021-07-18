@@ -3,6 +3,7 @@ package pers.zhc.tools.utils.sqlite;
 import android.database.sqlite.SQLiteException;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.jni.JNI;
+import pers.zhc.tools.utils.Common;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -123,5 +124,15 @@ public class SQLite3 {
 
     public void commit() {
         this.exec("COMMIT ");
+    }
+
+    public int getRecordCount(String table) {
+        final Statement statement = compileStatement("SELECT COUNT() FROM " + table);
+        final Cursor cursor = statement.getCursor();
+        Common.doAssertion(cursor.step());
+        final int count = cursor.getInt(0);
+        statement.release();
+
+        return count;
     }
 }
