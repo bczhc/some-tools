@@ -124,6 +124,8 @@ public class Statement {
                 bind(index, (Long) bind);
             } else if (bind instanceof Double) {
                 bind(index, (Double) bind);
+            } else if (bind instanceof Float) {
+                bind(index, ((Float) bind).doubleValue());
             } else if (bind instanceof String) {
                 bindText(index, (String) bind);
             } else if (bind == null) {

@@ -2,6 +2,8 @@
 <resources>
     <!-- app -->
     <string name="notification_channel_name_common">常规</string>
+    <string name="app_menu_update">更新</string>
+    <string name="app_update_download_dialog">是否下载最新快照版本</string>
     <!-- app end -->
 
     <!-- universal -->
@@ -12,6 +14,7 @@
     <string name="mkdir_failed">创建文件夹失败</string>
     <string name="saving_succeeded_dialog">保存成功</string>
     <string name="filename_hint">文件名</string>
+    <string name="process_done">完成</string>
     <!-- end -->
 
     <!-- old -->
@@ -469,5 +472,6 @@
     <string name="fdb_hide_fdb_notification_text">点击以恢复画板\n%1$s</string>
     <string name="fdb_hide_fdb_confirmation_dialog">是否隐藏画板</string>
     <string name="fdb_start_fdb_button">开启悬浮窗</string>
+    <string name="fdb_process_path_progress_title">正在处理……阶段%1$d</string>
     <!-- module end -->
 </resources>

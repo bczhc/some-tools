@@ -868,8 +868,8 @@ public class PaintView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                pathSaver.onTouchUp(x, y);
                 if (mPath != null) {
+                    pathSaver.onTouchUp(x, y);
                     if (!dontDrawWhileImporting) {
                         headCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
                     }
