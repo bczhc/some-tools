@@ -694,11 +694,11 @@ class FdbWindow(private val context: Activity) {
                     }
                 }
 
+                ToastUtils.show(context, R.string.fdb_exporting_path_succeeded_toast)
             } catch (e: IOException) {
                 Common.showException(e, context)
+                dialog.dismiss()
             }
-
-            ToastUtils.show(context, R.string.fdb_importing_path_succeeded_toast)
         }.start()
     }
 
