@@ -1141,6 +1141,7 @@ public class PaintView extends View {
      */
     private class PathSaver {
         private final SQLite3 pathDatabase;
+        private Statement tmpStatement;
         private Statement pathStatement;
 
         private void setExtraInfos() {
@@ -1197,12 +1198,8 @@ public class PaintView extends View {
 
             pathDatabase.exec("BEGIN TRANSACTION");
             // prepare statement
-            try {
-                pathStatement = pathDatabase.compileStatement("INSERT INTO tmp\n" +
-                        "VALUES (?, ?, ?)");
-            } catch (Exception e) {
-                Common.showException(e, (Activity) PaintView.this.ctx);
-            }
+            tmpStatement = pathDatabase.compileStatement("INSERT INTO tmp (mark, p1, p2) VALUES (?, ?, ?)");
+            pathStatement = pathDatabase.compileStatement("INSERT INTO path (mark, p1, p2) VALUES (?, ?, ?)");
         }
 
         private PathSaver(SQLite3 pathDatabase) {
@@ -1211,33 +1208,29 @@ public class PaintView extends View {
         }
 
         private void undo() {
-            insert(0x20);
+            pathStatement.reset();
+            pathStatement.bind(1, 0x20);
+            pathStatement.bind(2, 0);
+            pathStatement.bind(3, 0);
+            pathStatement.step();
         }
 
         private void redo() {
-            insert(0x30);
-        }
-
-        private void insert(int mark) {
-            try {
-                pathStatement.reset();
-                pathStatement.bind(1, mark);
-                pathStatement.bind(2, 0);
-                pathStatement.bind(3, 0);
-                pathStatement.step();
-            } catch (Exception e) {
-                Common.showException(e, (Activity) PaintView.this.ctx);
-            }
+            pathStatement.reset();
+            pathStatement.bind(1, 0x30);
+            pathStatement.bind(2, 0);
+            pathStatement.bind(3, 0);
+            pathStatement.step();
         }
 
         @SuppressWarnings("DuplicatedCode")
         private void insert(int mark, int p1, float p2) {
             try {
-                pathStatement.reset();
-                pathStatement.bind(1, mark);
-                pathStatement.bind(2, p1);
-                pathStatement.bind(3, p2);
-                pathStatement.step();
+                tmpStatement.reset();
+                tmpStatement.bind(1, mark);
+                tmpStatement.bind(2, p1);
+                tmpStatement.bind(3, p2);
+                tmpStatement.step();
             } catch (Exception e) {
                 Common.showException(e, PaintView.this.ctx);
             }
@@ -1246,11 +1239,11 @@ public class PaintView extends View {
         @SuppressWarnings("DuplicatedCode")
         private void insert(int mark, float p1, float p2) {
             try {
-                pathStatement.reset();
-                pathStatement.bind(1, mark);
-                pathStatement.bind(2, p1);
-                pathStatement.bind(3, p2);
-                pathStatement.step();
+                tmpStatement.reset();
+                tmpStatement.bind(1, mark);
+                tmpStatement.bind(2, p1);
+                tmpStatement.bind(3, p2);
+                tmpStatement.step();
             } catch (Exception e) {
                 Common.showException(e, PaintView.this.ctx);
             }
@@ -1303,6 +1296,7 @@ public class PaintView extends View {
     public void closePathDatabase() {
         if (pathSaver == null) return;
         try {
+            pathSaver.tmpStatement.release();
             pathSaver.pathStatement.release();
         } catch (Exception e) {
             Common.showException(e, ctx);
