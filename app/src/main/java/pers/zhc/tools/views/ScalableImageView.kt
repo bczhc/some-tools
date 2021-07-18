@@ -30,7 +30,7 @@ class ScalableImageView : View {
 
         mGestureResolver = GestureResolver(object : GestureResolver.GestureInterface {
             override fun onTwoPointsScroll(distanceX: Float, distanceY: Float, event: MotionEvent?) {
-                mCanvas.invertTranslate(distanceX, distanceY)
+                mCanvas.translateReal(distanceX, distanceY)
             }
 
             override fun onTwoPointsZoom(
@@ -44,7 +44,7 @@ class ScalableImageView : View {
                 dScale: Float,
                 event: MotionEvent?
             ) {
-                mCanvas.invertScale(dScale, midPointX, midPointY)
+                mCanvas.scaleReal(dScale, midPointX, midPointY)
             }
 
             override fun onTwoPointsUp() {

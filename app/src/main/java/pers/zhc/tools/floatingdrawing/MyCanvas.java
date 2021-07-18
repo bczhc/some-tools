@@ -2,9 +2,8 @@ package pers.zhc.tools.floatingdrawing;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author bczhc
@@ -16,16 +15,6 @@ public class MyCanvas extends Canvas {
 
     public MyCanvas(@NonNull Bitmap bitmap) {
         super(bitmap);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(@Nullable Object obj) {
-        return super.equals(obj);
     }
 
     @Override
@@ -58,17 +47,16 @@ public class MyCanvas extends Canvas {
         return startPointY;
     }
 
-    public void invertTranslate(float canvasTransX, float canvasTransY) {
+    public void translateReal(float canvasTransX, float canvasTransY) {
         translate(canvasTransX / this.scale, canvasTransY / this.scale);
     }
 
-    public void invertScale(float canvasScale, float canvasPX, float canvasPY) {
+    public void scaleReal(float canvasScale, float canvasPX, float canvasPY) {
         scale(canvasScale, (canvasPX - startPointX) / this.scale, (canvasPY - startPointY) / this.scale);
     }
 
     public void reset() {
-        this.scale(1 / scale);
-        this.translate(-startPointX, -startPointY);
+        transTo(0F, 0F, 1F);
     }
 
     @Override
@@ -86,7 +74,7 @@ public class MyCanvas extends Canvas {
 
     public void transTo(float toStartPointX, float toStartPointY, float toScale) {
         scale(toScale / scale);
-        translate(toStartPointX - startPointX, toStartPointY - startPointY);
+        translateReal(toStartPointX - startPointX, toStartPointY - startPointY);
     }
 
     @Override
@@ -96,5 +84,52 @@ public class MyCanvas extends Canvas {
                 ", startPointX=" + startPointX +
                 ", startPointY=" + startPointY +
                 '}';
+    }
+
+    @NotNull
+    public State getStatus() {
+        return new State(startPointX, startPointY, scale);
+    }
+
+    public void restoreStatus(@NotNull State state) {
+        transTo(state.startPointX, state.startPointY, state.scale);
+    }
+
+    public static class State {
+        public final float startPointX;
+        public final float startPointY;
+        public final float scale;
+
+        public State(float startPointX, float startPointY, float scale) {
+            this.startPointX = startPointX;
+            this.startPointY = startPointY;
+            this.scale = scale;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MyCanvas myCanvas = (MyCanvas) o;
+
+        if (Float.compare(myCanvas.scale, scale) != 0) return false;
+        if (Float.compare(myCanvas.startPointX, startPointX) != 0) return false;
+        if (Float.compare(myCanvas.startPointY, startPointY) != 0) return false;
+        if (Float.compare(myCanvas.savedScale, savedScale) != 0) return false;
+        if (Float.compare(myCanvas.savedStartPointX, savedStartPointX) != 0) return false;
+        return Float.compare(myCanvas.savedStartPointY, savedStartPointY) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (scale != +0.0f ? Float.floatToIntBits(scale) : 0);
+        result = 31 * result + (startPointX != +0.0f ? Float.floatToIntBits(startPointX) : 0);
+        result = 31 * result + (startPointY != +0.0f ? Float.floatToIntBits(startPointY) : 0);
+        result = 31 * result + (savedScale != +0.0f ? Float.floatToIntBits(savedScale) : 0);
+        result = 31 * result + (savedStartPointX != +0.0f ? Float.floatToIntBits(savedStartPointX) : 0);
+        result = 31 * result + (savedStartPointY != +0.0f ? Float.floatToIntBits(savedStartPointY) : 0);
+        return result;
     }
 }

@@ -41,12 +41,12 @@ public class AView extends BaseView {
         gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent motionEvent) {
-                mCanvas.invertTranslate(distanceX, distanceY);
+                mCanvas.translateReal(distanceX, distanceY);
             }
 
             @Override
             public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
-                mCanvas.invertScale(dScale, midPointX, midPointY);
+                mCanvas.scaleReal(dScale, midPointX, midPointY);
             }
 
             @Override

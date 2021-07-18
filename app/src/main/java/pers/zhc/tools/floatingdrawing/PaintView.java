@@ -108,6 +108,11 @@ public class PaintView extends View {
     }
 
     private void setupBitmap(int width, int height) {
+        MyCanvas.State state = null;
+        if (headCanvas != null) {
+            state = headCanvas.getStatus();
+        }
+
         System.gc();
         headBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         backgroundBitmap = Bitmap.createBitmap(headBitmap);
@@ -115,8 +120,11 @@ public class PaintView extends View {
         mBackgroundCanvas = new Canvas(backgroundBitmap);
         //抗锯齿
         headCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+
+        if (state != null) {
+            headCanvas.restoreStatus(state);
+        }
         redrawCanvas();
-        invalidate();
     }
 
     private void setupBitmap() {
@@ -155,17 +163,17 @@ public class PaintView extends View {
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
-                headCanvas.invertTranslate(distanceX, distanceY);
+                headCanvas.translateReal(distanceX, distanceY);
                 if (transCanvas != null) {
-                    transCanvas.invertTranslate(distanceX, distanceY);
+                    transCanvas.translateReal(distanceX, distanceY);
                 }
             }
 
             @Override
             public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
-                headCanvas.invertScale(dScale, midPointX, midPointY);
+                headCanvas.scaleReal(dScale, midPointX, midPointY);
                 if (transCanvas != null) {
-                    transCanvas.invertScale(dScale, midPointX, midPointY);
+                    transCanvas.scaleReal(dScale, midPointX, midPointY);
                 }
                 setCurrentStrokeWidthInLocked();
             }
@@ -464,7 +472,7 @@ public class PaintView extends View {
             // init
             this.width = measuredW;
             this.height = measuredH;
-            refreshBitmap(width, height);
+            setupBitmap();
         }
 
         if (measuredW != width || measuredH != height) {

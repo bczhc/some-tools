@@ -692,11 +692,14 @@ class FdbWindow(private val context: Activity) {
                                     progressBar.progress = 100
                                     progressTitle.text = context.getString(R.string.process_done)
                                     progressTV.text = context.getString(R.string.progress_tv, 100F)
-
-                                    dialog.dismiss()
                                 }
                             }
                             notifier.finish()
+                        }
+                    }
+                    if (phase == PathProcessor.ProgressCallback.Phase.DONE) {
+                        context.runOnUiThread {
+                            dialog.dismiss()
                         }
                     }
                 }
