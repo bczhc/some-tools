@@ -17,6 +17,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.SeekBar
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -49,6 +50,7 @@ class FdbWindow(private val context: Activity) {
     private val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
     private val panelRL = PanelRL(context)
+    private val panelSV = ScrollView(context)
     private val panelLP = WindowManager.LayoutParams()
 
     private val paintView = PaintView(context)
@@ -70,7 +72,13 @@ class FdbWindow(private val context: Activity) {
 
     private val panelDimension = ViewDimension()
 
+    private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
+
     init {
+        val ll = LinearLayout(context)
+        ll.addView(panelRL)
+        panelSV.addView(ll)
+
         if (!pathFiles.tmpPathDir.exists() && !pathFiles.tmpPathDir.mkdirs()) {
             ToastUtils.show(context, R.string.mkdir_failed)
         }
@@ -206,17 +214,9 @@ class FdbWindow(private val context: Activity) {
                 }
             }
 
-            val displayMetrics = DisplayMetrics()
-            this@FdbWindow.context.windowManager.defaultDisplay.getMetrics(displayMetrics)
-            val screenWidth = displayMetrics.widthPixels
-            val screenHeight = displayMetrics.heightPixels
-
-            val positionUpdater =
-                FloatingViewOnTouchListener(panelLP, wm, panelRL, screenWidth, screenHeight, panelDimension)
-
             @Suppress("ClickableViewAccessibility")
-            setOnTouchListener { v, event ->
-                return@setOnTouchListener positionUpdater.onTouch(v, event)
+            setOnTouchListener { _, event ->
+                return@setOnTouchListener positionUpdater.onTouch(panelSV, event)
             }
         }
 
@@ -251,6 +251,9 @@ class FdbWindow(private val context: Activity) {
             eraserStrokeWidth = 10F
             drawingColor = colorPickers.brush.color
             enableSavePath(pathFiles.tmpPathFile.path)
+            setOnScreenDimensionChangedListener { width, height ->
+                positionUpdater.updateParentDimension(width, height)
+            }
         }
 
         val externalStorage = Common.getExternalStoragePath(context)
@@ -263,6 +266,12 @@ class FdbWindow(private val context: Activity) {
             ToastUtils.show(context, R.string.mkdir_failed)
         }
         // TODO: 7/11/21 handle storage permission request
+
+        val displayMetrics = DisplayMetrics()
+        context.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+        positionUpdater.updateParentDimension(screenWidth, screenHeight)
     }
 
     private fun showBrushWidthAdjustingDialog() {
@@ -370,11 +379,11 @@ class FdbWindow(private val context: Activity) {
 
     fun startFDB() {
         wm.addView(paintView, paintViewLP)
-        wm.addView(panelRL, panelLP)
+        wm.addView(panelSV, panelLP)
     }
 
     private fun stopFDB() {
-        wm.removeView(panelRL)
+        wm.removeView(panelSV)
         wm.removeView(paintView)
     }
 
@@ -768,6 +777,4 @@ class FdbWindow(private val context: Activity) {
             lateinit var image: File
         }
     }
-
-
 }

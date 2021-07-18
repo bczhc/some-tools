@@ -85,6 +85,7 @@ public class PaintView extends View {
     private Bitmap transBitmap;
     private MyCanvas transCanvas;
     private PathSaver pathSaver = null;
+    private OnScreenDimensionChangedListener onScreenDimensionChangedListener = null;
 
     public PaintView(Context context) {
         this(context, null);
@@ -471,6 +472,9 @@ public class PaintView extends View {
             this.width = measuredW;
             this.height = measuredH;
             refreshBitmap(width, height);
+            if (onScreenDimensionChangedListener != null) {
+                onScreenDimensionChangedListener.onChange(width, height);
+            }
         }
     }
 
@@ -1302,5 +1306,13 @@ public class PaintView extends View {
         if (!pathSaver.pathDatabase.isClosed()) {
             pathSaver.pathDatabase.close();
         }
+    }
+
+    public void setOnScreenDimensionChangedListener(OnScreenDimensionChangedListener onScreenDimensionChangedListener) {
+        this.onScreenDimensionChangedListener = onScreenDimensionChangedListener;
+    }
+
+    public interface OnScreenDimensionChangedListener {
+        void onChange(int width, int height);
     }
 }

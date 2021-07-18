@@ -3,12 +3,13 @@ package pers.zhc.tools.floatingdrawing;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.views.HSVAColorPickerRL;
 
 public class FloatingViewOnTouchListener implements View.OnTouchListener {
     final private WindowManager.LayoutParams layoutParams;
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
     private final WindowManager wm;
     private final View view;
     private final ViewDimension viewDimension;
@@ -28,7 +29,7 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
 
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View v, @NotNull MotionEvent event) {
         float rawX = event.getRawX();
         float rawY = event.getRawY();
         switch (event.getAction()) {
@@ -75,6 +76,11 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
      */
     public void cancelPerformClick() {
         performClick = false;
+    }
+
+    public void updateParentDimension(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 
     public static class ViewDimension {
