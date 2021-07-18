@@ -35,7 +35,9 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="Theme.Application.DayNight.Dialog.Alert" parent="Theme.MaterialComponents.DayNight.Dialog.Alert"/>
+    <style name="Theme.Application.DayNight.Dialog.Alert" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <item name="singleLine">false</item>
+    </style>
 
     <style name="Theme.Application.DayNight.Dialog" parent="Theme.MaterialComponents.DayNight.Dialog"/>
 

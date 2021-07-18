@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 
@@ -64,7 +65,7 @@ public class DialogUtil {
         setDialogAttr(d, isTransparent, WRAP_CONTENT, WRAP_CONTENT, applicationOverlay);
     }
 
-        @NotNull
+    @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, int titleId, int width, int height, boolean applicationOverlay) {
         return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, null, titleId, width, height, applicationOverlay);
     }
@@ -76,12 +77,14 @@ public class DialogUtil {
 
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, @Nullable DialogInterface.OnClickListener negativeAction, @Nullable View view, String title, int width, int height, boolean applicationOverlay) {
-        final TextView titleTV = new TextView(ctx);
-        titleTV.setTextSize(20);
-        titleTV.setText(title);
-        AlertDialog.Builder adb = new AlertDialog.Builder(ctx, R.style.Theme_Application_DayNight_Dialog_Alert);
-        adb.setPositiveButton(R.string.confirm, positiveAction).setNegativeButton(R.string.cancel, negativeAction == null ? (dialog, which) -> {
-        } : negativeAction).setCustomTitle(titleTV);
+//        TextView titleTV = View.inflate(ctx, R.layout.dialog_title, null).findViewById(R.id.title);
+//        titleTV.setText(title);
+
+        final MaterialAlertDialogBuilder adb = new MaterialAlertDialogBuilder(ctx, R.style.Theme_Application_DayNight_Dialog_Alert);
+        adb.setPositiveButton(R.string.confirm, positiveAction)
+                .setNegativeButton(R.string.cancel, negativeAction == null ? (dialog, which) -> {
+                } : negativeAction)
+                .setTitle(title);
         if (view != null) {
             adb.setView(view);
         }
