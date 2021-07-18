@@ -51,7 +51,7 @@ class FdbWindow(private val context: Activity) {
     private val panelRL = PanelRL(context)
     private val panelLP = WindowManager.LayoutParams()
 
-    val paintView = PaintView(context)
+    private val paintView = PaintView(context)
     private val paintViewLP = WindowManager.LayoutParams()
 
     private var operationMode = OperationMode.OPERATING
@@ -552,7 +552,6 @@ class FdbWindow(private val context: Activity) {
                             val progressTV = progressView.progress_tv!!
                             val progressDialog = createDialog(progressView)
                             progressDialog.setCanceledOnTouchOutside(false)
-                            progressDialog.setCancelable(false)
                             progressDialog.show()
 
                             val tryDo = AsyncTryDo()
@@ -647,7 +646,6 @@ class FdbWindow(private val context: Activity) {
 
         val dialog = createDialog(progressView).apply {
             setCanceledOnTouchOutside(false)
-            setCancelable(false)
         }
         dialog.show()
 

@@ -11,6 +11,8 @@
     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:layout_below="@id/textView"
                     android:id="@+id/rl2"
+                    android:focusableInTouchMode="true"
+                    android:focusable="true"
     >
         <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/filter_et" tools:ignore="Autofill,LabelFor,TextFields"
