@@ -216,7 +216,7 @@ class FdbWindow(private val context: Activity) {
 
             @Suppress("ClickableViewAccessibility")
             setOnTouchListener { _, event ->
-                return@setOnTouchListener positionUpdater.onTouch(panelSV, event)
+                return@setOnTouchListener positionUpdater.onTouch(panelSV, event, false)
             }
         }
 

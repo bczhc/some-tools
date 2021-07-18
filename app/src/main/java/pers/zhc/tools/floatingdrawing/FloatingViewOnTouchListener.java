@@ -27,9 +27,7 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
 
     private boolean performClick = true;
 
-
-    @Override
-    public boolean onTouch(View v, @NotNull MotionEvent event) {
+    public boolean onTouch(View v, @NotNull MotionEvent event, boolean doClick /* workaround */) {
         float rawX = event.getRawX();
         float rawY = event.getRawY();
         switch (event.getAction()) {
@@ -63,11 +61,17 @@ public class FloatingViewOnTouchListener implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_UP:
                 if (performClick && Math.abs(lastRawX - rawX) < 1 && Math.abs(lastRawY - rawY) < 1) {
-//                    v.performClick();
+                    if (doClick) {
+                        v.performClick();
+                    }
                 }
                 break;
         }
         return true;
+    }
+
+    public boolean onTouch(View v, @NotNull MotionEvent event) {
+        return onTouch(v, event, true);
     }
 
     /**

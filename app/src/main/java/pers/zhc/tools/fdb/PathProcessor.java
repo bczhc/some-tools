@@ -135,7 +135,9 @@ public class PathProcessor {
         db.commit();
         db.close();
 
-        progressCallback.progress(DONE, 0F);
+        if (progressCallback != null) {
+            progressCallback.progress(DONE, 0F);
+        }
     }
 
     private interface InsertFunction {

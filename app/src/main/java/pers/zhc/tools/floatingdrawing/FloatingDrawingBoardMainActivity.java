@@ -424,7 +424,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
         };
 
         childTextViews[4].setOnTouchListener((v, event) -> {
-            floatingViewOnTouchListener.onTouch(v, event);
+            floatingViewOnTouchListener.onTouch(v, event, true);
             int action = event.getAction();
             float x = event.getX();
             float y = event.getY();
@@ -452,7 +452,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             return true;
         });
         childTextViews[5].setOnTouchListener((v, event) -> {
-            floatingViewOnTouchListener.onTouch(v, event);
+            floatingViewOnTouchListener.onTouch(v, event, true);
             int action = event.getAction();
             float x = event.getX();
             float y = event.getY();
