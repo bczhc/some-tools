@@ -465,10 +465,13 @@ public class PaintView extends View {
             this.height = measuredH;
             refreshBitmap(width, height);
         }
-        this.width = measuredW;
-        this.height = measuredH;
 
-        // TODO: 7/12/21 for drawing area screen orientation adaptation
+        if (measuredW != width || measuredH != height) {
+            // adapt for the change of screen orientation
+            this.width = measuredW;
+            this.height = measuredH;
+            refreshBitmap(width, height);
+        }
     }
 
     public void refreshBitmap(int width, int height) {

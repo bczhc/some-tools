@@ -32,16 +32,6 @@ class FdbMainActivity : BaseActivity() {
             val fdbWindow = FdbWindow(this)
             ToastUtils.show(this, fdbWindow.toString())
             fdbWindow.startFDB()
-
-            val receiver = FdbBroadcastReceiver()
-            val filter = IntentFilter(ACTION_ON_SCREEN_ORIENTATION_CHANGED)
-            registerReceiver(receiver, filter)
-
-            receiver.setOnScreenOrientationChangedListener {
-                val paintView = fdbWindow.paintView
-                paintView.refreshBitmap(paintView.measuredWidth, paintView.measuredHeight)
-                ToastUtils.show(this, it.toString());
-            }
         }
 
         val serviceIntent = Intent(this, FdbService::class.java)
