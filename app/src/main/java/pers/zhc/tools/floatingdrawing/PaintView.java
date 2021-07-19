@@ -130,7 +130,8 @@ public class PaintView extends View {
         headCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 
         if (state != null) {
-            headCanvas.restoreStatus(state);
+            headCanvas.transTo(state);
+            headCanvas.save();
         }
         redrawCanvas();
     }
@@ -935,7 +936,7 @@ public class PaintView extends View {
     }
 
     public void resetTransform() {
-        headCanvas.reset();
+        headCanvas.restore();
         redrawCanvas();
         postInvalidate();
         setCurrentStrokeWidthInLocked();

@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MyCanvas extends Canvas {
     private float scale = 1F;
-    private float startPointX, startPointY;
-    private float savedScale, savedStartPointX, savedStartPointY;
+    private float startPointX = 0F, startPointY = 0F;
+    private float savedScale = 1F, savedStartPointX = 0F, savedStartPointY = 0F;
 
     public MyCanvas(@NonNull Bitmap bitmap) {
         super(bitmap);
@@ -91,7 +91,7 @@ public class MyCanvas extends Canvas {
         return new State(startPointX, startPointY, scale);
     }
 
-    public void restoreStatus(@NotNull State state) {
+    public void transTo(@NotNull State state) {
         transTo(state.startPointX, state.startPointY, state.scale);
     }
 
