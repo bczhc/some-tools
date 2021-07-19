@@ -96,9 +96,9 @@ public class MyCanvas extends Canvas {
     }
 
     public static class State {
-        public final float startPointX;
-        public final float startPointY;
-        public final float scale;
+        public float startPointX;
+        public float startPointY;
+        public float scale;
 
         public State(float startPointX, float startPointY, float scale) {
             this.startPointX = startPointX;

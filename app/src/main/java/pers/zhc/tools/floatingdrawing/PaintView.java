@@ -111,6 +111,14 @@ public class PaintView extends View {
         MyCanvas.State state = null;
         if (headCanvas != null) {
             state = headCanvas.getStatus();
+
+            final int prevWidth = headBitmap.getWidth();
+            final int prevHeight = headBitmap.getHeight();
+
+            final int tX = width / 2 - prevWidth / 2;
+            final int tY = height / 2 - prevHeight / 2;
+            state.startPointX += tX;
+            state.startPointY += tY;
         }
 
         System.gc();
