@@ -17,6 +17,8 @@
     <string name="adding_succeeded">添加成功</string>
     <string name="menu_delete">删除</string>
     <string name="process_done">完成</string>
+    <string name="importing_succeeded">导入成功</string>
+    <string name="exporting_succeeded">导出成功</string>
     <!-- end -->
 
     <!-- old -->
@@ -95,8 +97,6 @@
     <string name="delete">删除</string>
     <string name="export">导出</string>
     <string name="import_">导入</string>
-    <string name="importing_succeeded">导入成功</string>
-    <string name="exporting_succeeded">导出成功</string>
     <string name="importing_canceled">导入取消</string>
     <string name="drawing_board">画板</string>
     <string name="copying_failed">复制失败</string>
@@ -481,5 +481,7 @@
     <string name="words_already_have_word">该记录已存在</string>
     <string name="words_delete_confirmation_dialog">是否删除</string>
     <string name="fdb_exporting_path_succeeded_toast">导出成功</string>
+    <string name="menu_import">导入</string>
+    <string name="menu_export">导出</string>
     <!-- module end -->
 </resources>

@@ -39,7 +39,7 @@ public class FilePickerRL extends RelativeLayout {
     public static final int TYPE_PICK_FOLDER = 2;
     private final File initialPath;
     private final OnCancelCallback cancelAction;
-    private final OnPickedResultActionInterface pickedResultAction;
+    private final OnPickedResultCallback pickedResultAction;
     private final int[] justPicked = new int[]{-1};
     private final @DrawableRes
     int cannotPick = R.drawable.file_picker_view_cannot_pick;
@@ -64,7 +64,7 @@ public class FilePickerRL extends RelativeLayout {
 
     // Shitcode!!!
     public FilePickerRL(Context context, int type, @Nullable File initialPath
-            , OnCancelCallback cancelAction, OnPickedResultActionInterface pickedResultAction
+            , OnCancelCallback cancelAction, OnPickedResultCallback pickedResultAction
             , @Nullable String initFileName, boolean enableFilenameET) {
         super(context);
         this.ctx = (AppCompatActivity) context;
@@ -84,7 +84,7 @@ public class FilePickerRL extends RelativeLayout {
     }
 
     public FilePickerRL(Context context, int type, @Nullable File initialPath
-            , OnCancelCallback cancelAction, OnPickedResultActionInterface pickedResultAction
+            , OnCancelCallback cancelAction, OnPickedResultCallback pickedResultAction
             , @Nullable String initFileName) {
         this(context, type, initialPath, cancelAction, pickedResultAction, initFileName, false);
     }
@@ -358,7 +358,7 @@ public class FilePickerRL extends RelativeLayout {
         return fileList.toArray(new File[0]);
     }
 
-    public interface OnPickedResultActionInterface {
+    public interface OnPickedResultCallback {
         /**
          * onPickedResult callback
          *

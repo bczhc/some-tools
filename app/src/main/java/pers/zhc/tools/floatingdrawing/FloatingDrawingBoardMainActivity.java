@@ -1318,7 +1318,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
      * @return dialog
      */
     @NotNull
-    private Dialog getFilePickerDialog(File initialPath, FilePickerRL.OnPickedResultActionInterface onPickedResultAction) {
+    private Dialog getFilePickerDialog(File initialPath, FilePickerRL.OnPickedResultCallback onPickedResultAction) {
         Dialog dialog = new Dialog(this);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);

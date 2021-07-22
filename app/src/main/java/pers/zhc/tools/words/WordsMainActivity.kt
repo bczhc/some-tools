@@ -5,9 +5,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,16 +18,23 @@ import kotlinx.android.synthetic.main.words_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.AdapterWithClickListener
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.DialogUtil
-import pers.zhc.tools.utils.PopupMenuUtil
+import pers.zhc.tools.filepicker.FilePicker
+import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.sqlite.SQLite3
+import java.io.File
 
 /**
  * @author bczhc
  */
 class WordsMainActivity : BaseActivity() {
+    private val itemList = ArrayList<Item>()
+    private lateinit var listAdapter: MyAdapter
+
+    private val launchers = object {
+        val importFilePicker = initImportFilePickerLauncher()
+        val exportFilePicker = initExportFilePickerLauncher()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.words_activity)
@@ -34,8 +44,8 @@ class WordsMainActivity : BaseActivity() {
 
         val recyclerView = recycler_view!!
 
-        val itemList = queryItems()
-        val listAdapter = MyAdapter(this, itemList)
+        updateItems()
+        listAdapter = MyAdapter(this, itemList)
 
         recyclerView.adapter = listAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -72,8 +82,8 @@ class WordsMainActivity : BaseActivity() {
         database!!.execBind("DELETE FROM word WHERE word IS ?", arrayOf(word))
     }
 
-    private fun queryItems(): ArrayList<Item> {
-        val itemList = ArrayList<Item>()
+    private fun updateItems() {
+        itemList.clear()
 
         val statement = database!!.compileStatement("SELECT word FROM word")
         val cursor = statement.cursor
@@ -82,8 +92,6 @@ class WordsMainActivity : BaseActivity() {
             itemList.add(Item(word))
         }
         statement.release()
-
-        return itemList
     }
 
     private fun showNotification() {
@@ -99,6 +107,60 @@ class WordsMainActivity : BaseActivity() {
 
         val nm = applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         nm.notify(0, notification)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.words_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.import_ -> {
+                importAction()
+            }
+            R.id.export -> {
+                exportAction()
+            }
+            else -> {
+            }
+        }
+        return true
+    }
+
+    private fun importAction() {
+        launchers.importFilePicker.launch(FilePicker.PICK_FILE)
+    }
+
+    private fun exportAction() {
+        launchers.exportFilePicker.launch(FilePicker.PICK_FOLDER)
+    }
+
+    private fun initImportFilePickerLauncher(): ActivityResultLauncher<Int> {
+        return FilePicker.getLauncher(this) {
+            it ?: return@getLauncher
+
+            Thread {
+                FileUtil.copy(it, databasePath)
+                updateItems()
+                runOnUiThread {
+                    listAdapter.notifyDataSetChanged()
+                    ToastUtils.show(this, R.string.importing_succeeded)
+                }
+            }.start()
+        }
+    }
+
+    private fun initExportFilePickerLauncher(): ActivityResultLauncher<Int> {
+        return FilePicker.getLauncherWithFilename(this) { path, filename ->
+            path ?: return@getLauncherWithFilename
+
+            val outputFile = File(path, filename)
+            Thread {
+                FileUtil.copy(File(databasePath), outputFile)
+                ToastUtils.show(this, R.string.exporting_succeeded)
+            }.start()
+        }
     }
 
     class MyAdapter(private val ctx: Context, private val itemList: List<Item>) :
