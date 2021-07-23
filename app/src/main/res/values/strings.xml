@@ -4,6 +4,7 @@
     <string name="notification_channel_name_common">常规</string>
     <string name="app_menu_update">更新</string>
     <string name="app_update_download_dialog">是否下载最新快照版本</string>
+    <string name="settings_github_raw_root_url">GitHub raw根URL</string>
     <!-- app end -->
 
     <!-- universal -->
@@ -19,6 +20,8 @@
     <string name="process_done">完成</string>
     <string name="importing_succeeded">导入成功</string>
     <string name="exporting_succeeded">导出成功</string>
+    <string name="menu_import">导入</string>
+    <string name="menu_export">导出</string>
     <!-- end -->
 
     <!-- old -->
@@ -371,7 +374,7 @@
 
     <!-- app settings -->
     <string name="settings_server_root_url">服务器URL</string>
-    <string name="settings_resource_root_url">资源根URL</string>
+    <string name="settings_static_resource_root_url">静态资源根URL</string>
     <!-- end -->
 
     <!-- module: unicode_table -->
@@ -474,14 +477,13 @@
     <string name="fdb_hide_fdb_confirmation_dialog">是否隐藏画板</string>
     <string name="fdb_start_fdb_button">开启悬浮窗</string>
     <string name="fdb_process_path_progress_title">正在处理……阶段%1$d</string>
+    <string name="fdb_exporting_path_succeeded_toast">导出成功</string>
+    <!-- TODO: use universal string resources -->
     <!-- module end -->
 
     <!-- module: words -->
     <string name="words_label">单词</string>
     <string name="words_already_have_word">该记录已存在</string>
     <string name="words_delete_confirmation_dialog">是否删除</string>
-    <string name="fdb_exporting_path_succeeded_toast">导出成功</string>
-    <string name="menu_import">导入</string>
-    <string name="menu_export">导出</string>
     <!-- module end -->
 </resources>

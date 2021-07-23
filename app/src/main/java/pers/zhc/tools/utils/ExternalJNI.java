@@ -92,7 +92,7 @@ public class ExternalJNI {
         Handler handler = new Handler();
         new Thread(() -> {
             abi = getABI();
-            downloadURL = Infos.serverURL
+            downloadURL = Infos.serverRootURL
                     + "/tools_app/jni.zhc?abi=" + abi + "&name=libex1.so";
             File libsDir = new File(activity.getFilesDir(), "libs");
             if (!libsDir.exists()) {

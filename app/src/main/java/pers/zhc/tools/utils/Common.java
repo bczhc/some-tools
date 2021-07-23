@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -98,7 +97,7 @@ public class Common {
     @NotNull
     @Contract(pure = true)
     public static String getStaticResourceUrlString(String filename) {
-        return Infos.resourceURL + '/' + filename;
+        return Infos.staticResourceRootURL + '/' + filename;
     }
 
     public static void doAssertion(boolean condition) {

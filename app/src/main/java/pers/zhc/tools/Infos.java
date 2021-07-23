@@ -4,8 +4,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class Infos {
     public static @NotNull
-    String serverURL = "";
+    String serverRootURL = "";
     public static @NotNull
-    String resourceURL = "https://gitlab.com/bczhc/store/-/raw/master";
+    String staticResourceRootURL = "https://gitlab.com/bczhc/store/-/raw/master";
+    public static String githubRawRootURL = "https://raw.fastgit.org/%1$s/%2$s/%3$s";
+
     public static final Class<?> LAUNCHER_CLASS = MainActivity.class;
 }

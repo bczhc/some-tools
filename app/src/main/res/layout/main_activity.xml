@@ -16,7 +16,14 @@
             android:layout_height="wrap_content"
             style="@style/Widget.Application.TextInputLayout.FilledBox"
             android:id="@+id/resource_et"
-            app:hint="@string/settings_resource_root_url"
+            app:hint="@string/settings_static_resource_root_url"
+    />
+    <pers.zhc.tools.views.SmartHintEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Application.TextInputLayout.FilledBox"
+            android:id="@+id/github_raw_url_et"
+            app:hint="@string/settings_github_raw_root_url"
     />
     <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"

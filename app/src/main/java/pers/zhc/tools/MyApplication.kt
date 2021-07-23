@@ -5,8 +5,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
-import org.json.JSONException
 import org.json.JSONObject
+import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
+import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
+import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
 import pers.zhc.tools.crashhandler.CrashHandler
 import pers.zhc.tools.diary.DiaryDatabase
 import pers.zhc.tools.words.WordsMainActivity
@@ -44,25 +46,36 @@ class MyApplication : Application() {
     }
 
     private fun initAppInfoFile() {
-        infoFile = File(filesDir, "info.json")
+        infoFile = File(filesDir, InfoJson.FILENAME)
         if (!infoFile.exists()) {
             infoFile.createNewFile()
             infoFile.writeText(JSONObject().toString(4))
         }
         val read = infoFile.readText()
         val jsonObject = JSONObject(read)
-        try {
-            Infos.serverURL = jsonObject.getString("serverURL")
-        } catch (_: JSONException) {
+
+        if (jsonObject.has(KEY_SERVER_ROOT_URL)) {
+            Infos.serverRootURL = jsonObject.getString(KEY_SERVER_ROOT_URL)
         }
-        try {
-            Infos.resourceURL = jsonObject.getString("resourceURL")
-        } catch (_: JSONException) {
+        if (jsonObject.has(KEY_STATIC_RESOURCE_ROOT_URL)) {
+            Infos.staticResourceRootURL = jsonObject.getString(KEY_STATIC_RESOURCE_ROOT_URL)
+        }
+        if (jsonObject.has(KEY_GITHUB_RAW_ROOT_URL)) {
+            Infos.githubRawRootURL = jsonObject.getString(KEY_GITHUB_RAW_ROOT_URL)
         }
     }
 
     companion object {
         private lateinit var infoFile: File
+
+        class InfoJson {
+            companion object {
+                const val FILENAME = "info.json"
+                const val KEY_SERVER_ROOT_URL = "serverRootURL"
+                const val KEY_STATIC_RESOURCE_ROOT_URL = "staticResourceRootURL"
+                const val KEY_GITHUB_RAW_ROOT_URL = "githubRawRootURL"
+            }
+        }
 
         fun getInfoJSON() {
             TODO("Not yet implemented")

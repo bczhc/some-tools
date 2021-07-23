@@ -3,6 +3,9 @@ package pers.zhc.tools
 import android.os.Bundle
 import kotlinx.android.synthetic.main.main_activity.*
 import org.json.JSONObject
+import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
+import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
+import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
 import pers.zhc.tools.utils.ToastUtils
 
 /**
@@ -15,22 +18,27 @@ class Settings : BaseActivity() {
 
         val serverET = server_et!!
         val resourceET = resource_et!!
+        val githubET = github_raw_url_et!!
         val saveBtn = save!!
 
-        serverET.editText.setText(Infos.serverURL)
-        resourceET.editText.setText(Infos.resourceURL)
+        serverET.editText.setText(Infos.serverRootURL)
+        resourceET.editText.setText(Infos.staticResourceRootURL)
+        githubET.editText.setText(Infos.githubRawRootURL)
 
         saveBtn.setOnClickListener {
             val jsonObject = JSONObject()
             val newServerURL = serverET.editText.text.toString()
             val newResourceURL = resourceET.editText.text.toString()
-            jsonObject.put("serverURL", newServerURL)
-            jsonObject.put("resourceURL", newResourceURL)
+            val newGithubRawURL = githubET.editText.text.toString()
+            jsonObject.put(KEY_SERVER_ROOT_URL, newServerURL)
+            jsonObject.put(KEY_STATIC_RESOURCE_ROOT_URL, newResourceURL)
+            jsonObject.put(KEY_GITHUB_RAW_ROOT_URL, newGithubRawURL)
             MyApplication.writeInfoJSON(jsonObject)
 
 
-            Infos.serverURL = newServerURL
-            Infos.resourceURL = newResourceURL
+            Infos.serverRootURL = newServerURL
+            Infos.staticResourceRootURL = newResourceURL
+            Infos.githubRawRootURL = newGithubRawURL
 
             ToastUtils.show(this, R.string.saved)
             finish()
