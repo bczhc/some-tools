@@ -1408,23 +1408,28 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     tv.setText(R.string.importing);
                     ProgressBar progressBar = progressRelativeLayout.findViewById(R.id.progress_bar);
                     TextView pTextView = progressRelativeLayout.findViewById(R.id.progress_bar_title);
-                    SpinLatch latch = new SpinLatch();
+
+                    AsyncTryDo tryDo = new AsyncTryDo();
+
                     pv.asyncImportPathFile(new File(path), () -> {
                         runOnUiThread(importPathFileDoneAction);
                         importPathFileProgressDialog.dismiss();
                     }, aFloat -> {
-                        latch.suspend();
-                        runOnUiThread(() -> {
-                            progressBar.setProgress(aFloat.intValue());
-                            pTextView.setText(getString(R.string.progress_tv, aFloat));
-                            latch.stop();
+
+                        tryDo.tryDo((self, notifier) -> {
+                            runOnUiThread(() -> {
+                                progressBar.setProgress((int) (aFloat * 100F));
+                                pTextView.setText(getString(R.string.progress_tv, aFloat * 100F));
+                                notifier.finish();
+                            });
                         });
-                        latch.await();
+
                     }, speedDelayMillis.get());
                     if (moreOptionsDialog != null) {
                         moreOptionsDialog.dismiss();
                     }
                 };
+
                 adb.setPositiveButton(R.string.confirm, (dialog1, which) -> importAction.run()).setNegativeButton(R.string.cancel, (dialog1, which) -> {
                     speedDelayMillis.set(0);
                     importAction.run();

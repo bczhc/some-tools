@@ -1,6 +1,8 @@
 package pers.zhc.tools.fdb
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -35,7 +37,6 @@ class FdbMainActivity : BaseActivity() {
 
         val startButton = start_button!!
         startButton.setOnClickListener {
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!checkDrawOverlayPermission()) {
                     launcher.overlaySetting!!.launch(this.packageName)

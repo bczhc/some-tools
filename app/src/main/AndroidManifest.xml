@@ -27,7 +27,9 @@
             android:supportsRtl="true"
             android:testOnly="false"
             android:usesCleartextTraffic="true"
-            tools:targetApi="q">
+            tools:targetApi="q"
+            android:largeHeap="true"
+    >
         <receiver
                 android:name=".floatingdrawing.NotificationClickReceiver"
                 android:enabled="true"
