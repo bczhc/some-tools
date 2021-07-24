@@ -50,7 +50,7 @@ public class AView extends BaseView {
             }
 
             @Override
-            public void onTwoPointsUp() {
+            public void onTwoPointsUp(MotionEvent event) {
 
             }
 
@@ -60,11 +60,11 @@ public class AView extends BaseView {
             }
 
             @Override
-            public void onTwoPointsPress() {
+            public void onTwoPointsPress(MotionEvent event) {
             }
 
             @Override
-            public void onTwoPointsDown() {
+            public void onTwoPointsDown(MotionEvent event) {
 
             }
         });

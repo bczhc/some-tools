@@ -188,13 +188,13 @@ public class PaintView extends View {
             }
 
             @Override
-            public void onTwoPointsUp() {
+            public void onTwoPointsUp(MotionEvent event) {
                 transBitmap = null;
                 redrawCanvas();
             }
 
             @Override
-            public void onTwoPointsDown() {
+            public void onTwoPointsDown(MotionEvent event) {
                 mPath = null;
                 if (transBitmap == null) {
                     transBitmap = Bitmap.createBitmap(headBitmap);
@@ -211,7 +211,7 @@ public class PaintView extends View {
             }
 
             @Override
-            public void onTwoPointsPress() {
+            public void onTwoPointsPress(MotionEvent event) {
                 if (transBitmap != null) {
                     float startPointX = headCanvas.getStartPointX();
                     float startPointY = headCanvas.getStartPointY();

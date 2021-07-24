@@ -47,13 +47,13 @@ class ScalableImageView : View {
                 mCanvas.scaleReal(dScale, midPointX, midPointY)
             }
 
-            override fun onTwoPointsUp() {
+            override fun onTwoPointsUp(event: MotionEvent) {
             }
 
-            override fun onTwoPointsDown() {
+            override fun onTwoPointsDown(event: MotionEvent) {
             }
 
-            override fun onTwoPointsPress() {
+            override fun onTwoPointsPress(event: MotionEvent) {
             }
 
             override fun onOnePointScroll(distanceX: Float, distanceY: Float, event: MotionEvent?) {

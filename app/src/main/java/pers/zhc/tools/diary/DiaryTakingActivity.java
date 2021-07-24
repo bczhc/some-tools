@@ -20,15 +20,14 @@ import androidx.annotation.Nullable;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import org.jetbrains.annotations.NotNull;
+import pers.zhc.jni.sqlite.Cursor;
+import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.jni.sqlite.Cursor;
-import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.views.ScrollEditText;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +62,10 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
         updateStatement = this.diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?");
 
-        et = ((ScrollEditText) findViewById(R.id.et)).getEditText();
+        final ScrollEditText scrollEditText = findViewById(R.id.et);
+        scrollEditText.setZoomFontSizeEnabled(true);
+
+        et = scrollEditText.getEditText();
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         charactersCountTV = toolbar.findViewById(R.id.text_count_tv);
         SwitchMaterial ttsSwitch = toolbar.findViewById(R.id.tts_switch);

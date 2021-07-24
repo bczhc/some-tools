@@ -27,6 +27,13 @@ public class GestureResolver {
             float y1 = event.getY(0);
             float x2 = event.getX(1);
             float y2 = event.getY(1);
+
+            if (!twoPointsDown) {
+                gestureInterface.onTwoPointsDown(event);
+            }
+            twoPointsDown = true;
+            gestureInterface.onTwoPointsPress(event);
+
             {
                 float midX = (x1 + x2) / 2;
                 float midY = (y1 + y2) / 2;
@@ -55,11 +62,6 @@ public class GestureResolver {
                 this.gestureInterface.onTwoPointsZoom(firstMidPointX, firstMidPointY, midPointX, midPointY, firstDistance, distance, distance / firstDistance, distance / lastDistance, event);
                 lastDistance = distance;
             }
-            if (!twoPointsDown) {
-                gestureInterface.onTwoPointsDown();
-            }
-            twoPointsDown = true;
-            gestureInterface.onTwoPointsPress();
         } else {
             if (twoPointsDown) {
                 twoPointsDown = false;
@@ -67,7 +69,7 @@ public class GestureResolver {
                 lastY = -1;
                 firstDistance = -1;
                 lastDistance = -1;
-                gestureInterface.onTwoPointsUp();
+                gestureInterface.onTwoPointsUp(event);
             }
         }
         if (pointerCount == 1) {
@@ -115,18 +117,21 @@ public class GestureResolver {
 
         /**
          * It will be invoked when two points change to one point or no point.
+         * @param event event
          */
-        void onTwoPointsUp();
+        void onTwoPointsUp(MotionEvent event);
 
         /**
          * It will be invoked when two points press down the first time.
+         * @param event event
          */
-        void onTwoPointsDown();
+        void onTwoPointsDown(MotionEvent event);
 
         /**
          * It will be invoked when two points press down.
+         * @param event event
          */
-        void onTwoPointsPress();
+        void onTwoPointsPress(MotionEvent event);
 
         /**
          * 一个点的移动
