@@ -43,8 +43,6 @@ class FdbMainActivity : BaseActivity() {
                     return@setOnClickListener
                 } else run()
             } else return@setOnClickListener
-
-            run()
         }
 
         val serviceIntent = Intent(this, FdbService::class.java)

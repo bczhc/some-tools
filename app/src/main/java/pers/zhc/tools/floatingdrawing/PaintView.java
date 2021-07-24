@@ -13,6 +13,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +25,6 @@ import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
-import pers.zhc.util.function.ValueInterface;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -552,12 +552,12 @@ public class PaintView extends View {
      * @param progressCallback 进度回调接口 Range: [0-1]
      */
     @SuppressWarnings("BusyWait")
-    public void asyncImportPathFile(File f, Runnable doneAction, @Nullable ValueInterface<Float> progressCallback, int speedDelayMillis) {
+    public void asyncImportPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) {
         Handler handler = new Handler();
 
         dontDrawWhileImporting = speedDelayMillis == 0;
         if (progressCallback != null) {
-            progressCallback.f(0F);
+            progressCallback.accept(0F);
         }
 
         final Runnable importOldPathRunnable = () -> {
@@ -626,7 +626,7 @@ public class PaintView extends View {
                             }
                             read += 12;
                             if (progressCallback != null) {
-                                progressCallback.f((float) read / ((float) length));
+                                progressCallback.accept((float) read / ((float) length));
                             }
                         }
                         break;
@@ -677,7 +677,7 @@ public class PaintView extends View {
                                 }
                                 read += 9L;
                                 if (progressCallback != null) {
-                                    progressCallback.f((float) read / (float) length);
+                                    progressCallback.accept((float) read / (float) length);
                                 }
                             }
                         }
@@ -727,7 +727,7 @@ public class PaintView extends View {
                                     setDrawingStrokeWidth(strokeWidth);
                                     onTouchAction(motionAction, x, y);
                                     if (progressCallback != null) {
-                                        progressCallback.f((float) read / (float) length);
+                                        progressCallback.accept((float) read / (float) length);
                                     }
                                     break;
                             }
@@ -768,7 +768,7 @@ public class PaintView extends View {
         return (int) ran_sc_db;
     }
 
-    private void importPathVer3(@NotNull String path, ValueInterface<Float> progressCallback, int speedDelayMillis) {
+    private void importPathVer3(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
@@ -824,7 +824,7 @@ public class PaintView extends View {
             }
 
             ++c;
-            progressCallback.f((float) c / (float) recordNum);
+            progressCallback.accept((float) c / (float) recordNum);
             if (!dontDrawWhileImporting) {
                 try {
                     //noinspection BusyWait

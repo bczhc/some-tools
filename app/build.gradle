@@ -82,6 +82,7 @@ android {
 
 
 repositories {
+    mavenCentral()
     maven { url 'https://jitpack.io' }
 }
 
@@ -91,9 +92,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.32"
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.github.mik3y:usb-serial-for-android:3.3.0'
-    implementation 'com.github.bczhc:java-lib:master-SNAPSHOT'
+    implementation 'com.github.bczhc:java-lib:18a858c167'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.7'
-    implementation 'com.github.bczhc:jni-java:4ca3ad7995'
+    implementation 'com.github.bczhc:jni-java:292ec4a849'
 }
