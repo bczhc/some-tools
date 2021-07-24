@@ -202,7 +202,7 @@ FROM diary"""
 
     private fun showCreateSpecifiedDateDiaryDialog() {
         val promptDialog =
-            DialogUtil.createPromptDialog(context, R.string.enter_specific_date) { et: EditText, _: AlertDialog? ->
+            DialogUtil.createPromptDialog(context, R.string.enter_specific_date) { et, _ ->
                 val s = et.text.toString()
                 try {
                     val dateInt = s.toInt()

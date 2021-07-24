@@ -77,9 +77,6 @@ public class DialogUtil {
 
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, @Nullable DialogInterface.OnClickListener negativeAction, @Nullable View view, String title, int width, int height, boolean applicationOverlay) {
-//        TextView titleTV = View.inflate(ctx, R.layout.dialog_title, null).findViewById(R.id.title);
-//        titleTV.setText(title);
-
         final MaterialAlertDialogBuilder adb = new MaterialAlertDialogBuilder(ctx, R.style.Theme_Application_DayNight_Dialog_Alert);
         adb.setPositiveButton(R.string.confirm, positiveAction)
                 .setNegativeButton(R.string.cancel, negativeAction == null ? (dialog, which) -> {
@@ -122,7 +119,11 @@ public class DialogUtil {
         return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, titleId, WRAP_CONTENT, WRAP_CONTENT, false);
     }
 
-    public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {
+    public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction, View view, int titleId) {
+        return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, view, titleId, WRAP_CONTENT, WRAP_CONTENT, false);
+    }
+
+        public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         ad.setOnShowListener(dialog -> imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0));
         ad.setOnDismissListener(dialog -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0));
@@ -132,20 +133,17 @@ public class DialogUtil {
     }
 
     @NotNull
-    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback, DialogInterface.OnClickListener negativeAction) {
-        AlertDialog.Builder adb = new AlertDialog.Builder(ctx, R.style.Theme_Application_DayNight_Dialog_Alert);
-        EditText et = new EditText(ctx);
-        adb.setTitle(strId)
-                .setView(et)
-                .setPositiveButton(R.string.confirm, (dialog, which) -> callback.confirm(et, (AlertDialog) dialog))
-                .setNegativeButton(R.string.cancel, negativeAction);
-        return adb.create();
+    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback, DialogInterface.OnClickListener negativeAction, EditText editText) {
+
+        return createConfirmationAlertDialog(ctx, (d, which) -> {
+            callback.confirm(editText, d);
+        }, negativeAction, editText, strId);
     }
 
     @NotNull
     public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback) {
         return createPromptDialog(ctx, strId, callback, (dialog, which) -> {
-        });
+        }, new EditText(ctx));
     }
 
     @NotNull

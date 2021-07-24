@@ -28,6 +28,8 @@ public class Download {
             contentLength = connection.getContentLengthLong();
         } else contentLength = connection.getContentLength();
 
+        // TODO: 7/24/21 for some resources that can't get it's content length (-1)
+
         long totalRead = 0;
         InputStream is = connection.getInputStream();
         int readLen;

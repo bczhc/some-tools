@@ -3,7 +3,7 @@ package pers.zhc.tools.words
 import android.os.Bundle
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 
 class DialogShowActivity : BaseActivity() {
@@ -14,7 +14,7 @@ class DialogShowActivity : BaseActivity() {
     }
 
     private fun showDialog() {
-        val dialog = DialogUtil.createPromptDialog(this, R.string.words_label, { et, _ ->
+        val dialog = DialogUtils.createPromptDialog(this, R.string.words_label, { _, et ->
 
             val database = WordsMainActivity.database!!
 

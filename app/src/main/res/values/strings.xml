@@ -5,6 +5,7 @@
     <string name="app_menu_update">更新</string>
     <string name="app_update_download_dialog">是否下载最新快照版本</string>
     <string name="settings_github_raw_root_url">GitHub raw根URL</string>
+    <string name="processing">正在处理</string>
     <!-- app end -->
 
     <!-- universal -->
@@ -371,6 +372,10 @@
     <!-- TODO de-generalize the names -->
 
     <!-- new -->
+
+    <!-- module: wubi -->
+    <string name="wubi_words_dict_url_prompt">使用的词库网址</string>
+    <!-- module end -->
 
     <!-- app settings -->
     <string name="settings_server_root_url">服务器URL</string>

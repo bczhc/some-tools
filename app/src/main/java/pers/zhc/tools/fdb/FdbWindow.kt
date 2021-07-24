@@ -336,7 +336,7 @@ class FdbWindow(private val context: Activity) {
         }
 
         infoTV.setOnClickListener {
-            createPromptDialog(R.string.fdb_stroke_width_prompt_dialog) { et, _ ->
+            createPromptDialog(R.string.fdb_stroke_width_prompt_dialog) { _, et ->
                 val px = et.text.toString().toFloatOrNull()
                 if (px == null) {
                     ToastUtils.show(context, R.string.please_enter_correct_value_toast)
@@ -430,8 +430,8 @@ class FdbWindow(private val context: Activity) {
     }
 
     private fun createPromptDialog(@StringRes titleRes: Int, callback: PromptDialogCallback): AlertDialog {
-        val dialog = DialogUtil.createPromptDialog(context, titleRes, callback)
-        DialogUtil.setDialogAttr(dialog, false, true)
+        val dialog = DialogUtils.createPromptDialog(context, titleRes, callback)
+        DialogUtils.setDialogAttr(dialog, isTransparent = false, overlayWindow = true)
         return dialog
     }
 

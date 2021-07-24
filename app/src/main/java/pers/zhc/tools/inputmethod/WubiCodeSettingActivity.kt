@@ -6,20 +6,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
+import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.Infos
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.Download
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.views.ProgressView
 import java.io.File
 import java.io.IOException
+import java.net.MalformedURLException
 import java.net.URL
-import java.util.concurrent.atomic.AtomicReference
 
 class WubiCodeSettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,28 +42,158 @@ class WubiCodeSettingActivity : BaseActivity() {
         listView.onItemClickListener = AdapterView.OnItemClickListener { _, view, position, _ ->
             arrayOf(
                 View.OnClickListener {
-                    val dialog = AtomicReference<Dialog>()
-                    dialog.set(DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
-                        try {
-                            val wubiDatabaseURL = URL(Common.getStaticResourceUrlString("wubi_code.db"))
-                            val localWubiDatabaseFile = getLocalWubiDatabasePath(this)
-                            Download.startDownloadWithDialog(this, wubiDatabaseURL, File(localWubiDatabaseFile)) {
-                                runOnUiThread {
-                                    ToastUtils.show(this, R.string.downloading_done)
-                                }
-                            }
-                        } catch (e: IOException) {
-                            dialog.get().dismiss()
-                            Common.showException(e, this)
-                        }
-                    }, R.string.whether_to_download))
-                    dialog.get().show()
+
+                    downloadWordsDictAction()
+
                 },
                 View.OnClickListener {
                     startActivity(Intent(this, WubiDatabaseEditActivity::class.java))
                 }
             )[position].onClick(view)
         }
+    }
+
+    private fun downloadWordsDictAction() {
+        val editText = EditText(this)
+        editText.setText(
+            String.format(
+                Infos.githubRawRootURL,
+                "KyleBing",
+                "rime-wubi86-jidian",
+                "master",
+                "wubi86_jidian.dict.yaml"
+            )
+        )
+
+        DialogUtils.createPromptDialog(this, R.string.wubi_words_dict_url_prompt, { _, et ->
+
+            val urlString = et.text.toString()
+            try {
+                val url = URL(urlString)
+
+                val wubiDir = File(filesDir, "wubi")
+                if (!wubiDir.exists()) {
+                    if (!wubiDir.mkdir()) {
+                        ToastUtils.show(this, R.string.mkdir_failed)
+                        return@createPromptDialog
+                    }
+                }
+
+                val dictFile = File(wubiDir, "dict")
+
+                Download.startDownloadWithDialog(this, url, dictFile) {
+                    // this callback is run in async
+                    runOnUiThread {
+                        val dialog = Dialog(this)
+                        val progressView = ProgressView(this)
+                        progressView.setIsIndeterminateMode(true)
+                        progressView.setTitle(getString(R.string.processing))
+                        dialog.apply {
+                            setCanceledOnTouchOutside(false)
+                            setContentView(progressView)
+                        }
+                        dialog.show()
+
+                        Thread {
+
+                            try {
+                                processDownloadedDict(dictFile)
+                                runOnUiThread {
+                                    ToastUtils.show(this, R.string.process_done)
+                                }
+                            } catch (e: Exception) {
+                                Common.showException(e, this)
+                            }
+                            runOnUiThread {
+                                dialog.dismiss()
+                            }
+
+                        }.start()
+                    }
+
+                }
+
+            } catch (e: MalformedURLException) {
+                Common.showException(e, this)
+                return@createPromptDialog
+            }
+
+        }, editText = editText).show()
+    }
+
+    private fun initDatabase(db: SQLite3) {
+        for (i in 'a'..'z') {
+            // language=SQLite
+            db.exec(
+                """CREATE TABLE IF NOT EXISTS wubi_code_$i
+(
+    code TEXT NOT NULL PRIMARY KEY,
+    word TEXT NOT NULL
+)"""
+            )
+        }
+    }
+
+    private fun processDownloadedDict(file: File) {
+        val hashMap = HashMap<String, ArrayList<String>>()
+
+        val reader = file.reader()
+        val bufferedReader = reader.buffered()
+
+        val process = { line: String ->
+            val split = line.split('\t')
+            val code = split[1]
+            val word = split[0]
+
+            val get = hashMap[code]
+            if (get == null) {
+                val arrayList = ArrayList<String>()
+                arrayList.add(word)
+                hashMap[code] = arrayList
+            } else {
+                get.add(word)
+            }
+        }
+
+        while (true) {
+            val line = bufferedReader.readLine() ?: throw RuntimeException("Unexpected EOF")
+            if (line.matches(Regex("^.+\\t[a-z]+$"))) {
+                // the first time to meet the words content
+                process(line)
+                break
+            }
+        }
+
+        while (true) {
+            val line = bufferedReader.readLine()
+            line ?: break
+            process(line)
+        }
+
+        bufferedReader.close()
+        reader.close()
+
+        val localWubiDatabaseFile = File(getLocalWubiDatabasePath(this))
+
+        if (localWubiDatabaseFile.exists()) {
+            if (!localWubiDatabaseFile.delete()) {
+                throw IOException()
+            }
+        }
+        val db = SQLite3.open(localWubiDatabaseFile.path)
+        initDatabase(db)
+        db.beginTransaction()
+
+        hashMap.keys.forEach {
+            val c = it[0]
+            val arrayList = hashMap[it]!!
+            val join = arrayList.joinToString("|")
+            // language=SQLite
+            db.execBind("INSERT INTO wubi_code_$c VALUES (?, ?)", arrayOf(it, join))
+        }
+
+        db.commit()
+        db.close()
     }
 
     companion object {
