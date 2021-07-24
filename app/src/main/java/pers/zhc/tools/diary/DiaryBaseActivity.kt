@@ -2,10 +2,10 @@ package pers.zhc.tools.diary
 
 import android.os.Bundle
 import android.view.MenuItem
+import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
-import pers.zhc.tools.jni.JNI
+import pers.zhc.jni.JNI
 import pers.zhc.tools.utils.DigestUtil
-import pers.zhc.tools.utils.sqlite.SQLite3
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException

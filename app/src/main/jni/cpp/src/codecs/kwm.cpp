@@ -4,7 +4,7 @@
 
 #include <jni.h>
 #include "./codecsDo.h"
-#include "../../third_party/my-cpp-lib/file.hpp"
+#include "third_party/my-cpp-lib/file.hpp"
 
 using namespace bczhc;
 

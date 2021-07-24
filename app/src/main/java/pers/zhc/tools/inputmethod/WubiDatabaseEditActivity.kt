@@ -14,7 +14,7 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.utils.sqlite.SQLite3
+import pers.zhc.jni.sqlite.SQLite3
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.collections.ArrayList
 

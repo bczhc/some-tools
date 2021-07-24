@@ -86,5 +86,10 @@ class MyApplication : Application() {
         }
 
         var NOTIFICATION_CHANNEL_ID_UNIVERSAL = "c1"
+
+        init {
+            System.loadLibrary("Main")
+            System.loadLibrary("jni-lib")
+        }
     }
 }

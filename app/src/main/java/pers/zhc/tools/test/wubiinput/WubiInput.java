@@ -10,7 +10,7 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.inputmethod.WubiIME;
 import pers.zhc.tools.views.ScrollEditText;
-import pers.zhc.tools.utils.sqlite.SQLite3;
+import pers.zhc.jni.sqlite.SQLite3;
 
 import java.util.ArrayList;
 import java.util.Arrays;

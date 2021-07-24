@@ -19,8 +19,8 @@ import pers.zhc.tools.diary.*
 import pers.zhc.tools.diary.fragments.AttachmentFragment.Companion.EXTRA_PICKED_ATTACHMENT_ID
 import pers.zhc.tools.diary.fragments.AttachmentFragment.Companion.EXTRA_PICK_MODE
 import pers.zhc.tools.utils.*
-import pers.zhc.tools.utils.sqlite.SQLite3
-import pers.zhc.tools.utils.sqlite.Statement
+import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.jni.sqlite.Statement
 import java.util.*
 
 /**

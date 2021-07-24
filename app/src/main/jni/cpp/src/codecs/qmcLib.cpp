@@ -2,7 +2,7 @@
 // Created by root on 19-7-3.
 //
 #include "codecsDo.h"
-#include "../../third_party/my-cpp-lib/file.hpp"
+#include "third_party/my-cpp-lib/file.hpp"
 
 using namespace bczhc;
 

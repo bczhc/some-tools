@@ -5,7 +5,7 @@
 #ifndef BCZHC_SERIAL_SERIAL_JNI_H
 #define BCZHC_SERIAL_SERIAL_JNI_H
 
-#include "../../third_party/my-cpp-lib/app/stc_flash/serial.h"
+#include "third_party/my-cpp-lib/app/stc_flash/serial.h"
 #include <cassert>
 
 namespace bczhc::serial {

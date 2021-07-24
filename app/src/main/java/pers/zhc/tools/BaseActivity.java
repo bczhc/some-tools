@@ -15,9 +15,9 @@ import org.json.JSONObject;
 import pers.zhc.tools.crashhandler.CrashHandler;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.PermissionRequester;
-import pers.zhc.tools.utils.sqlite.Cursor;
-import pers.zhc.tools.utils.sqlite.SQLite3;
-import pers.zhc.tools.utils.sqlite.Statement;
+import pers.zhc.jni.sqlite.Cursor;
+import pers.zhc.jni.sqlite.SQLite3;
+import pers.zhc.jni.sqlite.Statement;
 
 import java.util.Stack;
 

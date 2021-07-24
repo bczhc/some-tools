@@ -39,9 +39,9 @@ import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePickerRL;
 import pers.zhc.tools.utils.*;
-import pers.zhc.tools.utils.sqlite.Cursor;
-import pers.zhc.tools.utils.sqlite.SQLite3;
-import pers.zhc.tools.utils.sqlite.Statement;
+import pers.zhc.jni.sqlite.Cursor;
+import pers.zhc.jni.sqlite.SQLite3;
+import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.views.HSVAColorPickerRL;
 
 import java.io.File;

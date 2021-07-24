@@ -1,9 +1,9 @@
 package pers.zhc.tools.fdb;
 
 import org.jetbrains.annotations.Nullable;
-import pers.zhc.tools.utils.sqlite.Cursor;
-import pers.zhc.tools.utils.sqlite.SQLite3;
-import pers.zhc.tools.utils.sqlite.Statement;
+import pers.zhc.jni.sqlite.Cursor;
+import pers.zhc.jni.sqlite.SQLite3;
+import pers.zhc.jni.sqlite.Statement;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

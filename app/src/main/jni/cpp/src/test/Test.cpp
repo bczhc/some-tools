@@ -3,10 +3,10 @@
 //
 
 #include "../jni_h/pers_zhc_tools_jni_JNI_JniTest.h"
-#include "../../third_party/my-cpp-lib/concurrent.hpp"
-#include "../jni_help.h"
+#include "third_party/my-cpp-lib/concurrent.hpp"
+#include <third_party/jni-lib/src/jni_help.h>
 #include <cerrno>
-#include "../../third_party/my-cpp-lib/app/stc_flash/stc_flash_lib.h"
+#include "third_party/my-cpp-lib/app/stc_flash/stc_flash_lib.h"
 
 void init(int fd) {
     termios options{};

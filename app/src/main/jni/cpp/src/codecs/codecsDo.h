@@ -3,7 +3,7 @@
 
 #include "./Base128Lib.h"
 #include "./qmcLib.h"
-#include "../jni_help.h"
+#include <third_party/jni-lib/src/jni_help.h>
 #include "./kwm.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_Codecs.h"
 

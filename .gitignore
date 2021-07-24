@@ -18,3 +18,4 @@ app/src/main/jni/cpp/*
 !app/src/main/jni/cpp/third-party/
 !app/src/main/jni/cpp/src/
 generate-native-headers
+jni/.cxx

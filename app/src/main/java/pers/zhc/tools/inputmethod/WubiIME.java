@@ -13,9 +13,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.sqlite.Cursor;
-import pers.zhc.tools.utils.sqlite.SQLite3;
-import pers.zhc.tools.utils.sqlite.Statement;
+import pers.zhc.jni.sqlite.Cursor;
+import pers.zhc.jni.sqlite.SQLite3;
+import pers.zhc.jni.sqlite.Statement;
 
 import java.util.ArrayList;
 import java.util.Arrays;

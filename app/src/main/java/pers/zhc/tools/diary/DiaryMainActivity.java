@@ -27,9 +27,9 @@ import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.tools.utils.sqlite.Cursor;
-import pers.zhc.tools.utils.sqlite.SQLite3;
-import pers.zhc.tools.utils.sqlite.Statement;
+import pers.zhc.jni.sqlite.Cursor;
+import pers.zhc.jni.sqlite.SQLite3;
+import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.views.SmartHintEditText;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;

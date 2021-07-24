@@ -4,11 +4,11 @@
 
 #include "../jni_h/pers_zhc_tools_jni_JNI_Diary.h"
 extern "C" {
-#include "../../third_party/my-cpp-lib/third_party/crypto-algorithms/sha256.h"
+#include "third_party/my-cpp-lib/third_party/crypto-algorithms/sha256.h"
 }
-#include "../../third_party/my-cpp-lib/string.hpp"
-#include "../../third_party/my-cpp-lib/array.hpp"
-#include "../../third_party/my-cpp-lib/app/base128/Base128Lib.h"
+#include "third_party/my-cpp-lib/string.hpp"
+#include "third_party/my-cpp-lib/array.hpp"
+#include "third_party/my-cpp-lib/app/base128/Base128Lib.h"
 #include <cassert>
 
 using namespace bczhc;

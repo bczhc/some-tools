@@ -2,10 +2,10 @@
 // Created by bczhc on 2/11/21.
 //
 
-#include "../../third_party/my-cpp-lib/string.hpp"
+#include "third_party/my-cpp-lib/string.hpp"
 #include "../jni_h/pers_zhc_tools_jni_JNI_Sqlite3_Statement.h"
 #include "../jni_help.h"
-#include "../../third_party/my-cpp-lib/sqlite3.hpp"
+#include "third_party/my-cpp-lib/sqlite3.hpp"
 #include <cassert>
 
 using namespace bczhc;

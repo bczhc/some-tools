@@ -1,8 +1,8 @@
 #include <jni.h>
-#include "../../third_party/my-cpp-lib/math/fourier_series.h"
+#include "third_party/my-cpp-lib/math/fourier_series.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_FourierSeries.h"
-#include "../jni_help.h"
-#include "../../third_party/my-cpp-lib/array_list.hpp"
+#include <third_party/jni-lib/src/jni_help.h>
+#include "third_party/my-cpp-lib/array_list.hpp"
 
 using namespace bczhc;
 

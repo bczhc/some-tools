@@ -3,31 +3,26 @@ project(jni)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(sqlite3 SHARED third_party/my-cpp-lib/third_party/sqlite3-single-c/sqlite3.c)
-add_library(
-        myLib SHARED
-        third_party/my-cpp-lib/math/fourier_series.cpp
-        third_party/my-cpp-lib/math/epicycle.cpp
-        third_party/my-cpp-lib/math/complex_value.cpp
-        third_party/my-cpp-lib/math/complex_integral.cpp
-        third_party/my-cpp-lib/app/charactersStatistics/CountCharacters.cpp
-        third_party/my-cpp-lib/utf8.cpp
-        third_party/my-cpp-lib/concurrent.cpp
-        third_party/my-cpp-lib/sqlite3.cpp
-        third_party/my-cpp-lib/io.cpp
-        third_party/my-cpp-lib/string.cpp
-        third_party/my-cpp-lib/app/characterReverser/reverseCharacters.cpp
-        third_party/my-cpp-lib/app/stc_flash/stc_flash_lib.cpp
-        third_party/my-cpp-lib/utils.cpp
-        third_party/my-cpp-lib/file.cpp
-        third_party/my-cpp-lib/third_party/crypto-algorithms/sha256.c
-        third_party/my-cpp-lib/exception.cpp
-        third_party/my-cpp-lib/app/base128/Base128Lib.cpp
-)
-target_link_libraries(myLib sqlite3)
-
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 add_subdirectory(third_party/libmagic)
+
+include_directories(third_party/jni-lib)
+include_directories(.)
+
+add_library(
+        myLib-android-dep SHARED
+        third_party/jni-lib/third_party/my-cpp-lib/math/complex_integral.cpp
+        third_party/jni-lib/third_party/my-cpp-lib/math/complex_value.cpp
+        third_party/jni-lib/third_party/my-cpp-lib/math/epicycle.cpp
+        third_party/jni-lib/third_party/my-cpp-lib/math/fourier_series.cpp
+        third_party/jni-lib/third_party/my-cpp-lib/third_party/crypto-algorithms/sha256.c
+        third_party/jni-lib/third_party/my-cpp-lib/concurrent.cpp
+        third_party/jni-lib/third_party/my-cpp-lib/app/base128/Base128Lib.cpp
+        third_party/jni-lib/third_party/my-cpp-lib/file.cpp
+        third_party/jni-lib/third_party/my-cpp-lib/app/stc_flash/stc_flash_lib.cpp
+        third_party/jni-lib/third_party/my-cpp-lib/app/stc_flash/serial_linux.cpp
+        third_party/jni-lib/third_party/my-cpp-lib/io.cpp
+)
 
 add_library(
         Main SHARED
@@ -41,19 +36,17 @@ add_library(
         src/floatingboard/fb_tools.cpp
         src/malloc_test/mallocTest.cpp
         src/pi/pi.cpp
-        src/sqlite3/sqlite3.cpp
-        src/sqlite3/statement.cpp
-        src/sqlite3/cursor.cpp
         src/stc_flash/serial_jni.cpp
         src/stc_flash/stc_flash.cpp
         src/test/Test.cpp
-        src/jni_help.cpp
         src/test.cpp
-        src/struct/structMain.cpp
         src/sys_info/sys_info.cpp
         src/magic/magic.cpp
 )
 
-target_link_libraries(Main myLib sqlite3 magic)
+add_subdirectory(third_party/jni-lib)
 
-set_target_properties(Main myLib PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
+target_link_libraries(myLib-android-dep myLib)
+target_link_libraries(Main myLib myLib-android-dep jni-lib magic)
+
+#set_target_properties(Main myLib PROPERTIES LINK_FLAGS "-Wl,-rpath,./")

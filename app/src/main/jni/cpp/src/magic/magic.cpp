@@ -4,7 +4,7 @@
 
 #include "../../third_party/libmagic/src/magic.h"
 #include "../jni_h/pers_zhc_tools_jni_JNI_Magic.h"
-#include "../jni_help.h"
+#include <third_party/jni-lib/src/jni_help.h>
 
 
 JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Magic_init

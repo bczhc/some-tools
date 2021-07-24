@@ -27,7 +27,7 @@ import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.FileUtil.Companion.copy
 import pers.zhc.tools.utils.PopupMenuUtil.Companion.createPopupMenu
-import pers.zhc.tools.utils.sqlite.SQLite3
+import pers.zhc.jni.sqlite.SQLite3
 import java.io.File
 import java.util.*
 

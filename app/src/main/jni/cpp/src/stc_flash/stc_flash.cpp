@@ -3,8 +3,8 @@
 //
 
 #include "../jni_h/pers_zhc_tools_jni_JNI_StcFlash.h"
-#include "../../third_party/my-cpp-lib/app/stc_flash/stc_flash_lib.h"
-#include "../jni_help.h"
+#include "third_party/my-cpp-lib/app/stc_flash/stc_flash_lib.h"
+#include <third_party/jni-lib/src/jni_help.h>
 #include "serial_jni.h"
 
 #pragma clang diagnostic push

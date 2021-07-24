@@ -18,7 +18,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.diary.FileLibraryActivity.Companion.EXTRA_PICKED_FILE_IDENTIFIER
 import pers.zhc.tools.utils.*
-import pers.zhc.tools.utils.sqlite.SQLite3
+import pers.zhc.jni.sqlite.SQLite3
 import java.io.File
 import java.util.*
 

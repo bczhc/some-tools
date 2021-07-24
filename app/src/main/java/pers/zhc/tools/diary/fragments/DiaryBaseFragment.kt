@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import pers.zhc.tools.diary.DiaryBaseActivity
-import pers.zhc.tools.utils.sqlite.SQLite3
+import pers.zhc.jni.sqlite.SQLite3
 
 /**
  * @author bczhc
