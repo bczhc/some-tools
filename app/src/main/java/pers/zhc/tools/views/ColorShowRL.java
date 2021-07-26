@@ -2,21 +2,23 @@ package pers.zhc.tools.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import org.jetbrains.annotations.Nullable;
+import pers.zhc.tools.R;
 
 /**
  * @author bczhc
  */
 public class ColorShowRL extends RelativeLayout {
-    private StrokeShowView strokeShowView;
-    private TextView hexTV;
+    private RoundColorView colorView;
+    private TextView nameTV;
     private int color;
     private String name;
+
+    @Nullable
+    private OnColorViewClickedListener onColorViewClickedListener = null;
 
     public ColorShowRL(Context context) {
         this(context, null);
@@ -28,30 +30,25 @@ public class ColorShowRL extends RelativeLayout {
     }
 
     private void init(Context context) {
-        strokeShowView = new StrokeShowView(context);
-        hexTV = new TextView(context);
-        LinearLayout ll = new LinearLayout(context);
+        final View inflate = View.inflate(context, R.layout.color_picker_color_show_ll, null);
+        colorView = inflate.findViewById(R.id.color_view);
+        nameTV = inflate.findViewById(R.id.name_tv);
 
-        hexTV.setGravity(Gravity.CENTER_HORIZONTAL);
+        colorView.setOnClickListener(v -> {
+            if (onColorViewClickedListener != null) {
+                onColorViewClickedListener.onClick(this);
+            }
+        });
 
-        LinearLayout.LayoutParams llLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ll.setLayoutParams(llLP);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        ll.addView(strokeShowView);
-        ll.addView(hexTV);
-
-        this.addView(ll);
+        this.addView(inflate);
     }
 
     public void setColor(int color, String name) {
         this.color = color;
         this.name = name;
 
-        strokeShowView.setColor(color);
-        hexTV.setText(name);
-        int measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-        hexTV.measure(measureSpec, measureSpec);
-        strokeShowView.setDiameter(hexTV.getMeasuredWidth());
+        colorView.setColor(color);
+        nameTV.setText(name);
     }
 
     public int getColor() {
@@ -62,8 +59,11 @@ public class ColorShowRL extends RelativeLayout {
         return name;
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return true;
+    public void setOnColorViewClickedListener(OnColorViewClickedListener listener) {
+        this.onColorViewClickedListener = listener;
+    }
+
+    public interface OnColorViewClickedListener {
+        void onClick(ColorShowRL self);
     }
 }

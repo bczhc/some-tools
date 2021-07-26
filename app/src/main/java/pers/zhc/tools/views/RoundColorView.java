@@ -15,16 +15,16 @@ import pers.zhc.tools.R;
 /**
  * @author bczhc
  */
-public class StrokeShowView extends View {
+public class RoundColorView extends View {
     private float diameter = 50F;
     private int color = Color.TRANSPARENT;
     private Paint mPaint;
 
-    public StrokeShowView(Context context) {
+    public RoundColorView(Context context) {
         this(context, null);
     }
 
-    public StrokeShowView(Context context, @Nullable AttributeSet attrs) {
+    public RoundColorView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
@@ -34,9 +34,9 @@ public class StrokeShowView extends View {
         mPaint.setColor(this.color);
         mPaint.setStrokeWidth(20);
 
-        final TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.StrokeShowView);
-        color = ta.getColor(R.styleable.StrokeShowView_color, Color.TRANSPARENT);
-        diameter = ((int) ta.getDimension(R.styleable.StrokeShowView_diameter, 50));
+        final TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.RoundColorView);
+        color = ta.getColor(R.styleable.RoundColorView_color, Color.TRANSPARENT);
+        diameter = ((int) ta.getDimension(R.styleable.RoundColorView_diameter, 50));
         ta.recycle();
     }
 

@@ -8,9 +8,7 @@ import android.graphics.Paint;
 import android.text.Selection;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import androidx.appcompat.app.AlertDialog;
@@ -127,6 +125,15 @@ public class HSVAColorPickerRL extends RelativeLayout {
         this.addView(inflate);
     }
 
+    private ColorShowRL createSavedColorView(int color, String name) {
+        final ColorShowRL colorShowRL = new ColorShowRL(context);
+        colorShowRL.setColor(color, name);
+        colorShowRL.setOnColorViewClickedListener(self -> {
+            setColor(self.getColor());
+        });
+        return colorShowRL;
+    }
+
     private void onColorViewClicked() {
         AlertDialog.Builder adb = new AlertDialog.Builder(this.context);
         EditText editText = new EditText(this.context);
@@ -170,11 +177,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                     (dialogInterface, editText12) -> {
 
                         final String inputName = editText12.getText().toString();
-                        final ColorShowRL colorShowRL = new ColorShowRL(context);
-                        colorShowRL.setOnClickListener(v -> {
-                            setColor(colorShowRL.getColor());
-                        });
-                        colorShowRL.setColor(parsed, inputName);
+                        final ColorShowRL colorShowRL = createSavedColorView(parsed, inputName);
                         savedColorLL.addView(colorShowRL);
 
                         return Unit.INSTANCE;
@@ -235,6 +238,15 @@ public class HSVAColorPickerRL extends RelativeLayout {
             list.add(new SavedColor(colorShowRL.getColor(), colorShowRL.getName()));
         }
         return list;
+    }
+
+    public void setSavedColor(ArrayList<SavedColor> savedColors) {
+        savedColorLL.removeAllViews();
+
+        for (SavedColor savedColor : savedColors) {
+            final ColorShowRL colorShowRL = createSavedColorView(savedColor.color, savedColor.name);
+            savedColorLL.addView(colorShowRL);
+        }
     }
 
     private static class SavedColorListView extends BaseView {

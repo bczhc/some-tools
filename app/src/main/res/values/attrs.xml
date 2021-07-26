@@ -18,7 +18,7 @@
         <flag name="onRoad" value="1"/>
     </attr>
     <attr name="color" format="color"/>
-    <attr name="diameter" format="float"/>
+    <attr name="diameter" format="dimension"/>
 
     <declare-styleable name="ScrollEditText">
         <attr name="gravity"/>
@@ -44,7 +44,7 @@
         <attr name="busMarkDotCount"/>
         <attr name="busState"/>
     </declare-styleable>
-    <declare-styleable name="StrokeShowView">
+    <declare-styleable name="RoundColorView">
         <attr name="color"/>
         <attr name="diameter"/>
     </declare-styleable>

@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.ll
 import kotlinx.android.synthetic.main.fdb_stoke_width_view.view.*
 import kotlinx.android.synthetic.main.progress_bar.view.*
+import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.fdb.FdbNotificationReceiver.Companion.ACTION_FDB_SHOW
@@ -184,9 +185,8 @@ class FdbWindow(private val context: Activity) {
                             7 -> {
                                 // clear
                                 createConfirmationDialog({ _, _ ->
-                                    pathSaver.commit()
                                     pathSaver.reset()
-                                    pathSaver.beginTransaction()
+                                    pathSaver.flush()
                                     paintView.clearAll()
                                 }, R.string.fdb_clear_confirmation_dialog).show()
                             }
@@ -578,6 +578,7 @@ class FdbWindow(private val context: Activity) {
                                         context,
                                         context.getString(R.string.fdb_importing_path_succeeded_toast)
                                     )
+
                                     colorPickers.brush.color = paintView.drawingColor
                                     panelRL.getPanelTextView(6).text = context.getString(
                                         if (paintView.isEraserMode) {
@@ -586,6 +587,23 @@ class FdbWindow(private val context: Activity) {
                                             R.string.fdb_panel_drawing_mode
                                         }
                                     )
+
+                                    val db = SQLite3.open(file)
+                                    val extraInfos = PaintView.PathSaver.getExtraInfos(db)
+                                    db.close()
+                                    extraInfos ?: return@runOnUiThread
+                                    val savedColors = extraInfos.getJSONArray("savedColors") ?: return@runOnUiThread
+                                    val list = ArrayList<HSVAColorPickerRL.SavedColor>()
+                                    for (i in 0 until savedColors.length()) {
+                                        val savedColor = savedColors.getJSONObject(i)
+                                        list.add(
+                                            HSVAColorPickerRL.SavedColor(
+                                                savedColor.getInt("colorInt"),
+                                                savedColor.getString("colorName")
+                                            )
+                                        )
+                                    }
+                                    colorPickers.brush.setSavedColor(list)
                                 }
                             }, { progress ->
 

@@ -1168,6 +1168,18 @@ public class PaintView extends View {
          */
         private PaintView paintView;
 
+        public PathSaver(String path) {
+            this.pathDatabase = SQLite3.open(path);
+
+            configureDatabase();
+
+            // prepare statement
+            tmpStatement = pathDatabase.compileStatement("INSERT INTO tmp (mark, p1, p2) VALUES (?, ?, ?)");
+            pathStatement = pathDatabase.compileStatement("INSERT INTO path (mark, p1, p2) VALUES (?, ?, ?)");
+
+            beginTransaction();
+        }
+
         public void setExtraInfos(ArrayList<HSVAColorPickerRL.SavedColor> savedColors) {
             JSONObject jsonObject = new JSONObject();
             try {
@@ -1225,16 +1237,6 @@ public class PaintView extends View {
             infoStatement.bindText(3, "");
             infoStatement.step();
             infoStatement.release();
-
-            // prepare statement
-            tmpStatement = pathDatabase.compileStatement("INSERT INTO tmp (mark, p1, p2) VALUES (?, ?, ?)");
-            pathStatement = pathDatabase.compileStatement("INSERT INTO path (mark, p1, p2) VALUES (?, ?, ?)");
-        }
-
-        public PathSaver(String path) {
-            this.pathDatabase = SQLite3.open(path);
-            configureDatabase();
-            beginTransaction();
         }
 
         private void undo() {
@@ -1255,20 +1257,20 @@ public class PaintView extends View {
 
         @SuppressWarnings("DuplicatedCode")
         private void insert(int mark, int p1, float p2) {
-                tmpStatement.reset();
-                tmpStatement.bind(1, mark);
-                tmpStatement.bind(2, p1);
-                tmpStatement.bind(3, p2);
-                tmpStatement.step();
+            tmpStatement.reset();
+            tmpStatement.bind(1, mark);
+            tmpStatement.bind(2, p1);
+            tmpStatement.bind(3, p2);
+            tmpStatement.step();
         }
 
         @SuppressWarnings("DuplicatedCode")
         private void insert(int mark, float p1, float p2) {
-                tmpStatement.reset();
-                tmpStatement.bind(1, mark);
-                tmpStatement.bind(2, p1);
-                tmpStatement.bind(3, p2);
-                tmpStatement.step();
+            tmpStatement.reset();
+            tmpStatement.bind(1, mark);
+            tmpStatement.bind(2, p1);
+            tmpStatement.bind(3, p2);
+            tmpStatement.step();
         }
 
         private void onTouchDown(float x, float y) {
@@ -1327,6 +1329,31 @@ public class PaintView extends View {
 
         public void beginTransaction() {
             pathDatabase.beginTransaction();
+        }
+
+        @Nullable
+        public static JSONObject getExtraInfos(SQLite3 db) {
+            String jsonString = null;
+
+            final Statement statement = db.compileStatement("SELECT extra_infos FROM info");
+            final Cursor cursor = statement.getCursor();
+
+            if (cursor.step()) {
+                jsonString = cursor.getText(0);
+            }
+
+            statement.release();
+
+            if (jsonString == null) {
+                return null;
+            }
+
+            try {
+                return new JSONObject(jsonString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 

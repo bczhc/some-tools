@@ -30,7 +30,7 @@
     />
     <SeekBar android:layout_width="match_parent" android:layout_height="wrap_content"
              android:id="@+id/sb"/>
-    <pers.zhc.tools.views.StrokeShowView
+    <pers.zhc.tools.views.RoundColorView
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:id="@+id/stroke_show"
             tools:color="@color/red"
