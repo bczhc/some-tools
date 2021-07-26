@@ -19,6 +19,8 @@ public class ColorShowRL extends RelativeLayout {
 
     @Nullable
     private OnColorViewClickedListener onColorViewClickedListener = null;
+    @Nullable
+    private OnLongClickListener onLongClickListener = null;
 
     public ColorShowRL(Context context) {
         this(context, null);
@@ -40,6 +42,19 @@ public class ColorShowRL extends RelativeLayout {
             }
         });
 
+        colorView.setOnLongClickListener(v -> {
+            if (onLongClickListener != null) {
+                return onLongClickListener.onLongClick(v);
+            }
+            return false;
+        });
+        nameTV.setOnLongClickListener(v -> {
+            if (onLongClickListener != null) {
+                return onLongClickListener.onLongClick(v);
+            }
+            return false;
+        });
+
         this.addView(inflate);
     }
 
@@ -59,8 +74,13 @@ public class ColorShowRL extends RelativeLayout {
         return name;
     }
 
-    public void setOnColorViewClickedListener(OnColorViewClickedListener listener) {
+    public void setOnColorViewClickedListener(@Nullable OnColorViewClickedListener listener) {
         this.onColorViewClickedListener = listener;
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener onLongClickListener) {
+        this.onLongClickListener = onLongClickListener;
     }
 
     public interface OnColorViewClickedListener {

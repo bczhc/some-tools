@@ -8,12 +8,18 @@ import android.graphics.Paint;
 import android.text.Selection;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import kotlin.Unit;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.*;
@@ -35,8 +41,10 @@ public class HSVAColorPickerRL extends RelativeLayout {
     private View[] hsvaViews;
     private ColorView colorView;
     private OnColorPickedInterface onColorPickedInterface = null;
-    private int width = 0;
-    private LinearLayout savedColorLL;
+    private final int width = 0;
+    private RecyclerView savedColorRV;
+    private ArrayList<SavedColor> savedColors = new ArrayList<>();
+    private SavedColorAdapter savedColorAdapter;
 
     /**
      * @param context context
@@ -113,7 +121,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
         final View inflate = View.inflate(context, R.layout.hsva_color_picker_view, null);
         final LinearLayout hsvaViewsLL = inflate.findViewById(R.id.hsva_views_ll);
         colorView = inflate.findViewById(R.id.color_view);
-        savedColorLL = inflate.findViewById(R.id.saved_color_ll);
+        savedColorRV = inflate.findViewById(R.id.recycler_view);
 
         for (View view : hsvaViews) {
             hsvaViewsLL.addView(view);
@@ -123,15 +131,26 @@ public class HSVAColorPickerRL extends RelativeLayout {
         colorView.setOnClickListener(v -> onColorViewClicked());
 
         this.addView(inflate);
-    }
 
-    private ColorShowRL createSavedColorView(int color, String name) {
-        final ColorShowRL colorShowRL = new ColorShowRL(context);
-        colorShowRL.setColor(color, name);
-        colorShowRL.setOnColorViewClickedListener(self -> {
+        savedColorAdapter = new SavedColorAdapter(context, savedColors);
+        savedColorRV.setAdapter(savedColorAdapter);
+        savedColorRV.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
+        savedColorAdapter.setOnColorViewClickedListener(self -> {
             setColor(self.getColor());
         });
-        return colorShowRL;
+        savedColorAdapter.setOnItemLongClickListener((view, position) -> {
+            final PopupMenu popupMenu = PopupMenuUtil.createPopupMenu(context, view, R.menu.color_picker_saved_color_popup_menu);
+            popupMenu.setOnMenuItemClickListener(item -> {
+                final int itemId = item.getItemId();
+
+                if (itemId == R.id.delete) {
+                    savedColors.remove(position);
+                    savedColorAdapter.notifyItemRemoved(position);
+                }
+                return true;
+            });
+            popupMenu.show();
+        });
     }
 
     private void onColorViewClicked() {
@@ -176,9 +195,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
                     R.string.color_naming,
                     (dialogInterface, editText12) -> {
 
-                        final String inputName = editText12.getText().toString();
-                        final ColorShowRL colorShowRL = createSavedColorView(parsed, inputName);
-                        savedColorLL.addView(colorShowRL);
+                        savedColors.add(new SavedColor(parsed, editText12.getText().toString()));
+                        savedColorAdapter.notifyItemInserted(savedColors.size() - 1);
 
                         return Unit.INSTANCE;
                     },
@@ -232,21 +250,20 @@ public class HSVAColorPickerRL extends RelativeLayout {
     public ArrayList<SavedColor> getSavedColors() {
         ArrayList<SavedColor> list = new ArrayList<>();
 
-        final int childCount = savedColorLL.getChildCount();
+        final int childCount = savedColorRV.getChildCount();
         for (int i = 0; i < childCount; i++) {
-            final ColorShowRL colorShowRL = (ColorShowRL) savedColorLL.getChildAt(i);
+            final ColorShowRL colorShowRL = (ColorShowRL) savedColorRV.getChildAt(i);
             list.add(new SavedColor(colorShowRL.getColor(), colorShowRL.getName()));
         }
         return list;
     }
 
     public void setSavedColor(ArrayList<SavedColor> savedColors) {
-        savedColorLL.removeAllViews();
-
+        this.savedColors.clear();
         for (SavedColor savedColor : savedColors) {
-            final ColorShowRL colorShowRL = createSavedColorView(savedColor.color, savedColor.name);
-            savedColorLL.addView(colorShowRL);
+            this.savedColors.add(savedColor);
         }
+        savedColorAdapter.notifyDataSetChanged();
     }
 
     private static class SavedColorListView extends BaseView {
@@ -427,6 +444,73 @@ public class HSVAColorPickerRL extends RelativeLayout {
         public SavedColor(int color, String name) {
             this.color = color;
             this.name = name;
+        }
+    }
+
+    private static class SavedColorAdapter extends RecyclerView.Adapter<SavedColorAdapter.MyViewHolder> {
+        private final Context context;
+        private final ArrayList<SavedColor> data;
+        @Nullable
+        private ColorShowRL.OnColorViewClickedListener onColorViewClickedListener = null;
+        @Nullable
+        private OnItemLongClickListener onItemLongClickListener = null;
+
+        private static class MyViewHolder extends RecyclerView.ViewHolder {
+            public MyViewHolder(@NonNull @NotNull View itemView) {
+                super(itemView);
+            }
+
+            private ColorShowRL getView() {
+                return ((ColorShowRL) itemView);
+            }
+        }
+
+        public void setOnColorViewClickedListener(ColorShowRL.@Nullable OnColorViewClickedListener onColorViewClickedListener) {
+            this.onColorViewClickedListener = onColorViewClickedListener;
+        }
+
+        public void setOnItemLongClickListener(@Nullable OnItemLongClickListener onItemLongClickListener) {
+            this.onItemLongClickListener = onItemLongClickListener;
+        }
+
+        public SavedColorAdapter(Context context, ArrayList<SavedColor> data) {
+            this.context = context;
+            this.data = data;
+        }
+
+        @NonNull
+        @NotNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+            return new MyViewHolder(new ColorShowRL(context));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull @NotNull HSVAColorPickerRL.SavedColorAdapter.MyViewHolder holder, int position) {
+            final ColorShowRL colorShowRL = holder.getView();
+            final SavedColor savedColor = data.get(position);
+            colorShowRL.setColor(savedColor.color, savedColor.name);
+
+            colorShowRL.setOnColorViewClickedListener(self -> {
+                if (onColorViewClickedListener != null) {
+                    onColorViewClickedListener.onClick(self);
+                }
+            });
+            colorShowRL.setOnLongClickListener(v -> {
+                if (onItemLongClickListener != null) {
+                    onItemLongClickListener.onLongClick(v, holder.getLayoutPosition());
+                }
+                return true;
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return data.size();
+        }
+
+        private interface OnItemLongClickListener {
+            void onLongClick(View view, int position);
         }
     }
 }

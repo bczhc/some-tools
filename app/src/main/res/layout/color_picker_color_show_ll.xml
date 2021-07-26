@@ -18,5 +18,6 @@
               android:id="@+id/name_tv"
               tools:text="#00123456"
               android:layout_gravity="center_horizontal"
+              android:layout_marginHorizontal="6.3dp"
     />
 </LinearLayout>
