@@ -7,7 +7,6 @@ import android.widget.EditText
 import android.widget.TextView
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import java.util.*
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 
@@ -29,13 +28,20 @@ class RegExpTest : BaseActivity() {
             override fun afterTextChanged(s: Editable?) {
                 try {
                     val matcher = Pattern.compile(regexET.text.toString()).matcher(textET.text.toString())
-                    val list = ArrayList<String>()
+                    val sb = StringBuilder()
                     while (matcher.find()) {
-                        list.add(matcher.group())
+                        // java doesn't count the initial group (index 0, the whole subject input)
+                        val groupCount = matcher.groupCount() + 1
+                        val groups = ArrayList<String>()
+                        for (i in 0 until groupCount) {
+                            groups.add(matcher.group(i)!!)
+                        }
+                        sb.append(groups.joinToString())
+                        sb.append('\n')
                     }
-                    tv.text = Arrays.toString(list.toArray())
+                    tv.text = sb.toString()
                     regexET.setBackgroundResource(R.drawable.edittext_right)
-                } catch(_: PatternSyntaxException) {
+                } catch (_: PatternSyntaxException) {
                     regexET.setBackgroundResource(R.drawable.edittext_wrong)
                 }
             }
