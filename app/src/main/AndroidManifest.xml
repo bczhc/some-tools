@@ -276,7 +276,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".crashhandler.CrashTest"
+                android:name=".test.CrashTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application">
             <intent-filter>

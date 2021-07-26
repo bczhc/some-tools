@@ -1,4 +1,4 @@
-package pers.zhc.tools.crashhandler;
+package pers.zhc.tools.test;
 
 import android.os.Bundle;
 

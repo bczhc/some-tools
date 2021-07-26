@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
@@ -59,6 +58,10 @@ public class DialogUtil {
         if (isTransparent) {
             window.setBackgroundDrawableResource(R.color.transparent);
         }
+    }
+
+    public static void setDialogAttr(Dialog d, @Nullable Boolean applicationOverlay) {
+        setDialogAttr(d, false, applicationOverlay);
     }
 
     public static void setDialogAttr(Dialog d, boolean isTransparent, @Nullable Boolean applicationOverlay) {
@@ -123,7 +126,7 @@ public class DialogUtil {
         return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, view, titleId, WRAP_CONTENT, WRAP_CONTENT, false);
     }
 
-        public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {
+    public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         ad.setOnShowListener(dialog -> imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0));
         ad.setOnDismissListener(dialog -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0));
