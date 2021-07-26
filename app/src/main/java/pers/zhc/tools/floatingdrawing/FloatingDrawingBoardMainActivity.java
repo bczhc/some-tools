@@ -103,6 +103,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     private boolean panelColorFollowPainting;
     private FloatingViewOnTouchListener floatingViewOnTouchListener;
 
+    private PaintView.PathSaver pathSaver;
+
     public static void setSelectedEditTextWithCurrentTimeMillisecond(@NotNull EditText et) {
         @SuppressLint("SimpleDateFormat") String format = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         et.setText(String.format(et.getContext().getString(R.string.str), format));
@@ -156,6 +158,8 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             System.out.println("currentInternalPathDir.mkdirs() = " + currentInternalPathDir.mkdirs());
         }
         currentInternalPathFile = new File(currentInternalPathDir.getPath() + File.separatorChar + currentInstanceMillisecond + ".path");
+        pathSaver = new PaintView.PathSaver(currentInternalPathFile.getPath());
+
         Button clearPathBtn = findViewById(R.id.clear_path_btn);
         final float[] cacheSize = {0F};
         ArrayList<File> fileList = new ArrayList<>();
@@ -278,7 +282,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             childTextViews[i].setOnTouchListener((v, e) -> {
                 if (e.getAction() == MotionEvent.ACTION_DOWN) {
                     // commit path temporary database in time, preventing data lose
-                    pv.commitPathDatabase();
+                    pv.flushPathSaver();
                 }
                 return floatingViewOnTouchListener.onTouch(v, e);
             });
@@ -796,14 +800,14 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                 new AbstractCheckOverlayPermission(this) {
                     @Override
                     public void granted() {
-                        pv.enableSavePath(currentInternalPathFile.getPath());
+                        pv.setPathSaver(pathSaver);
                         startFloatingWindow();
                     }
 
                     @Override
                     public void denied() {
                         fbSwitch.setChecked(false);
-                        pv.closePathDatabase();
+                        pathSaver.reset();
                     }
                 };
             } else {
@@ -855,7 +859,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
     }
 
     private void exit() {
-        pv.closePathDatabase();
+        pathSaver.close();
         stopFloatingWindow();
         FloatingDrawingBoardMainActivity.longActivityMap.remove(currentInstanceMillisecond);
         this.fbSwitch.setChecked(false);

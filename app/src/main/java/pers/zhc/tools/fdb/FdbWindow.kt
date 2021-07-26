@@ -74,6 +74,8 @@ class FdbWindow(private val context: Activity) {
 
     private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
 
+    private val pathSaver = PaintView.PathSaver(pathFiles.tmpPathFile.path)
+
     init {
         val ll = LinearLayout(context)
         ll.addView(panelRL)
@@ -182,6 +184,9 @@ class FdbWindow(private val context: Activity) {
                             7 -> {
                                 // clear
                                 createConfirmationDialog({ _, _ ->
+                                    pathSaver.commit()
+                                    pathSaver.reset()
+                                    pathSaver.beginTransaction()
                                     paintView.clearAll()
                                 }, R.string.fdb_clear_confirmation_dialog).show()
                             }
@@ -200,14 +205,14 @@ class FdbWindow(private val context: Activity) {
                             11 -> {
                                 // exit
                                 createConfirmationDialog({ _, _ ->
-                                    paintView.closePathDatabase()
+                                    pathSaver.close()
                                     stopFDB()
                                 }, R.string.fdb_exit_confirmation_dialog).show()
                             }
                             else -> {
                             }
                         }
-                        paintView.commitPathDatabase()
+                        paintView.flushPathSaver()
                     }
                     else -> {
                     }
@@ -250,7 +255,7 @@ class FdbWindow(private val context: Activity) {
             drawingStrokeWidth = 10F
             eraserStrokeWidth = 10F
             drawingColor = colorPickers.brush.color
-            enableSavePath(pathFiles.tmpPathFile.path)
+            setPathSaver(pathSaver)
             setOnScreenDimensionChangedListener { width, height ->
                 positionUpdater.updateParentDimension(width, height)
             }
@@ -272,6 +277,7 @@ class FdbWindow(private val context: Activity) {
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
+
     }
 
     private fun showBrushWidthAdjustingDialog() {
@@ -597,6 +603,11 @@ class FdbWindow(private val context: Activity) {
                     }
                     3 -> {
                         // export path
+
+                        val savedColors = colorPickers.brush.savedColors
+                        pathSaver.setExtraInfos(savedColors)
+                        pathSaver.flush()
+
                         createFilePickerDialog(
                             FilePickerRL.TYPE_PICK_FOLDER,
                             externalPath.path,

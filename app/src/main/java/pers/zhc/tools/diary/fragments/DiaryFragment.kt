@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity.RequestCode
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
@@ -27,7 +28,6 @@ import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.FileUtil.Companion.copy
 import pers.zhc.tools.utils.PopupMenuUtil.Companion.createPopupMenu
-import pers.zhc.jni.sqlite.SQLite3
 import java.io.File
 import java.util.*
 
@@ -202,7 +202,7 @@ FROM diary"""
 
     private fun showCreateSpecifiedDateDiaryDialog() {
         val promptDialog =
-            DialogUtil.createPromptDialog(context, R.string.enter_specific_date) { et, _ ->
+            DialogUtils.createPromptDialog(requireContext(), R.string.enter_specific_date, { _, et ->
                 val s = et.text.toString()
                 try {
                     val dateInt = s.toInt()
@@ -214,7 +214,7 @@ FROM diary"""
                 } catch (e: NumberFormatException) {
                     ToastUtils.show(context, R.string.please_enter_correct_value_toast)
                 }
-            }
+            })
         promptDialog.show()
     }
 

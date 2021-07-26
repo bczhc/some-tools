@@ -136,20 +136,6 @@ public class DialogUtil {
     }
 
     @NotNull
-    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback, DialogInterface.OnClickListener negativeAction, EditText editText) {
-
-        return createConfirmationAlertDialog(ctx, (d, which) -> {
-            callback.confirm(editText, d);
-        }, negativeAction, editText, strId);
-    }
-
-    @NotNull
-    public static AlertDialog createPromptDialog(Context ctx, @StringRes int strId, PromptDialogCallback callback) {
-        return createPromptDialog(ctx, strId, callback, (dialog, which) -> {
-        }, new EditText(ctx));
-    }
-
-    @NotNull
     public static AlertDialog createAlertDialogWithNeutralButton(Context ctx,
                                                                  DialogInterface.OnClickListener positiveAction,
                                                                  DialogInterface.OnClickListener negativeAction,

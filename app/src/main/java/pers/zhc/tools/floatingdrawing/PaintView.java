@@ -15,18 +15,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import pers.zhc.tools.R;
-import pers.zhc.tools.jni.JNI;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.GestureResolver;
-import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
+import pers.zhc.tools.R;
+import pers.zhc.tools.jni.JNI;
+import pers.zhc.tools.utils.*;
+import pers.zhc.tools.views.HSVAColorPickerRL;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -84,7 +85,10 @@ public class PaintView extends View {
     private OnColorChangedCallback onColorChangedCallback = null;
     private Bitmap transBitmap;
     private MyCanvas transCanvas;
+
+    private PathSaver defaultTmpPathSaver;
     private PathSaver pathSaver = null;
+
     private OnScreenDimensionChangedListener onScreenDimensionChangedListener = null;
 
     public PaintView(Context context) {
@@ -224,8 +228,17 @@ public class PaintView extends View {
             }
         });
 
-        // default sqlite is in memory
-        pathSaver = new PathSaver(SQLite3.open(""));
+        final File internalPathDir = new File(ctx.getFilesDir(), "path");
+        if (!internalPathDir.exists()) {
+            if (!internalPathDir.mkdir()) {
+                throw new MkdirException();
+            }
+        }
+
+        File tmpPathFile = new File(internalPathDir, String.valueOf(System.currentTimeMillis()));
+        // use an internal temporary PathSaver
+        defaultTmpPathSaver = new PathSaver(tmpPathFile.getPath());
+        pathSaver = defaultTmpPathSaver;
     }
 
     public float getDrawingStrokeWidth() {
@@ -307,11 +320,6 @@ public class PaintView extends View {
         redoList.clear();
         undoList.clear();
         mBackgroundCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-
-        // reset path database
-        String dbPath = pathSaver.pathDatabase.getDatabasePath();
-        System.out.println("new File(dbPath).delete() = " + new File(dbPath).delete());
-        pathSaver = new PathSaver(SQLite3.open(dbPath));
     }
 
     /**
@@ -1034,18 +1042,20 @@ public class PaintView extends View {
     }
 
     /**
-     * Enable to save path, so that you can export path file later.
+     * Set the path saver so that the drawing data will be stored
      *
-     * @param tempFile the temporary file to record the strokes, etc. If this parameter is null, the method call is invalid.
+     * @param pathSaver path saver
      */
-    public void enableSavePath(String tempFile) {
-        if (tempFile == null) return;
-        try {
-            // clear the old one
-            this.closePathDatabase();
-        } catch (Exception ignored) {
+    public void setPathSaver(PathSaver pathSaver) {
+        final File tmpFile = new File(defaultTmpPathSaver.pathDatabase.getDatabasePath());
+        if (tmpFile.exists()) {
+            if (!tmpFile.delete()) {
+                throw new DeleteException();
+            }
         }
-        pathSaver = new PathSaver(SQLite3.open(tempFile));
+
+        pathSaver.paintView = this;
+        this.pathSaver = pathSaver;
     }
 
     /**
@@ -1148,27 +1158,42 @@ public class PaintView extends View {
      *     </li>
      * </ul>
      */
-    private class PathSaver {
+    public static class PathSaver {
         private final SQLite3 pathDatabase;
         private Statement tmpStatement;
         private Statement pathStatement;
 
-        private void setExtraInfos() {
-            try {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("isLockingStroke", isLockingStroke());
-                jsonObject.put("lockedDrawingStrokeWidth", lockedDrawingStrokeWidth);
-                jsonObject.put("lockedEraserStrokeWidth", lockedEraserStrokeWidth);
-                String extraString = jsonObject.toString();
+        /**
+         * to get some infos from it, set by {@link PaintView#setPathSaver(PathSaver)}
+         */
+        private PaintView paintView;
 
-                Statement infoStatement = pathDatabase.compileStatement("UPDATE info\n" +
-                        "SET extra_infos = ?");
-                infoStatement.bindText(1, extraString);
-                infoStatement.step();
-                infoStatement.release();
-            } catch (Exception e) {
-                Common.showException(e, ctx);
+        public void setExtraInfos(ArrayList<HSVAColorPickerRL.SavedColor> savedColors) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("isLockingStroke", paintView.isLockingStroke());
+                jsonObject.put("lockedDrawingStrokeWidth", paintView.lockedDrawingStrokeWidth);
+                jsonObject.put("lockedEraserStrokeWidth", paintView.lockedEraserStrokeWidth);
+
+                JSONArray savedColorsJSONArray = new JSONArray();
+                for (HSVAColorPickerRL.SavedColor savedColor : savedColors) {
+                    JSONObject savedColorJSONObject = new JSONObject();
+                    savedColorJSONObject.put("colorInt", savedColor.color);
+                    savedColorJSONObject.put("colorName", savedColor.name);
+                    savedColorsJSONArray.put(savedColorJSONObject);
+                }
+                jsonObject.put("savedColors", savedColorsJSONArray);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
+
+            String extraString = jsonObject.toString();
+
+            Statement infoStatement = pathDatabase.compileStatement("UPDATE info\n" +
+                    "SET extra_infos = ?");
+            infoStatement.bindText(1, extraString);
+            infoStatement.step();
+            infoStatement.release();
         }
 
         private void configureDatabase() {
@@ -1193,27 +1218,23 @@ public class PaintView extends View {
                     "    extra_infos      TEXT NOT NULL\n" +
                     ")");
 
-            try {
-                Statement infoStatement = pathDatabase.compileStatement("INSERT INTO info VALUES(?,?,?)");
-                infoStatement.reset();
-                infoStatement.bindText(1, "3.0");
-                infoStatement.bind(2, System.currentTimeMillis());
-                infoStatement.bindText(3, "");
-                infoStatement.step();
-                infoStatement.release();
-            } catch (Exception e) {
-                Common.showException(e, (Activity) ctx);
-            }
+            Statement infoStatement = pathDatabase.compileStatement("INSERT INTO info VALUES(?,?,?)");
+            infoStatement.reset();
+            infoStatement.bindText(1, "3.0");
+            infoStatement.bind(2, System.currentTimeMillis());
+            infoStatement.bindText(3, "");
+            infoStatement.step();
+            infoStatement.release();
 
-            pathDatabase.exec("BEGIN TRANSACTION");
             // prepare statement
             tmpStatement = pathDatabase.compileStatement("INSERT INTO tmp (mark, p1, p2) VALUES (?, ?, ?)");
             pathStatement = pathDatabase.compileStatement("INSERT INTO path (mark, p1, p2) VALUES (?, ?, ?)");
         }
 
-        private PathSaver(SQLite3 pathDatabase) {
-            this.pathDatabase = pathDatabase;
+        public PathSaver(String path) {
+            this.pathDatabase = SQLite3.open(path);
             configureDatabase();
+            beginTransaction();
         }
 
         private void undo() {
@@ -1234,49 +1255,41 @@ public class PaintView extends View {
 
         @SuppressWarnings("DuplicatedCode")
         private void insert(int mark, int p1, float p2) {
-            try {
                 tmpStatement.reset();
                 tmpStatement.bind(1, mark);
                 tmpStatement.bind(2, p1);
                 tmpStatement.bind(3, p2);
                 tmpStatement.step();
-            } catch (Exception e) {
-                Common.showException(e, PaintView.this.ctx);
-            }
         }
 
         @SuppressWarnings("DuplicatedCode")
         private void insert(int mark, float p1, float p2) {
-            try {
                 tmpStatement.reset();
                 tmpStatement.bind(1, mark);
                 tmpStatement.bind(2, p1);
                 tmpStatement.bind(3, p2);
                 tmpStatement.step();
-            } catch (Exception e) {
-                Common.showException(e, PaintView.this.ctx);
-            }
         }
 
         private void onTouchDown(float x, float y) {
-            if (eraserMode) {
-                insert(0x11, getEraserTransparency(), getEraserStrokeWidth());
+            if (paintView.eraserMode) {
+                insert(0x11, paintView.getEraserTransparency(), paintView.getEraserStrokeWidth());
                 insert(0x12, x, y);
             } else {
-                insert(0x01, getDrawingColor(), getDrawingStrokeWidth());
+                insert(0x01, paintView.getDrawingColor(), paintView.getDrawingStrokeWidth());
                 insert(0x02, x, y);
             }
         }
 
         private void onTouchMove(float x, float y) {
-            insert(eraserMode ? 0x13 : 0x03, x, y);
+            insert(paintView.eraserMode ? 0x13 : 0x03, x, y);
         }
 
         private void onTouchUp(float x, float y) {
-            insert(eraserMode ? 0x14 : 0x04, x, y);
+            insert(paintView.eraserMode ? 0x14 : 0x04, x, y);
         }
 
-        private void commitDatabase() {
+        public void flush() {
             pathDatabase.exec("COMMIT");
             pathDatabase.exec("BEGIN TRANSACTION");
         }
@@ -1293,31 +1306,33 @@ public class PaintView extends View {
                     "FROM tmp");
             clearTmpTable();
         }
+
+        public void reset() {
+            pathDatabase.exec("DROP TABLE IF EXISTS path");
+            pathDatabase.exec("DROP TABLE IF EXISTS tmp");
+            pathDatabase.exec("DROP TABLE IF EXISTS info");
+            configureDatabase();
+        }
+
+        public void close() {
+            pathStatement.release();
+            tmpStatement.release();
+            pathDatabase.commit();
+            pathDatabase.close();
+        }
+
+        public void commit() {
+            pathDatabase.commit();
+        }
+
+        public void beginTransaction() {
+            pathDatabase.beginTransaction();
+        }
     }
 
-    public void commitPathDatabase() {
+    public void flushPathSaver() {
         if (pathSaver != null) {
-            pathSaver.setExtraInfos();
-            pathSaver.commitDatabase();
-        }
-    }
-
-    public void closePathDatabase() {
-        if (pathSaver == null) return;
-        try {
-            pathSaver.tmpStatement.release();
-            pathSaver.pathStatement.release();
-        } catch (Exception e) {
-            Common.showException(e, ctx);
-        }
-        try {
-            pathSaver.commitDatabase();
-        } catch (Exception e) {
-            Common.showException(e, ctx);
-        }
-        pathSaver.pathDatabase.exec("DROP TABLE tmp");
-        if (!pathSaver.pathDatabase.isClosed()) {
-            pathSaver.pathDatabase.close();
+            pathSaver.flush();
         }
     }
 

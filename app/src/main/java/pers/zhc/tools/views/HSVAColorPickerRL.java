@@ -20,6 +20,8 @@ import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.*;
 
+import java.util.ArrayList;
+
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 
@@ -224,6 +226,17 @@ public class HSVAColorPickerRL extends RelativeLayout {
         invalidateAllViews();
     }
 
+    public ArrayList<SavedColor> getSavedColors() {
+        ArrayList<SavedColor> list = new ArrayList<>();
+
+        final int childCount = savedColorLL.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final ColorShowRL colorShowRL = (ColorShowRL) savedColorLL.getChildAt(i);
+            list.add(new SavedColor(colorShowRL.getColor(), colorShowRL.getName()));
+        }
+        return list;
+    }
+
     private static class SavedColorListView extends BaseView {
 
         public SavedColorListView(Context context, int w, int h) {
@@ -392,6 +405,16 @@ public class HSVAColorPickerRL extends RelativeLayout {
             currentXPos[3] = limitValue(x, 0, aW);
             invalidateAllViews();
             return true;
+        }
+    }
+
+    public static class SavedColor {
+        public final int color;
+        public final String name;
+
+        public SavedColor(int color, String name) {
+            this.color = color;
+            this.name = name;
         }
     }
 }

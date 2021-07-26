@@ -33,3 +33,13 @@ fun InputStream.writeTo(out: OutputStream) {
         out.flush()
     }
 }
+
+class MkdirException: RuntimeException {
+    constructor() : super()
+    constructor(message: String?) : super(message)
+}
+
+class DeleteException: RuntimeException {
+    constructor() : super()
+    constructor(message: String?) : super(message)
+}

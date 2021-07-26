@@ -16,6 +16,7 @@ public class ColorShowRL extends RelativeLayout {
     private StrokeShowView strokeShowView;
     private TextView hexTV;
     private int color;
+    private String name;
 
     public ColorShowRL(Context context) {
         this(context, null);
@@ -44,6 +45,8 @@ public class ColorShowRL extends RelativeLayout {
 
     public void setColor(int color, String name) {
         this.color = color;
+        this.name = name;
+
         strokeShowView.setColor(color);
         hexTV.setText(name);
         int measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
@@ -53,6 +56,10 @@ public class ColorShowRL extends RelativeLayout {
 
     public int getColor() {
         return color;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
