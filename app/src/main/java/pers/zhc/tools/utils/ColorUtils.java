@@ -86,6 +86,10 @@ public class ColorUtils {
                                   @FloatRange(from = 0, to = 360) float hue,
                                   @FloatRange(from = 0, to = 1) float saturation,
                                   @FloatRange(from = 0, to = 1) float value) {
+        if (hue >= 359.5) {
+            hue = 359;
+        }
+
         hue /= 360;
         int r, g, b;
         int h = (int) (hue * 6);
