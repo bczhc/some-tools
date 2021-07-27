@@ -6,7 +6,7 @@
 	android:layout_height="wrap_content">
 	<ImageView
 			android:id="@+id/cancel_deletion"
-			app:srcCompat="@drawable/ic_window_close"
+			app:srcCompat="@drawable/ic_close"
 			android:layout_width="25dp"
 			android:layout_height="25dp"
 			android:layout_marginStart="20dp"

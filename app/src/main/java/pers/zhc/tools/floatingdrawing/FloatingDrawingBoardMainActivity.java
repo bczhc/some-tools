@@ -904,7 +904,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     .setAutoCancel(true)
                     .setContentTitle(getString(R.string.drawing_board))
                     .setContentText(getString(R.string.appear_f_b, date))
-                    .setSmallIcon(R.mipmap.ic_launcher);
+                    .setSmallIcon(R.drawable.ic_launcher_foreground);
             Intent intent = new Intent();
             intent.setAction(BroadcastAction.ACTION_START_FLOATING_BOARD);
             intent.putExtra("millisecond", currentInstanceMillisecond);
