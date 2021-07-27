@@ -13,6 +13,7 @@
         <TextView android:layout_width="0sp" android:layout_height="wrap_content"
                   android:text="@string/hsva_color_picker"
                   android:layout_weight="1"
+                  android:background="@color/white"
         />
         <pers.zhc.tools.views.ColorView
                 android:layout_width="0sp" android:layout_height="match_parent"
