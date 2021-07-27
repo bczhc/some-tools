@@ -28,6 +28,7 @@ import pers.zhc.tools.views.HSVAColorPickerRL;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -549,6 +550,60 @@ public class PaintView extends View {
         public void push(MsgType msg) {
             this.param = msg;
             this.aDo = true;
+        }
+    }
+
+    public enum PathVersion {
+        VERSION_1_0,
+        VERSION_2_0,
+        VERSION_2_1,
+        VERSION_3_0,
+        Unknown
+    }
+
+    @NotNull
+    public static PathVersion getPathVersion(File f) {
+        PathVersion version = null;
+
+        // check paths that use SQLite database
+        final SQLite3 db = SQLite3.open(f.getPath());
+        if (!db.checkIfCorrupt()) {
+            final Statement statement = db.compileStatement("SELECT version FROM info");
+            final Cursor cursor = statement.getCursor();
+            if (cursor.step()) {
+                final String versionString = cursor.getText(0);
+                if ("3.0".equals(versionString)) {
+                    version = PathVersion.VERSION_3_0;
+                } else {
+                    version = PathVersion.Unknown;
+                }
+            } else {
+                version = PathVersion.Unknown;
+            }
+            statement.release();
+        }
+        db.close();
+
+        if (version != null) {
+            return version;
+        }
+
+        // check path versions 1.0, 2.0, 2.1
+        try {
+            FileInputStream is = new FileInputStream(f);
+            byte[] buf = new byte[12];
+            Common.doAssertion(is.read(buf) == 12);
+            if (Arrays.equals(buf, "path ver 2.0".getBytes())) {
+                version = PathVersion.VERSION_2_0;
+            } else if (Arrays.equals(buf, "path ver 2.1".getBytes())) {
+                version = PathVersion.VERSION_2_1;
+            } else {
+                version = PathVersion.VERSION_1_0;
+            }
+            is.close();
+            return version;
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
         }
     }
 
