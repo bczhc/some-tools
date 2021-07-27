@@ -596,11 +596,11 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
             SeekBar sb = new SeekBar(this);
             linearLayout.addView(titleTextView);
             linearLayout.addView(sb);
-            sb.setProgress(pv.getEraserTransparency() * 100 / 255);
+            sb.setProgress(pv.getEraserAlpha() * 100 / 255);
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    pv.setEraserTransparency(HSVAColorPickerRL.limitValue(progress * 255 / 100, 0, 255));
+                    pv.setEraserAlpha(HSVAColorPickerRL.limitValue(progress * 255 / 100, 0, 255));
                 }
 
                 @Override

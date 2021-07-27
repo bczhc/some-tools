@@ -23,6 +23,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import com.google.android.material.button.MaterialButton
+import kotlinx.android.synthetic.main.fdb_eraser_opacity_adjusting_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.ll
 import kotlinx.android.synthetic.main.fdb_stoke_width_view.view.*
@@ -151,7 +152,11 @@ class FdbWindow(private val context: Activity) {
                             }
                             2 -> {
                                 // color
-                                dialogs.brushColorPicker.show()
+                                if (paintView.isEraserMode) {
+                                    dialogs.eraserOpacity.show()
+                                } else {
+                                    dialogs.brushColorPicker.show()
+                                }
                             }
                             3 -> {
                                 // stroke width
@@ -250,6 +255,7 @@ class FdbWindow(private val context: Activity) {
             panelTextColorPicker = createDialog(colorPickers.panelText, true, dim = false)
             panelSettings = createPanelSettingsDialog()
             moreMenu = createMoreOptionDialog()
+            eraserOpacity = createEraserOpacityDialog()
         }
 
         paintView.apply {
@@ -418,6 +424,7 @@ class FdbWindow(private val context: Activity) {
         lateinit var panelColorPicker: Dialog
         lateinit var panelSettings: Dialog
         lateinit var moreMenu: Dialog
+        lateinit var eraserOpacity: Dialog
     }
 
     private fun createConfirmationDialog(
@@ -691,6 +698,29 @@ class FdbWindow(private val context: Activity) {
             ll.addView(button)
         }
         return createDialog(inflate)
+    }
+
+    private fun createEraserOpacityDialog(): Dialog {
+        val inflate = View.inflate(context, R.layout.fdb_eraser_opacity_adjusting_view, null)
+        val opacitySeeker = inflate.opacity!!
+        opacitySeeker.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                var alpha = (progress.toDouble() / 100.0 * 256.0).toInt()
+                if (alpha > 255) {
+                    alpha = 255
+                }
+                paintView.eraserAlpha = alpha
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+        val dialog = createDialog(inflate, dim = false)
+        DialogUtils.setDialogAttr(dialog, width = MATCH_PARENT, overlayWindow = true)
+        return dialog
     }
 
     private fun exportPath(internalPath: String, filename: String) {

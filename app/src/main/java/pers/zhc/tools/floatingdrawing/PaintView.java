@@ -302,11 +302,11 @@ public class PaintView extends View {
         }
     }
 
-    public int getEraserTransparency() {
+    public int getEraserAlpha() {
         return this.eraserPaint.getAlpha();
     }
 
-    public void setEraserTransparency(@IntRange(from = 0, to = 255) int alpha) {
+    public void setEraserAlpha(@IntRange(from = 0, to = 255) int alpha) {
         this.eraserPaint.setAlpha(alpha);
     }
 
@@ -873,7 +873,7 @@ public class PaintView extends View {
                     break;
                 case 0x11:
                     setEraserMode(true);
-                    setEraserTransparency(cursor.getInt(1));
+                    setEraserAlpha(cursor.getInt(1));
                     setEraserStrokeWidth(cursor.getFloat(2));
                     break;
                 case 0x20:
@@ -1336,7 +1336,7 @@ public class PaintView extends View {
 
         private void onTouchDown(float x, float y) {
             if (paintView.eraserMode) {
-                insert(0x11, paintView.getEraserTransparency(), paintView.getEraserStrokeWidth());
+                insert(0x11, paintView.getEraserAlpha(), paintView.getEraserStrokeWidth());
                 insert(0x12, x, y);
             } else {
                 insert(0x01, paintView.getDrawingColor(), paintView.getDrawingStrokeWidth());
