@@ -41,7 +41,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
     private View[] hsvaViews;
     private ColorView colorView;
     private OnColorPickedInterface onColorPickedInterface = null;
-    private final int width = 0;
+    private int width = 0;
     private RecyclerView savedColorRV;
     private ArrayList<SavedColor> savedColors = new ArrayList<>();
     private SavedColorAdapter savedColorAdapter;
@@ -271,6 +271,12 @@ public class HSVAColorPickerRL extends RelativeLayout {
         public SavedColorListView(Context context, int w, int h) {
             super(context);
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        width = getMeasuredWidth();
     }
 
     private class HView extends BaseView {
