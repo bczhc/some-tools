@@ -518,8 +518,8 @@ public class PaintView extends View {
         private MsgType param;
         private boolean aDo = false;
         private boolean start;
-        private HandlerCallback<MsgType> handlerCallback;
-        private ExecutorService es;
+        private final HandlerCallback<MsgType> handlerCallback;
+        private final ExecutorService es;
 
         public CanDoHandler(HandlerCallback<MsgType> handlerCallback) {
             this.handlerCallback = handlerCallback;
@@ -1214,8 +1214,8 @@ public class PaintView extends View {
      */
     public static class PathSaver {
         private final SQLite3 pathDatabase;
-        private Statement tmpStatement;
-        private Statement pathStatement;
+        private final Statement tmpStatement;
+        private final Statement pathStatement;
 
         /**
          * to get some infos from it, set by {@link PaintView#setPathSaver(PathSaver)}
@@ -1244,7 +1244,14 @@ public class PaintView extends View {
                 JSONArray savedColorsJSONArray = new JSONArray();
                 for (HSVAColorPickerRL.SavedColor savedColor : savedColors) {
                     JSONObject savedColorJSONObject = new JSONObject();
-                    savedColorJSONObject.put("colorInt", savedColor.color);
+
+                    JSONArray hsvaJSONOArray = new JSONArray();
+                    hsvaJSONOArray.put(savedColor.hsv[0]);
+                    hsvaJSONOArray.put(savedColor.hsv[1]);
+                    hsvaJSONOArray.put(savedColor.hsv[2]);
+                    hsvaJSONOArray.put(savedColor.alpha);
+
+                    savedColorJSONObject.put("colorHSVA", hsvaJSONOArray);
                     savedColorJSONObject.put("colorName", savedColor.name);
                     savedColorsJSONArray.put(savedColorJSONObject);
                 }

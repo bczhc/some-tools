@@ -11,9 +11,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ColorShowRL colorShowRL = new ColorShowRL(this);
-        colorShowRL.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        this.setContentView(colorShowRL);
-        colorShowRL.setColor(Color.RED, "#FFFF0000");
+
     }
 }

@@ -136,7 +136,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         savedColorRV.setAdapter(savedColorAdapter);
         savedColorRV.setLayoutManager(new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false));
         savedColorAdapter.setOnColorViewClickedListener(self -> {
-            setColor(self.getColor());
+            final SavedColor savedColor = self.getColor();
+            setColor(savedColor.hsv, savedColor.alpha);
         });
         savedColorAdapter.setOnItemLongClickListener((view, position) -> {
             final PopupMenu popupMenu = PopupMenuUtil.createPopupMenu(context, view, R.menu.color_picker_saved_color_popup_menu);
@@ -181,13 +182,6 @@ public class HSVAColorPickerRL extends RelativeLayout {
 
             // 保存颜色
             final String input = editText.getText().toString();
-            int parsed;
-            try {
-                parsed = Color.parseColor(input);
-            } catch (Exception e) {
-                ToastUtils.showError(context, R.string.please_enter_correct_value_toast, e);
-                return;
-            }
 
             final EditText namingET = new EditText(context);
             final AlertDialog namingDialog = DialogUtils.Companion.createPromptDialog(
@@ -195,7 +189,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                     R.string.color_naming,
                     (dialogInterface, editText12) -> {
 
-                        savedColors.add(new SavedColor(parsed, editText12.getText().toString()));
+                        savedColors.add(new SavedColor(hsv, alpha, editText12.getText().toString()));
                         savedColorAdapter.notifyItemInserted(savedColors.size() - 1);
 
                         return Unit.INSTANCE;
@@ -203,7 +197,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                     (dialogInterface, editText1) -> Unit.INSTANCE,
                     namingET
             );
-            namingET.setText(ColorUtils.getHexString(parsed, true));
+            namingET.setText(ColorUtils.getHexString(getColor(), true));
             DialogUtil.setDialogAttr(namingDialog, null);
             DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(namingET, namingDialog);
             Selection.selectAll(namingET.getText());
@@ -247,13 +241,20 @@ public class HSVAColorPickerRL extends RelativeLayout {
         invalidateAllViews();
     }
 
+    public void setColor(float[] hsv, int alpha) {
+        System.arraycopy(hsv, 0, this.hsv, 0, 3);
+        this.alpha = alpha;
+        updateCurrentX();
+        invalidateAllViews();
+    }
+
     public ArrayList<SavedColor> getSavedColors() {
         ArrayList<SavedColor> list = new ArrayList<>();
 
         final int childCount = savedColorRV.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final ColorShowRL colorShowRL = (ColorShowRL) savedColorRV.getChildAt(i);
-            list.add(new SavedColor(colorShowRL.getColor(), colorShowRL.getName()));
+            list.add(colorShowRL.getColor());
         }
         return list;
     }
@@ -444,12 +445,20 @@ public class HSVAColorPickerRL extends RelativeLayout {
     }
 
     public static class SavedColor {
-        public final int color;
+        public final float[] hsv;
+        public final int alpha;
         public final String name;
 
-        public SavedColor(int color, String name) {
-            this.color = color;
+        public SavedColor(float[] hsv, int alpha, String name) {
+            float[] cloned = new float[3];
+            System.arraycopy(hsv, 0, cloned, 0, 3);
+            this.hsv = cloned;
+            this.alpha = alpha;
             this.name = name;
+        }
+
+        public int getColorInt() {
+            return Color.HSVToColor(alpha, hsv);
         }
     }
 
@@ -495,7 +504,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         public void onBindViewHolder(@NonNull @NotNull HSVAColorPickerRL.SavedColorAdapter.MyViewHolder holder, int position) {
             final ColorShowRL colorShowRL = holder.getView();
             final SavedColor savedColor = data.get(position);
-            colorShowRL.setColor(savedColor.color, savedColor.name);
+            colorShowRL.setColor(savedColor);
+            colorShowRL.setName(savedColor.name);
 
             colorShowRL.setOnColorViewClickedListener(self -> {
                 if (onColorViewClickedListener != null) {

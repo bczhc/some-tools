@@ -589,27 +589,37 @@ class FdbWindow(private val context: Activity) {
                                         }
                                     )
 
-                                    val pathVersion = PaintView.getPathVersion(File(file))
-                                    when (pathVersion) {
+                                    when (PaintView.getPathVersion(File(file))) {
                                         PathVersion.VERSION_3_0 -> {
-                                            val db = SQLite3.open(file)
-                                            val extraInfos = PaintView.PathSaver.getExtraInfos(db)
-                                            db.close()
-                                            extraInfos ?: return@runOnUiThread
-                                            val savedColors = extraInfos.getJSONArray("savedColors") ?: return@runOnUiThread
-                                            val list = ArrayList<HSVAColorPickerRL.SavedColor>()
-                                            for (i in 0 until savedColors.length()) {
-                                                val savedColor = savedColors.getJSONObject(i)
-                                                list.add(
-                                                    HSVAColorPickerRL.SavedColor(
-                                                        savedColor.getInt("colorInt"),
-                                                        savedColor.getString("colorName")
+                                            try {
+                                                val db = SQLite3.open(file)
+                                                val extraInfos = PaintView.PathSaver.getExtraInfos(db)
+                                                db.close()
+                                                extraInfos ?: return@runOnUiThread
+                                                val savedColors =
+                                                    extraInfos.getJSONArray("savedColors") ?: return@runOnUiThread
+                                                val list = ArrayList<HSVAColorPickerRL.SavedColor>()
+                                                for (i in 0 until savedColors.length()) {
+                                                    val savedColor = savedColors.getJSONObject(i)
+
+                                                    val hsvaJSONArray = savedColor.getJSONArray("colorHSVA")
+                                                    list.add(
+                                                        HSVAColorPickerRL.SavedColor(
+                                                            floatArrayOf(
+                                                                hsvaJSONArray.getDouble(0).toFloat(),
+                                                                hsvaJSONArray.getDouble(1).toFloat(),
+                                                                hsvaJSONArray.getDouble(2).toFloat()
+                                                            ),
+                                                            hsvaJSONArray.getInt(3),
+                                                            savedColor.getString("colorName")
+                                                        )
                                                     )
-                                                )
-                                            }
-                                            colorPickers.brush.setSavedColor(list)
+                                                }
+                                                colorPickers.brush.setSavedColor(list)
+                                            } catch (_: Exception) {}
                                         }
-                                        else -> {}
+                                        else -> {
+                                        }
                                     }
                                 }
                             }, { progress ->

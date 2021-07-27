@@ -1,6 +1,7 @@
 package pers.zhc.tools.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -16,6 +17,7 @@ public class ColorShowRL extends RelativeLayout {
     private TextView nameTV;
     private int color;
     private String name;
+    private HSVAColorPickerRL.SavedColor savedColor;
 
     @Nullable
     private OnColorViewClickedListener onColorViewClickedListener = null;
@@ -58,16 +60,18 @@ public class ColorShowRL extends RelativeLayout {
         this.addView(inflate);
     }
 
-    public void setColor(int color, String name) {
-        this.color = color;
-        this.name = name;
-
-        colorView.setColor(color);
-        nameTV.setText(name);
+    public void setColor(HSVAColorPickerRL.SavedColor savedColor) {
+        this.savedColor = savedColor;
+        this.color = savedColor.getColorInt();
+        this.colorView.setColor(this.color);
     }
 
-    public int getColor() {
-        return color;
+    public HSVAColorPickerRL.SavedColor getColor() {
+        return savedColor;
+    }
+
+    public void setName(String name) {
+        nameTV.setText(name);
     }
 
     public String getName() {
