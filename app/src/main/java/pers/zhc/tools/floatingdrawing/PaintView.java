@@ -136,7 +136,6 @@ public class PaintView extends View {
 
         if (state != null) {
             headCanvas.transTo(state);
-            headCanvas.save();
         }
         redrawCanvas();
     }
@@ -999,7 +998,7 @@ public class PaintView extends View {
     }
 
     public void resetTransform() {
-        headCanvas.restore();
+        headCanvas.reset();
         redrawCanvas();
         postInvalidate();
         setCurrentStrokeWidthInLocked();
