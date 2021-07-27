@@ -193,7 +193,7 @@ class FdbWindow(private val context: Activity) {
                             }
                             8 -> {
                                 // pick color
-                                TODO()
+                                ToastUtils.show(context, "TODO")
                             }
                             9 -> {
                                 // panel
@@ -296,6 +296,7 @@ class FdbWindow(private val context: Activity) {
         val lockBrushCB = inflate.cb!!
         val strokeShowView = inflate.stroke_show!!
 
+        lockBrushCB.isChecked = paintView.isLockStrokeEnabled
         strokeShowView.setColor(paintView.drawingColor)
         strokeShowView.setDiameter(paintView.strokeWidthInUse)
         rg.check(
