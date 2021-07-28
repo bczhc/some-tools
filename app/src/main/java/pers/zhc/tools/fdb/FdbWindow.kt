@@ -347,6 +347,9 @@ class FdbWindow(private val context: Activity) {
                 else -> {
                 }
             }
+            if (paintView.isLockStrokeEnabled) {
+                paintView.updateLockedStrokeWidth()
+            }
         }
 
         infoTV.setOnClickListener {

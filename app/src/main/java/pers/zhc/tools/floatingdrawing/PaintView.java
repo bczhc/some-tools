@@ -188,7 +188,7 @@ public class PaintView extends View {
                 if (transCanvas != null) {
                     transCanvas.scaleReal(dScale, midPointX, midPointY);
                 }
-                setCurrentStrokeWidthInLocked();
+                setCurrentStrokeWidthWhenLocked();
             }
 
             @Override
@@ -916,7 +916,7 @@ public class PaintView extends View {
                 setLockingStroke(isLockingStroke);
                 lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
                 lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
-                setCurrentStrokeWidthInLocked();
+                setCurrentStrokeWidthWhenLocked();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -1001,7 +1001,7 @@ public class PaintView extends View {
         headCanvas.reset();
         redrawCanvas();
         postInvalidate();
-        setCurrentStrokeWidthInLocked();
+        setCurrentStrokeWidthWhenLocked();
     }
 
     /**
@@ -1041,7 +1041,7 @@ public class PaintView extends View {
             float scale = headCanvas.getScale();
             this.lockedDrawingStrokeWidth = getDrawingStrokeWidth() * scale;
             this.lockedEraserStrokeWidth = getEraserStrokeWidth() * scale;
-            setCurrentStrokeWidthInLocked();
+            setCurrentStrokeWidthWhenLocked();
         }
     }
 
@@ -1055,8 +1055,7 @@ public class PaintView extends View {
     public void setLockStrokeEnabled(boolean enabled) {
         lockStrokeEnabled = enabled;
         if (enabled) {
-            lockedDrawingStrokeWidth = getDrawingStrokeWidth();
-            lockedEraserStrokeWidth = getEraserStrokeWidth();
+            updateLockedStrokeWidth();
         }
     }
 
@@ -1064,12 +1063,17 @@ public class PaintView extends View {
         return lockStrokeEnabled;
     }
 
-    public void setCurrentStrokeWidthInLocked() {
+    public void setCurrentStrokeWidthWhenLocked() {
         if (lockStrokeEnabled) {
             float canvasScale = headCanvas.getScale();
             setDrawingStrokeWidth(lockedDrawingStrokeWidth / canvasScale);
             setEraserStrokeWidth(lockedEraserStrokeWidth / canvasScale);
         }
+    }
+
+    public void updateLockedStrokeWidth() {
+        lockedDrawingStrokeWidth = getDrawingStrokeWidth() * getScale();
+        lockedEraserStrokeWidth = getEraserStrokeWidth() * getScale();
     }
 
     // ----------------------------------- end -----------------------------------------
