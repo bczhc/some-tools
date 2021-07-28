@@ -8,18 +8,18 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
-import pers.zhc.tools.crashhandler.CrashHandler;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.PermissionRequester;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
-
-import java.util.Stack;
+import pers.zhc.tools.app.ExternalDex;
+import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.PermissionRequester;
 
 /**
  * @author bczhc
@@ -28,17 +28,21 @@ import java.util.Stack;
  * <p>I love reinventing whells!</p>
  */
 public class BaseActivity extends AppCompatActivity {
-    public final App app = new App();
     protected final String TAG = this.getClass().getName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        app.addActivity(this);
-//        ExternalJNI.ex(this);
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
+
+        ExternalDex.Companion.asyncFetch(this, runner -> {
+            runner.run(this);
+
+            return Unit.INSTANCE;
+        });
+
     }
 
     private void setTheme() {
@@ -53,7 +57,6 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        app.pop();
         super.onDestroy();
     }
 
@@ -118,32 +121,6 @@ public class BaseActivity extends AppCompatActivity {
     public static class BroadcastAction {
         public static final String ACTION_START_FLOATING_BOARD = "pers.zhc.tools.START_FB";
         public static final String ACTION_BUS_CANCEL_CLICK = "pers.zhc.tools.BUS_CANCEL_CLICK";
-    }
-
-    public static class App {
-        private final Stack<AppCompatActivity> activities;
-
-        App() {
-            activities = new Stack<>();
-        }
-
-        void addActivity(AppCompatActivity activity) {
-            if (!activities.contains(activity)) {
-                activities.push(activity);
-            }
-        }
-
-        void pop() {
-            activities.pop();
-        }
-
-        public void finishAllActivities() {
-            for (AppCompatActivity activity : activities) {
-                if (activity != null) {
-                    activity.finish();
-                }
-            }
-        }
     }
 
     @NotNull

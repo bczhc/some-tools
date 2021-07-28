@@ -29,7 +29,7 @@ fun InputStream.writeTo(out: OutputStream) {
     while (true) {
         readLen = this.read(buf)
         if (readLen == -1) break
-        out.write(buf)
+        out.write(buf, 0, readLen)
         out.flush()
     }
 }

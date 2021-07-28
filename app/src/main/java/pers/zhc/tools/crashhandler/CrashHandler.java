@@ -71,10 +71,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         intent.putExtra("exception", stackTraceString);
         intent.putExtra("filename", filename);
         ctx.startActivity(intent);
-        try {
-            ((BaseActivity) ctx).app.finishAllActivities();
-        } catch (Exception ignored) {
-        }
         System.exit(1);
     }
 
