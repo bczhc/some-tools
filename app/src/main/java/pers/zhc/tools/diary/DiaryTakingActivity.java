@@ -81,7 +81,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
             return true;
         });
 
-        et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        et.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN);
 
         ttsReplaceDict = new HashMap<>();
         ttsReplaceDict.put("。", "句号");
