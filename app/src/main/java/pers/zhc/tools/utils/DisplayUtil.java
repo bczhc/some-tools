@@ -1,6 +1,8 @@
 package pers.zhc.tools.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import org.jetbrains.annotations.NotNull;
 
 public class DisplayUtil {
@@ -23,5 +25,15 @@ public class DisplayUtil {
     public static int sp2px(@NotNull Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    public static int cm2dp(float cm) {
+        return (int) (cm * (8000F / 127F));
+    }
+
+    public static int getStatusBarHeight(Activity activity) {
+        Rect rectangle= new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        return rectangle.top;
     }
 }

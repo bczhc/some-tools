@@ -490,5 +490,6 @@
     <string name="words_label">单词</string>
     <string name="words_already_have_word">该记录已存在</string>
     <string name="words_delete_confirmation_dialog">是否删除</string>
+    <string name="capture_permission_denied">未同意权限</string>
     <!-- module end -->
 </resources>
