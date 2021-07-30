@@ -699,5 +699,16 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity
+                android:name=".fdb.ScreenColorPickerActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:theme="@style/Theme.Transparent"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

@@ -3,6 +3,7 @@ package pers.zhc.tools.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import org.jetbrains.annotations.NotNull;
 
 public class DisplayUtil {
@@ -35,5 +36,11 @@ public class DisplayUtil {
         Rect rectangle= new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
         return rectangle.top;
+    }
+
+    public static DisplayMetrics getMetrics(Activity activity) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        return metrics;
     }
 }

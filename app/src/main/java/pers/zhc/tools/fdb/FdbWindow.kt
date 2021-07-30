@@ -1,18 +1,17 @@
 package pers.zhc.tools.fdb
 
-import android.app.Activity
 import android.app.Dialog
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.KeyEvent
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowManager
@@ -61,9 +60,6 @@ class FdbWindow(private val context: BaseActivity) {
     private val paintView = PaintView(context)
     private val paintViewLP = WindowManager.LayoutParams()
 
-    private val screenColorPickerView = ScreenColorPickerView(context)
-    private val screenColorPickerViewLP = WindowManager.LayoutParams()
-
     private var operationMode = OperationMode.OPERATING
     private var brushMode = BrushMode.DRAWING
 
@@ -82,22 +78,7 @@ class FdbWindow(private val context: BaseActivity) {
     private val panelDimension = ViewDimension()
     private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
 
-    private val screenColorPickerViewDimension = ViewDimension()
-    private val screenColorPickerViewPositionUpdater = FloatingViewOnTouchListener(
-        screenColorPickerViewLP,
-        wm,
-        screenColorPickerView,
-        0,
-        0,
-        screenColorPickerViewDimension
-    )
-
     private val pathSaver = PaintView.PathSaver(pathFiles.tmpPathFile.path)
-
-    /**
-     * When isn't null, the screen capture permission has been granted
-     */
-    private var mediaProjectionData: Intent? = null
 
     init {
         val ll = LinearLayout(context)
@@ -215,26 +196,16 @@ class FdbWindow(private val context: BaseActivity) {
                             }
                             8 -> {
                                 // pick screen color
-                                if (mediaProjectionData != null) {
-                                    startScreenColorPicker()
-                                } else {
-                                    // request the permission
-                                    if (context !is FdbMainActivity) {
-                                        ToastUtils.show(context, "Wrong instance")
-                                        return@setOnButtonClickedListener
-                                    }
-                                    stopFDB()
-                                    (context as FdbMainActivity).requestCapturePermission { result ->
-                                        startFDB()
-                                        if (result.resultCode == Activity.RESULT_OK) {
-                                            mediaProjectionData = result.data
+                                val intent = Intent(context, ScreenColorPickerActivity::class.java)
+                                intent.putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)
+                                context.startActivity(intent)
 
-                                            startScreenColorPicker()
-                                        } else {
-                                            ToastUtils.show(context, R.string.capture_permission_denied)
-                                        }
-                                    }
+                                val receiver = ScreenColorPickerResultReceiver(timestamp) { color ->
+                                    ToastUtils.show(context, ColorUtils.getHexString(color, true))
+                                    colorPickers.brush.color = color
                                 }
+                                val filter = IntentFilter(ScreenColorPickerResultReceiver.ACTION_ON_SCREEN_COLOR_PICKED)
+                                context.registerReceiver(receiver, filter)
                             }
                             9 -> {
                                 // panel
@@ -248,7 +219,6 @@ class FdbWindow(private val context: BaseActivity) {
                                 // exit
                                 createConfirmationDialog({ _, _ ->
                                     pathSaver.close()
-                                    stopScreenColorPickerView()
                                     stopFDB()
                                 }, R.string.fdb_exit_confirmation_dialog).show()
                             }
@@ -321,62 +291,6 @@ class FdbWindow(private val context: BaseActivity) {
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
-
-        val statusBarHeight = DisplayUtil.getStatusBarHeight(context)
-        screenColorPickerViewLP.apply {
-            width = WRAP_CONTENT
-            height = WRAP_CONTENT
-            type = floatingWindowType
-            flags = FLAG_NOT_FOCUSABLE
-            format = RGBA_8888
-        }
-        screenColorPickerView.measure(0, 0)
-        screenColorPickerViewDimension.width = screenColorPickerView.measuredWidth
-        screenColorPickerViewDimension.height = screenColorPickerView.measuredHeight
-        screenColorPickerViewPositionUpdater.updateParentDimension(
-            displayMetrics.widthPixels,
-            displayMetrics.heightPixels
-        )
-        var screenshotDone = true
-        @Suppress("ClickableViewAccessibility")
-        screenColorPickerView.setOnTouchListener { v, event ->
-            screenColorPickerViewPositionUpdater.onTouch(v, event, false)
-
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    if (!screenshotDone) {
-                        return@setOnTouchListener true
-                    }
-                    screenshotDone = false
-                    screenColorPickerView.setIsTransparent(true)
-                    MediaUtils.asyncTakeScreenshot(context, mediaProjectionData!!, null) { image ->
-                        val bitmap = MediaUtils.imageToBitmap(image)
-                        image.close()
-                        screenColorPickerView.getBitmap()?.recycle()
-                        screenColorPickerView.setBitmap(bitmap)
-                        screenColorPickerView.setIsTransparent(false)
-                        screenshotDone = true
-                    }
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    val rawX = event.rawX
-                    val rawY = event.rawY
-                    val x = event.x
-                    val y = event.y
-                    val pointX = rawX - x + screenColorPickerView.measuredWidth.toFloat() / 2F
-                    val pointY = rawY - y + screenColorPickerView.measuredHeight.toFloat() / 2F
-                    screenColorPickerView.updatePosition(pointX, pointY)
-                    val color = screenColorPickerView.getColor()
-                    color?.let {
-                        screenColorPickerView.setColor(it)
-                        paintView.drawingColor = it
-                    }
-                }
-                else -> {
-                }
-            }
-            return@setOnTouchListener true
-        }
     }
 
     private fun showBrushWidthAdjustingDialog() {
@@ -484,17 +398,6 @@ class FdbWindow(private val context: BaseActivity) {
             paintView.isLockStrokeEnabled = isChecked
         }
         return inflate
-    }
-
-    private fun startScreenColorPickerView() {
-        wm.addView(screenColorPickerView, screenColorPickerViewLP)
-    }
-
-    private fun stopScreenColorPickerView() {
-        try {
-            wm.removeView(screenColorPickerView)
-        } catch (_: Exception) {
-        }
     }
 
     fun startFDB() {
@@ -951,10 +854,6 @@ class FdbWindow(private val context: BaseActivity) {
             width = panelRL.measuredWidth
             height = panelRL.measuredHeight
         }
-    }
-
-    private fun startScreenColorPicker() {
-        startScreenColorPickerView()
     }
 
     override fun toString(): String {
