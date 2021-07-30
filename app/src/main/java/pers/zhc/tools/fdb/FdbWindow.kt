@@ -78,7 +78,13 @@ class FdbWindow(private val context: BaseActivity) {
 
     private val pathSaver = PaintView.PathSaver(pathFiles.tmpPathFile.path)
 
-    private lateinit var broadcaseReceiver: FdbBroadcastReceiver
+    private val receivers = object {
+        lateinit var main: FdbBroadcastReceiver
+        var startScreenColorPicker: StartScreenColorPickerReceiver? = null
+        var screenColorPickerResult: ScreenColorPickerResultReceiver? = null
+    }
+
+    private var hasStartedScreenColorPicker = false
 
     init {
         val ll = LinearLayout(context)
@@ -209,9 +215,7 @@ class FdbWindow(private val context: BaseActivity) {
                             11 -> {
                                 // exit
                                 createConfirmationDialog({ _, _ ->
-                                    pathSaver.close()
-                                    stopFDB()
-                                    context.applicationContext.unregisterReceiver(broadcaseReceiver)
+                                    exit()
                                 }, R.string.fdb_exit_confirmation_dialog).show()
                             }
                             else -> {
@@ -284,7 +288,7 @@ class FdbWindow(private val context: BaseActivity) {
         val screenHeight = displayMetrics.heightPixels
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
 
-        broadcaseReceiver = FdbBroadcastReceiver(this)
+        receivers.main = FdbBroadcastReceiver(this)
         val filter = IntentFilter()
         filter.apply {
             addAction(FdbBroadcastReceiver.ACTION_FDB_SHOW)
@@ -292,7 +296,7 @@ class FdbWindow(private val context: BaseActivity) {
             addAction(FdbBroadcastReceiver.ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED)
             addAction(FdbBroadcastReceiver.ACTION_ON_SCREEN_ORIENTATION_CHANGED)
         }
-        context.applicationContext.registerReceiver(broadcaseReceiver, filter)
+        context.applicationContext.registerReceiver(receivers.main, filter)
     }
 
     private fun showBrushWidthAdjustingDialog() {
@@ -857,19 +861,41 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     private fun pickScreenColorAction() {
+
+        if (receivers.startScreenColorPicker == null) {
+            receivers.startScreenColorPicker = StartScreenColorPickerReceiver { fdbId ->
+                if (fdbId == this.getFdbId()) {
+                    hasStartedScreenColorPicker = true
+                }
+            }
+            context.applicationContext.registerReceiver(
+                receivers.startScreenColorPicker,
+                IntentFilter(StartScreenColorPickerReceiver.ACTION_SCREEN_COLOR_PICKER_ON_STARTED)
+            )
+        }
+
+        if (receivers.screenColorPickerResult == null) {
+            receivers.screenColorPickerResult = ScreenColorPickerResultReceiver(timestamp) { color ->
+                ToastUtils.show(context, ColorUtils.getHexString(color, true))
+                colorPickers.brush.color = color
+            }
+            val filter = IntentFilter(ScreenColorPickerResultReceiver.ACTION_ON_SCREEN_COLOR_PICKED)
+            context.applicationContext.registerReceiver(receivers.screenColorPickerResult, filter)
+        }
+
+        // close the old one if exists
+        if (hasStartedScreenColorPicker) {
+            sendScreenColorPickerStopRequestBroadcast()
+            hasStartedScreenColorPicker = false
+            return
+        }
+
         stopFDB()
 
         val intent = Intent(context, ScreenColorPickerActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)
         context.startActivity(intent)
-
-        val receiver = ScreenColorPickerResultReceiver(timestamp) { color ->
-            ToastUtils.show(context, ColorUtils.getHexString(color, true))
-            colorPickers.brush.color = color
-        }
-        val filter = IntentFilter(ScreenColorPickerResultReceiver.ACTION_ON_SCREEN_COLOR_PICKED)
-        context.registerReceiver(receiver, filter)
     }
 
     override fun toString(): String {
@@ -878,6 +904,24 @@ class FdbWindow(private val context: BaseActivity) {
 
     fun getFdbId(): Long {
         return timestamp
+    }
+
+    fun exit() {
+        pathSaver.close()
+        stopFDB()
+        if (hasStartedScreenColorPicker) {
+            sendScreenColorPickerStopRequestBroadcast()
+            hasStartedScreenColorPicker = false
+        }
+        context.applicationContext.unregisterReceiver(receivers.main)
+        receivers.screenColorPickerResult?.let { context.applicationContext.unregisterReceiver(it) }
+        receivers.startScreenColorPicker?.let { context.applicationContext.unregisterReceiver(it) }
+    }
+
+    private fun sendScreenColorPickerStopRequestBroadcast() {
+        val stopIntent = Intent(ScreenColorPickerService.StopRequestReceiver.ACTION_SCREEN_COLOR_PICKER_STOP)
+        stopIntent.putExtra(ScreenColorPickerService.StopRequestReceiver.EXTRA_FDB_ID, timestamp)
+        context.applicationContext.sendBroadcast(stopIntent)
     }
 
     companion object {

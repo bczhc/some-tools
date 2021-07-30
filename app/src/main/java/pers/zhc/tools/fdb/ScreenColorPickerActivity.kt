@@ -51,6 +51,9 @@ class ScreenColorPickerActivity : BaseActivity() {
         } else {
             startService(serviceIntent)
         }
+        val intent = Intent(StartScreenColorPickerReceiver.ACTION_SCREEN_COLOR_PICKER_ON_STARTED)
+        intent.putExtra(StartScreenColorPickerReceiver.EXTRA_FDB_ID, fdbId)
+        applicationContext.sendBroadcast(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
