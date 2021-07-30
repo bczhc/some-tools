@@ -24,7 +24,6 @@ import pers.zhc.tools.test.CrashTest;
 import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.fdb.FdbMainActivity;
-import pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.magic.FileListActivity;
 import pers.zhc.tools.pi.Pi;
@@ -121,7 +120,6 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.generate_pi, Pi.class));
         activities.add(new ActivityItem(R.string.toast, ToastTest.class));
         activities.add(new ActivityItem(R.string.put_in_clipboard, Clip.class));
-        activities.add(new ActivityItem(R.string.floating_drawing_board, FloatingDrawingBoardMainActivity.class));
         activities.add(new ActivityItem(R.string.floating_drawing_board, FdbMainActivity.class));
         activities.add(new ActivityItem(R.string.notes, Document.class));
         activities.add(new ActivityItem(R.string.test, Demo.class));

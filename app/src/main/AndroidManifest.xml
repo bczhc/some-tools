@@ -32,15 +32,6 @@
             android:largeHeap="true"
     >
         <receiver
-                android:name=".floatingdrawing.NotificationClickReceiver"
-                android:enabled="true"
-                android:exported="true"
-                tools:ignore="ExportedReceiver">
-            <intent-filter android:priority="1000">
-                <action android:name="pers.zhc.tools.START_FB"/>
-            </intent-filter>
-        </receiver>
-        <receiver
                 android:name=".test.broadcast.BroadcastTest"
                 android:enabled="true"
                 android:exported="false">
@@ -97,17 +88,6 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-
-            </intent-filter>
-        </activity>
-        <activity
-                android:name="pers.zhc.tools.floatingdrawing.FloatingDrawingBoardMainActivity"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.VIEW"/>
 
                 <action android:name="android.intent.action.MAIN"/>
@@ -203,27 +183,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".test.MathExpressionEvaluationTest"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
                 android:name=".test.SensorTest"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".test.InputEvent"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application">
             <intent-filter>
@@ -236,16 +196,6 @@
                 android:name=".test.SurfaceViewTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".floatingdrawing.RequestCaptureScreenActivity"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/AppThemeTranslucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -436,16 +386,6 @@
         </activity>
         <activity
                 android:name=".test.Demo"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".test.DocumentProviderTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application">
             <intent-filter>
