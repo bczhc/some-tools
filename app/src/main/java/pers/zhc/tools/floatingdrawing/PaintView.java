@@ -92,6 +92,8 @@ public class PaintView extends View {
 
     private OnScreenDimensionChangedListener onScreenDimensionChangedListener = null;
 
+    private MyCanvas.State defaultTransformation = new MyCanvas.State(0F, 0F, 1F);
+
     public PaintView(Context context) {
         this(context, null);
     }
@@ -115,7 +117,7 @@ public class PaintView extends View {
     private void setupBitmap(int width, int height) {
         MyCanvas.State state = null;
         if (headCanvas != null) {
-            state = headCanvas.getStatus();
+            state = headCanvas.getState();
 
             final int prevWidth = headBitmap.getWidth();
             final int prevHeight = headBitmap.getHeight();
@@ -997,8 +999,8 @@ public class PaintView extends View {
         postInvalidate();
     }
 
-    public void resetTransform() {
-        headCanvas.reset();
+    public void resetTransformation() {
+        headCanvas.transTo(defaultTransformation);
         redrawCanvas();
         postInvalidate();
         setCurrentStrokeWidthWhenLocked();
@@ -1260,6 +1262,14 @@ public class PaintView extends View {
                     savedColorsJSONArray.put(savedColorJSONObject);
                 }
                 jsonObject.put("savedColors", savedColorsJSONArray);
+
+                JSONObject defaultTransformationJSONObject = new JSONObject();
+                final MyCanvas.State transformationState = paintView.getTransformationState();
+                defaultTransformationJSONObject.put("x", transformationState.startPointX);
+                defaultTransformationJSONObject.put("y", transformationState.startPointY);
+                defaultTransformationJSONObject.put("scale", transformationState.scale);
+
+                jsonObject.put("defaultTransformation", defaultTransformationJSONObject);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
@@ -1434,5 +1444,24 @@ public class PaintView extends View {
 
     public interface OnScreenDimensionChangedListener {
         void onChange(int width, int height);
+    }
+
+    public MyCanvas.State getTransformationState() {
+        return headCanvas.getState();
+    }
+
+    /**
+     * Set the current transformation state the default transformation
+     * When "reset transformation" button clicked, this saved state will be restored
+     */
+    public void setAsDefaultTransformation() {
+        defaultTransformation = getTransformationState();
+    }
+
+    /**
+     * Specify a transformation state to set; see {@link PaintView#setAsDefaultTransformation()}
+     */
+    public void setDefaultTransformation(MyCanvas.State state) {
+        defaultTransformation = state;
     }
 }

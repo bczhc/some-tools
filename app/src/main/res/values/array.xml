@@ -65,6 +65,7 @@
         <item>管理图层</item>
         <item>隐藏画板</item>
         <item>绘画统计</item>
+        <item>变换设置</item>
     </array>
     <!-- module end -->
 </resources>

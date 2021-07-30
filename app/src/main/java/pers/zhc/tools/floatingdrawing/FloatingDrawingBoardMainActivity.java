@@ -1199,7 +1199,7 @@ public class FloatingDrawingBoardMainActivity extends BaseActivity {
                     alertDialog.show();
                 }).requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE
                         , RequestCode.REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE),
-                v4 -> pv.resetTransform(),
+                v4 -> pv.resetTransformation(),
                 v5 -> setLayer(),
                 v6 -> DialogUtil.createConfirmationAlertDialog(this, (dialog1, which) -> {
                     hide();

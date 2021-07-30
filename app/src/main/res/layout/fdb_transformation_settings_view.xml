@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="vertical"
+    >
+        <com.google.android.material.checkbox.MaterialCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fdb_transformation_move"
+                android:id="@+id/move"
+                android:checked="true"
+        />
+        <com.google.android.material.checkbox.MaterialCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fdb_transformation_zoom"
+                android:id="@+id/zoom"
+                android:checked="true"
+        />
+        <com.google.android.material.checkbox.MaterialCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fdb_transformation_rotate"
+                android:id="@+id/rotate"
+                android:checked="false"
+        />
+        <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fdb_transformation_set_as_default"
+                android:id="@+id/set_as_default"
+        />
+    </LinearLayout>
+</ScrollView>

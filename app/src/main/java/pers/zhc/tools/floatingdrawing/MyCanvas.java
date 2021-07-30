@@ -87,7 +87,7 @@ public class MyCanvas extends Canvas {
     }
 
     @NotNull
-    public State getStatus() {
+    public State getState() {
         return new State(startPointX, startPointY, scale);
     }
 

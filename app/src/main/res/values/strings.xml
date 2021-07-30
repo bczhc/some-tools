@@ -485,6 +485,10 @@
     <string name="fdb_process_path_progress_title">正在处理……阶段%1$d</string>
     <string name="fdb_exporting_path_succeeded_toast">导出成功</string>
     <!-- TODO: use universal string resources -->
+    <string name="fdb_transformation_move">移动</string>
+    <string name="fdb_transformation_zoom">缩放</string>
+    <string name="fdb_transformation_rotate">旋转</string>
+    <string name="fdb_transformation_set_as_default">设为默认变换</string>
     <!-- module end -->
 
     <!-- module: words -->

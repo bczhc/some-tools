@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.fdb_eraser_opacity_adjusting_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.ll
 import kotlinx.android.synthetic.main.fdb_stoke_width_view.view.*
+import kotlinx.android.synthetic.main.fdb_transformation_settings_view.view.*
 import kotlinx.android.synthetic.main.progress_bar.view.*
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
@@ -35,6 +36,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
+import pers.zhc.tools.floatingdrawing.MyCanvas
 import pers.zhc.tools.floatingdrawing.PaintView
 import pers.zhc.tools.floatingdrawing.PaintView.PathVersion
 import pers.zhc.tools.utils.*
@@ -639,6 +641,22 @@ class FdbWindow(private val context: BaseActivity) {
                                                     )
                                                 }
                                                 colorPickers.brush.setSavedColor(list)
+
+                                                val defaultTransformationJSONObject =
+                                                    extraInfos.getJSONObject("defaultTransformation")
+                                                val startPointX =
+                                                    defaultTransformationJSONObject.getDouble("x").toFloat()
+                                                val startPointY =
+                                                    defaultTransformationJSONObject.getDouble("y").toFloat()
+                                                val scale = defaultTransformationJSONObject.getDouble("scale").toFloat()
+                                                paintView.setDefaultTransformation(
+                                                    MyCanvas.State(
+                                                        startPointX,
+                                                        startPointY,
+                                                        scale
+                                                    )
+                                                )
+                                                paintView.resetTransformation()
                                             } catch (_: Exception) {
                                             }
                                         }
@@ -679,7 +697,7 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     4 -> {
                         // reset transformation
-                        paintView.resetTransform()
+                        paintView.resetTransformation()
                     }
                     5 -> {
                         // manage layers
@@ -695,6 +713,24 @@ class FdbWindow(private val context: BaseActivity) {
                     7 -> {
                         // drawing statistics
                         TODO()
+                    }
+                    8 -> {
+                        // transformation settings
+
+                        val inflate = View.inflate(context, R.layout.fdb_transformation_settings_view, null)
+                        val moveCB = inflate.move!!
+                        val zoomCB = inflate.zoom!!
+                        val rotateCB = inflate.rotate!!
+                        // TODO: 7/30/21 move, zoom, rotate operations restrictions
+                        val setAsDefaultTransformation = inflate.set_as_default!!
+
+                        setAsDefaultTransformation.setOnClickListener {
+                            paintView.setAsDefaultTransformation()
+                        }
+
+                        val dialog = createDialog(inflate)
+                        DialogUtils.setDialogAttr(dialog, width = MATCH_PARENT, overlayWindow = true)
+                        dialog.show()
                     }
                     else -> {
                     }
