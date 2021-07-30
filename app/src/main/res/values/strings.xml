@@ -24,6 +24,7 @@
     <string name="exporting_succeeded">导出成功</string>
     <string name="menu_import">导入</string>
     <string name="menu_export">导出</string>
+    <string name="set_done_toast">已设置</string>
     <!-- end -->
 
     <!-- old -->

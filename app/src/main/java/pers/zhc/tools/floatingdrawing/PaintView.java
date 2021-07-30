@@ -94,6 +94,10 @@ public class PaintView extends View {
 
     private MyCanvas.State defaultTransformation = new MyCanvas.State(0F, 0F, 1F);
 
+    private boolean moveTransformationEnabled = true;
+    private boolean zoomTransformationEnabled = true;
+    private boolean rotateTransformationEnabled = true;
+
     public PaintView(Context context) {
         this(context, null);
     }
@@ -178,19 +182,23 @@ public class PaintView extends View {
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
-                headCanvas.translateReal(distanceX, distanceY);
-                if (transCanvas != null) {
-                    transCanvas.translateReal(distanceX, distanceY);
+                if (moveTransformationEnabled) {
+                    headCanvas.translateReal(distanceX, distanceY);
+                    if (transCanvas != null) {
+                        transCanvas.translateReal(distanceX, distanceY);
+                    }
                 }
             }
 
             @Override
             public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
-                headCanvas.scaleReal(dScale, midPointX, midPointY);
-                if (transCanvas != null) {
-                    transCanvas.scaleReal(dScale, midPointX, midPointY);
+                if (zoomTransformationEnabled) {
+                    headCanvas.scaleReal(dScale, midPointX, midPointY);
+                    if (transCanvas != null) {
+                        transCanvas.scaleReal(dScale, midPointX, midPointY);
+                    }
+                    setCurrentStrokeWidthWhenLocked();
                 }
-                setCurrentStrokeWidthWhenLocked();
             }
 
             @Override
@@ -1463,5 +1471,29 @@ public class PaintView extends View {
      */
     public void setDefaultTransformation(MyCanvas.State state) {
         defaultTransformation = state;
+    }
+
+    public boolean isMoveTransformationEnabled() {
+        return moveTransformationEnabled;
+    }
+
+    public void setMoveTransformationEnabled(boolean moveTransformationEnabled) {
+        this.moveTransformationEnabled = moveTransformationEnabled;
+    }
+
+    public boolean isZoomTransformationEnabled() {
+        return zoomTransformationEnabled;
+    }
+
+    public void setZoomTransformationEnabled(boolean zoomTransformationEnabled) {
+        this.zoomTransformationEnabled = zoomTransformationEnabled;
+    }
+
+    public boolean isRotateTransformationEnabled() {
+        return rotateTransformationEnabled;
+    }
+
+    public void setRotateTransformationEnabled(boolean rotateTransformationEnabled) {
+        this.rotateTransformationEnabled = rotateTransformationEnabled;
     }
 }

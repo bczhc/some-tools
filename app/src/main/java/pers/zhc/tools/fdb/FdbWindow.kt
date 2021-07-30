@@ -261,6 +261,7 @@ class FdbWindow(private val context: BaseActivity) {
             panelSettings = createPanelSettingsDialog()
             moreMenu = createMoreOptionDialog()
             eraserOpacity = createEraserOpacityDialog()
+            transformationSettings = createTransformationSettingsDialog()
         }
 
         paintView.apply {
@@ -442,6 +443,7 @@ class FdbWindow(private val context: BaseActivity) {
         lateinit var panelSettings: Dialog
         lateinit var moreMenu: Dialog
         lateinit var eraserOpacity: Dialog
+        lateinit var transformationSettings: Dialog
     }
 
     private fun createConfirmationDialog(
@@ -716,21 +718,7 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     8 -> {
                         // transformation settings
-
-                        val inflate = View.inflate(context, R.layout.fdb_transformation_settings_view, null)
-                        val moveCB = inflate.move!!
-                        val zoomCB = inflate.zoom!!
-                        val rotateCB = inflate.rotate!!
-                        // TODO: 7/30/21 move, zoom, rotate operations restrictions
-                        val setAsDefaultTransformation = inflate.set_as_default!!
-
-                        setAsDefaultTransformation.setOnClickListener {
-                            paintView.setAsDefaultTransformation()
-                        }
-
-                        val dialog = createDialog(inflate)
-                        DialogUtils.setDialogAttr(dialog, width = MATCH_PARENT, overlayWindow = true)
-                        dialog.show()
+                        dialogs.transformationSettings.show()
                     }
                     else -> {
                     }
@@ -958,6 +946,32 @@ class FdbWindow(private val context: BaseActivity) {
         val stopIntent = Intent(ScreenColorPickerService.StopRequestReceiver.ACTION_SCREEN_COLOR_PICKER_STOP)
         stopIntent.putExtra(ScreenColorPickerService.StopRequestReceiver.EXTRA_FDB_ID, timestamp)
         context.applicationContext.sendBroadcast(stopIntent)
+    }
+
+    private fun createTransformationSettingsDialog(): Dialog {
+        val inflate = View.inflate(context, R.layout.fdb_transformation_settings_view, null)
+        val moveCB = inflate.move!!
+        val zoomCB = inflate.zoom!!
+        val rotateCB = inflate.rotate!!
+
+        moveCB.setOnCheckedChangeListener { _, isChecked ->
+            paintView.isMoveTransformationEnabled = isChecked
+        }
+        zoomCB.setOnCheckedChangeListener { _, isChecked ->
+            paintView.isZoomTransformationEnabled = isChecked
+        }
+        rotateCB.setOnCheckedChangeListener { _, isChecked ->
+            paintView.isRotateTransformationEnabled = isChecked
+        }
+
+        val setAsDefaultTransformation = inflate.set_as_default!!
+
+        setAsDefaultTransformation.setOnClickListener {
+            paintView.setAsDefaultTransformation()
+            ToastUtils.show(context, R.string.set_done_toast)
+        }
+
+        return createDialog(inflate)
     }
 
     companion object {
