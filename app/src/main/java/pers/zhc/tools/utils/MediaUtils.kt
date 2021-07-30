@@ -10,7 +10,6 @@ import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjectionManager
 import android.os.Handler
-import android.util.DisplayMetrics
 
 /**
  * @author bczhc
@@ -42,32 +41,26 @@ class MediaUtils {
             }, handler)
         }
 
-        private fun getWindowMetrics(activity: Activity): DisplayMetrics {
-            val metrics = DisplayMetrics()
-            activity.windowManager.defaultDisplay.getMetrics(metrics)
-            return metrics
-        }
-
-        private fun getImageReader(activity: Activity): ImageReader {
-            val metrics = getWindowMetrics(activity)
+        private fun getImageReader(context: Context): ImageReader {
+            val metrics = DisplayUtil.getMetrics(context)
             return ImageReader.newInstance(metrics.widthPixels, metrics.heightPixels, PixelFormat.RGBA_8888, 1)
         }
 
         fun asyncTakeScreenshot(
-            activity: Activity,
+            context: Context,
             mediaProjectionData: Intent,
             handler: Handler? = null,
             callback: (image: Image) -> Unit
         ) {
             val mpm =
-                activity.applicationContext.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+                context.applicationContext.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
             val mp = mpm.getMediaProjection(Activity.RESULT_OK, mediaProjectionData)
-            val ir = getImageReader(activity)
+            val ir = getImageReader(context)
             val vd = mp.createVirtualDisplay(
                 "VirtualDisplay",
                 ir.width,
                 ir.height,
-                getWindowMetrics(activity).densityDpi,
+                DisplayUtil.getMetrics(context).densityDpi,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 ir.surface,
                 null,

@@ -32,8 +32,6 @@ import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
-import pers.zhc.tools.fdb.FdbNotificationReceiver.Companion.ACTION_FDB_SHOW
-import pers.zhc.tools.fdb.FdbNotificationReceiver.Companion.EXTRA_FDB_ID
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
@@ -79,6 +77,8 @@ class FdbWindow(private val context: BaseActivity) {
     private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
 
     private val pathSaver = PaintView.PathSaver(pathFiles.tmpPathFile.path)
+
+    private lateinit var broadcaseReceiver: FdbBroadcastReceiver
 
     init {
         val ll = LinearLayout(context)
@@ -196,16 +196,7 @@ class FdbWindow(private val context: BaseActivity) {
                             }
                             8 -> {
                                 // pick screen color
-                                val intent = Intent(context, ScreenColorPickerActivity::class.java)
-                                intent.putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)
-                                context.startActivity(intent)
-
-                                val receiver = ScreenColorPickerResultReceiver(timestamp) { color ->
-                                    ToastUtils.show(context, ColorUtils.getHexString(color, true))
-                                    colorPickers.brush.color = color
-                                }
-                                val filter = IntentFilter(ScreenColorPickerResultReceiver.ACTION_ON_SCREEN_COLOR_PICKED)
-                                context.registerReceiver(receiver, filter)
+                                pickScreenColorAction()
                             }
                             9 -> {
                                 // panel
@@ -220,6 +211,7 @@ class FdbWindow(private val context: BaseActivity) {
                                 createConfirmationDialog({ _, _ ->
                                     pathSaver.close()
                                     stopFDB()
+                                    context.applicationContext.unregisterReceiver(broadcaseReceiver)
                                 }, R.string.fdb_exit_confirmation_dialog).show()
                             }
                             else -> {
@@ -291,6 +283,16 @@ class FdbWindow(private val context: BaseActivity) {
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
+
+        broadcaseReceiver = FdbBroadcastReceiver(this)
+        val filter = IntentFilter()
+        filter.apply {
+            addAction(FdbBroadcastReceiver.ACTION_FDB_SHOW)
+            addAction(FdbBroadcastReceiver.ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED)
+            addAction(FdbBroadcastReceiver.ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED)
+            addAction(FdbBroadcastReceiver.ACTION_ON_SCREEN_ORIENTATION_CHANGED)
+        }
+        context.applicationContext.registerReceiver(broadcaseReceiver, filter)
     }
 
     private fun showBrushWidthAdjustingDialog() {
@@ -800,20 +802,18 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     private fun hideFDB() {
-        HiddenFdbHolder.fdbWindowMap[timestamp] = this
-
         showHideNotification()
 
-        wm.removeView(panelRL)
+        wm.removeView(panelSV)
     }
 
     fun restoreFDB() {
-        wm.addView(panelRL, panelLP)
+        wm.addView(panelSV, panelLP)
     }
 
     private fun showHideNotification() {
-        val intent = Intent(ACTION_FDB_SHOW)
-        intent.putExtra(EXTRA_FDB_ID, timestamp)
+        val intent = Intent(FdbBroadcastReceiver.ACTION_FDB_SHOW)
+        intent.putExtra(FdbBroadcastReceiver.EXTRA_FDB_ID, timestamp)
 
         val notificationId = timestamp.hashCode()
         val pi = PendingIntent.getBroadcast(context, notificationId, intent, 0)!!
@@ -856,10 +856,29 @@ class FdbWindow(private val context: BaseActivity) {
         }
     }
 
+    private fun pickScreenColorAction() {
+        stopFDB()
+
+        val intent = Intent(context, ScreenColorPickerActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)
+        context.startActivity(intent)
+
+        val receiver = ScreenColorPickerResultReceiver(timestamp) { color ->
+            ToastUtils.show(context, ColorUtils.getHexString(color, true))
+            colorPickers.brush.color = color
+        }
+        val filter = IntentFilter(ScreenColorPickerResultReceiver.ACTION_ON_SCREEN_COLOR_PICKED)
+        context.registerReceiver(receiver, filter)
+    }
+
     override fun toString(): String {
         return "FdbWindow(timestamp=$timestamp)"
     }
 
+    fun getFdbId(): Long {
+        return timestamp
+    }
 
     companion object {
         private val externalPath = object {

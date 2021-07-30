@@ -22,5 +22,3 @@ some-tools
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/bczhc/some-tools.svg)](http://isitmaintained.com/project/bczhc/some-tools "Average time to resolve an issue")
 
 ![total lines](https://img.shields.io/tokei/lines/github/bczhc/some-tools)
-
-[悬浮画板旧项目地址\(github\)](https://github.com/bczhc/FloatingBoard)

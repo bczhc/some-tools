@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.view.WindowManager;
 import org.jetbrains.annotations.NotNull;
 
 public class DisplayUtil {
@@ -33,14 +34,15 @@ public class DisplayUtil {
     }
 
     public static int getStatusBarHeight(Activity activity) {
-        Rect rectangle= new Rect();
+        Rect rectangle = new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
         return rectangle.top;
     }
 
-    public static DisplayMetrics getMetrics(Activity activity) {
+    public static DisplayMetrics getMetrics(Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        final WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(metrics);
         return metrics;
     }
 }

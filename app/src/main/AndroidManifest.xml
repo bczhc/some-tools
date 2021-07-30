@@ -49,14 +49,6 @@
                 <action android:name="android.intent.action.AIRPLANE_MODE"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".fdb.FdbNotificationReceiver"
-                  android:enabled="true"
-                  android:exported="false"
-        >
-            <intent-filter>
-                <action android:name="pers.zhc.tools.ACTION_FDB_SHOW"/>
-            </intent-filter>
-        </receiver>
 
         <!-- Declares the input input_method service -->
         <service
@@ -73,6 +65,10 @@
         </service>
         <service android:name=".bus.BusArrivalReminderService"/>
         <service android:name=".fdb.FdbService"/>
+        <service android:name=".fdb.ScreenColorPickerService"
+                 android:enabled="true"
+                 android:foregroundServiceType="mediaProjection"
+        />
 
         <provider
                 android:name="androidx.core.content.FileProvider"
