@@ -15,12 +15,12 @@ import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.words_activity.*
+import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
-import pers.zhc.jni.sqlite.SQLite3
 import java.io.File
 
 /**
@@ -37,6 +37,10 @@ class WordsMainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (notificationId == null) {
+            notificationId = System.currentTimeMillis().hashCode()
+        }
+
         setContentView(R.layout.words_activity)
 
         checkAndInitDatabase()
@@ -100,13 +104,13 @@ class WordsMainActivity : BaseActivity() {
 
         val notification = NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL).apply {
             setSmallIcon(R.drawable.ic_launcher_foreground)
-            setTitle(R.string.words_label)
+            setContentTitle(getString(R.string.words_label))
             setContentIntent(pi)
             setOngoing(true)
         }.build()
 
         val nm = applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        nm.notify(0, notification)
+        nm.notify(notificationId!!, notification)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -187,6 +191,9 @@ class WordsMainActivity : BaseActivity() {
     }
 
     companion object {
+
+        private var notificationId: Int? = null
+
         var database: SQLite3? = null
         private lateinit var databasePath: String
 
