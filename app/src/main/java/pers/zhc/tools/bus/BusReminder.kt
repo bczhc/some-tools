@@ -5,6 +5,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import pers.zhc.tools.MyApplication
@@ -117,6 +120,17 @@ class BusReminder(
         if (nearestBusRunStationDiff in 0..2) {
             ToastUtils.show(context, R.string.bus_approaching_toast_msg)
         }
+        if (nearestBusRunStationDiff in 0..1) {
+            val vibrator = context.applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE).also {
+                    vibrator.vibrate(it)
+                }
+            } else {
+                @Suppress("Deprecation")
+                vibrator.vibrate(1000)
+            }
+        }
     }
 
     private fun notifyNotification(notification: Notification) {
@@ -173,7 +187,7 @@ class BusReminder(
             setOngoing(true)
         }.build()
     }
-    
+
     fun stop() {
         timer.cancel()
         notificationManager.cancel(notificationId)
