@@ -18,12 +18,6 @@ class FdbBroadcastReceiver(private val fdbWindow: FdbWindow) : BaseBroadcastRece
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.d(TAG, "onReceive: received: $intent")
         intent ?: return
-        Common.doAssertion(intent.hasExtra(EXTRA_FDB_ID))
-        val receivedFdbId = intent.getLongExtra(EXTRA_FDB_ID, 0L)
-
-        if (fdbWindow.getFdbId() != receivedFdbId) {
-            return
-        }
 
         when (intent.action) {
             ACTION_ON_SCREEN_ORIENTATION_CHANGED -> {
@@ -33,16 +27,29 @@ class FdbBroadcastReceiver(private val fdbWindow: FdbWindow) : BaseBroadcastRece
                 onScreenOrientationChangedListener?.invoke(orientation)
             }
             ACTION_FDB_SHOW -> {
+                val fdbId = getFdbIdExtra(intent)
+                if (fdbWindow.getFdbId() != fdbId) {
+                    return
+                }
                 fdbWindow.restoreFDB()
 
                 val nm = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                nm.cancel(receivedFdbId.hashCode())
+                nm.cancel(fdbId.hashCode())
             }
             ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED, ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED -> {
-                Common.doAssertion(intent.hasExtra(EXTRA_FDB_ID))
+                val fdbId = getFdbIdExtra(intent)
+                if (fdbWindow.getFdbId() != fdbId) {
+                    return
+                }
+
                 fdbWindow.startFDB()
             }
         }
+    }
+
+    fun getFdbIdExtra(intent: Intent) = run {
+        Common.doAssertion(intent.hasExtra(EXTRA_FDB_ID))
+        intent.getLongExtra(EXTRA_FDB_ID, 0L)
     }
 
     companion object {
