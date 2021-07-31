@@ -1,6 +1,7 @@
 package pers.zhc.tools;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
@@ -8,6 +9,7 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.*;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -20,7 +22,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.bus.BusQueryMainActivity;
 import pers.zhc.tools.clipboard.Clip;
-import pers.zhc.tools.test.CrashTest;
 import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.fdb.FdbMainActivity;
@@ -38,6 +39,7 @@ import pers.zhc.tools.words.WordsMainActivity;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -219,8 +221,28 @@ public class MainActivity extends BaseActivity {
             startActivity(new Intent(this, Settings.class));
         } else if (itemId == R.id.update) {
             checkAndUpdate();
+        } else if (itemId == R.id.git_log) {
+            showGitLogDialog();
         }
         return true;
+    }
+
+    private void showGitLogDialog() {
+        String[] commitLogSplit = BuildConfig.commitLogEncodedSplit;
+        StringBuilder sb = new StringBuilder();
+        for (String s : commitLogSplit) {
+            sb.append(s);
+        }
+        String commitLogEncoded = sb.toString();
+        String commitLog = new String(Base64.decode(commitLogEncoded, Base64.DEFAULT), StandardCharsets.UTF_8);
+
+        final View inflate = View.inflate(this, R.layout.git_log_view, null);
+        TextView tv = inflate.findViewById(R.id.tv);
+        tv.setText(commitLog);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(inflate);
+        dialog.show();
     }
 
     private void checkAndUpdate() {

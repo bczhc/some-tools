@@ -7,6 +7,7 @@
     <string name="settings_github_raw_root_url">GitHub raw根URL</string>
     <string name="processing">正在处理</string>
     <string name="press_to_stop">点击以停止</string>
+    <string name="app_menu_git_log">git log</string>
     <!-- app end -->
 
     <!-- universal -->

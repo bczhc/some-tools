@@ -3,6 +3,7 @@ package pers.zhc.plugins
 import pers.zhc.util.IOUtils
 
 import java.io.{ByteArrayOutputStream, File, InputStream}
+import java.util
 import java.util.regex.Pattern
 
 /**
@@ -39,5 +40,32 @@ object BuildUtils2 {
     is.close()
 
     read
+  }
+
+  def splitString(string: String, length: Int): java.util.List[String] = {
+    val list = new util.ArrayList[String]()
+    val patternSB = new StringBuilder()
+    var i = 0
+    for (i <- 0 until length) {
+      patternSB.append(".?")
+    }
+
+    val pattern = Pattern.compile(patternSB.toString())
+    val matcher = pattern.matcher(string)
+    while (matcher.find()) {
+      val split = matcher.group()
+      list.add(split)
+    }
+    list
+  }
+
+  def longStringToStringArray(str: String, splitLen: Int): String = {
+    val sb = new StringBuilder("new String[] {\n")
+    val split = splitString(str, splitLen)
+    split.forEach(it => {
+      sb.append('\"').append(it).append('\"').append(',').append('\n')
+    })
+    sb.append("}")
+    sb.toString()
   }
 }
