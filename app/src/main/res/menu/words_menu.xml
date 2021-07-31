@@ -8,4 +8,8 @@
           android:id="@+id/export"
           app:showAsAction="never"
     />
+    <item android:title="@string/create_shortcut"
+          android:id="@+id/create_shortcut"
+          app:showAsAction="never"
+    />
 </menu>

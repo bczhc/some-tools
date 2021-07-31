@@ -12,6 +12,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.NotificationCompat
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.words_activity.*
@@ -126,10 +129,29 @@ class WordsMainActivity : BaseActivity() {
             R.id.export -> {
                 exportAction()
             }
+            R.id.create_shortcut -> {
+                createShortcutAction()
+            }
             else -> {
             }
         }
         return true
+    }
+
+    private fun createShortcutAction() {
+        if (!ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
+            ToastUtils.show(this, R.string.not_support_pinned_shortcut_toast)
+            return
+        }
+
+        val intent = Intent("NONE_ACTION")
+        intent.setClass(this, DialogShowActivity::class.java)
+        val shortcut = ShortcutInfoCompat.Builder(this, "shortcut.words").apply {
+            setIcon(IconCompat.createWithResource(this@WordsMainActivity, R.drawable.ic_launcher_foreground))
+            setIntent(intent)
+            setShortLabel(getString(R.string.words_add_word_shortcut_label))
+        }.build()
+        ShortcutManagerCompat.requestPinShortcut(this, shortcut, null)
     }
 
     private fun importAction() {

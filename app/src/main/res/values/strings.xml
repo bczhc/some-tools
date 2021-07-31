@@ -26,6 +26,8 @@
     <string name="menu_import">导入</string>
     <string name="menu_export">导出</string>
     <string name="set_done_toast">已设置</string>
+    <string name="tts_speak_error">TTS播放出错</string>
+    <string name="create_shortcut">创建快捷方式</string>
     <!-- end -->
 
     <!-- old -->
@@ -445,7 +447,7 @@
     <string name="bus_no_nearest_bus">没有最近的车辆</string>
     <string name="bus_set_bus_arrival_reminder_toast">设置到站提醒成功</string>
     <string name="diary_file_library_text_edit_activity_label">文本编辑</string>
-    <string name="tts_speak_error">TTS播放出错</string>
+    <string name="bus_foreground_notification_title">公交到站提醒正在运行</string>
     <!-- module end -->
 
     <!-- module: sys_info -->
@@ -503,6 +505,7 @@
     <string name="capture_permission_denied">未同意权限</string>
     <string name="screen_color_picker_running_notification_title">屏幕取色正在运行</string>
     <string name="stop_notification_action">停止</string>
-    <string name="bus_foreground_notification_title">公交到站提醒正在运行</string>
+    <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
+    <string name="words_add_word_shortcut_label">添加单词</string>
     <!-- end -->
 </resources>
