@@ -8,8 +8,10 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.WindowManager
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
+import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DisplayUtil
 import pers.zhc.tools.utils.MediaUtils
+import pers.zhc.tools.utils.ToastUtils
 
 /**
  * @author bczhc
@@ -59,6 +61,11 @@ class ScreenColorPickerShow(
         screenColorPickerViewDimension.height = screenColorPickerView.measuredHeight
         screenColorPickerViewPositionUpdater.updateParentDimension(metrics.widthPixels, metrics.heightPixels)
 
+        screenColorPickerView.setOnScreenSizeChangedListener { width, height ->
+            val newMetrics = DisplayUtil.getMetrics(context)
+            screenColorPickerViewPositionUpdater.updateParentDimension(newMetrics.widthPixels, newMetrics.heightPixels)
+        }
+
         var screenshotDone = true
         @Suppress("ClickableViewAccessibility")
         screenColorPickerView.setOnTouchListener { v, event ->
@@ -88,9 +95,14 @@ class ScreenColorPickerShow(
                     val pointX = rawX - x + screenColorPickerView.measuredWidth.toFloat() / 2F
                     val pointY = rawY - y + screenColorPickerView.measuredHeight.toFloat() / 2F
                     screenColorPickerView.updatePosition(pointX, pointY)
-                    val color = screenColorPickerView.getColor()
-                    color?.let {
-                        screenColorPickerView.setColor(it)
+                    try {
+                        val color = screenColorPickerView.getColor()
+                        color?.let {
+                            screenColorPickerView.setColor(it)
+                        }
+                    } catch (e: Exception) {
+                        // at least it prevents the accident coordinates out of index exception
+                        Common.showException(e, context)
                     }
                 }
                 MotionEvent.ACTION_UP -> {

@@ -25,6 +25,8 @@ class ScreenColorPickerView : BaseView {
     private var pointX = 0F
     private var pointY = 0F
 
+    private var onScreenSizeChangedListener: OnScreenSizeChangedListener? = null
+
     private fun init() {
         pointPaint.color = Color.RED
         pointPaint.strokeWidth = 5F
@@ -53,9 +55,20 @@ class ScreenColorPickerView : BaseView {
         canvas.drawPoint(width / 2F, height / 2F, pointPaint)
     }
 
+    private var lastWindowWidth = 0
+    private var lastWindowHeight = 0
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val radius = DisplayUtil.dip2px(context, DisplayUtil.cm2dp(2F).toFloat())
         setMeasuredDimension(radius, radius)
+
+        val w = MeasureSpec.getSize(widthMeasureSpec)
+        val h = MeasureSpec.getSize(heightMeasureSpec)
+        if (w != lastWindowWidth || h != lastWindowHeight) {
+            onScreenSizeChangedListener?.invoke(w, h)
+        }
+        lastWindowWidth = w
+        lastWindowHeight = h
     }
 
     fun setColor(color: Int) {
@@ -88,4 +101,10 @@ class ScreenColorPickerView : BaseView {
         this.transparent = transparent
         invalidate()
     }
+
+    fun setOnScreenSizeChangedListener(listener: OnScreenSizeChangedListener?) {
+        this.onScreenSizeChangedListener = listener
+    }
 }
+
+typealias OnScreenSizeChangedListener = (width: Int, height: Int) -> Unit
