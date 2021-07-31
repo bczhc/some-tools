@@ -7,11 +7,12 @@ import android.os.Build
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DisplayUtil
 import pers.zhc.tools.utils.MediaUtils
-import pers.zhc.tools.utils.ToastUtils
 
 /**
  * @author bczhc
@@ -51,14 +52,15 @@ class ScreenColorPickerShow(
             width = ViewGroup.LayoutParams.WRAP_CONTENT
             height = ViewGroup.LayoutParams.WRAP_CONTENT
             type = floatingWindowType
-            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+            flags = FLAG_NOT_FOCUSABLE
+                .xor(FLAG_LAYOUT_NO_LIMITS)
             format = PixelFormat.RGBA_8888
         }
 
         val metrics = DisplayUtil.getMetrics(context)
         screenColorPickerView.measure(0, 0)
-        screenColorPickerViewDimension.width = screenColorPickerView.measuredWidth
-        screenColorPickerViewDimension.height = screenColorPickerView.measuredHeight
+        screenColorPickerViewDimension.width = 0
+        screenColorPickerViewDimension.height = 0
         screenColorPickerViewPositionUpdater.updateParentDimension(metrics.widthPixels, metrics.heightPixels)
 
         screenColorPickerView.setOnScreenSizeChangedListener { width, height ->

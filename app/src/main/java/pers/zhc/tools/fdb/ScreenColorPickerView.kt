@@ -88,13 +88,21 @@ class ScreenColorPickerView : BaseView {
 
     fun updatePosition(pointX: Float, pointY: Float) {
         this.pointX = pointX
-        this.pointY  = pointY
+        this.pointY = pointY
         invalidate()
     }
 
     fun getColor(): Int? {
-        this.bitmap ?: return null
-        return this.bitmap!!.getPixel(pointX.toInt(), pointY.toInt())
+        bitmap ?: return null
+        bitmap!!.let {
+            val y = pointY.toInt()
+            val x = pointX.toInt()
+            return if (x < 0 || x > it.width || y < 0 || y > it.height) {
+                null
+            } else {
+                this.bitmap!!.getPixel(x, y)
+            }
+        }
     }
 
     fun setIsTransparent(transparent: Boolean) {

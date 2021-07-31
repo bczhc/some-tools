@@ -32,9 +32,7 @@ public class Common {
     }
 
     public static void showException(Exception e, Context ctx) {
-        if (ctx instanceof Activity) {
-            ((Activity) ctx).runOnUiThread(() -> ToastUtils.show(ctx, e.toString()));
-        } else throw new ClassCastException();
+        ToastUtils.show(ctx, e.toString());
     }
 
     public static void showException(@NotNull Exception e, Context ctx, @NotNull Handler handler) {
