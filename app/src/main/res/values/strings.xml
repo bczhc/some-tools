@@ -507,5 +507,6 @@
     <string name="stop_notification_action">停止</string>
     <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
     <string name="words_add_word_shortcut_label">添加单词</string>
+    <string name="app_menu_switch_themes">切换主题</string>
     <!-- end -->
 </resources>

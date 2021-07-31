@@ -31,15 +31,6 @@
             tools:targetApi="q"
             android:largeHeap="true"
     >
-        <receiver
-                android:name=".test.broadcast.BroadcastTest"
-                android:enabled="true"
-                android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED"/>
-                <action android:name="android.intent.action.AIRPLANE_MODE"/>
-            </intent-filter>
-        </receiver>
 
         <!-- Declares the input input_method service -->
         <service
@@ -153,16 +144,6 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".test.S"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
                 android:name=".test.viewtest.MainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application">
@@ -173,37 +154,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".test.theme.SetTheme"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
                 android:name=".test.SensorTest"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".test.SurfaceViewTest"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".test.service.ServiceActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application">
             <intent-filter>
@@ -257,7 +208,7 @@
                 android:name=".diary.DiaryTakingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/Theme.Application.NoActionBar">
+                android:theme="@style/Theme.Application.Dark.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -427,17 +378,6 @@
         <activity
                 android:name=".test.RegExpTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".test.wubiinput.WubiInput"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/wubi_input_method"
                 android:theme="@style/Theme.Application">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

@@ -29,7 +29,7 @@ class MyApplication : Application() {
         WordsMainActivity.init(this)
 
         registerNotificationChannel()
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         initAppInfoFile()
     }
 

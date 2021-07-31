@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import kotlin.Unit;
@@ -43,6 +44,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
 
 /**
  * @author bczhc
@@ -223,6 +227,12 @@ public class MainActivity extends BaseActivity {
             checkAndUpdate();
         } else if (itemId == R.id.git_log) {
             showGitLogDialog();
+        } else if (itemId == R.id.switch_themes) {
+            if (AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_YES) {
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
+            } else if (AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_NO) {
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
+            }
         }
         return true;
     }
