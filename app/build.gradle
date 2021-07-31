@@ -1,10 +1,32 @@
 import pers.zhc.plugins.BuildUtils
-import pers.zhc.plugins.MyPlugin2
+import pers.zhc.plugins.BuildUtils2
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: MyPlugin2
+
+def commitLogResult = null
+try {
+    def gitVersion = BuildUtils2.checkGitVersion()
+    println "Found git $gitVersion"
+
+    try {
+        def log = BuildUtils2.getGitCommitLog(projectDir)
+        println "git log string size: ${log.bytes.length}"
+        if (log.isEmpty()) {
+            commitLogResult = "Unknown"
+        } else {
+            commitLogResult = log
+        }
+    } catch(e) {
+        throw new GradleException("Execution failed", e)
+    }
+} catch (e) {
+    if (e instanceof GradleException) {
+        throw e
+    }
+    println "Found git error: ${e.toString()}; disable git commit log injection"
+}
 
 android {
     signingConfigs {
@@ -32,6 +54,7 @@ android {
         ndk {
             abiFilters "arm64-v8a"
         }
+        buildConfigField 'String', 'commitLog', "\"$commitLogResult\""
     }
     buildTypes {
         debug {

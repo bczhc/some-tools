@@ -1,29 +1,20 @@
-apply plugin: 'groovy'
-apply plugin: 'kotlin'
-
-dependencies {
-    implementation gradleApi()
+plugins {
+    id 'groovy'
+    id 'scala'
 }
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-    }
-}
-
-buildscript {
-    repositories {
-        maven { url "https://repo.maven.apache.org/maven2" }
-        jcenter()
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
-    }
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+
+dependencies {
+    implementation gradleApi()
+    implementation 'org.scala-lang:scala-library:2.13.6'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.7'
+    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'com.github.bczhc:java-lib:18a858c167'
+}
