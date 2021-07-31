@@ -1,6 +1,7 @@
 package pers.zhc.tools.bus
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -116,7 +117,11 @@ class BusLineDetailActivity : BaseActivity() {
         intent.putExtra(BusArrivalReminderService.EXTRA_BUS_STATION_ID, station.busStationId)
         intent.putExtra(BusArrivalReminderService.EXTRA_BUS_STATION_NAME, station.busStationName)
         intent.putExtra(BusArrivalReminderService.EXTRA_DIRECTION, currentDirection)
-        startService(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            applicationContext.startForegroundService(intent)
+        } else {
+            applicationContext.startService(intent)
+        }
     }
 
     enum class Direction : Serializable {

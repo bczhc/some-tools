@@ -118,11 +118,6 @@ public class BaseActivity extends AppCompatActivity {
         public static final int REQUEST_USB_PERMISSION = 9;
     }
 
-    public static class BroadcastAction {
-        public static final String ACTION_START_FLOATING_BOARD = "pers.zhc.tools.START_FB";
-        public static final String ACTION_BUS_CANCEL_CLICK = "pers.zhc.tools.BUS_CANCEL_CLICK";
-    }
-
     @NotNull
     @Contract("_ -> new")
     public static JSONObject getAppInfo(Context ctx) {

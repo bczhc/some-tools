@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
@@ -151,7 +150,7 @@ class BusReminder(
         contentTitle: String,
         contentText: String
     ): Notification {
-        val cancelIntent = Intent(BaseActivity.BroadcastAction.ACTION_BUS_CANCEL_CLICK)
+        val cancelIntent = Intent(BusArrivalReminderNotificationReceiver.ACTION_BUS_CANCEL_CLICK)
         cancelIntent.putExtra(BusArrivalReminderNotificationReceiver.EXTRA_NOTIFICATION_ID, notificationId)
         val cancelPI = PendingIntent.getBroadcast(context, notificationId, cancelIntent, 0)!!
 
@@ -160,8 +159,7 @@ class BusReminder(
         notificationContentIntent.putExtra(BusLineDetailActivity.EXTRA_RUN_PATH_ID, runPathId)
         notificationContentIntent.putExtra(BusLineDetailActivity.EXTRA_DIRECTION, direction)
         val notificationContentPI = PendingIntent.getActivity(context, notificationId, notificationContentIntent, 0)!!
-        
-        
+
         return NotificationCompat.Builder(context, MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL).apply {
             setSmallIcon(R.drawable.ic_launcher_foreground)
             setContentTitle(contentTitle)

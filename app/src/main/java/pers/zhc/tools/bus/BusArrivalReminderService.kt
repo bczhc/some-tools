@@ -1,12 +1,17 @@
 package pers.zhc.tools.bus
 
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
 import android.util.Log
 import android.util.SparseArray
+import androidx.core.app.NotificationCompat
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.BaseService
+import pers.zhc.tools.MyApplication
+import pers.zhc.tools.R
 
 /**
  * @author bczhc
@@ -20,9 +25,11 @@ class BusArrivalReminderService : BaseService() {
 
     override fun onCreate() {
         Log.i(TAG, "$TAG started")
+        startForeground(System.currentTimeMillis().hashCode(), createForegroundNotification())
+
         busReminderList = SparseArray()
         receiver = BusArrivalReminderNotificationReceiver()
-        val filter = IntentFilter(BaseActivity.BroadcastAction.ACTION_BUS_CANCEL_CLICK)
+        val filter = IntentFilter(BusArrivalReminderNotificationReceiver.ACTION_BUS_CANCEL_CLICK)
         registerReceiver(receiver, filter)
     }
 
@@ -42,9 +49,24 @@ class BusArrivalReminderService : BaseService() {
         return START_STICKY
     }
 
+    private fun createForegroundNotification(): Notification {
+        val pi = PendingIntent.getBroadcast(this, System.currentTimeMillis().hashCode(), Intent(), 0)
+
+        val builder = NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL)
+        builder.apply {
+            setSmallIcon(R.drawable.ic_launcher_foreground)
+            setContentTitle(getString(R.string.bus_foreground_notification_title))
+            // no operations
+            setContentIntent(pi)
+        }
+
+        return builder.build()
+    }
+
     override fun onDestroy() {
         Log.i(TAG, "$TAG destroyed")
         unregisterReceiver(receiver)
+        stopForeground(true)
     }
 
     companion object {
