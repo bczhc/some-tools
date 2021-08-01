@@ -2,6 +2,7 @@ package pers.zhc.tools.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -44,5 +45,12 @@ public class DisplayUtil {
         final WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
         return metrics;
+    }
+
+    public static Point getScreenSize(Context context) {
+        Point point = new Point();
+        final WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getRealSize(point);
+        return point;
     }
 }

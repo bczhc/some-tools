@@ -41,9 +41,9 @@ class MediaUtils {
             }, handler)
         }
 
-        private fun getImageReader(context: Context): ImageReader {
-            val metrics = DisplayUtil.getMetrics(context)
-            return ImageReader.newInstance(metrics.widthPixels, metrics.heightPixels, PixelFormat.RGBA_8888, 1)
+        private fun newImageReader(context: Context): ImageReader {
+            val screenSize = DisplayUtil.getScreenSize(context)
+            return ImageReader.newInstance(screenSize.x, screenSize.y, PixelFormat.RGBA_8888, 1)
         }
 
         fun asyncTakeScreenshot(
@@ -55,7 +55,7 @@ class MediaUtils {
             val mpm =
                 context.applicationContext.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
             val mp = mpm.getMediaProjection(Activity.RESULT_OK, mediaProjectionData)
-            val ir = getImageReader(context)
+            val ir = newImageReader(context)
             val vd = mp.createVirtualDisplay(
                 "VirtualDisplay",
                 ir.width,
