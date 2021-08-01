@@ -919,7 +919,8 @@ class FdbWindow(private val context: BaseActivity) {
         val intent = Intent(context, ScreenColorPickerActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)
-        context.startActivity(intent)
+        val pi = PendingIntent.getActivity(context.applicationContext, timestamp.hashCode(), intent, 0)
+        pi.send()
     }
 
     override fun toString(): String {

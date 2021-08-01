@@ -33,7 +33,9 @@ class ScreenCapturePermissionRequestActivity : BaseActivity() {
         fun getRequestLauncher(activity: BaseActivity, callback: (result: ActivityResult?) -> Unit): ActivityResultLauncher<Unit> {
             return activity.registerForActivityResult(object : ActivityResultContract<Unit, ActivityResult?>() {
                 override fun createIntent(context: Context, input: Unit): Intent {
-                    return Intent(context, ScreenCapturePermissionRequestActivity::class.java)
+                    val intent = Intent(context, ScreenCapturePermissionRequestActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+                    return intent
                 }
 
                 override fun parseResult(resultCode: Int, intent: Intent?): ActivityResult? {

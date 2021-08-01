@@ -582,6 +582,8 @@
                 android:name=".fdb.ScreenColorPickerActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Transparent"
+                android:launchMode="singleInstance"
+                android:excludeFromRecents="true"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
