@@ -37,7 +37,7 @@ class BusReminder(
             override fun run() {
                 scheduledTask()
             }
-        }, 0, 1000 /* 10 s */)
+        }, 0, 10000 /* 10 s */)
     }
 
     fun init() {
