@@ -558,6 +558,7 @@
                 android:name=".words.DialogShowActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Transparent"
+                android:excludeFromRecents="true"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -569,6 +570,7 @@
                 android:name=".media.ScreenCapturePermissionRequestActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Transparent"
+                android:excludeFromRecents="true"
         >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
