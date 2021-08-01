@@ -33,13 +33,11 @@ class BusReminder(
 
     fun start() {
         init()
-        Thread {
-            timer.schedule(object : TimerTask() {
-                override fun run() {
-                    scheduledTask()
-                }
-            }, 0, 10000 /* 10 s */)
-        }.start()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                scheduledTask()
+            }
+        }, 0, 1000 /* 10 s */)
     }
 
     fun init() {

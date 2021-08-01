@@ -16,4 +16,14 @@
           app:showAsAction="never"
           android:id="@+id/switch_themes"
     />
+    <item android:title="@string/app_menu_wake_lock">
+        <menu>
+            <item android:title="@string/app_menu_wake_lock_acquire"
+                  android:id="@+id/wake_lock_acquire"
+            />
+            <item android:title="@string/app_menu_wake_lock_release"
+                  android:id="@+id/wake_lock_release"
+            />
+        </menu>
+    </item>
 </menu>

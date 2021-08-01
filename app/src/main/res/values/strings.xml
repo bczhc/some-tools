@@ -508,5 +508,13 @@
     <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
     <string name="words_add_word_shortcut_label">添加单词</string>
     <string name="app_menu_switch_themes">切换主题</string>
+    <string name="app_menu_wake_lock">Wake lock</string>
+    <string name="app_menu_wake_lock_acquire">ACQUIRE</string>
+    <string name="app_menu_wake_lock_release">RELEASE</string>
+    <string name="wake_lock_already_acquired_toast">已获取wake lock</string>
+    <string name="wake_lock_already_held_toast">已持有wake lock</string>
+    <string name="wake_lock_held_success">获取成功</string>
+    <string name="wake_lock_no_held">未获取wake lock</string>
+    <string name="wake_lock_release_success">释放成功</string>
     <!-- end -->
 </resources>

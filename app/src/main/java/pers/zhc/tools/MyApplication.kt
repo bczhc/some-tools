@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import android.os.PowerManager.WakeLock
 import androidx.appcompat.app.AppCompatDelegate
 import org.json.JSONObject
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
@@ -67,6 +68,9 @@ class MyApplication : Application() {
 
     companion object {
         private lateinit var infoFile: File
+
+        @JvmField
+        var wakeLock: WakeLock? = null
 
         class InfoJson {
             companion object {

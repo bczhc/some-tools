@@ -1,5 +1,6 @@
 package pers.zhc.tools;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Base64;
 import android.view.*;
 import android.widget.TextView;
@@ -47,6 +49,7 @@ import java.util.Objects;
 
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
+import static pers.zhc.tools.MyApplication.wakeLock;
 
 /**
  * @author bczhc
@@ -233,8 +236,35 @@ public class MainActivity extends BaseActivity {
             } else if (AppCompatDelegate.getDefaultNightMode() == MODE_NIGHT_NO) {
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES);
             }
+        } else if (itemId == R.id.wake_lock_acquire) {
+            acquireWakeLockAction();
+        } else if (itemId == R.id.wake_lock_release) {
+            releaseWakeLockAction();
         }
         return true;
+    }
+
+    @SuppressLint("WakelockTimeout")
+    private void acquireWakeLockAction() {
+        if (wakeLock == null) {
+            final PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+        }
+        if (wakeLock.isHeld()) {
+            ToastUtils.show(this, R.string.wake_lock_already_held_toast);
+            return;
+        }
+        wakeLock.acquire();
+        ToastUtils.show(this, R.string.wake_lock_held_success);
+    }
+
+    private void releaseWakeLockAction() {
+        if (wakeLock == null || !wakeLock.isHeld()) {
+            ToastUtils.show(this, R.string.wake_lock_no_held);
+            return;
+        }
+        wakeLock.release();
+        ToastUtils.show(this, R.string.wake_lock_release_success);
     }
 
     private void showGitLogDialog() {
