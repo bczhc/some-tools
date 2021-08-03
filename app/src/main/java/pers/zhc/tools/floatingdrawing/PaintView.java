@@ -21,15 +21,13 @@ import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
+import pers.zhc.tools.fdb.ExtraInfos;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.*;
 import pers.zhc.tools.views.HSVAColorPickerRL;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -636,8 +634,6 @@ public class PaintView extends View {
      */
     @SuppressWarnings("BusyWait")
     public void asyncImportPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) {
-        transformToOrigin();
-
         Handler handler = new Handler();
 
         dontDrawWhileImporting = speedDelayMillis == 0;
@@ -853,12 +849,39 @@ public class PaintView extends View {
         return (int) ran_sc_db;
     }
 
+    private final PointF importTmpPoint = new PointF();
+
+    private void transformedOnTouchAction(int motionAction, float x, float y, float[] matrixValues) {
+        CanvasTransformer.getTransformedPoint(importTmpPoint, matrixValues, x, y);
+        onTouchAction(motionAction, importTmpPoint.x, importTmpPoint.y);
+    }
+
     private void importPathVer3(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
             throw new SQLiteDatabaseCorruptException();
         }
+
+        final Matrix savedTransformation = new Matrix(getTransformationMatrix());
+
+        Matrix defaultTransformation = null;
+        try {
+            final JSONObject extraInfos = PathSaver.getExtraInfos(db);
+            final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
+            defaultTransformation = ExtraInfos.Companion.getDefaultTransformation(defaultTransformationJSON);
+        } catch (JSONException | NullPointerException ignored) {
+            ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
+        }
+        if (defaultTransformation == null) {
+            defaultTransformation = new Matrix();
+        }
+        float defaultTransformationScale = CanvasTransformer.getRealScale(defaultTransformation);
+
+        float[] transformationValue = new float[9];
+        defaultTransformation.getValues(transformationValue);
+
+        float canvasScale = CanvasTransformer.getRealScale(getTransformationMatrix());
 
         final Statement statement0 = db.compileStatement("SELECT COUNT() FROM path");
         final Cursor cursor0 = statement0.getCursor();
@@ -879,25 +902,40 @@ public class PaintView extends View {
             switch (mark) {
                 case 0x01:
                     setDrawingColor(cursor.getInt(1));
-                    setDrawingStrokeWidth(cursor.getFloat(2));
+                    setDrawingStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
                     setEraserMode(false);
                     break;
                 case 0x02:
                 case 0x12:
-                    onTouchAction(MotionEvent.ACTION_DOWN, cursor.getFloat(1), cursor.getFloat(2));
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_DOWN,
+                            cursor.getFloat(1),
+                            cursor.getFloat(2),
+                            transformationValue
+                    );
                     break;
                 case 0x03:
                 case 0x13:
-                    onTouchAction(MotionEvent.ACTION_MOVE, cursor.getFloat(1), cursor.getFloat(2));
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_MOVE,
+                            cursor.getFloat(1),
+                            cursor.getFloat(2),
+                            transformationValue
+                    );
                     break;
                 case 0x04:
                 case 0x14:
-                    onTouchAction(MotionEvent.ACTION_UP, cursor.getFloat(1), cursor.getFloat(2));
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_UP,
+                            cursor.getFloat(1),
+                            cursor.getFloat(2),
+                            transformationValue
+                    );
                     break;
                 case 0x11:
                     setEraserMode(true);
                     setEraserAlpha(cursor.getInt(1));
-                    setEraserStrokeWidth(cursor.getFloat(2));
+                    setEraserStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
                     break;
                 case 0x20:
                     undo();
@@ -946,6 +984,8 @@ public class PaintView extends View {
         }
 
         statement.release();
+
+        transformTo(savedTransformation);
 
         postInvalidate();
     }
@@ -1021,10 +1061,7 @@ public class PaintView extends View {
     }
 
     public void resetTransformation() {
-        canvasTransformer.setMatrix(defaultTransformation);
-        redrawCanvas();
-        postInvalidate();
-        setCurrentStrokeWidthWhenLocked();
+        transformTo(defaultTransformation);
     }
 
     /**
@@ -1255,7 +1292,7 @@ public class PaintView extends View {
             beginTransaction();
         }
 
-        public void setExtraInfos(ArrayList<HSVAColorPickerRL.SavedColor> savedColors) {
+        public void setExtraInfos(@NotNull ArrayList<HSVAColorPickerRL.SavedColor> savedColors) {
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("isLockingStroke", paintView.isLockingStroke());
@@ -1429,7 +1466,7 @@ public class PaintView extends View {
         }
 
         @Nullable
-        public static JSONObject getExtraInfos(SQLite3 db) {
+        public static JSONObject getExtraInfos(@NotNull SQLite3 db) {
             String jsonString = null;
 
             final Statement statement = db.compileStatement("SELECT extra_infos FROM info");
@@ -1513,6 +1550,10 @@ public class PaintView extends View {
 
     public void transformTo(Matrix matrix) {
         canvasTransformer.setMatrix(matrix);
+        redrawCanvas();
+        postInvalidate();
+        canvasScale = CanvasTransformer.getRealScale(matrix);
+        setCurrentStrokeWidthWhenLocked();
     }
 
     public void transformToOrigin() {

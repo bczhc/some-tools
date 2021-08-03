@@ -8,7 +8,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
-import android.graphics.Matrix
 import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.util.DisplayMetrics
@@ -646,21 +645,10 @@ class FdbWindow(private val context: BaseActivity) {
 
                                                 val defaultTransformationJSONObject =
                                                     extraInfos.getJSONObject("defaultTransformation")
-                                                
-                                                val matrixValues = FloatArray(9)
-                                                matrixValues[Matrix.MSCALE_X] = defaultTransformationJSONObject.getDouble("MSCALE_X").toFloat()
-                                                matrixValues[Matrix.MSKEW_X] = defaultTransformationJSONObject.getDouble("MSKEW_X").toFloat()
-                                                matrixValues[Matrix.MTRANS_X] = defaultTransformationJSONObject.getDouble("MTRANS_X").toFloat()
-                                                matrixValues[Matrix.MSKEW_Y] = defaultTransformationJSONObject.getDouble("MSKEW_Y").toFloat()
-                                                matrixValues[Matrix.MSCALE_Y] = defaultTransformationJSONObject.getDouble("MSCALE_Y").toFloat()
-                                                matrixValues[Matrix.MTRANS_Y] = defaultTransformationJSONObject.getDouble("MTRANS_Y").toFloat()
-                                                matrixValues[Matrix.MPERSP_0] = defaultTransformationJSONObject.getDouble("MPERSP_0").toFloat()
-                                                matrixValues[Matrix.MPERSP_1] = defaultTransformationJSONObject.getDouble("MPERSP_1").toFloat()
-                                                matrixValues[Matrix.MPERSP_2] = defaultTransformationJSONObject.getDouble("MPERSP_2").toFloat()
-                                                
-                                                val matrix = Matrix().also { it.setValues(matrixValues) }
+
+                                                val matrix =
+                                                    ExtraInfos.getDefaultTransformation(defaultTransformationJSONObject)
                                                 paintView.setDefaultTransformation(matrix)
-                                                paintView.resetTransformation()
                                             } catch (_: Exception) {
                                             }
                                         }

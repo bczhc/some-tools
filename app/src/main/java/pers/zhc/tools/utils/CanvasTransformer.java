@@ -16,6 +16,7 @@ public class CanvasTransformer {
     private final Matrix savedMatrix = new Matrix();
     private final float[] tmpValue = new float[9];
     private final float[] inverseTmpValue = new float[9];
+    private final float[] realScaleTmpValue = new float[9];
 
     public CanvasTransformer(Canvas canvas) {
         this.canvas = canvas;
@@ -69,7 +70,26 @@ public class CanvasTransformer {
     public void getInvertedTransformedPoint(@NotNull PointF dest, float x, float y) {
         matrix.invert(inverse);
         inverse.getValues(inverseTmpValue);
-        dest.x = inverseTmpValue[MSCALE_X] * x + inverseTmpValue[MSKEW_X] * y + inverseTmpValue[MTRANS_X];
-        dest.y = inverseTmpValue[MSKEW_Y] * x + inverseTmpValue[MSCALE_Y] * y + inverseTmpValue[MTRANS_Y];
+        getTransformedPoint(dest, inverseTmpValue, x, y);
+    }
+
+    public float getRealScale() {
+        matrix.getValues(realScaleTmpValue);
+        float scaleX = realScaleTmpValue[MSCALE_X];
+        float skewY = realScaleTmpValue[MSKEW_Y];
+        return (float) Math.sqrt(scaleX * scaleX + skewY * skewY);
+    }
+
+    public static void getTransformedPoint(@NotNull PointF dest, float @NotNull [] matrixValues, float x, float y) {
+        dest.x = matrixValues[MSCALE_X] * x + matrixValues[MSKEW_X] * y + matrixValues[MTRANS_X];
+        dest.y = matrixValues[MSKEW_Y] * x + matrixValues[MSCALE_Y] * y + matrixValues[MTRANS_Y];
+    }
+
+    public static float getRealScale(@NotNull Matrix matrix) {
+        float[] v = new float[9];
+        matrix.getValues(v);
+        float scaleX = v[MSCALE_X];
+        float skewY = v[MSKEW_Y];
+        return (float) Math.sqrt(scaleX * scaleX + skewY * skewY);
     }
 }
