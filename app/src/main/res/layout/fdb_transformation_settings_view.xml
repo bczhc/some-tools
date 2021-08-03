@@ -32,5 +32,11 @@
                 android:text="@string/fdb_transformation_set_as_default"
                 android:id="@+id/set_as_default"
         />
+        <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fdb_transformation_reset_to_default"
+                android:id="@+id/reset_to_default"
+        />
     </LinearLayout>
 </ScrollView>

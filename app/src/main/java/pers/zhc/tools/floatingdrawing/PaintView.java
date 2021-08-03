@@ -582,7 +582,7 @@ public class PaintView extends View {
     }
 
     @NotNull
-    public static PathVersion getPathVersion(File f) {
+    public static PathVersion getPathVersion(@NotNull File f) {
         PathVersion version = null;
 
         // check paths that use SQLite database
@@ -636,6 +636,8 @@ public class PaintView extends View {
      */
     @SuppressWarnings("BusyWait")
     public void asyncImportPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) {
+        transformToOrigin();
+
         Handler handler = new Handler();
 
         dontDrawWhileImporting = speedDelayMillis == 0;
@@ -1507,5 +1509,17 @@ public class PaintView extends View {
 
     public void setRotateTransformationEnabled(boolean rotateTransformationEnabled) {
         this.rotateTransformationEnabled = rotateTransformationEnabled;
+    }
+
+    public void transformTo(Matrix matrix) {
+        canvasTransformer.setMatrix(matrix);
+    }
+
+    public void transformToOrigin() {
+        transformTo(new Matrix());
+    }
+
+    public void resetDefaultTransformation() {
+        defaultTransformation.set(new Matrix());
     }
 }

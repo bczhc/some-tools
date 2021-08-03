@@ -8,6 +8,15 @@
     <string name="processing">正在处理</string>
     <string name="press_to_stop">点击以停止</string>
     <string name="app_menu_git_log">git log</string>
+    <string name="app_menu_switch_themes">切换主题</string>
+    <string name="app_menu_wake_lock">Wake lock</string>
+    <string name="app_menu_wake_lock_acquire">ACQUIRE</string>
+    <string name="app_menu_wake_lock_release">RELEASE</string>
+    <string name="wake_lock_already_acquired_toast">已获取wake lock</string>
+    <string name="wake_lock_already_held_toast">已持有wake lock</string>
+    <string name="wake_lock_held_success">获取成功</string>
+    <string name="wake_lock_no_held">未获取wake lock</string>
+    <string name="wake_lock_release_success">释放成功</string>
     <!-- app end -->
 
     <!-- universal -->
@@ -28,6 +37,7 @@
     <string name="set_done_toast">已设置</string>
     <string name="tts_speak_error">TTS播放出错</string>
     <string name="create_shortcut">创建快捷方式</string>
+    <string name="reset_success_toast">重置成功</string>
     <!-- end -->
 
     <!-- old -->
@@ -493,28 +503,20 @@
     <string name="fdb_transformation_zoom">缩放</string>
     <string name="fdb_transformation_rotate">旋转</string>
     <string name="fdb_transformation_set_as_default">设为默认变换</string>
+    <string name="fdb_transformation_reset_to_default">重置默认变换</string>
     <!-- module end -->
 
     <!-- module: words -->
     <string name="words_label">单词</string>
     <string name="words_already_have_word">该记录已存在</string>
     <string name="words_delete_confirmation_dialog">是否删除</string>
+    <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
+    <string name="words_add_word_shortcut_label">添加单词</string>
     <!-- module end -->
 
     <!-- screen color picker -->
     <string name="capture_permission_denied">未同意权限</string>
     <string name="screen_color_picker_running_notification_title">屏幕取色正在运行</string>
     <string name="stop_notification_action">停止</string>
-    <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
-    <string name="words_add_word_shortcut_label">添加单词</string>
-    <string name="app_menu_switch_themes">切换主题</string>
-    <string name="app_menu_wake_lock">Wake lock</string>
-    <string name="app_menu_wake_lock_acquire">ACQUIRE</string>
-    <string name="app_menu_wake_lock_release">RELEASE</string>
-    <string name="wake_lock_already_acquired_toast">已获取wake lock</string>
-    <string name="wake_lock_already_held_toast">已持有wake lock</string>
-    <string name="wake_lock_held_success">获取成功</string>
-    <string name="wake_lock_no_held">未获取wake lock</string>
-    <string name="wake_lock_release_success">释放成功</string>
     <!-- end -->
 </resources>

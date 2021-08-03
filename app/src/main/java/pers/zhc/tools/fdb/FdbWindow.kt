@@ -968,10 +968,15 @@ class FdbWindow(private val context: BaseActivity) {
         }
 
         val setAsDefaultTransformation = inflate.set_as_default!!
+        val resetToDefaultTransformation = inflate.reset_to_default!!
 
         setAsDefaultTransformation.setOnClickListener {
             paintView.setAsDefaultTransformation()
             ToastUtils.show(context, R.string.set_done_toast)
+        }
+        resetToDefaultTransformation.setOnClickListener {
+            paintView.resetDefaultTransformation()
+            ToastUtils.show(context, R.string.reset_success_toast)
         }
 
         return createDialog(inflate)
