@@ -3,6 +3,7 @@ package pers.zhc.tools.utils;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import org.jetbrains.annotations.NotNull;
 
 import static android.graphics.Matrix.*;
 
@@ -39,6 +40,10 @@ public class CanvasTransformer {
         return matrix;
     }
 
+    public Matrix getNewMatrix() {
+        return new Matrix(matrix);
+    }
+
     public void setMatrix(Matrix matrix) {
         this.matrix.set(matrix);
         canvas.setMatrix(this.matrix);
@@ -53,7 +58,7 @@ public class CanvasTransformer {
         canvas.setMatrix(this.matrix);
     }
 
-    public void getTransformedPoint(PointF dest, float x, float y) {
+    public void getTransformedPoint(@NotNull PointF dest, float x, float y) {
         matrix.getValues(tmpValue);
         dest.x = tmpValue[MSCALE_X] * x + tmpValue[MSKEW_X] * y + tmpValue[MTRANS_X];
         dest.y = tmpValue[MSKEW_Y] * x + tmpValue[MSCALE_Y] * y + tmpValue[MTRANS_Y];
@@ -61,7 +66,7 @@ public class CanvasTransformer {
 
     private final Matrix inverse = new Matrix();
 
-    public void getInvertedTransformedPoint(PointF dest, float x, float y) {
+    public void getInvertedTransformedPoint(@NotNull PointF dest, float x, float y) {
         matrix.invert(inverse);
         inverse.getValues(inverseTmpValue);
         dest.x = inverseTmpValue[MSCALE_X] * x + inverseTmpValue[MSKEW_X] * y + inverseTmpValue[MTRANS_X];

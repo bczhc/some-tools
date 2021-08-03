@@ -93,7 +93,7 @@ public class PaintView extends View {
 
     private OnScreenDimensionChangedListener onScreenDimensionChangedListener = null;
 
-    private Matrix defaultTransformation = new Matrix();
+    private final Matrix defaultTransformation = new Matrix();
 
     private boolean moveTransformationEnabled = true;
     private boolean zoomTransformationEnabled = true;
@@ -197,7 +197,7 @@ public class PaintView extends View {
             public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
                 if (zoomTransformationEnabled) {
                     canvasTransformer.absScale(dScale, midPointX, midPointY);
-                    canvasScale = scale;
+                    canvasScale *= dScale;
                     if (transCanvas != null) {
                         transCanvasTransformer.absScale(dScale, midPointX, midPointY);
                     }
@@ -245,7 +245,6 @@ public class PaintView extends View {
                     Canvas c = new Canvas(transBitmap);
                     c.setMatrix(canvasTransformer.getMatrix());
                     c.drawBitmap(headBitmap, 0, 0, mBitmapPaint);
-
                 }
                 postInvalidate();
             }
@@ -1278,8 +1277,7 @@ public class PaintView extends View {
                 jsonObject.put("savedColors", savedColorsJSONArray);
 
                 float[] matrixValues = new float[9];
-                final Matrix matrix = paintView.getTransformationMatrix();
-                matrix.getValues(matrixValues);
+                paintView.defaultTransformation.getValues(matrixValues);
                 JSONObject defaultTransformationJSONObject = new JSONObject();
                 defaultTransformationJSONObject.put("MSCALE_X", matrixValues[Matrix.MSCALE_X]);
                 defaultTransformationJSONObject.put("MSKEW_X", matrixValues[Matrix.MSKEW_X]);
@@ -1477,7 +1475,7 @@ public class PaintView extends View {
      * When "reset transformation" button clicked, this saved state will be restored
      */
     public void setAsDefaultTransformation() {
-        defaultTransformation = getTransformationMatrix();
+        defaultTransformation.set(getTransformationMatrix());
     }
 
     /**
