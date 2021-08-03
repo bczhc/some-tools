@@ -6,7 +6,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import pers.zhc.tools.floatingdrawing.MyCanvas
+import pers.zhc.tools.utils.CanvasTransformer
 import pers.zhc.tools.utils.GestureResolver
 
 /**
@@ -16,7 +16,8 @@ class ScalableImageView : View {
     private lateinit var mGestureResolver: GestureResolver
     private var srcBitmap: Bitmap? = null
     private var mBitmap: Bitmap? = null
-    private lateinit var mCanvas: MyCanvas
+    private lateinit var mCanvas: Canvas
+    private lateinit var canvasTransformer: CanvasTransformer
     private lateinit var mBitmapPaint: Paint
 
     constructor(context: Context?) : this(context, null)
@@ -30,7 +31,7 @@ class ScalableImageView : View {
 
         mGestureResolver = GestureResolver(object : GestureResolver.GestureInterface {
             override fun onTwoPointsScroll(distanceX: Float, distanceY: Float, event: MotionEvent?) {
-                mCanvas.translateReal(distanceX, distanceY)
+                canvasTransformer.absTranslate(distanceX, distanceY)
             }
 
             override fun onTwoPointsZoom(
@@ -44,7 +45,18 @@ class ScalableImageView : View {
                 dScale: Float,
                 event: MotionEvent?
             ) {
-                mCanvas.scaleReal(dScale, midPointX, midPointY)
+                canvasTransformer.absScale(dScale, midPointX, midPointY)
+            }
+
+            override fun onTwoPointsRotate(
+                event: MotionEvent?,
+                firstMidX: Float,
+                firstMidY: Float,
+                degrees: Float,
+                midX: Float,
+                midY: Float
+            ) {
+                canvasTransformer.absRotate(degrees, midX, midY)
             }
 
             override fun onTwoPointsUp(event: MotionEvent) {
@@ -107,7 +119,8 @@ class ScalableImageView : View {
         if (mBitmap == null) {
             // init
             mBitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
-            mCanvas = MyCanvas(mBitmap!!)
+            mCanvas = Canvas(mBitmap!!)
+            canvasTransformer = CanvasTransformer(mCanvas)
             srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, mBitmapPaint) }
         }
     }

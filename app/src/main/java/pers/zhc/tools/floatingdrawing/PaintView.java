@@ -1,7 +1,6 @@
 package pers.zhc.tools.floatingdrawing;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.*;
@@ -53,10 +52,11 @@ public class PaintView extends View {
     private Paint eraserPaint;
     private Paint mPaintRef = null;
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private Map<MyCanvas, Bitmap> bitmapMap;
+    private Map<Canvas, Bitmap> bitmapMap;
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private Map<String, MyCanvas> canvasMap;
-    private MyCanvas headCanvas;
+    private Map<String, Canvas> canvasMap;
+    private Canvas headCanvas;
+    private CanvasTransformer canvasTransformer;
     /**
      * HEAD, a reference
      */
@@ -85,18 +85,21 @@ public class PaintView extends View {
     private float lockedEraserStrokeWidth;
     private OnColorChangedCallback onColorChangedCallback = null;
     private Bitmap transBitmap;
-    private MyCanvas transCanvas;
+    private Canvas transCanvas;
+    private CanvasTransformer transCanvasTransformer;
 
     private PathSaver defaultTmpPathSaver;
     private PathSaver pathSaver = null;
 
     private OnScreenDimensionChangedListener onScreenDimensionChangedListener = null;
 
-    private MyCanvas.State defaultTransformation = new MyCanvas.State(0F, 0F, 1F);
+    private Matrix defaultTransformation = new Matrix();
 
     private boolean moveTransformationEnabled = true;
     private boolean zoomTransformationEnabled = true;
-    private boolean rotateTransformationEnabled = true;
+    private boolean rotateTransformationEnabled = false;
+
+    private float canvasScale = 1F;
 
     public PaintView(Context context) {
         this(context, null);
@@ -119,29 +122,29 @@ public class PaintView extends View {
     }
 
     private void setupBitmap(int width, int height) {
-        MyCanvas.State state = null;
+        Matrix matrix = null;
         if (headCanvas != null) {
-            state = headCanvas.getState();
+            matrix = canvasTransformer.getMatrix();
 
             final int prevWidth = headBitmap.getWidth();
             final int prevHeight = headBitmap.getHeight();
 
             final int tX = width / 2 - prevWidth / 2;
             final int tY = height / 2 - prevHeight / 2;
-            state.startPointX += tX;
-            state.startPointY += tY;
+            matrix.postTranslate(tX, tY);
         }
 
         System.gc();
         headBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         backgroundBitmap = Bitmap.createBitmap(headBitmap);
-        headCanvas = new MyCanvas(headBitmap);
+        headCanvas = new Canvas(headBitmap);
+        canvasTransformer = new CanvasTransformer(headCanvas);
         mBackgroundCanvas = new Canvas(backgroundBitmap);
         //抗锯齿
         headCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 
-        if (state != null) {
-            headCanvas.transTo(state);
+        if (matrix != null) {
+            canvasTransformer.setMatrix(matrix);
         }
         redrawCanvas();
     }
@@ -183,9 +186,9 @@ public class PaintView extends View {
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
                 if (moveTransformationEnabled) {
-                    headCanvas.translateReal(distanceX, distanceY);
+                    canvasTransformer.absTranslate(distanceX, distanceY);
                     if (transCanvas != null) {
-                        transCanvas.translateReal(distanceX, distanceY);
+                        transCanvasTransformer.absTranslate(distanceX, distanceY);
                     }
                 }
             }
@@ -193,11 +196,22 @@ public class PaintView extends View {
             @Override
             public void onTwoPointsZoom(float firstMidPointX, float firstMidPointY, float midPointX, float midPointY, float firstDistance, float distance, float scale, float dScale, MotionEvent event) {
                 if (zoomTransformationEnabled) {
-                    headCanvas.scaleReal(dScale, midPointX, midPointY);
+                    canvasTransformer.absScale(dScale, midPointX, midPointY);
+                    canvasScale = scale;
                     if (transCanvas != null) {
-                        transCanvas.scaleReal(dScale, midPointX, midPointY);
+                        transCanvasTransformer.absScale(dScale, midPointX, midPointY);
                     }
                     setCurrentStrokeWidthWhenLocked();
+                }
+            }
+
+            @Override
+            public void onTwoPointsRotate(MotionEvent event, float firstMidX, float firstMidY, float degrees, float midX, float midY) {
+                if (rotateTransformationEnabled) {
+                    canvasTransformer.absRotate(degrees, midX, midY);
+                    if (transCanvas != null) {
+                        transCanvasTransformer.absRotate(degrees, midX, midY);
+                    }
                 }
             }
 
@@ -212,7 +226,8 @@ public class PaintView extends View {
                 mPath = null;
                 if (transBitmap == null) {
                     transBitmap = Bitmap.createBitmap(headBitmap);
-                    transCanvas = new MyCanvas(transBitmap);
+                    transCanvas = new Canvas(transBitmap);
+                    transCanvasTransformer = new CanvasTransformer(transCanvas);
                 }
                 if (pathSaver != null) {
                     pathSaver.clearTmpTable();
@@ -227,12 +242,10 @@ public class PaintView extends View {
             @Override
             public void onTwoPointsPress(MotionEvent event) {
                 if (transBitmap != null) {
-                    float startPointX = headCanvas.getStartPointX();
-                    float startPointY = headCanvas.getStartPointY();
-                    float scale = headCanvas.getScale();
-                    MyCanvas c = new MyCanvas(transBitmap);
-                    c.transTo(startPointX, startPointY, scale);
+                    Canvas c = new Canvas(transBitmap);
+                    c.setMatrix(canvasTransformer.getMatrix());
                     c.drawBitmap(headBitmap, 0, 0, mBitmapPaint);
+
                 }
                 postInvalidate();
             }
@@ -348,11 +361,12 @@ public class PaintView extends View {
      * 导出图片
      */
     public void exportImg(File f, int exportedWidth, int exportHeight) {
+        /*TODO
         Handler handler = new Handler();
         ToastUtils.show(ctx, R.string.saving);
         System.gc();
         Bitmap exportedBitmap = Bitmap.createBitmap(exportedWidth, exportHeight, Bitmap.Config.ARGB_8888);
-        MyCanvas myCanvas = new MyCanvas(exportedBitmap);
+        Canvas myCanvas = new Canvas(exportedBitmap);
         myCanvas.translate(headCanvas.getStartPointX() * exportedWidth / width
                 , headCanvas.getStartPointY() * exportedWidth / width);
         myCanvas.scale(headCanvas.getScale() * exportedWidth / width);
@@ -381,7 +395,7 @@ public class PaintView extends View {
                     ToastUtils.show(ctx, R.string.saving_failed);
                 }
             });
-        }).start();
+        }).start();*/
     }
 
     /**
@@ -430,9 +444,7 @@ public class PaintView extends View {
                     canvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
                     if (!dontDrawWhileImporting) {
                         if (mPath != null) {//显示实时正在绘制的path轨迹
-                            float mCanvasScale = headCanvas.getScale();
-                            canvas.translate(headCanvas.getStartPointX(), headCanvas.getStartPointY());
-                            canvas.scale(mCanvasScale, mCanvasScale);
+                            canvas.setMatrix(canvasTransformer.getMatrix());
                             if (eraserMode) {
                                 canvas.drawPath(mPath, eraserPaint);
                             } else {
@@ -937,12 +949,17 @@ public class PaintView extends View {
         postInvalidate();
     }
 
+    private final PointF transformedPoint = new PointF();
+    private final PointF inverseTransformedPoint = new PointF();
+
     private void onTouchAction(int motionAction, float x, float y) {
-        float startPointX = headCanvas.getStartPointX();
-        float startPointY = headCanvas.getStartPointY();
-        float canvasScale = headCanvas.getScale();
-        x = (x - startPointX) / canvasScale;
-        y = (y - startPointY) / canvasScale;
+        canvasTransformer.getInvertedTransformedPoint(inverseTransformedPoint, x, y);
+        // convert the screen coordinates to a new unknown point
+        // which after the transformation coincides with the screen point
+        // so that the new point can be shown on your finger's position after it's drawn on the transformed canvas
+        // principle: inverse matrix
+        x = inverseTransformedPoint.x;
+        y = inverseTransformedPoint.y;
         switch (motionAction) {
             case MotionEvent.ACTION_DOWN:
                 pathSaver.onTouchDown(x, y);
@@ -955,12 +972,7 @@ public class PaintView extends View {
             case MotionEvent.ACTION_MOVE:
                 pathSaver.onTouchMove(x, y);
                 if (mPath != null) {
-                    float dx = Math.abs(x - mLastX);
-                    float dy = Math.abs(y - mLastY);
-                    if (dx >= 0 || dy >= 0) {//绘制的最小距离 0px
-                        //利用二阶贝塞尔曲线，使绘制路径更加圆滑 TODO delete L, L~1
-                        mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
-                    }
+                    mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
                     mLastX = x;
                     mLastY = y;
                 }
@@ -1008,7 +1020,7 @@ public class PaintView extends View {
     }
 
     public void resetTransformation() {
-        headCanvas.transTo(defaultTransformation);
+        canvasTransformer.setMatrix(defaultTransformation);
         redrawCanvas();
         postInvalidate();
         setCurrentStrokeWidthWhenLocked();
@@ -1023,10 +1035,6 @@ public class PaintView extends View {
         for (PathBean pathBean : this.undoList) {
             headCanvas.drawPath(pathBean.path, pathBean.paint);
         }
-    }
-
-    MyCanvas getCanvas() {
-        return headCanvas;
     }
 
     public float getStrokeWidthInUse() {
@@ -1048,9 +1056,8 @@ public class PaintView extends View {
 
     public void lockStroke() {
         if (lockStrokeEnabled) {
-            float scale = headCanvas.getScale();
-            this.lockedDrawingStrokeWidth = getDrawingStrokeWidth() * scale;
-            this.lockedEraserStrokeWidth = getEraserStrokeWidth() * scale;
+            this.lockedDrawingStrokeWidth = getDrawingStrokeWidth() * canvasScale;
+            this.lockedEraserStrokeWidth = getEraserStrokeWidth() * canvasScale;
             setCurrentStrokeWidthWhenLocked();
         }
     }
@@ -1075,7 +1082,6 @@ public class PaintView extends View {
 
     public void setCurrentStrokeWidthWhenLocked() {
         if (lockStrokeEnabled) {
-            float canvasScale = headCanvas.getScale();
             setDrawingStrokeWidth(lockedDrawingStrokeWidth / canvasScale);
             setEraserStrokeWidth(lockedEraserStrokeWidth / canvasScale);
         }
@@ -1089,7 +1095,7 @@ public class PaintView extends View {
     // ----------------------------------- end -----------------------------------------
 
     public float getScale() {
-        return headCanvas.getScale();
+        return canvasScale;
     }
 
     public float getZoomedStrokeWidthInUse() {
@@ -1271,11 +1277,19 @@ public class PaintView extends View {
                 }
                 jsonObject.put("savedColors", savedColorsJSONArray);
 
+                float[] matrixValues = new float[9];
+                final Matrix matrix = paintView.getTransformationMatrix();
+                matrix.getValues(matrixValues);
                 JSONObject defaultTransformationJSONObject = new JSONObject();
-                final MyCanvas.State transformationState = paintView.getTransformationState();
-                defaultTransformationJSONObject.put("x", transformationState.startPointX);
-                defaultTransformationJSONObject.put("y", transformationState.startPointY);
-                defaultTransformationJSONObject.put("scale", transformationState.scale);
+                defaultTransformationJSONObject.put("MSCALE_X", matrixValues[Matrix.MSCALE_X]);
+                defaultTransformationJSONObject.put("MSKEW_X", matrixValues[Matrix.MSKEW_X]);
+                defaultTransformationJSONObject.put("MTRANS_X", matrixValues[Matrix.MTRANS_X]);
+                defaultTransformationJSONObject.put("MSKEW_Y", matrixValues[Matrix.MSKEW_Y]);
+                defaultTransformationJSONObject.put("MSCALE_Y", matrixValues[Matrix.MSCALE_Y]);
+                defaultTransformationJSONObject.put("MTRANS_Y", matrixValues[Matrix.MTRANS_Y]);
+                defaultTransformationJSONObject.put("MPERSP_0", matrixValues[Matrix.MPERSP_0]);
+                defaultTransformationJSONObject.put("MPERSP_1", matrixValues[Matrix.MPERSP_1]);
+                defaultTransformationJSONObject.put("MPERSP_2", matrixValues[Matrix.MPERSP_2]);
 
                 jsonObject.put("defaultTransformation", defaultTransformationJSONObject);
             } catch (JSONException e) {
@@ -1454,8 +1468,8 @@ public class PaintView extends View {
         void onChange(int width, int height);
     }
 
-    public MyCanvas.State getTransformationState() {
-        return headCanvas.getState();
+    public Matrix getTransformationMatrix() {
+        return canvasTransformer.getMatrix();
     }
 
     /**
@@ -1463,14 +1477,14 @@ public class PaintView extends View {
      * When "reset transformation" button clicked, this saved state will be restored
      */
     public void setAsDefaultTransformation() {
-        defaultTransformation = getTransformationState();
+        defaultTransformation = getTransformationMatrix();
     }
 
     /**
      * Specify a transformation state to set; see {@link PaintView#setAsDefaultTransformation()}
      */
-    public void setDefaultTransformation(MyCanvas.State state) {
-        defaultTransformation = state;
+    public void setDefaultTransformation(Matrix matrix) {
+        defaultTransformation.set(matrix);
     }
 
     public boolean isMoveTransformationEnabled() {

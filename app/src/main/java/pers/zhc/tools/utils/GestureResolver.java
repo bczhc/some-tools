@@ -12,6 +12,9 @@ public class GestureResolver {
     private boolean twoPointsDown = false;
     private float lastOnePointX = -1, lastOnePointY = -1;
 
+    private float lastX1 = -1, lastY1 = -1, lastX2 = -1, lastY2 = -1;
+    private boolean firstTwoDown = true;
+
     public GestureResolver(GestureInterface gestureInterface) {
         this.gestureInterface = gestureInterface;
     }
@@ -27,6 +30,14 @@ public class GestureResolver {
             float y1 = event.getY(0);
             float x2 = event.getX(1);
             float y2 = event.getY(1);
+
+            if (firstTwoDown) {
+                lastX1 = x1;
+                lastY1 = y1;
+                lastX2 = x2;
+                lastY2 = y2;
+                firstTwoDown = false;
+            }
 
             if (!twoPointsDown) {
                 gestureInterface.onTwoPointsDown(event);
@@ -62,6 +73,19 @@ public class GestureResolver {
                 this.gestureInterface.onTwoPointsZoom(firstMidPointX, firstMidPointY, midPointX, midPointY, firstDistance, distance, distance / firstDistance, distance / lastDistance, event);
                 lastDistance = distance;
             }
+
+            // two points rotate
+            float lastMidX = (lastX1 + lastX2) / 2F;
+            float lastMidY = (lastY1 + lastY2) / 2F;
+            float midX = (x1 + x2) / 2F;
+            float midY = (y1 + y2) / 2F;
+            final float degrees = getVectorDegrees(lastX1 - lastMidX, lastY1 - lastMidY, x1 - midX, y1 - midY);
+            gestureInterface.onTwoPointsRotate(event, firstMidPointX, firstMidPointY, degrees, midX, midY);
+
+            lastX1 = x1;
+            lastY1 = y1;
+            lastX2 = x2;
+            lastY2 = y2;
         } else {
             if (twoPointsDown) {
                 twoPointsDown = false;
@@ -69,6 +93,7 @@ public class GestureResolver {
                 lastY = -1;
                 firstDistance = -1;
                 lastDistance = -1;
+                firstTwoDown = true;
                 gestureInterface.onTwoPointsUp(event);
             }
         }
@@ -87,6 +112,20 @@ public class GestureResolver {
             lastOnePointX = -1;
             lastOnePointY = -1;
         }
+    }
+
+    private float getVectorDegrees(float x1, float y1, float x2, float y2) {
+
+        return (float) ((argumentRadian(x2, y2) - argumentRadian(x1, y1)) / Math.PI * 180D);
+    }
+
+    private double argumentRadian(double x, double y) {
+        if (x > 0) return Math.atan(y / x);
+        if (x == 0 && y > 0) return Math.PI / 2D;
+        if (x == 0 && y < 0) return -Math.PI / 2D;
+        if (x < 0 && y >= 0) return Math.atan(y / x) + Math.PI;
+        if (x < 0 && y < 0) return Math.atan(y / x) - Math.PI;
+        return Double.NaN;
     }
 
     public interface GestureInterface {
@@ -117,21 +156,34 @@ public class GestureResolver {
 
         /**
          * It will be invoked when two points change to one point or no point.
+         *
          * @param event event
          */
         void onTwoPointsUp(MotionEvent event);
 
         /**
          * It will be invoked when two points press down the first time.
+         *
          * @param event event
          */
         void onTwoPointsDown(MotionEvent event);
 
         /**
          * It will be invoked when two points press down.
+         *
          * @param event event
          */
         void onTwoPointsPress(MotionEvent event);
+
+        /**
+         * Called when two points do rotation
+         *
+         * @param event     motion event
+         * @param firstMidX the first mid point x
+         * @param firstMidY the first mid point y
+         * @param degrees   rotation degrees
+         */
+        void onTwoPointsRotate(MotionEvent event, float firstMidX, float firstMidY, float degrees, float midX, float midY);
 
         /**
          * 一个点的移动

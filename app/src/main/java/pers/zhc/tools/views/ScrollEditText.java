@@ -140,6 +140,11 @@ public class ScrollEditText extends ScrollView implements EditTextInterface {
         }
 
         @Override
+        public void onTwoPointsRotate(MotionEvent event, float firstMidX, float firstMidY, float degrees, float midX, float midY) {
+
+        }
+
+        @Override
         public void onTwoPointsDown(MotionEvent event) {
             downTextSize = DisplayUtil.px2sp(getContext(), editText.getTextSize());
         }
