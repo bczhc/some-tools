@@ -181,6 +181,10 @@ public class PaintView extends View {
         undoList = new LinkedList<>();
         redoList = new LinkedList<>();
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
+
+            private boolean transformationEnabled() {
+                return moveTransformationEnabled || zoomTransformationEnabled || rotateTransformationEnabled;
+            }
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
                 if (moveTransformationEnabled) {
@@ -215,20 +219,24 @@ public class PaintView extends View {
 
             @Override
             public void onTwoPointsUp(MotionEvent event) {
-                transBitmap = null;
-                redrawCanvas();
+                if (transformationEnabled()) {
+                    transBitmap = null;
+                    redrawCanvas();
+                }
             }
 
             @Override
             public void onTwoPointsDown(MotionEvent event) {
-                mPath = null;
-                if (transBitmap == null) {
-                    transBitmap = Bitmap.createBitmap(headBitmap);
-                    transCanvas = new Canvas(transBitmap);
-                    transCanvasTransformer = new CanvasTransformer(transCanvas);
-                }
-                if (pathSaver != null) {
-                    pathSaver.clearTmpTable();
+                if (moveTransformationEnabled || zoomTransformationEnabled || rotateTransformationEnabled) {
+                    mPath = null;
+                    if (transBitmap == null) {
+                        transBitmap = Bitmap.createBitmap(headBitmap);
+                        transCanvas = new Canvas(transBitmap);
+                        transCanvasTransformer = new CanvasTransformer(transCanvas);
+                    }
+                    if (pathSaver != null) {
+                        pathSaver.clearTmpTable();
+                    }
                 }
             }
 
