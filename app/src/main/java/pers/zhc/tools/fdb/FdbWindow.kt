@@ -261,6 +261,7 @@ class FdbWindow(private val context: BaseActivity) {
             moreMenu = createMoreOptionDialog()
             eraserOpacity = createEraserOpacityDialog()
             transformationSettings = createTransformationSettingsDialog()
+            layerManager = createLayerManagerDialog()
         }
 
         paintView.apply {
@@ -443,6 +444,7 @@ class FdbWindow(private val context: BaseActivity) {
         lateinit var moreMenu: Dialog
         lateinit var eraserOpacity: Dialog
         lateinit var transformationSettings: Dialog
+        lateinit var layerManager: Dialog
     }
 
     private fun createConfirmationDialog(
@@ -693,7 +695,7 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     5 -> {
                         // manage layers
-                        TODO()
+                        dialogs.layerManager.show()
                     }
                     6 -> {
                         // hide drawing board
@@ -968,6 +970,12 @@ class FdbWindow(private val context: BaseActivity) {
         }
 
         return createDialog(inflate)
+    }
+
+    private fun createLayerManagerDialog(): Dialog {
+        val dialog = createDialog(LayerManagerView(context))
+        DialogUtils.setDialogAttr(dialog, width = MATCH_PARENT, height = MATCH_PARENT, overlayWindow = true)
+        return dialog
     }
 
     companion object {

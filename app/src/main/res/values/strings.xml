@@ -38,6 +38,7 @@
     <string name="tts_speak_error">TTS播放出错</string>
     <string name="create_shortcut">创建快捷方式</string>
     <string name="reset_success_toast">重置成功</string>
+    <string name="add_button">添加</string>
     <!-- end -->
 
     <!-- old -->
@@ -504,6 +505,7 @@
     <string name="fdb_transformation_rotate">旋转</string>
     <string name="fdb_transformation_set_as_default">设为默认变换</string>
     <string name="fdb_transformation_reset_to_default">重置默认变换</string>
+    <string name="fdb_import_get_extra_infos_failed">获取附加信息失败</string>
     <!-- module end -->
 
     <!-- module: words -->
@@ -518,6 +520,7 @@
     <string name="capture_permission_denied">未同意权限</string>
     <string name="screen_color_picker_running_notification_title">屏幕取色正在运行</string>
     <string name="stop_notification_action">停止</string>
-    <string name="fdb_import_get_extra_infos_failed">获取附加信息失败</string>
+    <string name="fdb_layer_naming_dialog_title">图层命名</string>
+    <string name="create_new">新建</string>
     <!-- end -->
 </resources>

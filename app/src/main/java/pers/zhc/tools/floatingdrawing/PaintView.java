@@ -22,12 +22,16 @@ import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
 import pers.zhc.tools.fdb.ExtraInfos;
+import pers.zhc.tools.fdb.Layer;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.*;
 import pers.zhc.tools.views.HSVAColorPickerRL;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,10 +40,6 @@ import java.util.concurrent.Executors;
  */
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        return super.dispatchTouchEvent(event);
-    }
 
     private int height = -1;
     private int width = -1;
@@ -49,16 +49,11 @@ public class PaintView extends View {
     private Path mPath;
     private Paint eraserPaint;
     private Paint mPaintRef = null;
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private Map<Canvas, Bitmap> bitmapMap;
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private Map<String, Canvas> canvasMap;
-    private Canvas headCanvas;
+    private final ArrayList<Layer> layerArray = new ArrayList<>();
+    private Layer layerRef;
+    private Canvas mCanvas;
     private CanvasTransformer canvasTransformer;
-    /**
-     * HEAD, a reference
-     */
-    private Bitmap headBitmap;
+    private Bitmap bitmapRef;
     /**
      * 上次的坐标
      */
@@ -67,9 +62,7 @@ public class PaintView extends View {
     /**
      * 使用LinkedList 模拟栈，来保存 Path
      */
-    private LinkedList<PathBean> undoList, redoList;
-    private Bitmap backgroundBitmap;
-    private Canvas mBackgroundCanvas;
+    private LinkedList<PathBean> undoListRef, redoListRef;
     private GestureResolver gestureResolver;
     private boolean dontDrawWhileImporting = false;
     private boolean lockStrokeEnabled = false;
@@ -119,27 +112,29 @@ public class PaintView extends View {
         this.onColorChangedCallback = onColorChangedCallback;
     }
 
+    private void initBitmap(int width, int height) {
+        System.gc();
+        layerRef.bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    }
+
+    private void initBitmap() {
+        initBitmap(width, height);
+    }
+
     private void setupBitmap(int width, int height) {
         Matrix matrix = null;
-        if (headCanvas != null) {
+        if (layerRef.bitmap != null) {
             matrix = canvasTransformer.getMatrix();
 
-            final int prevWidth = headBitmap.getWidth();
-            final int prevHeight = headBitmap.getHeight();
+            final int prevWidth = layerRef.bitmap.getWidth();
+            final int prevHeight = layerRef.bitmap.getHeight();
 
             final int tX = width / 2 - prevWidth / 2;
             final int tY = height / 2 - prevHeight / 2;
             matrix.postTranslate(tX, tY);
         }
 
-        System.gc();
-        headBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        backgroundBitmap = Bitmap.createBitmap(headBitmap);
-        headCanvas = new Canvas(headBitmap);
-        canvasTransformer = new CanvasTransformer(headCanvas);
-        mBackgroundCanvas = new Canvas(backgroundBitmap);
-        //抗锯齿
-        headCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+        initBitmap(width, height);
 
         if (matrix != null) {
             canvasTransformer.setMatrix(matrix);
@@ -155,6 +150,11 @@ public class PaintView extends View {
      * Initialize.
      */
     private void init() {
+        mCanvas = new Canvas();
+        canvasTransformer = new CanvasTransformer(mCanvas);
+        //抗锯齿
+        mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+
         setEraserMode(false);
         eraserPaint = new Paint();
         eraserPaint.setColor(Color.BLACK);
@@ -178,13 +178,12 @@ public class PaintView extends View {
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
-        undoList = new LinkedList<>();
-        redoList = new LinkedList<>();
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
 
             private boolean transformationEnabled() {
                 return moveTransformationEnabled || zoomTransformationEnabled || rotateTransformationEnabled;
             }
+
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
                 if (moveTransformationEnabled) {
@@ -221,7 +220,13 @@ public class PaintView extends View {
             public void onTwoPointsUp(MotionEvent event) {
                 if (transformationEnabled()) {
                     transBitmap = null;
-                    redrawCanvas();
+                    // redraw all layers' bitmaps
+                    // noinspection ForLoopReplaceableByForEach
+                    for (int i = 0, layerArraySize = layerArray.size(); i < layerArraySize; i++) {
+                        Layer layer = layerArray.get(i);
+                        layer.redrawBitmap(canvasTransformer.getMatrix());
+                    }
+                    postInvalidate();
                 }
             }
 
@@ -230,7 +235,7 @@ public class PaintView extends View {
                 if (moveTransformationEnabled || zoomTransformationEnabled || rotateTransformationEnabled) {
                     mPath = null;
                     if (transBitmap == null) {
-                        transBitmap = Bitmap.createBitmap(headBitmap);
+                        transBitmap = Bitmap.createBitmap(bitmapRef.getWidth(), bitmapRef.getHeight(), Bitmap.Config.ARGB_8888);
                         transCanvas = new Canvas(transBitmap);
                         transCanvasTransformer = new CanvasTransformer(transCanvas);
                     }
@@ -250,7 +255,11 @@ public class PaintView extends View {
                 if (transBitmap != null) {
                     Canvas c = new Canvas(transBitmap);
                     c.setMatrix(canvasTransformer.getMatrix());
-                    c.drawBitmap(headBitmap, 0, 0, mBitmapPaint);
+                    // noinspection ForLoopReplaceableByForEach
+                    for (int i = 0, layerArraySize = layerArray.size(); i < layerArraySize; i++) {
+                        Layer layer = layerArray.get(i);
+                        transCanvas.drawBitmap(layer.bitmap, 0, 0, mBitmapPaint);
+                    }
                 }
                 postInvalidate();
             }
@@ -264,6 +273,7 @@ public class PaintView extends View {
         }
 
         File tmpPathFile = new File(internalPathDir, String.valueOf(System.currentTimeMillis()));
+
         // use an internal temporary PathSaver
         defaultTmpPathSaver = new PathSaver(tmpPathFile.getPath());
         pathSaver = defaultTmpPathSaver;
@@ -295,19 +305,16 @@ public class PaintView extends View {
      * 撤销操作
      */
     public void undo() {
-        if (!undoList.isEmpty()) {
+        if (!undoListRef.isEmpty()) {
             pathSaver.undo();
 
             clearPaint();//清除之前绘制内容
-            PathBean lastPb = undoList.removeLast();//将最后一个移除
-            redoList.add(lastPb);//加入 恢复操作
+            PathBean lastPb = undoListRef.removeLast();//将最后一个移除
+            redoListRef.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 headCanvas
-            if (backgroundBitmap != null) {
-                headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
-            }
             if (!dontDrawWhileImporting) {
-                for (PathBean pb : undoList) {
-                    headCanvas.drawPath(pb.path, pb.paint);
+                for (PathBean pb : undoListRef) {
+                    mCanvas.drawPath(pb.path, pb.paint);
                 }
                 postInvalidate();
             }
@@ -318,12 +325,12 @@ public class PaintView extends View {
      * 恢复操作
      */
     public void redo() {
-        if (!redoList.isEmpty()) {
+        if (!redoListRef.isEmpty()) {
             pathSaver.redo();
 
-            PathBean pathBean = redoList.removeLast();
-            headCanvas.drawPath(pathBean.path, pathBean.paint);
-            undoList.add(pathBean);
+            PathBean pathBean = redoListRef.removeLast();
+            mCanvas.drawPath(pathBean.path, pathBean.paint);
+            undoListRef.add(pathBean);
             if (!dontDrawWhileImporting) {
                 postInvalidate();
             }
@@ -345,9 +352,8 @@ public class PaintView extends View {
         clearPaint();
         mLastY = 0f;
         //清空 撤销 ，恢复 操作列表
-        redoList.clear();
-        undoList.clear();
-        mBackgroundCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        redoListRef.clear();
+        undoListRef.clear();
     }
 
     /**
@@ -407,14 +413,14 @@ public class PaintView extends View {
      * 是否可以撤销
      */
     public boolean canUndo() {
-        return undoList.isEmpty();
+        return undoListRef.isEmpty();
     }
 
     /**
      * 是否可以恢复
      */
     public boolean canRedo() {
-        return redoList.isEmpty();
+        return redoListRef.isEmpty();
     }
 
     /**
@@ -422,7 +428,7 @@ public class PaintView extends View {
      * 直接绘制白色背景
      */
     private void clearPaint() {
-        headCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         postInvalidate();
     }
 
@@ -442,27 +448,31 @@ public class PaintView extends View {
         if (dontDrawWhileImporting) {
             return;
         }
-        if (canvas != null) {
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            if (transBitmap == null) {
-                if (headBitmap != null) {
-                    canvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-                    if (!dontDrawWhileImporting) {
-                        if (mPath != null) {//显示实时正在绘制的path轨迹
-                            canvas.setMatrix(canvasTransformer.getMatrix());
-                            if (eraserMode) {
-                                canvas.drawPath(mPath, eraserPaint);
-                            } else {
-                                canvas.drawPath(mPath, mPaint);
-                            }
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        if (transBitmap == null) {
+            if (bitmapRef != null) {
+                // 将bitmap绘制在canvas上,最终的显示
+                // noinspection ForLoopReplaceableByForEach
+                for (int i = 0, layerArraySize = layerArray.size(); i < layerArraySize; i++) {
+                    Layer layer = layerArray.get(i);
+                    canvas.drawBitmap(layer.bitmap, 0, 0, mBitmapPaint);
+                }
+
+                if (!dontDrawWhileImporting) {
+                    if (mPath != null) {//显示实时正在绘制的path轨迹
+                        canvas.setMatrix(canvasTransformer.getMatrix());
+                        if (eraserMode) {
+                            canvas.drawPath(mPath, eraserPaint);
+                        } else {
+                            canvas.drawPath(mPath, mPaint);
                         }
                     }
                 }
-            } else {
-                transCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                transCanvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);
-                canvas.drawBitmap(transBitmap, 0, 0, mBitmapPaint);
             }
+        } else {
+            transCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            transCanvas.drawBitmap(bitmapRef, 0, 0, mBitmapPaint);
+            canvas.drawBitmap(transBitmap, 0, 0, mBitmapPaint);
         }
     }
 
@@ -518,7 +528,10 @@ public class PaintView extends View {
             // init
             this.width = measuredW;
             this.height = measuredH;
-            setupBitmap();
+            add1Layer();
+            add1Layer();
+            // the default layer
+            switchLayer(0);
         }
 
         if (measuredW != width || measuredH != height) {
@@ -1030,14 +1043,14 @@ public class PaintView extends View {
                 if (mPath != null) {
                     pathSaver.onTouchUp(x, y);
                     if (!dontDrawWhileImporting) {
-                        headCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
+                        mCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
                     }
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
                     // for undoing
-                    undoList.add(pb);
-                    redoList.clear();
+                    undoListRef.add(pb);
+                    redoListRef.clear();
                     mPath.reset();
                     mPath = null;
                 }
@@ -1057,15 +1070,16 @@ public class PaintView extends View {
     }
 
     public void importImage(@NonNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
-        System.gc();
+        // TODO: 8/4/21 import image
+        /*System.gc();
         Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
         mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
         if (backgroundBitmap == null) {
             ToastUtils.show(ctx, ctx.getString(R.string.importing_failed));
         } else {
-            headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
+            mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         }
-        postInvalidate();
+        postInvalidate();*/
     }
 
     public void resetTransformation() {
@@ -1076,11 +1090,7 @@ public class PaintView extends View {
      * 把路径绘制到缓冲Bitmap上
      */
     private void redrawCanvas() {
-        headCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
-        for (PathBean pathBean : this.undoList) {
-            headCanvas.drawPath(pathBean.path, pathBean.paint);
-        }
+        layerRef.redrawBitmap(canvasTransformer.getMatrix());
     }
 
     public float getStrokeWidthInUse() {
@@ -1091,26 +1101,8 @@ public class PaintView extends View {
         return this.lockStrokeEnabled;
     }
 
-    public void bitmapResolution(@NotNull Point point) {
-        point.x = headBitmap.getWidth();
-        point.y = headBitmap.getHeight();
-    }
-
     public void setLockingStroke(boolean mode) {
         this.lockStrokeEnabled = mode;
-    }
-
-    public void lockStroke() {
-        if (lockStrokeEnabled) {
-            this.lockedDrawingStrokeWidth = getDrawingStrokeWidth() * canvasScale;
-            this.lockedEraserStrokeWidth = getEraserStrokeWidth() * canvasScale;
-            setCurrentStrokeWidthWhenLocked();
-        }
-    }
-
-    public void changeHead(String id) {
-        headCanvas = canvasMap.get(id);
-        headBitmap = bitmapMap.get(headCanvas);
     }
 
     // ----------------------- new API of stroke locking -------------------------------
@@ -1152,8 +1144,8 @@ public class PaintView extends View {
      * 路径集合
      */
     public static class PathBean {
-        final Path path;
-        final Paint paint;
+        public final Path path;
+        public final Paint paint;
 
         PathBean(Path path, Paint paint) {
             this.path = path;
@@ -1570,5 +1562,28 @@ public class PaintView extends View {
 
     public void resetDefaultTransformation() {
         defaultTransformation.set(new Matrix());
+    }
+
+    int a = 1;
+
+    public void testAPI() {
+        switchLayer(a % 2);
+        redrawCanvas();
+        postInvalidate();
+        ++a;
+    }
+
+    private void add1Layer() {
+        layerArray.add(new Layer(width, height));
+    }
+
+    private void switchLayer(int index) {
+        layerRef = layerArray.get(index);
+        undoListRef = layerRef.undoList;
+        redoListRef = layerRef.redoList;
+        bitmapRef = layerRef.bitmap;
+
+        mCanvas.setBitmap(bitmapRef);
+        canvasTransformer.refresh();
     }
 }
