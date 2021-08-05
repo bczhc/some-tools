@@ -79,7 +79,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             }
 
             holder.itemView.setOnClickListener {
-                checkedId = items[position].layerId
+                checkedId = items[holder.layoutPosition].layerId
                 notifyDataSetChanged()
             }
         }
@@ -115,9 +115,13 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     ) :
         ItemTouchHelper.Callback() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+            var swipeFlag = ItemTouchHelper.LEFT
+            // if the item is checked, avoid being swipe away
+            if (listAdapter.getCheckedLayerId() == listAdapter.items[viewHolder.layoutPosition].layerId) {
+                swipeFlag = 0
+            }
             val dragFlag = ItemTouchHelper.UP
                 .xor(ItemTouchHelper.DOWN)
-            val swipeFlag = ItemTouchHelper.LEFT
 
             return makeMovementFlags(dragFlag, swipeFlag)
         }
