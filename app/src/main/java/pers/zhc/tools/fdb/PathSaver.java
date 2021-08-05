@@ -13,6 +13,7 @@ import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.views.HSVAColorPickerRL;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Path saver.
@@ -126,6 +127,24 @@ public class PathSaver {
         beginTransaction();
     }
 
+    private void configureDatabase() {
+        // create table
+        pathDatabase.exec("CREATE TABLE IF NOT EXISTS info\n" +
+                "(\n" +
+                "    version          TEXT NOT NULL,\n" +
+                "    create_timestamp INTEGER,\n" +
+                "    extra_infos      TEXT NOT NULL\n" +
+                ")");
+
+        Statement infoStatement = pathDatabase.compileStatement("INSERT INTO info VALUES(?,?,?)");
+        infoStatement.reset();
+        infoStatement.bindText(1, "3.0");
+        infoStatement.bind(2, System.currentTimeMillis());
+        infoStatement.bindText(3, "");
+        infoStatement.step();
+        infoStatement.release();
+    }
+
     public void addNewLayerPathSaver(long id) {
         final LayerPathSaver layerPathSaver = new LayerPathSaver(pathDatabase, id);
         layerPathSaverList.add(layerPathSaver);
@@ -167,6 +186,17 @@ public class PathSaver {
             defaultTransformationJSONObject.put("MPERSP_1", matrixValues[Matrix.MPERSP_1]);
             defaultTransformationJSONObject.put("MPERSP_2", matrixValues[Matrix.MPERSP_2]);
             jsonObject.put("defaultTransformation", defaultTransformationJSONObject);
+
+            JSONArray layersInfoJSONArray = new JSONArray();
+            final List<LayerInfo> layersInfo = extraInfos.getLayersInfo();
+            for (LayerInfo layerInfo : layersInfo) {
+                JSONObject layerInfoJSONObject = new JSONObject();
+                layerInfoJSONObject.put("id", layerInfo.getLayerId());
+                layerInfoJSONObject.put("name", layerInfo.getName());
+                layerInfoJSONObject.put("visible", layerInfo.getVisible());
+                layersInfoJSONArray.put(layerInfoJSONObject);
+            }
+            jsonObject.put("layersInfo", layersInfoJSONArray);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -176,24 +206,6 @@ public class PathSaver {
         Statement infoStatement = pathDatabase.compileStatement("UPDATE info\n" +
                 "SET extra_infos = ?");
         infoStatement.bindText(1, extraString);
-        infoStatement.step();
-        infoStatement.release();
-    }
-
-    private void configureDatabase() {
-        // create table
-        pathDatabase.exec("CREATE TABLE IF NOT EXISTS info\n" +
-                "(\n" +
-                "    version          TEXT NOT NULL,\n" +
-                "    create_timestamp INTEGER,\n" +
-                "    extra_infos      TEXT NOT NULL\n" +
-                ")");
-
-        Statement infoStatement = pathDatabase.compileStatement("INSERT INTO info VALUES(?,?,?)");
-        infoStatement.reset();
-        infoStatement.bindText(1, "3.0");
-        infoStatement.bind(2, System.currentTimeMillis());
-        infoStatement.bindText(3, "");
         infoStatement.step();
         infoStatement.release();
     }

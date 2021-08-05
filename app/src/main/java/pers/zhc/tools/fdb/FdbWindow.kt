@@ -85,6 +85,8 @@ class FdbWindow(private val context: BaseActivity) {
         var screenColorPickerResult: ScreenColorPickerResultReceiver? = null
     }
 
+    private var layerManagerView: LayerManagerView
+
     private var hasStartedScreenColorPicker = false
 
     init {
@@ -253,6 +255,28 @@ class FdbWindow(private val context: BaseActivity) {
             }
         }
 
+        paintView.apply {
+            drawingStrokeWidth = 10F
+            eraserStrokeWidth = 10F
+            drawingColor = colorPickers.brush.color
+
+            setPathSaver(pathSaver)
+
+            layerManagerView = LayerManagerView(context) { id ->
+                paintView.add1Layer(id)
+            }
+
+            setOnScreenDimensionChangedListener { width, height ->
+                positionUpdater.updateParentDimension(width, height)
+            }
+            post {
+                // add the default layer
+                val id = System.currentTimeMillis()
+                paintView.add1Layer(id)
+                layerManagerView.add1Layer(id, context.getString(R.string.fdb_layer_default_name))
+            }
+        }
+
         dialogs.apply {
             brushColorPicker = createDialog(colorPickers.brush, true, dim = false)
             panelColorPicker = createDialog(colorPickers.panel, true, dim = false)
@@ -262,16 +286,6 @@ class FdbWindow(private val context: BaseActivity) {
             eraserOpacity = createEraserOpacityDialog()
             transformationSettings = createTransformationSettingsDialog()
             layerManager = createLayerManagerDialog()
-        }
-
-        paintView.apply {
-            drawingStrokeWidth = 10F
-            eraserStrokeWidth = 10F
-            drawingColor = colorPickers.brush.color
-            setPathSaver(pathSaver)
-            setOnScreenDimensionChangedListener { width, height ->
-                positionUpdater.updateParentDimension(width, height)
-            }
         }
 
         val externalStorage = Common.getExternalStoragePath(context)
@@ -652,7 +666,7 @@ class FdbWindow(private val context: BaseActivity) {
                                                     ExtraInfosUtils.getDefaultTransformation(
                                                         defaultTransformationJSONObject
                                                     )
-                                                paintView.setDefaultTransformation(matrix)
+                                                paintView.defaultTransformation = matrix
                                             } catch (_: Exception) {
                                             }
                                         }
@@ -682,7 +696,8 @@ class FdbWindow(private val context: BaseActivity) {
                             paintView.lockedDrawingStrokeWidth,
                             paintView.lockedEraserStrokeWidth,
                             colorPickers.brush.savedColors,
-                            paintView.defaultTransformation
+                            paintView.defaultTransformation,
+                            layerManagerView.getLayersInfo()
                         )
                         pathSaver.setExtraInfos(extraInfos)
                         pathSaver.flush()
@@ -782,6 +797,7 @@ class FdbWindow(private val context: BaseActivity) {
                 FileUtil.copy(pathFiles.tmpPathFile, pathFile)
 
                 val first = arrayOf(true, true)
+                /*TODO
                 PathProcessor.optimizePath(pathFile.path) { phase, progress ->
                     phase!!
                     tryDo.tryDo { _, notifier ->
@@ -819,7 +835,7 @@ class FdbWindow(private val context: BaseActivity) {
                             dialog.dismiss()
                         }
                     }
-                }
+                }*/
 
                 ToastUtils.show(context, R.string.fdb_exporting_path_succeeded_toast)
             } catch (e: IOException) {
@@ -981,19 +997,8 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     private fun createLayerManagerDialog(): Dialog {
-        val onLayerAddedCallback: OnLayerAddedCallback = { id ->
-            paintView.add1Layer(id)
-        }
-
-        val layerManagerView = LayerManagerView(context, onLayerAddedCallback)
         val dialog = createDialog(layerManagerView).also {
             DialogUtils.setDialogAttr(it, width = MATCH_PARENT, height = MATCH_PARENT, overlayWindow = true)
-        }
-
-        // get the default layer in PaintView and add it to the layerManagerView
-        paintView.setOnDefaultLayerAddedCallback { id ->
-            layerManagerView.add1Layer(id, context.getString(R.string.fdb_layer_default_name))
-            layerManagerView.setChecked(id)
         }
 
         dialog.setOnDismissListener {

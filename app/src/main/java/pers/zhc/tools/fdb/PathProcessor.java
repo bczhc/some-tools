@@ -1,5 +1,6 @@
 package pers.zhc.tools.fdb;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
@@ -14,12 +15,13 @@ import static pers.zhc.tools.fdb.PathProcessor.ProgressCallback.Phase.*;
  * @author bczhc
  */
 public class PathProcessor {
-    public static void optimizePath(String filePath, @Nullable ProgressCallback progressCallback) {
+    public static void optimizePath(String filePath, String table, @Nullable ProgressCallback progressCallback) {
         class Lead {
             int mark;
             int p1;
             float p2;
 
+            @Contract(mutates = "this")
             private void set(int mark, int p1, float p2) {
                 this.mark = mark;
                 this.p1 = p1;
@@ -31,6 +33,7 @@ public class PathProcessor {
             final float p1;
             final float p2;
 
+            @Contract(pure = true)
             public Tail(int mark, float p1, float p2) {
                 this.mark = mark;
                 this.p1 = p1;
@@ -54,7 +57,7 @@ public class PathProcessor {
         final int recordCount = db.getRecordCount("path");
         int i = 0;
 
-        final Statement statement = db.compileStatement("SELECT mark, p1, p2 FROM path");
+        final Statement statement = db.compileStatement("SELECT mark, p1, p2 FROM " + table);
         final Cursor cursor = statement.getCursor();
         while (cursor.step()) {
             final int mark = cursor.getInt(0);
@@ -105,8 +108,8 @@ public class PathProcessor {
         statement.release();
 
         // noinspection SqlWithoutWhere
-        db.exec("DELETE FROM path");
-        final Statement insertStatement = db.compileStatement("INSERT INTO path (mark, p1, p2) VALUES (?, ?, ?)");
+        db.exec("DELETE FROM " + table);
+        final Statement insertStatement = db.compileStatement("INSERT INTO " + table + " (mark, p1, p2) VALUES (?, ?, ?)");
 
         final Object[] binds = new Object[3];
         InsertFunction insert = (mark, p1, p2) -> {

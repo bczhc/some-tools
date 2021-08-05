@@ -10,7 +10,7 @@ import org.json.JSONObject
 class ExtraInfosUtils {
     companion object {
         fun getDefaultTransformation(defaultTransformationJSONObject: JSONObject): Matrix? {
-            try {
+            return try {
                 val matrixValues = FloatArray(9)
                 matrixValues[Matrix.MSCALE_X] = defaultTransformationJSONObject.getDouble("MSCALE_X").toFloat()
                 matrixValues[Matrix.MSKEW_X] = defaultTransformationJSONObject.getDouble("MSKEW_X").toFloat()
@@ -23,9 +23,27 @@ class ExtraInfosUtils {
                 matrixValues[Matrix.MPERSP_2] = defaultTransformationJSONObject.getDouble("MPERSP_2").toFloat()
                 val matrix = Matrix()
                 matrix.setValues(matrixValues)
-                return matrix
+                matrix
             } catch (ignored: JSONException) {
-                return null
+                null
+            }
+        }
+
+        fun getLayersInfo(rootJSONObject: JSONObject): ArrayList<LayerInfo>? {
+            return try {
+                val list = ArrayList<LayerInfo>()
+                val layersInfoJSONArray = rootJSONObject.getJSONArray("layersInfo")
+                val length = layersInfoJSONArray.length()
+                for (i in 0 until length) {
+                    val layerInfoJSONObject = layersInfoJSONArray.getJSONObject(i)
+                    val id = layerInfoJSONObject.getLong("id")
+                    val name = layerInfoJSONObject.getString("name")
+                    val visible = layerInfoJSONObject.getBoolean("visible")
+                    list.add(LayerInfo(id, name, visible))
+                }
+                list
+            } catch (ignored: JSONException) {
+                null
             }
         }
     }

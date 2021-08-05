@@ -89,8 +89,6 @@ public class PaintView extends View {
 
     private float canvasScale = 1F;
 
-    private OnDefaultLayerAddedCallback onDefaultLayerAddedCallback;
-
     public PaintView(Context context) {
         this(context, null);
     }
@@ -522,10 +520,6 @@ public class PaintView extends View {
             // init
             this.width = measuredW;
             this.height = measuredH;
-            // the default layer
-            add1Layer();
-            switchLayer(0);
-            onDefaultLayerAddedCallback.onAdded(layerRef.getId());
         }
 
         if (measuredW != width || measuredH != height) {
@@ -899,10 +893,13 @@ public class PaintView extends View {
         final Matrix savedTransformation = new Matrix(getTransformationMatrix());
 
         Matrix defaultTransformation = null;
+        ArrayList<LayerInfo> layersInfo = null;
         try {
             final JSONObject extraInfos = PathSaver.getExtraInfos(db);
             final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
             defaultTransformation = ExtraInfosUtils.Companion.getDefaultTransformation(defaultTransformationJSON);
+
+            layersInfo = ExtraInfosUtils.Companion.getLayersInfo(extraInfos);
         } catch (JSONException | NullPointerException ignored) {
             ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
         }
@@ -916,26 +913,70 @@ public class PaintView extends View {
 
         float canvasScale = CanvasTransformer.getRealScale(getTransformationMatrix());
 
-        final Statement statement0 = db.compileStatement("SELECT COUNT() FROM path");
-        final Cursor cursor0 = statement0.getCursor();
-        Common.doAssertion(cursor0.step());
-        int recordNum = cursor0.getInt(0);
-        statement0.release();
-
-        dontDrawWhileImporting = speedDelayMillis == 0;
-
-        final ArrayList<String> tables = getDatabaseTables(db);
-        for (String table : tables) {
-            if (table.matches("^path_layer_[0-9]+$")) {
-                final long layerId = Long.parseLong(RegexUtils.Companion.capture(table, "^path_layer_([0-9]+)$").get(0).get(1));
+        if (layersInfo != null) {
+            for (LayerInfo layerInfo : layersInfo) {
+                final long layerId = layerInfo.getLayerId();
                 add1Layer(layerId);
+                switchLayer(layerId);
 
+                importLayerPath(
+                        db,
+                        layerId,
+                        defaultTransformationScale,
+                        transformationValue,
+                        progressCallback,
+                        speedDelayMillis
+                );
+            }
+        } else {
+            // TODO: 8/5/21 for old path ver3.0
+            TODO.todo();
+        }
+
+        String extraStr = null;
+        try {
+            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
+                    "FROM info");
+            Cursor infoCursor = infoStatement.getCursor();
+            if (infoCursor.step()) {
+                extraStr = infoCursor.getText(0);
+            }
+            infoStatement.release();
+        } catch (RuntimeException ignored) {
+        }
+
+        if (extraStr != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(extraStr);
+                boolean isLockingStroke = jsonObject.getBoolean("isLockingStroke");
+                setLockingStroke(isLockingStroke);
+                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
+                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
+                setCurrentStrokeWidthWhenLocked();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
-        Statement statement = db.compileStatement("SELECT mark, p1, p2\n" +
-                "FROM path");
 
-        Cursor cursor = statement.getCursor();
+        transformTo(savedTransformation);
+
+        postInvalidate();
+    }
+
+    private void importLayerPath(
+            SQLite3 db,
+            long layerId,
+            float defaultTransformationScale,
+            float[] transformationValue,
+            Consumer<Float> progressCallback,
+            int speedDelayMillis
+    ) {
+        final String pathTable = "path_layer_" + layerId;
+        final int rowCount = SQLiteUtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
+
+        final Statement statement = db.compileStatement("SELECT mark, p1, p2 FROM " + pathTable);
+        final Cursor cursor = statement.getCursor();
+
         int c = 0;
         while (cursor.step()) {
             int mark = cursor.getInt(0);
@@ -988,7 +1029,7 @@ public class PaintView extends View {
             }
 
             ++c;
-            progressCallback.accept((float) c / (float) recordNum);
+            progressCallback.accept((float) c / (float) rowCount);
             if (!dontDrawWhileImporting) {
                 try {
                     //noinspection BusyWait
@@ -999,36 +1040,7 @@ public class PaintView extends View {
             }
         }
 
-        String extraStr = null;
-        try {
-            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
-                    "FROM info");
-            Cursor infoCursor = infoStatement.getCursor();
-            if (infoCursor.step()) {
-                extraStr = infoCursor.getText(0);
-            }
-            infoStatement.release();
-        } catch (RuntimeException ignored) {
-        }
-
-        if (extraStr != null) {
-            try {
-                JSONObject jsonObject = new JSONObject(extraStr);
-                boolean isLockingStroke = jsonObject.getBoolean("isLockingStroke");
-                setLockingStroke(isLockingStroke);
-                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
-                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
-                setCurrentStrokeWidthWhenLocked();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
         statement.release();
-
-        transformTo(savedTransformation);
-
-        postInvalidate();
     }
 
     private final PointF transformedPoint = new PointF();
@@ -1282,6 +1294,7 @@ public class PaintView extends View {
     public long add1Layer(long id) {
         final Layer layer = new Layer(width, height, id);
         layerArray.add(layer);
+        pathSaver.addNewLayerPathSaver(id);
         return layer.getId();
     }
 
@@ -1334,14 +1347,6 @@ public class PaintView extends View {
 
     public void switchLayer(long id) {
         switchLayer(getLayerIndexById(id));
-    }
-
-    public void setOnDefaultLayerAddedCallback(OnDefaultLayerAddedCallback onDefaultLayerAddedCallback) {
-        this.onDefaultLayerAddedCallback = onDefaultLayerAddedCallback;
-    }
-
-    public interface OnDefaultLayerAddedCallback {
-        void onAdded(long id);
     }
 
     private void redrawAllLayerBitmap() {

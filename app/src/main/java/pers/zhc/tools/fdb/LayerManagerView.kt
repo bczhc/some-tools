@@ -156,6 +156,10 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     fun setChecked(id: Long) {
         listAdapter.setChecked(id)
     }
+
+    fun getLayersInfo(): ArrayList<LayerInfo> {
+        return listItems
+    }
 }
 
 typealias OnLayerAddedCallback = (id: Long) -> Unit

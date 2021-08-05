@@ -11,5 +11,6 @@ data class ExtraInfos(
     val lockedDrawingStrokeWidth: Float,
     val lockedEraserStrokeWidth: Float,
     val savedColors: ArrayList<SavedColor>,
-    val defaultTransformation: Matrix
+    val defaultTransformation: Matrix,
+    val layersInfo: List<LayerInfo>
 )

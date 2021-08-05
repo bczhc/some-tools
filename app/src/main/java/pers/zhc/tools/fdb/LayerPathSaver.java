@@ -19,15 +19,18 @@ public class LayerPathSaver {
 
     public LayerPathSaver(@NotNull SQLite3 mainDatabase, long layerId) {
         this.layerId = layerId;
+        this.mainDatabase = mainDatabase;
+
         pathTableName = "path_layer_" + layerId;
         tempTableName = "temp_layer_" + layerId;
+
+        configureDatabase();
 
         tmpStatement = mainDatabase.compileStatement("INSERT INTO " + tempTableName + "(mark, p1, p2) VALUES (?, ?, ?)");
         pathStatement = mainDatabase.compileStatement("INSERT INTO " + pathTableName + "(mark, p1, p2) VALUES (?, ?, ?)");
         // noinspection SqlWithoutWhere
         clearTempStatement = mainDatabase.compileStatement("DELETE FROM " + tempTableName);
         transferToPathTableStatement = mainDatabase.compileStatement("INSERT INTO " + pathTableName + " SELECT mark, p1, p2 FROM " + tempTableName);
-        this.mainDatabase = mainDatabase;
     }
 
     private void configureDatabase() {
