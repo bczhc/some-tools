@@ -13,19 +13,17 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
-import pers.zhc.tools.fdb.ExtraInfos;
-import pers.zhc.tools.fdb.Layer;
+import pers.zhc.tools.fdb.*;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.*;
-import pers.zhc.tools.views.HSVAColorPickerRL;
 
 import java.io.*;
 import java.util.*;
@@ -47,6 +45,8 @@ public class PaintView extends View {
     private Paint eraserPaint;
     private Paint mPaintRef = null;
     private final ArrayList<Layer> layerArray = new ArrayList<>();
+    private LayerPathSaver layerPathSaverRef;
+
     private Layer layerRef;
     private Canvas mCanvas;
     private CanvasTransformer canvasTransformer;
@@ -179,6 +179,7 @@ public class PaintView extends View {
 
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
 
+            @Contract(pure = true)
             private boolean transformationEnabled() {
                 return moveTransformationEnabled || zoomTransformationEnabled || rotateTransformationEnabled;
             }
@@ -234,8 +235,8 @@ public class PaintView extends View {
                         transCanvas = new Canvas(transBitmap);
                         transCanvasTransformer = new CanvasTransformer(transCanvas);
                     }
-                    if (pathSaver != null) {
-                        pathSaver.clearTmpTable();
+                    if (layerPathSaverRef != null) {
+                        layerPathSaverRef.clearTempTable();
                     }
                 }
             }
@@ -300,7 +301,7 @@ public class PaintView extends View {
      */
     public void undo() {
         if (!undoListRef.isEmpty()) {
-            pathSaver.undo();
+            layerPathSaverRef.undo();
 
             clearPaint();//清除之前绘制内容
             PathBean lastPb = undoListRef.removeLast();//将最后一个移除
@@ -320,7 +321,7 @@ public class PaintView extends View {
      */
     public void redo() {
         if (!redoListRef.isEmpty()) {
-            pathSaver.redo();
+            layerPathSaverRef.redo();
 
             PathBean pathBean = redoListRef.removeLast();
             mCanvas.drawPath(pathBean.path, pathBean.paint);
@@ -877,6 +878,17 @@ public class PaintView extends View {
         onTouchAction(motionAction, importTmpPoint.x, importTmpPoint.y);
     }
 
+    private @NotNull ArrayList<String> getDatabaseTables(@NotNull SQLite3 db) {
+        ArrayList<String> list = new ArrayList<>();
+        final Statement statement = db.compileStatement("SELECT tbl_name FROM sqlite_master");
+        final Cursor cursor = statement.getCursor();
+        while (cursor.step()) {
+            list.add(cursor.getText(0));
+        }
+        statement.release();
+        return list;
+    }
+
     private void importPathVer3(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
@@ -890,7 +902,7 @@ public class PaintView extends View {
         try {
             final JSONObject extraInfos = PathSaver.getExtraInfos(db);
             final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
-            defaultTransformation = ExtraInfos.Companion.getDefaultTransformation(defaultTransformationJSON);
+            defaultTransformation = ExtraInfosUtils.Companion.getDefaultTransformation(defaultTransformationJSON);
         } catch (JSONException | NullPointerException ignored) {
             ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
         }
@@ -912,6 +924,14 @@ public class PaintView extends View {
 
         dontDrawWhileImporting = speedDelayMillis == 0;
 
+        final ArrayList<String> tables = getDatabaseTables(db);
+        for (String table : tables) {
+            if (table.matches("^path_layer_[0-9]+$")) {
+                final long layerId = Long.parseLong(RegexUtils.Companion.capture(table, "^path_layer_([0-9]+)$").get(0).get(1));
+                add1Layer(layerId);
+
+            }
+        }
         Statement statement = db.compileStatement("SELECT mark, p1, p2\n" +
                 "FROM path");
 
@@ -1024,7 +1044,11 @@ public class PaintView extends View {
         y = inverseTransformedPoint.y;
         switch (motionAction) {
             case MotionEvent.ACTION_DOWN:
-                pathSaver.onTouchDown(x, y);
+                if (eraserMode) {
+                    layerPathSaverRef.onErasingTouchDown(x, y, getEraserAlpha(), getEraserStrokeWidth());
+                } else {
+                    layerPathSaverRef.onDrawingTouchDown(x, y, getDrawingColor(), getDrawingStrokeWidth());
+                }
                 //路径
                 mPath = new Path();
                 mLastX = x;
@@ -1032,7 +1056,7 @@ public class PaintView extends View {
                 mPath.moveTo(mLastX, mLastY);
                 break;
             case MotionEvent.ACTION_MOVE:
-                pathSaver.onTouchMove(x, y);
+                layerPathSaverRef.onTouchMove(x, y, eraserMode);
                 if (mPath != null) {
                     mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
                     mLastX = x;
@@ -1041,7 +1065,7 @@ public class PaintView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
-                    pathSaver.onTouchUp(x, y);
+                    layerPathSaverRef.onTouchUp(x, y, eraserMode);
                     if (!dontDrawWhileImporting) {
                         mCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
                     }
@@ -1054,7 +1078,7 @@ public class PaintView extends View {
                     mPath.reset();
                     mPath = null;
                 }
-                pathSaver.transferToPathTableAndClear();
+                layerPathSaverRef.transferToPathTableAndClear();
                 break;
             default:
         }
@@ -1159,336 +1183,14 @@ public class PaintView extends View {
      * @param pathSaver path saver
      */
     public void setPathSaver(PathSaver pathSaver) {
-        final File tmpFile = new File(defaultTmpPathSaver.pathDatabase.getDatabasePath());
+        final File tmpFile = new File(defaultTmpPathSaver.getDatabasePath());
         if (tmpFile.exists()) {
             if (!tmpFile.delete()) {
                 throw new DeleteException();
             }
         }
 
-        pathSaver.paintView = this;
         this.pathSaver = pathSaver;
-    }
-
-    /**
-     * Path saver.
-     * <p>One record structure in data saved:</p>
-     * <h3>&lt;mark&gt;(1bytes) &lt;p1&gt;(4bytes) &lt;p2&gt;(4bytes)</h3>
-     * When {@link MotionEvent#getAction()} is {@link MotionEvent#ACTION_DOWN}, it'll record 2 records.
-     * <ul>
-     *     <li>
-     *         drawing:<br/>
-     *         let action = {@link MotionEvent#getAction()}<br/>
-     *         if action is:
-     *         <ul>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_DOWN}:
-     *                 <ul>
-     *                     record 1:
-     *                     <li>mark: {@code 0x01}</li>
-     *                     <li>p1: paint color as {@code int}</li>
-     *                     <li>p2: stroke width as {@code float}</li>
-     *                 </ul>
-     *                 <ul>
-     *                     record 2:
-     *                     <li>mark: {@code 0x02}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_MOVE}:
-     *                 <ul>
-     *                     <li>mark: {@code 0x03}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_UP}
-     *                 <ul>
-     *                     <li>mark {@code 0x04}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *         </ul>
-     *     </li>
-     *     <li>
-     *         erasing:<br/>
-     *         let action = {@link MotionEvent#getAction()}<br/>
-     *         if action is:
-     *         <ul>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_DOWN}:
-     *                 <ul>
-     *                     record 1:
-     *                     <li>mark: {@code 0x11}</li>
-     *                     <li>p1: eraser transparency (alpha value) as {@code int}</li>
-     *                     <li>p2: stroke width as {@code float}</li>
-     *                 </ul>
-     *                 <ul>
-     *                     record 2:
-     *                     <li>mark: {@code 0x12}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_MOVE}:
-     *                 <ul>
-     *                     <li>mark: {@code 0x13}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_UP}
-     *                 <ul>
-     *                     <li>mark {@code 0x14}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *         </ul>
-     *     </li>
-     *     <li>
-     *         Undo:
-     *         <ul>
-     *             <li>mark: {@code 0x20}</li>
-     *             <li>p1: {@code 0x00}</li>
-     *             <li>p2: {@code 0x00}</li>
-     *         </ul>
-     *     </li>
-     *     <li>
-     *         Redo:
-     *         <ul>
-     *             <li>mark: {@code 0x30}</li>
-     *             <li>p1: {@code 0x00}</li>
-     *             <li>p2: {@code 0x00}</li>
-     *         </ul>
-     *     </li>
-     * </ul>
-     */
-    public static class PathSaver {
-        private final SQLite3 pathDatabase;
-        private final Statement tmpStatement;
-        private final Statement pathStatement;
-
-        /**
-         * to get some infos from it, set by {@link PaintView#setPathSaver(PathSaver)}
-         */
-        private PaintView paintView;
-
-        public PathSaver(String path) {
-            this.pathDatabase = SQLite3.open(path);
-
-            configureDatabase();
-
-            // prepare statement
-            tmpStatement = pathDatabase.compileStatement("INSERT INTO tmp (mark, p1, p2) VALUES (?, ?, ?)");
-            pathStatement = pathDatabase.compileStatement("INSERT INTO path (mark, p1, p2) VALUES (?, ?, ?)");
-
-            beginTransaction();
-        }
-
-        public void setExtraInfos(@NotNull ArrayList<HSVAColorPickerRL.SavedColor> savedColors) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("isLockingStroke", paintView.isLockingStroke());
-                jsonObject.put("lockedDrawingStrokeWidth", paintView.lockedDrawingStrokeWidth);
-                jsonObject.put("lockedEraserStrokeWidth", paintView.lockedEraserStrokeWidth);
-
-                JSONArray savedColorsJSONArray = new JSONArray();
-                for (HSVAColorPickerRL.SavedColor savedColor : savedColors) {
-                    JSONObject savedColorJSONObject = new JSONObject();
-
-                    JSONArray hsvaJSONOArray = new JSONArray();
-                    hsvaJSONOArray.put(savedColor.hsv[0]);
-                    hsvaJSONOArray.put(savedColor.hsv[1]);
-                    hsvaJSONOArray.put(savedColor.hsv[2]);
-                    hsvaJSONOArray.put(savedColor.alpha);
-
-                    savedColorJSONObject.put("colorHSVA", hsvaJSONOArray);
-                    savedColorJSONObject.put("colorName", savedColor.name);
-                    savedColorsJSONArray.put(savedColorJSONObject);
-                }
-                jsonObject.put("savedColors", savedColorsJSONArray);
-
-                float[] matrixValues = new float[9];
-                paintView.defaultTransformation.getValues(matrixValues);
-                JSONObject defaultTransformationJSONObject = new JSONObject();
-                defaultTransformationJSONObject.put("MSCALE_X", matrixValues[Matrix.MSCALE_X]);
-                defaultTransformationJSONObject.put("MSKEW_X", matrixValues[Matrix.MSKEW_X]);
-                defaultTransformationJSONObject.put("MTRANS_X", matrixValues[Matrix.MTRANS_X]);
-                defaultTransformationJSONObject.put("MSKEW_Y", matrixValues[Matrix.MSKEW_Y]);
-                defaultTransformationJSONObject.put("MSCALE_Y", matrixValues[Matrix.MSCALE_Y]);
-                defaultTransformationJSONObject.put("MTRANS_Y", matrixValues[Matrix.MTRANS_Y]);
-                defaultTransformationJSONObject.put("MPERSP_0", matrixValues[Matrix.MPERSP_0]);
-                defaultTransformationJSONObject.put("MPERSP_1", matrixValues[Matrix.MPERSP_1]);
-                defaultTransformationJSONObject.put("MPERSP_2", matrixValues[Matrix.MPERSP_2]);
-
-                jsonObject.put("defaultTransformation", defaultTransformationJSONObject);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-
-            String extraString = jsonObject.toString();
-
-            Statement infoStatement = pathDatabase.compileStatement("UPDATE info\n" +
-                    "SET extra_infos = ?");
-            infoStatement.bindText(1, extraString);
-            infoStatement.step();
-            infoStatement.release();
-        }
-
-        private void configureDatabase() {
-            // create table
-            pathDatabase.exec("CREATE TABLE IF NOT EXISTS path\n" +
-                    "(\n" +
-                    "    mark INTEGER,\n" +
-                    "    p1   NUMERIC,\n" +
-                    "    p2   NUMERIC\n" +
-                    ")");
-            // for storing records to be saved before ACTION_UP, to prevent recording paths while zooming
-            pathDatabase.exec("CREATE TABLE IF NOT EXISTS tmp\n" +
-                    "(\n" +
-                    "    mark INTEGER,\n" +
-                    "    p1   NUMERIC,\n" +
-                    "    p2   NUMERIC\n" +
-                    ")");
-            pathDatabase.exec("CREATE TABLE IF NOT EXISTS info\n" +
-                    "(\n" +
-                    "    version          TEXT NOT NULL,\n" +
-                    "    create_timestamp INTEGER,\n" +
-                    "    extra_infos      TEXT NOT NULL\n" +
-                    ")");
-
-            Statement infoStatement = pathDatabase.compileStatement("INSERT INTO info VALUES(?,?,?)");
-            infoStatement.reset();
-            infoStatement.bindText(1, "3.0");
-            infoStatement.bind(2, System.currentTimeMillis());
-            infoStatement.bindText(3, "");
-            infoStatement.step();
-            infoStatement.release();
-        }
-
-        private void undo() {
-            pathStatement.reset();
-            pathStatement.bind(1, 0x20);
-            pathStatement.bind(2, 0);
-            pathStatement.bind(3, 0);
-            pathStatement.step();
-        }
-
-        private void redo() {
-            pathStatement.reset();
-            pathStatement.bind(1, 0x30);
-            pathStatement.bind(2, 0);
-            pathStatement.bind(3, 0);
-            pathStatement.step();
-        }
-
-        @SuppressWarnings("DuplicatedCode")
-        private void insert(int mark, int p1, float p2) {
-            tmpStatement.reset();
-            tmpStatement.bind(1, mark);
-            tmpStatement.bind(2, p1);
-            tmpStatement.bind(3, p2);
-            tmpStatement.step();
-        }
-
-        @SuppressWarnings("DuplicatedCode")
-        private void insert(int mark, float p1, float p2) {
-            tmpStatement.reset();
-            tmpStatement.bind(1, mark);
-            tmpStatement.bind(2, p1);
-            tmpStatement.bind(3, p2);
-            tmpStatement.step();
-        }
-
-        private void onTouchDown(float x, float y) {
-            if (paintView.eraserMode) {
-                insert(0x11, paintView.getEraserAlpha(), paintView.getEraserStrokeWidth());
-                insert(0x12, x, y);
-            } else {
-                insert(0x01, paintView.getDrawingColor(), paintView.getDrawingStrokeWidth());
-                insert(0x02, x, y);
-            }
-        }
-
-        private void onTouchMove(float x, float y) {
-            insert(paintView.eraserMode ? 0x13 : 0x03, x, y);
-        }
-
-        private void onTouchUp(float x, float y) {
-            insert(paintView.eraserMode ? 0x14 : 0x04, x, y);
-        }
-
-        public void flush() {
-            pathDatabase.exec("COMMIT");
-            pathDatabase.exec("BEGIN TRANSACTION");
-        }
-
-        private void clearTmpTable() {
-            pathDatabase.exec("-- noinspection SqlWithoutWhere\n" +
-                    "DELETE\n" +
-                    "FROM tmp");
-        }
-
-        private void transferToPathTableAndClear() {
-            pathDatabase.exec("INSERT INTO path\n" +
-                    "SELECT *\n" +
-                    "FROM tmp");
-            clearTmpTable();
-        }
-
-        public void reset() {
-            pathDatabase.exec("DROP TABLE IF EXISTS path");
-            pathDatabase.exec("DROP TABLE IF EXISTS tmp");
-            pathDatabase.exec("DROP TABLE IF EXISTS info");
-            configureDatabase();
-        }
-
-        public void close() {
-            pathStatement.release();
-            tmpStatement.release();
-            pathDatabase.commit();
-            pathDatabase.close();
-        }
-
-        public void commit() {
-            pathDatabase.commit();
-        }
-
-        public void beginTransaction() {
-            pathDatabase.beginTransaction();
-        }
-
-        @Nullable
-        public static JSONObject getExtraInfos(@NotNull SQLite3 db) {
-            String jsonString = null;
-
-            final Statement statement = db.compileStatement("SELECT extra_infos FROM info");
-            final Cursor cursor = statement.getCursor();
-
-            if (cursor.step()) {
-                jsonString = cursor.getText(0);
-            }
-
-            statement.release();
-
-            if (jsonString == null) {
-                return null;
-            }
-
-            try {
-                return new JSONObject(jsonString);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
     }
 
     public void flushPathSaver() {
@@ -1596,6 +1298,8 @@ public class PaintView extends View {
         undoListRef = layerRef.undoList;
         redoListRef = layerRef.redoList;
         bitmapRef = layerRef.bitmap;
+        layerPathSaverRef = pathSaver.getLayerPathSaver(layerRef.getId());
+        if (layerPathSaverRef == null) throw new RuntimeException("Not found specific LayerPathSaver in PathSaver");
 
         mCanvas.setBitmap(bitmapRef);
         canvasTransformer.refresh();
@@ -1644,5 +1348,17 @@ public class PaintView extends View {
         for (int i = layerArray.size() - 1; i >= 0; i--) {
             layerArray.get(i).redrawBitmap(canvasTransformer.getMatrix());
         }
+    }
+
+    public float getLockedDrawingStrokeWidth() {
+        return lockedDrawingStrokeWidth;
+    }
+
+    public float getLockedEraserStrokeWidth() {
+        return lockedEraserStrokeWidth;
+    }
+
+    public Matrix getDefaultTransformation() {
+        return defaultTransformation;
     }
 }

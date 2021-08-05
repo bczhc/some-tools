@@ -77,7 +77,7 @@ class FdbWindow(private val context: BaseActivity) {
     private val panelDimension = ViewDimension()
     private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
 
-    private val pathSaver = PaintView.PathSaver(pathFiles.tmpPathFile.path)
+    private val pathSaver = PathSaver(pathFiles.tmpPathFile.path)
 
     private val receivers = object {
         lateinit var main: FdbBroadcastReceiver
@@ -621,7 +621,7 @@ class FdbWindow(private val context: BaseActivity) {
                                         PathVersion.VERSION_3_0 -> {
                                             try {
                                                 val db = SQLite3.open(file)
-                                                val extraInfos = PaintView.PathSaver.getExtraInfos(db)
+                                                val extraInfos = PathSaver.getExtraInfos(db)
                                                 db.close()
                                                 extraInfos ?: return@runOnUiThread
                                                 val savedColors =
@@ -649,7 +649,9 @@ class FdbWindow(private val context: BaseActivity) {
                                                     extraInfos.getJSONObject("defaultTransformation")
 
                                                 val matrix =
-                                                    ExtraInfos.getDefaultTransformation(defaultTransformationJSONObject)
+                                                    ExtraInfosUtils.getDefaultTransformation(
+                                                        defaultTransformationJSONObject
+                                                    )
                                                 paintView.setDefaultTransformation(matrix)
                                             } catch (_: Exception) {
                                             }
@@ -675,8 +677,14 @@ class FdbWindow(private val context: BaseActivity) {
                     3 -> {
                         // export path
 
-                        val savedColors = colorPickers.brush.savedColors
-                        pathSaver.setExtraInfos(savedColors)
+                        val extraInfos = ExtraInfos(
+                            paintView.isLockStrokeEnabled,
+                            paintView.lockedDrawingStrokeWidth,
+                            paintView.lockedEraserStrokeWidth,
+                            colorPickers.brush.savedColors,
+                            paintView.defaultTransformation
+                        )
+                        pathSaver.setExtraInfos(extraInfos)
                         pathSaver.flush()
 
                         createFilePickerDialog(
@@ -973,7 +981,7 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     private fun createLayerManagerDialog(): Dialog {
-        val onLayerAddedCallback: OnLayerAddedCallback = {id ->
+        val onLayerAddedCallback: OnLayerAddedCallback = { id ->
             paintView.add1Layer(id)
         }
 
@@ -983,7 +991,7 @@ class FdbWindow(private val context: BaseActivity) {
         }
 
         // get the default layer in PaintView and add it to the layerManagerView
-        paintView.setOnDefaultLayerAddedCallback {id->
+        paintView.setOnDefaultLayerAddedCallback { id ->
             layerManagerView.add1Layer(id, context.getString(R.string.fdb_layer_default_name))
             layerManagerView.setChecked(id)
         }

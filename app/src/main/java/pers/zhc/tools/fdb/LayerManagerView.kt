@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +23,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     RelativeLayout(context) {
     private var listAdapter: MyAdapter
     private var recyclerView: RecyclerView
-    private val listItems = ArrayList<LayerItem>()
+    private val listItems = ArrayList<LayerInfo>()
 
     init {
         val inflate = View.inflate(context, R.layout.fdb_layer_manager_view, null)
@@ -49,14 +48,14 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             val input = et.text.toString()
 
             val id = System.currentTimeMillis()
-            listItems.add(LayerItem(id, input))
+            listItems.add(LayerInfo(id, input, true))
             listAdapter.notifyItemInserted(listItems.size)
 
             onLayerAddedCallback(id)
         }).also { DialogUtils.setDialogAttr(it, overlayWindow = true) }.show()
     }
 
-    class MyAdapter(private val context: Context, val items: ArrayList<LayerItem>) :
+    class MyAdapter(private val context: Context, val items: ArrayList<LayerInfo>) :
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
         private var checkedId = -1L
 
@@ -105,11 +104,6 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         }
     }
 
-    class LayerItem(
-        val layerId: Long,
-        val name: String
-    )
-
     class TouchHelperCallback(
         private val listAdapter: MyAdapter,
     ) :
@@ -146,7 +140,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     }
 
     fun add1Layer(id: Long, name: String) {
-        listItems.add(LayerItem(id, name))
+        listItems.add(LayerInfo(id, name, true))
         listAdapter.notifyItemInserted(listItems.size)
     }
 
