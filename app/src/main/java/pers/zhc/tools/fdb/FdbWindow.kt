@@ -973,8 +973,27 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     private fun createLayerManagerDialog(): Dialog {
-        val dialog = createDialog(LayerManagerView(context))
-        DialogUtils.setDialogAttr(dialog, width = MATCH_PARENT, height = MATCH_PARENT, overlayWindow = true)
+        val onLayerAddedCallback: OnLayerAddedCallback = {id ->
+            paintView.add1Layer(id)
+        }
+
+        val layerManagerView = LayerManagerView(context, onLayerAddedCallback)
+        val dialog = createDialog(layerManagerView).also {
+            DialogUtils.setDialogAttr(it, width = MATCH_PARENT, height = MATCH_PARENT, overlayWindow = true)
+        }
+
+        // get the default layer in PaintView and add it to the layerManagerView
+        paintView.setOnDefaultLayerAddedCallback {id->
+            layerManagerView.add1Layer(id, context.getString(R.string.fdb_layer_default_name))
+            layerManagerView.setChecked(id)
+        }
+
+        dialog.setOnDismissListener {
+            val layerState = layerManagerView.getLayerState()
+            val checkedId = layerState.checkedId
+            Common.doAssertion(checkedId != -1L)
+            paintView.updateLayerState(layerState.orderList, checkedId)
+        }
         return dialog
     }
 

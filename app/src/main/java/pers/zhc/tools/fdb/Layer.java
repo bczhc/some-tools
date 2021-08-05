@@ -9,12 +9,14 @@ import java.util.LinkedList;
  * @author bczhc
  */
 public class Layer {
-    private final long id = System.currentTimeMillis();
+    private final long id;
     public LinkedList<PaintView.PathBean> undoList = new LinkedList<>();
     public LinkedList<PaintView.PathBean> redoList = new LinkedList<>();
     public Bitmap bitmap;
+    private boolean visible = true;
 
-    public Layer(int width, int height) {
+    public Layer(int width, int height, long id) {
+        this.id = id;
         updateBitmap(width, height);
     }
 
@@ -30,5 +32,17 @@ public class Layer {
         for (PaintView.PathBean pathBean : undoList) {
             canvas.drawPath(pathBean.path, pathBean.paint);
         }
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

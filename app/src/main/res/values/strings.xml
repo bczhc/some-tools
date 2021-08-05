@@ -522,5 +522,6 @@
     <string name="stop_notification_action">停止</string>
     <string name="fdb_layer_naming_dialog_title">图层命名</string>
     <string name="create_new">新建</string>
+    <string name="fdb_layer_default_name">默认图层</string>
     <!-- end -->
 </resources>

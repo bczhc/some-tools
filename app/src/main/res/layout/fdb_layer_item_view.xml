@@ -4,11 +4,12 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               xmlns:tools="http://schemas.android.com/tools"
+              android:background="@drawable/view_stroke"
+              android:id="@+id/root_ll"
 >
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/name_tv"
               tools:text="Layer Name"
               style="@style/TextAppearance.MaterialComponents.Headline6"
-              android:background="@drawable/view_stroke"
     />
 </LinearLayout>

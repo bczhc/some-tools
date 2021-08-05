@@ -28,10 +28,7 @@ import pers.zhc.tools.utils.*;
 import pers.zhc.tools.views.HSVAColorPickerRL;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -92,6 +89,8 @@ public class PaintView extends View {
 
     private float canvasScale = 1F;
 
+    private OnDefaultLayerAddedCallback onDefaultLayerAddedCallback;
+
     public PaintView(Context context) {
         this(context, null);
     }
@@ -112,38 +111,38 @@ public class PaintView extends View {
         this.onColorChangedCallback = onColorChangedCallback;
     }
 
-    private void initBitmap(int width, int height) {
+    private void initBitmap(int width, int height, @NotNull Layer layer) {
         System.gc();
-        layerRef.bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        layer.bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        // due to the bitmap was replaced, we need to re-link some references of the layer
+        if (layer == layerRef) {
+            updateLayerRefs();
+        }
     }
 
-    private void initBitmap() {
-        initBitmap(width, height);
+    private void initBitmap(Layer layer) {
+        initBitmap(width, height, layer);
     }
 
-    private void setupBitmap(int width, int height) {
-        Matrix matrix = null;
-        if (layerRef.bitmap != null) {
+    private void setupBitmap(int width, int height, @NotNull Layer layer) {
+        /*Matrix matrix = null;
+        if (layer.bitmap != null) {
             matrix = canvasTransformer.getMatrix();
 
-            final int prevWidth = layerRef.bitmap.getWidth();
-            final int prevHeight = layerRef.bitmap.getHeight();
+            final int prevWidth = layer.bitmap.getWidth();
+            final int prevHeight = layer.bitmap.getHeight();
 
             final int tX = width / 2 - prevWidth / 2;
             final int tY = height / 2 - prevHeight / 2;
             matrix.postTranslate(tX, tY);
-        }
+        }*/
 
-        initBitmap(width, height);
+        initBitmap(width, height, layer);
 
-        if (matrix != null) {
+        /*if (matrix != null) {
             canvasTransformer.setMatrix(matrix);
-        }
-        redrawCanvas();
-    }
-
-    private void setupBitmap() {
-        setupBitmap(width, height);
+        }*/
+        layer.redrawBitmap(canvasTransformer.getMatrix());
     }
 
     /**
@@ -221,11 +220,7 @@ public class PaintView extends View {
                 if (transformationEnabled()) {
                     transBitmap = null;
                     // redraw all layers' bitmaps
-                    // noinspection ForLoopReplaceableByForEach
-                    for (int i = 0, layerArraySize = layerArray.size(); i < layerArraySize; i++) {
-                        Layer layer = layerArray.get(i);
-                        layer.redrawBitmap(canvasTransformer.getMatrix());
-                    }
+                    redrawAllLayerBitmap();
                     postInvalidate();
                 }
             }
@@ -255,8 +250,7 @@ public class PaintView extends View {
                 if (transBitmap != null) {
                     Canvas c = new Canvas(transBitmap);
                     c.setMatrix(canvasTransformer.getMatrix());
-                    // noinspection ForLoopReplaceableByForEach
-                    for (int i = 0, layerArraySize = layerArray.size(); i < layerArraySize; i++) {
+                    for (int i = layerArray.size() - 1; i >= 0; i--) {
                         Layer layer = layerArray.get(i);
                         transCanvas.drawBitmap(layer.bitmap, 0, 0, mBitmapPaint);
                     }
@@ -452,8 +446,7 @@ public class PaintView extends View {
         if (transBitmap == null) {
             if (bitmapRef != null) {
                 // 将bitmap绘制在canvas上,最终的显示
-                // noinspection ForLoopReplaceableByForEach
-                for (int i = 0, layerArraySize = layerArray.size(); i < layerArraySize; i++) {
+                for (int i = layerArray.size() - 1; i >= 0; i--) {
                     Layer layer = layerArray.get(i);
                     canvas.drawBitmap(layer.bitmap, 0, 0, mBitmapPaint);
                 }
@@ -528,25 +521,32 @@ public class PaintView extends View {
             // init
             this.width = measuredW;
             this.height = measuredH;
-            add1Layer();
-            add1Layer();
             // the default layer
+            add1Layer();
             switchLayer(0);
+            onDefaultLayerAddedCallback.onAdded(layerRef.getId());
         }
 
         if (measuredW != width || measuredH != height) {
             // adapt for the change of screen orientation
             this.width = measuredW;
             this.height = measuredH;
-            refreshBitmap(width, height);
+            refreshAllLayerBitmap(width, height);
             if (onScreenDimensionChangedListener != null) {
                 onScreenDimensionChangedListener.onChange(width, height);
             }
         }
     }
 
-    public void refreshBitmap(int width, int height) {
-        setupBitmap(width, height);
+    private void refreshBitmap(int width, int height, Layer layer) {
+        setupBitmap(width, height, layer);
+        invalidate();
+    }
+
+    private void refreshAllLayerBitmap(int width, int height) {
+        for (Layer layer : layerArray) {
+            setupBitmap(width, height, layer);
+        }
         invalidate();
     }
 
@@ -859,7 +859,7 @@ public class PaintView extends View {
             }
 
             dontDrawWhileImporting = false;
-            redrawCanvas();
+            redrawBitmap();
             postInvalidate();
             doneAction.run();
         }).start();
@@ -1089,7 +1089,7 @@ public class PaintView extends View {
     /**
      * 把路径绘制到缓冲Bitmap上
      */
-    private void redrawCanvas() {
+    private void redrawBitmap() {
         layerRef.redrawBitmap(canvasTransformer.getMatrix());
     }
 
@@ -1550,7 +1550,7 @@ public class PaintView extends View {
 
     public void transformTo(Matrix matrix) {
         canvasTransformer.setMatrix(matrix);
-        redrawCanvas();
+        redrawAllLayerBitmap();
         postInvalidate();
         canvasScale = CanvasTransformer.getRealScale(matrix);
         setCurrentStrokeWidthWhenLocked();
@@ -1568,22 +1568,81 @@ public class PaintView extends View {
 
     public void testAPI() {
         switchLayer(a % 2);
-        redrawCanvas();
+        redrawBitmap();
         postInvalidate();
         ++a;
     }
 
-    private void add1Layer() {
-        layerArray.add(new Layer(width, height));
+    public void add1Layer() {
+        add1Layer(System.currentTimeMillis());
+    }
+
+    public long add1Layer(long id) {
+        final Layer layer = new Layer(width, height, id);
+        layerArray.add(layer);
+        return layer.getId();
+    }
+
+    public ArrayList<Layer> getLayers() {
+        return layerArray;
     }
 
     private void switchLayer(int index) {
         layerRef = layerArray.get(index);
+        updateLayerRefs();
+    }
+
+    private void updateLayerRefs() {
         undoListRef = layerRef.undoList;
         redoListRef = layerRef.redoList;
         bitmapRef = layerRef.bitmap;
 
         mCanvas.setBitmap(bitmapRef);
         canvasTransformer.refresh();
+    }
+
+    private int getLayerIndexById(long id) {
+        for (int i = 0; i < layerArray.size(); i++) {
+            if (layerArray.get(i).getId() == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private @org.jetbrains.annotations.Nullable Layer getLayerById(long id) {
+        final int i = getLayerIndexById(id);
+        if (i != -1) {
+            return layerArray.get(i);
+        }
+        return null;
+    }
+
+    public void updateLayerState(@NotNull List<Long> orderList, long checkedId) {
+        ArrayList<Layer> newLayerArray = new ArrayList<>();
+        for (Long id : orderList) {
+            newLayerArray.add(getLayerById(id));
+        }
+        layerArray.clear();
+        layerArray.addAll(newLayerArray);
+        switchLayer(checkedId);
+    }
+
+    public void switchLayer(long id) {
+        switchLayer(getLayerIndexById(id));
+    }
+
+    public void setOnDefaultLayerAddedCallback(OnDefaultLayerAddedCallback onDefaultLayerAddedCallback) {
+        this.onDefaultLayerAddedCallback = onDefaultLayerAddedCallback;
+    }
+
+    public interface OnDefaultLayerAddedCallback {
+        void onAdded(long id);
+    }
+
+    private void redrawAllLayerBitmap() {
+        for (int i = layerArray.size() - 1; i >= 0; i--) {
+            layerArray.get(i).redrawBitmap(canvasTransformer.getMatrix());
+        }
     }
 }
