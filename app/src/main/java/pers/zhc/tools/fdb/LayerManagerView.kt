@@ -139,8 +139,8 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         }
     }
 
-    fun add1Layer(id: Long, name: String) {
-        listItems.add(LayerInfo(id, name, true))
+    fun add1Layer(layerInfo: LayerInfo) {
+        listItems.add(layerInfo)
         listAdapter.notifyItemInserted(listItems.size)
     }
 

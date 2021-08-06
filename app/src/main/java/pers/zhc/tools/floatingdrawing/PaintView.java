@@ -30,8 +30,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author bczhc
@@ -91,6 +89,9 @@ public class PaintView extends View {
     private boolean rotateTransformationEnabled = false;
 
     private float canvasScale = 1F;
+
+    @Nullable
+    private OnImportLayerAddedListener onImportLayerAddedListener = null;
 
     public PaintView(Context context) {
         this(context, null);
@@ -548,48 +549,6 @@ public class PaintView extends View {
         invalidate();
     }
 
-    private static class CanDoHandler<MsgType> implements Runnable {
-        public interface HandlerCallback<MsgType> {
-            void callback(MsgType a);
-        }
-
-        private MsgType param;
-        private boolean aDo = false;
-        private boolean start;
-        private final HandlerCallback<MsgType> handlerCallback;
-        private final ExecutorService es;
-
-        public CanDoHandler(HandlerCallback<MsgType> handlerCallback) {
-            this.handlerCallback = handlerCallback;
-            es = Executors.newFixedThreadPool(1);
-        }
-
-        @Override
-        public void run() {
-            while (this.start) {
-                if (aDo) {
-                    handlerCallback.callback(param);
-                    aDo = false;
-                }
-            }
-        }
-
-        public void stop() {
-            this.start = false;
-            es.shutdownNow();
-        }
-
-        public void start() {
-            this.start = true;
-            es.execute(this);
-        }
-
-        public void push(MsgType msg) {
-            this.param = msg;
-            this.aDo = true;
-        }
-    }
-
     public enum PathVersion {
         VERSION_1_0,
         VERSION_2_0,
@@ -654,6 +613,12 @@ public class PaintView extends View {
      * @param pathVersion      path version
      */
     public void asyncImportPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
+        new Thread(() -> {
+            importPathFile(f, doneAction, progressCallback, speedDelayMillis, pathVersion);
+        }).start();
+    }
+
+    public void importPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
         dontDrawWhileImporting = speedDelayMillis == 0;
         if (progressCallback != null) {
             progressCallback.accept(0F);
@@ -764,6 +729,8 @@ public class PaintView extends View {
                     break;
             }
         }
+
+        is.close();
     }
 
     public void importPathVer2_0(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
@@ -895,6 +862,8 @@ public class PaintView extends View {
                 }
             }
         }
+
+        is.close();
     }
 
     private int randomGen(int min, int max) {
@@ -955,6 +924,7 @@ public class PaintView extends View {
                 final long layerId = layerInfo.getLayerId();
                 add1Layer(layerId);
                 switchLayer(layerId);
+                onImportLayerAddedListener.onAdded(layerInfo);
 
                 importLayerPath(
                         db,
@@ -1324,10 +1294,6 @@ public class PaintView extends View {
         ++a;
     }
 
-    public void add1Layer() {
-        add1Layer(System.currentTimeMillis());
-    }
-
     public long add1Layer(long id) {
         final Layer layer = new Layer(width, height, id);
         layerArray.add(layer);
@@ -1414,5 +1380,13 @@ public class PaintView extends View {
             list.add(layer.getId());
         }
         return list;
+    }
+
+    public interface OnImportLayerAddedListener {
+        void onAdded(LayerInfo layerInfo);
+    }
+
+    public void setOnImportLayerAddedListener(@Nullable OnImportLayerAddedListener onImportLayerAddedListener) {
+        this.onImportLayerAddedListener = onImportLayerAddedListener;
     }
 }

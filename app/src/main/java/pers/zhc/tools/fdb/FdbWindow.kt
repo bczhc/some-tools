@@ -272,7 +272,12 @@ class FdbWindow(private val context: BaseActivity) {
                 val id = System.currentTimeMillis()
                 paintView.add1Layer(id)
                 paintView.switchLayer(id)
-                layerManagerView.add1Layer(id, context.getString(R.string.fdb_layer_default_name))
+                layerManagerView.add1Layer(LayerInfo(id, context.getString(R.string.fdb_layer_default_name), true))
+                layerManagerView.setChecked(id)
+            }
+
+            setOnImportLayerAddedListener {
+                layerManagerView.add1Layer(it)
             }
         }
 
@@ -633,7 +638,7 @@ class FdbWindow(private val context: BaseActivity) {
                                         }
                                     )
 
-                                    when (PaintView.getPathVersion(file)) {
+                                    when (pathVersion) {
                                         PathVersion.VERSION_3_0 -> {
                                             try {
                                                 val db = SQLite3.open(path)
@@ -687,7 +692,7 @@ class FdbWindow(private val context: BaseActivity) {
                                     }
                                 }
 
-                            }, 0/* TODO */)
+                            }, 0/* TODO */, pathVersion)
                         }.show()
                     }
                     3 -> {
