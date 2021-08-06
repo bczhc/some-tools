@@ -12,6 +12,7 @@ import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.views.HSVAColorPickerRL;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -274,5 +275,10 @@ public class PathSaver {
 
     public String getDatabasePath() {
         return pathDatabase.getDatabasePath();
+    }
+
+    public File save() {
+        flush();
+        return new File(pathDatabase.getDatabasePath());
     }
 }

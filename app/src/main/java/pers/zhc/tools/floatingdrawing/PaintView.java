@@ -1366,4 +1366,16 @@ public class PaintView extends View {
     public Matrix getDefaultTransformation() {
         return defaultTransformation;
     }
+
+    public long getCurrentLayerId() {
+        return layerRef.getId();
+    }
+
+    public ArrayList<Long> getLayerIds() {
+        ArrayList<Long> list = new ArrayList<>();
+        for (Layer layer : layerArray) {
+            list.add(layer.getId());
+        }
+        return list;
+    }
 }

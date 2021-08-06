@@ -21,7 +21,7 @@ public class TODO {
         }
 
         public UnimplementedError(String reason) {
-            super(reason);
+            super("An operation has not been implemented: " + reason);
         }
     }
 }

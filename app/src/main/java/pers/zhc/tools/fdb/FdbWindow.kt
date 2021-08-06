@@ -198,8 +198,6 @@ class FdbWindow(private val context: BaseActivity) {
                             7 -> {
                                 // clear
                                 createConfirmationDialog({ _, _ ->
-                                    pathSaver.reset()
-                                    pathSaver.flush()
                                     paintView.clearAll()
                                 }, R.string.fdb_clear_confirmation_dialog).show()
                             }
@@ -273,6 +271,7 @@ class FdbWindow(private val context: BaseActivity) {
                 // add the default layer
                 val id = System.currentTimeMillis()
                 paintView.add1Layer(id)
+                paintView.switchLayer(id)
                 layerManagerView.add1Layer(id, context.getString(R.string.fdb_layer_default_name))
             }
         }
@@ -948,7 +947,6 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     fun exit() {
-        pathSaver.close()
         stopFDB()
         if (hasStartedScreenColorPicker) {
             sendScreenColorPickerStopRequestBroadcast()
