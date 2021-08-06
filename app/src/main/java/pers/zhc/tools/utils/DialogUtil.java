@@ -47,12 +47,13 @@ public class DialogUtil {
         if (window == null) {
             return;
         }
+        window.setLayout(width, height);
         if (overlay) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGB_888));
+                window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, 0, PixelFormat.RGBA_8888));
             } else {
                 //noinspection deprecation
-                window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_SYSTEM_ERROR, 0, PixelFormat.RGB_888));
+                window.setAttributes(new WindowManager.LayoutParams(width, height, WindowManager.LayoutParams.TYPE_SYSTEM_ERROR, 0, PixelFormat.RGBA_8888));
             }
         }
         if (isTransparent) {

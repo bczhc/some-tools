@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/rl"
+                android:layout_height="wrap_content"
+                android:id="@+id/root_ll"
+              android:orientation="vertical"
 >
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               tools:text="@string/title"
               android:id="@+id/progress_bar_title"
     />
-    <ProgressBar android:layout_width="match_parent" android:layout_height="wrap_content"
-                 android:layout_below="@id/progress_bar_title"
-                 android:indeterminate="false"
-                 style="?android:attr/progressBarStyleHorizontal"
-                 android:id="@+id/progress_bar"
-                 android:max="100"
-    />
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:max="100"
+            android:id="@+id/progress_bar"
+            />
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/progress_tv"
-              android:layout_below="@id/progress_bar"
     />
-</RelativeLayout>
+</LinearLayout>

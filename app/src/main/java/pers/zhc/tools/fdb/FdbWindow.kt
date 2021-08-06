@@ -18,7 +18,6 @@ import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import android.widget.SeekBar
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
@@ -303,8 +302,7 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     private fun showBrushWidthAdjustingDialog() {
-        val dialog = createDialog(createBrushWidthAdjustingView())
-        DialogUtil.setDialogAttr(dialog, false, MATCH_PARENT, WRAP_CONTENT, true)
+        val dialog = createDialog(createBrushWidthAdjustingView(), width = MATCH_PARENT)
         dialog.show()
     }
 
@@ -378,7 +376,7 @@ class FdbWindow(private val context: BaseActivity) {
             }.show()
         }
 
-        slider.addOnChangeListener { self, value, fromUser ->
+        slider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
                 val width = base.pow(value.toDouble()).toFloat()
                 updateWidthAndDisplay(width)
@@ -444,14 +442,21 @@ class FdbWindow(private val context: BaseActivity) {
         return DialogUtil.createConfirmationAlertDialog(context, positiveAction, titleRes, true)
     }
 
-    private fun createDialog(view: View, transparent: Boolean = false, dim: Boolean = true): Dialog {
-        val dialog = Dialog(context)
-        DialogUtil.setDialogAttr(dialog, transparent, true)
-        if (!dim) {
-            dialog.window?.clearFlags(FLAG_DIM_BEHIND)
+    private fun createDialog(
+        view: View,
+        transparent: Boolean = false,
+        dim: Boolean = true,
+        width: Int = WRAP_CONTENT,
+        height: Int = WRAP_CONTENT
+    ): Dialog {
+        return Dialog(context).apply {
+            setContentView(view)
+        }.also {
+            DialogUtils.setDialogAttr(it, transparent, width, height, true)
+            if (!dim) {
+                it.window?.clearFlags(FLAG_DIM_BEHIND)
+            }
         }
-        dialog.setContentView(view)
-        return dialog
     }
 
     private fun createPromptDialog(@StringRes titleRes: Int, callback: PromptDialogCallback): AlertDialog {
@@ -584,7 +589,7 @@ class FdbWindow(private val context: BaseActivity) {
                                 context.getString(R.string.fdb_importing_path_progress_title)
                             val progressBar = progressView.progress_bar!!
                             val progressTV = progressView.progress_tv!!
-                            val progressDialog = createDialog(progressView)
+                            val progressDialog = createDialog(progressView, width = MATCH_PARENT)
                             progressDialog.setCanceledOnTouchOutside(false)
                             progressDialog.show()
 
@@ -653,7 +658,7 @@ class FdbWindow(private val context: BaseActivity) {
                                 tryDo.tryDo { _, notifier ->
                                     progress!!
                                     context.runOnUiThread {
-                                        progressBar.progress = (progress * 100F).toInt()
+                                        progressBar.setProgressCompat((progress * 100F).toInt(), true)
                                         progressTV.text = context.getString(R.string.percentage, progress * 100F)
                                         notifier.finish()
                                     }

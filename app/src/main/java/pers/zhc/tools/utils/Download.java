@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 
@@ -66,27 +67,22 @@ public class Download {
         }).start();
     }
 
-    @SuppressWarnings("CodeBlock2Expr")
     public static void startDownloadWithDialog(Context ctx, URL url, File localFile, @Nullable Runnable doneAction) {
         Dialog downloadDialog = new Dialog(ctx);
 
+        View inflate = View.inflate(ctx, R.layout.progress_bar, null);
+
+        TextView progressTextView = inflate.findViewById(R.id.progress_tv);
+        TextView barTextView = inflate.findViewById(R.id.progress_bar_title);
+        barTextView.setText(R.string.downloading);
+        LinearProgressIndicator pi = inflate.findViewById(R.id.progress_bar);
+        progressTextView.setText(R.string.please_wait);
+        downloadDialog.setContentView(inflate);
+        downloadDialog.setCanceledOnTouchOutside(false);
+        downloadDialog.setCancelable(true);
         DialogUtil.setDialogAttr(downloadDialog, false
                 , ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
                 , false);
-        RelativeLayout rl = View.inflate(ctx, R.layout.progress_bar, null)
-                .findViewById(R.id.rl);
-        rl.setLayoutParams(new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-
-        TextView progressTextView = rl.findViewById(R.id.progress_tv);
-        TextView barTextView = rl.findViewById(R.id.progress_bar_title);
-        barTextView.setText(R.string.downloading);
-        ProgressBar pb = rl.findViewById(R.id.progress_bar);
-        progressTextView.setText(R.string.please_wait);
-        downloadDialog.setContentView(rl);
-        downloadDialog.setCanceledOnTouchOutside(false);
-        downloadDialog.setCancelable(true);
         downloadDialog.show();
 
         try {
@@ -100,7 +96,7 @@ public class Download {
 
                         tryDo.tryDo((self, notifier) -> {
                             Common.runOnUiThread(ctx, () -> {
-                                pb.setProgress(((int) (progress * 100F)));
+                                pi.setProgressCompat(((int) (progress * 100F)), true);
                                 progressTextView.setText(ctx.getString(R.string.progress_tv, progress * 100F));
                                 notifier.finish();
                             });
