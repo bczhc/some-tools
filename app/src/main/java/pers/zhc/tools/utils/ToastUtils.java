@@ -40,4 +40,8 @@ public class ToastUtils {
         ToastUtils.show(ctx, ctx.getString(R.string.concat, ctx.getString(errorMsgResId)
                 , "\n" + e));
     }
+
+    public static void showException(Context ctx, @NotNull Exception e) {
+        show(ctx, e.toString());
+    }
 }

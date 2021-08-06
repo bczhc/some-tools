@@ -598,7 +598,7 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     2 -> {
                         // import path
-                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { _, _, file ->
+                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { _, _, path ->
                             dialogs.moreMenu.dismiss()
 
                             val progressView = View.inflate(context, R.layout.progress_bar, null)
@@ -611,9 +611,12 @@ class FdbWindow(private val context: BaseActivity) {
                             progressDialog.setCanceledOnTouchOutside(false)
                             progressDialog.show()
 
+                            val file = File(path)
+                            val pathVersion = PaintView.getPathVersion(file)
+
                             val tryDo = AsyncTryDo()
 
-                            paintView.asyncImportPathFile(File(file), {
+                            paintView.asyncImportPathFile(file, {
                                 Common.runOnUiThread(context) {
                                     progressDialog.dismiss()
                                     ToastUtils.show(
@@ -630,10 +633,10 @@ class FdbWindow(private val context: BaseActivity) {
                                         }
                                     )
 
-                                    when (PaintView.getPathVersion(File(file))) {
+                                    when (PaintView.getPathVersion(file)) {
                                         PathVersion.VERSION_3_0 -> {
                                             try {
-                                                val db = SQLite3.open(file)
+                                                val db = SQLite3.open(path)
                                                 val extraInfos = PathSaver.getExtraInfos(db)
                                                 db.close()
                                                 extraInfos ?: return@runOnUiThread

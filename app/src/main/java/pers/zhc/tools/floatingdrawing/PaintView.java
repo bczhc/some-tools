@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.*;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,8 +23,12 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.fdb.*;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.*;
+import pers.zhc.util.Assertion;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -647,217 +650,251 @@ public class PaintView extends View {
      * @param f                路径文件
      * @param doneAction       完成回调接口
      * @param progressCallback 进度回调接口 Range: [0-1]
+     * @param speedDelayMillis interval of reading per point
+     * @param pathVersion      path version
      */
-    @SuppressWarnings("BusyWait")
-    public void asyncImportPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) {
-        Handler handler = new Handler();
-
+    public void asyncImportPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
         dontDrawWhileImporting = speedDelayMillis == 0;
         if (progressCallback != null) {
             progressCallback.accept(0F);
         }
 
-        final Runnable importOldPathRunnable = () -> {
-            RandomAccessFile raf = null;
-            try {
-                raf = new RandomAccessFile(f, "r");
-                byte[] head = new byte[12];
-                raf.read(head);
-                raf.seek(0);
-                StringBuilder sb = new StringBuilder();
-                for (byte b : head) {
-                    sb.append((char) b);
+        switch (pathVersion) {
+            case VERSION_1_0:
+                ToastUtils.show(ctx, R.string.import_path_1_0);
+                try {
+                    importPathVer1_0(f, progressCallback, speedDelayMillis);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    ToastUtils.showException(ctx, e);
                 }
-                String headString = sb.toString();
-                long length = f.length(), read;
-                byte[] bytes;
-                float x, y, strokeWidth;
-                int color;
-                switch (headString) {
-                    case "path ver 2.0":
-                        handler.post(() -> ToastUtils.show(ctx, R.string.import_old_2_0));
-                        raf.skipBytes(12);
-                        bytes = new byte[12];
-                        read = 0L;
-                        int lastP1, p1 = -1;
-                        x = -1;
-                        y = -1;
-                        while (raf.read(bytes) != -1) {
-                            Thread.sleep(speedDelayMillis);
-                            lastP1 = p1;
-                            p1 = JNI.FloatingBoard.byteArrayToInt(bytes, 0);
-                            switch (p1) {
-                                case 4:
-                                    undo();
-                                    break;
-                                case 5:
-                                    redo();
-                                    break;
-                                case 1:
-                                case 2:
-                                    strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
-                                    color = JNI.FloatingBoard.byteArrayToInt(bytes, 8);
-                                    setEraserMode(p1 == 2);
-                                    if (eraserMode) {
-                                        setEraserStrokeWidth(strokeWidth);
-                                    } else {
-                                        setDrawingStrokeWidth(strokeWidth);
-                                        setDrawingColor(color);
-                                    }
-                                    break;
-                                case 3:
-                                    if (x != -1 && y != -1) {
-                                        onTouchAction(MotionEvent.ACTION_UP, x, y);
-                                    }
-                                    break;
-                                case 0:
-                                    x = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
-                                    y = JNI.FloatingBoard.byteArrayToFloat(bytes, 8);
-                                    if (lastP1 == 1 || lastP1 == 2) {
-                                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
-                                    }
-                                    onTouchAction(MotionEvent.ACTION_MOVE, x, y);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            read += 12;
-                            if (progressCallback != null) {
-                                progressCallback.accept((float) read / ((float) length));
-                            }
-                        }
+                break;
+            case VERSION_2_0:
+                ToastUtils.show(ctx, R.string.import_old_2_0);
+                try {
+                    importPathVer2_0(f, progressCallback, speedDelayMillis);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    ToastUtils.showException(ctx, e);
+                }
+                break;
+            case VERSION_2_1:
+                ToastUtils.show(ctx, R.string.import_2_1);
+                try {
+                    importPathVer2_1(f, progressCallback, speedDelayMillis);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    ToastUtils.showException(ctx, e);
+                }
+                break;
+            case VERSION_3_0:
+                ToastUtils.show(ctx, R.string.fdb_import_path_version_3_0_toast);
+                importPathVer3_0(f.getPath(), progressCallback, speedDelayMillis);
+                break;
+            default:
+                throw new RuntimeException("Unknown path version");
+        }
+
+        dontDrawWhileImporting = false;
+        redrawBitmap();
+        postInvalidate();
+        if (doneAction != null) {
+            doneAction.run();
+        }
+    }
+
+    public void importPathVer1_0(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
+        long length = f.length(), read;
+        byte[] bytes;
+        float x, y, strokeWidth;
+        int color;
+
+        FileInputStream is = new FileInputStream(f);
+
+        bytes = new byte[26];
+        byte[] bytes_4 = new byte[4];
+        read = 0L;
+        while (is.read(bytes) != -1) {
+            try {
+                // noinspection BusyWait
+                Thread.sleep(speedDelayMillis);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            read += 26L;
+            switch (bytes[25]) {
+                case 1:
+                    undo();
+                    System.out.println("undo!");
+                    break;
+                case 2:
+                    redo();
+                    System.out.println("redo!");
+                    break;
+                default:
+                    System.arraycopy(bytes, 0, bytes_4, 0, 4);
+                    x = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                    System.arraycopy(bytes, 4, bytes_4, 0, 4);
+                    y = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                    System.arraycopy(bytes, 8, bytes_4, 0, 4);
+                    color = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
+                    System.arraycopy(bytes, 12, bytes_4, 0, 4);
+                    strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                    System.arraycopy(bytes, 16, bytes_4, 0, 4);
+                    int motionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
+                    System.arraycopy(bytes, 20, bytes_4, 0, 4);
+                    float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                    if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
+                        motionAction = randomGen(0, 2);
+                    }
+                    if (strokeWidth <= 0) {
+                        strokeWidth = randomGen(1, 800);
+                    }
+                    if (eraserStrokeWidth <= 0) {
+                        eraserStrokeWidth = randomGen(1, 800);
+                    }
+                    setEraserMode(bytes[24] == 1);
+                    setEraserStrokeWidth(eraserStrokeWidth);
+                    setDrawingColor(color);
+                    setDrawingStrokeWidth(strokeWidth);
+                    onTouchAction(motionAction, x, y);
+                    if (progressCallback != null) {
+                        progressCallback.accept((float) read / (float) length);
+                    }
+                    break;
+            }
+        }
+    }
+
+    public void importPathVer2_0(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
+        long length = f.length(), read;
+        byte[] bytes;
+        float x, y, strokeWidth;
+        int color;
+
+        FileInputStream is = new FileInputStream(f);
+
+        Assertion.doAssertion(is.skip(12) == 12);
+        bytes = new byte[12];
+        read = 0L;
+        int lastP1, p1 = -1;
+        x = -1;
+        y = -1;
+        while (is.read(bytes) != -1) {
+            try {
+                // noinspection BusyWait
+                Thread.sleep(speedDelayMillis);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            lastP1 = p1;
+            p1 = JNI.FloatingBoard.byteArrayToInt(bytes, 0);
+            switch (p1) {
+                case 4:
+                    undo();
+                    break;
+                case 5:
+                    redo();
+                    break;
+                case 1:
+                case 2:
+                    strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
+                    color = JNI.FloatingBoard.byteArrayToInt(bytes, 8);
+                    setEraserMode(p1 == 2);
+                    if (eraserMode) {
+                        setEraserStrokeWidth(strokeWidth);
+                    } else {
+                        setDrawingStrokeWidth(strokeWidth);
+                        setDrawingColor(color);
+                    }
+                    break;
+                case 3:
+                    if (x != -1 && y != -1) {
+                        onTouchAction(MotionEvent.ACTION_UP, x, y);
+                    }
+                    break;
+                case 0:
+                    x = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
+                    y = JNI.FloatingBoard.byteArrayToFloat(bytes, 8);
+                    if (lastP1 == 1 || lastP1 == 2) {
+                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                    }
+                    onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                    break;
+                default:
+                    break;
+            }
+            read += 12;
+            if (progressCallback != null) {
+                progressCallback.accept((float) read / ((float) length));
+            }
+        }
+
+        is.close();
+    }
+
+    public void importPathVer2_1(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
+        long length = f.length(), read;
+        byte[] bytes;
+        float x, y, strokeWidth;
+        int color;
+
+        FileInputStream is = new FileInputStream(f);
+
+        // 512 * 9
+        int bufferSize = 2304;
+        Assertion.doAssertion(is.skip(12) == 12);
+        byte[] buffer = new byte[bufferSize];
+        int bufferRead;
+        read = 0L;
+        while ((bufferRead = is.read(buffer)) != -1) {
+            int a = bufferRead / 9;
+            for (int i = 0; i < a; i++) {
+                try {
+                    // noinspection BusyWait
+                    Thread.sleep(speedDelayMillis);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                switch (buffer[i * 9]) {
+                    case (byte) 0xA1:
+                    case (byte) 0xA2:
+                        strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
+                        color = JNI.FloatingBoard.byteArrayToInt(buffer, 5 + i * 9);
+                        setEraserMode(buffer[i * 9] == (byte) 0xA2);
+                        mPaintRef.setColor(color);
+                        mPaintRef.setStrokeWidth(strokeWidth);
                         break;
-                    case "path ver 2.1":
-                        // 512 * 9
-                        int bufferSize = 2304;
-                        handler.post(() -> ToastUtils.show(ctx, R.string.import_2_1));
-                        raf.skipBytes(12);
-                        byte[] buffer = new byte[bufferSize];
-                        int bufferRead;
-                        read = 0L;
-                        while ((bufferRead = raf.read(buffer)) != -1) {
-                            int a = bufferRead / 9;
-                            for (int i = 0; i < a; i++) {
-                                Thread.sleep(speedDelayMillis);
-                                switch (buffer[i * 9]) {
-                                    case (byte) 0xA1:
-                                    case (byte) 0xA2:
-                                        strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                                        color = JNI.FloatingBoard.byteArrayToInt(buffer, 5 + i * 9);
-                                        setEraserMode(buffer[i * 9] == (byte) 0xA2);
-                                        mPaintRef.setColor(color);
-                                        mPaintRef.setStrokeWidth(strokeWidth);
-                                        break;
-                                    case (byte) 0xB1:
-                                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
-                                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
-                                        break;
-                                    case (byte) 0xB3:
-                                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
-                                        onTouchAction(MotionEvent.ACTION_MOVE, x, y);
-                                        break;
-                                    case (byte) 0xB2:
-                                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
-                                        onTouchAction(MotionEvent.ACTION_UP, x, y);
-                                        break;
-                                    case (byte) 0xC1:
-                                        undo();
-                                        break;
-                                    case (byte) 0xC2:
-                                        redo();
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                read += 9L;
-                                if (progressCallback != null) {
-                                    progressCallback.accept((float) read / (float) length);
-                                }
-                            }
-                        }
+                    case (byte) 0xB1:
+                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
+                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
+                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                        break;
+                    case (byte) 0xB3:
+                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
+                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
+                        onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                        break;
+                    case (byte) 0xB2:
+                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
+                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
+                        onTouchAction(MotionEvent.ACTION_UP, x, y);
+                        break;
+                    case (byte) 0xC1:
+                        undo();
+                        break;
+                    case (byte) 0xC2:
+                        redo();
                         break;
                     default:
-                        handler.post(() -> ToastUtils.show(ctx, R.string.import_path_1_0));
-                        bytes = new byte[26];
-                        byte[] bytes_4 = new byte[4];
-                        read = 0L;
-                        while (raf.read(bytes) != -1) {
-                            Thread.sleep(speedDelayMillis);
-                            read += 26L;
-                            switch (bytes[25]) {
-                                case 1:
-                                    undo();
-                                    System.out.println("undo!");
-                                    break;
-                                case 2:
-                                    redo();
-                                    System.out.println("redo!");
-                                    break;
-                                default:
-                                    System.arraycopy(bytes, 0, bytes_4, 0, 4);
-                                    x = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    System.arraycopy(bytes, 4, bytes_4, 0, 4);
-                                    y = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    System.arraycopy(bytes, 8, bytes_4, 0, 4);
-                                    color = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
-                                    System.arraycopy(bytes, 12, bytes_4, 0, 4);
-                                    strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    System.arraycopy(bytes, 16, bytes_4, 0, 4);
-                                    int motionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
-                                    System.arraycopy(bytes, 20, bytes_4, 0, 4);
-                                    float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
-                                        motionAction = randomGen(0, 2);
-                                    }
-                                    if (strokeWidth <= 0) {
-                                        strokeWidth = randomGen(1, 800);
-                                    }
-                                    if (eraserStrokeWidth <= 0) {
-                                        eraserStrokeWidth = randomGen(1, 800);
-                                    }
-                                    setEraserMode(bytes[24] == 1);
-                                    setEraserStrokeWidth(eraserStrokeWidth);
-                                    setDrawingColor(color);
-                                    setDrawingStrokeWidth(strokeWidth);
-                                    onTouchAction(motionAction, x, y);
-                                    if (progressCallback != null) {
-                                        progressCallback.accept((float) read / (float) length);
-                                    }
-                                    break;
-                            }
-                        }
                         break;
                 }
-            } catch (IOException e) {
-                handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
-            } catch (InterruptedException ignored) {
-            } finally {
-                if (raf != null) {
-                    try {
-                        raf.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                read += 9L;
+                if (progressCallback != null) {
+                    progressCallback.accept((float) read / (float) length);
                 }
             }
-        };
-
-        new Thread(() -> {
-            try {
-                importPathVer3(f.getPath(), progressCallback == null ? ((v) -> {
-                }) : progressCallback, speedDelayMillis);
-            } catch (SQLiteDatabaseCorruptException ignored) {
-                importOldPathRunnable.run();
-            }
-
-            dontDrawWhileImporting = false;
-            redrawBitmap();
-            postInvalidate();
-            doneAction.run();
-        }).start();
+        }
     }
 
     private int randomGen(int min, int max) {
@@ -883,7 +920,7 @@ public class PaintView extends View {
         return list;
     }
 
-    private void importPathVer3(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
+    private void importPathVer3_0(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
