@@ -24,6 +24,7 @@ import pers.zhc.tools.fdb.*;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.*;
 import pers.zhc.util.Assertion;
+import pers.zhc.util.Random;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -917,18 +918,19 @@ public class PaintView extends View {
         float[] transformationValue = new float[9];
         defaultTransformation.getValues(transformationValue);
 
-        float canvasScale = CanvasTransformer.getRealScale(getTransformationMatrix());
-
         if (layersInfo != null) {
             for (LayerInfo layerInfo : layersInfo) {
-                final long layerId = layerInfo.getLayerId();
-                add1Layer(layerId);
-                switchLayer(layerId);
-                onImportLayerAddedListener.onAdded(layerInfo);
+                final long originalLayerId = layerInfo.getLayerId();
+                final long newLayerId = layerInfo.getLayerId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
+                add1Layer(newLayerId);
+                switchLayer(newLayerId);
+                if (onImportLayerAddedListener != null) {
+                    onImportLayerAddedListener.onAdded(new LayerInfo(newLayerId, layerInfo.getName(), layerInfo.getVisible()));
+                }
 
                 importLayerPath(
                         db,
-                        layerId,
+                        originalLayerId,
                         defaultTransformationScale,
                         transformationValue,
                         progressCallback,
