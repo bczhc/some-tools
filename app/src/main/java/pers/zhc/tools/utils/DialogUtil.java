@@ -80,7 +80,7 @@ public class DialogUtil {
 
     @NotNull
     public static AlertDialog createConfirmationAlertDialog(Context ctx, DialogInterface.OnClickListener positiveAction, @Nullable DialogInterface.OnClickListener negativeAction, @Nullable View view, String title, int width, int height, boolean applicationOverlay) {
-        final MaterialAlertDialogBuilder adb = new MaterialAlertDialogBuilder(ctx, R.style.Theme_Application_DayNight_Dialog_Alert);
+        final MaterialAlertDialogBuilder adb = new MaterialAlertDialogBuilder(ctx);
         adb.setPositiveButton(R.string.confirm, positiveAction)
                 .setNegativeButton(R.string.cancel, negativeAction == null ? (dialog, which) -> {
                 } : negativeAction)

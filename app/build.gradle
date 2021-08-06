@@ -119,7 +119,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.32"
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.github.mik3y:usb-serial-for-android:3.3.0'
     implementation 'com.github.bczhc:java-lib:18a858c167'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'

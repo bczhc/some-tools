@@ -23,6 +23,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.slider.Slider
 import kotlinx.android.synthetic.main.fdb_eraser_opacity_adjusting_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.ll
@@ -311,7 +312,7 @@ class FdbWindow(private val context: BaseActivity) {
         val inflate = View.inflate(context, R.layout.fdb_stoke_width_view, null)!!.rootView as LinearLayout
 
         val rg = inflate.rg!!
-        val seekBar = inflate.sb!!
+        val slider = inflate.slider!!
         val infoTV = inflate.tv!!
         val lockBrushCB = inflate.cb!!
         val strokeShowView = inflate.stroke_show!!
@@ -336,7 +337,7 @@ class FdbWindow(private val context: BaseActivity) {
                 BrushMode.IN_USE -> paintView.strokeWidthInUse
             }
             strokeShowView.setDiameter(width * paintView.scale)
-            seekBar.progress = (ln(width.toDouble()) / ln(base)).toInt()
+            slider.value = (ln(width.toDouble()) / ln(base)).toFloat()
             strokeShowView.setDiameter(width * paintView.scale)
             infoTV.text = context.getString(
                 R.string.fdb_stroke_width_info,
@@ -377,21 +378,12 @@ class FdbWindow(private val context: BaseActivity) {
             }.show()
         }
 
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    val width = base.pow(progress.toDouble()).toFloat()
-                    updateWidthAndDisplay(width)
-                }
+        slider.addOnChangeListener { self, value, fromUser ->
+            if (fromUser) {
+                val width = base.pow(value.toDouble()).toFloat()
+                updateWidthAndDisplay(width)
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-            }
-        })
-
+        }
 
         rg.setOnCheckedChangeListener { _, id ->
             when (id) {
@@ -453,7 +445,7 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     private fun createDialog(view: View, transparent: Boolean = false, dim: Boolean = true): Dialog {
-        val dialog = Dialog(context, R.style.Theme_Application_DayNight_Dialog)
+        val dialog = Dialog(context)
         DialogUtil.setDialogAttr(dialog, transparent, true)
         if (!dim) {
             dialog.window?.clearFlags(FLAG_DIM_BEHIND)
@@ -732,22 +724,17 @@ class FdbWindow(private val context: BaseActivity) {
 
     private fun createEraserOpacityDialog(): Dialog {
         val inflate = View.inflate(context, R.layout.fdb_eraser_opacity_adjusting_view, null)
-        val opacitySeeker = inflate.opacity!!
-        opacitySeeker.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                var alpha = (progress.toDouble() / 100.0 * 256.0).toInt()
-                if (alpha > 255) {
-                    alpha = 255
-                }
-                paintView.eraserAlpha = alpha
+        val opacitySlider = inflate.opacity!!
+        opacitySlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
+
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            override fun onStopTrackingTouch(slider: Slider) {
+                paintView.eraserAlpha = slider.value.toInt()
             }
         })
+
         val dialog = createDialog(inflate, dim = false)
         DialogUtils.setDialogAttr(dialog, width = MATCH_PARENT, overlayWindow = true)
         return dialog

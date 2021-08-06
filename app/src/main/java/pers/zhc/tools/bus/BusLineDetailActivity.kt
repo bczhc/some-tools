@@ -12,6 +12,7 @@ import org.json.JSONObject
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 import java.io.Serializable
 
@@ -85,8 +86,10 @@ class BusLineDetailActivity : BaseActivity() {
 
                 startStationNameTV.text =
                     getString(R.string.bus_start_station_tv, busStationList[0].busStationName)
-                endStationNameTV.text = getString(R.string.bus_end_station_tv,
-                    busStationList[busStationList.size - 1].busStationName)
+                endStationNameTV.text = getString(
+                    R.string.bus_end_station_tv,
+                    busStationList[busStationList.size - 1].busStationName
+                )
 
                 busStationList.forEach {
                     val stationLL = busLineDetailLL.addStation(it)
@@ -94,14 +97,12 @@ class BusLineDetailActivity : BaseActivity() {
                     stationLL.setOnClickListener {
                         val station = stationLL.station!!
 
-                        val dialog = DialogUtil.createConfirmationAlertDialog(this,
-                            { _, _ ->
-                                setBusArrivalReminder(station)
-                                ToastUtils.show(this, R.string.bus_set_bus_arrival_reminder_toast)
-                            },
-                            getString(R.string.bus_ask_for_setting_bus_arrival_reminder_dialog_title,
-                                station.busStationName))
-                        dialog.show()
+                        DialogUtils.createConfirmationAlertDialog(
+                            this,
+                            { _, _ -> },
+                            titleRes = R.string.bus_setting_bus_arrival_reminder_dialog_title,
+                            message = station.busStationName
+                        ).show()
                     }
                 }
 
@@ -200,12 +201,14 @@ class BusLineDetailActivity : BaseActivity() {
                 }
             }
 
-            return BusInfo(result["runPathName"] as String,
+            return BusInfo(
+                result["runPathName"] as String,
                 result["startStation"] as String,
                 result["endStation"] as String,
                 startTime,
                 endTime,
-                result["busInterval"] as String)
+                result["busInterval"] as String
+            )
         }
 
         fun syncFetchBusRunInfo(runPathId: String, direction: Direction): List<ABusRun>? {

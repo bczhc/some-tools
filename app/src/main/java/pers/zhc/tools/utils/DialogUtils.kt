@@ -20,6 +20,7 @@ class DialogUtils {
             negativeAction: DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, _ -> },
             view: View? = null,
             title: String,
+            message: String? = null,
             width: Int = WRAP_CONTENT,
             height: Int = WRAP_CONTENT,
             applicationOverlay: Boolean = false
@@ -33,7 +34,9 @@ class DialogUtils {
                 width,
                 height,
                 applicationOverlay
-            )
+            ).apply {
+                message?.let { setMessage(it) }
+            }
         }
 
         fun createConfirmationAlertDialog(
@@ -42,6 +45,7 @@ class DialogUtils {
             negativeAction: DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, _ -> },
             view: View? = null,
             @StringRes titleRes: Int,
+            message: String? = null,
             width: Int = WRAP_CONTENT,
             height: Int = WRAP_CONTENT,
             applicationOverlay: Boolean = false
@@ -55,7 +59,9 @@ class DialogUtils {
                 width,
                 height,
                 applicationOverlay
-            )
+            ).apply {
+                message?.let { setMessage(message) }
+            }
         }
 
         fun createPromptDialog(

@@ -14,6 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.jni.sqlite.SQLite3
@@ -201,21 +203,19 @@ FROM diary"""
     }
 
     private fun showCreateSpecifiedDateDiaryDialog() {
-        val promptDialog =
-            DialogUtils.createPromptDialog(requireContext(), R.string.enter_specific_date, { _, et ->
-                val s = et.text.toString()
-                try {
-                    val dateInt = s.toInt()
-                    if (checkRecordExistence(dateInt)) {
-                        showDuplicateConfirmDialog(dateInt)
-                    } else {
-                        createDiary(dateInt)
-                    }
-                } catch (e: NumberFormatException) {
-                    ToastUtils.show(context, R.string.please_enter_correct_value_toast)
+        MaterialDatePicker.Builder.datePicker().apply {
+
+        }.build().apply {
+            addOnPositiveButtonClickListener {
+                val dateInt = MyDate(Date(it)).dateInt
+
+                if (checkRecordExistence(dateInt)) {
+                    showDuplicateConfirmDialog(dateInt)
+                } else {
+                    createDiary(dateInt)
                 }
-            })
-        promptDialog.show()
+            }
+        }.show(childFragmentManager, javaClass.name)
     }
 
     private fun showDuplicateConfirmDialog(dateInt: Int) {

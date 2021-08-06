@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -28,8 +28,14 @@
               android:textSize="15sp"
               android:id="@+id/tv"
     />
-    <SeekBar android:layout_width="match_parent" android:layout_height="wrap_content"
-             android:id="@+id/sb"/>
+    <com.google.android.material.slider.Slider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/slider"
+            app:labelBehavior="gone"
+            android:valueFrom="0"
+            android:valueTo="100"
+            />
     <pers.zhc.tools.views.RoundColorView
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:id="@+id/stroke_show"

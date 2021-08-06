@@ -2,7 +2,6 @@ package pers.zhc.tools.diary.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import pers.zhc.tools.diary.DiaryBaseActivity
 import pers.zhc.jni.sqlite.SQLite3
