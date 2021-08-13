@@ -16,7 +16,6 @@ import pers.zhc.tools.utils.DisplayUtil;
  * @author bczhc
  */
 public class DrawingBoardTest extends BaseActivity {
-    private PaintView pv;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -24,20 +23,10 @@ public class DrawingBoardTest extends BaseActivity {
         setContentView(R.layout.drawing_board_test_activity);
         RelativeLayout layout = findViewById(R.id.rl);
 
-        pv = new PaintView(this);
+        PaintView pv = new PaintView(this);
         pv.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         pv.setDrawingStrokeWidth(10F);
         pv.setDrawingColor(Color.RED);
         layout.addView(pv);
-    }
-
-    @Override
-    public void onConfigurationChanged(@NotNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        pv.refreshBitmap(
-                DisplayUtil.dip2px(this, newConfig.screenWidthDp),
-                DisplayUtil.dip2px(this, newConfig.screenHeightDp)
-        );
     }
 }

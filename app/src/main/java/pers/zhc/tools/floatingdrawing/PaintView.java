@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.*;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,33 +12,31 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
-import pers.zhc.tools.fdb.ExtraInfos;
+import pers.zhc.tools.fdb.*;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.*;
-import pers.zhc.tools.views.HSVAColorPickerRL;
+import pers.zhc.util.Assertion;
+import pers.zhc.util.Random;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author bczhc
  */
 @SuppressLint("ViewConstructor")
 public class PaintView extends View {
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        return super.dispatchTouchEvent(event);
-    }
 
     private int height = -1;
     private int width = -1;
@@ -49,16 +46,13 @@ public class PaintView extends View {
     private Path mPath;
     private Paint eraserPaint;
     private Paint mPaintRef = null;
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private Map<Canvas, Bitmap> bitmapMap;
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private Map<String, Canvas> canvasMap;
-    private Canvas headCanvas;
+    private final ArrayList<Layer> layerArray = new ArrayList<>();
+    private LayerPathSaver layerPathSaverRef;
+
+    private Layer layerRef;
+    private Canvas mCanvas;
     private CanvasTransformer canvasTransformer;
-    /**
-     * HEAD, a reference
-     */
-    private Bitmap headBitmap;
+    private Bitmap bitmapRef;
     /**
      * 上次的坐标
      */
@@ -67,9 +61,7 @@ public class PaintView extends View {
     /**
      * 使用LinkedList 模拟栈，来保存 Path
      */
-    private LinkedList<PathBean> undoList, redoList;
-    private Bitmap backgroundBitmap;
-    private Canvas mBackgroundCanvas;
+    private LinkedList<PathBean> undoListRef, redoListRef;
     private GestureResolver gestureResolver;
     private boolean dontDrawWhileImporting = false;
     private boolean lockStrokeEnabled = false;
@@ -99,6 +91,9 @@ public class PaintView extends View {
 
     private float canvasScale = 1F;
 
+    @Nullable
+    private OnImportLayerAddedListener onImportLayerAddedListener = null;
+
     public PaintView(Context context) {
         this(context, null);
     }
@@ -119,42 +114,49 @@ public class PaintView extends View {
         this.onColorChangedCallback = onColorChangedCallback;
     }
 
-    private void setupBitmap(int width, int height) {
-        Matrix matrix = null;
-        if (headCanvas != null) {
+    private void initBitmap(int width, int height, @NotNull Layer layer) {
+        System.gc();
+        layer.bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        // due to the bitmap was replaced, we need to re-link some references of the layer
+        if (layer == layerRef) {
+            updateLayerRefs();
+        }
+    }
+
+    private void initBitmap(Layer layer) {
+        initBitmap(width, height, layer);
+    }
+
+    private void setupBitmap(int width, int height, @NotNull Layer layer) {
+        /*Matrix matrix = null;
+        if (layer.bitmap != null) {
             matrix = canvasTransformer.getMatrix();
 
-            final int prevWidth = headBitmap.getWidth();
-            final int prevHeight = headBitmap.getHeight();
+            final int prevWidth = layer.bitmap.getWidth();
+            final int prevHeight = layer.bitmap.getHeight();
 
             final int tX = width / 2 - prevWidth / 2;
             final int tY = height / 2 - prevHeight / 2;
             matrix.postTranslate(tX, tY);
-        }
+        }*/
 
-        System.gc();
-        headBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        backgroundBitmap = Bitmap.createBitmap(headBitmap);
-        headCanvas = new Canvas(headBitmap);
-        canvasTransformer = new CanvasTransformer(headCanvas);
-        mBackgroundCanvas = new Canvas(backgroundBitmap);
-        //抗锯齿
-        headCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+        initBitmap(width, height, layer);
 
-        if (matrix != null) {
+        /*if (matrix != null) {
             canvasTransformer.setMatrix(matrix);
-        }
-        redrawCanvas();
-    }
-
-    private void setupBitmap() {
-        setupBitmap(width, height);
+        }*/
+        layer.redrawBitmap(canvasTransformer.getMatrix());
     }
 
     /**
      * Initialize.
      */
     private void init() {
+        mCanvas = new Canvas();
+        canvasTransformer = new CanvasTransformer(mCanvas);
+        //抗锯齿
+        mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+
         setEraserMode(false);
         eraserPaint = new Paint();
         eraserPaint.setColor(Color.BLACK);
@@ -178,13 +180,13 @@ public class PaintView extends View {
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
-        undoList = new LinkedList<>();
-        redoList = new LinkedList<>();
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
 
+            @Contract(pure = true)
             private boolean transformationEnabled() {
                 return moveTransformationEnabled || zoomTransformationEnabled || rotateTransformationEnabled;
             }
+
             @Override
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
                 if (moveTransformationEnabled) {
@@ -221,7 +223,9 @@ public class PaintView extends View {
             public void onTwoPointsUp(MotionEvent event) {
                 if (transformationEnabled()) {
                     transBitmap = null;
-                    redrawCanvas();
+                    // redraw all layers' bitmaps
+                    redrawAllLayerBitmap();
+                    postInvalidate();
                 }
             }
 
@@ -230,12 +234,12 @@ public class PaintView extends View {
                 if (moveTransformationEnabled || zoomTransformationEnabled || rotateTransformationEnabled) {
                     mPath = null;
                     if (transBitmap == null) {
-                        transBitmap = Bitmap.createBitmap(headBitmap);
+                        transBitmap = Bitmap.createBitmap(bitmapRef.getWidth(), bitmapRef.getHeight(), Bitmap.Config.ARGB_8888);
                         transCanvas = new Canvas(transBitmap);
                         transCanvasTransformer = new CanvasTransformer(transCanvas);
                     }
-                    if (pathSaver != null) {
-                        pathSaver.clearTmpTable();
+                    if (layerPathSaverRef != null) {
+                        layerPathSaverRef.clearTempTable();
                     }
                 }
             }
@@ -250,7 +254,10 @@ public class PaintView extends View {
                 if (transBitmap != null) {
                     Canvas c = new Canvas(transBitmap);
                     c.setMatrix(canvasTransformer.getMatrix());
-                    c.drawBitmap(headBitmap, 0, 0, mBitmapPaint);
+                    for (int i = layerArray.size() - 1; i >= 0; i--) {
+                        Layer layer = layerArray.get(i);
+                        transCanvas.drawBitmap(layer.bitmap, 0, 0, mBitmapPaint);
+                    }
                 }
                 postInvalidate();
             }
@@ -264,6 +271,7 @@ public class PaintView extends View {
         }
 
         File tmpPathFile = new File(internalPathDir, String.valueOf(System.currentTimeMillis()));
+
         // use an internal temporary PathSaver
         defaultTmpPathSaver = new PathSaver(tmpPathFile.getPath());
         pathSaver = defaultTmpPathSaver;
@@ -295,19 +303,16 @@ public class PaintView extends View {
      * 撤销操作
      */
     public void undo() {
-        if (!undoList.isEmpty()) {
-            pathSaver.undo();
+        if (!undoListRef.isEmpty()) {
+            layerPathSaverRef.undo();
 
             clearPaint();//清除之前绘制内容
-            PathBean lastPb = undoList.removeLast();//将最后一个移除
-            redoList.add(lastPb);//加入 恢复操作
+            PathBean lastPb = undoListRef.removeLast();//将最后一个移除
+            redoListRef.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 headCanvas
-            if (backgroundBitmap != null) {
-                headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
-            }
             if (!dontDrawWhileImporting) {
-                for (PathBean pb : undoList) {
-                    headCanvas.drawPath(pb.path, pb.paint);
+                for (PathBean pb : undoListRef) {
+                    mCanvas.drawPath(pb.path, pb.paint);
                 }
                 postInvalidate();
             }
@@ -318,12 +323,12 @@ public class PaintView extends View {
      * 恢复操作
      */
     public void redo() {
-        if (!redoList.isEmpty()) {
-            pathSaver.redo();
+        if (!redoListRef.isEmpty()) {
+            layerPathSaverRef.redo();
 
-            PathBean pathBean = redoList.removeLast();
-            headCanvas.drawPath(pathBean.path, pathBean.paint);
-            undoList.add(pathBean);
+            PathBean pathBean = redoListRef.removeLast();
+            mCanvas.drawPath(pathBean.path, pathBean.paint);
+            undoListRef.add(pathBean);
             if (!dontDrawWhileImporting) {
                 postInvalidate();
             }
@@ -345,9 +350,8 @@ public class PaintView extends View {
         clearPaint();
         mLastY = 0f;
         //清空 撤销 ，恢复 操作列表
-        redoList.clear();
-        undoList.clear();
-        mBackgroundCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        redoListRef.clear();
+        undoListRef.clear();
     }
 
     /**
@@ -407,14 +411,14 @@ public class PaintView extends View {
      * 是否可以撤销
      */
     public boolean canUndo() {
-        return undoList.isEmpty();
+        return undoListRef.isEmpty();
     }
 
     /**
      * 是否可以恢复
      */
     public boolean canRedo() {
-        return redoList.isEmpty();
+        return redoListRef.isEmpty();
     }
 
     /**
@@ -422,7 +426,7 @@ public class PaintView extends View {
      * 直接绘制白色背景
      */
     private void clearPaint() {
-        headCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         postInvalidate();
     }
 
@@ -442,27 +446,30 @@ public class PaintView extends View {
         if (dontDrawWhileImporting) {
             return;
         }
-        if (canvas != null) {
-            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            if (transBitmap == null) {
-                if (headBitmap != null) {
-                    canvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);//将mBitmap绘制在canvas上,最终的显示
-                    if (!dontDrawWhileImporting) {
-                        if (mPath != null) {//显示实时正在绘制的path轨迹
-                            canvas.setMatrix(canvasTransformer.getMatrix());
-                            if (eraserMode) {
-                                canvas.drawPath(mPath, eraserPaint);
-                            } else {
-                                canvas.drawPath(mPath, mPaint);
-                            }
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        if (transBitmap == null) {
+            if (bitmapRef != null) {
+                // 将bitmap绘制在canvas上,最终的显示
+                for (int i = layerArray.size() - 1; i >= 0; i--) {
+                    Layer layer = layerArray.get(i);
+                    canvas.drawBitmap(layer.bitmap, 0, 0, mBitmapPaint);
+                }
+
+                if (!dontDrawWhileImporting) {
+                    if (mPath != null) {//显示实时正在绘制的path轨迹
+                        canvas.setMatrix(canvasTransformer.getMatrix());
+                        if (eraserMode) {
+                            canvas.drawPath(mPath, eraserPaint);
+                        } else {
+                            canvas.drawPath(mPath, mPaint);
                         }
                     }
                 }
-            } else {
-                transCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-                transCanvas.drawBitmap(headBitmap, 0, 0, mBitmapPaint);
-                canvas.drawBitmap(transBitmap, 0, 0, mBitmapPaint);
             }
+        } else {
+            transCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            transCanvas.drawBitmap(bitmapRef, 0, 0, mBitmapPaint);
+            canvas.drawBitmap(transBitmap, 0, 0, mBitmapPaint);
         }
     }
 
@@ -518,65 +525,29 @@ public class PaintView extends View {
             // init
             this.width = measuredW;
             this.height = measuredH;
-            setupBitmap();
         }
 
         if (measuredW != width || measuredH != height) {
             // adapt for the change of screen orientation
             this.width = measuredW;
             this.height = measuredH;
-            refreshBitmap(width, height);
+            refreshAllLayerBitmap(width, height);
             if (onScreenDimensionChangedListener != null) {
                 onScreenDimensionChangedListener.onChange(width, height);
             }
         }
     }
 
-    public void refreshBitmap(int width, int height) {
-        setupBitmap(width, height);
+    private void refreshBitmap(int width, int height, Layer layer) {
+        setupBitmap(width, height, layer);
         invalidate();
     }
 
-    private static class CanDoHandler<MsgType> implements Runnable {
-        public interface HandlerCallback<MsgType> {
-            void callback(MsgType a);
+    private void refreshAllLayerBitmap(int width, int height) {
+        for (Layer layer : layerArray) {
+            setupBitmap(width, height, layer);
         }
-
-        private MsgType param;
-        private boolean aDo = false;
-        private boolean start;
-        private final HandlerCallback<MsgType> handlerCallback;
-        private final ExecutorService es;
-
-        public CanDoHandler(HandlerCallback<MsgType> handlerCallback) {
-            this.handlerCallback = handlerCallback;
-            es = Executors.newFixedThreadPool(1);
-        }
-
-        @Override
-        public void run() {
-            while (this.start) {
-                if (aDo) {
-                    handlerCallback.callback(param);
-                    aDo = false;
-                }
-            }
-        }
-
-        public void stop() {
-            this.start = false;
-            es.shutdownNow();
-        }
-
-        public void start() {
-            this.start = true;
-            es.execute(this);
-        }
-
-        public void push(MsgType msg) {
-            this.param = msg;
-            this.aDo = true;
-        }
+        invalidate();
     }
 
     public enum PathVersion {
@@ -639,217 +610,261 @@ public class PaintView extends View {
      * @param f                路径文件
      * @param doneAction       完成回调接口
      * @param progressCallback 进度回调接口 Range: [0-1]
+     * @param speedDelayMillis interval of reading per point
+     * @param pathVersion      path version
      */
-    @SuppressWarnings("BusyWait")
-    public void asyncImportPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) {
-        Handler handler = new Handler();
+    public void asyncImportPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
+        new Thread(() -> {
+            importPathFile(f, doneAction, progressCallback, speedDelayMillis, pathVersion);
+        }).start();
+    }
 
+    public void importPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
         dontDrawWhileImporting = speedDelayMillis == 0;
         if (progressCallback != null) {
             progressCallback.accept(0F);
         }
 
-        final Runnable importOldPathRunnable = () -> {
-            RandomAccessFile raf = null;
-            try {
-                raf = new RandomAccessFile(f, "r");
-                byte[] head = new byte[12];
-                raf.read(head);
-                raf.seek(0);
-                StringBuilder sb = new StringBuilder();
-                for (byte b : head) {
-                    sb.append((char) b);
+        switch (pathVersion) {
+            case VERSION_1_0:
+                ToastUtils.show(ctx, R.string.import_path_1_0);
+                try {
+                    importPathVer1_0(f, progressCallback, speedDelayMillis);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    ToastUtils.showException(ctx, e);
                 }
-                String headString = sb.toString();
-                long length = f.length(), read;
-                byte[] bytes;
-                float x, y, strokeWidth;
-                int color;
-                switch (headString) {
-                    case "path ver 2.0":
-                        handler.post(() -> ToastUtils.show(ctx, R.string.import_old_2_0));
-                        raf.skipBytes(12);
-                        bytes = new byte[12];
-                        read = 0L;
-                        int lastP1, p1 = -1;
-                        x = -1;
-                        y = -1;
-                        while (raf.read(bytes) != -1) {
-                            Thread.sleep(speedDelayMillis);
-                            lastP1 = p1;
-                            p1 = JNI.FloatingBoard.byteArrayToInt(bytes, 0);
-                            switch (p1) {
-                                case 4:
-                                    undo();
-                                    break;
-                                case 5:
-                                    redo();
-                                    break;
-                                case 1:
-                                case 2:
-                                    strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
-                                    color = JNI.FloatingBoard.byteArrayToInt(bytes, 8);
-                                    setEraserMode(p1 == 2);
-                                    if (eraserMode) {
-                                        setEraserStrokeWidth(strokeWidth);
-                                    } else {
-                                        setDrawingStrokeWidth(strokeWidth);
-                                        setDrawingColor(color);
-                                    }
-                                    break;
-                                case 3:
-                                    if (x != -1 && y != -1) {
-                                        onTouchAction(MotionEvent.ACTION_UP, x, y);
-                                    }
-                                    break;
-                                case 0:
-                                    x = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
-                                    y = JNI.FloatingBoard.byteArrayToFloat(bytes, 8);
-                                    if (lastP1 == 1 || lastP1 == 2) {
-                                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
-                                    }
-                                    onTouchAction(MotionEvent.ACTION_MOVE, x, y);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            read += 12;
-                            if (progressCallback != null) {
-                                progressCallback.accept((float) read / ((float) length));
-                            }
-                        }
+                break;
+            case VERSION_2_0:
+                ToastUtils.show(ctx, R.string.import_old_2_0);
+                try {
+                    importPathVer2_0(f, progressCallback, speedDelayMillis);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    ToastUtils.showException(ctx, e);
+                }
+                break;
+            case VERSION_2_1:
+                ToastUtils.show(ctx, R.string.import_2_1);
+                try {
+                    importPathVer2_1(f, progressCallback, speedDelayMillis);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    ToastUtils.showException(ctx, e);
+                }
+                break;
+            case VERSION_3_0:
+                ToastUtils.show(ctx, R.string.fdb_import_path_version_3_0_toast);
+                importPathVer3_0(f.getPath(), progressCallback, speedDelayMillis);
+                break;
+            default:
+                throw new RuntimeException("Unknown path version");
+        }
+
+        dontDrawWhileImporting = false;
+        redrawBitmap();
+        postInvalidate();
+        if (doneAction != null) {
+            doneAction.run();
+        }
+    }
+
+    public void importPathVer1_0(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
+        long length = f.length(), read;
+        byte[] bytes;
+        float x, y, strokeWidth;
+        int color;
+
+        FileInputStream is = new FileInputStream(f);
+
+        bytes = new byte[26];
+        byte[] bytes_4 = new byte[4];
+        read = 0L;
+        while (is.read(bytes) != -1) {
+            try {
+                // noinspection BusyWait
+                Thread.sleep(speedDelayMillis);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            read += 26L;
+            switch (bytes[25]) {
+                case 1:
+                    undo();
+                    System.out.println("undo!");
+                    break;
+                case 2:
+                    redo();
+                    System.out.println("redo!");
+                    break;
+                default:
+                    System.arraycopy(bytes, 0, bytes_4, 0, 4);
+                    x = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                    System.arraycopy(bytes, 4, bytes_4, 0, 4);
+                    y = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                    System.arraycopy(bytes, 8, bytes_4, 0, 4);
+                    color = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
+                    System.arraycopy(bytes, 12, bytes_4, 0, 4);
+                    strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                    System.arraycopy(bytes, 16, bytes_4, 0, 4);
+                    int motionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
+                    System.arraycopy(bytes, 20, bytes_4, 0, 4);
+                    float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                    if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
+                        motionAction = randomGen(0, 2);
+                    }
+                    if (strokeWidth <= 0) {
+                        strokeWidth = randomGen(1, 800);
+                    }
+                    if (eraserStrokeWidth <= 0) {
+                        eraserStrokeWidth = randomGen(1, 800);
+                    }
+                    setEraserMode(bytes[24] == 1);
+                    setEraserStrokeWidth(eraserStrokeWidth);
+                    setDrawingColor(color);
+                    setDrawingStrokeWidth(strokeWidth);
+                    onTouchAction(motionAction, x, y);
+                    if (progressCallback != null) {
+                        progressCallback.accept((float) read / (float) length);
+                    }
+                    break;
+            }
+        }
+
+        is.close();
+    }
+
+    public void importPathVer2_0(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
+        long length = f.length(), read;
+        byte[] bytes;
+        float x, y, strokeWidth;
+        int color;
+
+        FileInputStream is = new FileInputStream(f);
+
+        Assertion.doAssertion(is.skip(12) == 12);
+        bytes = new byte[12];
+        read = 0L;
+        int lastP1, p1 = -1;
+        x = -1;
+        y = -1;
+        while (is.read(bytes) != -1) {
+            try {
+                // noinspection BusyWait
+                Thread.sleep(speedDelayMillis);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            lastP1 = p1;
+            p1 = JNI.FloatingBoard.byteArrayToInt(bytes, 0);
+            switch (p1) {
+                case 4:
+                    undo();
+                    break;
+                case 5:
+                    redo();
+                    break;
+                case 1:
+                case 2:
+                    strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
+                    color = JNI.FloatingBoard.byteArrayToInt(bytes, 8);
+                    setEraserMode(p1 == 2);
+                    if (eraserMode) {
+                        setEraserStrokeWidth(strokeWidth);
+                    } else {
+                        setDrawingStrokeWidth(strokeWidth);
+                        setDrawingColor(color);
+                    }
+                    break;
+                case 3:
+                    if (x != -1 && y != -1) {
+                        onTouchAction(MotionEvent.ACTION_UP, x, y);
+                    }
+                    break;
+                case 0:
+                    x = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
+                    y = JNI.FloatingBoard.byteArrayToFloat(bytes, 8);
+                    if (lastP1 == 1 || lastP1 == 2) {
+                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                    }
+                    onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                    break;
+                default:
+                    break;
+            }
+            read += 12;
+            if (progressCallback != null) {
+                progressCallback.accept((float) read / ((float) length));
+            }
+        }
+
+        is.close();
+    }
+
+    public void importPathVer2_1(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
+        long length = f.length(), read;
+        byte[] bytes;
+        float x, y, strokeWidth;
+        int color;
+
+        FileInputStream is = new FileInputStream(f);
+
+        // 512 * 9
+        int bufferSize = 2304;
+        Assertion.doAssertion(is.skip(12) == 12);
+        byte[] buffer = new byte[bufferSize];
+        int bufferRead;
+        read = 0L;
+        while ((bufferRead = is.read(buffer)) != -1) {
+            int a = bufferRead / 9;
+            for (int i = 0; i < a; i++) {
+                try {
+                    // noinspection BusyWait
+                    Thread.sleep(speedDelayMillis);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                switch (buffer[i * 9]) {
+                    case (byte) 0xA1:
+                    case (byte) 0xA2:
+                        strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
+                        color = JNI.FloatingBoard.byteArrayToInt(buffer, 5 + i * 9);
+                        setEraserMode(buffer[i * 9] == (byte) 0xA2);
+                        mPaintRef.setColor(color);
+                        mPaintRef.setStrokeWidth(strokeWidth);
                         break;
-                    case "path ver 2.1":
-                        // 512 * 9
-                        int bufferSize = 2304;
-                        handler.post(() -> ToastUtils.show(ctx, R.string.import_2_1));
-                        raf.skipBytes(12);
-                        byte[] buffer = new byte[bufferSize];
-                        int bufferRead;
-                        read = 0L;
-                        while ((bufferRead = raf.read(buffer)) != -1) {
-                            int a = bufferRead / 9;
-                            for (int i = 0; i < a; i++) {
-                                Thread.sleep(speedDelayMillis);
-                                switch (buffer[i * 9]) {
-                                    case (byte) 0xA1:
-                                    case (byte) 0xA2:
-                                        strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                                        color = JNI.FloatingBoard.byteArrayToInt(buffer, 5 + i * 9);
-                                        setEraserMode(buffer[i * 9] == (byte) 0xA2);
-                                        mPaintRef.setColor(color);
-                                        mPaintRef.setStrokeWidth(strokeWidth);
-                                        break;
-                                    case (byte) 0xB1:
-                                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
-                                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
-                                        break;
-                                    case (byte) 0xB3:
-                                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
-                                        onTouchAction(MotionEvent.ACTION_MOVE, x, y);
-                                        break;
-                                    case (byte) 0xB2:
-                                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
-                                        onTouchAction(MotionEvent.ACTION_UP, x, y);
-                                        break;
-                                    case (byte) 0xC1:
-                                        undo();
-                                        break;
-                                    case (byte) 0xC2:
-                                        redo();
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                read += 9L;
-                                if (progressCallback != null) {
-                                    progressCallback.accept((float) read / (float) length);
-                                }
-                            }
-                        }
+                    case (byte) 0xB1:
+                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
+                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
+                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                        break;
+                    case (byte) 0xB3:
+                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
+                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
+                        onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                        break;
+                    case (byte) 0xB2:
+                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
+                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
+                        onTouchAction(MotionEvent.ACTION_UP, x, y);
+                        break;
+                    case (byte) 0xC1:
+                        undo();
+                        break;
+                    case (byte) 0xC2:
+                        redo();
                         break;
                     default:
-                        handler.post(() -> ToastUtils.show(ctx, R.string.import_path_1_0));
-                        bytes = new byte[26];
-                        byte[] bytes_4 = new byte[4];
-                        read = 0L;
-                        while (raf.read(bytes) != -1) {
-                            Thread.sleep(speedDelayMillis);
-                            read += 26L;
-                            switch (bytes[25]) {
-                                case 1:
-                                    undo();
-                                    System.out.println("undo!");
-                                    break;
-                                case 2:
-                                    redo();
-                                    System.out.println("redo!");
-                                    break;
-                                default:
-                                    System.arraycopy(bytes, 0, bytes_4, 0, 4);
-                                    x = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    System.arraycopy(bytes, 4, bytes_4, 0, 4);
-                                    y = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    System.arraycopy(bytes, 8, bytes_4, 0, 4);
-                                    color = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
-                                    System.arraycopy(bytes, 12, bytes_4, 0, 4);
-                                    strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    System.arraycopy(bytes, 16, bytes_4, 0, 4);
-                                    int motionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
-                                    System.arraycopy(bytes, 20, bytes_4, 0, 4);
-                                    float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                                    if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
-                                        motionAction = randomGen(0, 2);
-                                    }
-                                    if (strokeWidth <= 0) {
-                                        strokeWidth = randomGen(1, 800);
-                                    }
-                                    if (eraserStrokeWidth <= 0) {
-                                        eraserStrokeWidth = randomGen(1, 800);
-                                    }
-                                    setEraserMode(bytes[24] == 1);
-                                    setEraserStrokeWidth(eraserStrokeWidth);
-                                    setDrawingColor(color);
-                                    setDrawingStrokeWidth(strokeWidth);
-                                    onTouchAction(motionAction, x, y);
-                                    if (progressCallback != null) {
-                                        progressCallback.accept((float) read / (float) length);
-                                    }
-                                    break;
-                            }
-                        }
                         break;
                 }
-            } catch (IOException e) {
-                handler.post(() -> ToastUtils.showError(ctx, R.string.read_error, e));
-            } catch (InterruptedException ignored) {
-            } finally {
-                if (raf != null) {
-                    try {
-                        raf.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                read += 9L;
+                if (progressCallback != null) {
+                    progressCallback.accept((float) read / (float) length);
                 }
             }
-        };
+        }
 
-        new Thread(() -> {
-            try {
-                importPathVer3(f.getPath(), progressCallback == null ? ((v) -> {
-                }) : progressCallback, speedDelayMillis);
-            } catch (SQLiteDatabaseCorruptException ignored) {
-                importOldPathRunnable.run();
-            }
-
-            dontDrawWhileImporting = false;
-            redrawCanvas();
-            postInvalidate();
-            doneAction.run();
-        }).start();
+        is.close();
     }
 
     private int randomGen(int min, int max) {
@@ -864,7 +879,18 @@ public class PaintView extends View {
         onTouchAction(motionAction, importTmpPoint.x, importTmpPoint.y);
     }
 
-    private void importPathVer3(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
+    private @NotNull ArrayList<String> getDatabaseTables(@NotNull SQLite3 db) {
+        ArrayList<String> list = new ArrayList<>();
+        final Statement statement = db.compileStatement("SELECT tbl_name FROM sqlite_master");
+        final Cursor cursor = statement.getCursor();
+        while (cursor.step()) {
+            list.add(cursor.getText(0));
+        }
+        statement.release();
+        return list;
+    }
+
+    private void importPathVer3_0(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
@@ -874,10 +900,13 @@ public class PaintView extends View {
         final Matrix savedTransformation = new Matrix(getTransformationMatrix());
 
         Matrix defaultTransformation = null;
+        ArrayList<LayerInfo> layersInfo = null;
         try {
             final JSONObject extraInfos = PathSaver.getExtraInfos(db);
             final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
-            defaultTransformation = ExtraInfos.Companion.getDefaultTransformation(defaultTransformationJSON);
+            defaultTransformation = ExtraInfosUtils.Companion.getDefaultTransformation(defaultTransformationJSON);
+
+            layersInfo = ExtraInfosUtils.Companion.getLayersInfo(extraInfos);
         } catch (JSONException | NullPointerException ignored) {
             ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
         }
@@ -889,20 +918,74 @@ public class PaintView extends View {
         float[] transformationValue = new float[9];
         defaultTransformation.getValues(transformationValue);
 
-        float canvasScale = CanvasTransformer.getRealScale(getTransformationMatrix());
+        if (layersInfo != null) {
+            for (LayerInfo layerInfo : layersInfo) {
+                final long originalLayerId = layerInfo.getLayerId();
+                final long newLayerId = layerInfo.getLayerId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
+                add1Layer(newLayerId);
+                switchLayer(newLayerId);
+                if (onImportLayerAddedListener != null) {
+                    onImportLayerAddedListener.onAdded(new LayerInfo(newLayerId, layerInfo.getName(), layerInfo.getVisible()));
+                }
 
-        final Statement statement0 = db.compileStatement("SELECT COUNT() FROM path");
-        final Cursor cursor0 = statement0.getCursor();
-        Common.doAssertion(cursor0.step());
-        int recordNum = cursor0.getInt(0);
-        statement0.release();
+                importLayerPath(
+                        db,
+                        originalLayerId,
+                        defaultTransformationScale,
+                        transformationValue,
+                        progressCallback,
+                        speedDelayMillis
+                );
+            }
+        } else {
+            // TODO: 8/5/21 for old path ver3.0
+            TODO.todo();
+        }
 
-        dontDrawWhileImporting = speedDelayMillis == 0;
+        String extraStr = null;
+        try {
+            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
+                    "FROM info");
+            Cursor infoCursor = infoStatement.getCursor();
+            if (infoCursor.step()) {
+                extraStr = infoCursor.getText(0);
+            }
+            infoStatement.release();
+        } catch (RuntimeException ignored) {
+        }
 
-        Statement statement = db.compileStatement("SELECT mark, p1, p2\n" +
-                "FROM path");
+        if (extraStr != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(extraStr);
+                boolean isLockingStroke = jsonObject.getBoolean("isLockingStroke");
+                setLockingStroke(isLockingStroke);
+                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
+                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
+                setCurrentStrokeWidthWhenLocked();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
-        Cursor cursor = statement.getCursor();
+        transformTo(savedTransformation);
+
+        postInvalidate();
+    }
+
+    private void importLayerPath(
+            SQLite3 db,
+            long layerId,
+            float defaultTransformationScale,
+            float[] transformationValue,
+            Consumer<Float> progressCallback,
+            int speedDelayMillis
+    ) {
+        final String pathTable = "path_layer_" + layerId;
+        final int rowCount = SQLiteUtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
+
+        final Statement statement = db.compileStatement("SELECT mark, p1, p2 FROM " + pathTable);
+        final Cursor cursor = statement.getCursor();
+
         int c = 0;
         while (cursor.step()) {
             int mark = cursor.getInt(0);
@@ -955,7 +1038,7 @@ public class PaintView extends View {
             }
 
             ++c;
-            progressCallback.accept((float) c / (float) recordNum);
+            progressCallback.accept((float) c / (float) rowCount);
             if (!dontDrawWhileImporting) {
                 try {
                     //noinspection BusyWait
@@ -966,36 +1049,7 @@ public class PaintView extends View {
             }
         }
 
-        String extraStr = null;
-        try {
-            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
-                    "FROM info");
-            Cursor infoCursor = infoStatement.getCursor();
-            if (infoCursor.step()) {
-                extraStr = infoCursor.getText(0);
-            }
-            infoStatement.release();
-        } catch (RuntimeException ignored) {
-        }
-
-        if (extraStr != null) {
-            try {
-                JSONObject jsonObject = new JSONObject(extraStr);
-                boolean isLockingStroke = jsonObject.getBoolean("isLockingStroke");
-                setLockingStroke(isLockingStroke);
-                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
-                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
-                setCurrentStrokeWidthWhenLocked();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
         statement.release();
-
-        transformTo(savedTransformation);
-
-        postInvalidate();
     }
 
     private final PointF transformedPoint = new PointF();
@@ -1011,7 +1065,11 @@ public class PaintView extends View {
         y = inverseTransformedPoint.y;
         switch (motionAction) {
             case MotionEvent.ACTION_DOWN:
-                pathSaver.onTouchDown(x, y);
+                if (eraserMode) {
+                    layerPathSaverRef.onErasingTouchDown(x, y, getEraserAlpha(), getEraserStrokeWidth());
+                } else {
+                    layerPathSaverRef.onDrawingTouchDown(x, y, getDrawingColor(), getDrawingStrokeWidth());
+                }
                 //路径
                 mPath = new Path();
                 mLastX = x;
@@ -1019,7 +1077,7 @@ public class PaintView extends View {
                 mPath.moveTo(mLastX, mLastY);
                 break;
             case MotionEvent.ACTION_MOVE:
-                pathSaver.onTouchMove(x, y);
+                layerPathSaverRef.onTouchMove(x, y, eraserMode);
                 if (mPath != null) {
                     mPath.quadTo(mLastX, mLastY, (mLastX + x) / 2, (mLastY + y) / 2);
                     mLastX = x;
@@ -1028,20 +1086,20 @@ public class PaintView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
-                    pathSaver.onTouchUp(x, y);
+                    layerPathSaverRef.onTouchUp(x, y, eraserMode);
                     if (!dontDrawWhileImporting) {
-                        headCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
+                        mCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
                     }
                     Path path = new Path(mPath);//复制出一份mPath
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
                     // for undoing
-                    undoList.add(pb);
-                    redoList.clear();
+                    undoListRef.add(pb);
+                    redoListRef.clear();
                     mPath.reset();
                     mPath = null;
                 }
-                pathSaver.transferToPathTableAndClear();
+                layerPathSaverRef.transferToPathTableAndClear();
                 break;
             default:
         }
@@ -1057,15 +1115,16 @@ public class PaintView extends View {
     }
 
     public void importImage(@NonNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
-        System.gc();
+        // TODO: 8/4/21 import image
+        /*System.gc();
         Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
         mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
         if (backgroundBitmap == null) {
             ToastUtils.show(ctx, ctx.getString(R.string.importing_failed));
         } else {
-            headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
+            mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
         }
-        postInvalidate();
+        postInvalidate();*/
     }
 
     public void resetTransformation() {
@@ -1075,12 +1134,8 @@ public class PaintView extends View {
     /**
      * 把路径绘制到缓冲Bitmap上
      */
-    private void redrawCanvas() {
-        headCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        headCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
-        for (PathBean pathBean : this.undoList) {
-            headCanvas.drawPath(pathBean.path, pathBean.paint);
-        }
+    private void redrawBitmap() {
+        layerRef.redrawBitmap(canvasTransformer.getMatrix());
     }
 
     public float getStrokeWidthInUse() {
@@ -1091,26 +1146,8 @@ public class PaintView extends View {
         return this.lockStrokeEnabled;
     }
 
-    public void bitmapResolution(@NotNull Point point) {
-        point.x = headBitmap.getWidth();
-        point.y = headBitmap.getHeight();
-    }
-
     public void setLockingStroke(boolean mode) {
         this.lockStrokeEnabled = mode;
-    }
-
-    public void lockStroke() {
-        if (lockStrokeEnabled) {
-            this.lockedDrawingStrokeWidth = getDrawingStrokeWidth() * canvasScale;
-            this.lockedEraserStrokeWidth = getEraserStrokeWidth() * canvasScale;
-            setCurrentStrokeWidthWhenLocked();
-        }
-    }
-
-    public void changeHead(String id) {
-        headCanvas = canvasMap.get(id);
-        headBitmap = bitmapMap.get(headCanvas);
     }
 
     // ----------------------- new API of stroke locking -------------------------------
@@ -1152,8 +1189,8 @@ public class PaintView extends View {
      * 路径集合
      */
     public static class PathBean {
-        final Path path;
-        final Paint paint;
+        public final Path path;
+        public final Paint paint;
 
         PathBean(Path path, Paint paint) {
             this.path = path;
@@ -1167,336 +1204,14 @@ public class PaintView extends View {
      * @param pathSaver path saver
      */
     public void setPathSaver(PathSaver pathSaver) {
-        final File tmpFile = new File(defaultTmpPathSaver.pathDatabase.getDatabasePath());
+        final File tmpFile = new File(defaultTmpPathSaver.getDatabasePath());
         if (tmpFile.exists()) {
             if (!tmpFile.delete()) {
                 throw new DeleteException();
             }
         }
 
-        pathSaver.paintView = this;
         this.pathSaver = pathSaver;
-    }
-
-    /**
-     * Path saver.
-     * <p>One record structure in data saved:</p>
-     * <h3>&lt;mark&gt;(1bytes) &lt;p1&gt;(4bytes) &lt;p2&gt;(4bytes)</h3>
-     * When {@link MotionEvent#getAction()} is {@link MotionEvent#ACTION_DOWN}, it'll record 2 records.
-     * <ul>
-     *     <li>
-     *         drawing:<br/>
-     *         let action = {@link MotionEvent#getAction()}<br/>
-     *         if action is:
-     *         <ul>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_DOWN}:
-     *                 <ul>
-     *                     record 1:
-     *                     <li>mark: {@code 0x01}</li>
-     *                     <li>p1: paint color as {@code int}</li>
-     *                     <li>p2: stroke width as {@code float}</li>
-     *                 </ul>
-     *                 <ul>
-     *                     record 2:
-     *                     <li>mark: {@code 0x02}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_MOVE}:
-     *                 <ul>
-     *                     <li>mark: {@code 0x03}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_UP}
-     *                 <ul>
-     *                     <li>mark {@code 0x04}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *         </ul>
-     *     </li>
-     *     <li>
-     *         erasing:<br/>
-     *         let action = {@link MotionEvent#getAction()}<br/>
-     *         if action is:
-     *         <ul>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_DOWN}:
-     *                 <ul>
-     *                     record 1:
-     *                     <li>mark: {@code 0x11}</li>
-     *                     <li>p1: eraser transparency (alpha value) as {@code int}</li>
-     *                     <li>p2: stroke width as {@code float}</li>
-     *                 </ul>
-     *                 <ul>
-     *                     record 2:
-     *                     <li>mark: {@code 0x12}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_MOVE}:
-     *                 <ul>
-     *                     <li>mark: {@code 0x13}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *             <li>
-     *                 {@link MotionEvent#ACTION_UP}
-     *                 <ul>
-     *                     <li>mark {@code 0x14}</li>
-     *                     <li>p1: x touch point coordinates as {@code float}</li>
-     *                     <li>p2: y touch point coordinates as {@code float}</li>
-     *                 </ul>
-     *             </li>
-     *         </ul>
-     *     </li>
-     *     <li>
-     *         Undo:
-     *         <ul>
-     *             <li>mark: {@code 0x20}</li>
-     *             <li>p1: {@code 0x00}</li>
-     *             <li>p2: {@code 0x00}</li>
-     *         </ul>
-     *     </li>
-     *     <li>
-     *         Redo:
-     *         <ul>
-     *             <li>mark: {@code 0x30}</li>
-     *             <li>p1: {@code 0x00}</li>
-     *             <li>p2: {@code 0x00}</li>
-     *         </ul>
-     *     </li>
-     * </ul>
-     */
-    public static class PathSaver {
-        private final SQLite3 pathDatabase;
-        private final Statement tmpStatement;
-        private final Statement pathStatement;
-
-        /**
-         * to get some infos from it, set by {@link PaintView#setPathSaver(PathSaver)}
-         */
-        private PaintView paintView;
-
-        public PathSaver(String path) {
-            this.pathDatabase = SQLite3.open(path);
-
-            configureDatabase();
-
-            // prepare statement
-            tmpStatement = pathDatabase.compileStatement("INSERT INTO tmp (mark, p1, p2) VALUES (?, ?, ?)");
-            pathStatement = pathDatabase.compileStatement("INSERT INTO path (mark, p1, p2) VALUES (?, ?, ?)");
-
-            beginTransaction();
-        }
-
-        public void setExtraInfos(@NotNull ArrayList<HSVAColorPickerRL.SavedColor> savedColors) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("isLockingStroke", paintView.isLockingStroke());
-                jsonObject.put("lockedDrawingStrokeWidth", paintView.lockedDrawingStrokeWidth);
-                jsonObject.put("lockedEraserStrokeWidth", paintView.lockedEraserStrokeWidth);
-
-                JSONArray savedColorsJSONArray = new JSONArray();
-                for (HSVAColorPickerRL.SavedColor savedColor : savedColors) {
-                    JSONObject savedColorJSONObject = new JSONObject();
-
-                    JSONArray hsvaJSONOArray = new JSONArray();
-                    hsvaJSONOArray.put(savedColor.hsv[0]);
-                    hsvaJSONOArray.put(savedColor.hsv[1]);
-                    hsvaJSONOArray.put(savedColor.hsv[2]);
-                    hsvaJSONOArray.put(savedColor.alpha);
-
-                    savedColorJSONObject.put("colorHSVA", hsvaJSONOArray);
-                    savedColorJSONObject.put("colorName", savedColor.name);
-                    savedColorsJSONArray.put(savedColorJSONObject);
-                }
-                jsonObject.put("savedColors", savedColorsJSONArray);
-
-                float[] matrixValues = new float[9];
-                paintView.defaultTransformation.getValues(matrixValues);
-                JSONObject defaultTransformationJSONObject = new JSONObject();
-                defaultTransformationJSONObject.put("MSCALE_X", matrixValues[Matrix.MSCALE_X]);
-                defaultTransformationJSONObject.put("MSKEW_X", matrixValues[Matrix.MSKEW_X]);
-                defaultTransformationJSONObject.put("MTRANS_X", matrixValues[Matrix.MTRANS_X]);
-                defaultTransformationJSONObject.put("MSKEW_Y", matrixValues[Matrix.MSKEW_Y]);
-                defaultTransformationJSONObject.put("MSCALE_Y", matrixValues[Matrix.MSCALE_Y]);
-                defaultTransformationJSONObject.put("MTRANS_Y", matrixValues[Matrix.MTRANS_Y]);
-                defaultTransformationJSONObject.put("MPERSP_0", matrixValues[Matrix.MPERSP_0]);
-                defaultTransformationJSONObject.put("MPERSP_1", matrixValues[Matrix.MPERSP_1]);
-                defaultTransformationJSONObject.put("MPERSP_2", matrixValues[Matrix.MPERSP_2]);
-
-                jsonObject.put("defaultTransformation", defaultTransformationJSONObject);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-
-            String extraString = jsonObject.toString();
-
-            Statement infoStatement = pathDatabase.compileStatement("UPDATE info\n" +
-                    "SET extra_infos = ?");
-            infoStatement.bindText(1, extraString);
-            infoStatement.step();
-            infoStatement.release();
-        }
-
-        private void configureDatabase() {
-            // create table
-            pathDatabase.exec("CREATE TABLE IF NOT EXISTS path\n" +
-                    "(\n" +
-                    "    mark INTEGER,\n" +
-                    "    p1   NUMERIC,\n" +
-                    "    p2   NUMERIC\n" +
-                    ")");
-            // for storing records to be saved before ACTION_UP, to prevent recording paths while zooming
-            pathDatabase.exec("CREATE TABLE IF NOT EXISTS tmp\n" +
-                    "(\n" +
-                    "    mark INTEGER,\n" +
-                    "    p1   NUMERIC,\n" +
-                    "    p2   NUMERIC\n" +
-                    ")");
-            pathDatabase.exec("CREATE TABLE IF NOT EXISTS info\n" +
-                    "(\n" +
-                    "    version          TEXT NOT NULL,\n" +
-                    "    create_timestamp INTEGER,\n" +
-                    "    extra_infos      TEXT NOT NULL\n" +
-                    ")");
-
-            Statement infoStatement = pathDatabase.compileStatement("INSERT INTO info VALUES(?,?,?)");
-            infoStatement.reset();
-            infoStatement.bindText(1, "3.0");
-            infoStatement.bind(2, System.currentTimeMillis());
-            infoStatement.bindText(3, "");
-            infoStatement.step();
-            infoStatement.release();
-        }
-
-        private void undo() {
-            pathStatement.reset();
-            pathStatement.bind(1, 0x20);
-            pathStatement.bind(2, 0);
-            pathStatement.bind(3, 0);
-            pathStatement.step();
-        }
-
-        private void redo() {
-            pathStatement.reset();
-            pathStatement.bind(1, 0x30);
-            pathStatement.bind(2, 0);
-            pathStatement.bind(3, 0);
-            pathStatement.step();
-        }
-
-        @SuppressWarnings("DuplicatedCode")
-        private void insert(int mark, int p1, float p2) {
-            tmpStatement.reset();
-            tmpStatement.bind(1, mark);
-            tmpStatement.bind(2, p1);
-            tmpStatement.bind(3, p2);
-            tmpStatement.step();
-        }
-
-        @SuppressWarnings("DuplicatedCode")
-        private void insert(int mark, float p1, float p2) {
-            tmpStatement.reset();
-            tmpStatement.bind(1, mark);
-            tmpStatement.bind(2, p1);
-            tmpStatement.bind(3, p2);
-            tmpStatement.step();
-        }
-
-        private void onTouchDown(float x, float y) {
-            if (paintView.eraserMode) {
-                insert(0x11, paintView.getEraserAlpha(), paintView.getEraserStrokeWidth());
-                insert(0x12, x, y);
-            } else {
-                insert(0x01, paintView.getDrawingColor(), paintView.getDrawingStrokeWidth());
-                insert(0x02, x, y);
-            }
-        }
-
-        private void onTouchMove(float x, float y) {
-            insert(paintView.eraserMode ? 0x13 : 0x03, x, y);
-        }
-
-        private void onTouchUp(float x, float y) {
-            insert(paintView.eraserMode ? 0x14 : 0x04, x, y);
-        }
-
-        public void flush() {
-            pathDatabase.exec("COMMIT");
-            pathDatabase.exec("BEGIN TRANSACTION");
-        }
-
-        private void clearTmpTable() {
-            pathDatabase.exec("-- noinspection SqlWithoutWhere\n" +
-                    "DELETE\n" +
-                    "FROM tmp");
-        }
-
-        private void transferToPathTableAndClear() {
-            pathDatabase.exec("INSERT INTO path\n" +
-                    "SELECT *\n" +
-                    "FROM tmp");
-            clearTmpTable();
-        }
-
-        public void reset() {
-            pathDatabase.exec("DROP TABLE IF EXISTS path");
-            pathDatabase.exec("DROP TABLE IF EXISTS tmp");
-            pathDatabase.exec("DROP TABLE IF EXISTS info");
-            configureDatabase();
-        }
-
-        public void close() {
-            pathStatement.release();
-            tmpStatement.release();
-            pathDatabase.commit();
-            pathDatabase.close();
-        }
-
-        public void commit() {
-            pathDatabase.commit();
-        }
-
-        public void beginTransaction() {
-            pathDatabase.beginTransaction();
-        }
-
-        @Nullable
-        public static JSONObject getExtraInfos(@NotNull SQLite3 db) {
-            String jsonString = null;
-
-            final Statement statement = db.compileStatement("SELECT extra_infos FROM info");
-            final Cursor cursor = statement.getCursor();
-
-            if (cursor.step()) {
-                jsonString = cursor.getText(0);
-            }
-
-            statement.release();
-
-            if (jsonString == null) {
-                return null;
-            }
-
-            try {
-                return new JSONObject(jsonString);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
     }
 
     public void flushPathSaver() {
@@ -1558,7 +1273,7 @@ public class PaintView extends View {
 
     public void transformTo(Matrix matrix) {
         canvasTransformer.setMatrix(matrix);
-        redrawCanvas();
+        redrawAllLayerBitmap();
         postInvalidate();
         canvasScale = CanvasTransformer.getRealScale(matrix);
         setCurrentStrokeWidthWhenLocked();
@@ -1570,5 +1285,110 @@ public class PaintView extends View {
 
     public void resetDefaultTransformation() {
         defaultTransformation.set(new Matrix());
+    }
+
+    int a = 1;
+
+    public void testAPI() {
+        switchLayer(a % 2);
+        redrawBitmap();
+        postInvalidate();
+        ++a;
+    }
+
+    public long add1Layer(long id) {
+        final Layer layer = new Layer(width, height, id);
+        layerArray.add(layer);
+        pathSaver.addNewLayerPathSaver(id);
+        return layer.getId();
+    }
+
+    public ArrayList<Layer> getLayers() {
+        return layerArray;
+    }
+
+    private void switchLayer(int index) {
+        layerRef = layerArray.get(index);
+        updateLayerRefs();
+    }
+
+    private void updateLayerRefs() {
+        undoListRef = layerRef.undoList;
+        redoListRef = layerRef.redoList;
+        bitmapRef = layerRef.bitmap;
+        layerPathSaverRef = pathSaver.getLayerPathSaver(layerRef.getId());
+        if (layerPathSaverRef == null) throw new RuntimeException("Not found specific LayerPathSaver in PathSaver");
+
+        mCanvas.setBitmap(bitmapRef);
+        canvasTransformer.refresh();
+    }
+
+    private int getLayerIndexById(long id) {
+        for (int i = 0; i < layerArray.size(); i++) {
+            if (layerArray.get(i).getId() == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private @org.jetbrains.annotations.Nullable Layer getLayerById(long id) {
+        final int i = getLayerIndexById(id);
+        if (i != -1) {
+            return layerArray.get(i);
+        }
+        return null;
+    }
+
+    public void updateLayerState(@NotNull List<Long> orderList, long checkedId) {
+        ArrayList<Layer> newLayerArray = new ArrayList<>();
+        for (Long id : orderList) {
+            newLayerArray.add(getLayerById(id));
+        }
+        layerArray.clear();
+        layerArray.addAll(newLayerArray);
+        switchLayer(checkedId);
+    }
+
+    public void switchLayer(long id) {
+        switchLayer(getLayerIndexById(id));
+    }
+
+    private void redrawAllLayerBitmap() {
+        for (int i = layerArray.size() - 1; i >= 0; i--) {
+            layerArray.get(i).redrawBitmap(canvasTransformer.getMatrix());
+        }
+    }
+
+    public float getLockedDrawingStrokeWidth() {
+        return lockedDrawingStrokeWidth;
+    }
+
+    public float getLockedEraserStrokeWidth() {
+        return lockedEraserStrokeWidth;
+    }
+
+    public Matrix getDefaultTransformation() {
+        return defaultTransformation;
+    }
+
+    public long getCurrentLayerId() {
+        return layerRef.getId();
+    }
+
+    public ArrayList<Long> getLayerIds() {
+        ArrayList<Long> list = new ArrayList<>();
+        for (Layer layer : layerArray) {
+            list.add(layer.getId());
+        }
+        return list;
+    }
+
+    public interface OnImportLayerAddedListener {
+        void onAdded(LayerInfo layerInfo);
+    }
+
+    public void setOnImportLayerAddedListener(@Nullable OnImportLayerAddedListener onImportLayerAddedListener) {
+        this.onImportLayerAddedListener = onImportLayerAddedListener;
     }
 }

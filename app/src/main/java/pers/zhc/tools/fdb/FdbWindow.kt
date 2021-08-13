@@ -77,13 +77,15 @@ class FdbWindow(private val context: BaseActivity) {
     private val panelDimension = ViewDimension()
     private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
 
-    private val pathSaver = PaintView.PathSaver(pathFiles.tmpPathFile.path)
+    private val pathSaver = PathSaver(pathFiles.tmpPathFile.path)
 
     private val receivers = object {
         lateinit var main: FdbBroadcastReceiver
         var startScreenColorPicker: StartScreenColorPickerReceiver? = null
         var screenColorPickerResult: ScreenColorPickerResultReceiver? = null
     }
+
+    private var layerManagerView: LayerManagerView
 
     private var hasStartedScreenColorPicker = false
 
@@ -196,8 +198,6 @@ class FdbWindow(private val context: BaseActivity) {
                             7 -> {
                                 // clear
                                 createConfirmationDialog({ _, _ ->
-                                    pathSaver.reset()
-                                    pathSaver.flush()
                                     paintView.clearAll()
                                 }, R.string.fdb_clear_confirmation_dialog).show()
                             }
@@ -253,6 +253,34 @@ class FdbWindow(private val context: BaseActivity) {
             }
         }
 
+        paintView.apply {
+            drawingStrokeWidth = 10F
+            eraserStrokeWidth = 10F
+            drawingColor = colorPickers.brush.color
+
+            setPathSaver(pathSaver)
+
+            layerManagerView = LayerManagerView(context) { id ->
+                paintView.add1Layer(id)
+            }
+
+            setOnScreenDimensionChangedListener { width, height ->
+                positionUpdater.updateParentDimension(width, height)
+            }
+            post {
+                // add the default layer
+                val id = System.currentTimeMillis()
+                paintView.add1Layer(id)
+                paintView.switchLayer(id)
+                layerManagerView.add1Layer(LayerInfo(id, context.getString(R.string.fdb_layer_default_name), true))
+                layerManagerView.setChecked(id)
+            }
+
+            setOnImportLayerAddedListener {
+                layerManagerView.add1Layer(it)
+            }
+        }
+
         dialogs.apply {
             brushColorPicker = createDialog(colorPickers.brush, true, dim = false)
             panelColorPicker = createDialog(colorPickers.panel, true, dim = false)
@@ -261,16 +289,7 @@ class FdbWindow(private val context: BaseActivity) {
             moreMenu = createMoreOptionDialog()
             eraserOpacity = createEraserOpacityDialog()
             transformationSettings = createTransformationSettingsDialog()
-        }
-
-        paintView.apply {
-            drawingStrokeWidth = 10F
-            eraserStrokeWidth = 10F
-            drawingColor = colorPickers.brush.color
-            setPathSaver(pathSaver)
-            setOnScreenDimensionChangedListener { width, height ->
-                positionUpdater.updateParentDimension(width, height)
-            }
+            layerManager = createLayerManagerDialog()
         }
 
         val externalStorage = Common.getExternalStoragePath(context)
@@ -433,6 +452,7 @@ class FdbWindow(private val context: BaseActivity) {
         lateinit var moreMenu: Dialog
         lateinit var eraserOpacity: Dialog
         lateinit var transformationSettings: Dialog
+        lateinit var layerManager: Dialog
     }
 
     private fun createConfirmationDialog(
@@ -580,7 +600,7 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     2 -> {
                         // import path
-                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { _, _, file ->
+                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { _, _, path ->
                             dialogs.moreMenu.dismiss()
 
                             val progressView = View.inflate(context, R.layout.progress_bar, null)
@@ -593,9 +613,12 @@ class FdbWindow(private val context: BaseActivity) {
                             progressDialog.setCanceledOnTouchOutside(false)
                             progressDialog.show()
 
+                            val file = File(path)
+                            val pathVersion = PaintView.getPathVersion(file)
+
                             val tryDo = AsyncTryDo()
 
-                            paintView.asyncImportPathFile(File(file), {
+                            paintView.asyncImportPathFile(file, {
                                 Common.runOnUiThread(context) {
                                     progressDialog.dismiss()
                                     ToastUtils.show(
@@ -612,11 +635,11 @@ class FdbWindow(private val context: BaseActivity) {
                                         }
                                     )
 
-                                    when (PaintView.getPathVersion(File(file))) {
+                                    when (pathVersion) {
                                         PathVersion.VERSION_3_0 -> {
                                             try {
-                                                val db = SQLite3.open(file)
-                                                val extraInfos = PaintView.PathSaver.getExtraInfos(db)
+                                                val db = SQLite3.open(path)
+                                                val extraInfos = PathSaver.getExtraInfos(db)
                                                 db.close()
                                                 extraInfos ?: return@runOnUiThread
                                                 val savedColors =
@@ -644,8 +667,10 @@ class FdbWindow(private val context: BaseActivity) {
                                                     extraInfos.getJSONObject("defaultTransformation")
 
                                                 val matrix =
-                                                    ExtraInfos.getDefaultTransformation(defaultTransformationJSONObject)
-                                                paintView.setDefaultTransformation(matrix)
+                                                    ExtraInfosUtils.getDefaultTransformation(
+                                                        defaultTransformationJSONObject
+                                                    )
+                                                paintView.defaultTransformation = matrix
                                             } catch (_: Exception) {
                                             }
                                         }
@@ -664,14 +689,21 @@ class FdbWindow(private val context: BaseActivity) {
                                     }
                                 }
 
-                            }, 0/* TODO */)
+                            }, 0/* TODO */, pathVersion)
                         }.show()
                     }
                     3 -> {
                         // export path
 
-                        val savedColors = colorPickers.brush.savedColors
-                        pathSaver.setExtraInfos(savedColors)
+                        val extraInfos = ExtraInfos(
+                            paintView.isLockStrokeEnabled,
+                            paintView.lockedDrawingStrokeWidth,
+                            paintView.lockedEraserStrokeWidth,
+                            colorPickers.brush.savedColors,
+                            paintView.defaultTransformation,
+                            layerManagerView.getLayersInfo()
+                        )
+                        pathSaver.setExtraInfos(extraInfos)
                         pathSaver.flush()
 
                         createFilePickerDialog(
@@ -690,7 +722,7 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     5 -> {
                         // manage layers
-                        TODO()
+                        dialogs.layerManager.show()
                     }
                     6 -> {
                         // hide drawing board
@@ -764,6 +796,7 @@ class FdbWindow(private val context: BaseActivity) {
                 FileUtil.copy(pathFiles.tmpPathFile, pathFile)
 
                 val first = arrayOf(true, true)
+                /*TODO
                 PathProcessor.optimizePath(pathFile.path) { phase, progress ->
                     phase!!
                     tryDo.tryDo { _, notifier ->
@@ -801,7 +834,7 @@ class FdbWindow(private val context: BaseActivity) {
                             dialog.dismiss()
                         }
                     }
-                }
+                }*/
 
                 ToastUtils.show(context, R.string.fdb_exporting_path_succeeded_toast)
             } catch (e: IOException) {
@@ -914,7 +947,6 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     fun exit() {
-        pathSaver.close()
         stopFDB()
         if (hasStartedScreenColorPicker) {
             sendScreenColorPickerStopRequestBroadcast()
@@ -960,6 +992,21 @@ class FdbWindow(private val context: BaseActivity) {
         }
 
         return createDialog(inflate)
+    }
+
+    private fun createLayerManagerDialog(): Dialog {
+        val dialog = createDialog(layerManagerView).also {
+            DialogUtils.setDialogAttr(it, width = MATCH_PARENT, height = MATCH_PARENT, overlayWindow = true)
+        }
+
+        dialog.setOnDismissListener {
+            val layerState = layerManagerView.getLayerState()
+            val checkedId = layerState.checkedId
+            Common.doAssertion(checkedId != -1L)
+            paintView.updateLayerState(layerState.orderList, checkedId)
+            paintView.invalidate()
+        }
+        return dialog
     }
 
     companion object {

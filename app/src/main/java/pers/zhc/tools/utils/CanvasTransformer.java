@@ -17,6 +17,7 @@ public class CanvasTransformer {
     private final float[] tmpValue = new float[9];
     private final float[] inverseTmpValue = new float[9];
     private final float[] realScaleTmpValue = new float[9];
+    private final Matrix identityMatrix = new Matrix();
 
     public CanvasTransformer(Canvas canvas) {
         this.canvas = canvas;
@@ -45,6 +46,10 @@ public class CanvasTransformer {
         return new Matrix(matrix);
     }
 
+    /**
+     * deep copy
+     * @param matrix matrix
+     */
     public void setMatrix(Matrix matrix) {
         this.matrix.set(matrix);
         canvas.setMatrix(this.matrix);
@@ -91,5 +96,16 @@ public class CanvasTransformer {
         float scaleX = v[MSCALE_X];
         float skewY = v[MSKEW_Y];
         return (float) Math.sqrt(scaleX * scaleX + skewY * skewY);
+    }
+
+    public void reset() {
+        setMatrix(identityMatrix);
+    }
+
+    /**
+     * Refresh the transformation. When the canvas' transformation changed, use this method to re-apply the held inner transformation to the canvas.
+     */
+    public void refresh() {
+        canvas.setMatrix(this.matrix);
     }
 }
