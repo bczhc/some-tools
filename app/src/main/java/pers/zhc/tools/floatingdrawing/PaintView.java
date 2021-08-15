@@ -130,7 +130,8 @@ public class PaintView extends View {
     }
 
     private void setupBitmap(int width, int height, @NotNull Layer layer) {
-        /*Matrix matrix = null;
+        /*TODO keep the "rotate origin" fixed
+        Matrix matrix = null;
         if (layer.bitmap != null) {
             matrix = canvasTransformer.getMatrix();
 
@@ -552,14 +553,6 @@ public class PaintView extends View {
         invalidate();
     }
 
-    public enum PathVersion {
-        VERSION_1_0,
-        VERSION_2_0,
-        VERSION_2_1,
-        VERSION_3_0,
-        Unknown
-    }
-
     @NotNull
     public static PathVersion getPathVersion(@NotNull File f) {
         PathVersion version = null;
@@ -658,6 +651,14 @@ public class PaintView extends View {
             case VERSION_3_0:
                 ToastUtils.show(ctx, R.string.fdb_import_path_version_3_0_toast);
                 importPathVer3_0(f.getPath(), progressCallback, speedDelayMillis);
+                break;
+            case VERSION_3_1:
+                ToastUtils.show(ctx, R.string.fdb_import_path_version_3_1_toast);
+                importPathVer3_1(f.getPath(), progressCallback, speedDelayMillis);
+                break;
+            case VERSION_4_0:
+                ToastUtils.show(ctx, R.string.fdb_import_path_version_4_0_toast);
+                importPathVer4_0(f.getPath(), progressCallback, speedDelayMillis);
                 break;
             default:
                 throw new RuntimeException("Unknown path version");
@@ -892,7 +893,150 @@ public class PaintView extends View {
         return list;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private void importPathVer3_0(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
+        final SQLite3 db = SQLite3.open(path);
+        if (db.checkIfCorrupt()) {
+            db.close();
+            throw new SQLiteDatabaseCorruptException();
+        }
+
+        final Matrix savedTransformation = new Matrix(getTransformationMatrix());
+
+        Matrix defaultTransformation = null;
+        try {
+            final JSONObject extraInfos = PathSaver.getExtraInfos(db);
+            final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
+            defaultTransformation = ExtraInfosUtils.Companion.getDefaultTransformation(defaultTransformationJSON);
+        } catch (JSONException | NullPointerException ignored) {
+            ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
+        }
+        if (defaultTransformation == null) {
+            defaultTransformation = new Matrix();
+        }
+        float defaultTransformationScale = CanvasTransformer.getRealScale(defaultTransformation);
+
+        float[] transformationValue = new float[9];
+        defaultTransformation.getValues(transformationValue);
+
+        float canvasScale = CanvasTransformer.getRealScale(getTransformationMatrix());
+
+        final Statement statement0 = db.compileStatement("SELECT COUNT() FROM path");
+        final Cursor cursor0 = statement0.getCursor();
+        Common.doAssertion(cursor0.step());
+        int recordNum = cursor0.getInt(0);
+        statement0.release();
+
+        dontDrawWhileImporting = speedDelayMillis == 0;
+
+        final ArrayList<String> tables = getDatabaseTables(db);
+        for (String table : tables) {
+            if (table.matches("^path_layer_[0-9]+$")) {
+                final long layerId = Long.parseLong(RegexUtils.Companion.capture(table, "^path_layer_([0-9]+)$").get(0).get(1));
+                add1Layer(layerId);
+
+            }
+        }
+        Statement statement = db.compileStatement("SELECT mark, p1, p2\n" +
+                "FROM path");
+
+        Cursor cursor = statement.getCursor();
+        int c = 0;
+        while (cursor.step()) {
+            int mark = cursor.getInt(0);
+
+            switch (mark) {
+                case 0x01:
+                    setDrawingColor(cursor.getInt(1));
+                    setDrawingStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
+                    setEraserMode(false);
+                    break;
+                case 0x02:
+                case 0x12:
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_DOWN,
+                            cursor.getFloat(1),
+                            cursor.getFloat(2),
+                            transformationValue
+                    );
+                    break;
+                case 0x03:
+                case 0x13:
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_MOVE,
+                            cursor.getFloat(1),
+                            cursor.getFloat(2),
+                            transformationValue
+                    );
+                    break;
+                case 0x04:
+                case 0x14:
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_UP,
+                            cursor.getFloat(1),
+                            cursor.getFloat(2),
+                            transformationValue
+                    );
+                    break;
+                case 0x11:
+                    setEraserMode(true);
+                    setEraserAlpha(cursor.getInt(1));
+                    setEraserStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
+                    break;
+                case 0x20:
+                    undo();
+                    break;
+                case 0x30:
+                    redo();
+                    break;
+                default:
+            }
+
+            ++c;
+            progressCallback.accept((float) c / (float) recordNum);
+            if (!dontDrawWhileImporting) {
+                try {
+                    //noinspection BusyWait
+                    Thread.sleep(speedDelayMillis);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        String extraStr = null;
+        try {
+            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
+                    "FROM info");
+            Cursor infoCursor = infoStatement.getCursor();
+            if (infoCursor.step()) {
+                extraStr = infoCursor.getText(0);
+            }
+            infoStatement.release();
+        } catch (RuntimeException ignored) {
+        }
+
+        if (extraStr != null) {
+            try {
+                JSONObject jsonObject = new JSONObject(extraStr);
+                boolean isLockingStroke = jsonObject.getBoolean("isLockingStroke");
+                setLockingStroke(isLockingStroke);
+                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
+                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
+                setCurrentStrokeWidthWhenLocked();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        statement.release();
+
+        transformTo(savedTransformation);
+
+        postInvalidate();
+    }
+
+    private void importPathVer3_1(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
@@ -920,28 +1064,26 @@ public class PaintView extends View {
         float[] transformationValue = new float[9];
         defaultTransformation.getValues(transformationValue);
 
-        if (layersInfo != null) {
-            for (LayerInfo layerInfo : layersInfo) {
-                final long originalLayerId = layerInfo.getLayerId();
-                final long newLayerId = layerInfo.getLayerId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
-                add1Layer(newLayerId);
-                switchLayer(newLayerId);
-                if (onImportLayerAddedListener != null) {
-                    onImportLayerAddedListener.onAdded(new LayerInfo(newLayerId, layerInfo.getName(), layerInfo.getVisible()));
-                }
+        // pathVer3.0 records the layers info
+        Assertion.doAssertion(layersInfo != null);
 
-                importLayerPath(
-                        db,
-                        originalLayerId,
-                        defaultTransformationScale,
-                        transformationValue,
-                        progressCallback,
-                        speedDelayMillis
-                );
+        for (LayerInfo layerInfo : layersInfo) {
+            final long originalLayerId = layerInfo.getLayerId();
+            final long newLayerId = layerInfo.getLayerId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
+            add1Layer(newLayerId);
+            switchLayer(newLayerId);
+            if (onImportLayerAddedListener != null) {
+                onImportLayerAddedListener.onAdded(new LayerInfo(newLayerId, layerInfo.getName(), layerInfo.getVisible()));
             }
-        } else {
-            // TODO: 8/5/21 for old path ver3.0
-            TODO.todo();
+
+            importLayerPath(
+                    db,
+                    originalLayerId,
+                    defaultTransformationScale,
+                    transformationValue,
+                    progressCallback,
+                    speedDelayMillis
+            );
         }
 
         String extraStr = null;
@@ -974,6 +1116,11 @@ public class PaintView extends View {
         postInvalidate();
     }
 
+    private void importPathVer4_0(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
+        TODO.todo("4.0 path");
+    }
+
+    @SuppressWarnings("DuplicatedCode")
     private void importLayerPath(
             SQLite3 db,
             long layerId,

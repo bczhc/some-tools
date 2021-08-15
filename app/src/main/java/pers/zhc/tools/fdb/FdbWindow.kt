@@ -37,7 +37,6 @@ import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
 import pers.zhc.tools.floatingdrawing.PaintView
-import pers.zhc.tools.floatingdrawing.PaintView.PathVersion
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.views.HSVAColorPickerRL
 import java.io.File
@@ -417,7 +416,7 @@ class FdbWindow(private val context: BaseActivity) {
         }
 
         hardnessSlider.value = (1F - paintView.blurRadius * 2F / paintView.drawingStrokeWidth) * 100F
-        hardnessSlider.addOnChangeListener { slider, value, fromUser ->
+        hardnessSlider.addOnChangeListener { _, value, fromUser ->
             if (!fromUser) {
                 return@addOnChangeListener
             }
