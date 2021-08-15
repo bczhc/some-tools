@@ -120,7 +120,7 @@ public class PathSaver {
     private final SQLite3 pathDatabase;
     private final ArrayList<LayerPathSaver> layerPathSaverList = new ArrayList<>();
 
-    public static final String PATH_VERSION = "3.1";
+    public static final PathVersion PATH_VERSION = PathVersion.VERSION_4_0;
 
     public PathSaver(String path) {
         this.pathDatabase = SQLite3.open(path);
@@ -141,7 +141,7 @@ public class PathSaver {
 
         Statement infoStatement = pathDatabase.compileStatement("INSERT INTO info VALUES(?,?,?)");
         infoStatement.reset();
-        infoStatement.bindText(1, PATH_VERSION);
+        infoStatement.bindText(1, PATH_VERSION.getVersionName());
         infoStatement.bind(2, System.currentTimeMillis());
         infoStatement.bindText(3, "");
         infoStatement.step();

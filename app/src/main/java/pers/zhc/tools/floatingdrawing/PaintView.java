@@ -553,52 +553,6 @@ public class PaintView extends View {
         invalidate();
     }
 
-    @NotNull
-    public static PathVersion getPathVersion(@NotNull File f) {
-        PathVersion version = null;
-
-        // check paths that use SQLite database
-        final SQLite3 db = SQLite3.open(f.getPath());
-        if (!db.checkIfCorrupt()) {
-            final Statement statement = db.compileStatement("SELECT version FROM info");
-            final Cursor cursor = statement.getCursor();
-            if (cursor.step()) {
-                final String versionString = cursor.getText(0);
-                if ("3.0".equals(versionString)) {
-                    version = PathVersion.VERSION_3_0;
-                } else {
-                    version = PathVersion.Unknown;
-                }
-            } else {
-                version = PathVersion.Unknown;
-            }
-            statement.release();
-        }
-        db.close();
-
-        if (version != null) {
-            return version;
-        }
-
-        // check path versions 1.0, 2.0, 2.1
-        try {
-            FileInputStream is = new FileInputStream(f);
-            byte[] buf = new byte[12];
-            Common.doAssertion(is.read(buf) == 12);
-            if (Arrays.equals(buf, "path ver 2.0".getBytes())) {
-                version = PathVersion.VERSION_2_0;
-            } else if (Arrays.equals(buf, "path ver 2.1".getBytes())) {
-                version = PathVersion.VERSION_2_1;
-            } else {
-                version = PathVersion.VERSION_1_0;
-            }
-            is.close();
-            return version;
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
-    }
-
     /**
      * 导入路径
      *
@@ -893,6 +847,10 @@ public class PaintView extends View {
         return list;
     }
 
+    private void setupExtraConfig(ExtraInfos extraInfos) {
+        // TODO: 8/16/21
+    }
+
     @SuppressWarnings("DuplicatedCode")
     private void importPathVer3_0(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
         final SQLite3 db = SQLite3.open(path);
@@ -907,7 +865,7 @@ public class PaintView extends View {
         try {
             final JSONObject extraInfos = PathSaver.getExtraInfos(db);
             final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
-            defaultTransformation = ExtraInfosUtils.Companion.getDefaultTransformation(defaultTransformationJSON);
+            defaultTransformation = ExtraInfos.Companion.getDefaultTransformation(defaultTransformationJSON);
         } catch (JSONException | NullPointerException ignored) {
             ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
         }
@@ -1004,32 +962,19 @@ public class PaintView extends View {
             }
         }
 
-        String extraStr = null;
-        try {
-            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
-                    "FROM info");
-            Cursor infoCursor = infoStatement.getCursor();
-            if (infoCursor.step()) {
-                extraStr = infoCursor.getText(0);
-            }
-            infoStatement.release();
-        } catch (RuntimeException ignored) {
-        }
-
-        if (extraStr != null) {
+        final JSONObject jsonObject = ExtraInfos.Companion.queryExtraInfo(db);
+        if (jsonObject != null) {
+            boolean isLockingStroke = false;
             try {
-                JSONObject jsonObject = new JSONObject(extraStr);
-                boolean isLockingStroke = jsonObject.getBoolean("isLockingStroke");
+                isLockingStroke = jsonObject.getBoolean("isLockingStroke");
                 setLockingStroke(isLockingStroke);
                 lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
                 lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
                 setCurrentStrokeWidthWhenLocked();
             } catch (JSONException e) {
-                e.printStackTrace();
+                ToastUtils.showException(ctx, e);
             }
         }
-
-        statement.release();
 
         transformTo(savedTransformation);
 
@@ -1050,9 +995,9 @@ public class PaintView extends View {
         try {
             final JSONObject extraInfos = PathSaver.getExtraInfos(db);
             final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
-            defaultTransformation = ExtraInfosUtils.Companion.getDefaultTransformation(defaultTransformationJSON);
+            defaultTransformation = ExtraInfos.Companion.getDefaultTransformation(defaultTransformationJSON);
 
-            layersInfo = ExtraInfosUtils.Companion.getLayersInfo(extraInfos);
+            layersInfo = ExtraInfos.Companion.getLayersInfo(extraInfos);
         } catch (JSONException | NullPointerException ignored) {
             ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
         }
@@ -1086,28 +1031,17 @@ public class PaintView extends View {
             );
         }
 
-        String extraStr = null;
-        try {
-            Statement infoStatement = db.compileStatement("SELECT extra_infos\n" +
-                    "FROM info");
-            Cursor infoCursor = infoStatement.getCursor();
-            if (infoCursor.step()) {
-                extraStr = infoCursor.getText(0);
-            }
-            infoStatement.release();
-        } catch (RuntimeException ignored) {
-        }
-
-        if (extraStr != null) {
+        final JSONObject jsonObject = ExtraInfos.Companion.queryExtraInfo(db);
+        if (jsonObject != null) {
+            boolean isLockingStroke = false;
             try {
-                JSONObject jsonObject = new JSONObject(extraStr);
-                boolean isLockingStroke = jsonObject.getBoolean("isLockingStroke");
+                isLockingStroke = jsonObject.getBoolean("isLockingStroke");
                 setLockingStroke(isLockingStroke);
                 lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
                 lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
                 setCurrentStrokeWidthWhenLocked();
             } catch (JSONException e) {
-                e.printStackTrace();
+                ToastUtils.showException(ctx, e);
             }
         }
 
@@ -1117,7 +1051,72 @@ public class PaintView extends View {
     }
 
     private void importPathVer4_0(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
-        TODO.todo("4.0 path");
+        final SQLite3 db = SQLite3.open(path);
+        if (db.checkIfCorrupt()) {
+            db.close();
+            throw new SQLiteDatabaseCorruptException();
+        }
+
+        final Matrix savedTransformation = new Matrix(getTransformationMatrix());
+
+        Matrix defaultTransformation = null;
+        ArrayList<LayerInfo> layersInfo = null;
+        try {
+            final JSONObject extraInfos = PathSaver.getExtraInfos(db);
+            final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
+            defaultTransformation = ExtraInfos.Companion.getDefaultTransformation(defaultTransformationJSON);
+
+            layersInfo = ExtraInfos.Companion.getLayersInfo(extraInfos);
+        } catch (JSONException | NullPointerException ignored) {
+            ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
+        }
+        if (defaultTransformation == null) {
+            defaultTransformation = new Matrix();
+        }
+        float defaultTransformationScale = CanvasTransformer.getRealScale(defaultTransformation);
+
+        float[] transformationValue = new float[9];
+        defaultTransformation.getValues(transformationValue);
+
+        // pathVer3.0 records the layers info
+        Assertion.doAssertion(layersInfo != null);
+
+        for (LayerInfo layerInfo : layersInfo) {
+            final long originalLayerId = layerInfo.getLayerId();
+            final long newLayerId = layerInfo.getLayerId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
+            add1Layer(newLayerId);
+            switchLayer(newLayerId);
+            if (onImportLayerAddedListener != null) {
+                onImportLayerAddedListener.onAdded(new LayerInfo(newLayerId, layerInfo.getName(), layerInfo.getVisible()));
+            }
+
+            importLayerPath4_0(
+                    db,
+                    originalLayerId,
+                    defaultTransformationScale,
+                    transformationValue,
+                    progressCallback,
+                    speedDelayMillis
+            );
+        }
+
+        final JSONObject jsonObject = ExtraInfos.Companion.queryExtraInfo(db);
+        if (jsonObject != null) {
+            boolean isLockingStroke = false;
+            try {
+                isLockingStroke = jsonObject.getBoolean("isLockingStroke");
+                setLockingStroke(isLockingStroke);
+                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
+                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
+                setCurrentStrokeWidthWhenLocked();
+            } catch (JSONException e) {
+                ToastUtils.showException(ctx, e);
+            }
+        }
+
+        transformTo(savedTransformation);
+
+        postInvalidate();
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -1176,6 +1175,105 @@ public class PaintView extends View {
                     setEraserMode(true);
                     setEraserAlpha(cursor.getInt(1));
                     setEraserStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
+                    break;
+                case 0x20:
+                    undo();
+                    break;
+                case 0x30:
+                    redo();
+                    break;
+                default:
+            }
+
+            ++c;
+            progressCallback.accept((float) c / (float) rowCount);
+            if (!dontDrawWhileImporting) {
+                try {
+                    //noinspection BusyWait
+                    Thread.sleep(speedDelayMillis);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        statement.release();
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    private void importLayerPath4_0(
+            SQLite3 db,
+            long layerId,
+            float defaultTransformationScale,
+            float[] transformationValue,
+            Consumer<Float> progressCallback,
+            int speedDelayMillis
+    ) {
+        final String pathTable = "path_layer_" + layerId;
+        final int rowCount = SQLiteUtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
+
+        final Statement statement = db.compileStatement("SELECT mark, info, x, y FROM " + pathTable);
+        final Cursor cursor = statement.getCursor();
+
+        int c = 0;
+        while (cursor.step()) {
+            int mark = cursor.getInt(0);
+
+            switch (mark) {
+                case 0x02:
+                case 0x12:
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_MOVE,
+                            cursor.getFloat(2),
+                            cursor.getFloat(3),
+                            transformationValue
+                    );
+                    break;
+                case 0x01:
+                    // TODO: 8/16/21 optimize (byte array allocation, unpack value in machine byte order)
+                    final byte[] info = cursor.getBlob(1);
+                    int color = pers.zhc.jni.JNI.Struct.unpackInt(info, 0, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                    float width = pers.zhc.jni.JNI.Struct.unpackFloat(info, 4, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                    float blurRadius = pers.zhc.jni.JNI.Struct.unpackFloat(info, 8, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                    setDrawingColor(color);
+                    setDrawingStrokeWidth(width * defaultTransformationScale / canvasScale);
+                    setBlurRadius(blurRadius);
+                    setEraserMode(false);
+
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_DOWN,
+                            cursor.getFloat(2),
+                            cursor.getFloat(3),
+                            transformationValue
+                    );
+                    break;
+                case 0x11:
+                    final byte[] info2 = cursor.getBlob(1);
+                    int color2 = pers.zhc.jni.JNI.Struct.unpackInt(info2, 0, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                    float width2 = pers.zhc.jni.JNI.Struct.unpackFloat(info2, 4, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                    float blurRadius2 = pers.zhc.jni.JNI.Struct.unpackFloat(info2, 8, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+
+                    setEraserMode(true);
+                    setEraserAlpha(color2);
+                    setEraserStrokeWidth(width2 * defaultTransformationScale / canvasScale);
+                    // TODO: 8/16/21 eraser hardness (blur radius)
+                    setBlurRadius(blurRadius2);
+
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_DOWN,
+                            cursor.getFloat(2),
+                            cursor.getFloat(3),
+                            transformationValue
+                    );
+                    break;
+                case 0x03:
+                case 0x13:
+                    transformedOnTouchAction(
+                            MotionEvent.ACTION_UP,
+                            cursor.getFloat(2),
+                            cursor.getFloat(3),
+                            transformationValue
+                    );
                     break;
                 case 0x20:
                     undo();
@@ -1543,7 +1641,11 @@ public class PaintView extends View {
 
     public void setBlurRadius(float blurRadius) {
         this.blurRadius = blurRadius;
-        mPaint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL));
+        if (blurRadius == 0.0) {
+            mPaint.setMaskFilter(null);
+        } else {
+            mPaint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL));
+        }
     }
 
     public float getBlurRadius() {

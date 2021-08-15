@@ -624,7 +624,7 @@ class FdbWindow(private val context: BaseActivity) {
                             progressDialog.show()
 
                             val file = File(path)
-                            val pathVersion = PaintView.getPathVersion(file)
+                            val pathVersion = PathVersion.getPathVersion(file)
 
                             val tryDo = AsyncTryDo()
 
@@ -677,7 +677,7 @@ class FdbWindow(private val context: BaseActivity) {
                                                     extraInfos.getJSONObject("defaultTransformation")
 
                                                 val matrix =
-                                                    ExtraInfosUtils.getDefaultTransformation(
+                                                    ExtraInfos.getDefaultTransformation(
                                                         defaultTransformationJSONObject
                                                     )
                                                 paintView.defaultTransformation = matrix
