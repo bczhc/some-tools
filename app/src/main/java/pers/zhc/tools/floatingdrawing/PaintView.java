@@ -1237,7 +1237,7 @@ public class PaintView extends View {
                     float blurRadius = pers.zhc.jni.JNI.Struct.unpackFloat(info, 8, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
                     setDrawingColor(color);
                     setDrawingStrokeWidth(width * defaultTransformationScale / canvasScale);
-                    setBlurRadius(blurRadius);
+                    setBlurRadius(blurRadius * defaultTransformationScale / canvasScale);
                     setEraserMode(false);
 
                     transformedOnTouchAction(
@@ -1257,7 +1257,7 @@ public class PaintView extends View {
                     setEraserAlpha(color2);
                     setEraserStrokeWidth(width2 * defaultTransformationScale / canvasScale);
                     // TODO: 8/16/21 eraser hardness (blur radius)
-                    setBlurRadius(blurRadius2);
+                    setBlurRadius(blurRadius2 * defaultTransformationScale / canvasScale);
 
                     transformedOnTouchAction(
                             MotionEvent.ACTION_DOWN,
