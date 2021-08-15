@@ -28,6 +28,9 @@
               android:textSize="15sp"
               android:id="@+id/tv"
     />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/fdb_stroke_width_tv"
+    />
     <com.google.android.material.slider.Slider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,10 +39,20 @@
             android:valueFrom="0"
             android:valueTo="100"
             />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/fdb_stroke_hardness_tv"
+    />
+    <com.google.android.material.slider.Slider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="100"
+            android:id="@+id/hardness_slider"
+    />
     <pers.zhc.tools.views.RoundColorView
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:id="@+id/stroke_show"
             tools:color="@color/red"
-            tools:diameter="100.0"
+            tools:diameter="100px"
             tools:ignore="PxUsage"/>
 </LinearLayout>

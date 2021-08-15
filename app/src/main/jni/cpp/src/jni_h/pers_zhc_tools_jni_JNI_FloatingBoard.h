@@ -23,6 +23,14 @@ JNIEXPORT jfloat JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_byteArra
 JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_byteArrayToInt
   (JNIEnv *, jclass, jbyteArray, jint);
 
+/*
+ * Class:     pers_zhc_tools_jni_JNI_FloatingBoard
+ * Method:    packStrokeInfo3_1
+ * Signature: ([BIFF)V
+ */
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_packStrokeInfo3_11
+  (JNIEnv *, jclass, jbyteArray, jint, jfloat, jfloat);
+
 #ifdef __cplusplus
 }
 #endif

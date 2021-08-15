@@ -91,6 +91,8 @@ public class PaintView extends View {
 
     private float canvasScale = 1F;
 
+    private float blurRadius = 0F;
+
     @Nullable
     private OnImportLayerAddedListener onImportLayerAddedListener = null;
 
@@ -1066,9 +1068,9 @@ public class PaintView extends View {
         switch (motionAction) {
             case MotionEvent.ACTION_DOWN:
                 if (eraserMode) {
-                    layerPathSaverRef.onErasingTouchDown(x, y, getEraserAlpha(), getEraserStrokeWidth());
+                    layerPathSaverRef.onErasingTouchDown(x, y, getEraserAlpha(), getEraserStrokeWidth(), blurRadius);
                 } else {
-                    layerPathSaverRef.onDrawingTouchDown(x, y, getDrawingColor(), getDrawingStrokeWidth());
+                    layerPathSaverRef.onDrawingTouchDown(x, y, getDrawingColor(), getDrawingStrokeWidth(), blurRadius);
                 }
                 //路径
                 mPath = new Path();
@@ -1390,5 +1392,14 @@ public class PaintView extends View {
 
     public void setOnImportLayerAddedListener(@Nullable OnImportLayerAddedListener onImportLayerAddedListener) {
         this.onImportLayerAddedListener = onImportLayerAddedListener;
+    }
+
+    public void setBlurRadius(float blurRadius) {
+        this.blurRadius = blurRadius;
+        mPaint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL));
+    }
+
+    public float getBlurRadius() {
+        return blurRadius;
     }
 }

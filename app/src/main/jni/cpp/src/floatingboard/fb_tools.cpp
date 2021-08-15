@@ -43,3 +43,14 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_byteArrayT
     int r = *((int *) b);
     return (jint) r;
 }
+
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FloatingBoard_packStrokeInfo3_11
+        (JNIEnv *env, jclass, jbyteArray dest, jint color, jfloat width, jfloat blurRadius) {
+    const char *colorBytes = (char *) &color;
+    const char *widthBytes = (char *) &width;
+    const char *blurRadiusBytes = (char *) &blurRadius;
+
+    env->SetByteArrayRegion(dest, 0, 4, (const jbyte *) colorBytes);
+    env->SetByteArrayRegion(dest, 4, 4, (const jbyte *) widthBytes);
+    env->SetByteArrayRegion(dest, 8, 4, (const jbyte *) blurRadiusBytes);
+}

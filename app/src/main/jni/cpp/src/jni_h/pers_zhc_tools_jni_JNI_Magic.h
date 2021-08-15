@@ -66,10 +66,10 @@ extern "C" {
 /*
  * Class:     pers_zhc_tools_jni_JNI_Magic
  * Method:    init
- * Signature: ()J
+ * Signature: (I)J
  */
 JNIEXPORT jlong JNICALL Java_pers_zhc_tools_jni_JNI_00024Magic_init
-  (JNIEnv *, jclass, jint flag);
+  (JNIEnv *, jclass, jint);
 
 /*
  * Class:     pers_zhc_tools_jni_JNI_Magic

@@ -67,6 +67,14 @@ public class JNI {
         public static native float byteArrayToFloat(@Size(min = 4) byte[] bytes, int offset);
 
         public static native int byteArrayToInt(@Size(min = 4) byte[] bytes, int offset);
+
+
+        public static native void packStrokeInfo3_1(
+                @Size(min = 12) byte[] dest,
+                int color,
+                float width,
+                float blurRadius
+        );
     }
 
     public static class MAllocTest {

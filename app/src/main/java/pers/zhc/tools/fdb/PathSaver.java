@@ -18,9 +18,15 @@ import java.util.List;
 
 /**
  * Path saver.
- * <p>One record structure in data saved:</p>
- * <h3>&lt;mark&gt;(1bytes) &lt;p1&gt;(4bytes) &lt;p2&gt;(4bytes)</h3>
- * When {@link MotionEvent#getAction()} is {@link MotionEvent#ACTION_DOWN}, it'll record 2 records.
+ *
+ * <h3>Database structure:</h3>
+ * <ol>
+ *     <li>mark INTEGER</li>
+ *     <li>info BLOB</li>
+ *     <li>x REAL</li>
+ *     <li>y REAL</li>
+ * </ol>
+ *
  * <ul>
  *     <li>
  *         drawing:<br/>
@@ -30,32 +36,28 @@ import java.util.List;
  *             <li>
  *                 {@link MotionEvent#ACTION_DOWN}:
  *                 <ul>
- *                     record 1:
  *                     <li>mark: {@code 0x01}</li>
- *                     <li>p1: paint color as {@code int}</li>
- *                     <li>p2: stroke width as {@code float}</li>
- *                 </ul>
- *                 <ul>
- *                     record 2:
- *                     <li>mark: {@code 0x02}</li>
- *                     <li>p1: x touch point coordinates as {@code float}</li>
- *                     <li>p2: y touch point coordinates as {@code float}</li>
+ *                     <li>info: some infos about the stroke</li>
+ *                     <li>x: the x coordinate</li>
+ *                     <li>y: the y coordinate</li>
  *                 </ul>
  *             </li>
  *             <li>
  *                 {@link MotionEvent#ACTION_MOVE}:
  *                 <ul>
- *                     <li>mark: {@code 0x03}</li>
- *                     <li>p1: x touch point coordinates as {@code float}</li>
- *                     <li>p2: y touch point coordinates as {@code float}</li>
+ *                     <li>mark: {@code 0x02}</li>
+ *                     <li>info: NULL</li>
+ *                     <li>x: the x coordinate</li>
+ *                     <li>y: the y coordinate</li>
  *                 </ul>
  *             </li>
  *             <li>
  *                 {@link MotionEvent#ACTION_UP}
  *                 <ul>
- *                     <li>mark {@code 0x04}</li>
- *                     <li>p1: x touch point coordinates as {@code float}</li>
- *                     <li>p2: y touch point coordinates as {@code float}</li>
+ *                     <li>mark: {@code 0x03}</li>
+ *                     <li>info: NULL</li>
+ *                     <li>x: the x coordinate</li>
+ *                     <li>y: the y coordinate</li>
  *                 </ul>
  *             </li>
  *         </ul>
@@ -68,32 +70,28 @@ import java.util.List;
  *             <li>
  *                 {@link MotionEvent#ACTION_DOWN}:
  *                 <ul>
- *                     record 1:
  *                     <li>mark: {@code 0x11}</li>
- *                     <li>p1: eraser transparency (alpha value) as {@code int}</li>
- *                     <li>p2: stroke width as {@code float}</li>
- *                 </ul>
- *                 <ul>
- *                     record 2:
- *                     <li>mark: {@code 0x12}</li>
- *                     <li>p1: x touch point coordinates as {@code float}</li>
- *                     <li>p2: y touch point coordinates as {@code float}</li>
+ *                     <li>info: some infos about the stroke</li>
+ *                     <li>x: the x coordinate</li>
+ *                     <li>y: the y coordinate</li>
  *                 </ul>
  *             </li>
  *             <li>
  *                 {@link MotionEvent#ACTION_MOVE}:
  *                 <ul>
- *                     <li>mark: {@code 0x13}</li>
- *                     <li>p1: x touch point coordinates as {@code float}</li>
- *                     <li>p2: y touch point coordinates as {@code float}</li>
+ *                     <li>mark: {@code 0x12}</li>
+ *                     <li>info: NULL</li>
+ *                     <li>x: the x coordinate</li>
+ *                     <li>y: the y coordinate</li>
  *                 </ul>
  *             </li>
  *             <li>
  *                 {@link MotionEvent#ACTION_UP}
  *                 <ul>
- *                     <li>mark {@code 0x14}</li>
- *                     <li>p1: x touch point coordinates as {@code float}</li>
- *                     <li>p2: y touch point coordinates as {@code float}</li>
+ *                     <li>mark: {@code 0x13}</li>
+ *                     <li>info: NULL</li>
+ *                     <li>x: the x coordinate</li>
+ *                     <li>y: the y coordinate</li>
  *                 </ul>
  *             </li>
  *         </ul>
@@ -102,16 +100,18 @@ import java.util.List;
  *         Undo:
  *         <ul>
  *             <li>mark: {@code 0x20}</li>
- *             <li>p1: {@code 0x00}</li>
- *             <li>p2: {@code 0x00}</li>
+ *             <li>info: NULL</li>
+ *             <li>x: NULL</li>
+ *             <li>y: NULL</li>
  *         </ul>
  *     </li>
  *     <li>
  *         Redo:
  *         <ul>
  *             <li>mark: {@code 0x30}</li>
- *             <li>p1: {@code 0x00}</li>
- *             <li>p2: {@code 0x00}</li>
+ *             <li>info: NULL</li>
+ *             <li>x: NULL</li>
+ *             <li>y: NULL</li>
  *         </ul>
  *     </li>
  * </ul>
@@ -119,6 +119,8 @@ import java.util.List;
 public class PathSaver {
     private final SQLite3 pathDatabase;
     private final ArrayList<LayerPathSaver> layerPathSaverList = new ArrayList<>();
+
+    public static final String PATH_VERSION = "3.1";
 
     public PathSaver(String path) {
         this.pathDatabase = SQLite3.open(path);
@@ -139,7 +141,7 @@ public class PathSaver {
 
         Statement infoStatement = pathDatabase.compileStatement("INSERT INTO info VALUES(?,?,?)");
         infoStatement.reset();
-        infoStatement.bindText(1, "3.0");
+        infoStatement.bindText(1, PATH_VERSION);
         infoStatement.bind(2, System.currentTimeMillis());
         infoStatement.bindText(3, "");
         infoStatement.step();
