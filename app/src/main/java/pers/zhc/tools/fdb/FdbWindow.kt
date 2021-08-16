@@ -336,7 +336,7 @@ class FdbWindow(private val context: BaseActivity) {
 
         lockBrushCB.isChecked = paintView.isLockStrokeEnabled
         strokeShowView.setColor(paintView.drawingColor)
-        strokeShowView.setDiameter(paintView.strokeWidthInUse)
+        strokeShowView.setWidth(paintView.strokeWidthInUse)
         rg.check(
             if (paintView.isEraserMode) {
                 R.id.eraser_radio
@@ -353,9 +353,9 @@ class FdbWindow(private val context: BaseActivity) {
                 BrushMode.ERASING -> paintView.eraserStrokeWidth
                 BrushMode.IN_USE -> paintView.strokeWidthInUse
             }
-            strokeShowView.setDiameter(width * paintView.scale)
+            strokeShowView.setWidth(width * paintView.scale)
             widthSlider.value = (ln(width.toDouble()) / ln(base)).toFloat()
-            strokeShowView.setDiameter(width * paintView.scale)
+            strokeShowView.setWidth(width * paintView.scale)
             infoTV.text = context.getString(
                 R.string.fdb_stroke_width_info,
                 width,
@@ -422,6 +422,7 @@ class FdbWindow(private val context: BaseActivity) {
             }
             val blurRadius = (1F - value / 100F) * paintView.drawingStrokeWidth / 2F
             paintView.blurRadius = blurRadius
+            strokeShowView.setBlurRadius(blurRadius)
         }
 
         return inflate

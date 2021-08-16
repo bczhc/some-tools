@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
             app:labelBehavior="gone"
             android:valueFrom="0"
             android:valueTo="100"
-            />
+    />
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
               android:text="@string/fdb_stroke_hardness_tv"
     />
@@ -49,10 +49,9 @@
             android:valueTo="100"
             android:id="@+id/hardness_slider"
     />
-    <pers.zhc.tools.views.RoundColorView
-            android:layout_width="match_parent" android:layout_height="wrap_content"
+    <pers.zhc.tools.fdb.StrokeView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/stroke_show"
-            tools:color="@color/red"
-            tools:diameter="100px"
-            tools:ignore="PxUsage"/>
+    />
 </LinearLayout>
