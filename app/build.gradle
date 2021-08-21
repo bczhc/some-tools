@@ -29,6 +29,7 @@ try {
         throw e
     }
     println "Found git error: ${e.toString()}; disable git commit log injection"
+    commitLogResult = base64Encoder.encodeToString("Unknown".bytes)
 }
 
 
