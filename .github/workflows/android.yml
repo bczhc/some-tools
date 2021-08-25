@@ -65,7 +65,7 @@ jobs:
               mkdir apks
           fi
 
-          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload "${GITHUB_WORKSPACE}app/build/outputs/apk/debug/app-debug.apk" $commit_hash $encoded_commit_message
+          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload "${GITHUB_WORKSPACE}/app/build/outputs/apk/debug/app-debug.apk" $commit_hash $encoded_commit_message
 
           git config --global user.email "bczhc0@126.com"
           git config --global user.name "bczhc"
