@@ -36,12 +36,10 @@ import pers.zhc.tools.test.*;
 import pers.zhc.tools.test.malloctest.MAllocTest;
 import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
-import pers.zhc.tools.utils.*;
+import pers.zhc.tools.utils.AdapterWithClickListener;
+import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.words.WordsMainActivity;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,6 +171,7 @@ public class MainActivity extends BaseActivity {
         final int textRes;
         private final Class<? extends Activity> activityClass;
 
+        @Contract(pure = true)
         public ActivityItem(int textRes, Class<? extends Activity> activityClass) {
             this.textRes = textRes;
             this.activityClass = activityClass;
@@ -227,7 +226,7 @@ public class MainActivity extends BaseActivity {
         if (itemId == R.id.settings) {
             startActivity(new Intent(this, Settings.class));
         } else if (itemId == R.id.update) {
-            checkAndUpdate();
+            updateAction();
         } else if (itemId == R.id.git_log) {
             showGitLogDialog();
         } else if (itemId == R.id.switch_themes) {
@@ -285,32 +284,8 @@ public class MainActivity extends BaseActivity {
         dialog.show();
     }
 
-    private void checkAndUpdate() {
-        final String storagePath = Common.getAppMainExternalStoragePath(this);
-        final File updateDir = new File(storagePath, "update");
-        if (!updateDir.exists()) {
-            if (!updateDir.mkdirs()) {
-                ToastUtils.show(this, R.string.mkdir_failed);
-                return;
-            }
-        }
-
-        // TODO: 7/16/21 check update
-
-        DialogUtil.createConfirmationAlertDialog(this, (dialog, which) -> {
-
-            try {
-                final File apkFile = new File(updateDir, "some-tools.apk");
-                Download.startDownloadWithDialog(
-                        this, new URL(Common.getStaticResourceUrlString("apks/some-tools.apk")),
-                        apkFile,
-                        () -> Common.installApk(this, apkFile)
-                );
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-
-        }, R.string.app_update_download_dialog).show();
+    private void updateAction() {
+        pers.zhc.tools.main.MainActivity.Companion.showGithubActionDownloadDialog(this);
     }
 
     @Override

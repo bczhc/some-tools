@@ -39,6 +39,9 @@
     <string name="create_shortcut">创建快捷方式</string>
     <string name="reset_success_toast">重置成功</string>
     <string name="add_button">添加</string>
+    <string name="create_new">新建</string>
+    <string name="getting_information">正在获取信息</string>
+    <string name="getting_information_failed">获取信息失败</string>
     <!-- end -->
 
     <!-- old -->
@@ -506,6 +509,13 @@
     <string name="fdb_transformation_set_as_default">设为默认变换</string>
     <string name="fdb_transformation_reset_to_default">重置默认变换</string>
     <string name="fdb_import_get_extra_infos_failed">获取附加信息失败</string>
+    <string name="fdb_layer_naming_dialog_title">图层命名</string>
+    <string name="fdb_layer_default_name">默认图层</string>
+    <string name="fdb_import_path_version_3_0_toast">使用3.0版本path导入</string>
+    <string name="fdb_stroke_width_tv">粗细</string>
+    <string name="fdb_stroke_hardness_tv">硬度</string>
+    <string name="fdb_import_path_version_3_1_toast">使用3.1版本path导入</string>
+    <string name="fdb_import_path_version_4_0_toast">使用4.0版本path导入</string>
     <!-- module end -->
 
     <!-- module: words -->
@@ -520,13 +530,5 @@
     <string name="capture_permission_denied">未同意权限</string>
     <string name="screen_color_picker_running_notification_title">屏幕取色正在运行</string>
     <string name="stop_notification_action">停止</string>
-    <string name="fdb_layer_naming_dialog_title">图层命名</string>
-    <string name="create_new">新建</string>
-    <string name="fdb_layer_default_name">默认图层</string>
-    <string name="fdb_import_path_version_3_0_toast">使用3.0版本path导入</string>
-    <string name="fdb_stroke_width_tv">粗细</string>
-    <string name="fdb_stroke_hardness_tv">硬度</string>
-    <string name="fdb_import_path_version_3_1_toast">使用3.1版本path导入</string>
-    <string name="fdb_import_path_version_4_0_toast">使用4.0版本path导入</string>
     <!-- end -->
 </resources>
