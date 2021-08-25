@@ -19,18 +19,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Clone submosule
-        run: git submodule update --init --recursive
-      - name: Set up SDK and NDK
-        run: |
-          yes | sudo $ANDROID_HOME/tools/bin/sdkmanager ndk-bundle > /dev/null
-          LP=./local.properties
-          rm -rf $LP
-          echo "sdk.dir=$ANDROID_HOME" >> $LP
-          echo "ndk.dir=$ANDROID_HOME/ndk-bundle" >> $LP
       - name: Build app
         run: |
-          ./gradlew :app:assembleDebug
+          mkdir ${GITHUB_WORKSPACE}app/build/outputs/apk/debug --parents
+          echo aa > "${GITHUB_WORKSPACE}app/build/outputs/apk/debug/app-debug.apk"
       - name: Configure SSH key
         env:
           SSH_PRK: ${{ secrets.SSH_PRK }}
@@ -42,24 +34,37 @@ jobs:
           echo $SSH_PRK | base64 -d > ~/.ssh/id_rsa
           sudo chmod 600 ~/.ssh/id_rsa
           ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+      - name: Compile CI tool jar
+        run: |
+          cd ci
+          chmod +x gradlew
+          ./gradlew fatJar
+          mv build/libs/ci-all.jar ../
       - name: Upload apk to GitLab
         run: |
+          cd "${GITHUB_WORKSPACE}"
+          commit_hash=`git log --format=%H --max-count 1`
+          commit_message=`git log --format=%B --max-count 1`
+          encoded_commit_message=`printf "$commit_message" | base64 -w 0`
+
           git clone git@gitlab.com:bczhc/store
           cd store
+
           rm -rf .git
           git init
           git remote add origin git@gitlab.com:bczhc/store
           if [ ! -d apks ]; then
               mkdir apks
           fi
-          cd apks
-          cp -v ../../app/build/outputs/apk/debug/app-debug.apk some-tools.apk
+
+          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload "${GITHUB_WORKSPACE}app/build/outputs/apk/debug/app-debug.apk" $commit_hash $encoded_commit_message
+
           git config --global user.email "bczhc0@126.com"
           git config --global user.name "bczhc"
           git add --all
           git commit -m "update $(date)"
           git push origin master -f
-          cd ../..
+          cd "${GITHUB_WORKSPACE}"
       - name: Upload apk
         uses: actions/upload-artifact@v2
         with:
