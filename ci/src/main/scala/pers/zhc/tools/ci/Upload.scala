@@ -95,14 +95,11 @@ object Upload {
 
   def clearDirs(kept: Array[JSONObject], apkDirFile: File): Unit = {
     val files = apkDirFile.listFiles()
-    val getCommitHash = (json: JSONObject) => {
-      json.getString("commit")
-    }
     val exist = (name: String) => {
       var exist = false
       breakable {
         kept.foreach(o => {
-          if (getCommitHash(o) == name) {
+          if (findCommitHash(o.getString("commitInfo")) == name) {
             exist = true
             break()
           }
