@@ -27,13 +27,13 @@ object Upload {
     val commitHash = args(1)
     val commitMessage = base64DecodeToString(args(2))
 
-    if (checkCommitExistence(commitHash)) {
-      return
-    }
-
     val apkDirFile = new File("./apks/some-tools")
     if (!apkDirFile.exists()) {
       require(apkDirFile.mkdirs())
+    }
+
+    if (checkCommitExistence(apkDirFile, commitHash)) {
+      return
     }
 
     val jsonFile = new File("./apks/some-tools/log.json")
