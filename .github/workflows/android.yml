@@ -51,7 +51,7 @@ jobs:
       - name: Upload apk to GitLab
         run: |
           cd "${GITHUB_WORKSPACE}"
-          encoded_commit_info=`git log --no-decorate --max-count=1` | base64 -w 0
+          encoded_commit_info=`git log --no-decorate --max-count=1 | base64 -w 0`
 
           git clone git@gitlab.com:bczhc/store
           cd store
