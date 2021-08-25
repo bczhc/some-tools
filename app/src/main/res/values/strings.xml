@@ -530,5 +530,6 @@
     <string name="capture_permission_denied">未同意权限</string>
     <string name="screen_color_picker_running_notification_title">屏幕取色正在运行</string>
     <string name="stop_notification_action">停止</string>
+    <string name="app_download_confirmation_dialog_title">是否确认下载</string>
     <!-- end -->
 </resources>

@@ -3,20 +3,16 @@ package pers.zhc.tools.main
 import android.app.Dialog
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.github_action_download_view.view.*
 import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
 import pers.zhc.tools.Infos
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.DialogUtils
-import pers.zhc.tools.utils.ProgressDialog
-import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.*
+import java.io.File
 import java.net.URL
 
 /**
@@ -25,6 +21,38 @@ import java.net.URL
 class MainActivity {
     companion object {
         fun showGithubActionDownloadDialog(context: Context) {
+
+            val findCommitHash = {commitInfo: String->
+                val firstLine = commitInfo.split(Regex("\\n"))[0]
+                val prefix = "commit "
+                val i = firstLine.indexOf(prefix)
+                firstLine.substring(i + prefix.length)
+            }
+
+            val download = { item: GithubActionDownloadItem ->
+                val storagePath = Common.getAppMainExternalStoragePath(context)
+                val updateDir = File(storagePath, "update")
+                val localFile = File(updateDir, "some-tools.apk")
+
+                val url = URL(Infos.staticResourceRootURL + "/apks/some-tools/" + findCommitHash(item.commitInfo) + "/app-debug.apk")
+                Download.startDownloadWithDialog(context, url, localFile) {
+                    // TODO: check file integrity
+                    Common.installApk(context, localFile)
+                }
+            }
+
+            val onItemClicked = { item: GithubActionDownloadItem, upperDialog: Dialog ->
+                DialogUtils.createConfirmationAlertDialog(
+                    context,
+                    { _, _ ->
+                        upperDialog.dismiss()
+                        download(item)
+                    },
+                    titleRes = R.string.app_download_confirmation_dialog_title,
+                    message = item.commitInfo,
+                    width = MATCH_PARENT
+                ).show()
+            }
 
             val jsonArray2DataList = { jsonArray: JSONArray ->
                 try {
@@ -59,6 +87,10 @@ class MainActivity {
                     DialogUtils.setDialogAttr(dialog, width = MATCH_PARENT, height = WRAP_CONTENT)
                     dialog.setContentView(inflate)
                     dialog.show()
+
+                    adapter.setOnItemClickListener { position, _ ->
+                        onItemClicked(data[position], dialog)
+                    }
                 }
             }
 
