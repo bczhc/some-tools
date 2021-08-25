@@ -19,10 +19,18 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+      - name: Clone submosule
+        run: git submodule update --init --recursive
+      - name: Set up SDK and NDK
+        run: |
+          yes | sudo $ANDROID_HOME/tools/bin/sdkmanager ndk-bundle > /dev/null
+          LP=./local.properties
+          rm -rf $LP
+          echo "sdk.dir=$ANDROID_HOME" >> $LP
+          echo "ndk.dir=$ANDROID_HOME/ndk-bundle" >> $LP
       - name: Build app
         run: |
-          mkdir ${GITHUB_WORKSPACE}app/build/outputs/apk/debug --parents
-          echo aa > "${GITHUB_WORKSPACE}app/build/outputs/apk/debug/app-debug.apk"
+          ./gradlew :app:assembleDebug
       - name: Configure SSH key
         env:
           SSH_PRK: ${{ secrets.SSH_PRK }}
