@@ -16,22 +16,19 @@ import scala.util.control.Breaks.{break, breakable}
  */
 object Upload {
 
-  // Usage: program <apk-file> <commit-hash> <commit-message-base64>
+  // Usage: program <apk-file> <encoded-commit-info>
   def main(args: Array[String]): Unit = {
-    require(args.length >= 3)
-    require(args(0) != null)
-    require(args(1) != null)
-    require(args(2) != null)
+    require(args.length == 2)
 
     val apkFile = new File(args(0))
-    val commitHash = args(1)
-    val commitMessage = base64DecodeToString(args(2))
+    val commitInfo = base64DecodeToString(args(1))
 
     val apkDirFile = new File("./apks/some-tools")
     if (!apkDirFile.exists()) {
       require(apkDirFile.mkdirs())
     }
 
+    val commitHash = findCommitHash(commitInfo)
     if (checkCommitExistence(apkDirFile, commitHash)) {
       return
     }
@@ -46,7 +43,7 @@ object Upload {
     assert(jsonFile.exists())
 
     val jsonArray = new JSONArray(readFileToString(jsonFile))
-    val newCommit = createGitCommitJSON(commitHash, commitMessage, computeFileSha1String(apkFile))
+    val newCommit = createGitCommitJSON(commitInfo, computeFileSha1String(apkFile))
     val commits = new util.ArrayList[JSONObject]()
     for (i <- 0 until jsonArray.length()) {
       commits.add(jsonArray.getJSONObject(i))
@@ -84,10 +81,9 @@ object Upload {
     baos.toString("UTF-8")
   }
 
-  def createGitCommitJSON(commitHash: String, message: String, fileSha1: String): JSONObject = {
+  def createGitCommitJSON(commitInfo: String, fileSha1: String): JSONObject = {
     val json = new JSONObject()
-    json.put("commit", commitHash)
-    json.put("message", message)
+    json.put("commitInfo", commitInfo)
     json.put("fileSha1", fileSha1)
     json
   }
@@ -184,5 +180,15 @@ object Upload {
       })
     }
     exist
+  }
+
+  def findCommitHash(commitInfo: String): String = {
+    val firstLine = commitInfo.split('\n')(0)
+    val prefix = "commit "
+    val i = firstLine.indexOf(prefix)
+    require(i != -1)
+    val hash = firstLine.substring(i + prefix.length)
+    require(hash.length == 40)
+    hash
   }
 }

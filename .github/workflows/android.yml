@@ -51,9 +51,7 @@ jobs:
       - name: Upload apk to GitLab
         run: |
           cd "${GITHUB_WORKSPACE}"
-          commit_hash=`git log --format=%H --max-count 1`
-          commit_message=`git log --format=%B --max-count 1`
-          encoded_commit_message=`printf "$commit_message" | base64 -w 0`
+          encoded_commit_info=`git log --no-decorate --max-count=1` | base64 -w 0
 
           git clone git@gitlab.com:bczhc/store
           cd store
@@ -65,7 +63,7 @@ jobs:
               mkdir apks
           fi
 
-          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload "${GITHUB_WORKSPACE}/app/build/outputs/apk/debug/app-debug.apk" $commit_hash $encoded_commit_message
+          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload "${GITHUB_WORKSPACE}/app/build/outputs/apk/debug/app-debug.apk" $encoded_commit_info
 
           git config --global user.email "bczhc0@126.com"
           git config --global user.name "bczhc"
