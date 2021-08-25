@@ -104,7 +104,7 @@ public class Document extends BaseActivity {
                         for (int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++) {
                             LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
                             if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFF808080) {
-                                childLL.setBackground(getDrawable(R.drawable.view_stroke));
+                                childLL.setBackground(getDrawable(R.drawable.view_stroke_red));
                                 for (int i1 = 0; i1 < childLL.getChildCount(); i1++) {
                                     ((TextView) ((LinearLayout) childLL.getChildAt(i1)).getChildAt(0)).setTextColor(0xFFFF0000);
                                 }
