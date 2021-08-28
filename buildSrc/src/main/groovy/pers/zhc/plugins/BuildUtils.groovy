@@ -1,7 +1,5 @@
 package pers.zhc.plugins
 
-import org.jetbrains.annotations.Nullable
-
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
@@ -166,5 +164,15 @@ class BuildUtils {
             def sourcePropertiesFile = new File(ndkDir as String, "source.properties")
             return getVersionStringFromPropertiesFile(sourcePropertiesFile)
         }
+    }
+
+    static Properties openPropertiesFile(File file) {
+        def properties = new Properties()
+
+        def reader = file.newReader("UTF-8")
+        properties.load(reader)
+        reader.close()
+
+        return properties
     }
 }

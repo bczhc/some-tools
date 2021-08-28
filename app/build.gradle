@@ -1,5 +1,7 @@
 import pers.zhc.plugins.BuildUtils
 import pers.zhc.plugins.BuildUtils2
+import pers.zhc.plugins.NdkVersion
+import pers.zhc.plugins.SdkPath
 
 import java.nio.charset.StandardCharsets
 
@@ -21,7 +23,7 @@ try {
         } else {
             commitLogResult = base64Encoder.encodeToString(log.getBytes(StandardCharsets.UTF_8))
         }
-    } catch(e) {
+    } catch (e) {
         throw new GradleException("Execution failed", e)
     }
 } catch (e) {
@@ -31,9 +33,6 @@ try {
     println "Found git error: ${e.toString()}; disable git commit log injection"
     commitLogResult = base64Encoder.encodeToString("Unknown".bytes)
 }
-
-
-
 
 android {
     signingConfigs {
@@ -89,18 +88,32 @@ android {
         abortOnError false
     }
 
-    def ndkDir
-    def sdkDir = android.sdkDirectory
+    def foundSdkDir
     try {
-        ndkDir = android.ndkDirectory
-    } catch (def ignored) {
-        throw new GradleException("Please define ndk.dir in local.properties")
+        foundSdkDir = new File(SdkPath.getSdkPath(project))
+    } catch (FileNotFoundException ignored) {
+        throw new GradleException("Cannot found sdk path. Please define \"sdk.dir\" in the project \"local.properties\"")
     }
+    def detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir)
+    if (detectedNdkVersion == null) {
+        detectedNdkVersion = NdkVersion.readLocalProperties(project)
+    }
+    if (detectedNdkVersion == null) {
+        throw new GradleException("Cannot get NDK version. Please check NDK directory \"\$SDK/ndk/\" " +
+                "or try to define \"ndk.version\" in the project \"local.properties\"")
+    }
+    println "Detected NDK version in ${foundSdkDir.path}/ndk is $detectedNdkVersion"
+
+    ndkVersion = detectedNdkVersion
+    def sdkDir = android.sdkDirectory as File
+    def ndkDir = android.ndkDirectory as File
+    println """Build environment info:
+SDK path: ${sdkDir.path}
+NDK path: ${ndkDir.path}"""
 
     def list = [ndkDir, sdkDir]
     def tools = BuildUtils.Tools.newInstance(list as Object[])
-    ndkVersion = tools.getNdkVersion()
-    println("Ndk Version: ${ndkVersion}")
+    detectedNdkVersion = tools.getNdkVersion()
     externalNativeBuild {
         cmake {
             version tools.getCMakeVersion()
@@ -109,7 +122,6 @@ android {
         }
     }
 }
-
 
 repositories {
     mavenCentral()
