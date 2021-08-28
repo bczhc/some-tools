@@ -27,6 +27,16 @@ jobs:
           LP=./local.properties
           rm -rf $LP
           echo "sdk.dir=$ANDROID_HOME" >> $LP
+      - name: Set up Rust
+        run: |
+          sudo apt update
+          sudo apt purge rustc cargo -y
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install
+          chmod +x install
+          ./install -y
+          source ~/.bashrc
+          rustc --version
+          rustup target add aarch64-linux-android
       - name: Build app
         run: |
           ./gradlew :app:assembleDebug
