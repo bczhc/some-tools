@@ -27,7 +27,6 @@ jobs:
           LP=./local.properties
           rm -rf $LP
           echo "sdk.dir=$ANDROID_HOME" >> $LP
-          echo "ndk.dir=$ANDROID_HOME/ndk-bundle" >> $LP
       - name: Build app
         run: |
           ./gradlew :app:assembleDebug

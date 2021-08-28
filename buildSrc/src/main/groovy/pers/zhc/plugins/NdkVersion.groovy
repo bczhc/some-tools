@@ -9,36 +9,6 @@ import java.util.regex.Pattern
  * @author bczhc
  */
 class NdkVersion {
-    static String getNdkVersion(Project project, String sdkPath) {
-        def defaultLocation = [
-                "ndk",
-                "ndk-bundle"
-        ]
-
-        def ndkVersion = null
-        defaultLocation.forEach {
-            def ndkDir = new File(sdkPath, it)
-            try {
-                ndkVersion = tryReadVersion(ndkDir)
-                if (ndkVersion != null) {
-                    return ndkVersion
-                }
-            } catch (ignored) {
-            }
-        }
-
-        if (ndkVersion == null) {
-            ndkVersion = readLocalProperties(new File(project.rootProject.projectDir, "source.properties"))
-        }
-
-        if (ndkVersion == null) {
-            throw new GradleException(
-                    "Cannot detect NDK version. Please define \"ndk.version\" in the project \"source.properties\""
-            )
-        }
-        return ndkVersion
-    }
-
     static String readLocalProperties(File file) {
         if (!file.exists()) {
             return null
@@ -63,6 +33,12 @@ class NdkVersion {
     }
 
     static String getLatestNdkVersion(File sdkPath) {
+        // use the "ndk-bundle" NDK package in priority
+        def ndkBundleVersion = getNdkBundleVersion(sdkPath)
+        if (ndkBundleVersion != null) {
+            return ndkBundleVersion
+        }
+
         def ndkPath = new File(sdkPath, "ndk")
         if (!ndkPath.exists()) {
             return null
@@ -82,5 +58,17 @@ class NdkVersion {
 
     static String readLocalProperties(Project project) {
         return readLocalProperties(new File(project.rootProject.projectDir, "local.properties"))
+    }
+
+    static String getNdkBundleVersion(File sdkPath) {
+        try {
+            def ndkBundlePath = new File(sdkPath, "ndk-bundle")
+            def version = tryReadVersion(ndkBundlePath)
+            if (version != null) {
+                return version
+            }
+        } catch (FileNotFoundException ignored) {
+        }
+        return null
     }
 }

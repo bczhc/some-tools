@@ -102,7 +102,6 @@ android {
         throw new GradleException("Cannot get NDK version. Please check NDK directory \"\$SDK/ndk/\" " +
                 "or try to define \"ndk.version\" in the project \"local.properties\"")
     }
-    println "Detected NDK version in ${foundSdkDir.path}/ndk is $detectedNdkVersion"
 
     ndkVersion = detectedNdkVersion
     def sdkDir = android.sdkDirectory as File
