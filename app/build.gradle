@@ -2,12 +2,14 @@ import pers.zhc.plugins.BuildUtils
 import pers.zhc.plugins.BuildUtils2
 import pers.zhc.plugins.NdkVersion
 import pers.zhc.plugins.SdkPath
+import pers.zhc.tools.build.rust.RustBuildPlugin
 
 import java.nio.charset.StandardCharsets
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: RustBuildPlugin
 
 def commitLogResult = null
 def base64Encoder = Base64.encoder
@@ -120,7 +122,24 @@ NDK path: ${ndkDir.path}"""
             path file('src/main/jni/cpp/CMakeLists.txt')
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['jniLibs']
+        }
+    }
 }
+
+
+rustBuild {
+    androidNdkDir = android.ndkDirectory.path
+    androidApi = 29
+    target = "aarch64"
+}
+
+def appProject = rootProject.findProject("app")
+def compileReleaseRustTask = appProject.tasks.getByName("compileReleaseRust")
+appProject.tasks.getByName("preBuild").dependsOn(compileReleaseRustTask)
 
 repositories {
     mavenCentral()

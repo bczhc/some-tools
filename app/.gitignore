@@ -1,0 +1,9 @@
+jniLibs
+build
+src/jni/cpp/cmake-build-debug/
+src/obj
+src/libs
+.cxx
+src/main/jni/cpp/*
+!src/main/jni/cpp/third-party/
+!src/main/jni/cpp/src/

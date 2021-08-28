@@ -94,6 +94,7 @@ class MyApplication : Application() {
         init {
             System.loadLibrary("Main")
             System.loadLibrary("jni-lib")
+            System.loadLibrary("rust_jni")
         }
     }
 }

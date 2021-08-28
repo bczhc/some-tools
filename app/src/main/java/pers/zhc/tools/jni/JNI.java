@@ -121,9 +121,8 @@ public class JNI {
         public static native String getResultJson(int id);
     }
 
-    public static class JniTest {
-
-        public static native void call(int fd);
+    public static class JniDemo {
+        public static native String hello(String name);
     }
 
     public static class StcFlash {
