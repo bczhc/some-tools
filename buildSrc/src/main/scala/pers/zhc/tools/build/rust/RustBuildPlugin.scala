@@ -81,18 +81,23 @@ class RustBuildPlugin extends Plugin[Project] {
     val rustProjectDir = getRustProjectDir
     val jniLibsDir = getJniLibsDir
 
-    val command = Array(
-      "cargo", "build",
-      "--release", "--target", rustTarget
-    )
-
     val runtime = Runtime.getRuntime
-    val status = executeProgram(runtime, command, Some(rustProjectDir))
+    var command = List(
+      "cargo", "build",
+      "--target", rustTarget,
+      "-j", s"${runtime.availableProcessors()}"
+    )
+    val buildType = getBuildType
+    if (buildType == BuildType.Release) {
+      command = command :+ "--release"
+    }
+
+    val status = executeProgram(runtime, command.toArray[String], Some(rustProjectDir))
     if (status != 0) {
       throw new GradleException("Failed to run program: exits with non-zero return value")
     }
 
-    val outputDir = new File(rustProjectDir, s"target/$architecture/release")
+    val outputDir = new File(rustProjectDir, s"target/$architecture/${buildType.toString}")
     assert(outputDir.exists())
 
     if (!jniLibsDir.exists()) {
@@ -150,6 +155,14 @@ class RustBuildPlugin extends Plugin[Project] {
       new File(appProjectDir.get, "jniLibs")
   }
 
+  def getBuildType: BuildType = {
+    val buildTypeStr = extension.get.getBuildType.getOrElse("debug")
+    BuildType.from(buildTypeStr) match {
+      case Some(value) => value
+      case None => throw new GradleException(s"Unknown build type: $buildTypeStr")
+    }
+  }
+
   def configureToolchain(): Unit = {
     require(extension.get.getAndroidNdkDir.isPresent)
     val androidNdkDir = extension.get.getAndroidNdkDir.get()
@@ -163,6 +176,31 @@ class RustBuildPlugin extends Plugin[Project] {
       }
       configFile
     }, configString)
+  }
+
+  class BuildType {
+    override def toString: String = this match {
+      case BuildType.Debug => BuildType.Debug.toString
+      case BuildType.Release => BuildType.Release.toString
+    }
+  }
+
+  object BuildType {
+    case object Debug extends BuildType {
+      override def toString = "debug"
+    }
+
+    case object Release extends BuildType {
+      override def toString = "release"
+    }
+
+    def from(string: String): Option[BuildType] = {
+      string match {
+        case "debug" => Some(Debug)
+        case "release" => Some(Release)
+        case _ => None
+      }
+    }
   }
 }
 
@@ -178,5 +216,7 @@ object RustBuildPlugin {
 
     // TODO: multi-target handling
     def getTarget: Property[String]
+
+    def getBuildType: Property[String]
   }
 }

@@ -13,7 +13,6 @@ public class Demo extends BaseActivity {
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final String hello = JNI.JniDemo.hello("Rust");
-        ToastUtils.show(this, hello);
+        JNI.JniDemo.hello(this, "Rust");
     }
 }

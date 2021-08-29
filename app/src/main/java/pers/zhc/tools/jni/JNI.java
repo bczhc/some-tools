@@ -122,7 +122,7 @@ public class JNI {
     }
 
     public static class JniDemo {
-        public static native String hello(String name);
+        public static native String hello(Object context, String name);
     }
 
     public static class StcFlash {
