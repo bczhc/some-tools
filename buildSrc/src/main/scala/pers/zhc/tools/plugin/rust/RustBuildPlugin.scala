@@ -2,11 +2,10 @@ package pers.zhc.tools.plugin.rust
 
 import org.gradle.api.provider.Property
 import org.gradle.api.{GradleException, Plugin, Project, Task}
-import pers.zhc.tools.plugin.FileUtils
 import pers.zhc.tools.plugin.rust.RustBuildPlugin.RustBuildPluginExtension
+import pers.zhc.tools.plugin.util.{FileUtils, ProcessOutput}
 
-import java.io.{File, InputStream}
-import scala.util.control.Breaks.{break, breakable}
+import java.io.File
 
 class RustBuildPlugin extends Plugin[Project] {
   var appProjectDir: Option[File] = None
@@ -34,39 +33,9 @@ class RustBuildPlugin extends Plugin[Project] {
     this.project = Some(project)
   }
 
-  def printStream(is: InputStream): Unit = {
-    val c = new Array[Byte](1)
-    var readLen = 0
-    breakable {
-      while (true) {
-        readLen = is.read(c)
-        if (readLen == -1) {
-          break()
-        }
-        Console.out.write(c, 0, readLen)
-        Console.out.flush()
-      }
-    }
-  }
-
   def executeProgram(runtime: Runtime, cmd: Array[String], dir: Option[File]): Int = {
     val process = runtime.exec(cmd, null, dir.orNull)
-    val stdout = process.getInputStream
-    val stderr = process.getErrorStream
-
-    val t1 = new Thread {
-      printStream(stdout)
-    }
-    val t2 = new Thread {
-      printStream(stderr)
-    }
-    t1.start()
-    t2.start()
-    t1.join()
-    t2.join()
-
-    stdout.close()
-    stderr.close()
+    ProcessOutput.output(process)
     process.waitFor()
     process.exitValue()
   }

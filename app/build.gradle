@@ -135,6 +135,7 @@ rustBuild {
     androidNdkDir = android.ndkDirectory.path
     androidApi = 29
     target = "aarch64"
+    buildType = "release"
 }
 
 def appProject = rootProject.findProject("app")
