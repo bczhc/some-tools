@@ -1,4 +1,4 @@
-package pers.zhc.tools.build
+package pers.zhc.tools.plugin
 
 import pers.zhc.util.IOUtils
 

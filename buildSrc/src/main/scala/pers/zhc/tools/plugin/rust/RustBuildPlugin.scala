@@ -1,9 +1,9 @@
-package pers.zhc.tools.build.rust
+package pers.zhc.tools.plugin.rust
 
 import org.gradle.api.provider.Property
 import org.gradle.api.{GradleException, Plugin, Project, Task}
-import pers.zhc.tools.build.FileUtils
-import pers.zhc.tools.build.rust.RustBuildPlugin.RustBuildPluginExtension
+import pers.zhc.tools.plugin.FileUtils
+import pers.zhc.tools.plugin.rust.RustBuildPlugin.RustBuildPluginExtension
 
 import java.io.{File, InputStream}
 import scala.util.control.Breaks.{break, breakable}

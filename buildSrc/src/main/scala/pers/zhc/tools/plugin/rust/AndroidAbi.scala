@@ -1,4 +1,4 @@
-package pers.zhc.tools.build.rust
+package pers.zhc.tools.plugin.rust
 
 /**
  * @author bczhc
