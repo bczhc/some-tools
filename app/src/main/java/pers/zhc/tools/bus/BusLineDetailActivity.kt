@@ -11,7 +11,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 import java.io.Serializable
@@ -99,7 +98,10 @@ class BusLineDetailActivity : BaseActivity() {
 
                         DialogUtils.createConfirmationAlertDialog(
                             this,
-                            { _, _ -> },
+                            { _, _ ->
+                                setBusArrivalReminder(station)
+                                ToastUtils.show(this, R.string.bus_set_bus_arrival_reminder_toast)
+                            },
                             titleRes = R.string.bus_setting_bus_arrival_reminder_dialog_title,
                             message = station.busStationName
                         ).show()
