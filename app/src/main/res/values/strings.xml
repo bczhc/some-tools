@@ -42,6 +42,8 @@
     <string name="create_new">新建</string>
     <string name="getting_information">正在获取信息</string>
     <string name="getting_information_failed">获取信息失败</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
     <!-- end -->
 
     <!-- old -->
@@ -265,7 +267,6 @@
     <string name="whether_to_save_unsaved_content">是否保存尚未保存内容</string>
     <string name="whether_to_import_notes">导入操作将会覆盖当前已有笔记，是否继续？</string>
     <string name="filename_duplication">当前目录下已有同名文件，继续将覆盖</string>
-    <string name="password">密码</string>
     <string name="diary">日记</string>
     <string name="write_diary">写日记</string>
     <string name="test">测试</string>
@@ -544,5 +545,20 @@
     <string name="transfer_send_label">发送</string>
     <string name="transfer_invalid_address_toast">无效的地址</string>
     <string name="transfer_invalid_port_toast">无效的端口</string>
+    <string name="email_label">电子邮件</string>
+    <string name="email_smtp_server_et_hint">SMTP服务器</string>
+    <string name="email_configure_account">配置邮箱帐号</string>
+    <string name="email_menu_account_add">添加帐户</string>
+    <string name="email_from_account_et_hint">使用的发送帐号</string>
+    <string name="email_subject_et_hint">主题</string>
+    <string name="email_body_et_hint">正文</string>
+    <string name="email_send_button">发送</string>
+    <string name="email_no_account_toast">还没有邮箱帐户，请先配置</string>
+    <string name="email_add_account_dialog_title">添加帐号</string>
+    <string name="email_to_et_hint">目标</string>
+    <string name="email_cc_et_hint">抄送</string>
+    <string name="email_sending_toast">正在发送</string>
+    <string name="email_send_done_toast">发送成功</string>
+    <string name="email_send_failed">发送失败</string>
     <!-- end -->
 </resources>

@@ -43,11 +43,13 @@ class SmartHintEditText : TextInputLayout {
         }
         val measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         mET!!.measure(measureSpec, measureSpec)
-        val measuredWidth = mET!!.measuredWidth
+        val editTextWidth = mET!!.measuredWidth
+        val editTextHeight = mET!!.measuredHeight
 
         this.addView(mET)
 
-        this.minimumWidth = measuredWidth
+        this.minimumWidth = editTextWidth
+        this.minimumHeight = editTextHeight
     }
 
     override fun getEditText(): EditText {

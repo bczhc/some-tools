@@ -27,6 +27,7 @@ import pers.zhc.tools.bus.BusQueryMainActivity;
 import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.document.Document;
+import pers.zhc.tools.email.EmailMainActivity;
 import pers.zhc.tools.fdb.FdbMainActivity;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.magic.FileListActivity;
@@ -147,6 +148,7 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.unicode_table_label, UnicodeTable.class));
         activities.add(new ActivityItem(R.string.words_label, WordsMainActivity.class));
         activities.add(new ActivityItem(R.string.transfer_label, TransferMainActivity.class));
+        activities.add(new ActivityItem(R.string.email_label, EmailMainActivity.class));
     }
 
     private void loadRecyclerView() {

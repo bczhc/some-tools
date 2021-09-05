@@ -78,10 +78,14 @@ public class Common {
         return dir;
     }
 
-    @NotNull
     @Contract("_, _ -> new")
-    public static File getInternalDatabaseDir(Context ctx, String name) {
+    public static @NotNull File getInternalDatabaseDir(Context ctx, String name) {
         return new File(getInternalDatabaseDir(ctx), name);
+    }
+
+    @Contract("_, _ -> new")
+    public static @NotNull File getInternalDatabaseFile(Context context, String name) {
+        return new File(getInternalDatabaseDir(context), name);
     }
 
     public static String getGithubRawFileURLString(String username, String branch, String filePathInRepo) {

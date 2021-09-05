@@ -2,6 +2,7 @@
 package pers.zhc.tools.jni;
 
 import androidx.annotation.Size;
+import pers.zhc.tools.email.SmtpTransport;
 import pers.zhc.tools.pi.JNICallback;
 import pers.zhc.tools.stcflash.JNIInterface;
 
@@ -254,5 +255,16 @@ public class JNI {
              */
             void onResult(String msg, boolean error);
         }
+    }
+
+    public static class Email {
+        public static native void send(String smtpServer,
+                                       String username,
+                                       String password,
+                                       String from,
+                                       String to,
+                                       String cc,
+                                       String subject,
+                                       String body);
     }
 }
