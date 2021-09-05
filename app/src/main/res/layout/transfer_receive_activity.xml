@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:padding="10dp"
+>
+    <pers.zhc.tools.views.SmartHintEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:id="@+id/listen_port"
+            app:hint="@string/transfer_listen_port"
+            app:text="1234"
+            android:layout_toStartOf="@id/receive_start_btn"
+    />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:id="@+id/receive_start_btn"
+            android:text="@string/transfer_start_btn"
+            android:layout_alignTop="@id/listen_port"
+            android:layout_alignBottom="@id/listen_port"
+            android:layout_alignParentEnd="true"
+            />
+    <pers.zhc.tools.views.ScrollEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/output_et"
+            android:layout_below="@id/listen_port"
+            android:layout_alignParentBottom="true"
+            android:fillViewport="true"
+            />
+</RelativeLayout>

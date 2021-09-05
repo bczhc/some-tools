@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:padding="10dp"
+>
+    <pers.zhc.tools.views.SmartHintEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="@string/transfer_destination_address_et"
+            android:id="@+id/destination_address_et"
+    />
+    <pers.zhc.tools.views.ScrollEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/destination_address_et"
+            android:layout_above="@id/send_msg_btn"
+            android:fillViewport="true"
+            android:id="@+id/msg_et"
+    />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/transfer_send_button"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/send_msg_btn"
+    />
+</RelativeLayout>

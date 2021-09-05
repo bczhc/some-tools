@@ -532,4 +532,17 @@
     <string name="stop_notification_action">停止</string>
     <string name="app_download_confirmation_dialog_title">是否确认下载</string>
     <!-- end -->
+
+    <!-- module: transfer -->
+    <string name="transfer_label">传输</string>
+    <string name="transfer_send_button">发送</string>
+    <string name="transfer_receive_button">接收</string>
+    <string name="transfer_destination_address_et">目标地址（ip:端口）</string>
+    <string name="transfer_listen_port">监听端口</string>
+    <string name="transfer_start_btn">启动</string>
+    <string name="transfer_receive_label">接收</string>
+    <string name="transfer_send_label">发送</string>
+    <string name="transfer_invalid_address_toast">无效的地址</string>
+    <string name="transfer_invalid_port_toast">无效的端口</string>
+    <!-- end -->
 </resources>

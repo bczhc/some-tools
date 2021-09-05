@@ -36,6 +36,7 @@ import pers.zhc.tools.test.*;
 import pers.zhc.tools.test.malloctest.MAllocTest;
 import pers.zhc.tools.test.toast.ToastTest;
 import pers.zhc.tools.test.typetest.TypeTest;
+import pers.zhc.tools.transfer.TransferMainActivity;
 import pers.zhc.tools.utils.AdapterWithClickListener;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.words.WordsMainActivity;
@@ -145,6 +146,7 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.magic_label, FileListActivity.class));
         activities.add(new ActivityItem(R.string.unicode_table_label, UnicodeTable.class));
         activities.add(new ActivityItem(R.string.words_label, WordsMainActivity.class));
+        activities.add(new ActivityItem(R.string.transfer_label, TransferMainActivity.class));
     }
 
     private void loadRecyclerView() {

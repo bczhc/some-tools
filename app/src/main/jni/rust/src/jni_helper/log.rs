@@ -1,6 +1,8 @@
 use jni::objects::JValue;
 use jni::JNIEnv;
 
+const JNI_LOG_TAG: &str = "jni-log";
+
 pub fn log(env: JNIEnv, tag: &str, msg: &str) -> jni::errors::Result<()> {
     let tag = env.new_string(tag)?;
     let msg = env.new_string(msg)?;
@@ -13,4 +15,8 @@ pub fn log(env: JNIEnv, tag: &str, msg: &str) -> jni::errors::Result<()> {
         &[JValue::Object(tag.into()), JValue::Object(msg.into())],
     )?;
     Ok(())
+}
+
+pub fn jni_log(env: JNIEnv, msg: &str) -> jni::errors::Result<()> {
+    log(env, JNI_LOG_TAG, msg)
 }
