@@ -19,7 +19,7 @@
     <string name="wake_lock_release_success">释放成功</string>
     <!-- app end -->
 
-    <!-- universal -->
+    <!-- common -->
     <string name="cancel_btn">取消</string>
     <string name="empty" translatable="false"/>
     <string name="percentage">%1$f%%</string>
