@@ -2,13 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:padding="10dp"
+>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/transfer_send_button"
             android:id="@+id/send_btn"
+            android:layout_gravity="center_horizontal"
     />
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/transfer_receive_button"
             android:id="@+id/receive_btn"
+            android:layout_gravity="center_horizontal"
     />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:id="@+id/ip_info_tv"
+                  android:textSize="15sp"
+        />
+    </ScrollView>
 </LinearLayout>

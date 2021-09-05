@@ -7,6 +7,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.util.Assertion
+import java.net.InetAddress
 
 /**
  * @author bczhc
@@ -25,6 +26,7 @@ class TransferSendActivity : BaseActivity() {
                 return@setOnClickListener
             }
             Thread {
+                InetAddress.getLocalHost()
                 try {
                     JNI.Transfer.send(address.ip, address.port, messageET.text.toString())
                     ToastUtils.show(this, "Done")

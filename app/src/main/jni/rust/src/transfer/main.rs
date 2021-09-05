@@ -2,7 +2,7 @@ use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpListener, TcpStream};
 use std::thread::spawn;
 
 use jni::objects::{JByteBuffer, JClass, JObject, JString, JValue, ReleaseMode};
-use jni::sys::{jbyteArray, jshort};
+use jni::sys::{jbyteArray, jshort, jstring};
 use jni::JNIEnv;
 
 use crate::jni_helper;
@@ -11,6 +11,7 @@ use crate::transfer::error::result::*;
 use crate::transfer::lib::Status;
 use crate::transfer::receive::async_receive;
 use crate::transfer::send::send;
+use pnet::ipnetwork::IpNetwork;
 use std::ops::Deref;
 use std::sync::Arc;
 
@@ -64,11 +65,11 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Transfer_startAsyncReceive(
         let callback = rc_callback.as_obj();
         match r {
             Ok(s) => {
-                invoke_callback(*thread_env.deref(), callback, s, false);
+                invoke_callback(*thread_env.deref(), callback, s, false).unwrap();
             }
             Err(e) => {
                 let format = format!("{:?}", e);
-                invoke_callback(*thread_env.deref(), callback, format, true);
+                invoke_callback(*thread_env.deref(), callback, format, true).unwrap();
             }
         }
     });
@@ -88,4 +89,37 @@ fn invoke_callback(
         &[JValue::Object(jni_str.into()), JValue::Bool(error as u8)],
     )?;
     Ok(())
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+pub fn Java_pers_zhc_tools_jni_JNI_00024Transfer_getLocalIpInfo(
+    env: JNIEnv,
+    _class: JClass,
+) -> jstring {
+    let interfaces = pnet::datalink::interfaces();
+    let mut info = String::new();
+
+    let check_loopback = |ips: &Vec<IpNetwork>| {
+        for x in ips {
+            if x.is_ipv4() {
+                if x.ip().is_loopback() {
+                    return true;
+                }
+            }
+        }
+        false
+    };
+
+    for x in interfaces {
+        let ip = &x.ips;
+        if ip.len() <= 1 || check_loopback(ip) {
+            continue;
+        }
+        let format = format!("{}", x);
+        info.push_str(format.as_str());
+        info.push('\n');
+    }
+    let j_string = env.new_string(info).unwrap();
+    j_string.into_inner()
 }

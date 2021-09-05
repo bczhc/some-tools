@@ -243,6 +243,10 @@ public class JNI {
 
         public static native void startAsyncReceive(short port, Callback callback);
 
+        public static native byte[] getLocalIpv4();
+
+        public static native String getLocalIpInfo();
+
         public interface Callback {
             /**
              * @param msg   received message or error message
