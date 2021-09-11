@@ -2,7 +2,6 @@
 package pers.zhc.tools.jni;
 
 import androidx.annotation.Size;
-import pers.zhc.tools.email.SmtpTransport;
 import pers.zhc.tools.pi.JNICallback;
 import pers.zhc.tools.stcflash.JNIInterface;
 
@@ -262,8 +261,8 @@ public class JNI {
                                        String username,
                                        String password,
                                        String from,
-                                       String to,
-                                       String cc,
+                                       String[] to,
+                                       String[] cc,
                                        String subject,
                                        String body);
     }

@@ -33,10 +33,11 @@ class EmailMainActivity : BaseActivity() {
         val sendButton = send_button!!
 
         sendButton.setOnClickListener {
-            val message = Message(toET.text.toString(), subjectET.text.toString()).apply {
+            // TODO: multi-to and multi-cc
+            val message = Message(arrayOf(toET.text.toString()), subjectET.text.toString()).apply {
                 ccET.text.toString().let {
                     if (it.isNotEmpty()) {
-                        this.cc = it
+                        this.cc = arrayOf(it)
                     }
                 }
                 bodyET.text.toString().let {
@@ -53,7 +54,7 @@ class EmailMainActivity : BaseActivity() {
                 } catch (e: Exception) {
                     ToastUtils.showError(this, R.string.email_send_failed, e)
                 }
-            }
+            }.start()
         }
     }
 
@@ -181,7 +182,7 @@ class EmailMainActivity : BaseActivity() {
         companion object {
             private lateinit var databaseFile: File
             fun initPath(context: Context) {
-                databaseFile = Common.getInternalDatabaseFile(context, "smtp-config")
+                databaseFile = Common.getInternalDatabaseFile(context, "smtp-config.db")
             }
         }
     }

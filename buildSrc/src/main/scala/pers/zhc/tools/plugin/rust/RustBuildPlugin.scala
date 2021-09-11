@@ -33,8 +33,8 @@ class RustBuildPlugin extends Plugin[Project] {
     this.project = Some(project)
   }
 
-  def executeProgram(runtime: Runtime, cmd: Array[String], dir: Option[File]): Int = {
-    val process = runtime.exec(cmd, null, dir.orNull)
+  def executeProgram(runtime: Runtime, cmd: Array[String], envp: Option[Array[String]], dir: Option[File]): Int = {
+    val process = runtime.exec(cmd, envp.orNull, dir.orNull)
     ProcessOutput.output(process)
     process.waitFor()
     process.exitValue()
@@ -61,13 +61,26 @@ class RustBuildPlugin extends Plugin[Project] {
       command = command :+ "--release"
     }
 
-    val status = executeProgram(runtime, command.toArray[String], Some(rustProjectDir))
+    val opensslDir = getOpensslDir
+    val opensslLibDir = getOpensslLibDir
+    val cryptoLibFile = new File(opensslLibDir, "libcrypto.so")
+    val sslLibFile = new File(opensslLibDir, "libssl.so")
+    if (!opensslDir.exists() || !opensslLibDir.exists() || !cryptoLibFile.exists() || !sslLibFile.exists()) {
+      throw new GradleException(s"Couldn't find \"${cryptoLibFile.getPath}\" and \"${sslLibFile.getPath}\"")
+    }
+
+    val ndkToolchainBinFile = getNdkToolchainBinFile
+    val pathEnv = Option(System.getenv("PATH")).get
+    val newPathEnv = s"${ndkToolchainBinFile.getPath}:$pathEnv"
+    val envp = Array(s"PATH=$newPathEnv", s"OPENSSL_DIR=$opensslDir")
+
+    val status = executeProgram(runtime, command.toArray[String], Some(envp), Some(rustProjectDir))
     if (status != 0) {
       throw new GradleException("Failed to run program: exits with non-zero return value")
     }
 
-    val outputDir = new File(rustProjectDir, s"target/$architecture/${buildType.toString}")
-    assert(outputDir.exists())
+    val rustOutputDir = new File(rustProjectDir, s"target/$architecture/${buildType.toString}")
+    assert(rustOutputDir.exists())
 
     if (!jniLibsDir.exists()) {
       require(jniLibsDir.mkdir())
@@ -88,16 +101,20 @@ class RustBuildPlugin extends Plugin[Project] {
       }
       d
     }
-    listSoFiles(outputDir, { file =>
+    listSoFiles(rustOutputDir, { file =>
       val dest = new File(outputSoDir, file.getName)
       FileUtils.copyFile(file, dest)
       assert(dest.exists())
     })
+
+    FileUtils.copyFile(cryptoLibFile, new File(outputSoDir, cryptoLibFile.getName))
+    FileUtils.copyFile(sslLibFile, new File(outputSoDir, sslLibFile.getName))
   }
 
   def checkRequiredExtension(extension: RustBuildPluginExtension): Unit = {
     require(extension.getAndroidApi.isPresent)
     require(extension.getTarget.isPresent)
+    require(extension.getOpensslDir.isPresent)
   }
 
   def getRustProjectDir: File = Option(extension.get.getRustProjectDir.getOrNull()) match {
@@ -117,12 +134,18 @@ class RustBuildPlugin extends Plugin[Project] {
 
   def getAndroidAbi: AndroidAbi = AndroidAbi.from(getTarget)
 
+  def getOpensslDir: File = new File(extension.get.getOpensslDir.get())
+
+  def getOpensslLibDir: File = new File(getOpensslDir, "lib")
+
   def getJniLibsDir: File = Option(extension.get.getOutputDir.getOrNull()) match {
     case Some(value) =>
       new File(value)
     case None =>
       new File(appProjectDir.get, "jniLibs")
   }
+
+  def getNdkToolchainBinFile: File = ToolchainUtils.getToolchainBinDir(new File(extension.get.getAndroidNdkDir.get()))
 
   def getBuildType: BuildType = {
     val buildTypeStr = extension.get.getBuildType.getOrElse("debug")
@@ -187,5 +210,7 @@ object RustBuildPlugin {
     def getTarget: Property[String]
 
     def getBuildType: Property[String]
+
+    def getOpensslDir: Property[String]
   }
 }
