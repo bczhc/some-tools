@@ -557,7 +557,7 @@
     <string name="email_add_account_dialog_title">添加帐号</string>
     <string name="email_to_et_hint">目标</string>
     <string name="email_cc_et_hint">抄送</string>
-    <string name="email_sending_toast">正在发送</string>
+    <string name="email_sending_msg">正在发送</string>
     <string name="email_send_done_toast">发送成功</string>
     <string name="email_send_failed">发送失败</string>
     <!-- end -->

@@ -12,6 +12,7 @@ import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.ProgressDialog
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.readToString
 import java.io.File
@@ -46,13 +47,24 @@ class EmailMainActivity : BaseActivity() {
                     }
                 }
             }
+            val progressDialog = ProgressDialog(this)
+            val progressView = progressDialog.getProgressView()
+            progressView.setIsIndeterminateMode(true)
+            progressView.setTitle(getString(R.string.email_sending_msg))
+            progressDialog.setCanceledOnTouchOutside(false)
+            progressDialog.show()
             Thread {
-                ToastUtils.show(this, R.string.email_sending_toast)
                 try {
                     Sender.send(currentAccount!!, message)
-                    ToastUtils.show(this, R.string.email_send_done_toast)
+                    runOnUiThread {
+                        progressDialog.dismiss()
+                        ToastUtils.show(this, R.string.email_send_done_toast)
+                    }
                 } catch (e: Exception) {
-                    ToastUtils.showError(this, R.string.email_send_failed, e)
+                    runOnUiThread {
+                        progressDialog.dismiss()
+                        ToastUtils.showError(this, R.string.email_send_failed, e)
+                    }
                 }
             }.start()
         }
