@@ -5,7 +5,8 @@ import org.gradle.api.{GradleException, Plugin, Project, Task}
 import pers.zhc.tools.plugin.rust.RustBuildPlugin.RustBuildPluginExtension
 import pers.zhc.tools.plugin.util.{FileUtils, ProcessOutput}
 
-import java.io.File
+import java.io.{File, FileInputStream}
+import java.util.Properties
 
 class RustBuildPlugin extends Plugin[Project] {
   var appProjectDir: Option[File] = None
@@ -114,7 +115,6 @@ class RustBuildPlugin extends Plugin[Project] {
   def checkRequiredExtension(extension: RustBuildPluginExtension): Unit = {
     require(extension.getAndroidApi.isPresent)
     require(extension.getTarget.isPresent)
-    require(extension.getOpensslDir.isPresent)
   }
 
   def getRustProjectDir: File = Option(extension.get.getRustProjectDir.getOrNull()) match {
@@ -134,7 +134,7 @@ class RustBuildPlugin extends Plugin[Project] {
 
   def getAndroidAbi: AndroidAbi = AndroidAbi.from(getTarget)
 
-  def getOpensslDir: File = new File(extension.get.getOpensslDir.get())
+  def getOpensslDir: File = readOpensslDir
 
   def getOpensslLibDir: File = new File(getOpensslDir, "lib")
 
@@ -168,6 +168,34 @@ class RustBuildPlugin extends Plugin[Project] {
       }
       configFile
     }, configString)
+  }
+
+  def readOpensslDir: File = {
+    val propertiesFile = getConfigPropertiesFile
+    val notFoundException = new GradleException(s"Couldn't find openssl directory. Please define \"openssl-dir\" in ${propertiesFile.getPath}")
+
+    if (!propertiesFile.exists()) {
+      throw notFoundException
+    }
+    val properties = new Properties()
+    val is = new FileInputStream(propertiesFile)
+    properties.load(is)
+    is.close()
+
+    val opensslDir = Option(properties.getProperty("openssl-dir"))
+    opensslDir match {
+      case Some(dir) =>
+        val f = new File(dir)
+        if (!f.exists()) {
+          throw new GradleException(s"\"openssl-dir\" defined in ${propertiesFile.getPath} doesn't exist")
+        }
+        f
+      case None => throw notFoundException
+    }
+  }
+
+  def getConfigPropertiesFile: File = {
+    new File(project.get.getRootProject.getProjectDir, "config.properties")
   }
 
   class BuildType {
@@ -210,7 +238,5 @@ object RustBuildPlugin {
     def getTarget: Property[String]
 
     def getBuildType: Property[String]
-
-    def getOpensslDir: Property[String]
   }
 }

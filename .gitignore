@@ -9,3 +9,4 @@ cmake-build-debug
 replay*.log
 CMakeFiles/
 /generate-native-headers
+/config.properties

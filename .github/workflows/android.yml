@@ -21,6 +21,17 @@ jobs:
           java-version: 1.8
       - name: Clone submosule
         run: git submodule update --init --recursive
+      - name: Configure SSH key
+        env:
+          SSH_PRK: ${{ secrets.SSH_PRK }}
+        run: |
+          if [ ! -d ~/.ssh ]; then
+              mkdir ~/.ssh
+          fi
+          ssh-keyscan gitlab.com 2> /dev/null >> ~/.ssh/known_hosts
+          echo $SSH_PRK | base64 -d > ~/.ssh/id_rsa
+          sudo chmod 600 ~/.ssh/id_rsa
+          ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
       - name: Set up SDK and NDK
         run: |
           yes | sudo $ANDROID_HOME/tools/bin/sdkmanager ndk-bundle > /dev/null
@@ -37,20 +48,32 @@ jobs:
           source ~/.bashrc
           rustc --version
           rustup target add aarch64-linux-android
+      - name: Compile openssl
+        run: |
+          ./gradlew :app:saveNdkPath
+          ndk_path=`cat ./ndk-path`
+          git clone git://git.openssl.org/openssl.git
+          cd openssl
+          git checkout openssl-3.0.0
+
+          export ANDROID_NDK_ROOT="$ndk_path"
+          toolchain_bin_dir=`ls -d "$ndk_path"/toolchains/llvm/prebuilt/*/bin`
+          export PATH="$toolchain_bin_dir:$PATH"
+
+          ./Configure android-arm64 -D__ANDROID_API__=29
+          make -j4
+          mkdir lib
+          cd lib
+          ln -s ../libcrypto.so .
+          ln -s ../libcrypto.a .
+          ln -s ../libssl.so .
+          ln -s ../libssl.a .
+
+          cd ../..
+          echo "openssl-dir=`pwd`/openssl" >> ./config.properties
       - name: Build app
         run: |
           ./gradlew :app:assembleDebug
-      - name: Configure SSH key
-        env:
-          SSH_PRK: ${{ secrets.SSH_PRK }}
-        run: |
-          if [ ! -d ~/.ssh ]; then
-              mkdir ~/.ssh
-          fi
-          ssh-keyscan gitlab.com 2> /dev/null >> ~/.ssh/known_hosts
-          echo $SSH_PRK | base64 -d > ~/.ssh/id_rsa
-          sudo chmod 600 ~/.ssh/id_rsa
-          ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
       - name: Compile CI tool jar
         run: |
           cd ci

@@ -136,7 +136,6 @@ rustBuild {
     androidApi = 29
     target = "aarch64"
     buildType = "release"
-    opensslDir = "/home/bczhc/github/openssl"
 }
 
 def appProject = rootProject.findProject("app")
@@ -159,4 +158,19 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.7'
     implementation 'com.github.bczhc:jni-java:292ec4a849'
+}
+
+project.task("showNdkPath") {
+    doLast {
+        println android.ndkDirectory.path
+    }
+}
+
+project.task("saveNdkPath") {
+    doLast {
+        String path = android.ndkDirectory.path
+        def writer = new File("./ndk-path").newWriter("UTF-8")
+        writer.write(path)
+        writer.close()
+    }
 }
