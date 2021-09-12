@@ -1,44 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp"
->
-    <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hint="@string/email_to_et_hint"
-            android:id="@+id/to_et"
-    />
-    <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hint="@string/email_cc_et_hint"
-            android:id="@+id/cc_et"
-            android:layout_below="@id/to_et"
-    />
-    <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hint="@string/email_subject_et_hint"
-            android:id="@+id/subject_et"
-            android:layout_below="@id/cc_et"
-    />
-    <pers.zhc.tools.views.ScrollEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:hint="@string/email_body_et_hint"
-            app:gravity="top"
-            android:fillViewport="true"
-            android:layout_below="@id/subject_et"
-            android:layout_above="@id/send_button"
-            android:id="@+id/body_et"
-    />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/email_send_button"
-            android:id="@+id/send_button"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-    />
-</RelativeLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+</LinearLayout>

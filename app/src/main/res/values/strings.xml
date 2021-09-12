@@ -560,5 +560,7 @@
     <string name="email_sending_msg">正在发送</string>
     <string name="email_send_done_toast">发送成功</string>
     <string name="email_send_failed">发送失败</string>
+    <string name="email_compose_button">写邮件</string>
+    <string name="email_compose_label">写邮件</string>
     <!-- end -->
 </resources>
