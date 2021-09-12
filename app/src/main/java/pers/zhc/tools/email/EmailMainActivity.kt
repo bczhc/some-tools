@@ -72,6 +72,7 @@ class EmailMainActivity : BaseActivity() {
 
     override fun finish() {
         database.database.close()
+        super.finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
