@@ -1,5 +1,7 @@
 package pers.zhc.tools.utils;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * @author bczhc
  */
@@ -7,11 +9,12 @@ public abstract class RefCountHolder<T> {
     private final T obj;
     private int refCount = 0;
 
+    @Contract(pure = true)
     public RefCountHolder(T obj) {
         this.obj = obj;
     }
 
-    public T getRef() {
+    public T newRef() {
         ++refCount;
         return obj;
     }
