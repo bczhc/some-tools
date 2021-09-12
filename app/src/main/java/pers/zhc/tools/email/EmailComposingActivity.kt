@@ -35,11 +35,7 @@ class EmailComposingActivity : BaseActivity() {
                         this.cc = arrayOf(it)
                     }
                 }
-                bodyET.text.toString().let {
-                    if (it.isNotEmpty()) {
-                        this.body = bodyET.text.toString()
-                    }
-                }
+                body = bodyET.text.toString()
             }
             val progressDialog = ProgressDialog(this)
             val progressView = progressDialog.getProgressView()
