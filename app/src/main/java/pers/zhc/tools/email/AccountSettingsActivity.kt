@@ -10,14 +10,20 @@ import kotlinx.android.synthetic.main.email_account_add_dialog.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtils
-import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.SharedRef
 
 /**
  * @author bczhc
  */
 class AccountSettingsActivity : BaseActivity() {
+    private lateinit var databaseRef: SharedRef.Ref<Database>
+    private lateinit var database: Database
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        databaseRef = Database.getDatabaseRef()
+        database = databaseRef.get()
+
         // TODO: list existing accounts
     }
 
@@ -52,7 +58,7 @@ class AccountSettingsActivity : BaseActivity() {
                 ), fromET.text.toString()
             )
             EmailMainActivity.currentAccount = account
-            EmailMainActivity.database.insert(account)
+            database.insert(account)
         }
 
         return DialogUtils.createConfirmationAlertDialog(
@@ -64,5 +70,10 @@ class AccountSettingsActivity : BaseActivity() {
             titleRes = R.string.email_add_account_dialog_title,
             width = MATCH_PARENT
         )
+    }
+
+    override fun finish() {
+        databaseRef.release()
+        super.finish()
     }
 }

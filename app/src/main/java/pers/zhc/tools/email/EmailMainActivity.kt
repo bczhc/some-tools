@@ -1,18 +1,14 @@
 package pers.zhc.tools.email
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.email_main_activity.*
 import org.json.JSONException
 import org.json.JSONObject
-import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.ProgressDialog
+import pers.zhc.tools.utils.SharedRef
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.readToString
 import java.io.File
@@ -21,57 +17,17 @@ import java.io.File
  * @author bczhc
  */
 class EmailMainActivity : BaseActivity() {
+    private lateinit var databaseRef: SharedRef.Ref<Database>
+    private lateinit var database: Database
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.email_main_activity)
-        database = Database()
+        databaseRef = Database.getDatabaseRef()
+        database = databaseRef.get()
+
         setupCurrentAccount()
 
-        val subjectET = subject_et!!.editText
-        val bodyET = body_et!!.editText
-        val toET = to_et!!.editText
-        val ccET = cc_et!!.editText
-        val sendButton = send_button!!
-
-        sendButton.setOnClickListener {
-            // TODO: multi-to and multi-cc
-            val message = Message(arrayOf(toET.text.toString()), subjectET.text.toString()).apply {
-                ccET.text.toString().let {
-                    if (it.isNotEmpty()) {
-                        this.cc = arrayOf(it)
-                    }
-                }
-                bodyET.text.toString().let {
-                    if (it.isNotEmpty()) {
-                        this.body = bodyET.text.toString()
-                    }
-                }
-            }
-            val progressDialog = ProgressDialog(this)
-            val progressView = progressDialog.getProgressView()
-            progressView.setIsIndeterminateMode(true)
-            progressView.setTitle(getString(R.string.email_sending_msg))
-            progressDialog.setCanceledOnTouchOutside(false)
-            progressDialog.show()
-            Thread {
-                try {
-                    Sender.send(currentAccount!!, message)
-                    runOnUiThread {
-                        progressDialog.dismiss()
-                        ToastUtils.show(this, R.string.email_send_done_toast)
-                    }
-                } catch (e: Exception) {
-                    runOnUiThread {
-                        progressDialog.dismiss()
-                        ToastUtils.showError(this, R.string.email_send_failed, e)
-                    }
-                }
-            }.start()
-        }
-    }
-
-    override fun finish() {
-        database.database.close()
+        setContentView(R.layout.email_main_activity)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -84,10 +40,18 @@ class EmailMainActivity : BaseActivity() {
             R.id.configure_account -> {
                 startActivity(Intent(this, AccountSettingsActivity::class.java))
             }
+            R.id.compose -> {
+                startActivity(Intent(this, EmailComposingActivity::class.java))
+            }
             else -> {
             }
         }
         return true
+    }
+
+    override fun finish() {
+        databaseRef.release()
+        super.finish()
     }
 
     private fun generateAccountJson(account: Account): JSONObject {
@@ -138,69 +102,7 @@ class EmailMainActivity : BaseActivity() {
         currentAccount = account
     }
 
-    class Database {
-        var database: SQLite3 = SQLite3.open(databaseFile.path)
-
-        init {
-            configure()
-        }
-
-        private fun configure() {
-            database.exec(
-                """CREATE TABLE IF NOT EXISTS account
-(
-    id          INTEGER,
-    smtp_server TEXT NOT NULL,
-    username    TEXT NOT NULL,
-    password    TEXT NOT NULL,
-    header_from TEXT NOT NULL
-)"""
-            )
-        }
-
-        fun insert(account: Account) {
-            val smtpTransport = account.smtpTransport
-            val credential = smtpTransport.credential
-            insert(smtpTransport.server, credential.username, credential.password, account.headerFrom)
-        }
-
-        private fun insert(smtpServer: String, username: String, password: String, headFrom: String) {
-            database.execBind(
-                "INSERT INTO account(id, smtp_server, username, password, header_from)\nVALUES (?, ?, ?, ?, ?)",
-                arrayOf(System.currentTimeMillis(), smtpServer, username, password, headFrom)
-            )
-        }
-
-        fun queryAll(): ArrayList<Account> {
-            val list = ArrayList<Account>()
-
-            val statement =
-                database.compileStatement("SELECT smtp_server, username, password, header_from\nFROM account ")
-
-            val cursor = statement.cursor
-            while (cursor.step()) {
-                list.add(
-                    Account(
-                        SmtpTransport(cursor.getText(0), Credential(cursor.getText(1), cursor.getText(2))),
-                        cursor.getText(3)
-                    )
-                )
-            }
-
-            statement.release()
-            return list
-        }
-
-        companion object {
-            private lateinit var databaseFile: File
-            fun initPath(context: Context) {
-                databaseFile = Common.getInternalDatabaseFile(context, "smtp-config.db")
-            }
-        }
-    }
-
     companion object {
         var currentAccount: Account? = null
-        lateinit var database: Database
     }
 }
