@@ -25,7 +25,7 @@ Tools
 
 # Build
 
-## Basic dependencies
+## Basic requirements
 
 - curl
 - JDK (>=1.8)
@@ -33,9 +33,9 @@ Tools
 
 ## Configure SDK path
 
-Define SDK path in "local.properties" file (create if not exist). Add line "sdk.dir=SDK_PATH" (repleace `SDK_PATH` to your Android SDK path) to "local.properties".
+Define SDK path in "local.properties" file at the project root directory (create if not exist). Add line "sdk.dir=SDK_PATH" (repleace `SDK_PATH` to your Android SDK path) to this configuration file.
 
-The Android SDK must contain NDK, try running `./gradlew` to check, and it's expected to print messages like below:
+The Android SDK needs to contain NDK, try running `./gradlew` to check, and it's expected to print messages like below:
 
 ```
 ...
@@ -46,11 +46,13 @@ CMake Version:  3.18.1
 ...
 ```
 
-NDK dependencies:
+NDK dependencies requirements:
 
 - CMake (>=3.10.0)
 
 ## Compile OpenSSL
+
+Because I haven't made a OpenSSL automatic build work, at present OpenSSL should be compiled manually.
 
 Just run `./build-openssl`
 
@@ -70,6 +72,6 @@ Run `./configure-rust`
 
 ## Build Project
 
-Run `./gradlew asD` for debug build
+Run `./gradlew :app:assembleDebug` or `./gradlew asD` for debug build.
 
-Or `./gradlew asR` for release build
+Run `./gradlew :app:assembleRelease` or `./gradlew asR` for release build.
