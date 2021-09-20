@@ -32,11 +32,6 @@ jobs:
           echo $SSH_PRK | base64 -d > ~/.ssh/id_rsa
           sudo chmod 600 ~/.ssh/id_rsa
           ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
-      - name: Install basics
-        run: |
-          sudo apt update
-          sudo apt install curl -y
-          sudo apt install groovy -y
       - name: Set up SDK and NDK
         run: |
           yes | sudo $ANDROID_HOME/tools/bin/sdkmanager ndk-bundle > /dev/null
@@ -45,15 +40,37 @@ jobs:
           echo "sdk.dir=$ANDROID_HOME" >> $LP
       - name: Set up Rust
         run: |
+          sudo apt update
           sudo apt purge rustc cargo -y
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install
           chmod +x install
           ./install -y
           source ~/.bashrc
           rustc --version
-          ./configure-rust
+          rustup target add aarch64-linux-android
       - name: Compile openssl
-        run: ./build-openssl
+        run: |
+          ./gradlew :app:saveNdkPath
+          ndk_path=`cat ./ndk-path`
+          git clone git://git.openssl.org/openssl.git
+          cd openssl
+          git checkout openssl-3.0.0
+
+          export ANDROID_NDK_ROOT="$ndk_path"
+          toolchain_bin_dir=`ls -d "$ndk_path"/toolchains/llvm/prebuilt/*/bin`
+          export PATH="$toolchain_bin_dir:$PATH"
+
+          ./Configure android-arm64 -D__ANDROID_API__=29
+          make -j4
+          mkdir lib
+          cd lib
+          ln -s ../libcrypto.so .
+          ln -s ../libcrypto.a .
+          ln -s ../libssl.so .
+          ln -s ../libssl.a .
+
+          cd ../..
+          echo "openssl-dir=`pwd`/openssl" >> ./config.properties
       - name: Build app
         run: |
           ./gradlew :app:assembleDebug
