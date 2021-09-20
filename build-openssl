@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+./gradlew :app:saveNdkPath
+ndk_path=`cat ./ndk-path`
+git clone git://git.openssl.org/openssl.git
+cd openssl
+git checkout openssl-3.0.0
+
+export ANDROID_NDK_ROOT="$ndk_path"
+toolchain_bin_dir=`ls -d "$ndk_path"/toolchains/llvm/prebuilt/*/bin`
+export PATH="$toolchain_bin_dir:$PATH"
+
+./Configure android-arm64 -D__ANDROID_API__=29
+make -j4
+mkdir lib
+cd lib
+ln -s ../libcrypto.so .
+ln -s ../libcrypto.a .
+ln -s ../libssl.so .
+ln -s ../libssl.a .
+
+cd ../..
+echo "openssl-dir=`pwd`/openssl" >> ./config.properties
