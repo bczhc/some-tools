@@ -1,7 +1,6 @@
-some-tools
+Tools
 ----------------
 ![some-tools Shitcode](https://img.shields.io/static/v1?label=some-tools&message=Shitcode&color=7B5804)
-
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/931b7e3905cc49448a14cebf432a6396)](https://app.codacy.com/gh/bczhc/some-tools?utm_source=github.com&utm_medium=referral&utm_content=bczhc/some-tools&utm_campaign=Badge_Grade)
 [![lgtm code quality](https://img.shields.io/lgtm/grade/java/github/bczhc/some-tools)](https://lgtm.com/projects/g/bczhc/some-tools/context:java)
@@ -22,3 +21,55 @@ some-tools
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/bczhc/some-tools.svg)](http://isitmaintained.com/project/bczhc/some-tools "Average time to resolve an issue")
 
 ![total lines](https://img.shields.io/tokei/lines/github/bczhc/some-tools)
+
+
+# Build
+
+## Basic dependencies
+
+- curl
+- JDK (>=1.8)
+- groovy
+
+## Configure SDK path
+
+Define SDK path in "local.properties" file (create if not exist). Add line "sdk.dir=SDK_PATH" (repleace `SDK_PATH` to your Android SDK path) to "local.properties".
+
+The Android SDK must contain NDK, try running `./gradlew` to check, and it's expected to print messages like below:
+
+```
+...
+Build environment info:
+SDK path: /root/sdk
+NDK path: /root/sdk/ndk-bundle
+CMake Version:  3.18.1
+...
+```
+
+NDK dependencies:
+
+- CMake (>=3.10.0)
+
+## Compile OpenSSL
+
+Just run `./build-openssl`
+
+## Configure Rust
+
+### Install [Rust](https://www.rust-lang.org/learn/get-started):
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Note: This installation method is recommended, since `rustup` is required in the further operations.
+
+### Configure cross-compilation toolchain
+
+Run `./configure-rust`
+
+## Build Project
+
+Run `./gradlew asD` for debug build
+
+Or `./gradlew asR` for release build
