@@ -1,7 +1,6 @@
 package pers.zhc.tools;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,33 +11,29 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Base64;
-import android.view.*;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import kotlin.Unit;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import pers.zhc.tools.app.ActivityItem;
+import pers.zhc.tools.app.AppMenuAdapter;
+import pers.zhc.tools.app.SmallToolsListActivity;
+import pers.zhc.tools.app.TestListActivity;
 import pers.zhc.tools.bus.BusQueryMainActivity;
-import pers.zhc.tools.clipboard.Clip;
 import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.email.EmailMainActivity;
 import pers.zhc.tools.fdb.FdbMainActivity;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.magic.FileListActivity;
-import pers.zhc.tools.pi.Pi;
 import pers.zhc.tools.stcflash.FlashMainActivity;
-import pers.zhc.tools.test.*;
-import pers.zhc.tools.test.malloctest.MAllocTest;
-import pers.zhc.tools.test.toast.ToastTest;
-import pers.zhc.tools.test.typetest.TypeTest;
 import pers.zhc.tools.transfer.TransferMainActivity;
-import pers.zhc.tools.utils.AdapterWithClickListener;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.words.WordsMainActivity;
 
@@ -126,26 +121,15 @@ public class MainActivity extends BaseActivity {
     }
 
     private void addActivities() {
-        activities.add(new ActivityItem(R.string.generate_pi, Pi.class));
-        activities.add(new ActivityItem(R.string.toast, ToastTest.class));
-        activities.add(new ActivityItem(R.string.put_in_clipboard, Clip.class));
+        activities.add(new ActivityItem(R.string.app_menu_test, TestListActivity.class));
+        activities.add(new ActivityItem(R.string.app_menu_little_tools, SmallToolsListActivity.class));
         activities.add(new ActivityItem(R.string.floating_drawing_board, FdbMainActivity.class));
         activities.add(new ActivityItem(R.string.notes, Document.class));
-        activities.add(new ActivityItem(R.string.test, Demo.class));
-        activities.add(new ActivityItem(R.string.sensor_test, SensorTest.class));
-        activities.add(new ActivityItem(R.string.crash_test, CrashTest.class));
-        activities.add(new ActivityItem(R.string.m_alloc_test, MAllocTest.class));
         activities.add(new ActivityItem(R.string.diary, DiaryMainActivity.class));
-        activities.add(new ActivityItem(R.string.type_test, TypeTest.class));
-        activities.add(new ActivityItem(R.string.tts_test, TTS.class));
-        activities.add(new ActivityItem(R.string.regular_expression_test, RegExpTest.class));
         activities.add(new ActivityItem(R.string.wubi_input_method, WubiInputMethodActivity.class));
         activities.add(new ActivityItem(R.string.stc_flash, FlashMainActivity.class));
-        activities.add(new ActivityItem(R.string.drawing_board_test, DrawingBoardTest.class));
         activities.add(new ActivityItem(R.string.bus_query_label, BusQueryMainActivity.class));
-        activities.add(new ActivityItem(R.string.sys_info_label, SysInfo.class));
         activities.add(new ActivityItem(R.string.magic_label, FileListActivity.class));
-        activities.add(new ActivityItem(R.string.unicode_table_label, UnicodeTable.class));
         activities.add(new ActivityItem(R.string.words_label, WordsMainActivity.class));
         activities.add(new ActivityItem(R.string.transfer_label, TransferMainActivity.class));
         activities.add(new ActivityItem(R.string.email_label, EmailMainActivity.class));
@@ -153,69 +137,11 @@ public class MainActivity extends BaseActivity {
 
     private void loadRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        final MyAdapter adapter = new MyAdapter(this, activities);
+        final AppMenuAdapter adapter = new AppMenuAdapter(this, activities);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter.setOnItemClickListener((position, view) -> {
-            final ActivityItem item = activities.get(position);
-            startActivity(new Intent(this, item.activityClass));
-            return Unit.INSTANCE;
-        });
-
-        adapter.setOnItemLongClickListener((position, view) -> {
-            final ActivityItem item = activities.get(position);
-            shortcut(item.textRes, item.activityClass, position);
-            return Unit.INSTANCE;
-        });
-    }
-
-    private static class ActivityItem {
-        private @StringRes
-        final int textRes;
-        private final Class<? extends Activity> activityClass;
-
-        @Contract(pure = true)
-        public ActivityItem(int textRes, Class<? extends Activity> activityClass) {
-            this.textRes = textRes;
-            this.activityClass = activityClass;
-        }
-    }
-
-    private static class MyAdapter extends AdapterWithClickListener<MyAdapter.MyViewHolder> {
-        private final Context context;
-        private final ArrayList<ActivityItem> activities;
-
-        public MyAdapter(Context context, ArrayList<ActivityItem> activities) {
-            this.context = context;
-            this.activities = activities;
-        }
-
-        @org.jetbrains.annotations.Nullable
-        @Contract(pure = true)
-        @Override
-        public MyViewHolder onCreateViewHolder(@NotNull ViewGroup parent) {
-            final View view = LayoutInflater.from(context).inflate(R.layout.main_activity_item, parent, false);
-            return new MyViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
-            final View view = holder.itemView;
-            TextView tv = view.findViewById(R.id.tv);
-            tv.setText(activities.get(position).textRes);
-        }
-
-        @Override
-        public int getItemCount() {
-            return activities.size();
-        }
-
-        private static class MyViewHolder extends RecyclerView.ViewHolder {
-            public MyViewHolder(@NonNull @NotNull View itemView) {
-                super(itemView);
-            }
-        }
+        // TODO: 9/21/21 shortcut
     }
 
     @Override

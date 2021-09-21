@@ -327,7 +327,7 @@
     <string name="empty_device">empty device</string>
     <string name="empty_driver">empty driver</string>
     <string name="null_connection">null connection</string>
-    <string name="stc_flash">stc烧写</string>
+    <string name="stc_flash">STC烧写</string>
     <string name="connect">连接</string>
     <string name="null_port">null port</string>
     <string name="hex_file_path">hex文件路径</string>
@@ -572,6 +572,8 @@
     <string name="email_contact_email">邮箱</string>
     <string name="email_add_contact_dialog_title">添加联系人</string>
     <string name="email_contact_already_exist_toast">已经存在相同邮箱联系人</string>
+    <string name="app_menu_test">测试</string>
+    <string name="app_menu_little_tools">小工具</string>
     <!-- end -->
 
 </resources>
