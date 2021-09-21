@@ -568,5 +568,6 @@
     <string name="email_contact_name">姓名</string>
     <string name="email_contact_email">邮箱</string>
     <string name="email_add_contact_dialog_title">添加联系人</string>
+    <string name="email_contact_already_exist_toast">已经存在相同邮箱联系人</string>
     <!-- end -->
 </resources>

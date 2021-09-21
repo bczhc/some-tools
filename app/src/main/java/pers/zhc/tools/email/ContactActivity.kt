@@ -78,7 +78,6 @@ class ContactActivity : BaseActivity() {
         }
 
         fun delete(email: String) {
-            database.delete(email)
             val find = itemData.find {
                 return@find it.email == email
             }!!
@@ -87,6 +86,7 @@ class ContactActivity : BaseActivity() {
         }
 
         fun delete(position: Int) {
+            database.delete(itemData[position].email)
             itemData.removeAt(position)
             notifyItemRemoved(position)
         }
@@ -125,7 +125,15 @@ class ContactActivity : BaseActivity() {
 
         val dialog = DialogUtils.createConfirmationAlertDialog(this, { _, _ ->
 
-            listAdapter.add(Contact(nameET.text.toString(), emailET.text.toString()))
+            val name = nameET.text.toString()
+            val email = emailET.text.toString()
+
+            if (database.checkExistence(email)) {
+                ToastUtils.show(this, R.string.email_contact_already_exist_toast)
+                return@createConfirmationAlertDialog
+            }
+
+            listAdapter.add(Contact(name, email))
             ToastUtils.show(this, R.string.adding_succeeded)
 
         }, view = inflate, titleRes = R.string.email_add_contact_dialog_title, width = MATCH_PARENT)
@@ -174,6 +182,10 @@ class ContactActivity : BaseActivity() {
         fun update(newContact: Contact, oldEmail: String) {
             database.execBind("UPDATE contact SET name = ? WHERE email IS ?", arrayOf(newContact.name, oldEmail))
             database.execBind("UPDATE contact SET email = ? WHERE email IS ?", arrayOf(newContact.email, oldEmail))
+        }
+
+        fun checkExistence(email: String): Boolean {
+            return database.hasRecord("SELECT * FROM contact WHERE email IS ?", arrayOf(email))
         }
     }
 
