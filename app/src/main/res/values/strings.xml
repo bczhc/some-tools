@@ -439,6 +439,7 @@
     <string name="diary_attachment_adding_duplicate_toast">已存在该附件</string>
     <string name="diary_attachment_library_duplicate_toast">已添加该文件</string>
     <string name="diary_file_browser_open_file_failed">无法打开图片</string>
+    <string name="diary_file_library_text_edit_activity_label">文本编辑</string>
     <!-- module end -->
 
     <!-- module: bus -->
@@ -463,7 +464,6 @@
     <string name="bus_arrival_reminder_notification_content">公交车位置：%1$s\n还有%2$d站</string>
     <string name="bus_no_nearest_bus">没有最近的车辆</string>
     <string name="bus_set_bus_arrival_reminder_toast">设置到站提醒成功</string>
-    <string name="diary_file_library_text_edit_activity_label">文本编辑</string>
     <string name="bus_foreground_notification_title">公交到站提醒正在运行</string>
     <!-- module end -->
 
@@ -547,6 +547,9 @@
     <string name="transfer_send_label">发送</string>
     <string name="transfer_invalid_address_toast">无效的地址</string>
     <string name="transfer_invalid_port_toast">无效的端口</string>
+    <!-- end -->
+
+    <!-- module: email -->
     <string name="email_label">电子邮件</string>
     <string name="email_smtp_server_et_hint">SMTP服务器</string>
     <string name="email_configure_account">配置邮箱帐号</string>
@@ -570,4 +573,5 @@
     <string name="email_add_contact_dialog_title">添加联系人</string>
     <string name="email_contact_already_exist_toast">已经存在相同邮箱联系人</string>
     <!-- end -->
+
 </resources>
