@@ -28,7 +28,7 @@
     <string name="saving_succeeded_dialog">保存成功</string>
     <string name="filename_hint">文件名</string>
     <string name="adding_succeeded">添加成功</string>
-    <string name="menu_delete">删除</string>
+    <string name="delete_button">删除</string>
     <string name="process_done">完成</string>
     <string name="importing_succeeded">导入成功</string>
     <string name="exporting_succeeded">导出成功</string>
@@ -44,6 +44,8 @@
     <string name="getting_information_failed">获取信息失败</string>
     <string name="username">用户名</string>
     <string name="password">密码</string>
+    <string name="delete_success">删除成功</string>
+    <string name="delete_confirmation_dialog_title">是否删除</string>
     <!-- end -->
 
     <!-- old -->
@@ -562,5 +564,9 @@
     <string name="email_send_failed">发送失败</string>
     <string name="email_compose_button">写邮件</string>
     <string name="email_compose_label">写邮件</string>
+    <string name="email_contact_label">联系人</string>
+    <string name="email_contact_name">姓名</string>
+    <string name="email_contact_email">邮箱</string>
+    <string name="email_add_contact_dialog_title">添加联系人</string>
     <!-- end -->
 </resources>

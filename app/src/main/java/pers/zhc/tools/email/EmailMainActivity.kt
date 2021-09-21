@@ -43,6 +43,9 @@ class EmailMainActivity : BaseActivity() {
             R.id.compose -> {
                 startActivity(Intent(this, EmailComposingActivity::class.java))
             }
+            R.id.contact -> {
+                startActivity(Intent(this, ContactActivity::class.java))
+            }
             else -> {
             }
         }

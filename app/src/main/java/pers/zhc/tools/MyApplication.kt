@@ -12,6 +12,7 @@ import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
 import pers.zhc.tools.crashhandler.CrashHandler
 import pers.zhc.tools.diary.DiaryDatabase
+import pers.zhc.tools.email.ContactActivity
 import pers.zhc.tools.email.Database
 import pers.zhc.tools.words.WordsMainActivity
 import java.io.File
@@ -30,6 +31,7 @@ class MyApplication : Application() {
         DiaryDatabase.init(this)
         WordsMainActivity.init(this)
         Database.initPath(this)
+        ContactActivity.initPath(this)
 
         registerNotificationChannel()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

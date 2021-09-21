@@ -8,4 +8,8 @@
           app:showAsAction="never"
           android:id="@+id/configure_account"
     />
+    <item android:title="@string/email_contact_label"
+          app:showAsAction="never"
+          android:id="@+id/contact"
+    />
 </menu>

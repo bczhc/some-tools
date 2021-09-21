@@ -663,5 +663,17 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity
+                android:name=".email.ContactActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:theme="@style/Theme.Application"
+                android:label="@string/email_contact_label"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
