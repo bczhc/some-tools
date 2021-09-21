@@ -72,12 +72,21 @@ class EmailComposingActivity : BaseActivity() {
             contactSelectorLauncher.launch(ContactAddTarget.CC)
         }
 
+        val parseMultipleContact = { s: String ->
+            val list = ArrayList<String>()
+            s.split(" ").forEach {
+                if (it.isNotEmpty()) {
+                    list.add(it)
+                }
+            }
+            list.toArray(arrayOf(""))
+        }
+
         sendButton.setOnClickListener {
-            // TODO: multi-to and multi-cc
-            val message = Message(arrayOf(toET.text.toString()), subjectET.text.toString()).apply {
+            val message = Message(parseMultipleContact(toET.text.toString()), subjectET.text.toString()).apply {
                 ccET.text.toString().let {
                     if (it.isNotEmpty()) {
-                        this.cc = arrayOf(it)
+                        this.cc = parseMultipleContact(it)
                     }
                 }
                 body = bodyET.text.toString()
