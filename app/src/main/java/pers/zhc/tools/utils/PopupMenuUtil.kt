@@ -16,5 +16,10 @@ class PopupMenuUtil {
             popupMenu.menuInflater.inflate(menuRes, popupMenu.menu)
             return popupMenu
         }
+
+        @JvmStatic
+        fun create(ctx: Context, anchor: View, @MenuRes menuRes: Int): PopupMenu {
+            return createPopupMenu(ctx, anchor, menuRes)
+        }
     }
 }
