@@ -1,6 +1,7 @@
 package pers.zhc.tools.email
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -26,6 +27,9 @@ class ContactActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.email_contact_activity)
 
+        val intent = intent
+        val selectMode = intent.getBooleanExtra(EXTRA_SELECT_MODE, false)
+
         val recyclerView = recycler_view!!
         listAdapter = MyAdapter(this, database)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -47,6 +51,15 @@ class ContactActivity : BaseActivity() {
                 return@setOnMenuItemClickListener true
             }
             menu.show()
+        }
+        listAdapter.setOnItemClickListener { position, _ ->
+            if (selectMode) {
+                val contact = listAdapter.getContact(position)
+                val resultIntent = Intent()
+                resultIntent.putExtra(EXTRA_SELECTED_RESULT, contact)
+                setResult(0, resultIntent)
+                finish()
+            }
         }
     }
 
@@ -99,6 +112,10 @@ class ContactActivity : BaseActivity() {
             val index = itemData.indexOf(find)
             itemData[index].set(contact)
             notifyItemChanged(index)
+        }
+
+        fun getContact(position: Int): Contact {
+            return itemData[position]
         }
     }
 
@@ -212,6 +229,21 @@ class ContactActivity : BaseActivity() {
         fun initPath(context: Context) {
             databasePath = Common.getInternalDatabaseFile(context, "email-contact").path
         }
+
+        /**
+         * Boolean intent extra
+         *
+         * When set to `true`, then when the items are clicked,
+         * this activity will finish and set [EXTRA_SELECTED_RESULT] intent result.
+         */
+        const val EXTRA_SELECT_MODE = "selectMode"
+
+        /**
+         * Parcelable intent extra
+         *
+         * See [EXTRA_SELECT_MODE]
+         */
+        const val EXTRA_SELECTED_RESULT = "selectedResult"
     }
 }
 
