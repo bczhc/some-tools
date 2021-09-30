@@ -167,6 +167,22 @@ public class WubiIME extends InputMethodService {
                         return true;
                     }
                 }
+                if (event.isCtrlPressed() && !tempEnglishMode) {
+                    switch (inputRange) {
+                        case SEMICOLON:
+                            commitTheFirstCandidate();
+                            clear();
+                            commitText("；");
+                            break;
+                        case NUM0_9:
+                            commitTheFirstCandidate();
+                            clear();
+                            commitText(String.valueOf(keyCode - KeyEvent.KEYCODE_0));
+                            break;
+                        default:
+                    }
+                    return true;
+                }
                 if (!composing && inputRange == InputRange.A_Z) {
                     // start to input
                     composing = true;
