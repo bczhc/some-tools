@@ -408,7 +408,9 @@
     <string name="unicode_table_label">Unicode表</string>
     <string name="unicode_table_seek_menu">定位</string>
     <string name="unicode_table_copying_succeeded_toast">复制成功</string>
-    <string name="unicode_table_codepoint_hex_is_dialog">十六进制码点：</string>
+    <string name="unicode_table_seek_codepoint_et_hint">十六进制码点</string>
+    <string name="unicode_table_seek_char_et_hint">字符</string>
+    <string name="unicode_table_seek_dialog_title">定位</string>
     <!-- module end -->
 
     <!-- module: diary -->

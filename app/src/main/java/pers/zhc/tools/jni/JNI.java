@@ -266,4 +266,16 @@ public class JNI {
                                        String subject,
                                        String body);
     }
+
+    public static class Utf8 {
+        public static native long getCodepointIterator(String s);
+
+        public static native boolean hasNext(long addr);
+
+        public static native int next(long addr);
+
+        public static native void release(long addr);
+
+        public static native int codepointLength(String s);
+    }
 }
