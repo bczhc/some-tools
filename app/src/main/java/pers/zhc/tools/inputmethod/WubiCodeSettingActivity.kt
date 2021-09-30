@@ -31,6 +31,7 @@ class WubiCodeSettingActivity : BaseActivity() {
         class MyArrayAdapter(context: Context, val resource: Int, objects: Array<out String>) :
             ArrayAdapter<String>(context, resource, objects) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                @Suppress("ViewHolder")
                 val view = View.inflate(this@WubiCodeSettingActivity, resource, null)
                 val textView = view.findViewById<TextView>(android.R.id.text1)
                 textView.text = getItem(position)!!
@@ -173,7 +174,8 @@ class WubiCodeSettingActivity : BaseActivity() {
         bufferedReader.close()
         reader.close()
 
-        val localWubiDatabaseFile = File(getLocalWubiDatabasePath(this))
+        // TODO: operate before closing the database use in `WubiIME`
+        val localWubiDatabaseFile = File(DictionaryDatabase.databasePath)
 
         if (localWubiDatabaseFile.exists()) {
             if (!localWubiDatabaseFile.delete()) {
@@ -194,11 +196,5 @@ class WubiCodeSettingActivity : BaseActivity() {
 
         db.commit()
         db.close()
-    }
-
-    companion object {
-        fun getLocalWubiDatabasePath(context: Context): String {
-            return Common.getInternalDatabaseDir(context, "wubi_code.db").path
-        }
     }
 }

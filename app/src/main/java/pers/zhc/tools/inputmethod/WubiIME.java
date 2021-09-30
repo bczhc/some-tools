@@ -1,6 +1,5 @@
 package pers.zhc.tools.inputmethod;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
 import android.speech.tts.TextToSpeech;
@@ -9,13 +8,9 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.TextView;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import pers.zhc.jni.sqlite.Cursor;
-import pers.zhc.jni.sqlite.SQLite3;
-import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 
@@ -27,6 +22,14 @@ import java.util.List;
  * @author bczhc
  */
 public class WubiIME extends InputMethodService {
+    private DictionaryDatabase dictDatabase;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        dictDatabase = DictionaryDatabase.Companion.getDatabaseRef();
+    }
+
     /**
      * Chinese punctuation array
      */
@@ -113,7 +116,6 @@ public class WubiIME extends InputMethodService {
     private final StringBuilder wubiCodeSB = new StringBuilder();
     private final Quotation quotation = new Quotation();
     private final List<String> candidates = new ArrayList<>();
-    private static SQLite3 wubiDictDB = null;
     private TextView candidateTV, wubiCodeTV;
     private boolean alphabetMode = false;
     private InputConnection ic;
@@ -437,18 +439,12 @@ public class WubiIME extends InputMethodService {
 
     @Override
     public View onCreateInputView() {
-        if (wubiDictDB == null) {
-            wubiDictDB = getWubiDictDatabase(this);
-        }
         return super.onCreateInputView();
     }
 
-    @NotNull
-    public static synchronized SQLite3 getWubiDictDatabase(Context ctx) {
-        if (wubiDictDB == null || wubiDictDB.isClosed()) {
-            wubiDictDB = SQLite3.open(Common.getInternalDatabaseDir(ctx, "wubi_code.db").getPath());
-        }
-        return wubiDictDB;
+    @Override
+    public void onFinishInput() {
+        super.onFinishInput();
     }
 
     @Override
@@ -614,40 +610,13 @@ public class WubiIME extends InputMethodService {
         if (wubiCodeSB.toString().equals("z")) {
             candidates.add(lastWord);
         } else try {
-            String[] fetched = fetchCandidates(wubiDictDB, wubiCodeStr);
+            String[] fetched = dictDatabase.fetchCandidates(wubiCodeStr);
             if (fetched != null) {
                 this.candidates.addAll(Arrays.asList(fetched));
             }
         } catch (RuntimeException ignored) {
             // no such table
         }
-    }
-
-    /**
-     * Fetch wubi candidate words.
-     *
-     * @param wubiDictDatabase wubi dictionary database
-     * @param wubiCodeStr      wubi code
-     * @return fetched candidates string arr, null if not found the specified wubi code (no such column)
-     * @throws RuntimeException sqlite error, such as io error or no such table error.
-     */
-    @Nullable
-    public static String[] fetchCandidates(@NotNull SQLite3 wubiDictDatabase, @NotNull String wubiCodeStr) throws RuntimeException {
-        String[] r = null;
-        try {
-            String tableName = "wubi_code_" + wubiCodeStr.charAt(0);
-            Statement statement = wubiDictDatabase.compileStatement("SELECT word FROM " + tableName + " WHERE code IS ?");
-            statement.bindText(1, wubiCodeStr);
-            Cursor cursor = statement.getCursor();
-            if (cursor.step()) {
-                String selected = cursor.getText(0);
-                r = selected.split("\\|");
-            }
-            statement.release();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return r;
     }
 
     /**

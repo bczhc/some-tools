@@ -10,13 +10,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.wubi_database_edit_activity.*
 import kotlinx.android.synthetic.main.wubi_dict_add_view.view.*
+import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.jni.sqlite.SQLite3
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.collections.ArrayList
 
 /**
  * @author bczhc
@@ -31,13 +30,12 @@ class WubiDatabaseEditActivity : BaseActivity() {
         val addBtn = add_btn
         val wubiCodeET = wubiCodeSHET.editText
 
-        val localWubiDatabasePath = WubiCodeSettingActivity.getLocalWubiDatabasePath(this)
-        val dictDatabase = SQLite3.open(localWubiDatabasePath)
+        val dictDatabase = DictionaryDatabase.getDatabaseRef()
 
         Thread {
             var totalRow = 0
             for (a in 'a'..'z') {
-                val statement = dictDatabase.compileStatement("SELECT COUNT(*) FROM wubi_code_$a")
+                val statement = dictDatabase.database.compileStatement("SELECT COUNT(*) FROM wubi_code_$a")
                 statement.stepRow()
                 totalRow += statement.cursor.getInt(0)
                 statement.release()
@@ -56,7 +54,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
             var fetchCandidates: Array<String>? = null
             candidateList.clear()
             try {
-                fetchCandidates = WubiIME.fetchCandidates(dictDatabase, wubiCodeStr)
+                fetchCandidates = dictDatabase.fetchCandidates(wubiCodeStr)
             } catch (_: Exception) {
                 wubiCandidatesLL.removeAllViews()
             }
@@ -84,7 +82,11 @@ class WubiDatabaseEditActivity : BaseActivity() {
                                 candidateList.removeAt(i)
                                 val wordsCombinedStr = getWordsCombinedStr(candidateList)
                                 try {
-                                    updateWordRecord(dictDatabase, wubiCodeET.text.toString(), wordsCombinedStr)
+                                    updateWordRecord(
+                                        dictDatabase.database,
+                                        wubiCodeET.text.toString(),
+                                        wordsCombinedStr
+                                    )
                                     ToastUtils.show(this, R.string.deleting_succeeded)
                                 } catch (e: Exception) {
                                     ToastUtils.showError(this, R.string.deleting_failed, e)
@@ -144,7 +146,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
                     val newWordStr = getWordsCombinedStr(candidateList)
 
                     try {
-                        updateWordRecord(dictDatabase, wubiCodeStr, newWordStr)
+                        updateWordRecord(dictDatabase.database, wubiCodeStr, newWordStr)
                         ToastUtils.show(this, R.string.adding_succeeded)
                     } catch (e: Exception) {
                         ToastUtils.showError(this, R.string.adding_failed, e)
