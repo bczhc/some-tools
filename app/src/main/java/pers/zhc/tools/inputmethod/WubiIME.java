@@ -463,6 +463,8 @@ public class WubiIME extends InputMethodService {
 
         candidateTV.setBackgroundColor(backgroundColor);
         candidateTV.setTextColor(textColor);
+        wubiCodeTV.setBackgroundColor(backgroundColor);
+        wubiCodeTV.setTextColor(textColor);
     }
 
     @Override
