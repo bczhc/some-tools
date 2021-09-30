@@ -148,7 +148,7 @@ public class WubiIME extends InputMethodService {
                 if (inputRange == InputRange.NUM0_9 && !event.isShiftPressed() && !composing) {
                     return false;
                 }
-                if (event.isShiftPressed()) {
+                if (event.isShiftPressed() && !tempEnglishMode) {
                     // on shift held routines
                     for (int i = 0; i < punctuationWithShiftKeyCodes.length; i++) {
                         if (keyCode == punctuationWithShiftKeyCodes[i]) {
@@ -192,7 +192,7 @@ public class WubiIME extends InputMethodService {
                     return true;
                 }
                 // routines below are for composing
-                if (!tempEnglishMode)
+                if (!tempEnglishMode) {
                     // Chinese input mode
                     switch (inputRange) {
                         case A_Z:
@@ -264,7 +264,7 @@ public class WubiIME extends InputMethodService {
                             break;
                         default:
                     }
-                else {
+                } else {
                     // temporary English mode
                     switch (inputRange) {
                         case ENTER:
