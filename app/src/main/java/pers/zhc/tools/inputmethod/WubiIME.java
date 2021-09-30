@@ -1,6 +1,7 @@
 package pers.zhc.tools.inputmethod;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
 import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
@@ -9,13 +10,14 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import pers.zhc.tools.R;
-import pers.zhc.tools.utils.Common;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
+import pers.zhc.tools.R;
+import pers.zhc.tools.utils.Common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -397,6 +399,7 @@ public class WubiIME extends InputMethodService {
      * @param keyCode key code
      * @return {@link WubiIME.InputRange}
      */
+    @Contract(pure = true)
     static InputRange checkInputRange(int keyCode) {
         if (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z) return InputRange.A_Z;
         if (keyCode == KeyEvent.KEYCODE_DEL) return InputRange.BACKSPACE;
@@ -453,10 +456,25 @@ public class WubiIME extends InputMethodService {
         View candidateView = View.inflate(this, R.layout.wubi_input_method_candidate_view, null);
         candidateTV = candidateView.findViewById(R.id.candidates);
         wubiCodeTV = candidateView.findViewById(R.id.code);
+
         setCandidatesViewShown(true);
         return candidateView;
     }
 
+    @Override
+    public void onStartInputView(EditorInfo info, boolean restarting) {
+        int backgroundColor = Color.WHITE;
+        int textColor = Color.BLACK;
+
+        final int nightMode = AppCompatDelegate.getDefaultNightMode();
+        if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            backgroundColor = Color.BLACK;
+            textColor = Color.WHITE;
+        }
+
+        candidateTV.setBackgroundColor(backgroundColor);
+        candidateTV.setTextColor(textColor);
+    }
 
     @Override
     public void onComputeInsets(InputMethodService.Insets outInsets) {
@@ -468,6 +486,7 @@ public class WubiIME extends InputMethodService {
 
     @Override
     public boolean onEvaluateInputViewShown() {
+        super.onEvaluateInputViewShown();
         return true;
     }
 
@@ -529,7 +548,8 @@ public class WubiIME extends InputMethodService {
             String candidate = candidates.get(i);
             candidatesSB.append(toSuperscriptNumberChar(i + 1)).append(candidate).append(' ');
         }
-        if (candidates.size() > 0) candidatesSB.append(toSuperscriptNumberChar(candidates.size())).append(candidates.get(candidates.size() - 1));
+        if (candidates.size() > 0)
+            candidatesSB.append(toSuperscriptNumberChar(candidates.size())).append(candidates.get(candidates.size() - 1));
 
         if (wubiCodeTV != null && candidateTV != null) {
             wubiCodeTV.setText(wubiCodeStr);
@@ -605,6 +625,7 @@ public class WubiIME extends InputMethodService {
 
     /**
      * Fetch wubi candidate words.
+     *
      * @param wubiDictDatabase wubi dictionary database
      * @param wubiCodeStr      wubi code
      * @return fetched candidates string arr, null if not found the specified wubi code (no such column)

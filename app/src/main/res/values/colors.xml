@@ -19,6 +19,7 @@
     <color name="black">#000000</color>
     <color name="red">#FFFF0000</color>
     <color name="blue">#FF0000FF</color>
+    <color name="highContrastTextColor">@color/black</color>
 
     <color name="diary_item_date_head">#1565C0</color>
 </resources>
