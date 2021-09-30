@@ -46,7 +46,7 @@ public class WubiIME extends InputMethodService {
     };
 
     /**
-     * On-to-one correspondence with {@link WubiIME#punctuationStrings}
+     * One-to-one correspondence with {@link WubiIME#punctuationStrings}
      */
     private final static int[] punctuationKeyCodes = {
             KeyEvent.KEYCODE_PERIOD,
@@ -83,7 +83,7 @@ public class WubiIME extends InputMethodService {
             "+"
     };
     /**
-     * On-to-one correspondence with {@link WubiIME#chinesePunctuationWithShiftStrings}
+     * One-to-one correspondence with {@link WubiIME#chinesePunctuationWithShiftStrings}
      */
     private final static int[] punctuationWithShiftKeyCodes = {
             KeyEvent.KEYCODE_COMMA,
@@ -632,6 +632,7 @@ public class WubiIME extends InputMethodService {
         private final String[] doubleQuotation = {"“", "”"};
         private int singleQuotationIndex = 0, doubleQuotationIndex = 0;
 
+        @Contract(mutates = "this")
         private String getSingleQuotation() {
             String r = singleQuotation[singleQuotationIndex];
             singleQuotationIndex = 1 - singleQuotationIndex;
