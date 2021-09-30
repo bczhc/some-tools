@@ -149,7 +149,7 @@ public class WubiIME extends InputMethodService {
                     return false;
                 }
                 if (event.isShiftPressed()) {
-                    // on shift hold routines
+                    // on shift held routines
                     for (int i = 0; i < punctuationWithShiftKeyCodes.length; i++) {
                         if (keyCode == punctuationWithShiftKeyCodes[i]) {
                             commitTheFirstCandidate();
@@ -198,6 +198,8 @@ public class WubiIME extends InputMethodService {
                         case A_Z:
                             if (event.isShiftPressed()) {
                                 // when capitalized, start temporary English input mode
+                                commitTheFirstCandidate();
+                                clear();
                                 tempEnglishMode = true;
                                 composing = true;
                                 candidateTV.setText(String.valueOf(c));
@@ -329,15 +331,6 @@ public class WubiIME extends InputMethodService {
             InputRange inputRange = checkInputRange(keyCode);
             if (inputRange == InputRange.SHIFT) return false;
             return inputRange != InputRange.OTHERS;
-        }
-
-        @Override
-        public void onShift(KeyEvent event) {
-        }
-
-        @Override
-        public void onCtrl(KeyEvent event) {
-
         }
     });
 
