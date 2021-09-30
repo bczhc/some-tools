@@ -179,6 +179,12 @@ public class WubiIME extends InputMethodService {
                             clear();
                             commitText(String.valueOf(keyCode - KeyEvent.KEYCODE_0));
                             break;
+                        case SPACE:
+                            if (candidates.size() > 0) {
+                                commitTheFirstCandidate();
+                            }
+                            clear();
+                            break;
                         default:
                     }
                     return true;
