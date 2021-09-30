@@ -33,9 +33,9 @@ Tools
 
 ## Configure SDK path
 
-Define SDK path in "local.properties" file at the project root directory (create if not exist). Add line "sdk.dir=SDK_PATH" (repleace `SDK_PATH` to your Android SDK path) to this configuration file.
+Add line "sdk.dir=SDK_PATH" (replace `SDK_PATH` with your Android SDK path) to "local.properties" at the project root (create it if it doesn't exist).
 
-The Android SDK needs to contain NDK, try running `./gradlew` to check, and it's expected to print messages like below:
+Make sure the SDK contains NDK, try running `./gradlew` to check, and it's expected to print messages like below:
 
 ```
 ...
