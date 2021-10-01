@@ -57,8 +57,8 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_release(_env: JNIEnv, _class: JClas
 #[no_mangle]
 #[allow(non_snake_case)]
 pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_codepointLength(
-    _env: JNIEnv,
-    _class: Jclass,
+    env: JNIEnv,
+    _class: JClass,
     s: JString,
 ) -> i32 {
     let s = String::from(env.get_string(s).unwrap().to_str().unwrap());
