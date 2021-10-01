@@ -17,6 +17,8 @@
     <string name="wake_lock_held_success">获取成功</string>
     <string name="wake_lock_no_held">未获取wake lock</string>
     <string name="wake_lock_release_success">释放成功</string>
+    <string name="app_menu_test">测试</string>
+    <string name="app_menu_little_tools">小工具</string>
     <!-- app end -->
 
     <!-- common -->
@@ -414,6 +416,7 @@
     <!-- module end -->
 
     <!-- module: diary -->
+    <string name="diary_label">日记</string>
     <string name="diary_navigation_view_title">我的日记</string>
     <string name="diary_duplicated_diary_dialog_title">已有该日期日记，是否打开？</string>
     <string name="diary_import_ref_count_not_zero_msg">数据库还有%1$d个连接引用，不能关闭，导入终止。</string>
@@ -427,6 +430,7 @@
     <string name="diary_file_not_exist_alert_msg">文件不存在</string>
     <string name="diary_browser_file_btn">预览文件</string>
     <string name="diary_browser_label">预览</string>
+    <string name="diary_file_library_label">文件库</string>
     <string name="diary_file_library_has_file_reference_alert_msg">存在文件引用，无法删除。</string>
     <string name="diary_file_library_file_not_exist_dialog">本地文件已不存在，是否删除？</string>
     <string name="diary_attachment_preview_activity_title_is">标题：%1$s</string>
@@ -574,8 +578,6 @@
     <string name="email_contact_email">邮箱</string>
     <string name="email_add_contact_dialog_title">添加联系人</string>
     <string name="email_contact_already_exist_toast">已经存在相同邮箱联系人</string>
-    <string name="app_menu_test">测试</string>
-    <string name="app_menu_little_tools">小工具</string>
     <!-- end -->
 
 </resources>

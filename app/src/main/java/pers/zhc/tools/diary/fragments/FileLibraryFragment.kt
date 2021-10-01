@@ -8,9 +8,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_file_library_file_preview_view.view.*
+import kotlinx.android.synthetic.main.diary_file_library_fragment.*
 import kotlinx.android.synthetic.main.diary_file_library_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
@@ -27,7 +29,7 @@ import java.util.*
  */
 class FileLibraryFragment(
     private var pickMode: Boolean = false
-) : DiaryBaseFragment() {
+) : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var recyclerViewAdapter: MyAdapter
     private lateinit var recyclerView: RecyclerView
     private var itemDataList = ArrayList<ItemData>()
@@ -35,6 +37,10 @@ class FileLibraryFragment(
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflate = inflater.inflate(R.layout.diary_file_library_fragment, container, false)
         recyclerView = inflate.recycler_view!!
+
+        val toolbar = inflate.toolbar!!
+        toolbar.setOnMenuItemClickListener(this)
+        (requireActivity() as DiaryMainActivity).configureDrawerToggle(toolbar)
 
         loadRecyclerView()
         return inflate
@@ -135,7 +141,7 @@ WHERE identifier IS ?"""
         statement.release()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
                 startActivityForResult(

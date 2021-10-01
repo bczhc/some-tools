@@ -5,21 +5,10 @@
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/drawer_layout"
         android:orientation="vertical">
-    <LinearLayout
+    <androidx.fragment.app.FragmentContainerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-        <com.google.android.material.appbar.MaterialToolbar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/toolbar"
-                style="@style/Widget.MaterialComponents.Toolbar.Primary"
-        />
-        <androidx.fragment.app.FragmentContainerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/diary_fragment_container"/>
-    </LinearLayout>
+            android:id="@+id/diary_fragment_container"/>
     <com.google.android.material.navigation.NavigationView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

@@ -6,19 +6,26 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.*;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import pers.zhc.jni.sqlite.Cursor;
+import pers.zhc.jni.sqlite.SQLite3;
+import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
 import pers.zhc.tools.diary.fragments.AttachmentFragment;
 import pers.zhc.tools.diary.fragments.DiaryFragment;
@@ -27,10 +34,8 @@ import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
-import pers.zhc.jni.sqlite.Cursor;
-import pers.zhc.jni.sqlite.SQLite3;
-import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.views.SmartHintEditText;
+import pers.zhc.util.Assertion;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -40,9 +45,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 public class DiaryMainActivity extends DiaryBaseActivity {
     private boolean isUnlocked = false;
     private ActionBarDrawerToggle drawerToggle;
-    private MaterialToolbar toolbar;
-    private @MenuRes
-    int currentMenuRes = R.menu.diary_menu;
+    private DrawerArrowDrawable drawerArrowDrawable = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,19 +100,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         invalidateOptionsMenu();
 
         initDrawerLayout();
-        initToolbar();
-    }
-
-    private void initToolbar() {
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
-        Common.doAssertion(actionBar != null);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        toolbar.setTitle(R.string.diary);
-
-        drawerToggle = new ActionBarDrawerToggle(this, findViewById(R.id.drawer_layout), toolbar, 0, 0);
     }
 
     @Override
@@ -150,25 +140,16 @@ public class DiaryMainActivity extends DiaryBaseActivity {
             if (itemId == R.id.diary) {
 
                 fragmentManager.beginTransaction().replace(R.id.diary_fragment_container, new DiaryFragment()).commit();
-                toolbar.setTitle(R.string.diary);
-                currentMenuRes = R.menu.diary_menu;
-                invalidateOptionsMenu();
 
             } else if (itemId == R.id.attachment) {
 
                 fragmentManager.beginTransaction().replace(R.id.diary_fragment_container,
                         new AttachmentFragment(false, false, -1)
                 ).commit();
-                toolbar.setTitle(R.string.attachment);
-                currentMenuRes = R.menu.diary_attachment_actionbar;
-                invalidateOptionsMenu();
 
             } else if (itemId == R.id.file_library) {
 
                 fragmentManager.beginTransaction().replace(R.id.diary_fragment_container, new FileLibraryFragment()).commit();
-                toolbar.setTitle(R.string.file_library);
-                currentMenuRes = R.menu.diary_file_library_actionbar;
-                invalidateOptionsMenu();
 
             } else if (itemId == R.id.settings) {
 
@@ -204,6 +185,7 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         }
     }
 
+    @Contract(" -> new")
     @NotNull
     private SQLite3 openPasswordDatabase() {
         return SQLite3.open(Common.getInternalDatabaseDir(this, "passwords.db").getPath());
@@ -222,15 +204,6 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         passwordDatabase.execBind("UPDATE password\n" +
                 "SET digest=?\n" +
                 "WHERE \"key\" IS 'diary'", new Object[]{digest});
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (isUnlocked) {
-            final MenuInflater menuInflater = getMenuInflater();
-            menuInflater.inflate(currentMenuRes, menu);
-        }
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -275,5 +248,16 @@ public class DiaryMainActivity extends DiaryBaseActivity {
         final String digest = getPasswordDigest(db);
         db.close();
         return digest;
+    }
+
+    public void configureDrawerToggle(@NotNull Toolbar toolbar) {
+        drawerToggle = new ActionBarDrawerToggle(this, findViewById(R.id.drawer_layout), toolbar, 0, 0);
+        if (drawerArrowDrawable == null) {
+            drawerToggle.setDrawerIndicatorEnabled(true);
+            drawerToggle.syncState();
+            drawerArrowDrawable = drawerToggle.getDrawerArrowDrawable();
+        }
+        drawerToggle.setDrawerArrowDrawable(drawerArrowDrawable);
+        drawerToggle.syncState();
     }
 }

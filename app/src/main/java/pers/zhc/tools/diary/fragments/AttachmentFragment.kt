@@ -8,8 +8,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.diary_attachment_fragment.*
 import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
@@ -42,7 +44,7 @@ class AttachmentFragment(
      * -1 if no dateInt specified
      */
     private var dateInt: Int = -1
-) : DiaryBaseFragment() {
+) : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var itemAdapter: MyAdapter
     private val itemDataList = ArrayList<ItemData>()
 
@@ -52,6 +54,10 @@ class AttachmentFragment(
         val inflate = inflater.inflate(R.layout.diary_attachment_fragment, container, false)
 
         recyclerView = inflate.recycler_view!!
+
+        val toolbar = inflate.toolbar!!
+        toolbar.setOnMenuItemClickListener(this)
+        (requireActivity() as DiaryMainActivity).configureDrawerToggle(toolbar)
 
         checkAttachmentInfoRecord()
         refreshItemDataList()
@@ -155,7 +161,7 @@ WHERE diary_attachment_mapping.diary_date IS ?"""
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
                 if (fromDiary) {

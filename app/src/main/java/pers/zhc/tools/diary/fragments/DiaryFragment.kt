@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -36,7 +37,7 @@ import java.util.*
 /**
  * @author bczhc
  */
-class DiaryFragment : DiaryBaseFragment() {
+class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: MyAdapter
     private val diaryItemDataList = ArrayList<DiaryItemData>()
@@ -46,6 +47,10 @@ class DiaryFragment : DiaryBaseFragment() {
         recyclerView = inflate.recycler_view!!
 
         loadRecyclerView()
+
+        val toolbar = inflate.toolbar!!
+        toolbar.setOnMenuItemClickListener(this)
+        (requireActivity() as DiaryMainActivity).configureDrawerToggle(toolbar)
 
         return inflate
     }
@@ -170,7 +175,7 @@ FROM diary"""
         statement.release()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.write_diary -> {
                 writeDiary()
