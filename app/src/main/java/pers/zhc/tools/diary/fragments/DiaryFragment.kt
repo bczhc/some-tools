@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity.RequestCode
 import pers.zhc.tools.R
@@ -52,7 +54,35 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
         toolbar.setOnMenuItemClickListener(this)
         (requireActivity() as DiaryMainActivity).configureDrawerToggle(toolbar)
 
+        val searchView = inflate.search_view!!
+        configSearchView(searchView)
+
         return inflate
+    }
+
+    private fun configSearchView(searchView: SearchView) {
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                if (query.isEmpty()) {
+                    refreshList()
+                    return true
+                }
+
+                refreshItemDataList("""
+
+SELECT "date", content
+FROM diary
+WHERE instr(lower("date"), lower(?)) > 0
+   OR instr(lower(content), lower(?)) > 0""", arrayOf(query, query))
+
+                recyclerViewAdapter.notifyDataSetChanged()
+                return true
+            }
+        })
     }
 
     private fun loadRecyclerView() {
@@ -159,12 +189,13 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun refreshItemDataList() {
+        refreshItemDataList("""SELECT "date", content FROM diary""")
+    }
+
+    private fun refreshItemDataList(@Language("SQLite") sql: String, binds: Array<out Any>? = null) {
         diaryItemDataList.clear()
 
-        val statement = diaryDatabase.compileStatement(
-            """SELECT "date", content
-FROM diary"""
-        )
+        val statement = diaryDatabase.compileStatement(sql, binds ?: arrayOf())
         val cursor = statement.cursor
         while (cursor.step()) {
             val date = cursor.getInt(0)

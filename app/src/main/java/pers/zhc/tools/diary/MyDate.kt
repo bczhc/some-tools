@@ -19,11 +19,34 @@ class MyDate {
     }
 
     constructor(date: Date) {
+        set(date)
+    }
+
+    class ParseDateException : RuntimeException {
+        constructor(message: String) : super(message)
+        constructor(cause: Throwable) : super(cause)
+    }
+
+    /**
+     * [date]: e.g.: "2021.3.12" or "2021.03.02"
+     */
+    constructor(date: String) {
+        val split = date.split(Regex("\\."))
+        if (split.size != 3) {
+            throw ParseDateException("Invalid part size")
+        }
+        val ints = IntArray(3)
+        split.forEachIndexed { index, s ->
+            try {
+                val i = s.toInt()
+                ints[index] = i
+            } catch (e: NumberFormatException) {
+                throw ParseDateException(e)
+            }
+        }
         val calendar = Calendar.getInstance()
-        calendar.time = date
-        year = calendar[Calendar.YEAR]
-        month = calendar[Calendar.MONTH] + 1
-        day = calendar[Calendar.DAY_OF_MONTH]
+        calendar.set(ints[0], ints[1] - 1, ints[2])
+        set(calendar.time)
     }
 
     fun set(dateInt: Int) {
@@ -36,6 +59,14 @@ class MyDate {
         year = date[0]
         month = date[1]
         day = date[2]
+    }
+
+    fun set(date: Date) {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        year = calendar[Calendar.YEAR]
+        month = calendar[Calendar.MONTH] + 1
+        day = calendar[Calendar.DAY_OF_MONTH]
     }
 
     override fun equals(other: Any?): Boolean {
