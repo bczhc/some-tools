@@ -10,7 +10,7 @@ import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.widget.doBeforeTextChanged
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.unicode_cell_view.view.*
@@ -19,8 +19,11 @@ import kotlinx.android.synthetic.main.unicode_table_seek_dialog.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.jni.JNI.Utf8
+import pers.zhc.tools.utils.CodepointIterator
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.util.Assertion
 import java.util.*
 
 /**
@@ -72,16 +75,63 @@ class UnicodeTable : BaseActivity() {
         val codepointET = inflate.codepoint_et!!.editText
         val charET = inflate.char_et!!.editText
 
-        codepointET.doBeforeTextChanged { _, _, _, _ ->
+        var doSetText = false
 
+        val setText = { func: () -> Unit ->
+            doSetText = true
+            func()
+            doSetText = false
         }
-        charET.doBeforeTextChanged { _, _, _, _ ->
-//            val codePoints = charET.text.toString().codePoints()
+
+        codepointET.doAfterTextChanged {
+            if (doSetText) return@doAfterTextChanged
+
+            val codepointInput = codepointET.text.toString()
+            val codepoint = codepointInput.toIntOrNull(16).also {
+                if (it == null || it !in 1..0x10FFFF) {
+                    setText {
+                        charET.setText("")
+                    }
+                    return@doAfterTextChanged
+                }
+            }!!
+            val s = String(intArrayOf(codepoint), 0, 1)
+            Assertion.doAssertion(Utf8.codepointLength(s) == 1)
+
+            setText {
+                charET.setText(s)
+            }
+        }
+        charET.doAfterTextChanged {
+            if (doSetText) return@doAfterTextChanged
+
+            val charInput = charET.text.toString().also {
+                if (it.isEmpty()) {
+                    setText {
+                        codepointET.setText("")
+                    }
+                    return@doAfterTextChanged
+                }
+            }
+
+            val codepoints = CodepointIterator(charInput).toList()
+            Assertion.doAssertion(codepoints.isNotEmpty())
+            if (codepoints.size > 1) {
+                val s = String(intArrayOf(codepoints[0]), 0, 1)
+                setText {
+                    charET.setText(s)
+                    charET.setSelection(1)
+                }
+            }
+            Assertion.doAssertion(Utf8.codepointLength(charET.text.toString()) == 1)
+            setText {
+                codepointET.setText(completeCodepointNum(codepoints[0].toString(16)))
+            }
         }
 
         val dialog = DialogUtils.createConfirmationAlertDialog(this, { _, _ ->
 
-
+            seek(codepointET.text.toString().toInt(16))
 
         }, view = inflate, titleRes = R.string.unicode_table_seek_dialog_title, width = MATCH_PARENT)
         dialog.show()
@@ -107,9 +157,7 @@ class UnicodeTable : BaseActivity() {
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            var s = position.toString(16).toUpperCase(Locale.US)
-            if (s.length < 4) s = "0".repeat(4 - s.length) + s
-            holder.codepointTV.text = "U+$s"
+            holder.codepointTV.text = "U+${completeCodepointNum(position.toString(16))}"
 
             val len = Character.toChars(position, charBuf, 0)
             holder.charTV.text = String(charBuf, 0, len)
@@ -127,6 +175,19 @@ class UnicodeTable : BaseActivity() {
         override fun getItemCount(): Int {
             // for 0..0x10FFFF, so the count is 0x10FFFF + 1
             return 0x10FFFF + 1
+        }
+    }
+
+    companion object {
+        /**
+         * "a" -> "000A"
+         */
+        private fun completeCodepointNum(s: String) : String {
+            return if (s.length < 4) {
+                "${"0".repeat(4 - s.length)}$s"
+            } else {
+                s
+            }.toUpperCase(Locale.US)
         }
     }
 }

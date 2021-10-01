@@ -16,11 +16,18 @@ class CodepointIterator(s: String): Iterator<Int>, Iterable<Int> {
         return Utf8.next(addr)
     }
 
-    fun release() {
+    private fun release() {
         Utf8.release(addr)
     }
 
     override fun iterator(): Iterator<Int> {
         return this
+    }
+
+    /**
+     * Method for finalizing this object for JVM
+     */
+    protected fun finalize() {
+        release()
     }
 }
