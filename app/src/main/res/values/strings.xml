@@ -446,6 +446,7 @@
     <string name="diary_attachment_library_duplicate_toast">已添加该文件</string>
     <string name="diary_file_browser_open_file_failed">无法打开图片</string>
     <string name="diary_file_library_text_edit_activity_label">文本编辑</string>
+    <string name="diary_find_menu">查找</string>
     <!-- module end -->
 
     <!-- module: bus -->
@@ -578,6 +579,9 @@
     <string name="email_contact_email">邮箱</string>
     <string name="email_add_contact_dialog_title">添加联系人</string>
     <string name="email_contact_already_exist_toast">已经存在相同邮箱联系人</string>
+    <string name="diary_taking_find_text_dialog_title">查找</string>
+    <string name="diary_taking_find_text_et_hint">查找内容</string>
+    <string name="diary_found_nothing_toast">未找到</string>
     <!-- end -->
 
 </resources>

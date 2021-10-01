@@ -19,11 +19,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import kotlin.Unit;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.DialogUtils;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.views.ScrollEditText;
 
@@ -137,6 +140,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
                 }
             }
 
+            @Contract(pure = true)
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -235,7 +239,38 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
             intent.putExtra(DiaryAttachmentActivity.EXTRA_DATE_INT, dateInt);
             startActivity(intent);
 
+        } else if (itemId == R.id.find) {
+
+            showFindDialog();
+
         }
+    }
+
+    private void showFindDialog() {
+        final EditText inputET = new EditText(this);
+        inputET.setHint(R.string.diary_taking_find_text_et_hint);
+        DialogUtils.Companion.createPromptDialog(
+                this,
+                R.string.diary_taking_find_text_dialog_title,
+                (dialogInterface, editText) -> {
+
+                    final String diaryContent = et.getText().toString();
+                    final String input = editText.getText().toString();
+                    final int foundIndex = diaryContent.indexOf(input, et.getSelectionEnd());
+                    if (foundIndex == -1) {
+                        ToastUtils.show(this, R.string.diary_found_nothing_toast);
+                        return Unit.INSTANCE;
+                    }
+
+                    et.setSelection(foundIndex, foundIndex + input.length());
+
+                    return Unit.INSTANCE;
+                },
+                (dialogInterface, editText) -> {
+                    return Unit.INSTANCE;
+                },
+                inputET
+        ).show();
     }
 
     @Override

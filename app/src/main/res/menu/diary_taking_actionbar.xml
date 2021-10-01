@@ -10,4 +10,9 @@
             app:showAsAction="never"
             android:title="@string/attachment"
     />
+    <item
+            android:id="@+id/find"
+            app:showAsAction="never"
+            android:title="@string/diary_find_menu"
+    />
 </menu>
