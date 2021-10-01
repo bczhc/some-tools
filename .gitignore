@@ -1,5 +1,4 @@
 /.gradle/
-cmake-build-debug
 /buildSrc/.gradle/
 /buildSrc/build/
 /gitpush
@@ -7,6 +6,5 @@ cmake-build-debug
 /build
 /local.properties
 replay*.log
-CMakeFiles/
 /generate-native-headers
 /config.properties

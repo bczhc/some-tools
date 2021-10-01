@@ -119,7 +119,7 @@ NDK path: ${ndkDir.path}"""
         cmake {
             version tools.getCMakeVersion()
             println("CMake Version: ${getVersion()}")
-            path file('src/main/jni/cpp/CMakeLists.txt')
+            path file('src/main/cpp/CMakeLists.txt')
         }
     }
 
@@ -130,15 +130,16 @@ NDK path: ${ndkDir.path}"""
     }
 }
 
+def appProject = rootProject.findProject("app")
 
 rustBuild {
     androidNdkDir = android.ndkDirectory.path
     androidApi = 29
     target = "aarch64"
     buildType = "release"
+    rustProjectDir = new File(appProject.projectDir, "src/main/rust").path
 }
 
-def appProject = rootProject.findProject("app")
 def compileReleaseRustTask = appProject.tasks.getByName("compileReleaseRust")
 appProject.tasks.getByName("preBuild").dependsOn(compileReleaseRustTask)
 
