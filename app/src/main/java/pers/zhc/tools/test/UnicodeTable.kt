@@ -7,12 +7,15 @@ import android.content.Context
 import android.graphics.Point
 import android.os.Bundle
 import android.view.*
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.widget.doBeforeTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.unicode_cell_view.view.*
 import kotlinx.android.synthetic.main.unicode_table_activity.*
+import kotlinx.android.synthetic.main.unicode_table_seek_dialog.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
@@ -65,15 +68,23 @@ class UnicodeTable : BaseActivity() {
     }
 
     private fun showSeekDialog() {
-        DialogUtils.createPromptDialog(this, R.string.unicode_table_codepoint_hex_is_dialog, { _, et ->
-            val input = et.text.toString()
-            try {
-                val codepoint = input.toInt(16)
-                seek(codepoint)
-            } catch (e: NumberFormatException) {
-                ToastUtils.showError(this, R.string.please_enter_correct_value_toast, e)
-            }
-        }).show()
+        val inflate = View.inflate(this, R.layout.unicode_table_seek_dialog, null)
+        val codepointET = inflate.codepoint_et!!.editText
+        val charET = inflate.char_et!!.editText
+
+        codepointET.doBeforeTextChanged { _, _, _, _ ->
+
+        }
+        charET.doBeforeTextChanged { _, _, _, _ ->
+//            val codePoints = charET.text.toString().codePoints()
+        }
+
+        val dialog = DialogUtils.createConfirmationAlertDialog(this, { _, _ ->
+
+
+
+        }, view = inflate, titleRes = R.string.unicode_table_seek_dialog_title, width = MATCH_PARENT)
+        dialog.show()
     }
 
     private fun seek(codepoint: Int) {

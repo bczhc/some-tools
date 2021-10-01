@@ -4,3 +4,6 @@
 [submodule "app/src/main/jni/cpp/third_party/jni-lib"]
 	path = app/src/main/jni/cpp/third_party/jni-lib
 	url = https://hub.fastgit.org/bczhc/jni
+[submodule "app/src/main/jni/rust/third_party/bczhc_rust"]
+	path = app/src/main/jni/rust/third_party/bczhc_rust
+	url = https://hub.fastgit.org/bczhc/rust.git
