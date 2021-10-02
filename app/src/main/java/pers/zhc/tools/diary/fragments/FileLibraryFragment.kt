@@ -40,7 +40,7 @@ class FileLibraryFragment(
 
         val toolbar = inflate.toolbar!!
         toolbar.setOnMenuItemClickListener(this)
-        (requireActivity() as DiaryMainActivity).configureDrawerToggle(toolbar)
+        setupOuterToolbar(toolbar)
 
         loadRecyclerView()
         return inflate

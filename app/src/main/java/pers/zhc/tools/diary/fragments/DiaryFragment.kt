@@ -52,7 +52,7 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
 
         val toolbar = inflate.toolbar!!
         toolbar.setOnMenuItemClickListener(this)
-        (requireActivity() as DiaryMainActivity).configureDrawerToggle(toolbar)
+        setupOuterToolbar(toolbar)
 
         val searchView = inflate.search_view!!
         configSearchView(searchView)

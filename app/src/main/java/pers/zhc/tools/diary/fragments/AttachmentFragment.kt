@@ -57,7 +57,7 @@ class AttachmentFragment(
 
         val toolbar = inflate.toolbar!!
         toolbar.setOnMenuItemClickListener(this)
-        (requireActivity() as DiaryMainActivity).configureDrawerToggle(toolbar)
+        setupOuterToolbar(toolbar)
 
         checkAttachmentInfoRecord()
         refreshItemDataList()
