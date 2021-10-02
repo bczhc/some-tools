@@ -2,6 +2,7 @@
 package pers.zhc.tools.jni;
 
 import androidx.annotation.Size;
+import pers.zhc.tools.fourierseries.InputPoint;
 import pers.zhc.tools.pi.JNICallback;
 import pers.zhc.tools.stcflash.JNIInterface;
 
@@ -277,5 +278,13 @@ public class JNI {
         public static native void release(long addr);
 
         public static native int codepointLength(String s);
+    }
+
+    public static class FourierSeries {
+        public interface Callback {
+            void onResult(double re, double im, double n, double p);
+        }
+
+        public static native void calculate(InputPoint[] points, Callback callback);
     }
 }

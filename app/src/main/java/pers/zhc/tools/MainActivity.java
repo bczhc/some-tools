@@ -30,6 +30,7 @@ import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.document.Document;
 import pers.zhc.tools.email.EmailMainActivity;
 import pers.zhc.tools.fdb.FdbMainActivity;
+import pers.zhc.tools.fourierseries.FourierSeriesActivity;
 import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
 import pers.zhc.tools.magic.FileListActivity;
 import pers.zhc.tools.stcflash.FlashMainActivity;
@@ -133,6 +134,7 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.words_label, WordsMainActivity.class));
         activities.add(new ActivityItem(R.string.transfer_label, TransferMainActivity.class));
         activities.add(new ActivityItem(R.string.email_label, EmailMainActivity.class));
+        activities.add(new ActivityItem(R.string.fourier_series_label, FourierSeriesActivity.class));
     }
 
     private void loadRecyclerView() {

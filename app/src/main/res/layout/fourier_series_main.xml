@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_margin="10dp"
+                  >
+        <Button android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/draw_btn"
+                android:text="@string/fourier_series_draw_btn"
+                android:layout_weight="1"
+                tools:ignore="ButtonStyle"/>
+        <Button android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/start_btn"
+                android:text="@string/fourier_series_start_btn"
+                android:layout_weight="1"
+                tools:ignore="ButtonStyle"/>
+        <Button android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/calc_btn"
+                android:text="@string/fourier_series_calc_btn"
+                android:layout_weight="1"
+                tools:ignore="ButtonStyle"/>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recycler_view"
+            tools:listitem="@layout/fourier_series_epicycle_item"
+            tools:itemCount="100"
+    />
+</LinearLayout>

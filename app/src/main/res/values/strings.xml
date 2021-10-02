@@ -584,4 +584,10 @@
     <string name="diary_found_nothing_toast">未找到</string>
     <!-- end -->
 
+    <!-- module: fourier series -->
+    <string name="fourier_series_label">傅里叶级数</string>
+    <string name="fourier_series_draw_btn">绘制</string>
+    <string name="fourier_series_start_btn">开始</string>
+    <string name="fourier_series_calc_btn">计算</string>
+    <!-- end -->
 </resources>
