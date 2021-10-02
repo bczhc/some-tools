@@ -588,6 +588,12 @@
     <string name="fourier_series_label">傅里叶级数</string>
     <string name="fourier_series_draw_btn">绘制</string>
     <string name="fourier_series_start_btn">开始</string>
-    <string name="fourier_series_calc_btn">计算</string>
+    <string name="fourier_series_compute_btn">计算</string>
+    <string name="fourier_series_no_curve_toast">请先绘制</string>
+    <string name="fourier_series_integral_fragment_number_hint">积分分段数</string>
+    <string name="fourier_series_period_hint">周期</string>
+    <string name="fourier_series_threads_number">线程数</string>
+    <string name="fourier_series_epicycle_number">本轮个数</string>
+    <string name="fourier_series_computing_dialog_title">正在计算</string>
     <!-- end -->
 </resources>

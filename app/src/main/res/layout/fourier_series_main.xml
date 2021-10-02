@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -8,7 +9,7 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:layout_margin="10dp"
-                  >
+    >
         <Button android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/draw_btn"
@@ -23,11 +24,48 @@
                 tools:ignore="ButtonStyle"/>
         <Button android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:id="@+id/calc_btn"
-                android:text="@string/fourier_series_calc_btn"
+                android:id="@+id/compute_btn"
+                android:text="@string/fourier_series_compute_btn"
                 android:layout_weight="1"
                 tools:ignore="ButtonStyle"/>
     </LinearLayout>
+    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
+    >
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:layout_margin="5dp"
+        >
+            <pers.zhc.tools.views.SmartHintEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/fourier_series_integral_fragment_number_hint"
+                    android:id="@+id/integral_fragment_number"
+                    android:inputType="number"
+            />
+            <pers.zhc.tools.views.SmartHintEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/fourier_series_period_hint"
+                    android:id="@+id/period"
+                    android:inputType="numberDecimal"
+            />
+            <pers.zhc.tools.views.SmartHintEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/fourier_series_epicycle_number"
+                    android:id="@+id/epicycles_number"
+                    android:inputType="number"
+            />
+            <pers.zhc.tools.views.SmartHintEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/fourier_series_threads_number"
+                    android:id="@+id/threads_num"
+                    android:inputType="number"
+            />
+        </LinearLayout>
+    </HorizontalScrollView>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

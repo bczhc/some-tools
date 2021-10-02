@@ -2,7 +2,7 @@ package pers.zhc.tools.fourierseries
 
 import android.os.Bundle
 import pers.zhc.tools.BaseActivity
-import pers.zhc.tools.utils.ToastUtils
+import java.util.*
 
 /**
  * @author bczhc
@@ -18,7 +18,13 @@ class DrawingActivity: BaseActivity() {
     }
 
     override fun finish() {
-        ToastUtils.show(this, drawingView.points.size.toString())
+        points = drawingView.points
         super.finish()
     }
+
+    companion object {
+        var points: InputPoints? = null
+    }
 }
+
+typealias InputPoints = LinkedList<InputPoint>

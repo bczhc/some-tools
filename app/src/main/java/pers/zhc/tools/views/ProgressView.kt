@@ -2,10 +2,11 @@ package pers.zhc.tools.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.android.synthetic.main.progress_bar.view.*
 import kotlinx.android.synthetic.main.progress_bar_indeterminate.view.*
 import pers.zhc.tools.R
@@ -37,12 +38,12 @@ class ProgressView : RelativeLayout {
     }
 
     private fun getProgressBarRootView(): View {
-        return View.inflate(
-            context, if (isIndeterminateMode) {
+        return LayoutInflater.from(context).inflate(
+            if (isIndeterminateMode) {
                 R.layout.progress_bar_indeterminate
             } else {
                 R.layout.progress_bar
-            }, null
+            }, this, false
         )!!
     }
 
@@ -59,7 +60,7 @@ class ProgressView : RelativeLayout {
      */
     fun setProgress(progress: Float) {
         if (!isIndeterminateMode) {
-            determinateProgressBar.progressBar.progress = (progress * 100F).toInt()
+            determinateProgressBar.progressBar.setProgressCompat((progress * 100F).toInt(), true)
             determinateProgressBar.textTV.text = context.getString(R.string.progress_tv, progress * 100F)
         }
     }
@@ -72,7 +73,7 @@ class ProgressView : RelativeLayout {
 
     class DeterminateProgressBar {
         lateinit var textTV: TextView
-        lateinit var progressBar: ProgressBar
+        lateinit var progressBar: LinearProgressIndicator
         lateinit var titleTV: TextView
     }
 

@@ -282,9 +282,16 @@ public class JNI {
 
     public static class FourierSeries {
         public interface Callback {
-            void onResult(double re, double im, double n, double p);
+            void onResult(double re, double im, int n, double p);
         }
 
-        public static native void calculate(InputPoint[] points, Callback callback);
+        public static native void compute(
+                InputPoint[] points,
+                int integralFragment,
+                double period,
+                int epicycleNum,
+                int threadNum,
+                Callback callback
+        );
     }
 }
