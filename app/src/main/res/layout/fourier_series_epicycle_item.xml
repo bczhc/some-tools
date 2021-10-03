@@ -9,5 +9,9 @@
               tools:text="(3+4i)e^(1.213213it)"
               android:textSize="15sp"
               android:id="@+id/text_view"
-              />
+    />
+    <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
 </LinearLayout>

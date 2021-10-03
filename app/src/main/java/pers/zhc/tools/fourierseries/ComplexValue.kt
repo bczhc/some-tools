@@ -1,5 +1,7 @@
 package pers.zhc.tools.fourierseries
 
+import kotlin.math.sqrt
+
 /**
  * @author bczhc
  */
@@ -9,5 +11,9 @@ class ComplexValue(
 ) {
     override fun toString(): String {
         return "ComplexValue(re=$re, im=$im)"
+    }
+
+    fun module(): Double {
+        return sqrt(re * re + im * im)
     }
 }

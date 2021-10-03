@@ -43,7 +43,7 @@ class EmailComposingActivity : BaseActivity() {
 
             override fun parseResult(resultCode: Int, intent: Intent?): ContactResult? {
                 intent ?: return null
-                return ContactResult(intent.getParcelableExtra(ContactActivity.EXTRA_SELECTED_RESULT), target)
+                return ContactResult(intent.getParcelableExtra(ContactActivity.EXTRA_SELECTED_RESULT)!!, target)
             }
         }) {
             it ?: return@registerForActivityResult

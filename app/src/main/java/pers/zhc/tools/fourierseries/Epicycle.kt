@@ -11,4 +11,8 @@ class Epicycle(
     override fun toString(): String {
         return "Epicycle(n=$n, an=$an, p=$p)"
     }
+
+    fun radius(): Double {
+        return an.module()
+    }
 }

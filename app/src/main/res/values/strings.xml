@@ -595,5 +595,10 @@
     <string name="fourier_series_threads_number">线程数</string>
     <string name="fourier_series_epicycle_number">本轮个数</string>
     <string name="fourier_series_computing_dialog_title">正在计算</string>
+    <string name="fourier_series_sort">排序</string>
+    <string name="fourier_series_sort_epicycle_radius_ascent">本轮半径升序</string>
+    <string name="fourier_series_sort_epicycle_radius_descent">本轮半径降序</string>
+    <string name="fourier_series_sort_epicycle_speed_ascent">本轮速度升序</string>
+    <string name="fourier_series_sort_epicycle_speed_descent">本轮速度降序</string>
     <!-- end -->
 </resources>

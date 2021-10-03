@@ -28,6 +28,12 @@
                 android:text="@string/fourier_series_compute_btn"
                 android:layout_weight="1"
                 tools:ignore="ButtonStyle"/>
+        <Button android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/sort_btn"
+                android:text="@string/fourier_series_sort"
+                android:layout_weight="1"
+                tools:ignore="ButtonStyle"/>
     </LinearLayout>
     <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
     >

@@ -16,10 +16,7 @@ import kotlinx.android.synthetic.main.fourier_series_main.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.jni.JNI
-import pers.zhc.tools.utils.AsyncTryDo
-import pers.zhc.tools.utils.DialogUtils
-import pers.zhc.tools.utils.ProgressDialog
-import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.*
 
 /**
  * @author bczhc
@@ -40,6 +37,7 @@ class FourierSeriesActivity : BaseActivity() {
         val drawButton = draw_btn!!
         val computeButton = compute_btn!!
         val startButton = start_btn!!
+        val sortButton = sort_btn!!
         integralSegNumET = integral_fragment_number!!.editText
         threadsNumET = threads_num!!.editText
         epicycleNumET = epicycles_number!!.editText
@@ -67,6 +65,90 @@ class FourierSeriesActivity : BaseActivity() {
         }
         startButton.setOnClickListener {
             startActivity(Intent(this, EpicycleDrawingActivity::class.java))
+        }
+        sortButton.setOnClickListener {
+            val menu = PopupMenuUtil.create(this, it, R.menu.fourier_series_sort_btn)
+            menu.show()
+            menu.setOnMenuItemClickListener { item ->
+
+                val comparator: Comparator<Epicycle> = when (item.itemId) {
+                    R.id.radius_ascent -> {
+                        Comparator { o1, o2 ->
+                            val radius1 = o1.radius()
+                            val radius2 = o2.radius()
+                            return@Comparator when {
+                                radius1 < radius2 -> {
+                                    -1
+                                }
+                                radius1 == radius2 -> {
+                                    0
+                                }
+                                else -> {
+                                    1
+                                }
+                            }
+                        }
+                    }
+                    R.id.radius_descent -> {
+                        Comparator { o1, o2 ->
+                            val radius1 = o1.radius()
+                            val radius2 = o2.radius()
+                            return@Comparator when {
+                                radius1 < radius2 -> {
+                                    1
+                                }
+                                radius1 == radius2 -> {
+                                    0
+                                }
+                                else -> {
+                                    -1
+                                }
+                            }
+                        }
+                    }
+                    R.id.speed_ascent -> {
+                        Comparator { o1, o2 ->
+                            val speed1 = o1.p
+                            val speed2 = o2.p
+                            return@Comparator when {
+                                speed1 < speed2 -> {
+                                    -1
+                                }
+                                speed1 == speed2 -> {
+                                    0
+                                }
+                                else -> {
+                                    1
+                                }
+                            }
+                        }
+                    }
+                    R.id.speed_descent -> {
+                        Comparator { o1, o2 ->
+                            val speed1 = o1.p
+                            val speed2 = o2.p
+                            return@Comparator when {
+                                speed1 < speed2 -> {
+                                    1
+                                }
+                                speed1 == speed2 -> {
+                                    0
+                                }
+                                else -> {
+                                    -1
+                                }
+                            }
+                        }
+                    }
+                    else -> {
+                        // no reach
+                        throw RuntimeException()
+                    }
+                }
+                epicycleData.sortWith(comparator)
+                listAdapter.notifyDataSetChanged()
+                return@setOnMenuItemClickListener true
+            }
         }
     }
 
