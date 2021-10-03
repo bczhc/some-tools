@@ -51,11 +51,11 @@ android {
             keyAlias 'key0'
         }
     }
-    compileSdkVersion 29
+    compileSdkVersion 31
     defaultConfig {
         applicationId "pers.zhc.tools"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 31
         def verInfo = BuildUtils.gVersion()
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
@@ -152,7 +152,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'org.mariuszgromada.math:MathParser.org-mXparser:4.3.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.32"
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.5.0-alpha04'
     implementation 'com.github.mik3y:usb-serial-for-android:3.3.0'
     implementation 'com.github.bczhc:java-lib:18a858c167'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
