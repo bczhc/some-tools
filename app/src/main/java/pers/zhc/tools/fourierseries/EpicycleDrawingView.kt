@@ -39,7 +39,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             style = Paint.Style.STROKE
         }
         pathPaint.apply {
-            strokeWidth = 2F
+            strokeWidth = 0F
             color = Color.RED
             style = Paint.Style.STROKE
         }
@@ -47,6 +47,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
 
     private val gestureResolver = GestureResolver(object : GestureResolver.GestureInterface {
         override fun onTwoPointsScroll(distanceX: Float, distanceY: Float, event: MotionEvent?) {
+            transformation!!.postTranslate(distanceX, distanceY)
         }
 
         override fun onTwoPointsZoom(
@@ -60,6 +61,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             dScale: Float,
             event: MotionEvent?
         ) {
+            transformation!!.postScale(dScale, dScale, midPointX, midPointY)
         }
 
         override fun onTwoPointsUp(event: MotionEvent?) {
