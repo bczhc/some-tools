@@ -9,5 +9,7 @@ import pers.zhc.tools.BaseActivity
 class EpicycleDrawingActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val view = EpicycleDrawingView(this, FourierSeriesActivity.epicycleData)
+        setContentView(view)
     }
 }

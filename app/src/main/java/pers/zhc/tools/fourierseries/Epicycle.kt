@@ -1,5 +1,8 @@
 package pers.zhc.tools.fourierseries
 
+import kotlin.math.cos
+import kotlin.math.sin
+
 /**
  * @author bczhc
  */
@@ -14,5 +17,11 @@ class Epicycle(
 
     fun radius(): Double {
         return an.module()
+    }
+
+    fun evaluate(t: Double, dest: ComplexValue) {
+        val s = sin(p * t)
+        val c = cos(p * t)
+        dest.set(an.re * c - an.im * s, an.re * s + an.im * c)
     }
 }

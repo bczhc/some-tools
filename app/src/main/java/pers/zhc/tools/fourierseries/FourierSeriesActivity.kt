@@ -27,7 +27,6 @@ class FourierSeriesActivity : BaseActivity() {
     private lateinit var epicycleNumET: EditText
     private lateinit var threadsNumET: EditText
     private lateinit var integralSegNumET: EditText
-    private val epicycleData = Epicycles()
     private lateinit var listAdapter: ListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -225,6 +224,10 @@ class FourierSeriesActivity : BaseActivity() {
         override fun getItemCount(): Int {
             return epicycleData.size
         }
+    }
+
+    companion object {
+        var epicycleData: Epicycles = Epicycles()
     }
 }
 
