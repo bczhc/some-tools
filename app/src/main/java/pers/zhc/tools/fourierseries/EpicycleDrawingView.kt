@@ -3,10 +3,13 @@ package pers.zhc.tools.fourierseries
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.view.MotionEvent
 import pers.zhc.tools.BaseView
-import pers.zhc.tools.utils.CanvasTransformer
+import pers.zhc.tools.utils.AsyncTryDo
 import pers.zhc.tools.utils.GestureResolver
+import pers.zhc.tools.utils.SpinAsyncAwaiter
 
 /**
  * @author bczhc
@@ -21,7 +24,8 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
     private var t = 0.0
     private val endPath = Path()
     private val pathPaint = Paint()
-    private val coordTransformation = Matrix()
+    private var transformation: Matrix? = null
+    private var run = true
 
     init {
         axesPaint.apply {
@@ -41,7 +45,6 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
         }
     }
 
-    private lateinit var transformer: CanvasTransformer
     private val gestureResolver = GestureResolver(object : GestureResolver.GestureInterface {
         override fun onTwoPointsScroll(distanceX: Float, distanceY: Float, event: MotionEvent?) {
         }
@@ -85,6 +88,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         gestureResolver.onTouch(event)
+        invalidate()
         return true
     }
 
@@ -97,12 +101,17 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             pathBitmap = Bitmap.createBitmap(width.toInt(), height.toInt(), Bitmap.Config.ARGB_8888)
         }
 
-        // set up the coordinate transformation matrix
-        // to let the drawing look like in a mathematics coordinate
-        coordTransformation.preTranslate(width / 2F, height / 2F)
-        coordTransformation.preScale(1F, -1F)
+        // initialize the transformation: (Android canvas coordinate -> mathematics coordinate)
+        if (transformation == null) {
+            // set up the coordinate transformation matrix
+            // to let the drawing look like in a mathematics coordinate
+            transformation = Matrix().apply {
+                preTranslate(width / 2F, height / 2F)
+                preScale(1F, -1F)
+            }
+        }
         // apply the transformation
-        canvas.setMatrix(coordTransformation)
+        canvas.setMatrix(transformation)
 
         // draw the axes
         canvas.drawLine(-width / 2F, 0F, width / 2F, 0F, axesPaint)
@@ -132,6 +141,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             )
             complexSum += tempComplex
         }
+        // draw the final epicycles' path
         endPath.lineTo(complexSum.re.toFloat(), complexSum.im.toFloat())
         canvas.drawPath(endPath, pathPaint)
     }
@@ -157,5 +167,25 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         setMeasuredDimension(measure(widthMeasureSpec), measure(heightMeasureSpec))
+    }
+
+    fun startAnimation() {
+        val asyncTryDo = AsyncTryDo()
+        val handler = Handler(Looper.getMainLooper())
+        Thread {
+            while (this.run) {
+                asyncTryDo.tryDo { _, notifier ->
+                    handler.post {
+                        invalidate()
+                        this.t += 0.01
+                        notifier.finish()
+                    }
+                }
+            }
+        }.start()
+    }
+
+    fun stopAnimation() {
+        this.run = false
     }
 }
