@@ -41,6 +41,19 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             color = Color.RED
             style = Paint.Style.STROKE
         }
+
+        val pathStartPoint = evaluatePathStartPoint()
+        endPath.moveTo(pathStartPoint.x, pathStartPoint.y)
+    }
+
+    private fun evaluatePathStartPoint(): PointF {
+        val sum = ComplexValue()
+        val evaluatedTemp = ComplexValue()
+        for (epicycle in epicycles) {
+            epicycle.evaluate(0.0, evaluatedTemp)
+            sum += evaluatedTemp
+        }
+        return PointF(sum.re.toFloat(), sum.im.toFloat())
     }
 
     private val gestureResolver = GestureResolver(object : GestureResolver.GestureInterface {

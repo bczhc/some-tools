@@ -7,8 +7,8 @@ import kotlin.math.sqrt
  * @author bczhc
  */
 class ComplexValue(
-    @JvmField var re: Double,
-    @JvmField var im: Double
+    @JvmField var re: Double = 0.0,
+    @JvmField var im: Double = 0.0
 ) {
     override fun toString(): String {
         return "ComplexValue(re=$re, im=$im)"
