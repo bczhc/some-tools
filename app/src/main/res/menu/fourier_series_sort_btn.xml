@@ -16,4 +16,8 @@
             android:id="@+id/speed_descent"
             android:title="@string/fourier_series_sort_epicycle_speed_descent"
     />
+    <item
+            android:id="@+id/shuffle"
+            android:title="@string/fourier_series_sort_shuffle"
+    />
 </menu>

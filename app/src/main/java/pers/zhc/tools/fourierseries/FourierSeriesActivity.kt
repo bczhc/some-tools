@@ -78,6 +78,14 @@ class FourierSeriesActivity : BaseActivity() {
             menu.show()
             menu.setOnMenuItemClickListener { item ->
 
+                when (item.itemId) {
+                    R.id.shuffle -> {
+                        epicycleData.shuffle()
+                        listAdapter.notifyDataSetChanged()
+                        return@setOnMenuItemClickListener true
+                    }
+                }
+
                 val comparator: Comparator<Epicycle> = when (item.itemId) {
                     R.id.radius_ascent -> {
                         Comparator { o1, o2 ->
