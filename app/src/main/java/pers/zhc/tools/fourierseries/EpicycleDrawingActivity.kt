@@ -36,6 +36,9 @@ class EpicycleDrawingActivity : BaseActivity() {
                     R.id.speed -> {
                         showSpeedDialog()
                     }
+                    R.id.reset_path -> {
+                        drawingView.resetPath()
+                    }
                     else -> {
                     }
                 }

@@ -43,15 +43,15 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             style = Paint.Style.STROKE
         }
 
-        val pathStartPoint = evaluatePathStartPoint()
+        val pathStartPoint = evaluatePath(0.0)
         endPath.moveTo(pathStartPoint.x, pathStartPoint.y)
     }
 
-    private fun evaluatePathStartPoint(): PointF {
+    private fun evaluatePath(t: Double): PointF {
         val sum = ComplexValue()
         val evaluatedTemp = ComplexValue()
         for (epicycle in epicycles) {
-            epicycle.evaluate(0.0, evaluatedTemp)
+            epicycle.evaluate(t, evaluatedTemp)
             sum += evaluatedTemp
         }
         return PointF(sum.re.toFloat(), sum.im.toFloat())
@@ -201,5 +201,11 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
 
     fun stopAnimation() {
         this.run = false
+    }
+
+    fun resetPath() {
+        val currentPathPoint = evaluatePath(this.t)
+        endPath.reset()
+        endPath.moveTo(currentPathPoint.x, currentPathPoint.y)
     }
 }

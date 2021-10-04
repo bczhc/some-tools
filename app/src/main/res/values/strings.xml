@@ -605,5 +605,6 @@
     <string name="fourier_series_linear_path_evaluator_name">线性（匀速）路径求值器</string>
     <string name="fourier_series_time_path_evaluator_name">按时路径求值器</string>
     <string name="fourier_series_epicycles_drawing_option_speed">速度</string>
+    <string name="fourier_series_epicycles_drawing_option_reset_path">重置路径</string>
     <!-- end -->
 </resources>

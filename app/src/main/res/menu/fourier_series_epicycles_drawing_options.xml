@@ -4,4 +4,8 @@
             android:id="@+id/speed"
             android:title="@string/fourier_series_epicycles_drawing_option_speed"
     />
+    <item
+            android:id="@+id/reset_path"
+            android:title="@string/fourier_series_epicycles_drawing_option_reset_path"
+    />
 </menu>
