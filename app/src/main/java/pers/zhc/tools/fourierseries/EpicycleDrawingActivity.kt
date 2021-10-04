@@ -55,6 +55,7 @@ class EpicycleDrawingActivity : BaseActivity() {
         }.show()
 
         val speedSlider = view.speed_slider!!
+        speedSlider.value = (drawingView.tIncrement * 100.0).toFloat()
         speedSlider.addOnChangeListener { _, value, _ ->
             drawingView.tIncrement = value.toDouble() / 100.0
         }
