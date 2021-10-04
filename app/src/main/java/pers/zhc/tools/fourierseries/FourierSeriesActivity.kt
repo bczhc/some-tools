@@ -8,7 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.appcompat.widget.AppCompatSpinner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fourier_series_epicycle_item.view.*
@@ -22,6 +26,7 @@ import pers.zhc.tools.utils.*
  * @author bczhc
  */
 class FourierSeriesActivity : BaseActivity() {
+    private lateinit var evaluatorSpinner: AppCompatSpinner
     private lateinit var recyclerView: RecyclerView
     private lateinit var periodET: EditText
     private lateinit var epicycleNumET: EditText
@@ -42,10 +47,13 @@ class FourierSeriesActivity : BaseActivity() {
         epicycleNumET = epicycles_number!!.editText
         periodET = period!!.editText
         recyclerView = recycler_view!!
+        evaluatorSpinner = evaluator_spinner!!
 
         listAdapter = ListAdapter(this, epicycleData)
         recyclerView.adapter = listAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        configSpinner()
 
         // set the default values
         @Suppress("SetTextI18n")
@@ -151,6 +159,33 @@ class FourierSeriesActivity : BaseActivity() {
         }
     }
 
+    private fun configSpinner() {
+        val spinnerAdapter = object : ArrayAdapter<PathEvaluator>(
+            this, android.R.layout.simple_list_item_1, arrayOf(
+                PathEvaluator.LINEAR,
+                PathEvaluator.TIME
+            )
+        ) {
+            private fun setMyView(view: View, position: Int) {
+                val textView = view.findViewById<TextView>(android.R.id.text1)
+                textView.text = getItem(position)!!.toString(context)
+            }
+
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                return super.getView(position, convertView, parent).also {
+                    setMyView(it, position)
+                }
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                return super.getDropDownView(position, convertView, parent).also {
+                    setMyView(it, position)
+                }
+            }
+        }
+        evaluatorSpinner.adapter = spinnerAdapter
+    }
+
     private fun showComputeDialog() {
         val points = DrawingActivity.points
         if (points == null) {
@@ -185,7 +220,8 @@ class FourierSeriesActivity : BaseActivity() {
                 integralSegments,
                 period,
                 epicycleNum,
-                threadsNum
+                threadsNum,
+                (evaluatorSpinner.selectedItem as PathEvaluator).enumInt
             ) { re, im, n, p ->
                 synchronized(lock) {
                     val epicycle = Epicycle(n, ComplexValue(re, im), p)
@@ -228,6 +264,15 @@ class FourierSeriesActivity : BaseActivity() {
 
     companion object {
         var epicycleData: Epicycles = Epicycles()
+    }
+
+    enum class PathEvaluator(val enumInt: Int, @StringRes val textRes: Int) {
+        LINEAR(0, R.string.fourier_series_linear_path_evaluator_name),
+        TIME(1, R.string.fourier_series_time_path_evaluator_name);
+
+        fun toString(context: Context): String {
+            return context.getString(textRes)
+        }
     }
 }
 

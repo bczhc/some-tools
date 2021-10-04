@@ -600,5 +600,7 @@
     <string name="fourier_series_sort_epicycle_radius_descent">本轮半径降序</string>
     <string name="fourier_series_sort_epicycle_speed_ascent">本轮速度升序</string>
     <string name="fourier_series_sort_epicycle_speed_descent">本轮速度降序</string>
+    <string name="fourier_series_linear_path_evaluator_name">线性（匀速）路径求值器</string>
+    <string name="fourier_series_time_path_evaluator_name">按时路径求值器</string>
     <!-- end -->
 </resources>

@@ -9,7 +9,6 @@ import android.view.MotionEvent
 import pers.zhc.tools.BaseView
 import pers.zhc.tools.utils.AsyncTryDo
 import pers.zhc.tools.utils.GestureResolver
-import pers.zhc.tools.utils.SpinAsyncAwaiter
 
 /**
  * @author bczhc
@@ -18,7 +17,6 @@ import pers.zhc.tools.utils.SpinAsyncAwaiter
 class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : BaseView(context) {
 
     private val axesPaint = Paint()
-    private val bitmapPaint = Paint()
     private var pathBitmap: Bitmap? = null
     private val epicyclePaint = Paint()
     private var t = 0.0

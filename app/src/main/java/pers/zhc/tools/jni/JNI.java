@@ -285,12 +285,16 @@ public class JNI {
             void onResult(double re, double im, int n, double p);
         }
 
+        public static final int LINEAR_PATH_EVALUATOR = 0;
+        public static final int TIME_PATH_EVALUATOR = 1;
+
         public static native void compute(
                 InputPoint[] points,
                 int integralFragment,
                 double period,
                 int epicycleNum,
                 int threadNum,
+                int pathEvaluatorType,
                 Callback callback
         );
     }

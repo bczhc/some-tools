@@ -1,5 +1,6 @@
 use bczhc_lib::complex_num::ComplexValueF64;
-use bczhc_lib::fourier_series::{fourier_series_calc, LinearPath};
+use bczhc_lib::epicycle::Epicycle;
+use bczhc_lib::fourier_series::{fourier_series_calc, EvaluatePath, LinearPath, TimePath};
 use bczhc_lib::point::PointF64;
 use jni::objects::{GlobalRef, JClass, JObject, JValue};
 use jni::sys::{jobject, jobjectArray};
@@ -15,6 +16,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     period: f64,
     epicycle_num: i32,
     thread_num: i32,
+    path_evaluator_enum: i32,
     callback: jobject,
 ) {
     let mut points_vec = Vec::new();
@@ -33,27 +35,82 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     let jvm = env.get_java_vm().unwrap();
     let jvm_addr = &jvm as *const JavaVM as usize;
 
-    let evaluator = LinearPath::new(&points_vec, period);
-    let evaluator_addr = &evaluator as *const LinearPath as usize;
+    let result_callback = move |r: Epicycle| {
+        let callback = unsafe { &*(g_callback_addr as *const GlobalRef) };
+        let callback = callback.as_obj();
 
+        let jvm = unsafe { &*(jvm_addr as *const JavaVM) };
+        let guard = jvm.attach_current_thread().unwrap();
+        callback_call(*guard, callback, r.a.re, r.a.im, r.n, r.p).unwrap();
+    };
+
+    let path_evaluator_enum = PathEvaluator::from(path_evaluator_enum).unwrap();
+    match path_evaluator_enum {
+        PathEvaluator::Linear => {
+            let evaluator = LinearPath::new(&points_vec);
+
+            compute(
+                epicycle_num as u32,
+                period,
+                thread_num as u32,
+                integral_segments as u32,
+                &evaluator,
+                result_callback,
+            )
+        }
+        PathEvaluator::Time => {
+            let evaluator = TimePath::new(&points_vec);
+
+            compute(
+                epicycle_num as u32,
+                period,
+                thread_num as u32,
+                integral_segments as u32,
+                &evaluator,
+                result_callback,
+            )
+        }
+    }
+}
+
+enum PathEvaluator {
+    Linear,
+    Time,
+}
+
+impl PathEvaluator {
+    fn from(enum_int: i32) -> Option<Self> {
+        match enum_int {
+            0 => Some(PathEvaluator::Linear),
+            1 => Some(PathEvaluator::Time),
+            _ => None,
+        }
+    }
+}
+
+fn compute<T, R>(
+    epicycle_count: u32,
+    period: f64,
+    thread_num: u32,
+    integral_segments: u32,
+    path_evaluator: &T,
+    result_callback: R,
+) where
+    T: EvaluatePath,
+    R: Fn(Epicycle) + Send + Copy + 'static,
+{
+    let evaluator_addr = path_evaluator as *const T as usize;
     fourier_series_calc(
-        epicycle_num as u32,
+        epicycle_count,
         period,
-        thread_num as u32,
-        integral_segments as u32,
+        thread_num,
+        integral_segments,
         move |t| {
-            let evaluator = unsafe { &*(evaluator_addr as *const LinearPath) };
-            let p = evaluator.evaluate_path(t);
+            let evaluator = unsafe { &*(evaluator_addr as *const T) };
+            let p = evaluator.evaluate(t / period);
             ComplexValueF64::new(p.x, p.y)
         },
-        move |r| {
-            let callback = unsafe { &*(g_callback_addr as *const GlobalRef) };
-            let callback = callback.as_obj();
-
-            let jvm = unsafe { &*(jvm_addr as *const JavaVM) };
-            let guard = jvm.attach_current_thread().unwrap();
-            callback_call(*guard, callback, r.a.re, r.a.im, r.n, r.p).unwrap();
-        },
+        result_callback,
     );
 }
 

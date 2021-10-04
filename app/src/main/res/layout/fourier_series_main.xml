@@ -70,6 +70,11 @@
                     android:id="@+id/threads_num"
                     android:inputType="number"
             />
+            <androidx.appcompat.widget.AppCompatSpinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/evaluator_spinner"
+            />
         </LinearLayout>
     </HorizontalScrollView>
     <androidx.recyclerview.widget.RecyclerView
