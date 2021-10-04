@@ -25,6 +25,9 @@
     <style name="Widget.Application.Button" parent="Widget.MaterialComponents.Button">
     </style>
 
+    <style name="Widget.Application.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    </style>
+
     <style name="Widget.Application.TextInputLayout.FilledBox"
            parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="boxBackgroundColor">@color/white</item>

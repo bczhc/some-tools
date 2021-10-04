@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/speed"
+            android:title="@string/fourier_series_epicycles_drawing_option_speed"
+    />
+</menu>

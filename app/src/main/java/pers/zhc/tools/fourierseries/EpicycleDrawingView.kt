@@ -24,6 +24,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
     private val pathPaint = Paint()
     private var transformation: Matrix? = null
     private var run = true
+    var tIncrement = 0.01
 
     init {
         axesPaint.apply {
@@ -190,7 +191,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
                 asyncTryDo.tryDo { _, notifier ->
                     handler.post {
                         invalidate()
-                        this.t += 0.01
+                        this.t += tIncrement
                         notifier.finish()
                     }
                 }
