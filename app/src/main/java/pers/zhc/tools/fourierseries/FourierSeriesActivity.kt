@@ -21,6 +21,7 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.*
+import kotlin.math.abs
 
 /**
  * @author bczhc
@@ -123,8 +124,8 @@ class FourierSeriesActivity : BaseActivity() {
                     }
                     R.id.speed_ascent -> {
                         Comparator { o1, o2 ->
-                            val speed1 = o1.p
-                            val speed2 = o2.p
+                            val speed1 = abs(o1.p)
+                            val speed2 = abs(o2.p)
                             return@Comparator when {
                                 speed1 < speed2 -> {
                                     -1
@@ -140,8 +141,8 @@ class FourierSeriesActivity : BaseActivity() {
                     }
                     R.id.speed_descent -> {
                         Comparator { o1, o2 ->
-                            val speed1 = o1.p
-                            val speed2 = o2.p
+                            val speed1 = abs(o1.p)
+                            val speed2 = abs(o2.p)
                             return@Comparator when {
                                 speed1 < speed2 -> {
                                     1
