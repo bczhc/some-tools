@@ -20,9 +20,4 @@
             android:id="@+id/export"
             android:title="@string/export"
             app:showAsAction="never"/>
-    <item
-            android:id="@+id/sort"
-            android:title="@string/sort"
-            app:showAsAction="never"/>
-
 </menu>
