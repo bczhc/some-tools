@@ -20,4 +20,8 @@
             android:id="@+id/export"
             android:title="@string/export"
             app:showAsAction="never"/>
+    <item
+            android:id="@+id/statistics"
+            android:title="@string/diary_menu_statistics"
+            app:showAsAction="never"/>
 </menu>

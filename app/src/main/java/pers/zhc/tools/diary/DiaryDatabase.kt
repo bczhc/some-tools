@@ -5,6 +5,7 @@ import org.intellij.lang.annotations.Language
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.RefCountHolder
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.util.Assertion
 
 /**
  * @author bczhc
@@ -123,6 +124,15 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
             statements.forEach {
                 database.exec(it)
             }
+        }
+
+        fun getCharsCount(database: SQLite3, dateInt: Int): Int {
+            val statement = database.compileStatement("SELECT length(content) FROM diary WHERE \"date\" IS ?", arrayOf(dateInt))
+            val cursor = statement.cursor
+            Assertion.doAssertion(cursor.step())
+            val c = cursor.getInt(0)
+            statement.release()
+            return c
         }
     }
 }

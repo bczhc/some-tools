@@ -584,6 +584,10 @@
     <string name="diary_taking_find_text_dialog_title">查找</string>
     <string name="diary_taking_find_text_et_hint">查找内容</string>
     <string name="diary_found_nothing_toast">未找到</string>
+    <string name="diary_menu_statistics">统计</string>
+    <string name="diary_statistics_dialog_title">统计</string>
+    <string name="diary_statistics_dialog_content">字符总数：%1$d\n条目数：%2$d</string>
+    <string name="diary_record_statistics_dialog_content">字符总数：%1$d</string>
     <!-- end -->
 
     <!-- module: fourier series -->

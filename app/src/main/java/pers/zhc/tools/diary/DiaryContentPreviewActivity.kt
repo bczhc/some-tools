@@ -1,15 +1,21 @@
 package pers.zhc.tools.diary
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.diary_content_preview_activity.*
+import kotlinx.android.synthetic.main.diary_record_stat_dialog.view.*
+import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.DisplayUtil
 import java.text.SimpleDateFormat
 import java.util.*
@@ -81,6 +87,9 @@ WHERE "date" IS ?"""
                 intent.putExtra(EXTRA_DATE_INT, dateInt)
                 startActivity(intent)
             }
+            R.id.statistics -> {
+                createDiaryRecordStatDialog(this, diaryDatabase, dateInt).show()
+            }
             else -> {
             }
         }
@@ -119,5 +128,18 @@ WHERE "date" IS ?"""
          * intent integer extra
          */
         const val EXTRA_DATE_INT = "dateInt"
+
+        fun createDiaryRecordStatDialog(context: Context, database: SQLite3, dateInt: Int): Dialog {
+            return Dialog(context).apply {
+                setTitle(R.string.diary_statistics_dialog_title)
+                setContentView(View.inflate(context, R.layout.diary_record_stat_dialog, null).apply {
+                    this.stat_content_tv!!.text = context.getString(
+                        R.string.diary_record_statistics_dialog_content,
+                        DiaryDatabase.getCharsCount(database, dateInt)
+                    )
+                })
+                DialogUtils.setDialogAttr(this, width = MATCH_PARENT)
+            }
+        }
     }
 }

@@ -10,4 +10,9 @@
             android:title="@string/attachment"
             app:showAsAction="never"
     />
+    <item
+            android:id="@+id/statistics"
+            app:showAsAction="never"
+            android:title="@string/diary_menu_statistics"
+    />
 </menu>

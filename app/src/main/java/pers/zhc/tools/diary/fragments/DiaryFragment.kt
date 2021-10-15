@@ -1,6 +1,7 @@
 package pers.zhc.tools.diary.fragments
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -17,8 +19,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
+import kotlinx.android.synthetic.main.diary_stat_dialog.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.SQLite3
@@ -33,6 +35,7 @@ import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.FileUtil.Companion.copy
 import pers.zhc.tools.utils.PopupMenuUtil.Companion.createPopupMenu
+import pers.zhc.util.Assertion
 import java.io.File
 import java.util.*
 
@@ -61,7 +64,7 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     }
 
     private fun configSearchView(searchView: SearchView) {
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
@@ -72,12 +75,14 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
                     return true
                 }
 
-                refreshItemDataList("""
+                refreshItemDataList(
+                    """
 
 SELECT "date", content
 FROM diary
 WHERE instr(lower("date"), lower(?)) > 0
-   OR instr(lower(content), lower(?)) > 0""", arrayOf(query, query))
+   OR instr(lower(content), lower(?)) > 0""", arrayOf(query, query)
+                )
 
                 recyclerViewAdapter.notifyDataSetChanged()
                 return true
@@ -148,7 +153,7 @@ WHERE instr(lower("date"), lower(?)) > 0
             null,
             dateET,
             R.string.enter_new_date,
-            ViewGroup.LayoutParams.MATCH_PARENT,
+            MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             false
         )
@@ -234,8 +239,37 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             R.id.settings -> {
                 startActivity(Intent(context, DiaryAttachmentSettingsActivity::class.java))
             }
+            R.id.statistics -> {
+                showStatDialog()
+            }
         }
         return true
+    }
+
+    private fun showStatDialog() {
+        val context = requireContext()
+        val dialog = Dialog(context).apply {
+            setTitle(R.string.diary_statistics_dialog_title)
+            setContentView(View.inflate(context, R.layout.diary_stat_dialog, null).apply {
+                this.stat_content_tv!!.text =
+                    context.getString(R.string.diary_statistics_dialog_content, getTotalCharsCount(), getRowsCount())
+            })
+            DialogUtils.setDialogAttr(this, width = MATCH_PARENT)
+        }
+        dialog.show()
+    }
+
+    private fun getTotalCharsCount(): Int {
+        val statement = diaryDatabase.compileStatement("SELECT SUM(length(content)) FROM diary")
+        val cursor = statement.cursor
+        Assertion.doAssertion(cursor.step())
+        val c = cursor.getInt(0)
+        statement.release()
+        return c
+    }
+
+    private fun getRowsCount(): Int {
+        return diaryDatabase.getRowCount("SELECT COUNT() FROM diary")
     }
 
     private fun showCreateSpecifiedDateDiaryDialog() {
@@ -263,7 +297,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         DialogUtil.setDialogAttr(
             dialog,
             false,
-            ViewGroup.LayoutParams.MATCH_PARENT,
+            MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             false
         )

@@ -243,6 +243,10 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
             showFindDialog();
 
+        } else if (itemId == R.id.statistics) {
+
+            DiaryContentPreviewActivity.Companion.createDiaryRecordStatDialog(this, diaryDatabase, dateInt).show();
+
         }
     }
 

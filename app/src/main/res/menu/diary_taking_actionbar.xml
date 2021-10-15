@@ -15,4 +15,9 @@
             app:showAsAction="never"
             android:title="@string/diary_find_menu"
     />
+    <item
+            android:id="@+id/statistics"
+            app:showAsAction="never"
+            android:title="@string/diary_menu_statistics"
+    />
 </menu>
