@@ -8,3 +8,4 @@
 replay*.log
 /generate-native-headers
 /config.properties
+/ndk-path
