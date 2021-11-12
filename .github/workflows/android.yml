@@ -32,31 +32,12 @@ jobs:
           echo $SSH_PRK | base64 -d > ~/.ssh/id_rsa
           sudo chmod 600 ~/.ssh/id_rsa
           ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
-      - name: Install basics
-        run: |
-          sudo apt update
-          sudo apt install curl -y
-          sudo apt install groovy -y
-      - name: Set up SDK and NDK
-        run: |
-          yes | sudo $ANDROID_HOME/tools/bin/sdkmanager ndk-bundle > /dev/null
-          LP=./local.properties
-          rm -rf $LP
-          echo "sdk.dir=$ANDROID_HOME" >> $LP
-      - name: Set up Rust
-        run: |
-          sudo apt purge rustc cargo -y
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install
-          chmod +x install
-          ./install -y
-          source ~/.bashrc
-          rustc --version
-          ./configure-rust
-      - name: Compile openssl
-        run: ./build-openssl
       - name: Build app
         run: |
           ./gradlew :app:assembleDebug
+          docker build . -t some-tools-build
+          docker run -it --name some-tools some-tools-build
+          docker cp some-tools:/apk .
       - name: Compile CI tool jar
         run: |
           cd ci
@@ -78,7 +59,7 @@ jobs:
               mkdir apks
           fi
 
-          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload "${GITHUB_WORKSPACE}/app/build/outputs/apk/debug/app-debug.apk" $encoded_commit_info
+          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload "${GITHUB_WORKSPACE}/apk/debug/app-debug.apk" $encoded_commit_info
 
           git config --global user.email "bczhc0@126.com"
           git config --global user.name "bczhc"
@@ -90,4 +71,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: apk/debug/app-debug.apk
