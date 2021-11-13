@@ -34,7 +34,6 @@ jobs:
           ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
       - name: Build app
         run: |
-          ./gradlew :app:assembleDebug
           docker build . -t some-tools-build
           docker run -it --name some-tools some-tools-build
           docker cp some-tools:/apk .
