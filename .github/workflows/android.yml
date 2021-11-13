@@ -35,7 +35,7 @@ jobs:
       - name: Build app
         run: |
           docker build . -t some-tools-build
-          docker run -it --name some-tools some-tools-build
+          docker run --name some-tools some-tools-build
           docker cp some-tools:/apk .
       - name: Compile CI tool jar
         run: |
