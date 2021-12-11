@@ -50,6 +50,7 @@
     <string name="delete_confirmation_dialog_title">是否删除</string>
     <string name="menu_btn">菜单</string>
     <string name="option_btn">选项</string>
+    <string name="updating">正在更新</string>
     <!-- end -->
 
     <!-- old -->
@@ -401,6 +402,9 @@
 
     <!-- module: wubi -->
     <string name="wubi_words_dict_url_prompt">使用的词库网址</string>
+    <string name="wubi_code_look_up_label">编码反查</string>
+    <string name="wubi_word_to_look_up_hint">待查询字词</string>
+    <string name="wubi_inverse_dict_update_alert">五笔反查表需要更新，是否更新？</string>
     <!-- module end -->
 
     <!-- app settings -->

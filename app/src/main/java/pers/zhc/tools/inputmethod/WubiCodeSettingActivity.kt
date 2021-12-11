@@ -49,6 +49,9 @@ class WubiCodeSettingActivity : BaseActivity() {
                 },
                 View.OnClickListener {
                     startActivity(Intent(this, WubiDatabaseEditActivity::class.java))
+                },
+                View.OnClickListener {
+                    startActivity(Intent(this, WubiCodeLookingUpActivity::class.java))
                 }
             )[position].onClick(view)
         }
@@ -59,10 +62,10 @@ class WubiCodeSettingActivity : BaseActivity() {
         editText.setText(
             String.format(
                 Infos.githubRawRootURL,
-                "KyleBing",
+                "bczhc",
                 "rime-wubi86-jidian",
                 "master",
-                "wubi86_jidian.dict.yaml"
+                "wubi86_jidian.dict"
             )
         )
 
@@ -99,6 +102,9 @@ class WubiCodeSettingActivity : BaseActivity() {
 
                             try {
                                 processDownloadedDict(dictFile)
+                                WubiInverseDictManager.useDatabase {
+                                    it.updateUpdateMark(true)
+                                }
                                 runOnUiThread {
                                     ToastUtils.show(this, R.string.process_done)
                                 }
@@ -136,13 +142,16 @@ class WubiCodeSettingActivity : BaseActivity() {
     }
 
     private fun processDownloadedDict(file: File) {
+        val splitRegex = Regex("[\\t ]+")
+        val lineCheckRegex = Regex("^.+[\\t ]+[a-z]+$")
+
         val hashMap = HashMap<String, ArrayList<String>>()
 
         val reader = file.reader()
         val bufferedReader = reader.buffered()
 
         val process = { line: String ->
-            val split = line.split('\t')
+            val split = line.split(splitRegex)
             val code = split[1]
             val word = split[0]
 
@@ -158,7 +167,7 @@ class WubiCodeSettingActivity : BaseActivity() {
 
         while (true) {
             val line = bufferedReader.readLine() ?: throw RuntimeException("Unexpected EOF")
-            if (line.matches(Regex("^.+\\t[a-z]+$"))) {
+            if (line.matches(lineCheckRegex)) {
                 // the first time to meet the words content
                 process(line)
                 break
