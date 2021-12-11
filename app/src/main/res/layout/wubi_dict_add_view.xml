@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
 >
     <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:id="@+id/index_shet"
-            android:layout_centerHorizontal="true"
-            app:hint="@string/insert_index_1_leftmost"
-            android:inputType="number"
-            style="@style/Widget.Application.TextInputLayout.FilledBox"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/wubi_word_et"
+            app:hint="@string/wubi_word" style="@style/Widget.Application.TextInputLayout.FilledBox"
     />
-    <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_below="@id/index_shet"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/candidate_shet"
-            app:hint="@string/candidate_word"
-            style="@style/Widget.Application.TextInputLayout.FilledBox"
-    />
-</RelativeLayout>
+</LinearLayout>

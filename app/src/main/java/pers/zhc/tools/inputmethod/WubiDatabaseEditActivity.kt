@@ -1,36 +1,51 @@
 package pers.zhc.tools.inputmethod
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.Gravity
+import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.EditText
 import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.wubi_database_edit_activity.*
 import kotlinx.android.synthetic.main.wubi_dict_add_view.view.*
+import kotlinx.android.synthetic.main.wubi_word_with_ordinal_view.view.*
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.DialogUtil
+import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
-import java.util.concurrent.atomic.AtomicReference
+import pers.zhc.tools.views.WrapLayout
+import java.util.*
 
 /**
  * @author bczhc
  */
 class WubiDatabaseEditActivity : BaseActivity() {
+    private lateinit var wubiCodeET: EditText
+    private lateinit var myAdapter: MyAdapter
+    private lateinit var dictDatabase: DictionaryDatabase
+    private val candidateList = ArrayList<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.wubi_database_edit_activity)
-        val wubiDatabaseInfoTV = wubi_code_database_info
-        val wubiCodeSHET = wubi_code_shet
-        val wubiCandidatesLL = wubi_candidates_ll
-        val addBtn = add_btn
-        val wubiCodeET = wubiCodeSHET.editText
 
-        val dictDatabase = DictionaryDatabase.getDatabaseRef()
+        val wubiDatabaseInfoTV = wubi_code_database_info
+        wubiCodeET = wubi_code_shet!!.editText
+        val addBtn = add_btn
+        val recyclerView = recycler_view!!
+        myAdapter = MyAdapter(this, candidateList)
+        recyclerView.adapter = myAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        ItemTouchHelper(TouchHelperCallback(this)).attachToRecyclerView(recyclerView)
+        dictDatabase = DictionaryDatabase.getDatabaseRef()
 
         Thread {
             var totalRow = 0
@@ -45,122 +60,47 @@ class WubiDatabaseEditActivity : BaseActivity() {
             }
         }.start()
 
-        val candidateList = ArrayList<String>()
-        var wubiCodeStr = ""
-
-        val setCandidateWords = AtomicReference<Runnable>()
-        setCandidateWords.set {
-            wubiCodeStr = wubiCodeET.text.toString()
-            var fetchCandidates: Array<String>? = null
-            candidateList.clear()
-            try {
-                fetchCandidates = dictDatabase.fetchCandidates(wubiCodeStr)
-            } catch (_: Exception) {
-                wubiCandidatesLL.removeAllViews()
-            }
-            if (fetchCandidates == null) {
-                // no such column
-                wubiCandidatesLL.removeAllViews()
-            }
-            if (fetchCandidates != null && fetchCandidates.isNotEmpty()) {
-                wubiCandidatesLL.removeAllViews()
-                for (i in fetchCandidates.indices) {
-                    val tv = TextView(this@WubiDatabaseEditActivity)
-                    val layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    layoutParams.gravity = Gravity.TOP
-                    tv.layoutParams = layoutParams
-                    tv.textSize = 20F
-                    tv.text = String.format("%d. %s", i + 1, fetchCandidates[i])
-                    tv.setOnLongClickListener {
-                        // delete word
-                        val deleteDialog = DialogUtil.createConfirmationAlertDialog(
-                            this,
-                            { _, _ ->
-                                candidateList.removeAt(i)
-                                val wordsCombinedStr = getWordsCombinedStr(candidateList)
-                                try {
-                                    updateWordRecord(
-                                        dictDatabase.database,
-                                        wubiCodeET.text.toString(),
-                                        wordsCombinedStr
-                                    )
-                                    ToastUtils.show(this, R.string.deleting_succeeded)
-                                } catch (e: Exception) {
-                                    ToastUtils.showError(this, R.string.deleting_failed, e)
-                                } finally {
-                                    setCandidateWords.get().run()
-                                }
-                            },
-                            { _, _ -> },
-                            R.string.whether_to_delete,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            false
-                        )
-                        deleteDialog.show()
-                        return@setOnLongClickListener true
-                    }
-                    wubiCandidatesLL.addView(tv)
-                }
-                fetchCandidates.forEach { candidateList.add(it) }
-            }
+        wubiCodeET.doAfterTextChanged {
+            refreshList()
         }
-
-        wubiCodeET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                setCandidateWords.get().run()
-            }
-        })
 
         addBtn.setOnClickListener {
             val inflate = View.inflate(this, R.layout.wubi_dict_add_view, null)
-            val indexSHET = inflate.index_shet
-            val indexET = indexSHET.editText
-            val candidateSHET = inflate.candidate_shet
-            val candidateET = candidateSHET.editText
+            val wubiWordET = inflate.wubi_word_et!!.editText
 
-            DialogUtil.createConfirmationAlertDialog(
+            DialogUtils.createConfirmationAlertDialog(
                 this,
                 { _, _ ->
                     try {
-                        candidateList.add(Integer.parseInt(indexET.text.toString()) - 1, candidateET.text.toString())
-                    } catch (e: Exception) {
-                        when (e) {
-                            is NumberFormatException, is IndexOutOfBoundsException -> {
-                                ToastUtils.show(this, R.string.please_enter_correct_value_toast)
-                                return@createConfirmationAlertDialog
-                            }
-                            else -> throw e
-                        }
-                    }
-
-                    val newWordStr = getWordsCombinedStr(candidateList)
-
-                    try {
-                        updateWordRecord(dictDatabase.database, wubiCodeStr, newWordStr)
+                        dictDatabase.addRecord(wubiWordET.text.toString(), wubiCodeET.text.toString())
                         ToastUtils.show(this, R.string.adding_succeeded)
                     } catch (e: Exception) {
-                        ToastUtils.showError(this, R.string.adding_failed, e)
-                    } finally {
-                        setCandidateWords.get().run()
+                        Common.showException(e, this)
                     }
+                    refreshList()
                 },
-                { _, _ -> },
-                inflate,
-                R.string.add_new_sth,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                false
+                view = inflate,
+                titleRes = R.string.add_new,
+                width = ViewGroup.LayoutParams.MATCH_PARENT
             ).show()
+        }
+    }
+
+    private fun refreshList() {
+        candidateList.clear()
+        fetchAndSetCandidates()
+        myAdapter.notifyDataSetChanged()
+    }
+
+    private fun fetchAndSetCandidates() {
+        fetchAndSetCandidates(wubiCodeET.text.toString())
+    }
+
+    private fun fetchAndSetCandidates(code: String) {
+        val candidates = dictDatabase.fetchCandidates(code)
+        candidates ?: candidateList.clear()
+        candidates?.forEach {
+            candidateList.add(it)
         }
     }
 
@@ -200,5 +140,83 @@ class WubiDatabaseEditActivity : BaseActivity() {
             if (i != candidateList.size - 1) newWordSB.append('|')
         }
         return newWordSB.toString()
+    }
+
+    class WubiWordView : WrapLayout {
+        private lateinit var ordinalTV: TextView
+        private lateinit var wubiWordTV: TextView
+
+        constructor(context: Context?) : this(context, null)
+
+        constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+            val inflate = View.inflate(context, R.layout.wubi_word_with_ordinal_view, null)
+            this.addView(inflate)
+
+            ordinalTV = inflate.ordinal_tv!!
+            wubiWordTV = inflate.wubi_word_tv!!
+        }
+
+        @SuppressLint("SetTextI18n")
+        fun setOrdinal(i: Int) {
+            ordinalTV.text = "$i. "
+        }
+
+        fun setWord(word: String) {
+            wubiWordTV.text = word
+        }
+    }
+
+
+    class MyAdapter(
+        private val context: Context,
+        private val candidates: ArrayList<String>
+    ) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
+        class MyHolder(val wordView: WubiWordView) : RecyclerView.ViewHolder(wordView)
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
+            return MyHolder(WubiWordView(context))
+        }
+
+        override fun onBindViewHolder(holder: MyHolder, position: Int) {
+            holder.wordView.setOrdinal(position + 1)
+            holder.wordView.setWord(candidates[position])
+        }
+
+        override fun getItemCount(): Int {
+            return candidates.size
+        }
+    }
+
+    class TouchHelperCallback(
+        private val outer: WubiDatabaseEditActivity
+    ) : ItemTouchHelper.Callback() {
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+            return makeMovementFlags(
+                ItemTouchHelper.UP.xor(ItemTouchHelper.DOWN),
+                ItemTouchHelper.LEFT.xor(ItemTouchHelper.RIGHT)
+            )
+        }
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            val fromIndex = viewHolder.layoutPosition
+            val toIndex = target.layoutPosition
+            Collections.swap(outer.candidateList, fromIndex, toIndex)
+            outer.myAdapter.notifyItemMoved(fromIndex, toIndex)
+
+            outer.dictDatabase.updateRecord(outer.candidateList, outer.wubiCodeET.text.toString())
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val index = viewHolder.layoutPosition
+            outer.candidateList.removeAt(index)
+            outer.myAdapter.notifyItemRemoved(index)
+
+            outer.dictDatabase.updateRecord(outer.candidateList, outer.wubiCodeET.text.toString())
+        }
     }
 }

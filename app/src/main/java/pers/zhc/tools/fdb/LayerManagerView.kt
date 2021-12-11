@@ -110,7 +110,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         ItemTouchHelper.Callback() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
             var swipeFlag = ItemTouchHelper.LEFT
-            // if the item is checked, avoid being swipe away
+            // if the item is checked, avoid being swiped away
             if (listAdapter.getCheckedLayerId() == listAdapter.items[viewHolder.layoutPosition].layerId) {
                 swipeFlag = 0
             }

@@ -18,6 +18,9 @@ class DictionaryDatabase private constructor(path: String) {
      * @throws RuntimeException sqlite error, such as io error or no such table error.
      */
     fun fetchCandidates(wubiCodeStr: String): Array<String>? {
+        checkCode(wubiCodeStr)
+
+        if (wubiCodeStr.isEmpty()) return null
         var r: Array<String>? = null
         try {
             val tableName = "wubi_code_${wubiCodeStr[0]}"
@@ -30,12 +33,38 @@ class DictionaryDatabase private constructor(path: String) {
             }
             statement.release()
         } catch (e: Exception) {
-            if (e.toString().contains("no such column")) {
+            if (e.toString().contains("no such column") ||
+                e.toString().contains("no such table")
+            ) {
                 return null
             }
             throw RuntimeException(e)
         }
-        return r!!
+        return r
+    }
+
+    private fun checkCode(code: String) {
+        if (code.isEmpty()) throw IllegalArgumentException()
+        if (code[0] !in 'a'..'z') throw IllegalArgumentException()
+    }
+
+    fun addRecord(word: String, code: String) {
+        checkCode(code)
+
+        val candidates = fetchCandidates(code)!!
+        val list = candidates.toMutableList()
+        list.add(word)
+
+        updateRecord(list, code)
+    }
+
+    fun updateRecord(candidates: List<String>, code: String) {
+        checkCode(code)
+
+        database.execBind(
+            "UPDATE wubi_code_${code[0]} SET word=? WHERE code IS ?",
+            arrayOf(candidates.joinToString("|"), code)
+        )
     }
 
     companion object {
