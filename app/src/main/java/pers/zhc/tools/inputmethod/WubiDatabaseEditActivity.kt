@@ -137,7 +137,8 @@ class WubiDatabaseEditActivity : BaseActivity() {
         class MyHolder(val wordView: WubiWordView) : RecyclerView.ViewHolder(wordView)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-            return MyHolder(WubiWordView(context))
+            val wordView = WubiWordView(context)
+            return MyHolder(wordView)
         }
 
         override fun onBindViewHolder(holder: MyHolder, position: Int) {
@@ -177,7 +178,6 @@ class WubiDatabaseEditActivity : BaseActivity() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val index = viewHolder.layoutPosition
             outer.candidateList.removeAt(index)
-            outer.myAdapter.notifyItemRemoved(index)
 
             if (outer.candidateList.isEmpty()) {
                 // the last candidate has been removed, so the wubi code record is to be deleted
@@ -185,6 +185,18 @@ class WubiDatabaseEditActivity : BaseActivity() {
             } else {
                 outer.dictDatabase.updateRecord(outer.candidateList, outer.wubiCodeET.text.toString())
             }
+            outer.myAdapter.notifyDataSetChanged()
+        }
+
+        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+            super.clearView(recyclerView, viewHolder)
+            // workaround: send the list updating UI operation message in another thread
+            // or it will have "cannot call this method while RecyclerView is computing a layout or scrolling..."
+            Thread {
+                outer.runOnUiThread {
+                    outer.myAdapter.notifyDataSetChanged()
+                }
+            }.start()
         }
     }
 }
