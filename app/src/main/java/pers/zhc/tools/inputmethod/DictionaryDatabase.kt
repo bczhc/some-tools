@@ -14,12 +14,10 @@ class DictionaryDatabase private constructor(path: String) {
      * Fetch wubi candidate words.
      *
      * @param wubiCodeStr      wubi code
-     * @return fetched candidates string arr, null if not found the specified wubi code (no such column)
-     * @throws RuntimeException sqlite error, such as io error or no such table error.
+     * @return fetched candidates string array, null if not found the specified wubi code (no such column or table)
+     * @throws RuntimeException sqlite error
      */
     fun fetchCandidates(wubiCodeStr: String): Array<String>? {
-        checkCode(wubiCodeStr)
-
         if (wubiCodeStr.isEmpty()) return null
         var r: Array<String>? = null
         try {
@@ -48,6 +46,9 @@ class DictionaryDatabase private constructor(path: String) {
         if (code[0] !in 'a'..'z') throw IllegalArgumentException()
     }
 
+    /**
+     * @throws IllegalArgumentException for illegal wubi code
+     */
     fun addRecord(word: String, code: String) {
         checkCode(code)
 

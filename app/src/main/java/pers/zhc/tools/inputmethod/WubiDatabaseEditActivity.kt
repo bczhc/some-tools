@@ -74,8 +74,8 @@ class WubiDatabaseEditActivity : BaseActivity() {
                     try {
                         dictDatabase.addRecord(wubiWordET.text.toString(), wubiCodeET.text.toString())
                         ToastUtils.show(this, R.string.adding_succeeded)
-                    } catch (e: Exception) {
-                        Common.showException(e, this)
+                    } catch (_: IllegalArgumentException) {
+                        ToastUtils.show(this, R.string.please_enter_correct_wubi_code)
                     }
                     refreshList()
                 },
@@ -88,7 +88,10 @@ class WubiDatabaseEditActivity : BaseActivity() {
 
     private fun refreshList() {
         candidateList.clear()
-        fetchAndSetCandidates()
+        try {
+            fetchAndSetCandidates()
+        } catch (_: Exception) {
+        }
         myAdapter.notifyDataSetChanged()
     }
 
@@ -143,8 +146,8 @@ class WubiDatabaseEditActivity : BaseActivity() {
     }
 
     class WubiWordView : WrapLayout {
-        private lateinit var ordinalTV: TextView
-        private lateinit var wubiWordTV: TextView
+        private var ordinalTV: TextView
+        private var wubiWordTV: TextView
 
         constructor(context: Context?) : this(context, null)
 
