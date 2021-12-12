@@ -197,6 +197,10 @@ class WubiDatabaseEditActivity : BaseActivity() {
                     outer.myAdapter.notifyDataSetChanged()
                 }
             }.start()
+            // the dictionary may have been changed, so set the update mark true in wubi inverse dict database
+            WubiInverseDictManager.useDatabase {
+                it.updateUpdateMark(true)
+            }
         }
     }
 }
