@@ -15,10 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.wubi_database_edit_activity.*
 import kotlinx.android.synthetic.main.wubi_dict_add_view.view.*
 import kotlinx.android.synthetic.main.wubi_word_with_ordinal_view.view.*
-import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.views.WrapLayout
@@ -107,44 +105,6 @@ class WubiDatabaseEditActivity : BaseActivity() {
         }
     }
 
-    /**
-     * Update wubi word record.
-     *
-     * If no such column found, it'll create a new record.
-     *
-     * When after deleting and there's no candidates left, it'll delete the column.
-     */
-    private fun updateWordRecord(dictDatabase: SQLite3, wubiCodeStr: String, newWordStr: String) {
-        val hasRecord = dictDatabase.hasRecord("SELECT * FROM wubi_code_${wubiCodeStr[0]} WHERE code is '$wubiCodeStr'")
-        if (hasRecord) {
-            // update record
-            val statement = dictDatabase.compileStatement(
-                "UPDATE wubi_code_${wubiCodeStr[0]} SET word = ? WHERE code is ?"
-            )
-            statement.bindText(1, newWordStr)
-            statement.bindText(2, wubiCodeStr)
-            statement.step()
-            statement.release()
-        } else {
-            // add new record
-            dictDatabase.exec("INSERT INTO wubi_code_${wubiCodeStr[0]} VALUES('$wubiCodeStr', '$newWordStr')")
-        }
-
-        if (!newWordStr.matches(Regex("\\|"))) {
-            // have deleted the last left word
-            dictDatabase.exec("DELETE FROM wubi_code_${wubiCodeStr[0]} WHERE code is '$wubiCodeStr'")
-        }
-    }
-
-    private fun getWordsCombinedStr(candidateList: List<String>): String {
-        val newWordSB = StringBuilder()
-        for (i in candidateList.indices) {
-            newWordSB.append(candidateList[i])
-            if (i != candidateList.size - 1) newWordSB.append('|')
-        }
-        return newWordSB.toString()
-    }
-
     class WubiWordView : WrapLayout {
         private var ordinalTV: TextView
         private var wubiWordTV: TextView
@@ -219,7 +179,12 @@ class WubiDatabaseEditActivity : BaseActivity() {
             outer.candidateList.removeAt(index)
             outer.myAdapter.notifyItemRemoved(index)
 
-            outer.dictDatabase.updateRecord(outer.candidateList, outer.wubiCodeET.text.toString())
+            if (outer.candidateList.isEmpty()) {
+                // the last candidate has been removed, so the wubi code record is to be deleted
+                outer.dictDatabase.deleteCodeRecord(outer.wubiCodeET.text.toString())
+            } else {
+                outer.dictDatabase.updateRecord(outer.candidateList, outer.wubiCodeET.text.toString())
+            }
         }
     }
 }

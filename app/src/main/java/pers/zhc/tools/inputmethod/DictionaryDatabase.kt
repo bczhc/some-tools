@@ -42,8 +42,10 @@ class DictionaryDatabase private constructor(path: String) {
     }
 
     private fun checkCode(code: String) {
-        if (code.isEmpty()) throw IllegalArgumentException()
-        if (code[0] !in 'a'..'z') throw IllegalArgumentException()
+        if (code.isEmpty()
+            || code[0] !in 'a'..'z'
+            || code.length > 4
+        ) throw IllegalArgumentException()
     }
 
     /**
@@ -52,7 +54,17 @@ class DictionaryDatabase private constructor(path: String) {
     fun addRecord(word: String, code: String) {
         checkCode(code)
 
-        val candidates = fetchCandidates(code)!!
+        val candidates = fetchCandidates(code)
+        if (candidates == null) {
+            // there's no wubi code record in the dictionary database
+            // we need to add an initial record
+            database.execBind(
+                "INSERT INTO wubi_code_${code[0]} (code, word) VALUES (?, ?)",
+                arrayOf(code, "")
+            )
+            updateRecord(listOf(word), code)
+            return
+        }
         val list = candidates.toMutableList()
         list.add(word)
 
@@ -65,6 +77,21 @@ class DictionaryDatabase private constructor(path: String) {
         database.execBind(
             "UPDATE wubi_code_${code[0]} SET word=? WHERE code IS ?",
             arrayOf(candidates.joinToString("|"), code)
+        )
+    }
+
+    /**
+     * Delete the entire wubi code record
+     *
+     * When the last candidate word in a record has been removed, the record needs to be deleted also.
+     * @throws IllegalArgumentException for illegal wubi code
+     */
+    fun deleteCodeRecord(code: String) {
+        checkCode(code)
+
+        database.execBind(
+            "DELETE FROM wubi_code_${code[0]} WHERE code IS ?",
+            arrayOf(code)
         )
     }
 
