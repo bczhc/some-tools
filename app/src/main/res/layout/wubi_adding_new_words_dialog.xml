@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="10dp"
+              xmlns:tools="http://schemas.android.com/tools"
+>
+    <pers.zhc.tools.views.SmartHintEditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wubi_word_et"
+            app:hint="@string/wubi_words_adding_new_word_hint"
+            android:layout_gravity="center_horizontal"
+    />
+    <pers.zhc.tools.views.SmartHintEditText
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wubi_code_et"
+            app:hint="@string/wubi_words_adding_wubi_code_hint"
+            android:layout_gravity="center_horizontal"
+    />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              android:id="@+id/alert_tv"
+              android:textColor="@color/red"
+              android:text="@string/wubi_words_adding_word_already_exists_alert"
+              android:visibility="gone"
+              tools:visibility="visible"
+    />
+    <ScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
+
+    >
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:textSize="15sp"
+                      tools:text="aaaa\nbbbb\ncccc"
+                      android:id="@+id/wubi_word_tv"
+                      android:gravity="center_horizontal"
+                      android:visibility="gone"
+                      tools:visibility="visible"
+            />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

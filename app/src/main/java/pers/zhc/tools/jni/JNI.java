@@ -278,6 +278,8 @@ public class JNI {
         public static native void release(long addr);
 
         public static native int codepointLength(String s);
+
+        public static native String codepoint2str(int codepoint);
     }
 
     public static class FourierSeries {

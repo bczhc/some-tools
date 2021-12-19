@@ -1,9 +1,11 @@
 use std::alloc::Layout;
 use std::iter::Peekable;
+use std::ptr::null;
 use std::str::Chars;
 
 use jni::objects::{JClass, JString};
-use jni::sys::{jboolean, jint, jlong};
+use jni::strings::JNIString;
+use jni::sys::{_jobject, jboolean, jint, jlong, jobjectArray, jstring};
 use jni::JNIEnv;
 
 #[no_mangle]
@@ -91,5 +93,22 @@ impl<'a> StringWithIter<'a> {
             str: raw_ptr,
             chars: unsafe { (&*raw_ptr).chars().peekable() },
         }
+    }
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_codepoint2str(
+    env: JNIEnv,
+    _class: JClass,
+    codepoint: i32,
+) -> jstring {
+    let c = std::char::from_u32(codepoint as u32);
+    match c {
+        None => {
+            env.throw("invalid codepoint");
+            null::<_jobject>() as jstring
+        }
+        Some(c) => env.new_string(c.to_string()).unwrap().into_inner(),
     }
 }

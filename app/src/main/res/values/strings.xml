@@ -618,5 +618,10 @@
     <string name="fourier_series_epicycles_drawing_option_speed">速度</string>
     <string name="fourier_series_epicycles_drawing_option_reset_path">重置路径</string>
     <string name="fourier_series_sort_shuffle">乱序</string>
+    <string name="wubi_words_adding_new_word_hint">新增词</string>
+    <string name="wubi_words_adding_wubi_code_hint">五笔编码</string>
+    <string name="wubi_words_adding_word_already_exists_alert">已存在该词</string>
+    <string name="wubi_code_invalid_toast">无效的五笔编码</string>
+    <string name="wubi_words_adding_word_already_exists_ignore_toast">已经存在，忽略添加</string>
     <!-- end -->
 </resources>
