@@ -52,6 +52,8 @@
     <string name="option_btn">选项</string>
     <string name="updating">正在更新</string>
     <string name="add_new">新增</string>
+    <string name="unsupported_function_toast">功能不支持</string>
+    <string name="failed_to_get_content_toast">获取内容失败</string>
     <!-- end -->
 
     <!-- old -->
@@ -543,6 +545,7 @@
     <string name="words_delete_confirmation_dialog">是否删除</string>
     <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
     <string name="words_add_word_shortcut_label">添加单词</string>
+    <string name="words_text_process_action_label">@string/words_add_word_shortcut_label</string>
     <!-- module end -->
 
     <!-- screen color picker -->

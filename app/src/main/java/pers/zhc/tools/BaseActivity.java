@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -47,6 +46,7 @@ public class BaseActivity extends AppCompatActivity {
             return Unit.INSTANCE;
         });
 
+        getDelegate().setHandleNativeActionModesEnabled(false);
     }
 
     private void setTheme() {

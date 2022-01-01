@@ -577,6 +577,18 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity android:name=".words.WordAddingActivity"
+                  android:label="@string/words_text_process_action_label"
+                  android:theme="@style/Theme.Transparent"
+        >
+            <intent-filter>
+                <action android:name="4android.intent.action.PROCESS_TEXT"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+        </activity>
         <activity
                 android:name=".media.ScreenCapturePermissionRequestActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
