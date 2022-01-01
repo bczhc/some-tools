@@ -582,7 +582,7 @@
                   android:theme="@style/Theme.Transparent"
         >
             <intent-filter>
-                <action android:name="4android.intent.action.PROCESS_TEXT"/>
+                <action android:name="android.intent.action.PROCESS_TEXT"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
 
