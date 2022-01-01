@@ -2,6 +2,7 @@ package pers.zhc.tools.inputmethod
 
 import android.content.Context
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.tools.inputmethod.WubiIME.checkCodeOrThrow
 import pers.zhc.tools.utils.Common
 
 /**
@@ -41,18 +42,11 @@ class DictionaryDatabase private constructor(path: String) {
         return r
     }
 
-    private fun checkCode(code: String) {
-        if (code.isEmpty()
-            || code[0] !in 'a'..'z'
-            || code.length > 4
-        ) throw IllegalArgumentException()
-    }
-
     /**
      * @throws IllegalArgumentException for illegal wubi code
      */
     fun addRecord(word: String, code: String) {
-        checkCode(code)
+        checkCodeOrThrow(code)
 
         val candidates = fetchCandidates(code)
         if (candidates == null) {
@@ -72,7 +66,7 @@ class DictionaryDatabase private constructor(path: String) {
     }
 
     fun updateRecord(candidates: List<String>, code: String) {
-        checkCode(code)
+        checkCodeOrThrow(code)
 
         database.execBind(
             "UPDATE wubi_code_${code[0]} SET word=? WHERE code IS ?",
@@ -87,7 +81,7 @@ class DictionaryDatabase private constructor(path: String) {
      * @throws IllegalArgumentException for illegal wubi code
      */
     fun deleteCodeRecord(code: String) {
-        checkCode(code)
+        checkCodeOrThrow(code)
 
         database.execBind(
             "DELETE FROM wubi_code_${code[0]} WHERE code IS ?",

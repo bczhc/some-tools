@@ -19,7 +19,7 @@ class WubiInverseDictManager {
             return WubiInverseDictDatabase(dictFile.path)
         }
 
-        fun useDatabase(f: (db: WubiInverseDictDatabase)->Unit) {
+        fun useDatabase(f: (db: WubiInverseDictDatabase) -> Unit) {
             val database = openDatabase()
             f(database)
             database.close()

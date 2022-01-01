@@ -1,28 +1,41 @@
 package pers.zhc.tools.inputmethod;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
 import android.speech.tts.TextToSpeech;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.widget.EditText;
 import android.widget.TextView;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.view.ContextThemeWrapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
+import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.views.SmartHintEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author bczhc
  */
 public class WubiIME extends InputMethodService {
     private DictionaryDatabase dictDatabase;
+    private View candidateView = null;
 
     @Override
     public void onCreate() {
@@ -186,6 +199,10 @@ public class WubiIME extends InputMethodService {
                             clear();
                             break;
                         default:
+                            if (keyCode == KeyEvent.KEYCODE_N) {
+                                // show dialog: add new words
+                                showAddingNewWordsDialog();
+                            }
                     }
                     return true;
                 }
@@ -356,6 +373,120 @@ public class WubiIME extends InputMethodService {
         }
     });
 
+    private void showAddingNewWordsDialog() {
+        if (candidateView != null) {
+            int theme = R.style.Theme_Application_NoActionBar;
+
+            final int nightMode = AppCompatDelegate.getDefaultNightMode();
+            if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+                theme = R.style.Theme_Application_Dark_NoActionBar;
+            }
+
+            final ContextThemeWrapper themedContext = new ContextThemeWrapper(this, theme);
+            final View inflate = View.inflate(themedContext, R.layout.wubi_adding_new_words_dialog, null);
+
+            final EditText wordET = ((SmartHintEditText) inflate.findViewById(R.id.wubi_word_et)).getEditText();
+            final EditText codeET = ((SmartHintEditText) inflate.findViewById(R.id.wubi_code_et)).getEditText();
+            final TextView existAlertTV = inflate.findViewById(R.id.alert_tv);
+            final TextView existWordCodeTV = inflate.findViewById(R.id.wubi_word_tv);
+
+            AtomicBoolean alreadyExists = new AtomicBoolean(false);
+            final WubiInverseDictDatabase inverseDictDatabase = WubiInverseDictManager.Companion.openDatabase();
+
+            final DialogInterface.OnClickListener positiveButtonAction = (dialog1, which) -> {
+                final String word = wordET.getText().toString();
+                final String code = codeET.getText().toString();
+                if (!checkCode(code)) {
+                    ToastUtils.show(this, R.string.wubi_code_invalid_toast);
+                    return;
+                }
+                final String[] query = inverseDictDatabase.query(word);
+
+                boolean existInDict = false;
+                if (query.length != 0) {
+                    for (String s : query) {
+                        if (s.equals(code)) {
+                            existInDict = true;
+                            break;
+                        }
+                    }
+                }
+                if (existInDict) {
+                    ToastUtils.show(this, R.string.wubi_words_adding_word_already_exists_ignore_toast);
+                    return;
+                }
+                dictDatabase.addRecord(word, code);
+                ToastUtils.show(this, R.string.adding_succeeded);
+            };
+
+            Dialog dialog = new AlertDialog.Builder(themedContext)
+                    .setView(inflate)
+                    .setPositiveButton(R.string.confirm, (dialog1, which) -> {
+                        positiveButtonAction.onClick(dialog1, which);
+                        inverseDictDatabase.close();
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog1, which) -> {
+                        inverseDictDatabase.close();
+                    })
+                    .create();
+
+            final Window window = dialog.getWindow();
+            final WindowManager.LayoutParams lp = window.getAttributes();
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.token = candidateView.getWindowToken();
+            lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
+            window.setAttributes(lp);
+            window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
+            dialog.show();
+
+            wordET.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    final String word = wordET.getText().toString();
+                    final String[] query = inverseDictDatabase.query(word);
+                    if (query.length != 0) {
+                        // the word already exists
+                        existAlertTV.setVisibility(View.VISIBLE);
+                        existWordCodeTV.setVisibility(View.VISIBLE);
+                        StringBuilder sb = new StringBuilder();
+                        for (String sbs : query) {
+                            sb.append(sbs).append('\n');
+                        }
+                        sb.deleteCharAt(sb.length() - 1);
+                        existWordCodeTV.setText(sb.toString());
+                        codeET.setText("");
+                        alreadyExists.set(true);
+                    } else {
+                        existAlertTV.setVisibility(View.GONE);
+                        existWordCodeTV.setText("");
+                        existWordCodeTV.setVisibility(View.GONE);
+
+                        final String composedWubiCode = inverseDictDatabase.composeCodeFromWord(word);
+                        if (composedWubiCode != null) {
+                            codeET.setText(composedWubiCode);
+                        } else {
+                            codeET.setText("");
+                        }
+                        alreadyExists.set(false);
+                    }
+                }
+            });
+            wordET.setText(ic.getSelectedText(0));
+        }
+    }
+
     /**
      * Reset wubi code, candidate words, and input method text.
      */
@@ -453,11 +584,6 @@ public class WubiIME extends InputMethodService {
     }
 
     @Override
-    public View onCreateInputView() {
-        return super.onCreateInputView();
-    }
-
-    @Override
     public void onFinishInput() {
         super.onFinishInput();
     }
@@ -469,6 +595,7 @@ public class WubiIME extends InputMethodService {
         wubiCodeTV = candidateView.findViewById(R.id.code);
 
         setCandidatesViewShown(true);
+        this.candidateView = candidateView;
         return candidateView;
     }
 
@@ -666,5 +793,22 @@ public class WubiIME extends InputMethodService {
             singleQuotationIndex = 0;
             doubleQuotationIndex = 0;
         }
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean checkCode(@NotNull String code) {
+        if (code.isEmpty() || code.length() > 4) {
+            return false;
+        }
+        for (byte b : code.getBytes()) {
+            if (!('a' <= b && b <= 'z')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void checkCodeOrThrow(@NotNull String code) {
+        if (!checkCode(code)) throw new IllegalArgumentException();
     }
 }
