@@ -537,7 +537,7 @@
     <string name="fdb_stroke_hardness_tv">硬度</string>
     <string name="fdb_import_path_version_3_1_toast">使用3.1版本path导入</string>
     <string name="fdb_import_path_version_4_0_toast">使用4.0版本path导入</string>
-    <string name="eraser_opacity">橡皮不透明度</string>
+    <string name="fdb_eraser_opacity_adjusting_dialog_title">橡皮不透明度</string>
     <!-- module end -->
 
     <!-- module: words -->

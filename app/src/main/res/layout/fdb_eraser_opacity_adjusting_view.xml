@@ -9,7 +9,10 @@
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/eraser_opacity"/>
+		android:text="@string/fdb_eraser_opacity_adjusting_dialog_title"
+		android:padding="10dp"
+		android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+	/>
 
 	<com.google.android.material.slider.Slider
 		android:layout_width="match_parent"
@@ -17,7 +20,7 @@
 		android:valueFrom="0"
 		android:valueTo="255"
 		android:value="255"
-		app:labelBehavior="withinBounds"
+		app:labelBehavior="floating"
 		android:id="@+id/opacity"/>
 
 </LinearLayout>
