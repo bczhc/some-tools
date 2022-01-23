@@ -54,6 +54,8 @@
     <string name="option_btn">选项</string>
     <string name="updating">正在更新</string>
     <string name="add_new">新增</string>
+    <string name="unsupported_function_toast">功能不支持</string>
+    <string name="failed_to_get_content_toast">获取内容失败</string>
     <!-- end -->
 
     <!-- old -->
@@ -537,6 +539,7 @@
     <string name="fdb_stroke_hardness_tv">硬度</string>
     <string name="fdb_import_path_version_3_1_toast">使用3.1版本path导入</string>
     <string name="fdb_import_path_version_4_0_toast">使用4.0版本path导入</string>
+    <string name="fdb_eraser_opacity_adjusting_dialog_title">橡皮不透明度</string>
     <!-- module end -->
 
     <!-- module: words -->
@@ -545,6 +548,7 @@
     <string name="words_delete_confirmation_dialog">是否删除</string>
     <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
     <string name="words_add_word_shortcut_label">添加单词</string>
+    <string name="words_text_process_action_label">@string/words_add_word_shortcut_label</string>
     <!-- module end -->
 
     <!-- screen color picker -->
