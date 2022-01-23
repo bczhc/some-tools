@@ -632,6 +632,6 @@
     <!-- end -->
 
     <!-- module: chars_splitter -->
-    <string name="chars_splitter_label">字符分割</string>
+    <string name="chars_splitter_label">字符拆分</string>
     <!-- end -->
 </resources>
