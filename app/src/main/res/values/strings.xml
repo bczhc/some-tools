@@ -19,6 +19,8 @@
     <string name="wake_lock_release_success">释放成功</string>
     <string name="app_menu_test">测试</string>
     <string name="app_menu_little_tools">小工具</string>
+    <string name="clipboard_copy_failed_toast">复制失败</string>
+    <string name="clipboard_copy_success_toast">复制成功</string>
     <!-- app end -->
 
     <!-- common -->
@@ -623,5 +625,9 @@
     <string name="wubi_words_adding_word_already_exists_alert">已存在该词</string>
     <string name="wubi_code_invalid_toast">无效的五笔编码</string>
     <string name="wubi_words_adding_word_already_exists_ignore_toast">已经存在，忽略添加</string>
+    <!-- end -->
+
+    <!-- module: chars_splitter -->
+    <string name="chars_splitter_label">字符分割</string>
     <!-- end -->
 </resources>

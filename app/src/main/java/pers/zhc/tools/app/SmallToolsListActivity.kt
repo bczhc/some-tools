@@ -12,6 +12,7 @@ import pers.zhc.tools.test.SysInfo
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.test.toast.ToastTest
 import pers.zhc.tools.test.typetest.TypeTest
+import pers.zhc.tools.tools.CharsSplitter
 
 /**
  * @author bczhc
@@ -31,7 +32,8 @@ class SmallToolsListActivity : BaseActivity() {
             ActivityItem(R.string.type_test, TypeTest::class.java),
             ActivityItem(R.string.regular_expression_test, RegExpTest::class.java),
             ActivityItem(R.string.sys_info_label, SysInfo::class.java),
-            ActivityItem(R.string.unicode_table_label, UnicodeTable::class.java)
+            ActivityItem(R.string.unicode_table_label, UnicodeTable::class.java),
+            ActivityItem(R.string.chars_splitter_label, CharsSplitter::class.java),
         )
 
         recyclerView.adapter = AppMenuAdapter(this, activities)

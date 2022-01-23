@@ -189,5 +189,12 @@ class UnicodeTable : BaseActivity() {
                 s
             }.toUpperCase(Locale.US)
         }
+
+        /**
+         * 97 -> U+0061
+         */
+        fun codepoint2unicodeStr(codepoint: Int): String {
+            return "U+${completeCodepointNum(codepoint.toString(16))}"
+        }
     }
 }
