@@ -7,13 +7,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef pers_zhc_tools_jni_JNI_FourierSeries_LINEAR_PATH_EVALUATOR
+#define pers_zhc_tools_jni_JNI_FourierSeries_LINEAR_PATH_EVALUATOR 0L
+#undef pers_zhc_tools_jni_JNI_FourierSeries_TIME_PATH_EVALUATOR
+#define pers_zhc_tools_jni_JNI_FourierSeries_TIME_PATH_EVALUATOR 1L
 /*
  * Class:     pers_zhc_tools_jni_JNI_FourierSeries
- * Method:    calc
- * Signature: (Ljava/util/ArrayList;DILpers/zhc/tools/jni/JNI/FourierSeries/Callback;II)V
+ * Method:    compute
+ * Signature: ([Lpers/zhc/tools/fourierseries/InputPoint;IDIIILpers/zhc/tools/jni/JNI/FourierSeries/Callback;)V
  */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_calc
-  (JNIEnv *, jclass, jobject, jdouble, jint, jobject, jint, jint);
+JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute
+  (JNIEnv *, jclass, jobjectArray, jint, jdouble, jint, jint, jint, jobject);
 
 #ifdef __cplusplus
 }

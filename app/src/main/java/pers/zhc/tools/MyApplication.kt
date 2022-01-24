@@ -10,6 +10,7 @@ import org.json.JSONObject
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
+import pers.zhc.tools.charucd.CharLookupActivity
 import pers.zhc.tools.crashhandler.CrashHandler
 import pers.zhc.tools.diary.DiaryDatabase
 import pers.zhc.tools.email.ContactActivity
@@ -36,6 +37,7 @@ class MyApplication : Application() {
         ContactActivity.initPath(this)
         DictionaryDatabase.init(this)
         WubiInverseDictManager.init(this)
+        CharLookupActivity.init(this)
 
         registerNotificationChannel()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

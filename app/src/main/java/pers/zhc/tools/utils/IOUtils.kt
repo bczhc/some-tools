@@ -51,3 +51,12 @@ class IORuntimeException: RuntimeException {
     constructor(message: String?) : super(message)
     constructor(cause: Throwable?) : super(cause)
 }
+
+fun File.requireDelete() {
+    if (this.exists()) {
+        if (!this.delete()) {
+            throw DeleteException()
+        }
+    }
+}
+

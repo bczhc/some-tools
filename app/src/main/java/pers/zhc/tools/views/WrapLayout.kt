@@ -2,6 +2,7 @@ package pers.zhc.tools.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import pers.zhc.tools.BaseViewGroup
 
 /**
@@ -25,5 +26,12 @@ open class WrapLayout : BaseViewGroup {
             view.measure(widthMeasureSpec, heightMeasureSpec)
             setMeasuredDimension(view.measuredWidth, view.measuredHeight)
         }
+    }
+
+    fun setView(view: View) {
+        if (this.childCount >= 1) {
+            this.removeAllViews()
+        }
+        this.addView(view)
     }
 }

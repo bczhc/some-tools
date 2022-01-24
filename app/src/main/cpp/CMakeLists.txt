@@ -42,6 +42,7 @@ add_library(
         src/test.cpp
         src/sys_info/sys_info.cpp
         src/magic/magic.cpp
+        src/ucd/ucd_parse.cpp
 )
 
 add_subdirectory(third_party/jni-lib)

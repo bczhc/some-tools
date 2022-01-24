@@ -15,3 +15,5 @@ libc = "0.2.98"
 pnet = "0.28.0"
 lettre = "0.10.0-rc.3"
 bczhc_lib = {path = "./third_party/bczhc_rust/lib"}
+serde_json = "1.0.78"
+quick-xml = "0.22.0"

@@ -42,6 +42,7 @@ public class Download {
             }
         }
         is.close();
+        os.flush();
         if (doneAction != null) {
             doneAction.run();
         }
@@ -119,7 +120,7 @@ public class Download {
         }
     }
 
-    interface ProgressCallback {
+    public interface ProgressCallback {
         void call(float f);
     }
 }

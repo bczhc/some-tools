@@ -650,5 +650,14 @@
     <string name="char_ucd_char_info_activity_label">字符信息</string>
     <string name="char_ucd_lookup_button">查询</string>
     <string name="char_ucd_unicode_codepoint_tv">Unicode: %1$s</string>
+    <string name="char_ucd_missing_database_dialog">UCD数据库缺失，是否下载</string>
+    <string name="char_ucd_parse_downloading_action_msg">下载中……</string>
+    <string name="char_ucd_parse_processing_xml_action_msg">正在处理XML</string>
+    <string name="char_ucd_parse_writing_database_action_msg">写入数据库……</string>
+    <string name="char_ucd_parse_counting_action_msg">正在计数</string>
+    <string name="char_ucd_parse_done_msg">完成</string>
+    <string name="char_ucd_get_ucd_database_button">获取UCD数据库</string>
+    <string name="char_ucd_parse_decompressing_action_msg">正在解压……</string>
+    <string name="char_ucd_parse_counting_entries">共%1$d条</string>
     <!-- end -->
 </resources>
