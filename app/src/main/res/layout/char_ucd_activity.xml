@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:tools="http://schemas.android.com/tools"
+>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:padding="10dp"
+    >
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  tools:text="a"
+                  android:layout_gravity="center_horizontal"
+                  style="@style/TextAppearance.MaterialComponents.Headline1"
+                  android:textColor="@color/highContrastTextColor"
+                  android:id="@+id/char_tv"
+        />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  tools:text="Unicode: U+FFFF"
+                  android:gravity="center"
+                  android:textSize="20sp"
+                  android:text="@string/char_ucd_unicode_codepoint_tv"
+                  android:id="@+id/unicode_tv"
+        />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:text="@string/char_ucd_encodings_title"
+                  android:textAppearance="@style/TextAppearance.Material3.TitleLarge"/>
+        <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TableRow android:paddingVertical="2.5dp" android:paddingHorizontal="5dp">
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          android:text="@string/char_ucd_utf8_title"
+                          android:textSize="15sp"
+                />
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          tools:text="FF FF FF"
+                          android:textSize="15sp"
+                          android:id="@+id/enc_utf8_tv"
+                />
+            </TableRow>
+            <TableRow android:paddingVertical="2.5dp" android:paddingHorizontal="5dp">
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          android:text="@string/char_ucd_utf16_title"
+                          android:textSize="15sp"
+                />
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          tools:text="FFFF FFFF"
+                          android:textSize="15sp"
+                          android:id="@+id/enc_utf16_tv"
+                />
+            </TableRow>
+            <TableRow android:paddingVertical="2.5dp" android:paddingHorizontal="5dp">
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          android:text="@string/char_ucd_utf16le_bytes_title"
+                          android:textSize="15sp"
+                />
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          tools:text="FF FF FF FF"
+                          android:textSize="15sp"
+                          android:id="@+id/enc_utf16le_tv"
+                />
+            </TableRow>
+            <TableRow android:paddingVertical="2.5dp" android:paddingHorizontal="5dp">
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          android:text="@string/char_ucd_utf16be_bytes_title"
+                          android:textSize="15sp"
+                />
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          tools:text="FF FF FF FF"
+                          android:textSize="15sp"
+                          android:id="@+id/enc_utf16be_tv"
+                />
+            </TableRow>
+            <TableRow android:paddingVertical="2.5dp" android:paddingHorizontal="5dp">
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          android:text="@string/char_ucd_utf32_title"
+                          android:textSize="15sp"
+                />
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          tools:text="FFFFFFFF"
+                          android:textSize="15sp"
+                          android:id="@+id/enc_utf32_tv"
+                />
+            </TableRow>
+            <TableRow android:paddingVertical="2.5dp" android:paddingHorizontal="5dp">
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          android:text="@string/char_ucd_utf32_le_bytes_title"
+                          android:textSize="15sp"
+                />
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          tools:text="FF FF FF FF"
+                          android:textSize="15sp"
+                          android:id="@+id/enc_utf32le_tv"
+                />
+            </TableRow>
+            <TableRow android:paddingVertical="2.5dp" android:paddingHorizontal="5dp">
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          android:text="@string/char_ucd_utf32be_bytes_title"
+                          android:textSize="15sp"
+                />
+                <TextView android:layout_width="0sp" android:layout_weight="1"
+                          tools:text="FF FF FF FF"
+                          android:textSize="15sp"
+                          android:id="@+id/enc_utf32be_tv"
+                />
+            </TableRow>
+        </TableLayout>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:text="@string/char_ucd_ucd_properties_title"
+                  style="@style/TextAppearance.Material3.TitleLarge"
+        />
+        <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                     android:id="@+id/ucd_prop_tl"
+        >
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:textSize="15sp"
+                      android:text="@string/char_ucd_querying_msg_text"
+            />
+        </TableLayout>
+    </LinearLayout>
+</ScrollView>

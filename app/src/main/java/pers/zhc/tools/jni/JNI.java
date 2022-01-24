@@ -300,4 +300,14 @@ public class JNI {
                 Callback callback
         );
     }
+
+    public static class Char {
+        public static native int getUtf8Len(int codepoint);
+
+        public static native void encodeUTF8(int codepoint, byte[] buf, int start);
+
+        public static native int getUtf16Len(int codepoint);
+
+        public static native void encodeUTF16(int codepoint, short[] buf, int start);
+    }
 }

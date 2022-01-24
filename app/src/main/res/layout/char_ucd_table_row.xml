@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingHorizontal="5dp"
+          android:paddingVertical="2.5dp"
+          xmlns:tools="http://schemas.android.com/tools"
+>
+    <TextView android:layout_width="0sp" android:layout_weight="1"
+              tools:text="ABC"
+              android:textSize="15sp"
+              android:id="@+id/key_tv"
+    />
+    <TextView android:layout_width="0sp" android:layout_weight="1"
+              tools:text="Y"
+              android:textSize="15sp"
+              android:id="@+id/value_tv"
+    />
+</TableRow>

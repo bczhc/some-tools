@@ -634,4 +634,21 @@
     <!-- module: chars_splitter -->
     <string name="chars_splitter_label">字符拆分</string>
     <!-- end -->
+
+    <!-- module: char_ucd -->
+    <string name="char_ucd_encodings_title">编码</string>
+    <string name="char_ucd_utf8_title">UTF-8</string>
+    <string name="char_ucd_utf16_title">UTF-16</string>
+    <string name="char_ucd_utf16le_bytes_title">UTF-16 (bytes, LE)</string>
+    <string name="char_ucd_utf16be_bytes_title">UTF-16 (bytes, BE)</string>
+    <string name="char_ucd_utf32_title">UTF-32</string>
+    <string name="char_ucd_utf32_le_bytes_title">UTF-32 (bytes, LE)</string>
+    <string name="char_ucd_utf32be_bytes_title">UTF-32 (bytes, BE)</string>
+    <string name="char_ucd_ucd_properties_title">UCD属性</string>
+    <string name="char_ucd_querying_msg_text">正在查询……</string>
+    <string name="char_ucd_lookup_activity_label">字符查询</string>
+    <string name="char_ucd_char_info_activity_label">字符信息</string>
+    <string name="char_ucd_lookup_button">查询</string>
+    <string name="char_ucd_unicode_codepoint_tv">Unicode: %1$s</string>
+    <!-- end -->
 </resources>

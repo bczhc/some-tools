@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.tools_activity_main.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.charucd.CharLookupActivity
 import pers.zhc.tools.clipboard.Clip
 import pers.zhc.tools.pi.Pi
 import pers.zhc.tools.test.RegExpTest
@@ -34,6 +35,7 @@ class SmallToolsListActivity : BaseActivity() {
             ActivityItem(R.string.sys_info_label, SysInfo::class.java),
             ActivityItem(R.string.unicode_table_label, UnicodeTable::class.java),
             ActivityItem(R.string.chars_splitter_label, CharsSplitter::class.java),
+            ActivityItem(R.string.char_ucd_lookup_activity_label, CharLookupActivity::class.java),
         )
 
         recyclerView.adapter = AppMenuAdapter(this, activities)

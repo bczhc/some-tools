@@ -1,5 +1,6 @@
 use std::fmt::Debug;
 
+use jni::errors::Error;
 use jni::JNIEnv;
 
 pub trait CheckOrThrow {
@@ -16,5 +17,21 @@ where
             env.throw(string.as_str())?;
         }
         Ok(())
+    }
+}
+
+pub trait UnwrapOrThrow<T> {
+    fn unwrap_or_throw(self, env: JNIEnv, msg: &str) -> T;
+}
+
+impl<T> UnwrapOrThrow<T> for Option<T> {
+    fn unwrap_or_throw(self, env: JNIEnv, msg: &str) -> T {
+        match self {
+            None => {
+                env.throw(msg).unwrap();
+                unreachable!();
+            }
+            Some(a) => a,
+        }
     }
 }
