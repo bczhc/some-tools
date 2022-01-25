@@ -21,12 +21,19 @@ class CharLookupActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.char_ucd_lookup_activity)
 
-        val inputET = input_et!!.editText
+        val charLookupView = lookup_view!!
         val button = btn!!
         val getUcdDbButton = get_btn!!
 
         button.setOnClickListener {
-            val codepoint = inputET.text.toString().toInt(16)
+            val codepoint = charLookupView.getCodepoint().let {
+                if (it == null) {
+                    ToastUtils.show(this, R.string.please_enter_correct_value_toast)
+                    return@setOnClickListener
+                }
+                it
+            }
+
             val intent = Intent(this, CharUcdActivity::class.java)
             intent.putExtra(CharUcdActivity.EXTRA_CODEPOINT, codepoint)
             startActivity(intent)

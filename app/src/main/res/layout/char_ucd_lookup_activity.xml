@@ -2,15 +2,14 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="match_parent"
         android:padding="10dp"
         android:orientation="vertical"
 >
-    <pers.zhc.tools.views.SmartHintEditText
+    <pers.zhc.tools.views.CharacterLookupInputView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/input_et"
-            app:hint="@string/unicode_table_seek_codepoint_et_hint"
+            android:id="@+id/lookup_view"
     />
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/char_ucd_lookup_button"
