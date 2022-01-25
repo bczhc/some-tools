@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import kotlinx.android.synthetic.main.char_ucd_lookup_activity.*
 import pers.zhc.tools.BaseActivity
@@ -71,30 +73,33 @@ class CharLookupActivity : BaseActivity() {
         val tryDo = AsyncTryDo()
 
         progressView.setActionText(ParseAction.DOWNLOADING.getActionMsg(this))
+        val handler = Handler(Looper.getMainLooper())
 
         Thread {
-            val uiThreadResetProgress = {progressView: ParseProgressView ->
-                runOnUiThread {
-                    progressView.setProgress(0F, false)
+            val progressViewOnUiThread = object {
+                val resetProgress = {
+                    handler.post { progressView.setProgress(0F, false) }
+                    Unit
                 }
+                val setActionText = { s: String -> handler.post { progressView.setActionText(s) } }
             }
 
             val os = paths.download.outputStream()
             // the `download` method is synchronous, so we can write tasks below it directly; pass `null` to `doneAction`
             Download.download(URL(UNICODE_UCD_XML_URL), os, {
                 tryDo.tryDo { _, notifier ->
-                    runOnUiThread {
+                    handler.post {
                         progressView.setProgressAndTitle(it)
                         notifier.finish()
                     }
                 }
             }, null)
 
-            progressView.setActionText(ParseAction.DECOMPRESSING.getActionMsg(this))
-            uiThreadResetProgress(progressView)
+            progressViewOnUiThread.setActionText(ParseAction.DECOMPRESSING.getActionMsg(this))
+            progressViewOnUiThread.resetProgress()
             ZipUtils.decompressSingleFile(paths.download, paths.xml) {
                 tryDo.tryDo { _, notifier ->
-                    runOnUiThread {
+                    handler.post {
                         progressView.setProgress(it)
                         notifier.finish()
                     }
@@ -102,22 +107,22 @@ class CharLookupActivity : BaseActivity() {
             }
             paths.download.requireDelete()
 
-            progressView.setActionText(ParseAction.COUNTING.getActionMsg(this))
-            uiThreadResetProgress(progressView)
+            progressViewOnUiThread.setActionText(ParseAction.COUNTING.getActionMsg(this))
+            progressViewOnUiThread.resetProgress()
             val count = JNI.CharUcd.count(paths.xml.path) {
                 tryDo.tryDo { _, notifier ->
-                    runOnUiThread {
+                    handler.post {
                         progressView.setProgressTitle(getString(R.string.char_ucd_parse_counting_entries, it))
                         notifier.finish()
                     }
                 }
             }
 
-            progressView.setActionText(ParseAction.PARSING_XML.getActionMsg(this))
-            uiThreadResetProgress(progressView)
+            progressViewOnUiThread.setActionText(ParseAction.PARSING_XML.getActionMsg(this))
+            progressViewOnUiThread.resetProgress()
             JNI.CharUcd.parseXml(paths.xml.path, paths.intermediate.path) {
                 tryDo.tryDo { _, notifier ->
-                    runOnUiThread {
+                    handler.post {
                         progressView.setProgressAndTitle(it.toFloat() / count.toFloat())
                         notifier.finish()
                     }
@@ -125,13 +130,12 @@ class CharLookupActivity : BaseActivity() {
             }
             paths.xml.requireDelete()
 
-            progressView.setActionText(ParseAction.WRITING_DATABASE.getActionMsg(this))
-
+            progressViewOnUiThread.setActionText(ParseAction.WRITING_DATABASE.getActionMsg(this))
             // delete, and recreate it (SQLite3 "open" function automatically does)
             paths.database.requireDelete()
             JNI.CharUcd.writeDatabase(paths.intermediate.path, paths.database.path) {
                 tryDo.tryDo { _, notifier ->
-                    runOnUiThread {
+                    handler.post {
                         progressView.setProgressAndTitle(it.toFloat() / count.toFloat())
                         notifier.finish()
                     }
@@ -139,7 +143,7 @@ class CharLookupActivity : BaseActivity() {
             }
             paths.intermediate.requireDelete()
 
-            runOnUiThread {
+            handler.post {
                 progressView.setProgress(1F)
                 dialog.dismiss()
                 ToastUtils.show(this, R.string.char_ucd_parse_done_msg)
