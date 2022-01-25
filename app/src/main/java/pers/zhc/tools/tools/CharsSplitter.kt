@@ -2,6 +2,7 @@ package pers.zhc.tools.tools
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import kotlinx.android.synthetic.main.chars_splitter_activity.*
 import kotlinx.android.synthetic.main.chars_splitter_list_item.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.charucd.CharUcdActivity
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.utils.ClipboardUtils
@@ -62,6 +64,12 @@ class CharsSplitter : BaseActivity() {
             holder.charTV.setOnLongClickListener {
                 ClipboardUtils.putWithToast(context, char)
                 return@setOnLongClickListener true
+            }
+            holder.charTV.setOnClickListener {
+                val intent = Intent(context, CharUcdActivity::class.java).apply {
+                    putExtra(CharUcdActivity.EXTRA_CODEPOINT, codepoint)
+                }
+                context.startActivity(intent)
             }
         }
 
