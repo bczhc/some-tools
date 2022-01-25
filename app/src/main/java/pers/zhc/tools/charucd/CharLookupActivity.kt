@@ -42,11 +42,14 @@ class CharLookupActivity : BaseActivity() {
         }
 
         getUcdDbButton.setOnClickListener {
-            DialogUtils.createConfirmationAlertDialog(this, { _, _ ->
-                fetchAndProcessDatabase()
-            }, { _, _ ->
-                finish()
-            }, titleRes = R.string.char_ucd_missing_database_dialog).apply {
+            DialogUtils.createConfirmationAlertDialog(
+                this,
+                { _, _ ->
+                    fetchAndProcessDatabase()
+                },
+                titleRes = R.string.char_ucd_download_ucd_database_prompt_dialog,
+                message = getString(R.string.char_ucd_process_ucd_data_dialog_msg)
+            ).apply {
                 setCancelable(false)
                 setCanceledOnTouchOutside(false)
             }.show()
