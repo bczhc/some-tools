@@ -659,5 +659,8 @@
     <string name="char_ucd_get_ucd_database_button">获取UCD数据库</string>
     <string name="char_ucd_parse_decompressing_action_msg">正在解压……</string>
     <string name="char_ucd_parse_counting_entries">共%1$d条</string>
+    <string name="char_ucd_unicode_decimal_tv">十进制：%1$d</string>
+    <string name="char_ucd_database_missing_msg">数据库缺失</string>
+    <string name="char_ucd_ucd_properties_not_found_msg">未找到数据</string>
     <!-- end -->
 </resources>

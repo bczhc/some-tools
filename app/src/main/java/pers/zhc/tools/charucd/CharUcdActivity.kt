@@ -4,7 +4,10 @@
 package pers.zhc.tools.charucd
 
 import android.os.Bundle
+import android.view.View
 import kotlinx.android.synthetic.main.char_ucd_activity.*
+import kotlinx.android.synthetic.main.char_ucd_table_row.view.*
+import org.json.JSONArray
 import pers.zhc.jni.JNI.Struct.packInt
 import pers.zhc.jni.JNI.Struct.packShort
 import pers.zhc.jni.struct.Struct
@@ -13,6 +16,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.utils.CharUtils
+import pers.zhc.util.Assertion
 import java.util.*
 
 /**
@@ -43,6 +47,53 @@ class CharUcdActivity : BaseActivity() {
         char_tv.text = JNI.Utf8.codepoint2str(codepoint)
         unicode_tv!!.text =
             getString(R.string.char_ucd_unicode_codepoint_tv, UnicodeTable.codepoint2unicodeStr(codepoint))
+        decimal_tv!!.text = getString(R.string.char_ucd_unicode_decimal_tv, codepoint)
+
+        val ucdContentPlaceholder = ucd_content_placeholder!!
+        ucdContentPlaceholder.text = getString(
+            if (CharLookupActivity.UCD_DATABASE_PATH.exists()) {
+                R.string.char_ucd_querying_msg_text
+            } else {
+                R.string.char_ucd_database_missing_msg
+            }
+        )
+
+        Thread {
+            val ucdDatabasePath = CharLookupActivity.UCD_DATABASE_PATH
+            if (!ucdDatabasePath.exists()) return@Thread
+
+            val database = UcdDatabase(ucdDatabasePath)
+            val properties = database.query(codepoint)
+            database.close()
+
+            if (properties == null) {
+                ucdContentPlaceholder.text = getString(R.string.char_ucd_ucd_properties_not_found_msg)
+                return@Thread
+            }
+
+            runOnUiThread {
+                ucdTL.removeAllViews()
+                for (i in 0 until properties.length()) {
+                    val obj = properties.getJSONObject(i)
+                    val key = run {
+                        Assertion.doAssertion(obj.length() == 1)
+                        obj.keys().next()!!
+                    }
+                    val value = obj.get(key)
+                    val valueString = if (key != "alias") {
+                        value as String
+                    } else {
+                        val aliasArray = value as JSONArray
+                        aliasArray.join(", ")
+                    }
+
+                    val inflate = View.inflate(this, R.layout.char_ucd_table_row, null)
+                    inflate.key_tv!!.text = key
+                    inflate.value_tv!!.text = valueString
+                    ucdTL.addView(inflate)
+                }
+            }
+        }.start()
     }
 
     companion object {

@@ -49,7 +49,7 @@ class CharLookupActivity : BaseActivity() {
             val download = File(filesDir, "ucd-xml.zip")
             val xml = File(filesDir, "ucd-xml")
             val intermediate = File(filesDir, "ucd-xml-parsed-intermediate")
-            val database = File(UCD_DATABASE_PATH)
+            val database = UCD_DATABASE_PATH
         }
 
         val progressView = ParseProgressView(this)
@@ -156,10 +156,10 @@ class CharLookupActivity : BaseActivity() {
     companion object {
         private const val UNICODE_UCD_XML_URL = "https://www.unicode.org/Public/UCD/latest/ucdxml/ucd.all.flat.zip"
 
-        private lateinit var UCD_DATABASE_PATH: String
+        lateinit var UCD_DATABASE_PATH: File
 
         fun init(context: Context) {
-            UCD_DATABASE_PATH = File(context.filesDir, "ucd.db").path
+            UCD_DATABASE_PATH = File(context.filesDir, "ucd.db")
         }
     }
 }

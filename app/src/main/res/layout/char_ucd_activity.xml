@@ -16,12 +16,15 @@
                   android:id="@+id/char_tv"
         />
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  tools:text="Unicode: U+FFFF"
                   android:gravity="center"
                   android:textSize="20sp"
-                  android:text="@string/char_ucd_unicode_codepoint_tv"
+                  tools:text="@string/char_ucd_unicode_codepoint_tv"
                   android:id="@+id/unicode_tv"
         />
+        <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                  tools:text="@string/char_ucd_unicode_decimal_tv"
+                  android:id="@+id/decimal_tv"
+                  />
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:text="@string/char_ucd_encodings_title"
                   android:textAppearance="@style/TextAppearance.Material3.TitleLarge"/>
@@ -113,7 +116,8 @@
         >
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:textSize="15sp"
-                      android:text="@string/char_ucd_querying_msg_text"
+                      tools:text="@string/char_ucd_querying_msg_text"
+                      android:id="@+id/ucd_content_placeholder"
             />
         </TableLayout>
     </LinearLayout>
