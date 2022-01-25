@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
 import android.view.*
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.unicode_table_activity.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.charucd.CharUcdActivity
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.views.CharacterLookupInputView
@@ -114,6 +116,12 @@ class UnicodeTable : BaseActivity() {
                 cm.setPrimaryClip(cd)
                 ToastUtils.show(ctx, R.string.unicode_table_copying_succeeded_toast)
                 return@setOnLongClickListener true
+            }
+            holder.charTV.setOnClickListener {
+                val intent = Intent(ctx, CharUcdActivity::class.java).apply {
+                    putExtra(CharUcdActivity.EXTRA_CODEPOINT, position)
+                }
+                ctx.startActivity(intent)
             }
         }
 
