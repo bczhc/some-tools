@@ -28,6 +28,8 @@ class CodepointIterator(s: String): Iterator<Int>, Iterable<Int> {
      * Method for finalizing this object for JVM
      */
     protected fun finalize() {
-        release()
+        if (addr != 0L) {
+            release()
+        }
     }
 }
