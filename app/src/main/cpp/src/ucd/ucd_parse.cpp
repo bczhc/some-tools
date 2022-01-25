@@ -70,13 +70,17 @@ void writeDatabase(JNIEnv *env, jstring srcJS, jstring destJS, jobject progressC
         statement.bindText(2, propJsonStr.getCString(), SQLITE_TRANSIENT);
         statement.step();
 
-        progressCallback.progress(count);
         ++count;
+        if (count % 1000 == 0) {
+            progressCallback.progress(count);
+        }
     }
 
     statement.release();
     db.exec("COMMIT");
     db.close();
+
+    is.close();
 
     env->ReleaseStringUTFChars(srcJS, src);
     env->ReleaseStringUTFChars(destJS, dest);
