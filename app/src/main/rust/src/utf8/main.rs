@@ -8,6 +8,8 @@ use jni::strings::JNIString;
 use jni::sys::{_jobject, jboolean, jint, jlong, jobjectArray, jstring};
 use jni::JNIEnv;
 
+use crate::jni_helper::GetString;
+
 #[no_mangle]
 #[allow(non_snake_case)]
 pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_getCodepointIterator(
@@ -15,7 +17,12 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_getCodepointIterator(
     _class: JClass,
     s: JString,
 ) -> jlong {
-    let s = String::from(env.get_string(s).unwrap().to_str().unwrap());
+    let s = env.get_string_owned(s);
+    if let Err(e) = s {
+        env.throw(format!("Invalid string: {:?}", e));
+        return 0 as jlong;
+    }
+    let s = s.unwrap();
     let iterator = Box::new(StringWithIter::new(s));
     let raw = Box::into_raw(iterator);
     raw as usize as jlong

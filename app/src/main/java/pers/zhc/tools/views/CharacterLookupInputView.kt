@@ -10,12 +10,13 @@ import pers.zhc.tools.R
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.utils.CodepointIterator
+import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.util.Assertion
 
 /**
  * @author bczhc
  */
-class CharacterLookupInputView: WrapLayout {
+class CharacterLookupInputView : WrapLayout {
     private lateinit var codepointET: EditText
 
     constructor(context: Context?) : this(context, null)
@@ -69,14 +70,23 @@ class CharacterLookupInputView: WrapLayout {
                     return@doAfterTextChanged
                 }
             }
-
-            val codepoints = CodepointIterator(charInput).toList()
+            val codepoints: List<Int>
+            try {
+                codepoints = CodepointIterator(charInput).toList()
+            } catch (e: Exception) {
+                ToastUtils.showError(context, R.string.please_enter_correct_value_toast, e)
+                setText {
+                    charET.text.clear()
+                    codepointET.text.clear()
+                }
+                return@doAfterTextChanged
+            }
             Assertion.doAssertion(codepoints.isNotEmpty())
             if (codepoints.size > 1) {
                 val s = String(intArrayOf(codepoints[0]), 0, 1)
                 setText {
                     charET.setText(s)
-                    charET.setSelection(1)
+                    charET.setSelection(charET.length())
                 }
             }
             Assertion.doAssertion(JNI.Utf8.codepointLength(charET.text.toString()) == 1)
@@ -87,6 +97,6 @@ class CharacterLookupInputView: WrapLayout {
     }
 
     fun getCodepoint(): Int? {
-        return codepointET.text.toString().toIntOrNull( 16)
+        return codepointET.text.toString().toIntOrNull(16)
     }
 }
