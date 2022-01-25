@@ -110,14 +110,14 @@ class UnicodeTable : BaseActivity() {
             holder.charTV.text = String(charBuf, 0, len)
             holder.charTV.textSize = cellTextWidth
 
-            holder.charTV.setOnLongClickListener {
+            holder.itemView.setOnLongClickListener {
                 val cm = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val cd = ClipData.newPlainText("character", holder.charTV.text)
                 cm.setPrimaryClip(cd)
                 ToastUtils.show(ctx, R.string.unicode_table_copying_succeeded_toast)
                 return@setOnLongClickListener true
             }
-            holder.charTV.setOnClickListener {
+            holder.itemView.setOnClickListener {
                 val intent = Intent(ctx, CharUcdActivity::class.java).apply {
                     putExtra(CharUcdActivity.EXTRA_CODEPOINT, position)
                 }
