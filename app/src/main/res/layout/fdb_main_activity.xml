@@ -3,12 +3,18 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:padding="5dp">
+              android:padding="5dp"
+              xmlns:tools="http://schemas.android.com/tools"
+>
     <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/fdb_start_fdb_button"
             android:id="@+id/start_button"
             android:layout_gravity="center_horizontal"
+    />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              tools:text="debug..."
+              android:id="@+id/debug_tv"
     />
 </LinearLayout>

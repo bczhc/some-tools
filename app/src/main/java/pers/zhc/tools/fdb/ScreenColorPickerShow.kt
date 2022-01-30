@@ -10,9 +10,10 @@ import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.DisplayUtil
-import pers.zhc.tools.utils.MediaUtils
+import pers.zhc.tools.utils.*
+import pers.zhc.util.Assertion
+import java.io.File
+import java.io.OutputStreamWriter
 
 /**
  * @author bczhc
@@ -29,7 +30,14 @@ class ScreenColorPickerShow(
     private val screenColorPickerViewDimension = FloatingViewOnTouchListener.ViewDimension()
     private lateinit var screenColorPickerViewPositionUpdater: FloatingViewOnTouchListener
 
+    private lateinit var logFile: File
+    private lateinit var logWriter: OutputStreamWriter
+
     fun start() {
+        logFile = File(Common.getAppMainExternalStoragePathFile(context), "log")
+        logFile.requireDelete()
+        logWriter = logFile.writer()
+
         wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
         screenColorPickerView = ScreenColorPickerView(context)
@@ -72,6 +80,11 @@ class ScreenColorPickerShow(
         @Suppress("ClickableViewAccessibility")
         screenColorPickerView.setOnTouchListener { v, event ->
             screenColorPickerViewPositionUpdater.onTouch(v, event)
+
+            val eventLogString = event.toString()
+            FdbMainActivity.debugTV?.text = eventLogString
+            logWriter.write(eventLogString)
+            logWriter.appendLine()
 
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -128,5 +141,9 @@ class ScreenColorPickerShow(
 
     fun stop() {
         wm.removeView(screenColorPickerView)
+        logWriter.flush()
+        logWriter.close()
+
+        ToastUtils.show(context, logFile.path.toString())
     }
 }
