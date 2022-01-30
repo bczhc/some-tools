@@ -4,10 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
-import android.graphics.drawable.Icon;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Base64;
@@ -40,8 +36,6 @@ import pers.zhc.tools.words.WordsMainActivity;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
@@ -52,7 +46,6 @@ import static pers.zhc.tools.MyApplication.wakeLock;
  */
 public class MainActivity extends BaseActivity {
 
-    private ShortcutManager shortcutManager = null;
     private final ArrayList<ActivityItem> activities = new ArrayList<>();
 
     @Override
@@ -62,63 +55,6 @@ public class MainActivity extends BaseActivity {
 
         addActivities();
         loadRecyclerView();
-    }
-
-    /**
-     * TODO: 7/15/21 now when a shortcut was added, it could be changed or cross-positioned after a change of the main list
-     */
-    private void shortcut(int texts, Class<?> theClass, int id) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-            ToastUtils.show(this, R.string.shortcut_unsupported);
-            return;
-        }
-        if (shortcutManager == null) {
-            if ((shortcutManager = getSystemService(ShortcutManager.class)) == null) {
-                ToastUtils.show(this, R.string.create_shortcut_failed);
-                return;
-            }
-        }
-        final List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
-        int removedIndex = -1;
-        for (int i = 0; i < dynamicShortcuts.size(); i++) {
-            ShortcutInfo dynamicShortcut = dynamicShortcuts.get(i);
-            if (dynamicShortcut.getId().equals("shortcut_id" + id)) {
-                removedIndex = i;
-            }
-        }
-        if (removedIndex != -1) {
-            dynamicShortcuts.remove(removedIndex);
-            ToastUtils.show(this, R.string.deleted_shortcut);
-        } else {
-            int shortcutSize = dynamicShortcuts.size();
-            if (shortcutSize + 1 > shortcutManager.getMaxShortcutCountPerActivity()) {
-                ToastUtils.show(this, R.string.over_quantity_limit);
-                return;
-            }
-
-            //new
-            ShortcutInfo.Builder builder = new ShortcutInfo.Builder(this, "shortcut_id" + id);
-            Intent intent = new Intent(this, theClass);
-            intent.putExtra("fromShortcut", true);
-            intent.setAction(Intent.ACTION_VIEW);
-            ShortcutInfo shortcutInfo = builder.setShortLabel(getString(texts))
-                    .setLongLabel(getString(texts))
-                    .setIcon(Icon.createWithResource(this, R.drawable.ic_launcher_foreground))
-                    .setIntent(intent).build();
-            dynamicShortcuts.add(shortcutInfo);
-            ToastUtils.show(this, R.string.create_shortcut_succeeded);
-        }
-        //rebuild
-        List<ShortcutInfo> newShortCutInfoList = new ArrayList<>();
-        for (ShortcutInfo shortcut : dynamicShortcuts) {
-            ShortcutInfo.Builder builder1 = new ShortcutInfo.Builder(this, shortcut.getId());
-            builder1.setIcon(Icon.createWithResource(this, R.drawable.ic_launcher_foreground))
-                    .setLongLabel(Objects.requireNonNull(shortcut.getLongLabel()))
-                    .setIntent(Objects.requireNonNull(shortcut.getIntent()))
-                    .setShortLabel(Objects.requireNonNull(shortcut.getShortLabel()));
-            newShortCutInfoList.add(builder1.build());
-        }
-        shortcutManager.setDynamicShortcuts(newShortCutInfoList);
     }
 
     private void addActivities() {
