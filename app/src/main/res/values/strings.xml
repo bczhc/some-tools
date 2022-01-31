@@ -19,11 +19,6 @@
     <string name="wake_lock_release_success">释放成功</string>
     <string name="app_menu_test">测试</string>
     <string name="app_menu_little_tools">小工具</string>
-    <string name="clipboard_copy_failed_toast">复制失败</string>
-    <string name="clipboard_copy_success_toast">复制成功</string>
-    <string name="shortcut_deletion_msg">已删除快捷方式</string>
-    <string name="shortcut_size_limit_exceeded_msg">超出数量限制</string>
-    <string name="shortcut_create_success_toast">创建快捷方式成功</string>
     <!-- app end -->
 
     <!-- common -->
@@ -59,6 +54,13 @@
     <string name="add_new">新增</string>
     <string name="unsupported_function_toast">功能不支持</string>
     <string name="failed_to_get_content_toast">获取内容失败</string>
+    <string name="clipboard_copy_failed_toast">复制失败</string>
+    <string name="clipboard_copy_success_toast">复制成功</string>
+    <string name="shortcut_deletion_msg">已删除快捷方式</string>
+    <string name="shortcut_size_limit_exceeded_msg">超出数量限制</string>
+    <string name="shortcut_create_success_toast">创建快捷方式成功</string>
+    <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
+    <string name="create_pinned_shortcut_action_name">添加到桌面</string>
     <!-- end -->
 
     <!-- old -->
@@ -549,7 +551,7 @@
     <string name="words_label">单词</string>
     <string name="words_already_have_word">该记录已存在</string>
     <string name="words_delete_confirmation_dialog">是否删除</string>
-    <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
+    <string name="words_not_support_pinned_shortcut_toast">@string/not_support_pinned_shortcut_toast</string>
     <string name="words_add_word_shortcut_label">添加单词</string>
     <string name="words_text_process_action_label">@string/words_add_word_shortcut_label</string>
     <!-- module end -->

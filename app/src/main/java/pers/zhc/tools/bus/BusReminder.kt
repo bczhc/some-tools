@@ -169,7 +169,7 @@ class BusReminder(
         val notificationContentIntent = Intent(context, BusLineDetailActivity::class.java)
         notificationContentIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         notificationContentIntent.putExtra(BusLineDetailActivity.EXTRA_RUN_PATH_ID, runPathId)
-        notificationContentIntent.putExtra(BusLineDetailActivity.EXTRA_DIRECTION, direction)
+        notificationContentIntent.putExtra(BusLineDetailActivity.EXTRA_DIRECTION, direction.id)
         val notificationContentPI = PendingIntent.getActivity(context, notificationId, notificationContentIntent, 0)!!
 
         return NotificationCompat.Builder(context, MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL).apply {

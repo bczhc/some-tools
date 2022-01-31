@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-<item app:showAsAction="ifRoom"
-      android:id="@+id/refresh"
-      android:title="@string/bus_line_detail_refresh_btn"
-      />
+    <item app:showAsAction="ifRoom"
+          android:id="@+id/refresh"
+          android:title="@string/bus_line_detail_refresh_btn"
+    />
+    <item android:title="@string/create_pinned_shortcut_action_name"
+          android:id="@+id/add_pinned_shortcut"
+          app:showAsAction="never"
+    />
 </menu>

@@ -140,7 +140,7 @@ class WordsMainActivity : BaseActivity() {
 
     private fun createShortcutAction() {
         if (!ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
-            ToastUtils.show(this, R.string.not_support_pinned_shortcut_toast)
+            ToastUtils.show(this, R.string.words_not_support_pinned_shortcut_toast)
             return
         }
 

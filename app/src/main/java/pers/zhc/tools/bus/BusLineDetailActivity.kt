@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import kotlinx.android.synthetic.main.bus_line_detail_activity.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -27,6 +30,7 @@ class BusLineDetailActivity : BaseActivity() {
     private lateinit var busRunTimeTV: TextView
     private lateinit var endStationNameTV: TextView
     private lateinit var currentDirection: Direction
+    private var fetchedBusInfo: BusInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +38,7 @@ class BusLineDetailActivity : BaseActivity() {
 
         val intent = intent
         runPathId = intent.getStringExtra(EXTRA_RUN_PATH_ID)!!
-        currentDirection = if (intent.hasExtra(EXTRA_DIRECTION)) {
-            intent.getSerializableExtra(EXTRA_DIRECTION) as Direction
-        } else {
-            Direction.DIRECTION_1
-        }
+        currentDirection = Direction.fromId(intent.getIntExtra(EXTRA_DIRECTION, Direction.DIRECTION_1.id))
 
         startStationNameTV = start_station_name_tv!!
         endStationNameTV = end_station_name_tv!!
@@ -63,7 +63,9 @@ class BusLineDetailActivity : BaseActivity() {
 
     private fun asyncSetPageOnUiThread() {
         Thread {
+            fetchedBusInfo = null
             val busInfo = syncFetchBusInfo(runPathId)!!
+            fetchedBusInfo = busInfo
 
             val busRunInfo = syncFetchBusRunInfo(runPathId, currentDirection)
             if (busRunInfo == null) {
@@ -127,9 +129,25 @@ class BusLineDetailActivity : BaseActivity() {
         }
     }
 
-    enum class Direction : Serializable {
-        DIRECTION_1,
-        DIRECTION_2
+    enum class Direction(val id: Int) : Serializable {
+        DIRECTION_1(1),
+        DIRECTION_2(2);
+
+        companion object {
+            fun fromId(id: Int): Direction {
+                return when (id) {
+                    1 -> {
+                        DIRECTION_1
+                    }
+                    2 -> {
+                        DIRECTION_2
+                    }
+                    else -> {
+                        throw IllegalArgumentException("Invalid id")
+                    }
+                }
+            }
+        }
     }
 
     class BusInfo(
@@ -157,10 +175,35 @@ class BusLineDetailActivity : BaseActivity() {
                 busLineDetailLL.removeAllStations()
                 asyncSetPageOnUiThread()
             }
+            R.id.add_pinned_shortcut -> {
+                createPinnedShortcutAction()
+            }
             else -> {
             }
         }
-        return super.onOptionsItemSelected(item)
+        return true
+    }
+
+    private fun createPinnedShortcutAction() {
+        fetchedBusInfo?.let {
+            if (!ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
+                ToastUtils.show(this, R.string.not_support_pinned_shortcut_toast)
+                return
+            }
+
+            val shortcut = ShortcutInfoCompat.Builder(this, "bus-line-${it.busLineName}").apply {
+                setIcon(IconCompat.createWithResource(this@BusLineDetailActivity, R.drawable.ic_launcher_foreground))
+                setShortLabel(it.busLineName)
+                setLongLabel(it.busLineName)
+                setIntent(Intent("NONE_ACTION").apply {
+                    setClass(this@BusLineDetailActivity, this@BusLineDetailActivity.javaClass)
+                    putExtra(EXTRA_RUN_PATH_ID, runPathId)
+                    // there's no need to keep the bus line direction from users' view, I think
+                    // so do not put direction extra
+                })
+            }.build()
+            ShortcutManagerCompat.requestPinShortcut(this, shortcut, null)
+        }
     }
 
     companion object {
@@ -170,7 +213,7 @@ class BusLineDetailActivity : BaseActivity() {
         const val EXTRA_RUN_PATH_ID = "runPathId"
 
         /**
-         * intent serialized enum extra
+         * intent integer enum extra, optional
          */
         const val EXTRA_DIRECTION = "direction"
 
