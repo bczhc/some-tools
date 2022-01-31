@@ -61,6 +61,8 @@
     <string name="shortcut_create_success_toast">创建快捷方式成功</string>
     <string name="not_support_pinned_shortcut_toast">您的手机不支持此类型快捷方式</string>
     <string name="create_pinned_shortcut_action_name">添加到桌面</string>
+    <string name="regex">正则表达式</string>
+    <string name="regex_bad_pattern">正则表达式有误</string>
     <!-- end -->
 
     <!-- old -->
@@ -321,7 +323,6 @@
     <string name="closed">已关闭</string>
     <string name="regular_expression_test">正则表达式测试</string>
     <string name="text">文本</string>
-    <string name="regex">正则表达式</string>
     <string name="corrupted_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
     <string name="wubi_test">五笔测试</string>
     <string name="something_went_wrong">something went wrong</string>
@@ -465,6 +466,9 @@
     <string name="diary_file_browser_open_file_failed">无法打开图片</string>
     <string name="diary_file_library_text_edit_activity_label">文本编辑</string>
     <string name="diary_find_menu">查找</string>
+    <string name="diary_advanced_search_menu">高级搜索</string>
+    <string name="diary_advanced_search_dialog_title">搜索</string>
+    <string name="diary_searching_progress_dialog_title">搜索中……</string>
     <!-- module end -->
 
     <!-- module: bus -->

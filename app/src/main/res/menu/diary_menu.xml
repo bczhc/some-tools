@@ -24,4 +24,9 @@
             android:id="@+id/statistics"
             android:title="@string/diary_menu_statistics"
             app:showAsAction="never"/>
+    <item
+            android:id="@+id/advanced_search"
+            app:showAsAction="never"
+            android:title="@string/diary_advanced_search_menu"
+    />
 </menu>

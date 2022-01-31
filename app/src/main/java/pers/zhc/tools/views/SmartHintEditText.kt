@@ -5,6 +5,7 @@ import android.graphics.Point
 import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.material_input_layout.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
@@ -16,6 +17,9 @@ import kotlin.math.max
 class SmartHintEditText : WrapLayout {
     private lateinit var mET: EditText
     val editText get() = mET
+
+    private lateinit var inputLayout: TextInputLayout
+    val textInputLayout get() = inputLayout
 
     constructor(context: Context?) : this(context, null)
 
@@ -43,8 +47,9 @@ class SmartHintEditText : WrapLayout {
     }
 
     private fun init(attrs: AttributeSet?) {
-        val inflate = View.inflate(context, R.layout.material_input_layout, null)
-        this.addView(inflate)
+        val inflate = View.inflate(context, R.layout.material_input_layout, null).layout!!
+        this.setView(inflate)
+        inputLayout = inflate
 
         val til = inflate.layout!!
         mET = inflate.edit_text!!

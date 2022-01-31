@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
+import kotlinx.android.synthetic.main.diary_advenced_search_dialog.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import kotlinx.android.synthetic.main.diary_stat_dialog.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
@@ -46,6 +47,8 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: MyAdapter
     private val diaryItemDataList = ArrayList<DiaryItemData>()
+
+    private var lastRegex: Regex? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflate = inflater.inflate(R.layout.diary_main_diary_fragment, container, false)
@@ -242,8 +245,59 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             R.id.statistics -> {
                 showStatDialog()
             }
+            R.id.advanced_search -> {
+                showAdvancedSearchDialog()
+            }
         }
         return true
+    }
+
+    private fun showAdvancedSearchDialog() {
+        val context = requireContext()
+
+        val inflate = View.inflate(context, R.layout.diary_advenced_search_dialog, null)
+        val regexView = inflate.regex_input!!
+        regexView.regex = lastRegex
+
+        DialogUtils.createConfirmationAlertDialog(
+            context,
+            { _, _ ->
+
+                val regex = regexView.regex ?: return@createConfirmationAlertDialog
+                lastRegex = regex
+
+                val progressDialog = ProgressDialog(context).also {
+                    it.getProgressView().apply {
+                        setIsIndeterminateMode(true)
+                        setTitle(context.getString(R.string.diary_searching_progress_dialog_title))
+                    }
+                    it.setCancelable(false)
+                    it.setCanceledOnTouchOutside(false)
+                }
+                progressDialog.show()
+
+                Thread {
+                    diaryItemDataList.clear()
+                    diaryDatabase.queryExec("SELECT \"date\", content FROM diary") { cursor ->
+                        while (cursor.step()) {
+                            val date = cursor.getInt(0)
+                            val content = cursor.getText(1)
+                            if (regex.containsMatchIn(content)) {
+                                diaryItemDataList.add(DiaryItemData(date, content))
+                            }
+                        }
+                    }
+                    Common.runOnUiThread(context) {
+                        progressDialog.dismiss()
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }
+                }.start()
+
+            },
+            view = inflate,
+            width = MATCH_PARENT,
+            titleRes = R.string.diary_advanced_search_dialog_title
+        ).show()
     }
 
     private fun showStatDialog() {
