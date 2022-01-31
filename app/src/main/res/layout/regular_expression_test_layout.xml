@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/sv"
+            android:padding="5dp"
+            android:fillViewport="true"
 >
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="vertical">
-        <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:hint="@string/text"
-                  android:id="@+id/text"
-                  tools:ignore="Autofill,TextFields"
-                  android:layout_gravity="top"
+        <pers.zhc.tools.views.SmartHintEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/text"
+                android:id="@+id/input_et"
+                android:layout_marginBottom="5dp"
         />
-        <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:hint="@string/regex"
-                  android:id="@+id/regex"
-                  tools:ignore="Autofill,TextFields"
-                  android:layout_gravity="top"
+        <pers.zhc.tools.views.RegexInputView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/regex_input"
+                android:layout_marginBottom="5dp"
         />
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:textSize="25sp"

@@ -19,6 +19,8 @@ class RegexInputView : WrapLayout {
     private lateinit var inputLayout: TextInputLayout
     private var cachedRegex: Regex? = null
 
+    var regexChangeListener: RegexChangeListener? = null
+
     constructor(context: Context?) : this(context, null)
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
@@ -44,11 +46,18 @@ class RegexInputView : WrapLayout {
                 inputLayout.error = context.getString(R.string.regex_bad_pattern)
                 return@doAfterTextChanged
             }
+            regexChangeListener?.invoke(
+                if (checkRegexValid()) {
+                    cachedRegex
+                } else {
+                    null
+                }
+            )
         }
     }
 
     var regex
-        get() = if (inputLayout.error == null /* not wrong pattern */) {
+        get() = if (checkRegexValid()) {
             this.cachedRegex
         } else {
             null
@@ -58,4 +67,13 @@ class RegexInputView : WrapLayout {
                 editText.setText(regex.pattern)
             }
         }
+
+    private fun checkRegexValid(): Boolean {
+        return inputLayout.error == null
+    }
 }
+
+/**
+ * `regex` will be null when it's invalid regex pattern
+ */
+typealias RegexChangeListener = (regex: Regex?) -> Unit

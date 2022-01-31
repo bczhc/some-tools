@@ -1,52 +1,37 @@
 package pers.zhc.tools.test
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.EditText
-import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
+import kotlinx.android.synthetic.main.regular_expression_test_layout.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import java.util.regex.Pattern
-import java.util.regex.PatternSyntaxException
+import pers.zhc.tools.utils.RegexUtils.Companion.capture
 
 class RegExpTest : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.regular_expression_test_layout)
-        val textET = findViewById<EditText>(R.id.text)
-        val regexET = findViewById<EditText>(R.id.regex)
-        regexET.setBackgroundResource(R.drawable.edittext_right)
-        val tv = findViewById<TextView>(R.id.tv)
-        val watcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+        val inputET = input_et!!.editText
+        val regexInputView = regex_input!!
+        val resultTV = tv!!
 
-            override fun afterTextChanged(s: Editable?) {
-                try {
-                    val matcher = Pattern.compile(regexET.text.toString()).matcher(textET.text.toString())
-                    val sb = StringBuilder()
-                    while (matcher.find()) {
-                        // java doesn't count the initial group (index 0, the whole subject input)
-                        val groupCount = matcher.groupCount() + 1
-                        val groups = ArrayList<String>()
-                        for (i in 0 until groupCount) {
-                            groups.add(matcher.group(i)!!)
-                        }
-                        sb.append(groups.joinToString())
-                        sb.append('\n')
-                    }
-                    tv.text = sb.toString()
-                    regexET.setBackgroundResource(R.drawable.edittext_right)
-                } catch (_: PatternSyntaxException) {
-                    regexET.setBackgroundResource(R.drawable.edittext_wrong)
+        val update = { regex: Regex? ->
+            if (regex != null) {
+                val captured = inputET.text.toString().capture(regex)
+                resultTV.text = captured.joinToString("\n", "", "") {
+                    it.joinToString(prefix = "[", postfix = "]")
                 }
+            } else {
+                resultTV.text = ""
             }
         }
-        textET.addTextChangedListener(watcher)
-        regexET.addTextChangedListener(watcher)
+
+        inputET.doAfterTextChanged {
+            update(regexInputView.regex)
+        }
+        regexInputView.regexChangeListener = {
+            update(it)
+        }
     }
 }
