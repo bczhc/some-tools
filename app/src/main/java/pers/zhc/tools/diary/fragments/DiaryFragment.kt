@@ -191,8 +191,10 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun openDiaryPreview(dateInt: Int) {
-        val intent = Intent(requireContext(), DiaryContentPreviewActivity::class.java)
-        intent.putExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, dateInt)
+        val intent = Intent(requireContext(), DiaryContentPreviewActivity::class.java).apply {
+            putExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, dateInt)
+            lastRegex?.let { putExtra(DiaryContentPreviewActivity.EXTRA_HIGHLIGHT_REGEX, it) }
+        }
         startActivityForResult(intent, RequestCode.START_ACTIVITY_3)
     }
 
