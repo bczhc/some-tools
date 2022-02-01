@@ -3,7 +3,11 @@ package pers.zhc.tools.diary
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -33,6 +37,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         setContentView(R.layout.diary_content_preview_activity)
 
         contentTV = content_tv!!
+        contentTV.textSize = getEditTextTextSize(this)
         bottomAttachmentLL = bottom_attachment_ll!!
 
         val intent = intent
@@ -41,8 +46,26 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         this.dateInt = dateInt
 
         val content = fetchContent(dateInt)
-        contentTV.text = content
-        contentTV.textSize = getEditTextTextSize(this)
+
+        val tvText = if (intent.hasExtra(EXTRA_HIGHLIGHT_REGEX)) {
+            val highlightRegex = intent.getSerializableExtra(EXTRA_HIGHLIGHT_REGEX) as Regex
+            val ranges = highlightRegex.findAll(content).map {
+                it.range
+            }
+            SpannableString(content).apply {
+                ranges.forEach {
+                    setSpan(
+                        ForegroundColorSpan(Color.RED),
+                        it.first,
+                        it.last + 1 /* this parameter is exclusive */,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+            }
+        } else {
+            content
+        }
+        contentTV.text = tvText
 
         showBottomAttachment()
 
@@ -128,6 +151,11 @@ WHERE "date" IS ?"""
          * intent integer extra
          */
         const val EXTRA_DATE_INT = "dateInt"
+
+        /**
+         * intent serializable extra, optional
+         */
+        const val EXTRA_HIGHLIGHT_REGEX = "highlightRegex"
 
         fun createDiaryRecordStatDialog(context: Context, database: SQLite3, dateInt: Int): Dialog {
             return Dialog(context).apply {
