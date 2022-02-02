@@ -7,6 +7,7 @@ import pers.zhc.tools.plugin.util.{FileUtils, ProcessOutput}
 
 import java.io.{File, FileInputStream}
 import java.util.Properties
+import scala.jdk.CollectionConverters.SeqHasAsJava
 
 class RustBuildPlugin extends Plugin[Project] {
   var appProjectDir: Option[File] = None
@@ -38,12 +39,8 @@ class RustBuildPlugin extends Plugin[Project] {
   }
 
   def executeProgram(
-      runtime: Runtime,
-      cmd: Array[String],
-      envp: Option[Array[String]],
-      dir: Option[File]
+      process: Process
   ): Int = {
-    val process = runtime.exec(cmd, envp.orNull, dir.orNull)
     ProcessOutput.output(process)
     process.waitFor()
     process.exitValue()
@@ -86,17 +83,13 @@ class RustBuildPlugin extends Plugin[Project] {
       )
     }
 
-    val ndkToolchainBinFile = getNdkToolchainBinFile
-    val pathEnv = Option(System.getenv("PATH")).get
-    val newPathEnv = s"${ndkToolchainBinFile.getPath}:$pathEnv"
-    val envp = Array(s"PATH=$newPathEnv", s"OPENSSL_DIR=$opensslDir")
+    val pb = new ProcessBuilder(command.asJava)
+    val env = pb.environment()
+    env.put("OPENSSL_DIR", opensslDir.getPath)
+    pb.directory(rustProjectDir)
+    val progress = pb.start()
 
-    val status = executeProgram(
-      runtime,
-      command.toArray[String],
-      Some(envp),
-      Some(rustProjectDir)
-    )
+    val status = executeProgram(progress)
     if (status != 0) {
       throw new GradleException(
         "Failed to run program: exits with non-zero return value"
@@ -197,8 +190,9 @@ class RustBuildPlugin extends Plugin[Project] {
   def configureToolchain(): Unit = {
     require(extension.get.getAndroidNdkDir.isPresent)
     val androidNdkDir = extension.get.getAndroidNdkDir.get()
-    val toolchain =
+    val toolchain = {
       new Toolchain(new File(androidNdkDir), getAndroidApi, getArchitecture)
+    }
     val configString = ToolchainUtils.generateCargoConfig(getTarget, toolchain)
     FileUtils.writeFile(
       {
