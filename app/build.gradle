@@ -3,6 +3,7 @@ import pers.zhc.plugins.BuildUtils2
 import pers.zhc.plugins.NdkVersion
 import pers.zhc.plugins.SdkPath
 import pers.zhc.tools.plugin.rust.RustBuildPlugin
+import pers.zhc.tools.plugin.util.FileUtils
 
 import java.nio.charset.StandardCharsets
 
@@ -130,18 +131,40 @@ NDK path: ${ndkDir.path}"""
     }
 }
 
-def appProject = rootProject.findProject("app")
+def appProject = project
+def jniOutputDir = new File(appProject.projectDir, "jniLibs")
+
+def opensslDir = BuildUtils.getOpensslDir(new File(rootDir, "config.properties"))
+def jniTargetAbi = "arm64-v8a"
 
 rustBuild {
     androidNdkDir = android.ndkDirectory.path
     androidApi = 29
-    target = "aarch64"
+    targetAbi = jniTargetAbi
     buildType = "release"
     rustProjectDir = new File(appProject.projectDir, "src/main/rust").path
+    outputDir = jniOutputDir.path
+    extraEnv = [
+            "OPENSSL_DIR": opensslDir.path
+    ]
 }
 
-def compileReleaseRustTask = appProject.tasks.getByName("compileReleaseRust")
+def copyOpensslLibsTask = project.task("copyOpensslLibs") {
+    doLast {
+        ["libssl.so", "libcrypto.so"].stream().map {
+            new File(new File(opensslDir, "lib"), it)
+        }.forEach {
+            if (!it.exists()) {
+                throw new GradleException("Required OpenSSL library file not found: $it.path")
+            }
+            FileUtils.copyFile(it, new File(new File(jniOutputDir, jniTargetAbi), it.name))
+        }
+    }
+}
+
+def compileReleaseRustTask = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME())
 appProject.tasks.getByName("preBuild").dependsOn(compileReleaseRustTask)
+compileReleaseRustTask.dependsOn(copyOpensslLibsTask)
 
 repositories {
     mavenCentral()

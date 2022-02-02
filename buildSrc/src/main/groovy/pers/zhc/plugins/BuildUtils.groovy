@@ -1,5 +1,8 @@
 package pers.zhc.plugins
 
+import org.gradle.api.GradleException
+import pers.zhc.util.Assertion
+
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
@@ -169,10 +172,30 @@ class BuildUtils {
     static Properties openPropertiesFile(File file) {
         def properties = new Properties()
 
-        def reader = file.newReader("UTF-8")
-        properties.load(reader)
-        reader.close()
+        file.withReader("UTF-8") {
+            properties.load(it)
+        }
 
         return properties
+    }
+
+    static File getOpensslDir(File configPropertiesFile) {
+        def key = "opensslLib.dir"
+
+        if (!configPropertiesFile.exists()) {
+            Assertion.doAssertion(configPropertiesFile.createNewFile())
+        }
+        def properties = openPropertiesFile(configPropertiesFile)
+        if (!properties.containsKey(key)) {
+            throw new GradleException(
+                    "Could not find OpenSSL library. Please define \"$key\" in $configPropertiesFile.path"
+            )
+        }
+
+        def opensslDir = new File(properties.getProperty(key))
+        if (!opensslDir.exists()) {
+            throw new GradleException("\"$key\" defined in $configPropertiesFile.path doesn't exist")
+        }
+        return opensslDir
     }
 }

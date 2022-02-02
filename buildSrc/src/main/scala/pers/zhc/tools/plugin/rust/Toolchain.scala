@@ -5,10 +5,16 @@ import java.io.File
 /** @author
   *   bczhc
   */
-class Toolchain(val ndkPath: File, val androidApi: Int, val target: String) {
+class Toolchain(
+    val ndkPath: File,
+    val androidApi: Int,
+    val androidAbi: AndroidAbi
+) {
   private val binDir = ToolchainUtils.getToolchainBinDir(ndkPath)
-  private val prefix = s"$target-linux-android"
-  val linker: File = new File(binDir, s"$prefix$androidApi-clang")
+  private val prefix: String = androidAbi.toNdkToolchainName
+
+  val linker: File =
+    new File(binDir, s"$prefix$androidApi-clang")
   val ar: File = new File(binDir, s"$prefix-ar")
 
   require(linker.exists())
