@@ -2,9 +2,9 @@ package pers.zhc.tools.plugin.rust
 
 import java.io.File
 
-/**
- * @author bczhc
- */
+/** @author
+  *   bczhc
+  */
 object ToolchainUtils {
   def getToolchainBinDir(ndkPath: File): File = {
     val prebuiltDir = new File(ndkPath, "toolchains/llvm/prebuilt")
@@ -18,9 +18,12 @@ object ToolchainUtils {
   def generateCargoConfig(rustTarget: String, toolchain: Toolchain): String = {
     val sb = new StringBuilder
     val newLine = '\n'
-    sb.append(String.format("[target.%s]", rustTarget)).append(newLine)
-      .append(String.format("linker = \"%s\"", toolchain.linker.getPath)).append(newLine)
-      .append(String.format("ar = \"%s\"", toolchain.ar.getPath)).append(newLine)
+    sb.append(String.format("[target.%s]", rustTarget))
+      .append(newLine)
+      .append(String.format("linker = \"%s\"", toolchain.linker.getPath))
+      .append(newLine)
+      .append(String.format("ar = \"%s\"", toolchain.ar.getPath))
+      .append(newLine)
     sb.toString()
   }
 }

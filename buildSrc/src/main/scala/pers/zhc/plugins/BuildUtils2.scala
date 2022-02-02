@@ -6,9 +6,9 @@ import java.io.{ByteArrayOutputStream, File, InputStream}
 import java.util
 import java.util.regex.Pattern
 
-/**
- * @author bczhc
- */
+/** @author
+  *   bczhc
+  */
 object BuildUtils2 {
   def checkGitVersion(): String = {
     val runtime = Runtime.getRuntime
@@ -26,12 +26,6 @@ object BuildUtils2 {
     matcher.group(1)
   }
 
-  def readIS(is: InputStream): String = {
-    val out = new ByteArrayOutputStream()
-    IOUtils.streamWrite(is, out)
-    out.toString()
-  }
-
   def getGitCommitLog(path: File): String = {
     val runtime = Runtime.getRuntime
     val envp = Array.empty[String]
@@ -40,6 +34,22 @@ object BuildUtils2 {
     is.close()
 
     read
+  }
+
+  def readIS(is: InputStream): String = {
+    val out = new ByteArrayOutputStream()
+    IOUtils.streamWrite(is, out)
+    out.toString()
+  }
+
+  def longStringToStringArray(str: String, splitLen: Int): String = {
+    val sb = new StringBuilder("new String[] {\n")
+    val split = splitString(str, splitLen)
+    split.forEach(it => {
+      sb.append('\"').append(it).append('\"').append(',').append('\n')
+    })
+    sb.append("}")
+    sb.toString()
   }
 
   def splitString(string: String, length: Int): java.util.List[String] = {
@@ -57,15 +67,5 @@ object BuildUtils2 {
       list.add(split)
     }
     list
-  }
-
-  def longStringToStringArray(str: String, splitLen: Int): String = {
-    val sb = new StringBuilder("new String[] {\n")
-    val split = splitString(str, splitLen)
-    split.forEach(it => {
-      sb.append('\"').append(it).append('\"').append(',').append('\n')
-    })
-    sb.append("}")
-    sb.toString()
   }
 }
