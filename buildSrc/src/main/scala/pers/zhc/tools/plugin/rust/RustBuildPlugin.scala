@@ -24,7 +24,6 @@ class RustBuildPlugin extends Plugin[Project] {
 
         task.doLast { _: Task =>
           checkRequiredExtension(extension)
-          configureToolchain()
           compileReleaseRust()
         }
         ()
@@ -83,9 +82,23 @@ class RustBuildPlugin extends Plugin[Project] {
       )
     }
 
+    val toolchain = getToolchain
+
     val pb = new ProcessBuilder(command.asJava)
     val env = pb.environment()
     env.put("OPENSSL_DIR", opensslDir.getPath)
+    env.put("TARGET_CC", toolchain.linker.getPath)
+    env.put("TARGET_AR", toolchain.ar.getPath)
+    val targetEnvName = rustTarget.replace('-', '_').toUpperCase
+    env.put(
+      s"CARGO_TARGET_${targetEnvName}_LINUX_ANDROID_CC",
+      toolchain.linker.getPath
+    )
+    env.put(
+      s"CARGO_TARGET_${targetEnvName}_LINUX_ANDROID_AR",
+      toolchain.ar.getPath
+    )
+
     pb.directory(rustProjectDir)
     val progress = pb.start()
 
@@ -187,25 +200,10 @@ class RustBuildPlugin extends Plugin[Project] {
     }
   }
 
-  def configureToolchain(): Unit = {
-    require(extension.get.getAndroidNdkDir.isPresent)
-    val androidNdkDir = extension.get.getAndroidNdkDir.get()
-    val toolchain = {
-      new Toolchain(new File(androidNdkDir), getAndroidApi, getArchitecture)
-    }
-    val configString = ToolchainUtils.generateCargoConfig(getTarget, toolchain)
-    FileUtils.writeFile(
-      {
-        val configFile = getCargoConfigFile
-        val parent = getCargoConfigFile.getParentFile
-        if (!parent.exists()) {
-          require(parent.mkdir())
-        }
-        configFile
-      },
-      configString
-    )
-  }
+  def getToolchain: Toolchain =
+    new Toolchain(new File(getAndroidNdkDir), getAndroidApi, getArchitecture)
+
+  def getAndroidNdkDir: String = extension.get.getAndroidNdkDir.get()
 
   def readOpensslDir: File = {
     val propertiesFile = getConfigPropertiesFile

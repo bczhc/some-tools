@@ -14,16 +14,4 @@ object ToolchainUtils {
     }
     new File(listFiles(0), "bin")
   }
-
-  def generateCargoConfig(rustTarget: String, toolchain: Toolchain): String = {
-    val sb = new StringBuilder
-    val newLine = '\n'
-    sb.append(String.format("[target.%s]", rustTarget))
-      .append(newLine)
-      .append(String.format("linker = \"%s\"", toolchain.linker.getPath))
-      .append(newLine)
-      .append(String.format("ar = \"%s\"", toolchain.ar.getPath))
-      .append(newLine)
-    sb.toString()
-  }
 }

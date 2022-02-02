@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +31,7 @@ import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtils;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.views.ScrollEditText;
+import pers.zhc.tools.views.SmartHintEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -72,6 +75,11 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         charactersCountTV = toolbar.findViewById(R.id.text_count_tv);
         SwitchMaterial ttsSwitch = toolbar.findViewById(R.id.tts_switch);
+        ImageButton cancelButton = findViewById(R.id.cancel_button);
+        ViewGroup searchLayout = findViewById(R.id.search_layout);
+        EditText searchET = ((SmartHintEditText) findViewById(R.id.search_et)).getEditText();
+
+
         ttsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             speak = isChecked;
             if (isChecked) {
