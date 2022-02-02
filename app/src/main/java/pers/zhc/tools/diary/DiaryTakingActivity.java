@@ -2,9 +2,9 @@ package pers.zhc.tools.diary;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -101,7 +101,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         ttsReplaceDict.put("…", "省略号");
         ttsReplaceDict.put("……", "省略号");
 
-        Handler debounceHandler = new Handler();
+        Handler debounceHandler = new Handler(Looper.myLooper());
         final TextWatcher watcher = new TextWatcher() {
             private String last;
 
@@ -174,11 +174,9 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
     private void ttsSpeak(String content, int queueMode) {
         Common.doAssertion(tts != null);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            final int speak = tts.speak(content, queueMode, null, String.valueOf(System.currentTimeMillis()));
-            if (speak != TextToSpeech.SUCCESS) {
-                ToastUtils.showError(this, R.string.tts_speak_error, new Exception("Error code: " + speak));
-            }
+        final int speak = tts.speak(content, queueMode, null, String.valueOf(System.currentTimeMillis()));
+        if (speak != TextToSpeech.SUCCESS) {
+            ToastUtils.showError(this, R.string.tts_speak_error, new Exception("Error code: " + speak));
         }
     }
 
@@ -270,9 +268,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
                     return Unit.INSTANCE;
                 },
-                (dialogInterface, editText) -> {
-                    return Unit.INSTANCE;
-                },
+                (dialogInterface, editText) -> Unit.INSTANCE,
                 inputET
         ).show();
     }

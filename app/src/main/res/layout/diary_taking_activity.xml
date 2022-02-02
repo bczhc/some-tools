@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                xmlns:tools="http://schemas.android.com/tools"
+>
     <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,8 +20,10 @@
                     android:layout_height="wrap_content"
                     style="@style/Widget.Application.TextView.Light"
                     android:id="@+id/text_count_tv"
-                    android:text="adfadfssadf"
+                    tools:text="12345 chars"
                     android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/tts_switch"
             />
             <com.google.android.material.switchmaterial.SwitchMaterial
                     android:layout_width="wrap_content"
