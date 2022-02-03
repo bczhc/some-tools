@@ -197,20 +197,11 @@ class BuildUtils {
             throw new GradleException("\"$key\" defined in $configPropertiesFile.path doesn't exist")
         }
 
-        def checkFileExistence = {File f ->
-            if (!f.exists()) {
-                throw new GradleException("File not found: $f.path")
-            }
-        }
-
         def includeDir = new File(opensslDir, "include")
-        def prebuiltDir = new File(opensslDir, "prebuilt")
-        checkFileExistence(includeDir)
-        checkFileExistence(prebuiltDir)
+        def prebuiltDir = new File(opensslDir, "libs")
 
         return TargetAbi.values().toList().stream().map {
             def libDir = new File(prebuiltDir, it.toString())
-            checkFileExistence(libDir)
             new OpensslPath(it, libDir, includeDir)
         }.collect().toList()
     }
