@@ -1,10 +1,14 @@
-import pers.zhc.plugins.*
+import pers.zhc.plugins.BuildUtils2
+import pers.zhc.plugins.NdkVersion
+import pers.zhc.plugins.RegexUtils
+import pers.zhc.plugins.SdkPath
 import pers.zhc.tools.plugin.rust.AndroidAbi
 import pers.zhc.tools.plugin.rust.RustBuildPlugin
 import pers.zhc.tools.plugin.util.FileUtils
 
 import java.nio.charset.StandardCharsets
 
+import static pers.zhc.plugins.BuildUtils.*
 import static pers.zhc.plugins.FileUtils.requireCreate
 
 apply plugin: 'com.android.application'
@@ -44,7 +48,7 @@ def ndkFormatHintMsg = """Format: <ABI-name>-<native-API-version>
 Example:
 ndk.target=arm64-v8a-29,x86_64-29"""
 
-def properties = BuildUtils.openPropertiesFile(configPropertiesFile)
+def properties = openPropertiesFile(configPropertiesFile)
 def propNdkTarget = properties.getProperty("ndk.target")
 if (propNdkTarget == null) {
     throw new GradleException("Please define \"ndk.target\" in $configPropertiesFile.path\n$ndkFormatHintMsg")
@@ -55,8 +59,8 @@ def ndkTargets = propNdkTarget.split(',').toList().stream().map { it.trim() }.ma
         throw new GradleException("Wrong NDK target format: $it\n$ndkFormatHintMsg")
     }
     def captured = RegexUtils.capture(it, '^(.*)-([0-9]+)$')
-    [abi: BuildUtils.TargetAbi.from(captured[0][1]), api: captured[0][2] as int]
-}.toArray().toList()
+    [abi: TargetAbi.from(captured[0][1]), api: captured[0][2] as int]
+}.toArray().toList() as List<Map<String, Object>>
 
 println "NDK targets: $ndkTargets"
 
@@ -80,7 +84,7 @@ android {
         applicationId "pers.zhc.tools"
         minSdkVersion 21
         targetSdkVersion 31
-        def verInfo = BuildUtils.gVersion()
+        def verInfo = gVersion()
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
         ndk {
@@ -138,7 +142,7 @@ SDK path: ${sdkDir.path}
 NDK path: ${ndkDir.path}"""
 
     def list = [ndkDir, sdkDir]
-    def tools = BuildUtils.Tools.newInstance(list as Object[])
+    def tools = Tools.newInstance(list as Object[])
     detectedNdkVersion = tools.getNdkVersion()
     externalNativeBuild {
         cmake {
@@ -158,13 +162,14 @@ NDK path: ${ndkDir.path}"""
 def appProject = project
 def jniOutputDir = new File(appProject.projectDir, "jniLibs")
 
-def opensslPaths = BuildUtils.getOpensslDir(configPropertiesFile)
+def opensslDir = getOpensslDir(configPropertiesFile)
 
 def rustBuildExtraEnv = new HashMap<String, String>()
-opensslPaths.forEach {
-    def env = BuildUtils.getRustOpensslBuildEnv(AndroidAbi.from(it.targetAbi.toString()).toRustTarget())
-    rustBuildExtraEnv.put(env.libDir as String, it.lib.path)
-    rustBuildExtraEnv.put(env.includeDir as String, it.include.path)
+ndkTargets.forEach {
+    def env = getRustOpensslBuildEnv(AndroidAbi.from(it.abi.toString()).toRustTarget())
+    def opensslPath = getOpensslPath(opensslDir, it.abi as TargetAbi)
+    rustBuildExtraEnv.put(env.libDir as String, opensslPath.lib.path)
+    rustBuildExtraEnv.put(env.includeDir as String, opensslPath.include.path)
 }
 
 rustBuild {
@@ -179,17 +184,18 @@ rustBuild {
 
 def copyOpensslLibsTask = project.task("copyOpensslLibs") {
     doLast {
-        opensslPaths.forEach { path ->
-            ["libssl.so", "libcrypto.so"].stream().map {
-                new File(path.lib, it)
+        ndkTargets.forEach {
+            def abi = it.abi as TargetAbi
+            def opensslPath = getOpensslPath(opensslDir, abi)
+            ['libssl.so', 'libcrypto.so'].stream().map { libName ->
+                new File(opensslPath.lib, libName)
             }.forEach {
                 if (!it.exists()) {
                     throw new GradleException("Required OpenSSL library file not found: $it.path")
                 }
 
-                def dir = new File(jniOutputDir, path.targetAbi.toString())
-                dir.mkdirs()
-                FileUtils.copyFile(it, new File(dir, it.name))
+                def outputDir = new File(jniOutputDir, abi.toString()).with { it.mkdir(); it }
+                FileUtils.copyFile(it, new File(outputDir, it.name))
             }
         }
     }

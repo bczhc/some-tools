@@ -179,7 +179,7 @@ class BuildUtils {
         return properties
     }
 
-    static List<OpensslPath> getOpensslDir(File configPropertiesFile) {
+    static File getOpensslDir(File configPropertiesFile) {
         def key = "opensslLib.dir"
 
         if (!configPropertiesFile.exists()) {
@@ -196,14 +196,7 @@ class BuildUtils {
         if (!opensslDir.exists()) {
             throw new GradleException("\"$key\" defined in $configPropertiesFile.path doesn't exist")
         }
-
-        def includeDir = new File(opensslDir, "include")
-        def prebuiltDir = new File(opensslDir, "libs")
-
-        return TargetAbi.values().toList().stream().map {
-            def libDir = new File(prebuiltDir, it.toString())
-            new OpensslPath(it, libDir, includeDir)
-        }.collect().toList()
+        return opensslDir
     }
 
     static class UnreachableError extends Error {}
@@ -247,12 +240,10 @@ class BuildUtils {
     }
 
     static class OpensslPath {
-        TargetAbi targetAbi
         File lib
         File include
 
-        OpensslPath(TargetAbi targetAbi, File lib, File include) {
-            this.targetAbi = targetAbi
+        OpensslPath(File lib, File include) {
             this.lib = lib
             this.include = include
         }
@@ -261,5 +252,12 @@ class BuildUtils {
     static getRustOpensslBuildEnv(String rustTargetString) {
         def prefix = rustTargetString.toUpperCase().replace('-', '_')
         return [includeDir: "${prefix}_OPENSSL_INCLUDE_DIR", libDir: "${prefix}_OPENSSL_LIB_DIR"]
+    }
+
+    static OpensslPath getOpensslPath(File opensslDir, TargetAbi targetAbi) {
+        new OpensslPath(
+                new File(new File(opensslDir, "libs"), targetAbi.toString()),
+                new File(opensslDir, "include")
+        )
     }
 }
