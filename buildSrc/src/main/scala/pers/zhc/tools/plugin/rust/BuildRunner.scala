@@ -32,12 +32,8 @@ class BuildRunner(toolchain: Toolchain, config: Configurations) {
 
     val targetEnvName = rustTarget.replace('-', '_').toUpperCase
     env.put(
-      s"CARGO_TARGET_${targetEnvName}_LINUX_ANDROID_CC",
+      s"CARGO_TARGET_${targetEnvName}_LINKER",
       toolchain.linker.getPath
-    )
-    env.put(
-      s"CARGO_TARGET_${targetEnvName}_LINUX_ANDROID_AR",
-      toolchain.ar.getPath
     )
 
     pb.directory(config.rustProjectDir)
