@@ -218,17 +218,9 @@ dependencies {
     implementation 'com.github.bczhc:jni-java:3a74b3d640'
 }
 
-project.task("showNdkPath") {
-    doLast {
-        println android.ndkDirectory.path
-    }
-}
-
 project.task("saveNdkPath") {
     doLast {
         String path = android.ndkDirectory.path
-        def writer = new File("./ndk-path").newWriter("UTF-8")
-        writer.write(path)
-        writer.close()
+        new File(rootDir, "tmp").write(path)
     }
 }

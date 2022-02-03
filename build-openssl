@@ -1,25 +1,106 @@
-#!/bin/bash
+#!/bin/groovy
+def selfDir = new File(getClass().protectionDomain.codeSource.location.path).parentFile
+metaClass.mixin new GroovyScriptEngine(selfDir.canonicalPath).with {
+    loadScriptByName('lib.groovy')
+}
 
-set -e
+def androidAbi2OpensslTargetMap = [
+        "armeabi-v7a": "android-arm",
+        "arm64-v8a"  : "android-arm64",
+        "x86"        : "android-x86",
+        "x86_64"     : "android-x86_64"
+]
 
-./gradlew :app:saveNdkPath
-ndk_path=`cat ./ndk-path`
-git clone git://git.openssl.org/openssl.git
-cd openssl
-git checkout openssl-3.0.0
+if (args.length != 1) {
+    println "Usage: command <openssl-project-dir>"
+    return
+}
+def opensslDir = new File(args[0])
 
-export ANDROID_NDK_ROOT="$ndk_path"
-toolchain_bin_dir=`ls -d "$ndk_path"/toolchains/llvm/prebuilt/*/bin`
-export PATH="$toolchain_bin_dir:$PATH"
+checkRun new ProcessBuilder([s("${selfDir}/gradlew"), ':app:saveNdkPath']).with {
+    directory(selfDir)
+    inheritIO()
+}.start().waitFor()
 
-./Configure android-arm64 -D__ANDROID_API__=29
-make -j4
-mkdir lib
-cd lib
-ln -s ../libcrypto.so .
-ln -s ../libcrypto.a .
-ln -s ../libssl.so .
-ln -s ../libssl.a .
+def tmpFile = new File(selfDir, 'tmp')
+def ndkPath = tmpFile.readLines()[0]
+tmpFile.delete()
 
-cd ../..
-echo "openssl-dir=`pwd`/openssl" >> ./config.properties
+def toolchainBinDir = new File("$ndkPath/toolchains/llvm/prebuilt").listFiles().with {
+    if (it.length != 1) throw new Exception('Multiple hosts')
+    new File(it[0], "bin")
+}
+
+def build = { String target, int ndkApi ->
+    checkRun new ProcessBuilder([
+            './Configure',
+            target,
+            s("-D__ANDROID_API__=$ndkApi"),
+            '-latomic'
+    ]).with {
+        def env = it.environment()
+        env.PATH = s("$toolchainBinDir:${env.PATH}")
+        env.put("ANDROID_NDK_ROOT", ndkPath)
+        inheritIO()
+        directory(opensslDir)
+    }.start().waitFor()
+
+    checkRun new ProcessBuilder(['make', s("-j${Runtime.getRuntime().availableProcessors()}")]).with {
+        def env = it.environment()
+        env.PATH = s("$toolchainBinDir:${env.PATH}")
+        env.put("ANDROID_NDK_ROOT", ndkPath)
+        inheritIO()
+        directory(opensslDir)
+    }.start().waitFor()
+}
+
+def clean = {
+    checkRun new ProcessBuilder(['make', 'clean']).with {
+        inheritIO()
+        directory(opensslDir)
+    }.start().waitFor()
+}
+
+def ndkTargetProperty = new Properties().with {
+    new File(selfDir, "config.properties").withReader { r ->
+        load(r)
+    }
+    it
+}.getProperty("ndk.target")
+
+def outputLibsDir = new File(opensslDir, "libs").with { mkdir(); it }
+ndkTargetProperty.split(',').toList().stream().map { it.trim() }.forEach {
+    clean.call()
+
+    List<List<String>> captured = capture(it, '^(.*)-([0-9]+)$')
+    def ndkAbi = captured[0][1]
+    def ndkApi = captured[0][2] as int
+
+    println("Build: $ndkAbi, $ndkApi")
+    build.call(androidAbi2OpensslTargetMap[ndkAbi], ndkApi)
+
+    [
+            "libcrypto.so",
+            "libcrypto.a",
+            "libssl.so",
+            "libssl.a"
+    ].forEach {
+        def outputDir = new File(outputLibsDir, ndkAbi).with { mkdir(); it }
+        copyFile(new File(opensslDir, it), new File(outputDir, it))
+    }
+}
+
+static def copyFile(File src, File dest) {
+    dest.withOutputStream { os ->
+        src.withInputStream { is ->
+            byte[] buf = new byte[4096]
+            int readLen
+            while ((readLen = is.read(buf)) != -1) {
+                os.write(buf, 0, readLen)
+            }
+        }
+        os.flush()
+    }
+}
+
+println("Done")
