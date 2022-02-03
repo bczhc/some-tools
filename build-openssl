@@ -56,7 +56,7 @@ def build = { String target, int ndkApi ->
 
 def clean = {
     // for the first build when Makefile hasn't been generated
-    if (!new File("Makefile").exists()) return
+    if (!new File(opensslDir, "Makefile").exists()) return
     checkRun new ProcessBuilder(['make', 'clean']).with {
         inheritIO()
         directory(opensslDir)
