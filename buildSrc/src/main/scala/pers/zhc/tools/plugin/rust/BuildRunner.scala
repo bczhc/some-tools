@@ -1,6 +1,6 @@
 package pers.zhc.tools.plugin.rust
 
-import pers.zhc.tools.plugin.rust.RustBuildPlugin.Configurations
+import pers.zhc.tools.plugin.rust.RustBuildPlugin.{BuildType, Configurations}
 import pers.zhc.tools.plugin.util.ProcessUtils
 
 import scala.jdk.CollectionConverters.SeqHasAsJava
@@ -13,14 +13,16 @@ class BuildRunner(toolchain: Toolchain, config: Configurations) {
 
     val runtime = Runtime.getRuntime
     val rustTarget = config.targetAbi.toRustTarget
-    val command = List(
+    var command = List(
       "cargo",
       "build",
       "--target",
       rustTarget,
-      s"-j${runtime.availableProcessors()}",
-      s"--${config.buildType.toString}"
+      s"-j${runtime.availableProcessors()}"
     )
+    if (config.buildType == BuildType.Release) {
+      command = command :+ "--release"
+    }
 
     val pb = new ProcessBuilder(command.asJava)
     val env = pb.environment()
