@@ -1,12 +1,11 @@
-import pers.zhc.plugins.BuildUtils
-import pers.zhc.plugins.BuildUtils2
-import pers.zhc.plugins.NdkVersion
-import pers.zhc.plugins.SdkPath
+import pers.zhc.plugins.*
 import pers.zhc.tools.plugin.rust.AndroidAbi
 import pers.zhc.tools.plugin.rust.RustBuildPlugin
 import pers.zhc.tools.plugin.util.FileUtils
 
 import java.nio.charset.StandardCharsets
+
+import static pers.zhc.plugins.FileUtils.requireCreate
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -38,12 +37,28 @@ try {
     commitLogResult = base64Encoder.encodeToString("Unknown".bytes)
 }
 
-def jniTargets = [
-        [abi: BuildUtils.TargetAbi.ARM_V7, api: 21],
-        [abi: BuildUtils.TargetAbi.ARM_V8, api: 29],
-        [abi: BuildUtils.TargetAbi.X86, api: 29],
-        [abi: BuildUtils.TargetAbi.X86_64, api: 29]
-]
+def configPropertiesFile = new File(rootDir, "config.properties")
+requireCreate(configPropertiesFile)
+
+def ndkFormatHintMsg = """Format: <ABI-name>-<native-API-version>
+Example:
+ndk.target=arm64-v8a-29,x86_64-29"""
+
+def properties = BuildUtils.openPropertiesFile(configPropertiesFile)
+def propNdkTarget = properties.getProperty("ndk.target")
+if (propNdkTarget == null) {
+    throw new GradleException("Please define \"ndk.target\" in $configPropertiesFile.path\n$ndkFormatHintMsg")
+}
+
+def ndkTargets = propNdkTarget.split(',').toList().stream().map { it.trim() }.map {
+    if (!it.matches('^.*-[0-9]+$')) {
+        throw new GradleException("Wrong NDK target format: $it\n$ndkFormatHintMsg")
+    }
+    def captured = RegexUtils.capture(it, '^(.*)-([0-9]+)$')
+    [abi: BuildUtils.TargetAbi.from(captured[0][1]), api: captured[0][2] as int]
+}.toArray().toList()
+
+println "NDK targets: $ndkTargets"
 
 android {
     signingConfigs {
@@ -69,7 +84,7 @@ android {
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
         ndk {
-            def names = jniTargets.stream().map { it.abi.toString() }.collect().toList()
+            def names = ndkTargets.stream().map { it.abi.toString() }.collect().toList()
             names.forEach { abiFilters it }
         }
         buildConfigField 'String[]', 'commitLogEncodedSplit', BuildUtils2.longStringToStringArray(commitLogResult, 100)
@@ -143,7 +158,7 @@ NDK path: ${ndkDir.path}"""
 def appProject = project
 def jniOutputDir = new File(appProject.projectDir, "jniLibs")
 
-def opensslPaths = BuildUtils.getOpensslDir(new File(rootDir, "config.properties"))
+def opensslPaths = BuildUtils.getOpensslDir(configPropertiesFile)
 
 def rustBuildExtraEnv = new HashMap<String, String>()
 opensslPaths.forEach {
@@ -155,7 +170,7 @@ opensslPaths.forEach {
 rustBuild {
     androidNdkDir = android.ndkDirectory.path
     androidApi = 21
-    targets = jniTargets.stream().map { [abi: it.abi.toString(), api: it.api] }.collect().toList()
+    targets = ndkTargets.stream().map { [abi: it.abi.toString(), api: it.api] }.collect().toList()
     buildType = "release"
     rustProjectDir = new File(appProject.projectDir, "src/main/rust").path
     outputDir = jniOutputDir.path

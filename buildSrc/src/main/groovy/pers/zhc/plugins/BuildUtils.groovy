@@ -238,6 +238,21 @@ class BuildUtils {
                     throw new UnreachableError()
             }
         }
+
+        static TargetAbi from(String name) {
+            switch (name) {
+                case "armeabi-v7a":
+                    return ARM_V7
+                case "arm64-v8a":
+                    return ARM_V8
+                case "x86_64":
+                    return X86_64
+                case "x86":
+                    return X86
+                default:
+                    throw new GradleException("Unknown target ABI: $name")
+            }
+        }
     }
 
     static class OpensslPath {
