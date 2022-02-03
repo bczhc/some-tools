@@ -1,18 +1,24 @@
 package pers.zhc.tools.plugin.rust
 
-import pers.zhc.tools.plugin.rust.RustBuildPlugin.{BuildType, Configurations}
+import pers.zhc.tools.plugin.rust.BuildRunner.BuildOptions
+import pers.zhc.tools.plugin.rust.RustBuildPlugin.{
+  BuildType,
+  Environments,
+  Target
+}
 import pers.zhc.tools.plugin.util.ProcessUtils
 
+import java.io.File
 import scala.jdk.CollectionConverters.SeqHasAsJava
 
 /** @author
   *   bczhc
   */
-class BuildRunner(toolchain: Toolchain, config: Configurations) {
+class BuildRunner(toolchain: Toolchain, options: BuildOptions) {
   def run(): Int = {
 
     val runtime = Runtime.getRuntime
-    val rustTarget = config.targetAbi.toRustTarget
+    val rustTarget = options.target.abi.toRustTarget
     var command = List(
       "cargo",
       "build",
@@ -20,7 +26,7 @@ class BuildRunner(toolchain: Toolchain, config: Configurations) {
       rustTarget,
       s"-j${runtime.availableProcessors()}"
     )
-    if (config.buildType == BuildType.Release) {
+    if (options.buildType == BuildType.Release) {
       command = command :+ "--release"
     }
 
@@ -28,7 +34,7 @@ class BuildRunner(toolchain: Toolchain, config: Configurations) {
     val env = pb.environment()
     env.put("TARGET_CC", toolchain.linker.getPath)
     env.put("TARGET_AR", toolchain.ar.getPath)
-    config.extraEnv.foreach(_.foreach({ i => env.put(i._1, i._2) }))
+    options.extraEnv.foreach(_.foreach({ i => env.put(i._1, i._2) }))
 
     val targetEnvName = rustTarget.replace('-', '_').toUpperCase
     env.put(
@@ -36,9 +42,18 @@ class BuildRunner(toolchain: Toolchain, config: Configurations) {
       toolchain.linker.getPath
     )
 
-    pb.directory(config.rustProjectDir)
+    pb.directory(options.rustProjectDir)
     val progress = pb.start()
 
     ProcessUtils.executeWithOutput(progress)
   }
+}
+
+object BuildRunner {
+  case class BuildOptions(
+      target: Target,
+      buildType: BuildType,
+      extraEnv: Option[Environments],
+      rustProjectDir: File
+  )
 }

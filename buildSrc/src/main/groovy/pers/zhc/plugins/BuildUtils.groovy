@@ -179,7 +179,7 @@ class BuildUtils {
         return properties
     }
 
-    static File getOpensslDir(File configPropertiesFile) {
+    static List<OpensslPath> getOpensslDir(File configPropertiesFile) {
         def key = "opensslLib.dir"
 
         if (!configPropertiesFile.exists()) {
@@ -196,6 +196,64 @@ class BuildUtils {
         if (!opensslDir.exists()) {
             throw new GradleException("\"$key\" defined in $configPropertiesFile.path doesn't exist")
         }
-        return opensslDir
+
+        def checkFileExistence = {File f ->
+            if (!f.exists()) {
+                throw new GradleException("File not found: $f.path")
+            }
+        }
+
+        def includeDir = new File(opensslDir, "include")
+        def prebuiltDir = new File(opensslDir, "prebuilt")
+        checkFileExistence(includeDir)
+        checkFileExistence(prebuiltDir)
+
+        return TargetAbi.values().toList().stream().map {
+            def libDir = new File(prebuiltDir, it.toString())
+            checkFileExistence(libDir)
+            new OpensslPath(it, libDir, includeDir)
+        }.collect().toList()
+    }
+
+    static class UnreachableError extends Error {}
+
+    static enum TargetAbi {
+        ARM_V7,
+        ARM_V8,
+        X86,
+        X86_64
+
+        @Override
+        String toString() {
+            switch (this) {
+                case ARM_V7:
+                    return "armeabi-v7a"
+                case ARM_V8:
+                    return "arm64-v8a"
+                case X86:
+                    return "x86"
+                case X86_64:
+                    return "x86_64"
+                default:
+                    throw new UnreachableError()
+            }
+        }
+    }
+
+    static class OpensslPath {
+        TargetAbi targetAbi
+        File lib
+        File include
+
+        OpensslPath(TargetAbi targetAbi, File lib, File include) {
+            this.targetAbi = targetAbi
+            this.lib = lib
+            this.include = include
+        }
+    }
+
+    static getRustOpensslBuildEnv(String rustTargetString) {
+        def prefix = rustTargetString.toUpperCase().replace('-', '_')
+        return [includeDir: "${prefix}_OPENSSL_INCLUDE_DIR", libDir: "${prefix}_OPENSSL_LIB_DIR"]
     }
 }

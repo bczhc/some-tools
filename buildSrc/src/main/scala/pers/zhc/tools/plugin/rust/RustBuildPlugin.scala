@@ -2,16 +2,12 @@ package pers.zhc.tools.plugin.rust
 
 import org.gradle.api.provider.Property
 import org.gradle.api.{GradleException, Plugin, Project, Task}
-import pers.zhc.tools.plugin.rust.RustBuildPlugin.{
-  BuildType,
-  Configurations,
-  RustBuildPluginExtension,
-  TASK_NAME
-}
+import pers.zhc.tools.plugin.rust.BuildRunner.BuildOptions
+import pers.zhc.tools.plugin.rust.RustBuildPlugin._
 import pers.zhc.tools.plugin.util.FileUtils
 
 import java.io.File
-import scala.jdk.CollectionConverters.MapHasAsScala
+import scala.jdk.CollectionConverters.{ListHasAsScala, MapHasAsScala}
 
 class RustBuildPlugin extends Plugin[Project] {
   var appProjectDir: File = _
@@ -41,48 +37,61 @@ class RustBuildPlugin extends Plugin[Project] {
   def compileReleaseRust(): Unit = {
     val jniLibsDir = getJniLibsDir
 
-    val toolchain = getToolchain
-    val status = new BuildRunner(toolchain, config).run()
-    if (status != 0) {
-      throw new GradleException(
-        "Failed to run program: exits with non-zero return value"
-      )
-    }
+    for (target <- config.targets) {
+      println(s"Build target: $target")
+      val toolchain =
+        new Toolchain(config.androidNdkDir, target.api, target.abi)
+      val status = new BuildRunner(
+        toolchain,
+        BuildOptions(
+          target,
+          config.buildType,
+          config.extraEnv,
+          config.rustProjectDir
+        )
+      ).run()
+      if (status != 0) {
+        throw new GradleException(
+          "Failed to run program: exits with non-zero return value"
+        )
+      }
 
-    val rustOutputDir =
-      new File(
-        config.rustProjectDir,
-        s"target/${config.targetAbi.toRustTarget}/${config.buildType.toString}"
-      )
-    assert(rustOutputDir.exists())
+      val rustOutputDir =
+        new File(
+          config.rustProjectDir,
+          s"target/${target.abi.toRustTarget}/${config.buildType.toString}"
+        )
+      assert(rustOutputDir.exists())
 
-    if (!jniLibsDir.exists()) {
-      require(jniLibsDir.mkdir())
-    }
+      if (!jniLibsDir.exists()) {
+        require(jniLibsDir.mkdir())
+      }
 
-    val listSoFiles: (File, File => Unit) => Unit = { (dir, func) =>
-      dir.listFiles().foreach { f =>
-        if (f.isFile && FileUtils.getFileExtensionName(f) == Option("so")) {
-          func(f)
+      val listSoFiles: (File, File => Unit) => Unit = { (dir, func) =>
+        dir.listFiles().foreach { f =>
+          if (f.isFile && FileUtils.getFileExtensionName(f) == Option("so")) {
+            func(f)
+          }
         }
       }
-    }
 
-    val outputSoDir = {
-      val d = new File(jniLibsDir, config.targetAbi.toString)
-      if (!d.exists()) {
-        require(d.mkdirs())
+      val outputSoDir = {
+        val d = new File(jniLibsDir, target.abi.toString)
+        if (!d.exists()) {
+          require(d.mkdirs())
+        }
+        d
       }
-      d
+      listSoFiles(
+        rustOutputDir,
+        { file =>
+          val dest = new File(outputSoDir, file.getName)
+          FileUtils.copyFile(file, dest)
+          println(s"Output: ${dest.getPath}")
+          assert(dest.exists())
+        }
+      )
     }
-    listSoFiles(
-      rustOutputDir,
-      { file =>
-        val dest = new File(outputSoDir, file.getName)
-        FileUtils.copyFile(file, dest)
-        assert(dest.exists())
-      }
-    )
   }
 
   def getJniLibsDir: File = config.outputDir match {
@@ -91,9 +100,6 @@ class RustBuildPlugin extends Plugin[Project] {
     case None =>
       new File(appProjectDir, "jniLibs")
   }
-
-  def getToolchain: Toolchain =
-    new Toolchain(config.androidNdkDir, config.androidApi, config.targetAbi)
 
   def getConfigurations(extension: RustBuildPluginExtension): Configurations = {
     def toOption[T](value: Property[T]) = Option(value.getOrNull())
@@ -123,22 +129,32 @@ class RustBuildPlugin extends Plugin[Project] {
       override val androidApi: Int =
         unwrap(extension.getAndroidApi, "androidApi")
 
-      override val targetAbi: AndroidAbi =
-        AndroidAbi.from(unwrap(extension.getTargetAbi, "targetAbi"))
+      override val targets: Targets = {
+        unwrap(extension.getTargets, "targets")
+          .asInstanceOf[JList[JMap[String, Any]]]
+          .asScala
+          .toList
+          .map { it =>
+            Target(
+              AndroidAbi.from(it.get("abi").asInstanceOf[String]),
+              it.get("api").asInstanceOf[Int]
+            )
+          }
+      }
 
       override val buildType: BuildType =
         BuildType.from(toOption(extension.getBuildType).getOrElse("debug"))
 
       override val extraEnv: Option[Map[String, String]] =
         toOption(extension.getExtraEnv).map({
-          _.asInstanceOf[java.util.Map[String, String]].asScala.toMap
+          _.asInstanceOf[JMap[String, String]].asScala.toMap
         })
     }
   }
 }
 
 object RustBuildPlugin {
-  val TASK_NAME = "compileReleaseRust"
+  val TASK_NAME = "compileRust"
   trait RustBuildPluginExtension {
     def getOutputDir: Property[String]
 
@@ -148,13 +164,11 @@ object RustBuildPlugin {
 
     def getAndroidApi: Property[Int]
 
-    // TODO: multi-target handling
-    // options: armeabi-v7a, arm64-v8a, x86, x86_64
-    def getTargetAbi: Property[String]
+    def getTargets: Property[Any]
 
     def getBuildType: Property[String]
 
-    def getExtraEnv: Property[Object]
+    def getExtraEnv: Property[Any]
   }
 
   abstract class Configurations {
@@ -162,7 +176,7 @@ object RustBuildPlugin {
     val rustProjectDir: File
     val androidNdkDir: File
     val androidApi: Int
-    val targetAbi: AndroidAbi
+    val targets: Targets
     val buildType: BuildType
     val extraEnv: Option[Map[String, String]]
   }
@@ -191,4 +205,12 @@ object RustBuildPlugin {
       override def toString = "release"
     }
   }
+
+  type JMap[K, V] = java.util.Map[K, V]
+  type JList[T] = java.util.List[T]
+
+  case class Target(abi: AndroidAbi, api: Int)
+  type Targets = List[Target]
+
+  type Environments = Map[String, String]
 }

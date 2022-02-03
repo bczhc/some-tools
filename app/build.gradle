@@ -2,6 +2,7 @@ import pers.zhc.plugins.BuildUtils
 import pers.zhc.plugins.BuildUtils2
 import pers.zhc.plugins.NdkVersion
 import pers.zhc.plugins.SdkPath
+import pers.zhc.tools.plugin.rust.AndroidAbi
 import pers.zhc.tools.plugin.rust.RustBuildPlugin
 import pers.zhc.tools.plugin.util.FileUtils
 
@@ -37,6 +38,13 @@ try {
     commitLogResult = base64Encoder.encodeToString("Unknown".bytes)
 }
 
+def jniTargets = [
+        [abi: BuildUtils.TargetAbi.ARM_V7, api: 21],
+        [abi: BuildUtils.TargetAbi.ARM_V8, api: 29],
+        [abi: BuildUtils.TargetAbi.X86, api: 29],
+        [abi: BuildUtils.TargetAbi.X86_64, api: 29]
+]
+
 android {
     signingConfigs {
         debug {
@@ -61,7 +69,8 @@ android {
         versionCode(verInfo[0] as int)
         versionName(verInfo[1] as String)
         ndk {
-            abiFilters "arm64-v8a"
+            def names = jniTargets.stream().map { it.abi.toString() }.collect().toList()
+            names.forEach { abiFilters it }
         }
         buildConfigField 'String[]', 'commitLogEncodedSplit', BuildUtils2.longStringToStringArray(commitLogResult, 100)
     }
@@ -134,39 +143,46 @@ NDK path: ${ndkDir.path}"""
 def appProject = project
 def jniOutputDir = new File(appProject.projectDir, "jniLibs")
 
-def opensslDir = BuildUtils.getOpensslDir(new File(rootDir, "config.properties"))
-def jniTargetAbi = "arm64-v8a"
+def opensslPaths = BuildUtils.getOpensslDir(new File(rootDir, "config.properties"))
+
+def rustBuildExtraEnv = new HashMap<String, String>()
+opensslPaths.forEach {
+    def env = BuildUtils.getRustOpensslBuildEnv(AndroidAbi.from(it.targetAbi.toString()).toRustTarget())
+    rustBuildExtraEnv.put(env.libDir as String, it.lib.path)
+    rustBuildExtraEnv.put(env.includeDir as String, it.include.path)
+}
 
 rustBuild {
     androidNdkDir = android.ndkDirectory.path
-    androidApi = 29
-    targetAbi = jniTargetAbi
+    androidApi = 21
+    targets = jniTargets.stream().map { [abi: it.abi.toString(), api: it.api] }.collect().toList()
     buildType = "release"
     rustProjectDir = new File(appProject.projectDir, "src/main/rust").path
     outputDir = jniOutputDir.path
-    extraEnv = [
-            "OPENSSL_DIR": opensslDir.path
-    ]
+    extraEnv = rustBuildExtraEnv
 }
 
 def copyOpensslLibsTask = project.task("copyOpensslLibs") {
     doLast {
-        ["libssl.so", "libcrypto.so"].stream().map {
-            new File(new File(opensslDir, "lib"), it)
-        }.forEach {
-            if (!it.exists()) {
-                throw new GradleException("Required OpenSSL library file not found: $it.path")
+        opensslPaths.forEach { path ->
+            ["libssl.so", "libcrypto.so"].stream().map {
+                new File(path.lib, it)
+            }.forEach {
+                if (!it.exists()) {
+                    throw new GradleException("Required OpenSSL library file not found: $it.path")
+                }
+
+                def dir = new File(jniOutputDir, path.targetAbi.toString())
+                dir.mkdirs()
+                FileUtils.copyFile(it, new File(dir, it.name))
             }
-            def dir = new File(jniOutputDir, jniTargetAbi.toString())
-            dir.mkdirs()
-            FileUtils.copyFile(it, new File(dir, it.name))
         }
     }
 }
 
-def compileReleaseRustTask = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME())
-appProject.tasks.getByName("preBuild").dependsOn(compileReleaseRustTask)
-compileReleaseRustTask.dependsOn(copyOpensslLibsTask)
+def compileRustTask = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME())
+appProject.tasks.getByName("preBuild").dependsOn(compileRustTask)
+compileRustTask.dependsOn(copyOpensslLibsTask)
 
 repositories {
     mavenCentral()
