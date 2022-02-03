@@ -160,7 +160,7 @@ NDK path: ${ndkDir.path}"""
 }
 
 def appProject = project
-def jniOutputDir = new File(appProject.projectDir, "jniLibs")
+def jniOutputDir = new File(appProject.projectDir, "jniLibs").with { it.mkdirs(); it }
 
 def opensslDir = getOpensslDir(configPropertiesFile)
 
