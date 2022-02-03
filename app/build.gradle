@@ -157,7 +157,9 @@ def copyOpensslLibsTask = project.task("copyOpensslLibs") {
             if (!it.exists()) {
                 throw new GradleException("Required OpenSSL library file not found: $it.path")
             }
-            FileUtils.copyFile(it, new File(new File(jniOutputDir, jniTargetAbi), it.name))
+            def dir = new File(jniOutputDir, jniTargetAbi.toString())
+            dir.mkdirs()
+            FileUtils.copyFile(it, new File(dir, it.name))
         }
     }
 }
