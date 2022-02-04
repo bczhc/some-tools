@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.util.DisplayMetrics
+import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -18,6 +19,7 @@ import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
@@ -500,7 +502,7 @@ class FdbWindow(private val context: BaseActivity) {
 
     private fun createFilePickerDialog(
         type: Int = FilePickerRL.TYPE_PICK_FILE,
-        initialPath: File,
+        initialPath: File = externalPath.path,
         enableFilenameET: Boolean = false,
         onPickResultCallback: (dialog: Dialog, picker: FilePickerRL, path: String) -> Unit
     ): Dialog {
@@ -746,7 +748,7 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     7 -> {
                         // drawing statistics
-                        TODO()
+                        showPathStatDialog()
                     }
                     8 -> {
                         // transformation settings
@@ -770,6 +772,22 @@ class FdbWindow(private val context: BaseActivity) {
             ll.addView(button)
         }
         return createDialog(inflate)
+    }
+
+    private fun showPathStatDialog() {
+        createFilePickerDialog { _, _, path ->
+            val db = SQLite3.open(path)
+            try {
+                val infoStr = getPathV3_0StatisticsInfoStr(db)
+                createDialog(TextView(context).apply {
+                    gravity = Gravity.CENTER_HORIZONTAL
+                    text = infoStr
+                }).show()
+            } catch (e: Exception) {
+                Common.showException(e, context)
+            }
+            db.close()
+        }.show()
     }
 
     private fun createEraserOpacityDialog(): Dialog {
@@ -1022,6 +1040,74 @@ class FdbWindow(private val context: BaseActivity) {
             paintView.invalidate()
         }
         return dialog
+    }
+
+    private fun getSelectedStatisticsIntData(db: SQLite3, mark: Int): Int {
+        var r = 0
+        val statement = db.compileStatement(
+            """
+                    SELECT COUNT(*)
+                    FROM path
+                    WHERE mark is ?
+                    """.trimIndent()
+        )
+        statement.reset()
+        statement.bind(1, mark)
+        val cursor = statement.cursor
+        cursor.step()
+        r = cursor.getInt(0)
+        statement.release()
+        return r
+    }
+
+    private fun getPathV3_0StatisticsInfoStr(db: SQLite3): String {
+        /*
+         * infos:
+         * creation time
+         * total recorded points number,
+         * total recorded paths number,
+         * drawing paths number,
+         * erasing paths number,
+         * undo times,
+         * redo times
+         */
+        val totalPointsNum = intArrayOf(0)
+        val drawingPathsNum: Int = getSelectedStatisticsIntData(db, 0x01)
+        val erasingPathsNum: Int = getSelectedStatisticsIntData(db, 0x11)
+        val totalPathsNum = drawingPathsNum + erasingPathsNum
+        val createTime = arrayOfNulls<String>(1)
+        db.exec(
+            """
+            SELECT create_timestamp
+            FROM info
+            """.trimIndent()
+        ) { contents: Array<String> ->
+            createTime[0] = Date(contents[0].toLong()).toString()
+            0
+        }
+        db.exec(
+            """
+                SELECT COUNT(*)
+                FROM path
+                WHERE mark IS NOT 0x01
+                  AND mark IS NOT 0x11
+                  AND mark IS NOT 0x20
+                  AND mark IS NOT 0x30
+                """.trimIndent()
+        ) { contents: Array<String> ->
+            totalPointsNum[0] = contents[0].toInt()
+            0
+        }
+        return context.getString(
+            R.string.fdb_path_info,
+            createTime[0],
+            totalPointsNum[0],
+            totalPathsNum,
+            drawingPathsNum,
+            erasingPathsNum,
+            getSelectedStatisticsIntData(db, 0x20),
+            getSelectedStatisticsIntData(db, 0x30)
+        )
     }
 
     companion object {

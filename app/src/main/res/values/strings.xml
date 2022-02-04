@@ -364,8 +364,6 @@
     <string name="choose_path_file">选择path文件</string>
     <string name="unsupported_path">不支持的path</string>
     <string name="choose_path_v_3_0_file">选择pathV3.0文件</string>
-    <string name="path_info_string">创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d
-    </string>
     <string name="wubi_code_database_info">"共有%1$d条记录 "</string>
     <string name="enter_wubi_code">输入五笔编码</string>
     <string name="candidate_word">候选字词</string>
@@ -552,6 +550,9 @@
     <string name="fdb_stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
     <string name="fdb_clear_cache_button">清除缓存（%1$dkB）</string>
     <string name="fdb_clear_cache_success">清除成功</string>
+    <string name="fdb_path_info">
+        <![CDATA[创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d]]>
+    </string>
     <!-- module end -->
 
     <!-- module: words -->
