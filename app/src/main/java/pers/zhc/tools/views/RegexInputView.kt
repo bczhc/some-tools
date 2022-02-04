@@ -14,7 +14,7 @@ import java.util.regex.PatternSyntaxException
  * @author bczhc
  */
 class RegexInputView : WrapLayout {
-    private lateinit var shet: SmartHintEditText
+    lateinit var shet: SmartHintEditText
     private lateinit var editText: EditText
     private lateinit var inputLayout: TextInputLayout
     private var cachedRegex: Regex? = null

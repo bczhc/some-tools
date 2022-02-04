@@ -2,17 +2,15 @@ package pers.zhc.tools.diary;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.speech.tts.TextToSpeech;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.*;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,20 +20,23 @@ import androidx.annotation.Nullable;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import kotlin.Unit;
+import kotlin.ranges.IntRange;
+import kotlin.text.MatchResult;
+import kotlin.text.Regex;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.DialogUtils;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.views.RegexInputView;
 import pers.zhc.tools.views.ScrollEditText;
-import pers.zhc.tools.views.SmartHintEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import static android.speech.tts.TextToSpeech.QUEUE_ADD;
@@ -55,11 +56,13 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
     private Statement updateStatement;
     private ScheduledSaver saver;
     private Map<String, String> ttsReplaceDict = null;
+    private ViewGroup findLayout;
 
     /**
      * intent integer extra
      */
     public static String EXTRA_DATE_INT = "dateInt";
+    private IntConsumer setFoundCount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,9 +79,34 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         charactersCountTV = toolbar.findViewById(R.id.text_count_tv);
         SwitchMaterial ttsSwitch = toolbar.findViewById(R.id.tts_switch);
         ImageButton cancelButton = findViewById(R.id.cancel_button);
-        ViewGroup searchLayout = findViewById(R.id.search_layout);
-        EditText searchET = ((SmartHintEditText) findViewById(R.id.search_et)).getEditText();
+        findLayout = findViewById(R.id.find_layout);
+        RegexInputView findInputView = findViewById(R.id.find_et);
 
+        cancelButton.setOnClickListener(v -> findLayout.setVisibility(View.GONE));
+
+        findInputView.setRegexChangeListener(regex -> {
+            highlightFind(regex);
+            return Unit.INSTANCE;
+        });
+
+        setFoundCount = (int count) -> findInputView.shet.inputLayout.setSuffixText(Integer.toString(count));
+
+        // set single-line and have ACTION_GO IME action
+        findInputView.shet.getEditText().setInputType(InputType.TYPE_CLASS_TEXT);
+        findInputView.shet.getEditText().setImeOptions(EditorInfo.IME_ACTION_GO);
+
+        // On IME_ACTION_GO, invalidate text highlights, instead of refreshing on
+        // EditText text changed - like Chrome, maybe for reducing lags
+        findInputView.shet.getEditText().setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                final Regex regex = findInputView.getRegex();
+                if (regex != null) {
+                    highlightFind(regex);
+                }
+                return true;
+            }
+            return false;
+        });
 
         ttsSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             speak = isChecked;
@@ -180,6 +208,35 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         saver.start();
     }
 
+    private void highlightFind(@NotNull Regex regex) {
+        // avoid finding with an empty pattern
+        if (regex.getPattern().isEmpty()) {
+            // clear all colored span
+            et.setText(et.getText().toString());
+            setFoundCount.call(0);
+            return;
+        }
+        final SpannableString spannableString = new SpannableString(et.getText().toString());
+
+        final Iterator<MatchResult> iterator = regex.findAll(et.getText().toString(), 0).iterator();
+        int count = 0;
+        while (iterator.hasNext()) {
+            MatchResult matchResult = iterator.next();
+            final IntRange range = matchResult.getRange();
+
+            spannableString.setSpan(
+                    new BackgroundColorSpan(Color.YELLOW),
+                    range.getFirst(),
+                    range.getLast() + 1 /* this argument is exclusive */,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+            ++count;
+        }
+
+        setFoundCount.call(count);
+        et.setText(spannableString);
+    }
+
     private void ttsSpeak(String content, int queueMode) {
         Common.doAssertion(tts != null);
         final int speak = tts.speak(content, queueMode, null, String.valueOf(System.currentTimeMillis()));
@@ -247,38 +304,16 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
 
         } else if (itemId == R.id.find) {
 
-            showFindDialog();
+            // toggle search layout's visibility
+            final int visibility = findLayout.getVisibility();
+            if (visibility == View.GONE) findLayout.setVisibility(View.VISIBLE);
+            else if (visibility == View.VISIBLE) findLayout.setVisibility(View.GONE);
 
         } else if (itemId == R.id.statistics) {
 
             DiaryContentPreviewActivity.Companion.createDiaryRecordStatDialog(this, diaryDatabase, dateInt).show();
 
         }
-    }
-
-    private void showFindDialog() {
-        final EditText inputET = new EditText(this);
-        inputET.setHint(R.string.diary_taking_find_text_et_hint);
-        DialogUtils.Companion.createPromptDialog(
-                this,
-                R.string.diary_taking_find_text_dialog_title,
-                (dialogInterface, editText) -> {
-
-                    final String diaryContent = et.getText().toString();
-                    final String input = editText.getText().toString();
-                    final int foundIndex = diaryContent.indexOf(input, et.getSelectionEnd());
-                    if (foundIndex == -1) {
-                        ToastUtils.show(this, R.string.diary_found_nothing_toast);
-                        return Unit.INSTANCE;
-                    }
-
-                    et.setSelection(foundIndex, foundIndex + input.length());
-
-                    return Unit.INSTANCE;
-                },
-                (dialogInterface, editText) -> Unit.INSTANCE,
-                inputET
-        ).show();
     }
 
     @Override
@@ -340,5 +375,9 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         private void stop() {
             t.interrupt();
         }
+    }
+
+    private interface IntConsumer {
+        void call(int count);
     }
 }

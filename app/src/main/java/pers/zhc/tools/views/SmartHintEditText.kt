@@ -18,7 +18,7 @@ class SmartHintEditText : WrapLayout {
     private lateinit var mET: EditText
     val editText get() = mET
 
-    private lateinit var inputLayout: TextInputLayout
+    lateinit var inputLayout: TextInputLayout
     val textInputLayout get() = inputLayout
 
     constructor(context: Context?) : this(context, null)

@@ -37,21 +37,21 @@
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:id="@+id/search_layout"
+                    android:id="@+id/find_layout"
+                    android:visibility="gone"
     >
-        <pers.zhc.tools.views.SmartHintEditText
+        <pers.zhc.tools.views.RegexInputView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="@string/diary_taking_find_text_et_hint"
                 android:layout_toLeftOf="@id/cancel_button"
-                android:id="@+id/search_et"
+                android:id="@+id/find_et"
         />
         <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
                      android:src="@android:drawable/ic_menu_close_clear_cancel"
                      android:layout_alignParentRight="true"
                      android:contentDescription="@string/cancel_btn"
                      android:id="@+id/cancel_button"
-                     android:background="@color/white"
+                     android:background="?selectableItemBackground"
                      android:layout_centerVertical="true"
         />
     </RelativeLayout>
