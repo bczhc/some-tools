@@ -47,8 +47,10 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: MyAdapter
     private val diaryItemDataList = ArrayList<DiaryItemData>()
-
-    private var lastRegex: Regex? = null
+    private val advancedSearchDialog by lazy {
+        createAdvancedSearchDialog()
+    }
+    private var searchRegex: Regex? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflate = inflater.inflate(R.layout.diary_main_diary_fragment, container, false)
@@ -72,6 +74,7 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
                 return false
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun onQueryTextChange(query: String): Boolean {
                 if (query.isEmpty()) {
                     refreshList()
@@ -193,7 +196,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     private fun openDiaryPreview(dateInt: Int) {
         val intent = Intent(requireContext(), DiaryContentPreviewActivity::class.java).apply {
             putExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, dateInt)
-            lastRegex?.let { putExtra(DiaryContentPreviewActivity.EXTRA_HIGHLIGHT_REGEX, it) }
+            searchRegex?.let { putExtra(DiaryContentPreviewActivity.EXTRA_HIGHLIGHT_REGEX, it) }
         }
         startActivityForResult(intent, RequestCode.START_ACTIVITY_3)
     }
@@ -255,18 +258,21 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun showAdvancedSearchDialog() {
+        advancedSearchDialog.show()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun createAdvancedSearchDialog(): AlertDialog {
         val context = requireContext()
 
         val inflate = View.inflate(context, R.layout.diary_advenced_search_dialog, null)
         val regexView = inflate.regex_input!!
-        regexView.regex = lastRegex
-
-        DialogUtils.createConfirmationAlertDialog(
+        return DialogUtils.createConfirmationAlertDialog(
             context,
             { _, _ ->
 
                 val regex = regexView.regex ?: return@createConfirmationAlertDialog
-                lastRegex = regex
+                searchRegex = regex
 
                 val progressDialog = ProgressDialog(context).also {
                     it.getProgressView().apply {
@@ -299,7 +305,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             view = inflate,
             width = MATCH_PARENT,
             titleRes = R.string.diary_advanced_search_dialog_title
-        ).show()
+        )
     }
 
     private fun showStatDialog() {
@@ -489,6 +495,7 @@ WHERE "date" IS ?"""
         refreshList()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun refreshList() {
         refreshItemDataList()
         recyclerViewAdapter.notifyDataSetChanged()
