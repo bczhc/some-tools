@@ -20,7 +20,6 @@ import java.io.IOException
  */
 class FdbMainActivity : BaseActivity() {
     private lateinit var requestCapturePermissionCallback: ((result: ActivityResult) -> Unit)
-    private val fdbMap = HashMap<Long, FdbWindow>()
 
     private val launcher = object {
         val overlaySetting = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -103,5 +102,9 @@ class FdbMainActivity : BaseActivity() {
 
     private fun deleteTmpPathFiles() {
         getCacheFilesNotInUse().forEach { it.requireDelete() }
+    }
+
+    companion object {
+        private val fdbMap = HashMap<Long, FdbWindow>()
     }
 }
