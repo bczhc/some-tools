@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class DisplayUtil {
@@ -30,27 +31,32 @@ public class DisplayUtil {
         return (int) (spValue * fontScale + 0.5f);
     }
 
+    @Contract(pure = true)
     public static int cm2dp(float cm) {
         return (int) (cm * (8000F / 127F));
     }
 
-    public static int getStatusBarHeight(Activity activity) {
+    public static int getStatusBarHeight(@NotNull Activity activity) {
         Rect rectangle = new Rect();
         activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
         return rectangle.top;
     }
 
-    public static DisplayMetrics getMetrics(Context context) {
+    public static @NotNull DisplayMetrics getMetrics(@NotNull Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
         final WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metrics);
         return metrics;
     }
 
-    public static Point getScreenSize(Context context) {
+    public static @NotNull Point getScreenSize(@NotNull Context context) {
         Point point = new Point();
         final WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getRealSize(point);
         return point;
+    }
+
+    public static int cm2px(Context context, float cm) {
+        return dip2px(context, (float) cm2dp(cm));
     }
 }

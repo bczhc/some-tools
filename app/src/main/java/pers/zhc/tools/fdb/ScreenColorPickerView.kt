@@ -19,48 +19,98 @@ class ScreenColorPickerView : BaseView {
     private var transparent = false
     private val pointPaint = Paint()
     private val borderPaint = Paint()
-    private val borderWidth = 8F
+    private val borderWidth = DisplayUtil.cm2px(context, 1.5F / 10F).toFloat()
     private var bitmap: Bitmap? = null
     private val bitmapPaint = Paint()
     private var pointX = 0F
     private var pointY = 0F
+    private val innerEdgeLength = DisplayUtil.cm2px(context, 2F)
+    private val edgeWidth = 2F
+    private var color: Int = Color.TRANSPARENT
+    private val edgePaint = Paint()
+    private val pointWidth = 6F
 
     private var onScreenSizeChangedListener: OnScreenSizeChangedListener? = null
 
     private fun init() {
-        pointPaint.color = Color.RED
-        pointPaint.strokeWidth = 5F
+        pointPaint.apply {
+            color = Color.RED
+            strokeWidth = pointWidth
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+        }
 
-        borderPaint.color = Color.BLACK
+        borderPaint.apply {
+            color = Color.TRANSPARENT
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+        }
+
+        edgePaint.apply {
+            style = Paint.Style.STROKE
+            color = Color.BLACK
+            strokeWidth = edgeWidth
+            strokeJoin = Paint.Join.ROUND
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
+        pointPaint.color = getInvertColor()
+        borderPaint.color = color
+        edgePaint.color = getInvertColor()
+
         if (transparent) {
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             return
         }
 
-        val width = measuredWidth.toFloat()
-        val height = measuredHeight.toFloat()
-
+        canvas.translate(edgeWidth / 2F, edgeWidth / 2F)
+        canvas.translate(borderWidth, borderWidth)
+        canvas.translate(innerEdgeLength.toFloat() / 2F, innerEdgeLength.toFloat() / 2F)
+        canvas.translate(-pointX, -pointY)
+        // inner bitmap content
         bitmap?.let {
-            canvas.drawBitmap(it, -(pointX - width / 2F), -(pointY - height / 2F), bitmapPaint)
+            canvas.drawBitmap(it, 0F, 0F, bitmapPaint)
         }
 
-        canvas.drawRect(0F, 0F, width, borderWidth, borderPaint)
-        canvas.drawRect(0F, height - borderWidth, width, height, borderPaint)
-        canvas.drawRect(0F, 0F, borderWidth, height, borderPaint)
-        canvas.drawRect(width - borderWidth, 0F, width, height, borderPaint)
+        canvas.translate(pointX, pointY)
 
-        canvas.drawPoint(width / 2F, height / 2F, pointPaint)
+        // center point
+        canvas.drawPoint(0F, 0F, pointPaint)
+
+        canvas.translate(-innerEdgeLength.toFloat() / 2F, -innerEdgeLength.toFloat() / 2F)
+        canvas.translate(-borderWidth, -borderWidth)
+        // color border filled area
+        canvas.drawRect(0F, 0F, innerEdgeLength.toFloat() + 2F * borderWidth, borderWidth, borderPaint)
+        canvas.drawRect(0F, 0F, borderWidth, innerEdgeLength.toFloat() + 2F * borderWidth, borderPaint)
+        canvas.translate(innerEdgeLength.toFloat() + 2F * borderWidth, innerEdgeLength.toFloat() + 2F * borderWidth)
+        canvas.drawRect(0F, 0F, -(innerEdgeLength.toFloat() + 2F * borderWidth), -borderWidth, borderPaint)
+        canvas.drawRect(0F, 0F, -borderWidth, -(innerEdgeLength.toFloat() + 2F * borderWidth), borderPaint)
+
+        canvas.translate(
+            -(innerEdgeLength.toFloat() + 2F * borderWidth),
+            -(innerEdgeLength.toFloat() + 2F * borderWidth)
+        )
+        // color border stroke lines
+        canvas.drawRect(
+            0F,
+            0F,
+            innerEdgeLength.toFloat() + 2F * borderWidth,
+            innerEdgeLength.toFloat() + 2F * borderWidth,
+            edgePaint
+        )
     }
 
     private var lastWindowWidth = 0
     private var lastWindowHeight = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val radius = DisplayUtil.dip2px(context, DisplayUtil.cm2dp(2F).toFloat())
-        setMeasuredDimension(radius, radius)
+        val edgeLength = innerEdgeLength + borderWidth.toInt() * 2 + (edgeWidth / 2F).toInt() + pointWidth.toInt()
+        setMeasuredDimension(edgeLength, edgeLength)
 
         val w = MeasureSpec.getSize(widthMeasureSpec)
         val h = MeasureSpec.getSize(heightMeasureSpec)
@@ -72,9 +122,14 @@ class ScreenColorPickerView : BaseView {
     }
 
     fun setColor(color: Int) {
-        borderPaint.color = color
-        pointPaint.color = ColorUtils.invertColor(color)
+        this.color = color
         invalidate()
+    }
+
+    private fun getInvertColor(): Int {
+        return if (color != Color.TRANSPARENT) {
+            ColorUtils.invertColor(color)
+        } else Color.BLACK
     }
 
     fun setBitmap(bitmap: Bitmap) {
