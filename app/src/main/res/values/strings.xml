@@ -63,6 +63,7 @@
     <string name="create_pinned_shortcut_action_name">添加到桌面</string>
     <string name="regex">正则表达式</string>
     <string name="regex_bad_pattern">正则表达式有误</string>
+    <string name="io_error">IO异常</string>
     <!-- end -->
 
     <!-- old -->
@@ -250,7 +251,6 @@
     <string name="apk">apk</string>
     <string name="download_progress">%1$d/%2$d</string>
     <string name="can_not_import_itself">不能导入自己</string>
-    <string name="fdb_stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
     <string name="manage_layer">管理图层</string>
     <string name="hide_panel">隐藏面板</string>
     <string name="request_permission_error">请求权限出错</string>
@@ -549,6 +549,9 @@
     <string name="fdb_import_path_version_3_1_toast">使用3.1版本path导入</string>
     <string name="fdb_import_path_version_4_0_toast">使用4.0版本path导入</string>
     <string name="fdb_eraser_opacity_adjusting_dialog_title">橡皮不透明度</string>
+    <string name="fdb_stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
+    <string name="fdb_clear_cache_button">清除缓存（%1$dkB）</string>
+    <string name="fdb_clear_cache_success">清除成功</string>
     <!-- module end -->
 
     <!-- module: words -->

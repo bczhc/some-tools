@@ -66,7 +66,7 @@ class FdbWindow(private val context: BaseActivity) {
 
     private var followBrushColor = false
     private var invertTextColor = false
-    private val timestamp = System.currentTimeMillis()
+    val timestamp = System.currentTimeMillis()
     private val pathFiles = object {
         val tmpPathDir = File(context.filesDir, "path")
         val tmpPathFile = File(tmpPathDir, "$timestamp.path")
@@ -87,6 +87,8 @@ class FdbWindow(private val context: BaseActivity) {
     private var layerManagerView: LayerManagerView
 
     private var hasStartedScreenColorPicker = false
+
+    var onExitListener: OnExitListener? = null
 
     init {
         val ll = LinearLayout(context)
@@ -966,6 +968,8 @@ class FdbWindow(private val context: BaseActivity) {
         context.applicationContext.unregisterReceiver(receivers.main)
         receivers.screenColorPickerResult?.let { context.applicationContext.unregisterReceiver(it) }
         receivers.startScreenColorPicker?.let { context.applicationContext.unregisterReceiver(it) }
+
+        onExitListener?.invoke()
     }
 
     private fun sendScreenColorPickerStopRequestBroadcast() {
@@ -1027,3 +1031,5 @@ class FdbWindow(private val context: BaseActivity) {
         }
     }
 }
+
+typealias OnExitListener = () -> Unit
