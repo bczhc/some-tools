@@ -80,13 +80,13 @@ class ScreenColorPickerShow(
                     }
                     screenshotDone = false
                     screenColorPickerView.setIsTransparent(true)
-                    MediaUtils.asyncTakeScreenshot(context, projectionData, null) { image ->
-                        val bitmap = MediaUtils.imageToBitmap(image)
-                        image.close()
-                        screenColorPickerView.getBitmap()?.recycle()
-                        screenColorPickerView.setBitmap(bitmap)
-                        screenColorPickerView.setIsTransparent(false)
-                        screenshotDone = true
+                    MediaUtils.asyncTakeScreenshot(context, projectionData) { bitmap ->
+                        Common.runOnUiThread(context) {
+                            screenColorPickerView.getBitmap()?.recycle()
+                            screenColorPickerView.setBitmap(bitmap)
+                            screenColorPickerView.setIsTransparent(false)
+                            screenshotDone = true
+                        }
                     }
                 }
                 MotionEvent.ACTION_MOVE -> {

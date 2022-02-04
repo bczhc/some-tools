@@ -6,10 +6,12 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.hardware.display.DisplayManager
+import android.hardware.display.VirtualDisplay
 import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjectionManager
 import android.os.Handler
+import android.os.Looper
 
 /**
  * @author bczhc
@@ -29,18 +31,6 @@ class MediaUtils {
             return bitmap
         }
 
-        fun asyncTakeScreenshot(
-            imageReader: ImageReader,
-            handler: Handler? = null,
-            onAvailable: (image: Image) -> Unit
-        ) {
-            imageReader.setOnImageAvailableListener({
-                val image = imageReader.acquireLatestImage()!!
-                onAvailable(image)
-                imageReader.setOnImageAvailableListener(null, handler)
-            }, handler)
-        }
-
         private fun newImageReader(context: Context): ImageReader {
             val screenSize = DisplayUtil.getScreenSize(context)
             return ImageReader.newInstance(screenSize.x, screenSize.y, PixelFormat.RGBA_8888, 1)
@@ -49,14 +39,26 @@ class MediaUtils {
         fun asyncTakeScreenshot(
             context: Context,
             mediaProjectionData: Intent,
-            handler: Handler? = null,
-            callback: (image: Image) -> Unit
+            callback: (bitmap: Bitmap) -> Unit,
         ) {
             val mpm =
                 context.applicationContext.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
             val mp = mpm.getMediaProjection(Activity.RESULT_OK, mediaProjectionData)
+            var vd: VirtualDisplay? = null
+
             val ir = newImageReader(context)
-            val vd = mp.createVirtualDisplay(
+            Thread {
+                var image: Image? = null
+                while (image == null) image = ir.acquireLatestImage()
+                val bitmap = imageToBitmap(image)
+                vd!!.release()
+                ir.close()
+                mp.stop()
+                image.close()
+                callback(bitmap)
+            }.start()
+
+            vd = mp.createVirtualDisplay(
                 "VirtualDisplay",
                 ir.width,
                 ir.height,
@@ -64,14 +66,8 @@ class MediaUtils {
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 ir.surface,
                 null,
-                handler
+                null
             )
-            asyncTakeScreenshot(ir, handler) { image ->
-                callback(image)
-                vd.release()
-                ir.close()
-                mp.stop()
-            }
         }
     }
 }
