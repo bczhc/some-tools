@@ -15,12 +15,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Clone submosule
-        run: git submodule update --init --recursive
       - name: Configure SSH key
         env:
           SSH_PRK: ${{ secrets.SSH_PRK }}
@@ -36,7 +30,7 @@ jobs:
         run: |
           docker build . -t some-tools-build
           docker run --name some-tools some-tools-build
-          docker cp some-tools:/apk .
+          docker cp some-tools:/apks .
       - name: Compile CI tool jar
         run: |
           cd ci
@@ -58,7 +52,7 @@ jobs:
               mkdir apks
           fi
 
-          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload "${GITHUB_WORKSPACE}/apk/debug/app-debug.apk" $encoded_commit_info
+          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload "${GITHUB_WORKSPACE}/apks/arm64-v8a-29.apk" $encoded_commit_info
 
           git config --global user.email "bczhc0@126.com"
           git config --global user.name "bczhc"
@@ -66,8 +60,8 @@ jobs:
           git commit -m "update $(date)"
           git push origin master -f
           cd "${GITHUB_WORKSPACE}"
-      - name: Upload apk
+      - name: Upload APKs
         uses: actions/upload-artifact@v2
         with:
           name: app-debug
-          path: apk/debug/app-debug.apk
+          path: apks

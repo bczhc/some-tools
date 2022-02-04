@@ -1,21 +1,7 @@
-#!/bin/groovy
+#!/bin/bash
 
-def selfDir = new File(getClass().protectionDomain.codeSource.location.path).parentFile
-metaClass.mixin new GroovyScriptEngine(selfDir.canonicalPath).with {
-    loadScriptByName('lib.groovy')
-}
+set -e
 
-def target = "aarch64-linux-android"
-def targetList = "rustup target list".execute().text.split("\\n").toList()
-def installed = false
-targetList.forEach {
-    if (it.matches("^$target( \\(installed\\))?\$")) {
-        if (it.matches(".*installed\\)\$")) {
-            installed = true
-        }
-    }
-}
-if (!installed) {
-    runShell(["rustup", "target", "add", target])
-}
-
+for t in aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android; do
+  rustup target add $t
+done
