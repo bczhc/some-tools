@@ -120,7 +120,7 @@ class CharUcdActivity : BaseActivity() {
     }
 
     private fun getCompletedUppercaseString(s: String, length: Int): String {
-        return completeString(s, length).toUpperCase(Locale.US)
+        return completeString(s, length).uppercase(Locale.US)
     }
 
     private fun String.getCompletedUppercase(length: Int): String {

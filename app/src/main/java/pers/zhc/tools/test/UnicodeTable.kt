@@ -136,11 +136,11 @@ class UnicodeTable : BaseActivity() {
          * "a" -> "000A"
          */
         fun completeCodepointNum(s: String): String {
-            return if (s.length < 4) {
+            return (if (s.length < 4) {
                 "${"0".repeat(4 - s.length)}$s"
             } else {
                 s
-            }.toUpperCase(Locale.US)
+            }).uppercase(Locale.US)
         }
 
         /**

@@ -605,13 +605,13 @@ class FdbWindow(private val context: BaseActivity) {
                         ) { _, picker, path ->
                             var filename = picker.filenameText!!
                             val extension = File(filename).extension
-                            if (extension.toLowerCase(Locale.US) != ".png") {
+                            if (extension.lowercase(Locale.US) != ".png") {
                                 filename += ".png"
                             }
                             val imgFile = File(path, filename)
 
                             paintView.exportImg(imgFile, paintView.measuredWidth, paintView.measuredHeight)
-                        }
+                        }.show()
                     }
                     2 -> {
                         // import path
