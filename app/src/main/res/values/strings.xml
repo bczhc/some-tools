@@ -554,6 +554,8 @@
     <string name="fdb_path_info">
         <![CDATA[创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d]]>
     </string>
+    <string name="fdb_export_image_size_multiplier_prompt_title">导出图像大小倍数（对屏幕大小）</string>
+    <string name="fdb_layer_info_missing_importing_terminated_toast">图层信息丢失，导入中止</string>
     <!-- module end -->
 
     <!-- module: words -->
@@ -677,6 +679,6 @@
     <string name="char_ucd_unicode_decimal_tv">十进制：%1$d</string>
     <string name="char_ucd_database_missing_msg">数据库缺失</string>
     <string name="char_ucd_ucd_properties_not_found_msg">未找到数据</string>
-    <string name="fdb_export_image_size_multiplier_prompt_title">导出图像大小倍数（对屏幕大小）</string>
+    <string name="fdb_path_info_corrupt_toast">路径信息损坏，无法导入</string>
     <!-- end -->
 </resources>

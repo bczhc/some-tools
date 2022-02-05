@@ -1,84 +1,56 @@
 package pers.zhc.tools.fdb
 
-import android.graphics.Matrix
-import org.json.JSONException
-import org.json.JSONObject
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.tools.utils.fromJsonOrNull
+import pers.zhc.tools.utils.withCompiledStatement
 import pers.zhc.tools.views.HSVAColorPickerRL.SavedColor
 
 /**
  * @author bczhc
  */
-data class ExtraInfos(
-    val isLockingStroke: Boolean,
-    val lockedDrawingStrokeWidth: Float,
-    val lockedEraserStrokeWidth: Float,
-    val savedColors: ArrayList<SavedColor>,
-    val defaultTransformation: Matrix,
-    val layersInfo: List<LayerInfo>
+class ExtraInfos(
+    val isLockingStroke: Boolean?,
+    val lockedDrawingStrokeWidth: Float?,
+    val lockedEraserStrokeWidth: Float?,
+    val savedColors: List<SavedColor>?,
+    val defaultTransformation: FloatArray?,
+    val layersInfo: List<LayerInfo>?
 ) {
     companion object {
-        fun getDefaultTransformation(defaultTransformationJSONObject: JSONObject): Matrix? {
+        /**
+         * returns `null` if [extraInfosJson] has bad json syntax or there's
+         * no "layers" field.
+         */
+        fun getLayersInfo(extraInfosJson: String): List<LayerInfo>? {
             return try {
-                val matrixValues = FloatArray(9)
-                matrixValues[Matrix.MSCALE_X] = defaultTransformationJSONObject.getDouble("MSCALE_X").toFloat()
-                matrixValues[Matrix.MSKEW_X] = defaultTransformationJSONObject.getDouble("MSKEW_X").toFloat()
-                matrixValues[Matrix.MTRANS_X] = defaultTransformationJSONObject.getDouble("MTRANS_X").toFloat()
-                matrixValues[Matrix.MSKEW_Y] = defaultTransformationJSONObject.getDouble("MSKEW_Y").toFloat()
-                matrixValues[Matrix.MSCALE_Y] = defaultTransformationJSONObject.getDouble("MSCALE_Y").toFloat()
-                matrixValues[Matrix.MTRANS_Y] = defaultTransformationJSONObject.getDouble("MTRANS_Y").toFloat()
-                matrixValues[Matrix.MPERSP_0] = defaultTransformationJSONObject.getDouble("MPERSP_0").toFloat()
-                matrixValues[Matrix.MPERSP_1] = defaultTransformationJSONObject.getDouble("MPERSP_1").toFloat()
-                matrixValues[Matrix.MPERSP_2] = defaultTransformationJSONObject.getDouble("MPERSP_2").toFloat()
-                val matrix = Matrix()
-                matrix.setValues(matrixValues)
-                matrix
-            } catch (ignored: JSONException) {
-                null
-            }
-        }
-
-        fun getLayersInfo(rootJSONObject: JSONObject): ArrayList<LayerInfo>? {
-            return try {
-                val list = ArrayList<LayerInfo>()
-                val layersInfoJSONArray = rootJSONObject.getJSONArray("layersInfo")
-                val length = layersInfoJSONArray.length()
-                for (i in 0 until length) {
-                    val layerInfoJSONObject = layersInfoJSONArray.getJSONObject(i)
-                    val id = layerInfoJSONObject.getLong("id")
-                    val name = layerInfoJSONObject.getString("name")
-                    val visible = layerInfoJSONObject.getBoolean("visible")
-                    list.add(LayerInfo(id, name, visible))
-                }
-                list
-            } catch (ignored: JSONException) {
-                null
-            }
-        }
-
-        fun queryExtraInfo(db: SQLite3): JSONObject? {
-            var extraStr: String? = null
-            try {
-                val infoStatement = db.compileStatement(
-                    """
-              SELECT extra_infos
-              FROM info
-              """.trimIndent()
-                )
-                val infoCursor = infoStatement.cursor
-                if (infoCursor.step()) {
-                    extraStr = infoCursor.getText(0)
-                }
-                infoStatement.release()
-            } catch (ignored: RuntimeException) {
-            }
-            extraStr ?: return null
-
-            try {
-                return JSONObject(extraStr)
-            } catch (_: JSONException) {
+                Gson().fromJson(extraInfosJson, ExtraInfos::class.java)!!
+            } catch (e: JsonSyntaxException) {
                 return null
+            }.layersInfo
+        }
+
+        private fun queryExtraInfos(db: SQLite3): String? {
+            var jsonString: String? = null
+            db.withCompiledStatement("SELECT extra_infos FROM info") {
+                val cursor = it.cursor
+                jsonString = if (cursor.step()) {
+                    cursor.getText(0)
+                } else null
             }
+            return jsonString
+        }
+
+        /**
+         * returns null if [db] has no such database field or the info string
+         * it stores has invalid json syntax
+         */
+        fun getExtraInfos(db: SQLite3): ExtraInfos? {
+            return Gson().fromJsonOrNull(
+                queryExtraInfos(db) ?: return null,
+                ExtraInfos::class.java
+            )
         }
     }
 }

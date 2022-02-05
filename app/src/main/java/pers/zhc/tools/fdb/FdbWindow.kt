@@ -8,6 +8,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.util.DisplayMetrics
@@ -662,41 +663,15 @@ class FdbWindow(private val context: BaseActivity) {
 
                                     when (pathVersion) {
                                         PathVersion.VERSION_3_0 -> {
-                                            try {
-                                                val db = SQLite3.open(path)
-                                                val extraInfos = PathSaver.getExtraInfos(db)
-                                                db.close()
-                                                extraInfos ?: return@runOnUiThread
-                                                val savedColors =
-                                                    extraInfos.getJSONArray("savedColors") ?: return@runOnUiThread
-                                                val list = ArrayList<HSVAColorPickerRL.SavedColor>()
-                                                for (i in 0 until savedColors.length()) {
-                                                    val savedColor = savedColors.getJSONObject(i)
+                                            var extraInfos: ExtraInfos? = null
+                                            SQLite3::class.withNew(path) {
+                                                extraInfos = ExtraInfos.getExtraInfos(it)
+                                            }
+                                            extraInfos ?: return@runOnUiThread
 
-                                                    val hsvaJSONArray = savedColor.getJSONArray("colorHSVA")
-                                                    list.add(
-                                                        HSVAColorPickerRL.SavedColor(
-                                                            floatArrayOf(
-                                                                hsvaJSONArray.getDouble(0).toFloat(),
-                                                                hsvaJSONArray.getDouble(1).toFloat(),
-                                                                hsvaJSONArray.getDouble(2).toFloat()
-                                                            ),
-                                                            hsvaJSONArray.getInt(3),
-                                                            savedColor.getString("colorName")
-                                                        )
-                                                    )
-                                                }
-                                                colorPickers.brush.setSavedColor(list)
-
-                                                val defaultTransformationJSONObject =
-                                                    extraInfos.getJSONObject("defaultTransformation")
-
-                                                val matrix =
-                                                    ExtraInfos.getDefaultTransformation(
-                                                        defaultTransformationJSONObject
-                                                    )
-                                                paintView.defaultTransformation = matrix
-                                            } catch (_: Exception) {
+                                            extraInfos!!.savedColors?.let { colorPickers.brush.setSavedColor(it) }
+                                            extraInfos!!.defaultTransformation?.let {
+                                                paintView.defaultTransformation = Matrix::class.fromValues(it)
                                             }
                                         }
                                         else -> {
@@ -725,7 +700,7 @@ class FdbWindow(private val context: BaseActivity) {
                             paintView.lockedDrawingStrokeWidth,
                             paintView.lockedEraserStrokeWidth,
                             colorPickers.brush.savedColors,
-                            paintView.defaultTransformation,
+                            paintView.defaultTransformation.getValuesNew(),
                             layerManagerView.getLayersInfo()
                         )
                         pathSaver.setExtraInfos(extraInfos)

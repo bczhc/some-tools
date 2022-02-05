@@ -1,20 +1,19 @@
 package pers.zhc.tools.fdb;
 
-import android.graphics.Matrix;
 import android.view.MotionEvent;
 import androidx.annotation.Nullable;
+import com.google.gson.Gson;
+import kotlin.Unit;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
-import pers.zhc.tools.views.HSVAColorPickerRL;
+import pers.zhc.tools.utils.SQLite3UtilsKt;
+import pers.zhc.util.Assertion;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Path saver.
@@ -154,61 +153,10 @@ public class PathSaver {
     }
 
     public void setExtraInfos(@NotNull ExtraInfos extraInfos) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("isLockingStroke", extraInfos.isLockingStroke());
-            jsonObject.put("lockedDrawingStrokeWidth", extraInfos.getLockedDrawingStrokeWidth());
-            jsonObject.put("lockedEraserStrokeWidth", extraInfos.getLockedEraserStrokeWidth());
-
-            JSONArray savedColorsJSONArray = new JSONArray();
-            for (HSVAColorPickerRL.SavedColor savedColor : extraInfos.getSavedColors()) {
-                JSONObject savedColorJSONObject = new JSONObject();
-
-                JSONArray hsvaJSONOArray = new JSONArray();
-                hsvaJSONOArray.put(savedColor.hsv[0]);
-                hsvaJSONOArray.put(savedColor.hsv[1]);
-                hsvaJSONOArray.put(savedColor.hsv[2]);
-                hsvaJSONOArray.put(savedColor.alpha);
-
-                savedColorJSONObject.put("colorHSVA", hsvaJSONOArray);
-                savedColorJSONObject.put("colorName", savedColor.name);
-                savedColorsJSONArray.put(savedColorJSONObject);
-            }
-            jsonObject.put("savedColors", savedColorsJSONArray);
-
-            float[] matrixValues = new float[9];
-            extraInfos.getDefaultTransformation().getValues(matrixValues);
-            JSONObject defaultTransformationJSONObject = new JSONObject();
-            defaultTransformationJSONObject.put("MSCALE_X", matrixValues[Matrix.MSCALE_X]);
-            defaultTransformationJSONObject.put("MSKEW_X", matrixValues[Matrix.MSKEW_X]);
-            defaultTransformationJSONObject.put("MTRANS_X", matrixValues[Matrix.MTRANS_X]);
-            defaultTransformationJSONObject.put("MSKEW_Y", matrixValues[Matrix.MSKEW_Y]);
-            defaultTransformationJSONObject.put("MSCALE_Y", matrixValues[Matrix.MSCALE_Y]);
-            defaultTransformationJSONObject.put("MTRANS_Y", matrixValues[Matrix.MTRANS_Y]);
-            defaultTransformationJSONObject.put("MPERSP_0", matrixValues[Matrix.MPERSP_0]);
-            defaultTransformationJSONObject.put("MPERSP_1", matrixValues[Matrix.MPERSP_1]);
-            defaultTransformationJSONObject.put("MPERSP_2", matrixValues[Matrix.MPERSP_2]);
-            jsonObject.put("defaultTransformation", defaultTransformationJSONObject);
-
-            JSONArray layersInfoJSONArray = new JSONArray();
-            final List<LayerInfo> layersInfo = extraInfos.getLayersInfo();
-            for (LayerInfo layerInfo : layersInfo) {
-                JSONObject layerInfoJSONObject = new JSONObject();
-                layerInfoJSONObject.put("id", layerInfo.getLayerId());
-                layerInfoJSONObject.put("name", layerInfo.getName());
-                layerInfoJSONObject.put("visible", layerInfo.getVisible());
-                layersInfoJSONArray.put(layerInfoJSONObject);
-            }
-            jsonObject.put("layersInfo", layersInfoJSONArray);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        String extraString = jsonObject.toString();
-
+        final String extraInfosJson = new Gson().toJson(extraInfos);
         Statement infoStatement = pathDatabase.compileStatement("UPDATE info\n" +
                 "SET extra_infos = ?");
-        infoStatement.bindText(1, extraString);
+        infoStatement.bind(new Object[]{extraInfosJson});
         infoStatement.step();
         infoStatement.release();
     }
@@ -239,31 +187,6 @@ public class PathSaver {
         pathDatabase.beginTransaction();
     }
 
-    @Nullable
-    public static JSONObject getExtraInfos(@NotNull SQLite3 db) {
-        String jsonString = null;
-
-        final Statement statement = db.compileStatement("SELECT extra_infos FROM info");
-        final Cursor cursor = statement.getCursor();
-
-        if (cursor.step()) {
-            jsonString = cursor.getText(0);
-        }
-
-        statement.release();
-
-        if (jsonString == null) {
-            return null;
-        }
-
-        try {
-            return new JSONObject(jsonString);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     @org.jetbrains.annotations.Nullable
     @Nullable
     public LayerPathSaver getLayerPathSaver(long id) {
@@ -282,5 +205,25 @@ public class PathSaver {
     public File save() {
         flush();
         return new File(pathDatabase.getDatabasePath());
+    }
+
+    public static int getPathCount(SQLite3 db) {
+        AtomicInteger count = new AtomicInteger();
+        SQLite3UtilsKt.withCompiledStatement(db, "SELECT COUNT() FROM path", statement -> {
+            final Cursor cursor = statement.getCursor();
+            Assertion.doAssertion(cursor.step());
+            count.set(cursor.getInt(0));
+
+            return Unit.INSTANCE;
+        });
+
+        return count.get();
+    }
+
+    public static int getPathCount(String path) {
+        final SQLite3 db = SQLite3.open(path);
+        int count = getPathCount(db);
+        db.close();
+        return count;
     }
 }

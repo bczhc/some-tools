@@ -18,6 +18,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import kotlin.Unit;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.zhc.tools.BaseView;
@@ -25,6 +26,9 @@ import pers.zhc.tools.R;
 import pers.zhc.tools.utils.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -43,7 +47,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
     private OnColorPickedInterface onColorPickedInterface = null;
     private int width = 0;
     private RecyclerView savedColorRV;
-    private ArrayList<SavedColor> savedColors = new ArrayList<>();
+    private List<SavedColor> savedColors = new ArrayList<>();
     private SavedColorAdapter savedColorAdapter;
 
     /**
@@ -259,11 +263,10 @@ public class HSVAColorPickerRL extends RelativeLayout {
         return list;
     }
 
-    public void setSavedColor(ArrayList<SavedColor> savedColors) {
+    @SuppressLint("NotifyDataSetChanged")
+    public void setSavedColor(List<SavedColor> savedColors) {
         this.savedColors.clear();
-        for (SavedColor savedColor : savedColors) {
-            this.savedColors.add(savedColor);
-        }
+        this.savedColors.addAll(savedColors);
         savedColorAdapter.notifyDataSetChanged();
     }
 
@@ -460,11 +463,32 @@ public class HSVAColorPickerRL extends RelativeLayout {
         public int getColorInt() {
             return Color.HSVToColor(alpha, hsv);
         }
+
+        @Contract(value = "null -> false", pure = true)
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SavedColor that = (SavedColor) o;
+
+            if (alpha != that.alpha) return false;
+            if (!Arrays.equals(hsv, that.hsv)) return false;
+            return Objects.equals(name, that.name);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Arrays.hashCode(hsv);
+            result = 31 * result + alpha;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            return result;
+        }
     }
 
     private static class SavedColorAdapter extends RecyclerView.Adapter<SavedColorAdapter.MyViewHolder> {
         private final Context context;
-        private final ArrayList<SavedColor> data;
+        private final List<SavedColor> data;
         @Nullable
         private ColorShowRL.OnColorViewClickedListener onColorViewClickedListener = null;
         @Nullable
@@ -488,7 +512,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
             this.onItemLongClickListener = onItemLongClickListener;
         }
 
-        public SavedColorAdapter(Context context, ArrayList<SavedColor> data) {
+        public SavedColorAdapter(Context context, List<SavedColor> data) {
             this.context = context;
             this.data = data;
         }

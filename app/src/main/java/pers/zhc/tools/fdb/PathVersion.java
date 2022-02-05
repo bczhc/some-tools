@@ -21,6 +21,9 @@ public enum PathVersion {
     VERSION_1_0("1.0"),
     VERSION_2_0("2.0"),
     VERSION_2_1("2.1"),
+    /**
+     * start using SQLite3 database
+     */
     VERSION_3_0("3.0"),
     /**
      * multi-layer path import

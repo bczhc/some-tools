@@ -14,8 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
@@ -30,7 +28,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
+
+import static pers.zhc.tools.utils.NullSafeHelper.getNonNull;
 
 /**
  * @author bczhc
@@ -843,17 +842,17 @@ public class PaintView extends View {
 
         final Matrix savedTransformation = new Matrix(getTransformationMatrix());
 
-        Matrix defaultTransformation = null;
-        try {
-            final JSONObject extraInfos = PathSaver.getExtraInfos(db);
-            final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
-            defaultTransformation = ExtraInfos.Companion.getDefaultTransformation(defaultTransformationJSON);
-        } catch (JSONException | NullPointerException ignored) {
-            ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
+        final ExtraInfos extraInfos = ExtraInfos.Companion.getExtraInfos(db);
+        if (extraInfos == null) {
+            ToastUtils.show(ctx, R.string.fdb_path_info_corrupt_toast);
+            return;
         }
-        if (defaultTransformation == null) {
-            defaultTransformation = new Matrix();
-        }
+
+        Matrix defaultTransformation = new Matrix();
+
+        final float[] values = extraInfos.getDefaultTransformation();
+        if (values != null) defaultTransformation.setValues(values);
+
         float defaultTransformationScale = CanvasTransformer.getRealScale(defaultTransformation);
 
         float[] transformationValue = new float[9];
@@ -861,11 +860,7 @@ public class PaintView extends View {
 
         float canvasScale = CanvasTransformer.getRealScale(getTransformationMatrix());
 
-        final Statement statement0 = db.compileStatement("SELECT COUNT() FROM path");
-        final Cursor cursor0 = statement0.getCursor();
-        Common.doAssertion(cursor0.step());
-        int recordNum = cursor0.getInt(0);
-        statement0.release();
+        int recordNum = PathSaver.getPathCount(db);
 
         dontDrawWhileImporting = speedDelayMillis == 0;
 
@@ -944,23 +939,18 @@ public class PaintView extends View {
             }
         }
 
-        final JSONObject jsonObject = ExtraInfos.Companion.queryExtraInfo(db);
-        if (jsonObject != null) {
-            boolean isLockingStroke = false;
-            try {
-                isLockingStroke = jsonObject.getBoolean("isLockingStroke");
-                setLockingStroke(isLockingStroke);
-                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
-                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
-                setCurrentStrokeWidthWhenLocked();
-            } catch (JSONException e) {
-                ToastUtils.showException(ctx, e);
-            }
-        }
+        setLockingStrokesFromExtraInfos(extraInfos);
 
         transformTo(savedTransformation);
 
         postInvalidate();
+    }
+
+    private void setLockingStrokesFromExtraInfos(@NotNull ExtraInfos extraInfos) {
+        setLockStrokeEnabled(Boolean.TRUE.equals(extraInfos.isLockingStroke()));
+        lockedDrawingStrokeWidth = getNonNull(extraInfos.getLockedDrawingStrokeWidth(), 10F);
+        lockedEraserStrokeWidth = getNonNull(extraInfos.getLockedEraserStrokeWidth(), 10F);
+        setCurrentStrokeWidthWhenLocked();
     }
 
     private void importPathVer3_1(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
@@ -970,29 +960,33 @@ public class PaintView extends View {
             throw new SQLiteDatabaseCorruptException();
         }
 
+        final ExtraInfos extraInfos = ExtraInfos.Companion.getExtraInfos(db);
+        if (extraInfos == null) {
+            ToastUtils.show(ctx, R.string.fdb_path_info_corrupt_toast);
+            return;
+        }
+
         final Matrix savedTransformation = new Matrix(getTransformationMatrix());
 
-        Matrix defaultTransformation = null;
-        ArrayList<LayerInfo> layersInfo = null;
-        try {
-            final JSONObject extraInfos = PathSaver.getExtraInfos(db);
-            final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
-            defaultTransformation = ExtraInfos.Companion.getDefaultTransformation(defaultTransformationJSON);
+        Matrix defaultTransformation = new Matrix();
 
-            layersInfo = ExtraInfos.Companion.getLayersInfo(extraInfos);
-        } catch (JSONException | NullPointerException ignored) {
-            ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
+        final float[] values = extraInfos.getDefaultTransformation();
+        if (values != null) {
+            defaultTransformation.setValues(values);
         }
-        if (defaultTransformation == null) {
-            defaultTransformation = new Matrix();
-        }
+
+        List<LayerInfo> layersInfo = extraInfos.getLayersInfo();
+
         float defaultTransformationScale = CanvasTransformer.getRealScale(defaultTransformation);
 
         float[] transformationValue = new float[9];
         defaultTransformation.getValues(transformationValue);
 
         // pathVer3.0 records the layers info
-        Assertion.doAssertion(layersInfo != null);
+        if (layersInfo == null) {
+            ToastUtils.show(ctx, R.string.fdb_layer_info_missing_importing_terminated_toast);
+            return;
+        }
 
         for (LayerInfo layerInfo : layersInfo) {
             final long originalLayerId = layerInfo.getLayerId();
@@ -1013,19 +1007,7 @@ public class PaintView extends View {
             );
         }
 
-        final JSONObject jsonObject = ExtraInfos.Companion.queryExtraInfo(db);
-        if (jsonObject != null) {
-            boolean isLockingStroke = false;
-            try {
-                isLockingStroke = jsonObject.getBoolean("isLockingStroke");
-                setLockingStroke(isLockingStroke);
-                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
-                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
-                setCurrentStrokeWidthWhenLocked();
-            } catch (JSONException e) {
-                ToastUtils.showException(ctx, e);
-            }
-        }
+        setLockingStrokesFromExtraInfos(extraInfos);
 
         transformTo(savedTransformation);
 
@@ -1039,29 +1021,31 @@ public class PaintView extends View {
             throw new SQLiteDatabaseCorruptException();
         }
 
+        final ExtraInfos extraInfos = ExtraInfos.Companion.getExtraInfos(db);
+        if (extraInfos == null) {
+            ToastUtils.show(ctx, R.string.fdb_path_info_corrupt_toast);
+            return;
+        }
+
         final Matrix savedTransformation = new Matrix(getTransformationMatrix());
 
-        Matrix defaultTransformation = null;
-        ArrayList<LayerInfo> layersInfo = null;
-        try {
-            final JSONObject extraInfos = PathSaver.getExtraInfos(db);
-            final JSONObject defaultTransformationJSON = Objects.requireNonNull(extraInfos).getJSONObject("defaultTransformation");
-            defaultTransformation = ExtraInfos.Companion.getDefaultTransformation(defaultTransformationJSON);
+        Matrix defaultTransformation = new Matrix();
 
-            layersInfo = ExtraInfos.Companion.getLayersInfo(extraInfos);
-        } catch (JSONException | NullPointerException ignored) {
-            ToastUtils.show(ctx, R.string.fdb_import_get_extra_infos_failed);
+        final float[] values = extraInfos.getDefaultTransformation();
+        if (values != null) {
+            defaultTransformation.setValues(values);
         }
-        if (defaultTransformation == null) {
-            defaultTransformation = new Matrix();
+
+        // stored layer information is required
+        final List<LayerInfo> layersInfo = extraInfos.getLayersInfo();
+        if (layersInfo == null) {
+            ToastUtils.show(ctx, R.string.fdb_layer_info_missing_importing_terminated_toast);
+            return;
         }
         float defaultTransformationScale = CanvasTransformer.getRealScale(defaultTransformation);
 
         float[] transformationValue = new float[9];
         defaultTransformation.getValues(transformationValue);
-
-        // pathVer3.0 records the layers info
-        Assertion.doAssertion(layersInfo != null);
 
         for (LayerInfo layerInfo : layersInfo) {
             final long originalLayerId = layerInfo.getLayerId();
@@ -1082,19 +1066,7 @@ public class PaintView extends View {
             );
         }
 
-        final JSONObject jsonObject = ExtraInfos.Companion.queryExtraInfo(db);
-        if (jsonObject != null) {
-            boolean isLockingStroke = false;
-            try {
-                isLockingStroke = jsonObject.getBoolean("isLockingStroke");
-                setLockingStroke(isLockingStroke);
-                lockedDrawingStrokeWidth = (float) jsonObject.getDouble("lockedDrawingStrokeWidth");
-                lockedEraserStrokeWidth = (float) jsonObject.getDouble("lockedEraserStrokeWidth");
-                setCurrentStrokeWidthWhenLocked();
-            } catch (JSONException e) {
-                ToastUtils.showException(ctx, e);
-            }
-        }
+        setLockingStrokesFromExtraInfos(extraInfos);
 
         transformTo(savedTransformation);
 
