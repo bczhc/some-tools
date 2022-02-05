@@ -598,19 +598,29 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     1 -> {
                         // export image
-                        createFilePickerDialog(
-                            FilePickerRL.TYPE_PICK_FOLDER,
-                            externalPath.image,
-                            true
-                        ) { _, picker, path ->
-                            var filename = picker.filenameText!!
-                            val extension = File(filename).extension
-                            if (extension.lowercase(Locale.US) != ".png") {
-                                filename += ".png"
+                        createPromptDialog(R.string.fdb_export_image_size_multiplier_prompt_title) { dialog, editText ->
+                            val multiple = editText.text.toString().toIntOrNull() ?: run {
+                                ToastUtils.show(context, R.string.please_enter_correct_value_toast)
+                                return@createPromptDialog
                             }
-                            val imgFile = File(path, filename)
+                            val imageWidth = paintView.bitmapWidth * multiple
+                            val imageHeight = paintView.bitmapHeight * multiple
 
-                            paintView.exportImg(imgFile, paintView.bitmapWidth, paintView.bitmapHeight)
+                            createFilePickerDialog(
+                                FilePickerRL.TYPE_PICK_FOLDER,
+                                externalPath.image,
+                                true
+                            ) { _, picker, path ->
+                                var filename = picker.filenameText!!
+                                val extension = File(filename).extension
+                                if (extension.lowercase(Locale.US) != ".png") {
+                                    filename += ".png"
+                                }
+                                val imgFile = File(path, filename)
+
+                                paintView.exportImg(imgFile, imageWidth, imageHeight)
+                                ToastUtils.show(context, R.string.save_success_toast)
+                            }.show()
                         }.show()
                     }
                     2 -> {

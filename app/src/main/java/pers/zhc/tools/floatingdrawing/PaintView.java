@@ -374,8 +374,12 @@ public class PaintView extends View {
      */
     public void exportImg(File f, int width, int height) throws IOException {
         final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        final Matrix matrix = canvasTransformer.getMatrix();
+        matrix.postScale(((float) width) / ((float) getBitmapWidth()), (float) height / (float) getBitmapHeight());
+
         Canvas canvas = new Canvas(bitmap);
-        canvas.setMatrix(canvasTransformer.getMatrix());
+        canvas.setMatrix(matrix);
 
         for (PathBean pathBean : undoListRef) {
             canvas.drawPath(pathBean.path, pathBean.paint);
@@ -384,8 +388,8 @@ public class PaintView extends View {
         final FileOutputStream os = new FileOutputStream(f);
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
         os.close();
-
-        ToastUtils.show(ctx, R.string.save_success_toast);
+        bitmap.recycle();
+        System.gc();
     }
 
     /**

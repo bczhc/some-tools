@@ -677,5 +677,6 @@
     <string name="char_ucd_unicode_decimal_tv">十进制：%1$d</string>
     <string name="char_ucd_database_missing_msg">数据库缺失</string>
     <string name="char_ucd_ucd_properties_not_found_msg">未找到数据</string>
+    <string name="fdb_export_image_size_multiplier_prompt_title">导出图像大小倍数（对屏幕大小）</string>
     <!-- end -->
 </resources>
