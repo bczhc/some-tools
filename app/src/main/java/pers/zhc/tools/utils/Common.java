@@ -9,11 +9,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import androidx.annotation.StringRes;
 import androidx.core.content.FileProvider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.Infos;
+import pers.zhc.tools.R;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -31,7 +33,7 @@ public class Common {
         activity.runOnUiThread(() -> ToastUtils.show(activity, e.toString()));
     }
 
-    public static void showException(Exception e, Context ctx) {
+    public static void showException(@NotNull Exception e, Context ctx) {
         ToastUtils.show(ctx, e.toString());
     }
 
@@ -88,7 +90,7 @@ public class Common {
         return new File(getInternalDatabaseDir(context), name);
     }
 
-    public static String getGithubRawFileURLString(String username, String branch, String filePathInRepo) {
+    public static @NotNull String getGithubRawFileURLString(String username, String branch, String filePathInRepo) {
         try {
             return String.format("https://hub.fastgit.org/%s/store/blob/%s/%s?raw=true", username, branch, URLEncoder.encode(filePathInRepo, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
@@ -102,6 +104,7 @@ public class Common {
         return Infos.staticResourceRootURL + '/' + filename;
     }
 
+    @Contract("false -> fail")
     public static void doAssertion(boolean condition) {
         if (!condition) throw new AssertionError("Assertion failed");
     }
@@ -131,5 +134,17 @@ public class Common {
         }
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(r);
+    }
+
+    public static void toastTodo(Context context, String msg) {
+        ToastUtils.show(context, msg);
+    }
+
+    public static void toastTodo(Context context, @StringRes int stringRes) {
+        toastTodo(context, context.getString(stringRes));
+    }
+
+    public static void toastTodo(Context context) {
+        toastTodo(context, R.string.function_not_implemented_toast);
     }
 }

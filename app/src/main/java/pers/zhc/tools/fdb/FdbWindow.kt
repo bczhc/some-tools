@@ -594,7 +594,7 @@ class FdbWindow(private val context: BaseActivity) {
                 when (index) {
                     0 -> {
                         // import image
-                        TODO()
+                        Common.toastTodo(context)
                     }
                     1 -> {
                         // export image
@@ -1060,6 +1060,7 @@ class FdbWindow(private val context: BaseActivity) {
         return r
     }
 
+    @Suppress("FunctionName")
     private fun getPathV3_0StatisticsInfoStr(db: SQLite3): String {
         /*
          * infos:

@@ -64,6 +64,7 @@
     <string name="regex">正则表达式</string>
     <string name="regex_bad_pattern">正则表达式有误</string>
     <string name="io_error">IO异常</string>
+    <string name="function_not_implemented_toast">还未实现此功能</string>
     <!-- end -->
 
     <!-- old -->
