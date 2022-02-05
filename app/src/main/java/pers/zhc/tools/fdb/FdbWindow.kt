@@ -610,7 +610,7 @@ class FdbWindow(private val context: BaseActivity) {
                             }
                             val imgFile = File(path, filename)
 
-                            paintView.exportImg(imgFile, paintView.measuredWidth, paintView.measuredHeight)
+                            paintView.exportImg(imgFile, paintView.bitmapWidth, paintView.bitmapHeight)
                         }.show()
                     }
                     2 -> {

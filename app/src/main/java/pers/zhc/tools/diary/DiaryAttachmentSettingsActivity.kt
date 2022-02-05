@@ -64,10 +64,10 @@ VALUES (?)"""
 
     private fun save() {
         DialogUtil.createAlertDialogWithNeutralButton(this, { _, _ ->
-            ToastUtils.show(this, R.string.saving_succeeded_dialog)
+            ToastUtils.show(this, R.string.save_success_toast)
         }, { _, _ ->
             changeStoragePath(storagePathTV.text.toString())
-            ToastUtils.show(this, R.string.saving_succeeded_dialog)
+            ToastUtils.show(this, R.string.save_success_toast)
         }, R.string.diary_attachment_setting_move_file_dialog_title).show()
     }
 

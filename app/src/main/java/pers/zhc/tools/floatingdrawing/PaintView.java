@@ -26,11 +26,11 @@ import pers.zhc.tools.utils.*;
 import pers.zhc.util.Assertion;
 import pers.zhc.util.Random;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author bczhc
@@ -372,42 +372,20 @@ public class PaintView extends View {
     /**
      * 导出图片
      */
-    public void exportImg(File f, int exportedWidth, int exportHeight) {
-        /*TODO
-        Handler handler = new Handler();
-        ToastUtils.show(ctx, R.string.saving);
-        System.gc();
-        Bitmap exportedBitmap = Bitmap.createBitmap(exportedWidth, exportHeight, Bitmap.Config.ARGB_8888);
-        Canvas myCanvas = new Canvas(exportedBitmap);
-        myCanvas.translate(headCanvas.getStartPointX() * exportedWidth / width
-                , headCanvas.getStartPointY() * exportedWidth / width);
-        myCanvas.scale(headCanvas.getScale() * exportedWidth / width);
-        for (PathBean pathBean : undoList) {
-            myCanvas.drawPath(pathBean.path, pathBean.paint);
+    public void exportImg(File f, int width, int height) throws IOException {
+        final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.setMatrix(canvasTransformer.getMatrix());
+
+        for (PathBean pathBean : undoListRef) {
+            canvas.drawPath(pathBean.path, pathBean.paint);
         }
-        //保存图片
-        final FileOutputStream[] fileOutputStream = {null};
-        new Thread(() -> {
-            try {
-                fileOutputStream[0] = new FileOutputStream(f);
-                if (exportedBitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream[0])) {
-                    fileOutputStream[0].flush();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                Common.showException(e, (Activity) ctx);
-            } finally {
-                closeStream(fileOutputStream[0]);
-                System.gc();
-            }
-            handler.post(() -> {
-                if (f.exists()) {
-                    ToastUtils.show(ctx, ctx.getString(R.string.saving_succeeded_dialog) + "\n" + f);
-                } else {
-                    ToastUtils.show(ctx, R.string.saving_failed);
-                }
-            });
-        }).start();*/
+
+        final FileOutputStream os = new FileOutputStream(f);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+        os.close();
+
+        ToastUtils.show(ctx, R.string.save_success_toast);
     }
 
     /**
@@ -1650,5 +1628,13 @@ public class PaintView extends View {
 
     public float getBlurRadius() {
         return blurRadius;
+    }
+
+    public int getBitmapWidth() {
+        return bitmapRef.getWidth();
+    }
+
+    public int getBitmapHeight() {
+        return bitmapRef.getHeight();
     }
 }

@@ -27,7 +27,7 @@
     <string name="percentage">%1$f%%</string>
     <string name="please_enter_correct_value_toast">请输入正确的值</string>
     <string name="mkdir_failed">创建文件夹失败</string>
-    <string name="saving_succeeded_dialog">保存成功</string>
+    <string name="save_success_toast">保存成功</string>
     <string name="filename_hint">文件名</string>
     <string name="adding_succeeded">添加成功</string>
     <string name="delete_button">删除</string>
