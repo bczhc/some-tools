@@ -60,3 +60,19 @@ fun File.requireDelete() {
     }
 }
 
+fun File.requireMkdir() {
+    if (!this.exists()) {
+        if (!this.mkdir()) {
+            throw MkdirException()
+        }
+    }
+}
+
+fun File.requireMkdirs() {
+    if (!this.exists()) {
+        if (!this.mkdirs()) {
+            throw MkdirException()
+        }
+    }
+}
+

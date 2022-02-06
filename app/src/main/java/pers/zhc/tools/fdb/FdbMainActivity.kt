@@ -12,6 +12,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.media.ScreenCapturePermissionRequestActivity
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.requireDelete
+import pers.zhc.tools.utils.requireMkdir
 import java.io.File
 import java.io.IOException
 
@@ -34,7 +35,7 @@ class FdbMainActivity : BaseActivity() {
             }
     }
 
-    private val pathTmpDir by lazy { File(filesDir, "path") }
+    private val pathTmpDir by lazy { File(filesDir, "path").also { it.requireMkdir() } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
