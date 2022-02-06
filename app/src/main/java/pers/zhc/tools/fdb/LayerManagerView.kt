@@ -71,14 +71,14 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.nameTV.text = items[position].name
-            if (items[position].layerId == checkedId) {
+            if (items[position].id == checkedId) {
                 holder.ll.setBackgroundResource(R.drawable.view_stroke_red)
             } else {
                 holder.ll.setBackgroundResource(R.drawable.view_stroke)
             }
 
             holder.itemView.setOnClickListener {
-                checkedId = items[holder.layoutPosition].layerId
+                checkedId = items[holder.layoutPosition].id
                 notifyDataSetChanged()
             }
         }
@@ -90,7 +90,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         fun getIdOrderList(): ArrayList<Long> {
             val idList = ArrayList<Long>()
             items.forEach {
-                idList.add(it.layerId)
+                idList.add(it.id)
             }
             return idList
         }
@@ -111,7 +111,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
             var swipeFlag = ItemTouchHelper.LEFT
             // if the item is checked, avoid being swiped away
-            if (listAdapter.getCheckedLayerId() == listAdapter.items[viewHolder.layoutPosition].layerId) {
+            if (listAdapter.getCheckedLayerId() == listAdapter.items[viewHolder.layoutPosition].id) {
                 swipeFlag = 0
             }
             val dragFlag = ItemTouchHelper.UP

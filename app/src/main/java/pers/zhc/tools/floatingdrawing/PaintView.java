@@ -967,8 +967,8 @@ public class PaintView extends View {
         }
 
         for (LayerInfo layerInfo : layersInfo) {
-            final long originalLayerId = layerInfo.getLayerId();
-            final long newLayerId = layerInfo.getLayerId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
+            final long originalLayerId = layerInfo.getId();
+            final long newLayerId = layerInfo.getId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
             add1Layer(newLayerId);
             switchLayer(newLayerId);
             if (onImportLayerAddedListener != null) {
@@ -1026,8 +1026,8 @@ public class PaintView extends View {
         defaultTransformation.getValues(transformationValue);
 
         for (LayerInfo layerInfo : layersInfo) {
-            final long originalLayerId = layerInfo.getLayerId();
-            final long newLayerId = layerInfo.getLayerId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
+            final long originalLayerId = layerInfo.getId();
+            final long newLayerId = layerInfo.getId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
             add1Layer(newLayerId);
             switchLayer(newLayerId);
             if (onImportLayerAddedListener != null) {
