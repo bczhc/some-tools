@@ -207,7 +207,7 @@ public class PaintView extends View {
                     if (transCanvas != null) {
                         transCanvasTransformer.absScale(dScale, midPointX, midPointY);
                     }
-                    setCurrentStrokeWidthWhenLocked();
+                    updateStrokeWidthIfLocked();
                 }
             }
 
@@ -950,7 +950,7 @@ public class PaintView extends View {
         setLockStrokeEnabled(Boolean.TRUE.equals(extraInfos.isLockingStroke()));
         lockedDrawingStrokeWidth = getNonNull(extraInfos.getLockedDrawingStrokeWidth(), 10F);
         lockedEraserStrokeWidth = getNonNull(extraInfos.getLockedEraserStrokeWidth(), 10F);
-        setCurrentStrokeWidthWhenLocked();
+        updateStrokeWidthIfLocked();
     }
 
     private void importPathVer3_1(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
@@ -1369,7 +1369,7 @@ public class PaintView extends View {
         return lockStrokeEnabled;
     }
 
-    public void setCurrentStrokeWidthWhenLocked() {
+    public void updateStrokeWidthIfLocked() {
         if (lockStrokeEnabled) {
             setDrawingStrokeWidth(lockedDrawingStrokeWidth / canvasScale);
             setEraserStrokeWidth(lockedEraserStrokeWidth / canvasScale);
@@ -1482,7 +1482,7 @@ public class PaintView extends View {
         redrawAllLayerBitmap();
         postInvalidate();
         canvasScale = CanvasTransformer.getRealScale(matrix);
-        setCurrentStrokeWidthWhenLocked();
+        updateStrokeWidthIfLocked();
     }
 
     public void transformToOrigin() {
