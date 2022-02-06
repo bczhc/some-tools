@@ -1,6 +1,7 @@
 /*翟灿hhh*/
 package pers.zhc.tools.jni;
 
+import android.graphics.Bitmap;
 import androidx.annotation.Size;
 import pers.zhc.tools.fourierseries.InputPoint;
 import pers.zhc.tools.pi.JNICallback;
@@ -347,5 +348,9 @@ public class JNI {
          * @return counted total number
          */
         public static native int count(String src, OrdinaryCallback callback);
+    }
+
+    public static class Bitmap {
+        public static native void compressToPng(android.graphics.Bitmap bitmap, String outputPath);
     }
 }

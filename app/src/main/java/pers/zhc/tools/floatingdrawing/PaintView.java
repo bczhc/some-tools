@@ -416,11 +416,7 @@ public class PaintView extends View {
 
         progressCallback.call(ImageExportProgressType.COMPRESSING, "", 0F);
 
-        final FileOutputStream os = new FileOutputStream(f);
-        resultBitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-        os.close();
-        resultBitmap.recycle();
-        System.gc();
+        JNI.Bitmap.compressToPng(resultBitmap, f.getPath());
     }
 
     /**

@@ -1,3 +1,4 @@
+pub mod bitmap;
 pub mod char;
 pub mod char_ucd;
 pub mod email;

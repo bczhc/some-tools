@@ -17,3 +17,5 @@ lettre = "0.10.0-rc.3"
 bczhc_lib = {path = "./third_party/bczhc_rust/lib"}
 serde_json = "1.0.78"
 quick-xml = "0.22.0"
+ndk = { version = "0.6.0", features = ["bitmap"] }
+image = "0.24.0"
