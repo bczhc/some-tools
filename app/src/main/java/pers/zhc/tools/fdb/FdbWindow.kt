@@ -341,11 +341,6 @@ class FdbWindow(private val context: BaseActivity) {
         val hardnessLayout = inflate.hardness_layout!!
 
         lockBrushCB.isChecked = paintView.isLockStrokeEnabled
-        strokeShowView.apply {
-            setColor(paintView.drawingColor)
-            setWidth(paintView.strokeWidthInUse)
-            strokeHardness = paintView.strokeHardness
-        }
         rg.check(
             if (paintView.isEraserMode) {
                 R.id.eraser_radio
@@ -366,9 +361,13 @@ class FdbWindow(private val context: BaseActivity) {
         val base = 1.07
         val updateDisplay = { mode: BrushMode ->
             val width = getStrokeWidth(mode)
-            strokeShowView.setWidth(width * paintView.scale)
+            strokeShowView.apply {
+                setWidth(width * paintView.scale)
+                strokeHardness = paintView.strokeHardness
+                setColor(paintView.drawingColor)
+            }
+
             widthSlider.value = (ln(width.toDouble()) / ln(base)).toFloat().coerceIn(0F, 100F)
-            strokeShowView.setWidth(width * paintView.scale)
             infoTV.text = context.getString(
                 R.string.fdb_stroke_width_info,
                 width,
@@ -412,7 +411,6 @@ class FdbWindow(private val context: BaseActivity) {
             if (fromUser) {
                 val width = base.pow(value.toDouble()).toFloat()
                 updateWidthAndDisplay(width)
-                strokeShowView.strokeHardness = paintView.strokeHardness
             }
         }
 
