@@ -535,22 +535,7 @@ public class PaintView extends View {
         invalidate();
     }
 
-    /**
-     * 导入路径
-     *
-     * @param f                路径文件
-     * @param doneAction       完成回调接口
-     * @param progressCallback 进度回调接口 Range: [0-1]
-     * @param speedDelayMillis interval of reading per point
-     * @param pathVersion      path version
-     */
-    public void asyncImportPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
-        new Thread(() -> {
-            importPathFile(f, doneAction, progressCallback, speedDelayMillis, pathVersion);
-        }).start();
-    }
-
-    public void importPathFile(File f, Runnable doneAction, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
+    public void importPathFile(File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
         dontDrawWhileImporting = speedDelayMillis == 0;
         if (progressCallback != null) {
             progressCallback.accept(0F);
@@ -603,9 +588,6 @@ public class PaintView extends View {
         dontDrawWhileImporting = false;
         redrawBitmap();
         postInvalidate();
-        if (doneAction != null) {
-            doneAction.run();
-        }
     }
 
     public void importPathVer1_0(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
@@ -843,11 +825,7 @@ public class PaintView extends View {
 
         final Matrix savedTransformation = new Matrix(getTransformationMatrix());
 
-        final ExtraInfos extraInfos = ExtraInfos.Companion.getExtraInfos(db);
-        if (extraInfos == null) {
-            ToastUtils.show(ctx, R.string.fdb_path_info_corrupt_toast);
-            return;
-        }
+        final ExtraInfos extraInfos = getNonNull(ExtraInfos.Companion.getExtraInfos(db), getDefaultExtraInfos());
 
         Matrix defaultTransformation = new Matrix();
 
@@ -963,8 +941,7 @@ public class PaintView extends View {
 
         final ExtraInfos extraInfos = ExtraInfos.Companion.getExtraInfos(db);
         if (extraInfos == null) {
-            ToastUtils.show(ctx, R.string.fdb_path_info_corrupt_toast);
-            return;
+            throw new InvalidExtraInfoException(ctx.getString(R.string.fdb_path_info_corrupt_toast));
         }
 
         final Matrix savedTransformation = new Matrix(getTransformationMatrix());
@@ -1023,9 +1000,9 @@ public class PaintView extends View {
         }
 
         final ExtraInfos extraInfos = ExtraInfos.Companion.getExtraInfos(db);
+        // multi-layer info is needed, and they're stored in extraInfos
         if (extraInfos == null) {
-            ToastUtils.show(ctx, R.string.fdb_path_info_corrupt_toast);
-            return;
+            throw new InvalidExtraInfoException(ctx.getString(R.string.fdb_path_info_corrupt_toast));
         }
 
         final Matrix savedTransformation = new Matrix(getTransformationMatrix());
@@ -1644,5 +1621,36 @@ public class PaintView extends View {
     @Contract(pure = true)
     public static float toStrokeHardness(float strokeWidth, float blurRadius) {
         return (float) ((1.0 - ((double) blurRadius) * 2.0 / ((double) strokeWidth)) * 100.0);
+    }
+
+    public ExtraInfos getDefaultExtraInfos() {
+        float[] defaultTransformation = new float[9];
+        new Matrix().getValues(defaultTransformation);
+        return new ExtraInfos(
+                false,
+                10F,
+                10F,
+                new ArrayList<>(),
+                defaultTransformation,
+                new ArrayList<>()
+        );
+    }
+
+    private static class PathImportException extends RuntimeException {
+        public PathImportException() {
+            super();
+        }
+        public PathImportException(String message) {
+            super(message);
+        }
+    }
+
+    private static class InvalidExtraInfoException extends PathImportException {
+        public InvalidExtraInfoException() {
+            super();
+        }
+        public InvalidExtraInfoException(String message) {
+            super(message);
+        }
     }
 }

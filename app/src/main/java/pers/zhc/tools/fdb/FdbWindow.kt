@@ -669,8 +669,27 @@ class FdbWindow(private val context: BaseActivity) {
 
                             val tryDo = AsyncTryDo()
 
-                            paintView.asyncImportPathFile(file, {
+                            Thread {
+
+                                try {
+                                    paintView.importPathFile(file, { progress ->
+                                        // progress callback
+                                        tryDo.tryDo { _, notifier ->
+                                            progress!!
+                                            context.runOnUiThread {
+                                                progressBar.setProgressCompat((progress * 100F).toInt(), true)
+                                                progressTV.text = context.getString(R.string.percentage, progress * 100F)
+                                                notifier.finish()
+                                            }
+                                        }
+                                    }, 0 /* TODO */, pathVersion)
+                                } catch (e: Exception) {
+                                    ToastUtils.showError(context, R.string.fdb_import_failed, e)
+                                    return@Thread
+                                }
+
                                 Common.runOnUiThread(context) {
+                                    // done action
                                     progressDialog.dismiss()
                                     ToastUtils.show(
                                         context,
@@ -703,18 +722,9 @@ class FdbWindow(private val context: BaseActivity) {
                                         }
                                     }
                                 }
-                            }, { progress ->
 
-                                tryDo.tryDo { _, notifier ->
-                                    progress!!
-                                    context.runOnUiThread {
-                                        progressBar.setProgressCompat((progress * 100F).toInt(), true)
-                                        progressTV.text = context.getString(R.string.percentage, progress * 100F)
-                                        notifier.finish()
-                                    }
-                                }
+                            }.start()
 
-                            }, 0/* TODO */, pathVersion)
                         }.show()
                     }
                     3 -> {
