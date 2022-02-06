@@ -338,6 +338,7 @@ class FdbWindow(private val context: BaseActivity) {
         val lockBrushCB = inflate.cb!!
         val hardnessSlider = inflate.hardness_slider!!
         val strokeShowView = inflate.stroke_show!!
+        val hardnessLayout = inflate.hardness_layout!!
 
         lockBrushCB.isChecked = paintView.isLockStrokeEnabled
         strokeShowView.setColor(paintView.drawingColor)
@@ -350,7 +351,7 @@ class FdbWindow(private val context: BaseActivity) {
             }
         )
 
-        // for non-linear width adjusting
+        // for non-linear width adjustment
         val base = 1.07
         val updateDisplay = { mode: BrushMode ->
             val width = when (mode) {
@@ -409,8 +410,14 @@ class FdbWindow(private val context: BaseActivity) {
 
         rg.setOnCheckedChangeListener { _, id ->
             when (id) {
-                R.id.brush_radio -> updateDisplay(BrushMode.DRAWING)
-                R.id.eraser_radio -> updateDisplay(BrushMode.ERASING)
+                R.id.brush_radio -> {
+                    updateDisplay(BrushMode.DRAWING)
+                    hardnessLayout.visibility = View.VISIBLE
+                }
+                R.id.eraser_radio -> {
+                    updateDisplay(BrushMode.ERASING)
+                    hardnessLayout.visibility = View.GONE
+                }
                 else -> {
                 }
             }
