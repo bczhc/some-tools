@@ -44,6 +44,9 @@ class StrokeView : BaseView {
         invalidate()
     }
 
+    /**
+     * the [width] is displayed width
+     */
     fun setWidth(width: Float) {
         mPaint.strokeWidth = width
         invalidate()

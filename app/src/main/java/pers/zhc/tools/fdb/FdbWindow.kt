@@ -367,7 +367,7 @@ class FdbWindow(private val context: BaseActivity) {
         val updateDisplay = { mode: BrushMode ->
             val width = getStrokeWidth(mode)
             strokeShowView.setWidth(width * paintView.scale)
-            widthSlider.value = (ln(width.toDouble()) / ln(base)).toFloat()
+            widthSlider.value = (ln(width.toDouble()) / ln(base)).toFloat().coerceIn(0F, 100F)
             strokeShowView.setWidth(width * paintView.scale)
             infoTV.text = context.getString(
                 R.string.fdb_stroke_width_info,
@@ -413,7 +413,6 @@ class FdbWindow(private val context: BaseActivity) {
                 val width = base.pow(value.toDouble()).toFloat()
                 updateWidthAndDisplay(width)
                 strokeShowView.strokeHardness = paintView.strokeHardness
-
             }
         }
 
