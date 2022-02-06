@@ -11,6 +11,8 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.KeyEvent
@@ -612,6 +614,45 @@ class FdbWindow(private val context: BaseActivity) {
         return dialog
     }
 
+    private fun exportImgWithDialog(output: File, width: Int, height: Int) {
+        val progressDialog = ProgressDialog(context).apply {
+            DialogUtils.setDialogAttr(this, width = MATCH_PARENT, overlayWindow = true)
+            setCancelable(false)
+            setCanceledOnTouchOutside(false)
+        }.also { it.show() }
+        val progressView = progressDialog.getProgressView().also { it.setIsIndeterminateMode(false) }
+
+        val tryDo = AsyncTryDo()
+        val handler = Handler(Looper.getMainLooper())
+
+        Thread {
+            paintView.exportImg(output, width, height) { type, layerName, progress ->
+
+                when (type) {
+                    PaintView.ImageExportProgressType.REDRAWING -> {
+                        tryDo.tryDo { _, notifier ->
+                            handler.post {
+                                progressView.setTitle(context.getString(R.string.fdb_export_image_redrawing_phase_title, layerName))
+                                progressView.setProgress(progress)
+                                notifier.finish()
+                            }
+                        }
+                    }
+                    PaintView.ImageExportProgressType.COMPRESSING -> {
+                        handler.post {
+                            progressView.setIsIndeterminateMode(true)
+                            progressView.setTitle(context.getString(R.string.fdb_export_image_compressing_phase_title))
+                        }
+                    }
+                }
+            }
+            handler.post {
+                progressDialog.dismiss()
+                ToastUtils.show(context, R.string.save_success_toast)
+            }
+        }.start()
+    }
+
     private fun createMoreOptionDialog(): Dialog {
         val onClickActions: ((index: Int) -> View.OnClickListener) = { index ->
             View.OnClickListener {
@@ -644,8 +685,7 @@ class FdbWindow(private val context: BaseActivity) {
                                 }
                                 val imgFile = File(path, filename)
 
-                                paintView.exportImg(imgFile, imageWidth, imageHeight)
-                                ToastUtils.show(context, R.string.save_success_toast)
+                                exportImgWithDialog(imgFile, imageWidth, imageHeight)
                             }.show()
                         }.show()
                     }
@@ -678,7 +718,8 @@ class FdbWindow(private val context: BaseActivity) {
                                             progress!!
                                             context.runOnUiThread {
                                                 progressBar.setProgressCompat((progress * 100F).toInt(), true)
-                                                progressTV.text = context.getString(R.string.percentage, progress * 100F)
+                                                progressTV.text =
+                                                    context.getString(R.string.percentage, progress * 100F)
                                                 notifier.finish()
                                             }
                                         }

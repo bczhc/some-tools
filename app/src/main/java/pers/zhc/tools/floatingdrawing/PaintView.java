@@ -369,14 +369,21 @@ public class PaintView extends View {
         return eraserMode;
     }
 
-    private Bitmap drawPathsToBitmap(@NotNull List<PathBean> pathBeans, @Nullable Matrix matrix, int width, int height) {
+    private Bitmap drawPathsToBitmap(@NotNull List<PathBean> pathBeans, @Nullable Matrix matrix, int width, int height, FloatCallback progressCallback) {
         final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(bitmap);
         canvas.setMatrix(matrix);
 
+        final int size = pathBeans.size();
+
+        float count = 0F;
         for (PathBean pathBean : pathBeans) {
             canvas.drawPath(pathBean.path, pathBean.paint);
+
+            progressCallback.call(count / (float) size);
+
+            count += 1F;
         }
 
         return bitmap;
@@ -385,7 +392,7 @@ public class PaintView extends View {
     /**
      * 导出图片
      */
-    public void exportImg(File f, int width, int height) throws IOException {
+    public void exportImg(File f, int width, int height, ImageExportProgressCallback progressCallback) throws IOException {
         final Matrix matrix = canvasTransformer.getMatrix();
         matrix.postScale(((float) width) / ((float) getBitmapWidth()), (float) height / (float) getBitmapHeight());
 
@@ -394,13 +401,20 @@ public class PaintView extends View {
         Paint bitmapPaint = new Paint();
 
         for (int i = layerArray.size() - 1; i >= 0; i--) {
-            final LinkedList<PathBean> undoList = layerArray.get(i).undoList;
+            final Layer layer = layerArray.get(i);
+            final LinkedList<PathBean> undoList = layer.undoList;
 
-            final Bitmap bitmap = drawPathsToBitmap(undoList, matrix, width, height);
+
+            final Bitmap bitmap = drawPathsToBitmap(undoList, matrix, width, height, p -> {
+                // TODO layer's name
+                progressCallback.call(ImageExportProgressType.REDRAWING, String.valueOf(layer.getId()), p);
+            });
             overlayCanvas.drawBitmap(bitmap, 0F, 0F, bitmapPaint);
             bitmap.recycle();
             System.gc();
         }
+
+        progressCallback.call(ImageExportProgressType.COMPRESSING, "", 0F);
 
         final FileOutputStream os = new FileOutputStream(f);
         resultBitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
@@ -1671,5 +1685,14 @@ public class PaintView extends View {
         public InvalidExtraInfoException(String message) {
             super(message);
         }
+    }
+
+    public interface ImageExportProgressCallback {
+        void call(@NotNull ImageExportProgressType type, @NotNull String layerName, float progress);
+    }
+
+    public enum ImageExportProgressType {
+        REDRAWING,
+        COMPRESSING
     }
 }
