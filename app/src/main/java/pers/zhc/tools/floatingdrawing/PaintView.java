@@ -208,6 +208,7 @@ public class PaintView extends View {
                         transCanvasTransformer.absScale(dScale, midPointX, midPointY);
                     }
                     updateStrokeWidthIfLocked();
+                    updateHardness();
                 }
             }
 
@@ -1617,6 +1618,14 @@ public class PaintView extends View {
             mPaint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL));
         }
         this.strokeHardness = hardness;
+    }
+
+    /**
+     * this is useful when canvas scale changes
+     * because `blurRadius` is related with stroke width
+     */
+    public void updateHardness() {
+        setStrokeHardness(strokeHardness);
     }
 
     public float getStrokeHardness() {
