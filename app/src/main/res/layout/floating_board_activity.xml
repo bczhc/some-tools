@@ -22,7 +22,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:id="@+id/open_cache_path_file"
-            android:text="@string/open_cache_path_file"
+            android:text="@string/fdb_open_cache_path_file_button"
     />
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
               android:layout_below="@id/open_cache_path_file"

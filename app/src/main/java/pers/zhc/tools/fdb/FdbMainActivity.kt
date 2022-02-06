@@ -34,31 +34,24 @@ class FdbMainActivity : BaseActivity() {
             }
     }
 
-    private val pathTmpDir by lazy { File(filesDir, "path")}
+    private val pathTmpDir by lazy { File(filesDir, "path") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fdb_main_activity)
 
-        val run = {
-            val fdbWindow = FdbWindow(this)
-            fdbMap[fdbWindow.timestamp] = fdbWindow
-            fdbWindow.onExitListener = {
-                fdbMap.remove(fdbWindow.timestamp)
-            }
-            ToastUtils.show(this, fdbWindow.toString())
-            fdbWindow.startFDB()
-        }
-
         val startButton = start_button!!
         val clearCacheButton = clear_cache_btn!!
+        val openCacheDirButton = open_cache_btn!!
 
         startButton.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!checkDrawOverlayPermission()) {
                     launcher.overlaySetting!!.launch(this.packageName)
                     return@setOnClickListener
-                } else run()
+                } else {
+                    ToastUtils.show(this, createFdbWindow().also { it.startFDB() }.toString())
+                }
             } else return@setOnClickListener
         }
 
@@ -72,12 +65,25 @@ class FdbMainActivity : BaseActivity() {
             ToastUtils.show(this, R.string.fdb_clear_cache_success)
         }
         clearCacheButton.setOnLongClickListener {
-        updateClearCacheButtonText()
+            updateClearCacheButtonText()
             return@setOnLongClickListener true
+        }
+
+        openCacheDirButton.setOnClickListener {
+            createFdbWindow().also { it.startFDB() }.showImportPathDialog(pathTmpDir)
         }
 
         val serviceIntent = Intent(this, FdbService::class.java)
         startService(serviceIntent)
+    }
+
+    private fun createFdbWindow(): FdbWindow {
+        return FdbWindow(this).apply {
+            fdbMap[this.getFdbId()] = this
+            onExitListener = {
+                fdbMap.remove(this.getFdbId())
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

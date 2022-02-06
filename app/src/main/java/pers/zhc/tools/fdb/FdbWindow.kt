@@ -632,7 +632,12 @@ class FdbWindow(private val context: BaseActivity) {
                     PaintView.ImageExportProgressType.REDRAWING -> {
                         tryDo.tryDo { _, notifier ->
                             handler.post {
-                                progressView.setTitle(context.getString(R.string.fdb_export_image_redrawing_phase_title, layerName))
+                                progressView.setTitle(
+                                    context.getString(
+                                        R.string.fdb_export_image_redrawing_phase_title,
+                                        layerName
+                                    )
+                                )
                                 progressView.setProgress(progress)
                                 notifier.finish()
                             }
@@ -691,82 +696,7 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     2 -> {
                         // import path
-                        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, externalPath.path) { _, _, path ->
-                            dialogs.moreMenu.dismiss()
-
-                            val progressView = View.inflate(context, R.layout.progress_bar, null)
-
-                            progressView.progress_bar_title!!.text =
-                                context.getString(R.string.fdb_importing_path_progress_title)
-                            val progressBar = progressView.progress_bar!!
-                            val progressTV = progressView.progress_tv!!
-                            val progressDialog = createDialog(progressView, width = MATCH_PARENT)
-                            progressDialog.setCanceledOnTouchOutside(false)
-                            progressDialog.show()
-
-                            val file = File(path)
-                            val pathVersion = PathVersion.getPathVersion(file)
-
-                            val tryDo = AsyncTryDo()
-
-                            Thread {
-
-                                try {
-                                    paintView.importPathFile(file, { progress ->
-                                        // progress callback
-                                        tryDo.tryDo { _, notifier ->
-                                            progress!!
-                                            context.runOnUiThread {
-                                                progressBar.setProgressCompat((progress * 100F).toInt(), true)
-                                                progressTV.text =
-                                                    context.getString(R.string.percentage, progress * 100F)
-                                                notifier.finish()
-                                            }
-                                        }
-                                    }, 0 /* TODO */, pathVersion)
-                                } catch (e: Exception) {
-                                    ToastUtils.showError(context, R.string.fdb_import_failed, e)
-                                    return@Thread
-                                }
-
-                                Common.runOnUiThread(context) {
-                                    // done action
-                                    progressDialog.dismiss()
-                                    ToastUtils.show(
-                                        context,
-                                        context.getString(R.string.fdb_importing_path_succeeded_toast)
-                                    )
-
-                                    colorPickers.brush.color = paintView.drawingColor
-                                    panelRL.getPanelTextView(6).text = context.getString(
-                                        if (paintView.isEraserMode) {
-                                            R.string.fdb_panel_erasing_mode
-                                        } else {
-                                            R.string.fdb_panel_drawing_mode
-                                        }
-                                    )
-
-                                    when (pathVersion) {
-                                        PathVersion.VERSION_3_0 -> {
-                                            var extraInfos: ExtraInfos? = null
-                                            SQLite3::class.withNew(path) {
-                                                extraInfos = ExtraInfos.getExtraInfos(it)
-                                            }
-                                            extraInfos ?: return@runOnUiThread
-
-                                            extraInfos!!.savedColors?.let { colorPickers.brush.setSavedColor(it) }
-                                            extraInfos!!.defaultTransformation?.let {
-                                                paintView.defaultTransformation = Matrix::class.fromValues(it)
-                                            }
-                                        }
-                                        else -> {
-                                        }
-                                    }
-                                }
-
-                            }.start()
-
-                        }.show()
+                        showImportPathDialog(externalPath.path)
                     }
                     3 -> {
                         // export path
@@ -833,6 +763,85 @@ class FdbWindow(private val context: BaseActivity) {
             ll.addView(button)
         }
         return createDialog(inflate)
+    }
+
+    fun showImportPathDialog(dir: File) {
+        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
+            dialogs.moreMenu.dismiss()
+
+            val progressView = View.inflate(context, R.layout.progress_bar, null)
+
+            progressView.progress_bar_title!!.text =
+                context.getString(R.string.fdb_importing_path_progress_title)
+            val progressBar = progressView.progress_bar!!
+            val progressTV = progressView.progress_tv!!
+            val progressDialog = createDialog(progressView, width = MATCH_PARENT)
+            progressDialog.setCanceledOnTouchOutside(false)
+            progressDialog.show()
+
+            val file = File(path)
+            val pathVersion = PathVersion.getPathVersion(file)
+
+            val tryDo = AsyncTryDo()
+
+            Thread {
+
+                try {
+                    paintView.importPathFile(file, { progress ->
+                        // progress callback
+                        tryDo.tryDo { _, notifier ->
+                            progress!!
+                            context.runOnUiThread {
+                                progressBar.setProgressCompat((progress * 100F).toInt(), true)
+                                progressTV.text =
+                                    context.getString(R.string.percentage, progress * 100F)
+                                notifier.finish()
+                            }
+                        }
+                    }, 0 /* TODO */, pathVersion)
+                } catch (e: Exception) {
+                    ToastUtils.showError(context, R.string.fdb_import_failed, e)
+                    return@Thread
+                }
+
+                Common.runOnUiThread(context) {
+                    // done action
+                    progressDialog.dismiss()
+                    ToastUtils.show(
+                        context,
+                        context.getString(R.string.fdb_importing_path_succeeded_toast)
+                    )
+
+                    colorPickers.brush.color = paintView.drawingColor
+                    panelRL.getPanelTextView(6).text = context.getString(
+                        if (paintView.isEraserMode) {
+                            R.string.fdb_panel_erasing_mode
+                        } else {
+                            R.string.fdb_panel_drawing_mode
+                        }
+                    )
+
+                    when (pathVersion) {
+                        PathVersion.VERSION_3_0 -> {
+                            var extraInfos: ExtraInfos? = null
+                            SQLite3::class.withNew(path) {
+                                extraInfos = ExtraInfos.getExtraInfos(it)
+                            }
+                            extraInfos ?: return@runOnUiThread
+
+                            extraInfos!!.savedColors?.let { colorPickers.brush.setSavedColor(it) }
+                            extraInfos!!.defaultTransformation?.let {
+                                paintView.defaultTransformation = Matrix::class.fromValues(it)
+                            }
+                        }
+                        else -> {
+                        }
+                    }
+                }
+
+            }.start()
+
+        }.show()
     }
 
     private fun showPathStatDialog() {

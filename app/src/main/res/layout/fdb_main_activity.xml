@@ -16,4 +16,9 @@
             android:layout_gravity="center_horizontal"
             android:id="@+id/clear_cache_btn"
     />
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/open_cache_btn"
+            android:text="@string/fdb_open_cache_path_file_button"
+    />
 </LinearLayout>
