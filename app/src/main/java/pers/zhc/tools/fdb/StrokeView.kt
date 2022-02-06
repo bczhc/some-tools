@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import pers.zhc.tools.BaseView
+import pers.zhc.tools.floatingdrawing.PaintView
 import kotlin.math.ceil
 
 /**
@@ -49,7 +50,7 @@ class StrokeView : BaseView {
         requestLayout()
     }
 
-    fun setBlurRadius(radius: Float) {
+    private fun setBlurRadius(radius: Float) {
         if (radius == 0F) {
             mPaint.maskFilter = null
         } else {
@@ -58,6 +59,12 @@ class StrokeView : BaseView {
         this.blurRadius = radius
         invalidate()
         requestLayout()
+    }
+
+    var strokeHardness: Float = 100F
+    set(value) {
+        setBlurRadius(PaintView.toBlurRadius(mPaint.strokeWidth, value))
+        field = value
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

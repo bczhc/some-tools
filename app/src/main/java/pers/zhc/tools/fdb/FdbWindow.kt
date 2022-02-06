@@ -330,7 +330,7 @@ class FdbWindow(private val context: BaseActivity) {
     }
 
     private fun createStrokeSettingsView(): View {
-        val inflate = View.inflate(context, R.layout.fdb_stoke_settings_view, null)!!.rootView as LinearLayout
+        val inflate = View.inflate(context, R.layout.fdb_stoke_settings_view, null)!!
 
         val rg = inflate.rg!!
         val widthSlider = inflate.slider!!
@@ -341,8 +341,11 @@ class FdbWindow(private val context: BaseActivity) {
         val hardnessLayout = inflate.hardness_layout!!
 
         lockBrushCB.isChecked = paintView.isLockStrokeEnabled
-        strokeShowView.setColor(paintView.drawingColor)
-        strokeShowView.setWidth(paintView.strokeWidthInUse)
+        strokeShowView.apply {
+            setColor(paintView.drawingColor)
+            setWidth(paintView.strokeWidthInUse)
+            strokeHardness = paintView.strokeHardness
+        }
         rg.check(
             if (paintView.isEraserMode) {
                 R.id.eraser_radio
@@ -351,14 +354,18 @@ class FdbWindow(private val context: BaseActivity) {
             }
         )
 
-        // for non-linear width adjustment
-        val base = 1.07
-        val updateDisplay = { mode: BrushMode ->
-            val width = when (mode) {
+        val getStrokeWidth = {mode: BrushMode->
+            when (mode) {
                 BrushMode.DRAWING -> paintView.drawingStrokeWidth
                 BrushMode.ERASING -> paintView.eraserStrokeWidth
                 BrushMode.IN_USE -> paintView.strokeWidthInUse
             }
+        }
+
+        // for non-linear width adjustment
+        val base = 1.07
+        val updateDisplay = { mode: BrushMode ->
+            val width = getStrokeWidth(mode)
             strokeShowView.setWidth(width * paintView.scale)
             widthSlider.value = (ln(width.toDouble()) / ln(base)).toFloat()
             strokeShowView.setWidth(width * paintView.scale)
@@ -405,6 +412,8 @@ class FdbWindow(private val context: BaseActivity) {
             if (fromUser) {
                 val width = base.pow(value.toDouble()).toFloat()
                 updateWidthAndDisplay(width)
+                strokeShowView.strokeHardness = paintView.strokeHardness
+
             }
         }
 
@@ -427,14 +436,13 @@ class FdbWindow(private val context: BaseActivity) {
             paintView.isLockStrokeEnabled = isChecked
         }
 
-        hardnessSlider.value = (1F - paintView.blurRadius * 2F / paintView.drawingStrokeWidth) * 100F
+        hardnessSlider.value = paintView.strokeHardness
         hardnessSlider.addOnChangeListener { _, value, fromUser ->
             if (!fromUser) {
                 return@addOnChangeListener
             }
-            val blurRadius = (1F - value / 100F) * paintView.drawingStrokeWidth / 2F
-            paintView.blurRadius = blurRadius
-            strokeShowView.setBlurRadius(blurRadius)
+            paintView.strokeHardness = value
+            strokeShowView.strokeHardness = value
         }
 
         return inflate

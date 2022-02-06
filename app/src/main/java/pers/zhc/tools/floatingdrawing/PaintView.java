@@ -90,7 +90,7 @@ public class PaintView extends View {
 
     private float canvasScale = 1F;
 
-    private float blurRadius = 0F;
+    private float strokeHardness = 100F;
 
     @Nullable
     private OnImportLayerAddedListener onImportLayerAddedListener = null;
@@ -1190,8 +1190,12 @@ public class PaintView extends View {
                     float width = pers.zhc.jni.JNI.Struct.unpackFloat(info, 4, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
                     float blurRadius = pers.zhc.jni.JNI.Struct.unpackFloat(info, 8, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
                     setDrawingColor(color);
-                    setDrawingStrokeWidth(width * defaultTransformationScale / canvasScale);
-                    setBlurRadius(blurRadius * defaultTransformationScale / canvasScale);
+
+                    final float drawingStrokeWidth = width * defaultTransformationScale / canvasScale;
+                    setDrawingStrokeWidth(drawingStrokeWidth);
+
+                    setStrokeHardness(toStrokeHardness(drawingStrokeWidth, blurRadius * defaultTransformationScale / canvasScale));
+
                     setEraserMode(false);
 
                     transformedOnTouchAction(
@@ -1211,7 +1215,7 @@ public class PaintView extends View {
                     setEraserAlpha(color2);
                     setEraserStrokeWidth(width2 * defaultTransformationScale / canvasScale);
                     // TODO: 8/16/21 eraser hardness (blur radius)
-                    setBlurRadius(blurRadius2 * defaultTransformationScale / canvasScale);
+//                    setBlurRadius(blurRadius2 * defaultTransformationScale / canvasScale);
 
                     transformedOnTouchAction(
                             MotionEvent.ACTION_DOWN,
@@ -1257,6 +1261,7 @@ public class PaintView extends View {
     private final PointF inverseTransformedPoint = new PointF();
 
     private void onTouchAction(int motionAction, float x, float y) {
+        final float blurRadius = toBlurRadius(getDrawingStrokeWidth(), strokeHardness);
         canvasTransformer.getInvertedTransformedPoint(inverseTransformedPoint, x, y);
         // convert the screen coordinates to a new unknown point
         // which after the transformation coincides with the screen point
@@ -1593,24 +1598,43 @@ public class PaintView extends View {
         this.onImportLayerAddedListener = onImportLayerAddedListener;
     }
 
-    public void setBlurRadius(float blurRadius) {
-        this.blurRadius = blurRadius;
-        if (blurRadius == 0.0) {
-            mPaint.setMaskFilter(null);
-        } else {
-            mPaint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL));
-        }
-    }
-
-    public float getBlurRadius() {
-        return blurRadius;
-    }
-
     public int getBitmapWidth() {
         return bitmapRef.getWidth();
     }
 
     public int getBitmapHeight() {
         return bitmapRef.getHeight();
+    }
+
+    /**
+     * @param hardness in [0.0, 100.0]
+     */
+    public void setStrokeHardness(float hardness) {
+        if (hardness == 100.0) {
+            mPaint.setMaskFilter(null);
+        } else {
+            final float blurRadius = toBlurRadius(getDrawingStrokeWidth(), hardness);
+            mPaint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL));
+        }
+        this.strokeHardness = hardness;
+    }
+
+    public float getStrokeHardness() {
+        return strokeHardness;
+    }
+
+    /**
+     * @param strokeWidth stroke width
+     * @param hardness    hardness, in [0.0, 100.0]
+     * @return blur radius
+     */
+    @Contract(pure = true)
+    public static float toBlurRadius(float strokeWidth, float hardness) {
+        return (float) ((1.0 - ((double) hardness) / 100.0) * (((double) strokeWidth) / 2.0));
+    }
+
+    @Contract(pure = true)
+    public static float toStrokeHardness(float strokeWidth, float blurRadius) {
+        return (float) ((1.0 - ((double) blurRadius) * 2.0 / ((double) strokeWidth)) * 100.0);
     }
 }
