@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -349,7 +350,7 @@ class FdbWindow(private val context: BaseActivity) {
             }
         )
 
-        val getStrokeWidth = {mode: BrushMode->
+        val getStrokeWidth = { mode: BrushMode ->
             when (mode) {
                 BrushMode.DRAWING -> paintView.drawingStrokeWidth
                 BrushMode.ERASING -> paintView.eraserStrokeWidth
@@ -513,6 +514,16 @@ class FdbWindow(private val context: BaseActivity) {
         return dialog
     }
 
+    private fun createPromptDialog(
+        @StringRes titleRes: Int,
+        editText: EditText,
+        callback: PromptDialogCallback
+    ): AlertDialog {
+        val dialog = DialogUtils.createPromptDialog(context, titleRes, callback, editText = editText)
+        DialogUtils.setDialogAttr(dialog, isTransparent = false, overlayWindow = true)
+        return dialog
+    }
+
     private fun createFilePickerDialog(
         type: Int = FilePickerRL.TYPE_PICK_FILE,
         initialPath: File = externalPath.path,
@@ -611,7 +622,9 @@ class FdbWindow(private val context: BaseActivity) {
                     }
                     1 -> {
                         // export image
-                        createPromptDialog(R.string.fdb_export_image_size_multiplier_prompt_title) { dialog, editText ->
+                        createPromptDialog(
+                            R.string.fdb_export_image_size_multiplier_prompt_title,
+                            EditText(context).apply { setText(1.toString()) }) { _, editText ->
                             val multiple = editText.text.toString().toIntOrNull() ?: run {
                                 ToastUtils.show(context, R.string.please_enter_correct_value_toast)
                                 return@createPromptDialog
