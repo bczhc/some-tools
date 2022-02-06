@@ -1,102 +1,101 @@
-package pers.zhc.tools.fdb;
+package pers.zhc.tools.fdb
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import pers.zhc.jni.sqlite.Cursor;
-import pers.zhc.jni.sqlite.SQLite3;
-import pers.zhc.jni.sqlite.Statement;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.IORuntimeException;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
+import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.withCompiledStatement
+import pers.zhc.tools.utils.withNew
+import java.io.File
+import java.io.FileInputStream
 
 /**
  * @author bczhc
  */
-public enum PathVersion {
+enum class PathVersion(val versionName: String) {
     VERSION_1_0("1.0"),
+
     VERSION_2_0("2.0"),
+
     VERSION_2_1("2.1"),
+
     /**
      * start using SQLite3 database
      */
     VERSION_3_0("3.0"),
+
     /**
      * multi-layer path import
      */
     VERSION_3_1("3.1"),
+
     /**
      * use packed bytes as stroke info heads
      */
     VERSION_4_0("4.0"),
+
     Unknown("Unknown");
 
-    private final String versionName;
+    companion object {
+        fun getPathVersion(f: File): PathVersion {
+            var version: PathVersion? = null
 
-    @Contract(pure = true)
-    PathVersion(String name) {
-        versionName = name;
-    }
-
-    @Contract(pure = true)
-    public String getVersionName() {
-        return versionName;
-    }
-
-    @NotNull
-    public static PathVersion getPathVersion(@NotNull File f) {
-        PathVersion version = null;
-
-        // check paths that use SQLite database
-        final SQLite3 db = SQLite3.open(f.getPath());
-        if (!db.checkIfCorrupt()) {
-            final Statement statement = db.compileStatement("SELECT version FROM info");
-            final Cursor cursor = statement.getCursor();
-            if (cursor.step()) {
-                final String versionString = cursor.getText(0);
-
-                final HashMap<String, PathVersion> map = new HashMap<>();
-                map.put("3.0", VERSION_3_0);
-                map.put("3.1", VERSION_3_1);
-                map.put("4.0", VERSION_4_0);
-
-                final PathVersion get = map.get(versionString);
-                if (get != null) {
-                    version = get;
-                } else {
-                    version = Unknown;
+            // check paths that use SQLite database (since path 3.0)
+            val db = SQLite3.open(f.path)
+            if (!db.checkIfCorrupt()) {
+                db.withCompiledStatement("SELECT version FROM info") {
+                    val cursor = it.cursor
+                    version = if (cursor.step()) {
+                        val versionString = cursor.getText(0)
+                        mapOf(
+                            Pair("3.0", VERSION_3_0),
+                            Pair("3.1", VERSION_3_1),
+                            Pair("4.0", VERSION_4_0)
+                        )[versionString] ?: Unknown
+                    } else {
+                        Unknown
+                    }
                 }
-            } else {
-                version = Unknown;
             }
-            statement.release();
-        }
-        db.close();
+            db.close()
 
-        if (version != null) {
-            return version;
-        }
-
-        // check path versions 1.0, 2.0, 2.1
-        try {
-            FileInputStream is = new FileInputStream(f);
-            byte[] buf = new byte[12];
-            Common.doAssertion(is.read(buf) == 12);
-            if (Arrays.equals(buf, "path ver 2.0".getBytes())) {
-                version = VERSION_2_0;
-            } else if (Arrays.equals(buf, "path ver 2.1".getBytes())) {
-                version = VERSION_2_1;
-            } else {
-                version = VERSION_1_0;
+            if (version != null) {
+                if (version == VERSION_3_0) {
+                    version = checkMore(f.path)
+                }
+                return version!!
             }
-            is.close();
-            return version;
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
+
+            // check path versions 1.0, 2.0, 2.1
+            val inputStream = FileInputStream(f)
+            val buf = ByteArray(12)
+            Common.doAssertion(inputStream.read(buf) == 12)
+            version = if (buf.contentEquals("path ver 2.0".toByteArray())) {
+                VERSION_2_0
+            } else if (buf.contentEquals("path ver 2.1".toByteArray())) {
+                VERSION_2_1
+            } else {
+                VERSION_1_0
+            }
+            inputStream.close()
+
+            return version!!
+        }
+
+        // now some path 3.0 are actually path 3.1, due to some negligence of mine for not controlling
+        // the versions well
+        /**
+         * [path] is path 3.0
+         */
+        private fun checkMore(path: String): PathVersion {
+            SQLite3::class.withNew(path) { db ->
+                // the path file has been recognized to be path 3.0, so extraInfos must be valid
+                val extraInfos = ExtraInfos.getExtraInfos(db)!!
+                if (extraInfos.layersInfo != null) {
+                    // the path is actually path 3.1 (with layers info)
+                    return VERSION_3_1
+                }
+            }
+
+            return VERSION_3_0
         }
     }
 }
