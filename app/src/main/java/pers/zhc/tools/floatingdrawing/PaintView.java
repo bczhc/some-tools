@@ -369,26 +369,43 @@ public class PaintView extends View {
         return eraserMode;
     }
 
-    /**
-     * 导出图片
-     */
-    public void exportImg(File f, int width, int height) throws IOException {
+    private Bitmap drawPathsToBitmap(@NotNull List<PathBean> pathBeans, @Nullable Matrix matrix, int width, int height) {
         final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
-        final Matrix matrix = canvasTransformer.getMatrix();
-        matrix.postScale(((float) width) / ((float) getBitmapWidth()), (float) height / (float) getBitmapHeight());
 
         Canvas canvas = new Canvas(bitmap);
         canvas.setMatrix(matrix);
 
-        for (PathBean pathBean : undoListRef) {
+        for (PathBean pathBean : pathBeans) {
             canvas.drawPath(pathBean.path, pathBean.paint);
         }
 
+        return bitmap;
+    }
+
+    /**
+     * 导出图片
+     */
+    public void exportImg(File f, int width, int height) throws IOException {
+        final Matrix matrix = canvasTransformer.getMatrix();
+        matrix.postScale(((float) width) / ((float) getBitmapWidth()), (float) height / (float) getBitmapHeight());
+
+        final Bitmap resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas overlayCanvas = new Canvas(resultBitmap);
+        Paint bitmapPaint = new Paint();
+
+        for (int i = layerArray.size() - 1; i >= 0; i--) {
+            final LinkedList<PathBean> undoList = layerArray.get(i).undoList;
+
+            final Bitmap bitmap = drawPathsToBitmap(undoList, matrix, width, height);
+            overlayCanvas.drawBitmap(bitmap, 0F, 0F, bitmapPaint);
+            bitmap.recycle();
+            System.gc();
+        }
+
         final FileOutputStream os = new FileOutputStream(f);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+        resultBitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
         os.close();
-        bitmap.recycle();
+        resultBitmap.recycle();
         System.gc();
     }
 
@@ -1640,6 +1657,7 @@ public class PaintView extends View {
         public PathImportException() {
             super();
         }
+
         public PathImportException(String message) {
             super(message);
         }
@@ -1649,6 +1667,7 @@ public class PaintView extends View {
         public InvalidExtraInfoException() {
             super();
         }
+
         public InvalidExtraInfoException(String message) {
             super(message);
         }
