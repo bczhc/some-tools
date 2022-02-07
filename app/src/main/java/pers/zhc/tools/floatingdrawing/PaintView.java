@@ -56,7 +56,6 @@ public class PaintView extends View {
      * 上次的坐标
      */
     private float mLastX, mLastY;
-    private Paint mBitmapPaint;
     /**
      * 使用LinkedList 模拟栈，来保存 Path
      */
@@ -180,7 +179,6 @@ public class PaintView extends View {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         //同上
         mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
         this.gestureResolver = new GestureResolver(new GestureResolver.GestureInterface() {
 
@@ -398,7 +396,6 @@ public class PaintView extends View {
 
         final Bitmap resultBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas overlayCanvas = new Canvas(resultBitmap);
-        Paint bitmapPaint = new Paint();
 
         for (int i = layerArray.size() - 1; i >= 0; i--) {
             final Layer layer = layerArray.get(i);
@@ -409,7 +406,7 @@ public class PaintView extends View {
                 // TODO layer's name
                 progressCallback.call(ImageExportProgressType.REDRAWING, String.valueOf(layer.getId()), p);
             });
-            overlayCanvas.drawBitmap(bitmap, 0F, 0F, bitmapPaint);
+            overlayCanvas.drawBitmap(bitmap, 0F, 0F, null);
             bitmap.recycle();
             System.gc();
         }
@@ -464,7 +461,7 @@ public class PaintView extends View {
                 // 将bitmap绘制在canvas上,最终的显示
                 for (int i = layerArray.size() - 1; i >= 0; i--) {
                     Layer layer = layerArray.get(i);
-                    canvas.drawBitmap(layer.bitmap, 0, 0, mBitmapPaint);
+                    canvas.drawBitmap(layer.bitmap, 0, 0, null);
                 }
 
                 if (!dontDrawWhileImporting) {
@@ -480,8 +477,8 @@ public class PaintView extends View {
             }
         } else {
             transCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            transCanvas.drawBitmap(bitmapRef, 0, 0, mBitmapPaint);
-            canvas.drawBitmap(transBitmap, 0, 0, mBitmapPaint);
+            transCanvas.drawBitmap(bitmapRef, 0, 0, null);
+            canvas.drawBitmap(transBitmap, 0, 0, null);
         }
     }
 
@@ -1329,11 +1326,11 @@ public class PaintView extends View {
         // TODO: 8/4/21 import image
         /*System.gc();
         Bitmap bitmap = Bitmap.createScaledBitmap(imageBitmap, scaledWidth, scaledHeight, true);
-        mBackgroundCanvas.drawBitmap(bitmap, left, top, mBitmapPaint);
+        mBackgroundCanvas.drawBitmap(bitmap, left, top, null);
         if (backgroundBitmap == null) {
             ToastUtils.show(ctx, ctx.getString(R.string.importing_failed));
         } else {
-            mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, mBitmapPaint);
+            mCanvas.drawBitmap(backgroundBitmap, 0F, 0F, null);
         }
         postInvalidate();*/
     }
