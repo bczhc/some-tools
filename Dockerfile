@@ -43,13 +43,15 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
 
 # build single-Android-ABI App
 RUN . ~/.cargo/env && \
-    mkdir /apks && \
+    mkdir /apks && mkdir /apks/debug && mkdir /apks/release && \
     for a in armeabi-v7a-21 arm64-v8a-29 x86-29 x86_64-29; do \
       # reconfigure
       echo 'opensslLib.dir=/openssl' > config.properties && \
       echo "ndk.target=$a" >> config.properties && \
       ./gradlew asD && \
-      cp app/build/outputs/apk/debug/app-debug.apk /apks/$a.apk; \
+      cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/$a.apk && \
+      ./gradlew asR && \
+      cp app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
     done
 
 # build universal-Android-ABI App
@@ -57,4 +59,6 @@ RUN . ~/.cargo/env && \
     echo 'opensslLib.dir=/openssl' > config.properties && \
     echo 'ndk.target=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29' >> config.properties && \
     ./gradlew asD && \
-    cp app/build/outputs/apk/debug/app-debug.apk /apks/universal.apk
+    cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
+    ./gradlew asR && \
+    cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk
