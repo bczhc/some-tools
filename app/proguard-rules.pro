@@ -21,5 +21,4 @@
 #-renamesourcefileattribute SourceFile
 -dontobfuscate
 
--keep class pers.zhc.tools.jni.**$** {*;}
--keep class pers.zhc.tools.**.JNI* {*;}
+-keep class pers.zhc.** {*;}
