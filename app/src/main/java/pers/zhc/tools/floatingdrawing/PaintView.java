@@ -251,15 +251,6 @@ public class PaintView extends View {
 
             @Override
             public void onTwoPointsPress(MotionEvent event) {
-                if (transBitmap != null) {
-                    Canvas c = new Canvas(transBitmap);
-                    c.setMatrix(canvasTransformer.getMatrix());
-                    for (int i = layerArray.size() - 1; i >= 0; i--) {
-                        Layer layer = layerArray.get(i);
-                        transCanvas.drawBitmap(layer.bitmap, 0, 0, mBitmapPaint);
-                    }
-                }
-                postInvalidate();
             }
         });
 
