@@ -46,12 +46,14 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     private fun addLayerAction() {
         DialogUtils.createPromptDialog(context, R.string.fdb_layer_naming_dialog_title, { _, et ->
             val input = et.text.toString()
-
             val id = System.currentTimeMillis()
-            listItems.add(LayerInfo(id, input, true))
+
+            val layerInfo = LayerInfo(id, input, true)
+            listItems.add(layerInfo)
+
             listAdapter.notifyItemInserted(listItems.size)
 
-            onLayerAddedCallback(id)
+            onLayerAddedCallback(layerInfo)
         }).also { DialogUtils.setDialogAttr(it, overlayWindow = true) }.show()
     }
 
@@ -63,7 +65,6 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             val nameTV = view.name_tv!!
             val rootView = view.rootView!!
             val visibilityIV = view.visibility_btn!!
-            var visible = true
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -73,8 +74,10 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
 
         @SuppressLint("NotifyDataSetChanged")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.nameTV.text = items[position].name
-            if (items[position].id == checkedId) {
+            val layerInfo = items[position]
+
+            holder.nameTV.text = layerInfo.name
+            if (layerInfo.id == checkedId) {
                 holder.rootView.setBackgroundResource(R.drawable.view_stroke_red)
             } else {
                 holder.rootView.setBackgroundResource(R.drawable.view_stroke)
@@ -88,13 +91,13 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             holder.visibilityIV.setOnClickListener {
                 // toggle visibility
                 holder.visibilityIV.setImageResource(
-                    if (holder.visible) {
+                    if (layerInfo.visible) {
                         R.drawable.ic_visibility_off
                     } else {
                         R.drawable.ic_visibility
                     }
                 )
-                holder.visible = !holder.visible
+                layerInfo.visible = !layerInfo.visible
             }
         }
 
@@ -160,11 +163,11 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     }
 
     fun getLayerState(): LayerState {
-        return LayerState(listAdapter.getIdOrderList(), listAdapter.getCheckedLayerId())
+        return LayerState(listAdapter.items, listAdapter.getCheckedLayerId())
     }
 
     class LayerState(
-        val orderList: List<Long>,
+        val orderList: List<LayerInfo>,
         val checkedId: Long
     )
 
@@ -177,4 +180,4 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     }
 }
 
-typealias OnLayerAddedCallback = (id: Long) -> Unit
+typealias OnLayerAddedCallback = (layerInfo: LayerInfo) -> Unit

@@ -267,8 +267,8 @@ class FdbWindow(private val context: BaseActivity) {
 
             setPathSaver(pathSaver)
 
-            layerManagerView = LayerManagerView(context) { id ->
-                paintView.add1Layer(id)
+            layerManagerView = LayerManagerView(context) { layerInfo ->
+                paintView.add1Layer(layerInfo)
             }
 
             setOnScreenDimensionChangedListener { width, height ->
@@ -277,9 +277,11 @@ class FdbWindow(private val context: BaseActivity) {
             post {
                 // add the default layer
                 val id = System.currentTimeMillis()
-                paintView.add1Layer(id)
+                val defaultLayerInfo = LayerInfo(id, context.getString(R.string.fdb_layer_default_name), true)
+
+                paintView.add1Layer(defaultLayerInfo)
                 paintView.switchLayer(id)
-                layerManagerView.add1Layer(LayerInfo(id, context.getString(R.string.fdb_layer_default_name), true))
+                layerManagerView.add1Layer(defaultLayerInfo)
                 layerManagerView.setChecked(id)
             }
 
@@ -1106,7 +1108,7 @@ class FdbWindow(private val context: BaseActivity) {
             val layerState = layerManagerView.getLayerState()
             val checkedId = layerState.checkedId
             Common.doAssertion(checkedId != -1L)
-            paintView.updateLayerState(layerState.orderList, checkedId)
+            paintView.updateLayerState(layerState)
             paintView.invalidate()
         }
         return dialog

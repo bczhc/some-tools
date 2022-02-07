@@ -9,14 +9,13 @@ import java.util.LinkedList;
  * @author bczhc
  */
 public class Layer {
-    private final long id;
+    private final LayerInfo layerInfo;
     public LinkedList<PaintView.PathBean> undoList = new LinkedList<>();
     public LinkedList<PaintView.PathBean> redoList = new LinkedList<>();
     public Bitmap bitmap;
-    private boolean visible = true;
 
-    public Layer(int width, int height, long id) {
-        this.id = id;
+    public Layer(int width, int height, LayerInfo layerInfo) {
+        this.layerInfo = layerInfo;
         updateBitmap(width, height);
     }
 
@@ -35,14 +34,14 @@ public class Layer {
     }
 
     public long getId() {
-        return id;
+        return layerInfo.getId();
     }
 
     public boolean isVisible() {
-        return visible;
+        return layerInfo.getVisible();
     }
 
     public void setVisible(boolean visible) {
-        this.visible = visible;
+        layerInfo.setVisible(visible);
     }
 }

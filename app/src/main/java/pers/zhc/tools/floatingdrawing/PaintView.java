@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static pers.zhc.tools.utils.NullSafeHelper.getNonNull;
 
@@ -862,7 +863,7 @@ public class PaintView extends View {
         for (String table : tables) {
             if (table.matches("^path_layer_[0-9]+$")) {
                 final long layerId = Long.parseLong(RegexUtils.Companion.capture(table, "^path_layer_([0-9]+)$").get(0).get(1));
-                add1Layer(layerId);
+                add1Layer(new LayerInfo(layerId, String.valueOf(layerId), true));
 
             }
         }
@@ -983,11 +984,10 @@ public class PaintView extends View {
 
         for (LayerInfo layerInfo : layersInfo) {
             final long originalLayerId = layerInfo.getId();
-            final long newLayerId = layerInfo.getId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
-            add1Layer(newLayerId);
-            switchLayer(newLayerId);
+            add1Layer(layerInfo);
+            switchLayer(layerInfo.getId());
             if (onImportLayerAddedListener != null) {
-                onImportLayerAddedListener.onAdded(new LayerInfo(newLayerId, layerInfo.getName(), layerInfo.getVisible()));
+                onImportLayerAddedListener.onAdded(new LayerInfo(layerInfo.getId(), layerInfo.getName(), layerInfo.getVisible()));
             }
 
             importLayerPath(
@@ -1042,11 +1042,10 @@ public class PaintView extends View {
 
         for (LayerInfo layerInfo : layersInfo) {
             final long originalLayerId = layerInfo.getId();
-            final long newLayerId = layerInfo.getId() + layerInfo.getName().hashCode() + System.currentTimeMillis() + Random.generate(0, 10);
-            add1Layer(newLayerId);
-            switchLayer(newLayerId);
+            add1Layer(layerInfo);
+            switchLayer(layerInfo.getId());
             if (onImportLayerAddedListener != null) {
-                onImportLayerAddedListener.onAdded(new LayerInfo(newLayerId, layerInfo.getName(), layerInfo.getVisible()));
+                onImportLayerAddedListener.onAdded(new LayerInfo(layerInfo.getId(), layerInfo.getName(), layerInfo.getVisible()));
             }
 
             importLayerPath4_0(
@@ -1495,10 +1494,10 @@ public class PaintView extends View {
         ++a;
     }
 
-    public long add1Layer(long id) {
-        final Layer layer = new Layer(width, height, id);
+    public long add1Layer(LayerInfo layerInfo) {
+        final Layer layer = new Layer(width, height, layerInfo);
         layerArray.add(layer);
-        pathSaver.addNewLayerPathSaver(id);
+        pathSaver.addNewLayerPathSaver(layerInfo.getId());
         return layer.getId();
     }
 
@@ -1531,22 +1530,22 @@ public class PaintView extends View {
         return -1;
     }
 
-    private @org.jetbrains.annotations.Nullable Layer getLayerById(long id) {
+    private Layer getLayerById(long id) {
         final int i = getLayerIndexById(id);
         if (i != -1) {
             return layerArray.get(i);
         }
-        return null;
+        throw new NoSuchElementException();
     }
 
-    public void updateLayerState(@NotNull List<Long> orderList, long checkedId) {
-        ArrayList<Layer> newLayerArray = new ArrayList<>();
-        for (Long id : orderList) {
-            newLayerArray.add(getLayerById(id));
+    public void updateLayerState(@NotNull LayerManagerView.LayerState layerState) {
+        final ArrayList<Layer> newLayerArray = new ArrayList<>();
+        for (LayerInfo layerInfo : layerState.getOrderList()) {
+            newLayerArray.add(getLayerById(layerInfo.getId()));
         }
         layerArray.clear();
         layerArray.addAll(newLayerArray);
-        switchLayer(checkedId);
+        switchLayer(layerState.getCheckedId());
     }
 
     public void switchLayer(long id) {

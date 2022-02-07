@@ -6,5 +6,5 @@ package pers.zhc.tools.fdb
 data class LayerInfo(
     val id: Long,
     val name: String,
-    val visible: Boolean
+    var visible: Boolean
 )
