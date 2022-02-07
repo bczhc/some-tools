@@ -115,17 +115,7 @@ public class GestureResolver {
     }
 
     private float getVectorDegrees(float x1, float y1, float x2, float y2) {
-
-        return (float) ((argumentRadian(x2, y2) - argumentRadian(x1, y1)) / Math.PI * 180D);
-    }
-
-    private double argumentRadian(double x, double y) {
-        if (x > 0) return Math.atan(y / x);
-        if (x == 0 && y > 0) return Math.PI / 2D;
-        if (x == 0 && y < 0) return -Math.PI / 2D;
-        if (x < 0 && y >= 0) return Math.atan(y / x) + Math.PI;
-        if (x < 0 && y < 0) return Math.atan(y / x) - Math.PI;
-        return Double.NaN;
+        return (float) ((Math.atan2(y2, x2) - Math.atan2(y1, x1)) / Math.PI * 180D);
     }
 
     public interface GestureInterface {
