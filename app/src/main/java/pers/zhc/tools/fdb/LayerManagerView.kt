@@ -88,16 +88,20 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
                 notifyDataSetChanged()
             }
 
-            holder.visibilityIV.setOnClickListener {
-                // toggle visibility
+            val updateVisibilityIcon = {
                 holder.visibilityIV.setImageResource(
                     if (layerInfo.visible) {
-                        R.drawable.ic_visibility_off
-                    } else {
                         R.drawable.ic_visibility
+                    } else {
+                        R.drawable.ic_visibility_off
                     }
                 )
+            }.also { it() }
+
+            holder.visibilityIV.setOnClickListener {
+                // toggle visibility
                 layerInfo.visible = !layerInfo.visible
+                updateVisibilityIcon()
             }
         }
 
