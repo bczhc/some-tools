@@ -24,7 +24,7 @@ class ScalableImageView : View {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         init()
     }
-    
+
     var isRotatable = false
 
     private fun init() {
@@ -88,9 +88,15 @@ class ScalableImageView : View {
     }
 
     override fun onDraw(canvas: Canvas?) {
-        mBitmap?.let {
-            canvas!!.drawBitmap(it, 0F, 0F, null)
+        if (mBitmap == null) {
+            // init
+            mBitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+            mCanvas = Canvas(mBitmap!!)
+            canvasTransformer = CanvasTransformer(mCanvas)
+            srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, null) }
         }
+
+        canvas!!.drawBitmap(mBitmap!!, 0F, 0F, null)
     }
 
     private fun measure(measureSpec: Int): Int {
@@ -116,13 +122,5 @@ class ScalableImageView : View {
         val measuredWidth = measure(widthMeasureSpec)
         val measuredHeight = measure(heightMeasureSpec)
         setMeasuredDimension(measuredWidth, measuredHeight)
-
-        if (mBitmap == null) {
-            // init
-            mBitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
-            mCanvas = Canvas(mBitmap!!)
-            canvasTransformer = CanvasTransformer(mCanvas)
-            srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, null) }
-        }
     }
 }
