@@ -34,7 +34,7 @@ class MainActivity {
                 val updateDir = File(storagePath, "update")
                 val localFile = File(updateDir, "some-tools.apk")
 
-                val url = URL(Infos.staticResourceRootURL + "/apks/some-tools/" + findCommitHash(item.commitInfo) + "/app-debug.apk")
+                val url = URL(Infos.staticResourceRootURL + "/apks/some-tools/" + findCommitHash(item.commitInfo) + "/some-tools.apk")
                 Download.startDownloadWithDialog(context, url, localFile) {
                     // TODO: check file integrity
                     Common.installApk(context, localFile)
