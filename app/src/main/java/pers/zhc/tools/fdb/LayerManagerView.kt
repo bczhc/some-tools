@@ -61,7 +61,9 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
 
         class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val nameTV = view.name_tv!!
-            val ll = view.root_ll!!
+            val rootView = view.rootView!!
+            val visibilityIV = view.visibility_btn!!
+            var visible = true
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -69,17 +71,30 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             return MyViewHolder(inflate)
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             holder.nameTV.text = items[position].name
             if (items[position].id == checkedId) {
-                holder.ll.setBackgroundResource(R.drawable.view_stroke_red)
+                holder.rootView.setBackgroundResource(R.drawable.view_stroke_red)
             } else {
-                holder.ll.setBackgroundResource(R.drawable.view_stroke)
+                holder.rootView.setBackgroundResource(R.drawable.view_stroke)
             }
 
             holder.itemView.setOnClickListener {
                 checkedId = items[holder.layoutPosition].id
                 notifyDataSetChanged()
+            }
+
+            holder.visibilityIV.setOnClickListener {
+                // toggle visibility
+                holder.visibilityIV.setImageResource(
+                    if (holder.visible) {
+                        R.drawable.ic_visibility_off
+                    } else {
+                        R.drawable.ic_visibility
+                    }
+                )
+                holder.visible = !holder.visible
             }
         }
 

@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:background="@drawable/view_stroke"
-              android:id="@+id/root_ll"
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/view_stroke"
+        android:paddingVertical="2.5dp"
+        android:paddingHorizontal="5dp"
 >
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/name_tv"
               tools:text="Layer Name"
-              style="@style/TextAppearance.MaterialComponents.Headline6"
+              style="@style/TextAppearance.MaterialComponents.Headline5"
+              android:layout_toStartOf="@id/visibility_btn"
     />
-</LinearLayout>
+    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                 android:src="@drawable/ic_visibility"
+                 android:layout_alignParentEnd="true"
+                 android:id="@+id/visibility_btn"
+                 tools:ignore="ContentDescription"
+                 android:layout_centerVertical="true"
+                 android:background="?selectableItemBackground"
+    />
+</RelativeLayout>
