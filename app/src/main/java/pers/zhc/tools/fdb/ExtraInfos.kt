@@ -1,12 +1,12 @@
 package pers.zhc.tools.fdb
 
-import android.graphics.Matrix
-import com.google.gson.Gson
+import com.google.gson.*
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.tools.MyApplication.Companion.defaultGson
 import pers.zhc.tools.utils.fromJsonOrNull
-import pers.zhc.tools.utils.getValuesNew
 import pers.zhc.tools.utils.withCompiledStatement
 import pers.zhc.tools.views.HSVAColorPickerRL.SavedColor
+import java.lang.reflect.Type
 
 /**
  * @author bczhc
@@ -36,13 +36,32 @@ class ExtraInfos(
          * it stores has invalid json syntax
          */
         fun getExtraInfos(db: SQLite3): ExtraInfos? {
-            return Gson().fromJsonOrNull(
+            return Gson().newBuilder().apply {
+                registerTypeAdapter(FloatArray::class.java, OldMatrixDataSerializer())
+            }.create().fromJsonOrNull(
                 queryExtraInfos(db) ?: return null,
                 ExtraInfos::class.java
-            ) ?: (Gson().fromJsonOrNull(
-                queryExtraInfos(db) ?: return null,
-                OldExtraInfos::class.java
-            ) ?: return null).toNewExtraInfos()
+            )
+        }
+    }
+
+    private class OldMatrixDataSerializer : JsonDeserializer<FloatArray?> {
+        override fun deserialize(
+            json: JsonElement?,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): FloatArray? {
+            json ?: return null
+
+            if (json is JsonObject) {
+                // check if is a "OldMatrixData" JSON object
+                if (json.keySet().all { ExtraInfos::OldMatrixData.parameters.map { p -> p.name }.contains(it) }) {
+                    val oldMatrixData = defaultGson.fromJson(json, OldMatrixData::class.java)!!
+                    return oldMatrixData.getData()
+                }
+            }
+
+            return null
         }
     }
 
@@ -58,41 +77,16 @@ class ExtraInfos(
         val MPERSP_1: Float,
         val MPERSP_2: Float
     ) {
-        fun toMatrix(): Matrix {
-            return Matrix().apply {
-                val data = floatArrayOf(
-                    MSCALE_X,
-                    MSKEW_X,
-                    MTRANS_X,
-                    MSKEW_Y,
-                    MSCALE_Y,
-                    MTRANS_Y,
-                    MPERSP_0,
-                    MPERSP_1,
-                    MPERSP_2
-                )
-                this.setValues(data)
-            }
-        }
-    }
-
-    private class OldExtraInfos(
-        val isLockingStroke: Boolean?,
-        val lockedDrawingStrokeWidth: Float?,
-        val lockedEraserStrokeWidth: Float?,
-        val savedColors: List<SavedColor>?,
-        val defaultTransformation: OldMatrixData?,
-        val layersInfo: List<LayerInfo>?
-    ) {
-        fun toNewExtraInfos(): ExtraInfos? {
-            return ExtraInfos(
-                isLockingStroke,
-                lockedDrawingStrokeWidth,
-                lockedEraserStrokeWidth,
-                savedColors,
-                (defaultTransformation ?: return null).toMatrix().getValuesNew(),
-                layersInfo
-            )
-        }
+        fun getData() = floatArrayOf(
+            MSCALE_X,
+            MSKEW_X,
+            MTRANS_X,
+            MSKEW_Y,
+            MSCALE_Y,
+            MTRANS_Y,
+            MPERSP_0,
+            MPERSP_1,
+            MPERSP_2
+        )
     }
 }

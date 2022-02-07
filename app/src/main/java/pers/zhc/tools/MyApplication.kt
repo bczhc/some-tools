@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.os.Build
 import android.os.PowerManager.WakeLock
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.gson.Gson
 import org.json.JSONObject
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
@@ -78,6 +79,9 @@ class MyApplication : Application() {
 
     companion object {
         private lateinit var infoFile: File
+
+        // the default global Gson
+        val defaultGson = Gson()
 
         @JvmField
         var wakeLock: WakeLock? = null
