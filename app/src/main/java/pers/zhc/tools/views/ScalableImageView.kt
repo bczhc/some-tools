@@ -18,17 +18,16 @@ class ScalableImageView : View {
     private var mBitmap: Bitmap? = null
     private lateinit var mCanvas: Canvas
     private lateinit var canvasTransformer: CanvasTransformer
-    private lateinit var mBitmapPaint: Paint
 
     constructor(context: Context?) : this(context, null)
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         init()
     }
+    
+    var isRotatable = false
 
     private fun init() {
-        mBitmapPaint = Paint()
-
         mGestureResolver = GestureResolver(object : GestureResolver.GestureInterface {
             override fun onTwoPointsScroll(distanceX: Float, distanceY: Float, event: MotionEvent?) {
                 canvasTransformer.absTranslate(distanceX, distanceY)
@@ -56,7 +55,9 @@ class ScalableImageView : View {
                 midX: Float,
                 midY: Float
             ) {
-                canvasTransformer.absRotate(degrees, midX, midY)
+                if (isRotatable) {
+                    canvasTransformer.absRotate(degrees, midX, midY)
+                }
             }
 
             override fun onTwoPointsUp(event: MotionEvent) {
@@ -81,14 +82,14 @@ class ScalableImageView : View {
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         mGestureResolver.onTouch(event)
         mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-        srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, mBitmapPaint) }
+        srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, null) }
         invalidate()
         return true
     }
 
     override fun onDraw(canvas: Canvas?) {
         mBitmap?.let {
-            canvas!!.drawBitmap(it, 0F, 0F, mBitmapPaint)
+            canvas!!.drawBitmap(it, 0F, 0F, null)
         }
     }
 
@@ -121,7 +122,7 @@ class ScalableImageView : View {
             mBitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
             mCanvas = Canvas(mBitmap!!)
             canvasTransformer = CanvasTransformer(mCanvas)
-            srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, mBitmapPaint) }
+            srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, null) }
         }
     }
 }
