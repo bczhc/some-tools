@@ -9,7 +9,7 @@ import java.util.LinkedList;
  * @author bczhc
  */
 public class Layer {
-    private final LayerInfo layerInfo;
+    private LayerInfo layerInfo;
     public LinkedList<PaintView.PathBean> undoList = new LinkedList<>();
     public LinkedList<PaintView.PathBean> redoList = new LinkedList<>();
     public Bitmap bitmap;
@@ -43,5 +43,13 @@ public class Layer {
 
     public void setVisible(boolean visible) {
         layerInfo.setVisible(visible);
+    }
+
+    public void setLayerInfo(LayerInfo layerInfo) {
+        this.layerInfo = layerInfo;
+    }
+
+    public LayerInfo getLayerInfo() {
+        return layerInfo;
     }
 }

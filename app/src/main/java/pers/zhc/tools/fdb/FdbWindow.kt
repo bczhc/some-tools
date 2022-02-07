@@ -1109,7 +1109,6 @@ class FdbWindow(private val context: BaseActivity) {
             val checkedId = layerState.checkedId
             Common.doAssertion(checkedId != -1L)
             paintView.updateLayerState(layerState)
-            paintView.invalidate()
         }
         return dialog
     }

@@ -235,7 +235,10 @@ public class PaintView extends View {
                         Canvas transCanvas = new Canvas(transBitmap);
 
                         for (int i = layerArray.size() - 1; i >= 0; i--) {
-                            transCanvas.drawBitmap(layerArray.get(i).bitmap, 0F, 0F, null);
+                            final Layer layer = layerArray.get(i);
+                            if (layer.isVisible()) {
+                                transCanvas.drawBitmap(layer.bitmap, 0F, 0F, null);
+                            }
                         }
 
                         transCanvasTransformation = new Matrix();
@@ -392,6 +395,7 @@ public class PaintView extends View {
 
         for (int i = layerArray.size() - 1; i >= 0; i--) {
             final Layer layer = layerArray.get(i);
+            if (!layer.isVisible()) continue;
             final LinkedList<PathBean> undoList = layer.undoList;
 
 
@@ -454,7 +458,9 @@ public class PaintView extends View {
                 // 将bitmap绘制在canvas上,最终的显示
                 for (int i = layerArray.size() - 1; i >= 0; i--) {
                     Layer layer = layerArray.get(i);
-                    canvas.drawBitmap(layer.bitmap, 0, 0, null);
+                    if (layer.isVisible()) {
+                        canvas.drawBitmap(layer.bitmap, 0, 0, null);
+                    }
                 }
 
                 if (!dontDrawWhileImporting) {
@@ -546,7 +552,9 @@ public class PaintView extends View {
 
     private void refreshAllLayerBitmap(int width, int height) {
         for (Layer layer : layerArray) {
-            setupBitmap(width, height, layer);
+            if (layer.isVisible()) {
+                setupBitmap(width, height, layer);
+            }
         }
         invalidate();
     }
@@ -1541,11 +1549,15 @@ public class PaintView extends View {
     public void updateLayerState(@NotNull LayerManagerView.LayerState layerState) {
         final ArrayList<Layer> newLayerArray = new ArrayList<>();
         for (LayerInfo layerInfo : layerState.getOrderList()) {
-            newLayerArray.add(getLayerById(layerInfo.getId()));
+            final Layer layer = getLayerById(layerInfo.getId());
+            layer.setLayerInfo(layerInfo);
+            newLayerArray.add(layer);
         }
         layerArray.clear();
         layerArray.addAll(newLayerArray);
         switchLayer(layerState.getCheckedId());
+
+        invalidate();
     }
 
     public void switchLayer(long id) {
@@ -1554,7 +1566,10 @@ public class PaintView extends View {
 
     private void redrawAllLayerBitmap() {
         for (int i = layerArray.size() - 1; i >= 0; i--) {
-            layerArray.get(i).redrawBitmap(canvasTransformer.getMatrix());
+            final Layer layer = layerArray.get(i);
+            if (layer.isVisible()) {
+                layer.redrawBitmap(canvasTransformer.getMatrix());
+            }
         }
     }
 
