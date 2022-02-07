@@ -38,6 +38,7 @@ class ExtraInfos(
         fun getExtraInfos(db: SQLite3): ExtraInfos? {
             return Gson().newBuilder().apply {
                 registerTypeAdapter(FloatArray::class.java, OldMatrixDataSerializer())
+                registerTypeAdapter(LayerInfo::class.java, LayersInfoDeserializer())
             }.create().fromJsonOrNull(
                 queryExtraInfos(db) ?: return null,
                 ExtraInfos::class.java
@@ -61,6 +62,29 @@ class ExtraInfos(
                 }
             }
 
+            return null
+        }
+    }
+
+    private class LayersInfoDeserializer : JsonDeserializer<LayerInfo?> {
+        override fun deserialize(
+            json: JsonElement?,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): LayerInfo? {
+            json ?: return null
+
+            if (json is JsonObject) {
+                if (json.has("layerId") && !json.has("id") && run {
+                        val layerId = json.get("layerId")
+                        layerId.isJsonPrimitive && layerId.asJsonPrimitive.isNumber
+                    }) {
+
+                    json.add("id", json.get("layerId"))
+                    json.remove("layerId")
+                }
+                return defaultGson.fromJson(json, LayerInfo::class.java)
+            }
             return null
         }
     }
