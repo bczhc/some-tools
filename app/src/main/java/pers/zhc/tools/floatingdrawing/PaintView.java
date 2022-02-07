@@ -24,7 +24,10 @@ import pers.zhc.tools.utils.*;
 import pers.zhc.util.Assertion;
 import pers.zhc.util.Random;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,8 +76,7 @@ public class PaintView extends View {
     private float lockedEraserStrokeWidth;
     private OnColorChangedCallback onColorChangedCallback = null;
     private Bitmap transBitmap;
-    private Canvas transCanvas;
-    private CanvasTransformer transCanvasTransformer;
+    private Matrix transCanvasTransformation;
 
     private PathSaver defaultTmpPathSaver;
     private PathSaver pathSaver = null;
@@ -191,9 +193,7 @@ public class PaintView extends View {
             public void onTwoPointsScroll(float distanceX, float distanceY, MotionEvent event) {
                 if (moveTransformationEnabled) {
                     canvasTransformer.absTranslate(distanceX, distanceY);
-                    if (transCanvas != null) {
-                        transCanvasTransformer.absTranslate(distanceX, distanceY);
-                    }
+                    transCanvasTransformation.postTranslate(distanceX, distanceY);
                 }
             }
 
@@ -202,10 +202,8 @@ public class PaintView extends View {
                 if (zoomTransformationEnabled) {
                     canvasTransformer.absScale(dScale, midPointX, midPointY);
                     canvasScale *= dScale;
-                    if (transCanvas != null) {
-                        transCanvasTransformer.absScale(dScale, midPointX, midPointY);
-                    }
                     updateStrokeWidthIfLocked();
+                    transCanvasTransformation.postScale(dScale, dScale, midPointX, midPointY);
                 }
             }
 
@@ -213,9 +211,7 @@ public class PaintView extends View {
             public void onTwoPointsRotate(MotionEvent event, float firstMidX, float firstMidY, float degrees, float midX, float midY) {
                 if (rotateTransformationEnabled) {
                     canvasTransformer.absRotate(degrees, midX, midY);
-                    if (transCanvas != null) {
-                        transCanvasTransformer.absRotate(degrees, midX, midY);
-                    }
+                    transCanvasTransformation.postRotate(degrees, midX, midY);
                 }
             }
 
@@ -235,8 +231,13 @@ public class PaintView extends View {
                     mPath = null;
                     if (transBitmap == null) {
                         transBitmap = Bitmap.createBitmap(bitmapRef.getWidth(), bitmapRef.getHeight(), Bitmap.Config.ARGB_8888);
-                        transCanvas = new Canvas(transBitmap);
-                        transCanvasTransformer = new CanvasTransformer(transCanvas);
+                        Canvas transCanvas = new Canvas(transBitmap);
+
+                        for (int i = layerArray.size() - 1; i >= 0; i--) {
+                            transCanvas.drawBitmap(layerArray.get(i).bitmap, 0F, 0F, null);
+                        }
+
+                        transCanvasTransformation = new Matrix();
                     }
                     if (layerPathSaverRef != null) {
                         layerPathSaverRef.clearTempTable();
@@ -467,8 +468,7 @@ public class PaintView extends View {
                 }
             }
         } else {
-            transCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            transCanvas.drawBitmap(bitmapRef, 0, 0, null);
+            canvas.setMatrix(transCanvasTransformation);
             canvas.drawBitmap(transBitmap, 0, 0, null);
         }
     }
