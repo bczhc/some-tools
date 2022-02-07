@@ -372,7 +372,7 @@ class FdbWindow(private val context: BaseActivity) {
                 setColor(paintView.drawingColor)
             }
 
-            widthSlider.value = (ln(width.toDouble()) / ln(base)).toFloat().coerceIn(0F, 100F)
+            widthSlider.value = (ln(width.toDouble() * paintView.scale) / ln(base)).toFloat().coerceIn(0F, 100F)
             infoTV.text = context.getString(
                 R.string.fdb_stroke_width_info,
                 width,
@@ -414,8 +414,9 @@ class FdbWindow(private val context: BaseActivity) {
 
         widthSlider.addOnChangeListener { _, value, fromUser ->
             if (fromUser) {
-                val width = base.pow(value.toDouble()).toFloat()
-                updateWidthAndDisplay(width)
+                val displayWidth = base.pow(value.toDouble()).toFloat()
+                val realWidth = displayWidth / paintView.scale
+                updateWidthAndDisplay(realWidth)
             }
         }
 
@@ -824,7 +825,7 @@ class FdbWindow(private val context: BaseActivity) {
                     )
 
                     when (pathVersion) {
-                        PathVersion.VERSION_3_0 -> {
+                        PathVersion.VERSION_3_0, PathVersion.VERSION_3_1, PathVersion.VERSION_4_0 -> {
                             var extraInfos: ExtraInfos? = null
                             SQLite3::class.withNew(path) {
                                 extraInfos = ExtraInfos.getExtraInfos(it)

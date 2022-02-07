@@ -39,6 +39,7 @@ class ExtraInfos(
             return Gson().newBuilder().apply {
                 registerTypeAdapter(FloatArray::class.java, OldMatrixDataSerializer())
                 registerTypeAdapter(LayerInfo::class.java, LayersInfoDeserializer())
+                registerTypeAdapter(SavedColor::class.java, OldSavedColorDeserializer())
             }.create().fromJsonOrNull(
                 queryExtraInfos(db) ?: return null,
                 ExtraInfos::class.java
@@ -85,6 +86,32 @@ class ExtraInfos(
                 }
                 return defaultGson.fromJson(json, LayerInfo::class.java)
             }
+            return null
+        }
+    }
+
+    private class OldSavedColorDeserializer : JsonDeserializer<SavedColor?> {
+        override fun deserialize(
+            json: JsonElement?,
+            typeOfT: Type?,
+            context: JsonDeserializationContext?
+        ): SavedColor? {
+            json ?: return null
+
+            if (json is JsonObject) {
+                if (json.has("colorHSVA") && json.has("colorName")) {
+                    val hsva = json.get("colorHSVA")
+                    if (hsva !is JsonArray || !hsva.all { it.isJsonPrimitive }) return null
+                    val name = json.get("colorName")
+                    if (name !is JsonPrimitive || !name.isString) return null
+                    if (!hsva.all { it.asJsonPrimitive.isNumber }) return null
+
+                    return SavedColor(hsva.take(3).map { it.asFloat }.toFloatArray(), hsva[3].asInt, name.asString)
+                }
+
+                return defaultGson.fromJson(json, SavedColor::class.java)
+            }
+
             return null
         }
     }
