@@ -891,7 +891,7 @@ class FdbWindow(private val context: BaseActivity) {
         val dialog = createDialog(progressView).apply {
             setCanceledOnTouchOutside(false)
         }
-        dialog.show()
+      //  dialog.show()
 
         val tryDo = AsyncTryDo()
         Thread {

@@ -557,7 +557,7 @@
     <string name="fdb_import_failed">导入失败</string>
     <string name="fdb_path_info_corrupt_toast">路径信息损坏，无法导入</string>
     <string name="fdb_export_image_redrawing_phase_title">正在重绘：图层 %1$s</string>
-    <string name="fdb_export_image_compressing_phase_title">正在压缩</string>
+    <string name="fdb_export_image_compressing_phase_title">正在压缩 ...</string>
     <string name="fdb_open_cache_path_file_button">打开缓存路径文件</string>
     <!-- module end -->
 
