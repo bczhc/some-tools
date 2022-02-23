@@ -5,6 +5,7 @@ import pers.zhc.util.IOUtils
 import java.io.{ByteArrayOutputStream, File, InputStream}
 import java.util
 import java.util.regex.Pattern
+import java.nio.charset.StandardCharsets
 
 /** @author
   *   bczhc
@@ -39,7 +40,7 @@ object BuildUtils2 {
   def readIS(is: InputStream): String = {
     val out = new ByteArrayOutputStream()
     IOUtils.streamWrite(is, out)
-    out.toString()
+    out.toString(StandardCharsets.UTF_8)
   }
 
   def longStringToStringArray(str: String, splitLen: Int): String = {
