@@ -1,11 +1,10 @@
-use std::alloc::Layout;
 use std::iter::Peekable;
 use std::ptr::null;
 use std::str::Chars;
 
 use jni::objects::{JClass, JString};
-use jni::strings::JNIString;
-use jni::sys::{_jobject, jboolean, jint, jlong, jobjectArray, jstring};
+
+use jni::sys::{_jobject, jboolean, jint, jlong, jstring};
 use jni::JNIEnv;
 
 use crate::jni_helper::GetString;
@@ -19,8 +18,8 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_getCodepointIterator(
 ) -> jlong {
     let s = env.get_string_owned(s);
     if let Err(e) = s {
-        env.throw(format!("Invalid string: {:?}", e));
-        return 0 as jlong;
+        env.throw(format!("Invalid string: {:?}", e)).unwrap();
+        return 0;
     }
     let s = s.unwrap();
     let iterator = Box::new(StringWithIter::new(s));
@@ -41,7 +40,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_hasNext(
     _class: JClass,
     addr: jlong,
 ) -> jboolean {
-    let mut iter = get_ref(addr);
+    let iter = get_ref(addr);
     (iter.chars.peek() != None) as jboolean
 }
 
@@ -52,7 +51,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_next(
     _class: JClass,
     addr: jlong,
 ) -> i32 {
-    let mut iter = get_ref(addr);
+    let iter = get_ref(addr);
     iter.chars.next().unwrap() as i32
 }
 
@@ -113,7 +112,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_codepoint2str(
     let c = std::char::from_u32(codepoint as u32);
     match c {
         None => {
-            env.throw("invalid codepoint");
+            env.throw("invalid codepoint").unwrap();
             null::<_jobject>() as jstring
         }
         Some(c) => env.new_string(c.to_string()).unwrap().into_inner(),

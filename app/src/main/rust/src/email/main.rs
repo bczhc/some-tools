@@ -1,5 +1,3 @@
-use std::str::Utf8Error;
-
 use jni::objects::{JClass, JString};
 use jni::strings::JavaStr;
 use jni::sys::{jobjectArray, jsize};
@@ -11,7 +9,7 @@ use crate::email::error::Result;
 use crate::jni_helper::CheckOrThrow;
 
 #[no_mangle]
-#[allow(non_snake_case)]
+#[allow(non_snake_case, clippy::too_many_arguments)]
 pub fn Java_pers_zhc_tools_jni_JNI_00024Email_send(
     env: JNIEnv,
     _class: JClass,
@@ -38,6 +36,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Email_send(
     result.check_or_throw(env).unwrap();
 }
 
+#[allow(clippy::too_many_arguments)]
 fn run(
     env: JNIEnv,
     smtp_server: JString,
@@ -88,7 +87,7 @@ fn get_java_string_array(env: JNIEnv, arr: jobjectArray) -> Result<Vec<String>> 
         let object = env.get_object_array_element(arr, i as jsize)?;
         let java_str = env.get_string(object.into())?;
 
-        let s = String::from(java_str.to_string()?);
+        let s = java_str.to_string()?;
         vec.push(s);
     }
     Ok(vec)
@@ -114,6 +113,6 @@ trait GetString {
 impl GetString for JNIEnv<'_> {
     fn get_and_to_string(&self, java_string: JString) -> ToJavaStringResult {
         let java_str = self.get_string(java_string)?;
-        Ok(String::from(java_str.to_string()?))
+        java_str.to_string()
     }
 }

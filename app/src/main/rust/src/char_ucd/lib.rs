@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufReader, BufWriter, Write};
 
@@ -6,7 +5,7 @@ use bczhc_lib::io::OpenOrCreate;
 use quick_xml::events::attributes::Attributes;
 use quick_xml::events::Event;
 use quick_xml::Reader;
-use serde_json::{Number, Value};
+use serde_json::Value;
 
 fn get_xml_reader(path: &str) -> Reader<BufReader<File>> {
     let file = File::open(path).unwrap();
@@ -14,12 +13,12 @@ fn get_xml_reader(path: &str) -> Reader<BufReader<File>> {
 
     let mut xml_reader = Reader::from_reader(reader);
     xml_reader.trim_text(true);
-    return xml_reader;
+    xml_reader
 }
 
 pub fn read_total_count<F>(path: &str, callback: F) -> u32
-where
-    F: Fn(u32),
+    where
+        F: Fn(u32),
 {
     let mut total = 0_u32;
 
@@ -34,23 +33,18 @@ where
                 let name_binary = e.name();
                 if repertoire_enter {
                     if name_binary == b"char"
-                        && e.attributes().nth(0).unwrap().unwrap().key == b"cp"
+                        && e.attributes().next().unwrap().unwrap().key == b"cp"
                     {
                         total += 1;
                         callback(total);
                     }
-                } else {
-                    if name_binary == b"repertoire" {
-                        repertoire_enter = true;
-                    }
+                } else if name_binary == b"repertoire" {
+                    repertoire_enter = true;
                 }
             }
-            Ok(Event::End(ref e)) => {
-                if repertoire_enter && e.name() == b"repertoire" {
-                    repertoire_enter = false;
-                    break;
-                }
-            }
+            Ok(Event::End(ref e)) => if repertoire_enter && e.name() == b"repertoire" {
+                break;
+            },
             Ok(Event::Eof) => {
                 unreachable!()
             }
@@ -81,7 +75,7 @@ fn attributes2json(attrs: Attributes) -> Value {
 }
 
 fn to_output_line(codepoint: u32, attrs_json: Value) -> String {
-    format!("{} {}", codepoint, attrs_json.to_string())
+    format!("{} {}", codepoint, attrs_json)
 }
 
 struct HoldProp {
@@ -91,8 +85,8 @@ struct HoldProp {
 
 // TODO: handle some `unwrap` (e.g. IO `Error`) and throw it to Java7
 pub fn write_intermediate<F>(xml_path: &str, output_path: &str, callback: F)
-where
-    F: Fn(i32),
+    where
+        F: Fn(i32),
 {
     let mut xml_reader = get_xml_reader(xml_path);
     let mut output_writer = BufWriter::new(File::open_or_create(output_path).unwrap());
@@ -108,18 +102,18 @@ where
             Ok(Event::Empty(ref e)) => {
                 let name_binary = e.name();
                 if enter_repertoire {
-                    let first_attr = e.attributes().nth(0).unwrap().unwrap();
+                    let first_attr = e.attributes().next().unwrap().unwrap();
                     if name_binary == b"char" && first_attr.key == b"cp" {
                         let codepoint = u32::from_str_radix(
                             std::str::from_utf8(first_attr.value.as_ref()).unwrap(),
                             16,
                         )
-                        .unwrap();
+                            .unwrap();
                         let attr_json = attributes2json(e.attributes());
                         let output_line = to_output_line(codepoint, attr_json);
 
-                        output_writer.write(output_line.as_bytes()).unwrap();
-                        output_writer.write(b"\n").unwrap();
+                        output_writer.write_all(output_line.as_bytes()).unwrap();
+                        output_writer.write_all(b"\n").unwrap();
 
                         count += 1;
                         if count % 1000 == 0 {
@@ -139,32 +133,29 @@ where
             Ok(Event::Start(ref e)) => {
                 let name_binary = e.name();
                 if enter_repertoire {
-                    let first_attr = e.attributes().nth(0).unwrap().unwrap();
+                    let first_attr = e.attributes().next().unwrap().unwrap();
                     if name_binary == b"char" && first_attr.key == b"cp" {
                         let codepoint = u32::from_str_radix(
                             std::str::from_utf8(first_attr.value.as_ref()).unwrap(),
                             16,
                         )
-                        .unwrap();
+                            .unwrap();
 
-                        let mut attr_json = attributes2json(e.attributes());
+                        let attr_json = attributes2json(e.attributes());
 
                         hold_prop = Some(HoldProp {
                             codepoint,
                             json: attr_json,
                         });
                     }
-                } else {
-                    if name_binary == b"repertoire" {
-                        enter_repertoire = true;
-                    }
+                } else if name_binary == b"repertoire" {
+                    enter_repertoire = true;
                 }
             }
             Ok(Event::End(ref e)) => {
                 if enter_repertoire {
                     match e.name() {
                         b"repertoire" => {
-                            enter_repertoire = false;
                             break;
                         }
                         b"char" => {
@@ -186,8 +177,8 @@ where
                             hold_prop.json.as_array_mut().unwrap().push(alias_json);
 
                             let output_line = to_output_line(hold_prop.codepoint, hold_prop.json);
-                            output_writer.write(output_line.as_bytes()).unwrap();
-                            output_writer.write(b"\n").unwrap();
+                            output_writer.write_all(output_line.as_bytes()).unwrap();
+                            output_writer.write_all(b"\n").unwrap();
 
                             alias_vec.clear();
 

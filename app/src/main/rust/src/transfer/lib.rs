@@ -5,12 +5,10 @@ pub enum Mark {
 }
 
 pub trait EnumU8Value {
-    #[inline]
     fn u8_value(&self) -> u8;
 }
 
 pub trait FromValue {
-    #[inline]
     fn from_value(value: u8) -> Option<Self>
     where
         Self: Sized;

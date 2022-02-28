@@ -7,32 +7,32 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug)]
 pub enum Error {
-    BitmapError(BitmapError),
-    Utf8Error(Utf8Error),
-    ImageError(ImageError),
-    JniError(jni::errors::Error),
+    Bitmap(BitmapError),
+    Utf8(Utf8Error),
+    Image(ImageError),
+    Jni(jni::errors::Error),
 }
 
 impl From<BitmapError> for Error {
     fn from(e: BitmapError) -> Self {
-        Self::BitmapError(e)
+        Self::Bitmap(e)
     }
 }
 
 impl From<Utf8Error> for Error {
     fn from(e: Utf8Error) -> Self {
-        Self::Utf8Error(e)
+        Self::Utf8(e)
     }
 }
 
 impl From<ImageError> for Error {
     fn from(e: ImageError) -> Self {
-        Self::ImageError(e)
+        Self::Image(e)
     }
 }
 
 impl From<jni::errors::Error> for Error {
     fn from(e: jni::errors::Error) -> Self {
-        Self::JniError(e)
+        Self::Jni(e)
     }
 }

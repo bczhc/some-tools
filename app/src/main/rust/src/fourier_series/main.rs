@@ -7,7 +7,7 @@ use jni::sys::{jobject, jobjectArray};
 use jni::{JNIEnv, JavaVM};
 
 #[no_mangle]
-#[allow(non_snake_case)]
+#[allow(non_snake_case, clippy::too_many_arguments)]
 pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     env: JNIEnv,
     _class: JClass,

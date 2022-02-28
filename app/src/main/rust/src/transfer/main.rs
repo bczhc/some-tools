@@ -1,14 +1,9 @@
-use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpListener, TcpStream};
-use std::thread::spawn;
-
-use jni::objects::{JByteBuffer, JClass, JObject, JString, JValue, ReleaseMode};
+use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
+use jni::objects::{JClass, JObject, JString, JValue};
 use jni::sys::{jbyteArray, jshort, jstring};
 use jni::JNIEnv;
-
-use crate::jni_helper;
 use crate::jni_helper::CheckOrThrow;
 use crate::transfer::error::result::*;
-use crate::transfer::lib::Status;
 use crate::transfer::receive::async_receive;
 use crate::transfer::send::send;
 use pnet::ipnetwork::IpNetwork;
@@ -54,11 +49,11 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Transfer_startAsyncReceive(
 ) {
     let jvm = env.get_java_vm().unwrap();
     let jvm = Arc::new(jvm);
-    let rc_jvm = jvm.clone();
+    let rc_jvm = jvm;
 
     let g_callback = env.new_global_ref(callback).unwrap();
     let callback_rc = Arc::new(g_callback);
-    let rc_callback = callback_rc.clone();
+    let rc_callback = callback_rc;
 
     async_receive(port as u16, move |r| {
         let thread_env = rc_jvm.attach_current_thread().unwrap();
@@ -102,10 +97,8 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Transfer_getLocalIpInfo(
 
     let check_loopback = |ips: &Vec<IpNetwork>| {
         for x in ips {
-            if x.is_ipv4() {
-                if x.ip().is_loopback() {
-                    return true;
-                }
+            if x.is_ipv4() && x.ip().is_loopback() {
+                return true;
             }
         }
         false

@@ -1,2 +1,2 @@
-pub mod char_ucd;
+pub mod main;
 pub mod lib;

@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 
-use jni::errors::Error;
 use jni::JNIEnv;
 
 pub trait CheckOrThrow {
@@ -8,8 +7,8 @@ pub trait CheckOrThrow {
 }
 
 impl<R, E> CheckOrThrow for Result<R, E>
-where
-    E: Debug,
+    where
+        E: Debug,
 {
     fn check_or_throw(&self, env: JNIEnv) -> Result<(), jni::errors::Error> {
         if let Err(e) = self {

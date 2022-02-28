@@ -1,16 +1,14 @@
 use std::io::Read;
 use std::net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream};
-use std::sync::Arc;
 use std::thread::spawn;
-
 use byteorder::{BigEndian, ReadBytesExt};
 
-use crate::transfer::error::result::{ContractError, Error, Result};
-use crate::transfer::lib::{FromValue, Mark, Status, HEADER};
+use crate::transfer::error::result::{ContractError, Result};
+use crate::transfer::lib::{FromValue, Mark, HEADER};
 
 pub fn async_receive<F>(port: u16, callback: F)
-where
-    F: Fn(Result<String>) + Send + 'static + Sync,
+    where
+        F: Fn(Result<String>) + Send + 'static + Sync,
 {
     spawn(move || {
         let listener = TcpListener::bind(SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), port));
@@ -34,7 +32,7 @@ where
 
 fn read_msg(tcp_stream: &mut TcpStream) -> Result<String> {
     let mut header = [0_u8; 8];
-    tcp_stream.read(&mut header)?;
+    tcp_stream.read_exact(&mut header)?;
     if &header != HEADER {
         return Err(ContractError::InvalidHeader.into());
     }
@@ -52,7 +50,7 @@ fn read_msg(tcp_stream: &mut TcpStream) -> Result<String> {
 
     let msg_length = tcp_stream.read_u32::<BigEndian>()? as usize;
     let mut msg = vec![0_u8; msg_length];
-    tcp_stream.read(&mut msg)?;
+    tcp_stream.read_exact(&mut msg)?;
 
     Ok(String::from_utf8(msg)?)
 }

@@ -1,9 +1,9 @@
 use jni::objects::{JClass, JString, JValue};
-use jni::sys::{jboolean, jobject, jstring};
+use jni::sys::{jobject};
 use jni::JNIEnv;
 
 use crate::char_ucd::lib;
-use crate::jni_helper;
+
 use crate::jni_helper::{GetString, GetStringError};
 
 fn count(env: JNIEnv, src: JString, callback: jobject) -> Result<u32, GetStringError> {
@@ -61,6 +61,6 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024CharUcd_parseXml(
 ) {
     let call = parse_xml(env, src, dest, callback);
     if let Err(e) = call {
-        env.throw(format!("{:?}", e));
+        env.throw(format!("{:?}", e)).unwrap();
     }
 }

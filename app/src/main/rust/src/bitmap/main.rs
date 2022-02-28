@@ -1,11 +1,8 @@
-use std::fs::File;
-use std::io::Cursor;
-
 use image::{ColorType, ImageFormat};
 use jni::objects::{JClass, JString};
-use jni::sys::{jobject, jstring};
+use jni::sys::{jobject};
 use jni::JNIEnv;
-use ndk::bitmap::AndroidBitmap;
+
 
 use crate::bitmap::error::Result;
 
