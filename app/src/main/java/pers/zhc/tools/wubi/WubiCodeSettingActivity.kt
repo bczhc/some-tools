@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -11,10 +13,8 @@ import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.Infos
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.DialogUtils
-import pers.zhc.tools.utils.Download
-import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.filepicker.FilePicker
+import pers.zhc.tools.utils.*
 import pers.zhc.tools.views.ProgressView
 import java.io.File
 import java.io.IOException
@@ -205,5 +205,43 @@ class WubiCodeSettingActivity : BaseActivity() {
 
         db.commit()
         db.close()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.wubi_dict_settings_activity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.import_ -> {
+                importAction()
+            }
+            R.id.export -> {
+                exportAction()
+            }
+            else -> {}
+        }
+        return true
+    }
+
+    private val exportFilePickerLauncher = FilePicker.getLauncherWithFilename(this) { path, filename ->
+        val file = File(path, filename)
+        val dbFile = File(DictionaryDatabase.databasePath)
+        FileUtil.copy(dbFile, file)
+        ToastUtils.show(this, R.string.exporting_succeeded)
+    }
+
+    private fun exportAction() {
+        exportFilePickerLauncher.launch(FilePicker.PICK_FOLDER)
+    }
+
+    private val importFilePickerLauncher = FilePicker.getLauncher(this) {path->
+        DictionaryDatabase.changeDatabase(path ?: return@getLauncher)
+        ToastUtils.show(this, R.string.importing_succeeded)
+    }
+
+    private fun importAction() {
+        importFilePickerLauncher.launch(FilePicker.PICK_FILE)
     }
 }

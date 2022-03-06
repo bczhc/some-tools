@@ -34,14 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author bczhc
  */
 public class WubiIME extends InputMethodService {
-    private DictionaryDatabase dictDatabase;
     private View candidateView = null;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        dictDatabase = DictionaryDatabase.Companion.getDatabaseRef();
-    }
 
     /**
      * Chinese punctuation array
@@ -415,7 +408,7 @@ public class WubiIME extends InputMethodService {
                     ToastUtils.show(this, R.string.wubi_words_adding_word_already_exists_ignore_toast);
                     return;
                 }
-                dictDatabase.addRecord(word, code);
+                DictionaryDatabase.Companion.getDictDatabase().addRecord(word, code);
                 ToastUtils.show(this, R.string.adding_succeeded);
             };
 
@@ -425,9 +418,7 @@ public class WubiIME extends InputMethodService {
                         positiveButtonAction.onClick(dialog1, which);
                         inverseDictDatabase.close();
                     })
-                    .setNegativeButton(R.string.cancel, (dialog1, which) -> {
-                        inverseDictDatabase.close();
-                    })
+                    .setNegativeButton(R.string.cancel, (dialog1, which) -> inverseDictDatabase.close())
                     .create();
 
             final Window window = dialog.getWindow();
@@ -754,7 +745,7 @@ public class WubiIME extends InputMethodService {
         if (wubiCodeSB.toString().equals("z")) {
             candidates.add(lastWord);
         } else try {
-            String[] fetched = dictDatabase.fetchCandidates(wubiCodeStr);
+            String[] fetched = DictionaryDatabase.Companion.getDictDatabase().fetchCandidates(wubiCodeStr);
             if (fetched != null) {
                 this.candidates.addAll(Arrays.asList(fetched));
             }

@@ -2,8 +2,10 @@ package pers.zhc.tools.wubi
 
 import android.content.Context
 import pers.zhc.jni.sqlite.SQLite3
-import pers.zhc.tools.wubi.WubiIME.checkCodeOrThrow
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.FileUtil
+import pers.zhc.tools.wubi.WubiIME.checkCodeOrThrow
+import java.io.File
 
 /**
  * @author bczhc
@@ -91,17 +93,21 @@ class DictionaryDatabase private constructor(path: String) {
 
     companion object {
         lateinit var databasePath: String
-        private var dictDatabase: DictionaryDatabase? = null
+        private var lazyDB = lazy { DictionaryDatabase(databasePath) }
 
-        fun getDatabaseRef(): DictionaryDatabase {
-            if (dictDatabase == null) {
-                dictDatabase = DictionaryDatabase(databasePath)
-            }
-            return dictDatabase!!
-        }
+        val dictDatabase: DictionaryDatabase
+            get() = lazyDB.value
 
         fun init(context: Context) {
             databasePath = Common.getInternalDatabaseDir(context, "wubi_code.db").path
+        }
+
+        fun changeDatabase(path: String) {
+            if (lazyDB.isInitialized()) {
+                lazyDB.value.database.close()
+            }
+            FileUtil.copy(File(path), File(databasePath))
+            lazyDB = lazy { DictionaryDatabase(databasePath) }
         }
     }
 }

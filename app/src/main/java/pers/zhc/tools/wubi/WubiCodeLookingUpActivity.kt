@@ -33,7 +33,7 @@ class WubiCodeLookingUpActivity : BaseActivity() {
                 progressDialog.show()
 
                 Thread {
-                    dict.update(DictionaryDatabase.getDatabaseRef().database)
+                    dict.update(DictionaryDatabase.dictDatabase.database)
 
                     runOnUiThread {
                         progressDialog.dismiss()

@@ -43,7 +43,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
         recyclerView.adapter = myAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         ItemTouchHelper(TouchHelperCallback(this)).attachToRecyclerView(recyclerView)
-        dictDatabase = DictionaryDatabase.getDatabaseRef()
+        dictDatabase = DictionaryDatabase.dictDatabase
 
         Thread {
             var totalRow = 0

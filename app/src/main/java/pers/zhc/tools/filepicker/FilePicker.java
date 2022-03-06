@@ -150,6 +150,7 @@ public class FilePicker extends BaseActivity {
         private final String path;
         private final String filename;
 
+        @Contract(pure = true)
         public Result(String path, String filename) {
             this.path = path;
             this.filename = filename;

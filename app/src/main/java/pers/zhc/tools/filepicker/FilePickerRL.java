@@ -126,6 +126,9 @@ public class FilePickerRL extends RelativeLayout {
             cancelAction.cancel(this);
         });
         ok.setOnClickListener(v -> {
+            if (filenameET.getVisibility() != GONE && filenameET.getText().toString().isEmpty()) {
+                return;
+            }
             if (type == 2) {
                 String dir;
                 dir = currentPath.getAbsolutePath();
