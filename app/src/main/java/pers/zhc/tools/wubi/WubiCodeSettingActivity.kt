@@ -17,7 +17,6 @@ import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.views.ProgressView
 import java.io.File
-import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
 
@@ -183,15 +182,8 @@ class WubiCodeSettingActivity : BaseActivity() {
         bufferedReader.close()
         reader.close()
 
-        // TODO: operate before closing the database use in `WubiIME`
-        val localWubiDatabaseFile = File(DictionaryDatabase.databasePath)
-
-        if (localWubiDatabaseFile.exists()) {
-            if (!localWubiDatabaseFile.delete()) {
-                throw IOException()
-            }
-        }
-        val db = SQLite3.open(localWubiDatabaseFile.path)
+        val tempDictDatabaseFile = File(filesDir, "wubi_dict.tmp")
+        val db = SQLite3.open(tempDictDatabaseFile.path)
         initDatabase(db)
         db.beginTransaction()
 
@@ -199,12 +191,13 @@ class WubiCodeSettingActivity : BaseActivity() {
             val c = it[0]
             val arrayList = hashMap[it]!!
             val join = arrayList.joinToString("|")
-            // language=SQLite
             db.execBind("INSERT INTO wubi_code_$c VALUES (?, ?)", arrayOf(it, join))
         }
 
         db.commit()
         db.close()
+
+        DictionaryDatabase.changeDatabase(tempDictDatabaseFile.path)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

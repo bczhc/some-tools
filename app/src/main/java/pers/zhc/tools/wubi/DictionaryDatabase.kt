@@ -102,6 +102,9 @@ class DictionaryDatabase private constructor(path: String) {
             databasePath = Common.getInternalDatabaseDir(context, "wubi_code.db").path
         }
 
+        /**
+         * copy and substitute the inner database file
+         */
         fun changeDatabase(path: String) {
             if (lazyDB.isInitialized()) {
                 lazyDB.value.database.close()
