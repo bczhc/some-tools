@@ -7,7 +7,7 @@ import android.widget.RadioGroup
 /**
  * @author bczhc
  */
-class MyRadioGroup : RadioGroup {
+class AutoWrapRadioGroup : RadioGroup {
     constructor(context: Context?) : this(context, null)
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {

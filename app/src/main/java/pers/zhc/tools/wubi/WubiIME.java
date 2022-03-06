@@ -19,12 +19,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.ContextThemeWrapper;
+import com.google.android.flexbox.FlexboxLayout;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.ToastUtils;
 import pers.zhc.tools.views.SmartHintEditText;
+import pers.zhc.util.Assertion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +38,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author bczhc
  */
 public class WubiIME extends InputMethodService {
-    private View candidateView = null;
-
     /**
      * Chinese punctuation array
      */
@@ -67,7 +68,7 @@ public class WubiIME extends InputMethodService {
             KeyEvent.KEYCODE_GRAVE
     };
     /**
-     * punctuations that needs to input with shift key
+     * punctuations that need to input with shift key
      */
     private final static String[] chinesePunctuationWithShiftStrings = {
             "《",
@@ -123,12 +124,39 @@ public class WubiIME extends InputMethodService {
     private final StringBuilder wubiCodeSB = new StringBuilder();
     private final Quotation quotation = new Quotation();
     private final List<String> candidates = new ArrayList<>();
-    private TextView candidateTV, wubiCodeTV;
+    @Nullable
+    private TextView wubiCodeTV;
+    @Nullable
+    private FlexboxLayout candidateLayout = null;
+    private TextView candidateHintTV;
     private boolean alphabetMode = false;
     private InputConnection ic;
     private String lastWord;
     private TextToSpeech tts = null;
     private boolean tempEnglishMode = false;
+    private final TemporaryAlphabetModeManager tam = new TemporaryAlphabetModeManager();
+    private int tvBackgroundColor, tvTextColor;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        int backgroundColor = Color.WHITE;
+        int textColor = Color.BLACK;
+
+        final int nightMode = AppCompatDelegate.getDefaultNightMode();
+        if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            backgroundColor = Color.BLACK;
+            textColor = Color.WHITE;
+        }
+
+        tvBackgroundColor = backgroundColor;
+        tvTextColor = textColor;
+
+        candidateHintTV = View.inflate(this, R.layout.wubi_candidate_cell, null).findViewById(R.id.tv);
+        candidateHintTV.setTextColor(tvTextColor);
+        candidateHintTV.setBackgroundColor(tvBackgroundColor);
+    }
 
     private boolean composing = false;
     private final KeyEventResolver keyEventResolver = new KeyEventResolver(new KeyEventResolverCallback() {
@@ -226,9 +254,7 @@ public class WubiIME extends InputMethodService {
                     commitPunctuations(event);
                     if (inputRange == InputRange.SEMICOLON) {
                         // temporary English mode
-                        wubiCodeTV.setText(R.string.temporary_english_mode);
-                        tempEnglishMode = true;
-                        composing = true;
+                        tam.start();
                     }
                     return true;
                 }
@@ -243,7 +269,8 @@ public class WubiIME extends InputMethodService {
                                 clear();
                                 tempEnglishMode = true;
                                 composing = true;
-                                candidateTV.setText(String.valueOf(c));
+                                tam.start();
+                                tam.setText(String.valueOf(c));
                                 wubiCodeTV.setText(R.string.temporary_english_mode);
                                 return true;
                             }
@@ -310,40 +337,35 @@ public class WubiIME extends InputMethodService {
                     switch (inputRange) {
                         case ENTER:
                             // temporary English mode, commit!
-                            commitText(candidateTV.getText().toString());
+                            commitText(tam.getText());
                             clear();
-                            composing = false;
-                            tempEnglishMode = false;
+                            tam.finish();
                             break;
                         case BACKSPACE:
                             // delete the last character
-                            CharSequence sequence = candidateTV.getText();
-                            int length = sequence.length();
+                            final int length = tam.getText().length();
                             if (length == 0) {
                                 // exit
-                                tempEnglishMode = false;
-                                composing = false;
+                                tam.finish();
                                 clear();
                                 return true;
                             }
-                            CharSequence s = sequence.subSequence(0, length - 1);
-                            candidateTV.setText(s);
+                            CharSequence s = tam.getText().subSequence(0, length - 1);
+                            tam.setText(s.toString());
                             break;
                         case SEMICOLON:
                             // commit Chinese semicolon and exit temporary English mode
                             if (event.isCtrlPressed()) {
-                                commitText(candidateTV.getText().toString());
+                                commitText(tam.getText());
                                 commitText("；");
-                                composing = false;
-                                tempEnglishMode = false;
+                                tam.finish();
                                 clear();
                             }
                             // otherwise, input ";"
                         default:
                             // input alphabet
                             if (c != 0) {
-                                String text = candidateTV.getText().toString() + c;
-                                candidateTV.setText(text);
+                                tam.setText(tam.getText() + c);
                             }
                     }
                     return true;
@@ -378,7 +400,7 @@ public class WubiIME extends InputMethodService {
     });
 
     private void showAddingNewWordsDialog() {
-        if (candidateView != null) {
+        if (candidateLayout != null) {
             int theme = R.style.Theme_Application_NoActionBar;
 
             final int nightMode = AppCompatDelegate.getDefaultNightMode();
@@ -436,7 +458,7 @@ public class WubiIME extends InputMethodService {
             final WindowManager.LayoutParams lp = window.getAttributes();
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            lp.token = candidateView.getWindowToken();
+            lp.token = candidateLayout.getWindowToken();
             lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
             window.setAttributes(lp);
             window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
@@ -494,7 +516,12 @@ public class WubiIME extends InputMethodService {
      */
     private void clear() {
         resetWubiCodeAndCandidates();
-        clearInputMethodText();
+        if (wubiCodeTV != null) {
+            wubiCodeTV.setText(R.string.nul);
+        }
+        if (candidateLayout != null) {
+            candidateLayout.removeAllViews();
+        }
     }
 
     /**
@@ -507,9 +534,11 @@ public class WubiIME extends InputMethodService {
         if (event.isShiftPressed() && checkInputRange(event.getKeyCode()) == InputRange.SPACE) {
             alphabetMode = !alphabetMode;
             clearWubiCodeSB();
-            clearInputMethodText();
-            if (candidateTV != null) {
-                candidateTV.setText(alphabetMode ? R.string.alphabet_mode : R.string.nul);
+
+            if (candidateLayout != null) {
+                candidateLayout.removeAllViews();
+                candidateLayout.addView(candidateHintTV);
+                candidateHintTV.setText(alphabetMode ? R.string.alphabet_mode : R.string.nul);
             }
             return true;
         }
@@ -577,10 +606,8 @@ public class WubiIME extends InputMethodService {
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         ic = getCurrentInputConnection();
         quotation.reset();
-
-
         clear();
-        if (alphabetMode) candidateTV.setText(R.string.alphabet_mode);
+        if (alphabetMode) candidateHintTV.setText(R.string.alphabet_mode);
         tempEnglishMode = false;
         composing = false;
     }
@@ -593,29 +620,26 @@ public class WubiIME extends InputMethodService {
     @Override
     public View onCreateCandidatesView() {
         View candidateView = View.inflate(this, R.layout.wubi_input_method_candidate_view, null);
-        candidateTV = candidateView.findViewById(R.id.candidates);
+        candidateLayout = candidateView.findViewById(R.id.candidate_fl);
         wubiCodeTV = candidateView.findViewById(R.id.code);
 
+        // set minimal size
+        final View view = View.inflate(this, R.layout.wubi_candidate_cell, null).findViewById(R.id.tv);
+        Assertion.doAssertion(wubiCodeTV != null);
+        wubiCodeTV.measure(0, 0);
+        view.measure(0, 0);
+        candidateView.setMinimumHeight(wubiCodeTV.getMeasuredHeight() + view.getMeasuredHeight());
+
         setCandidatesViewShown(true);
-        this.candidateView = candidateView;
         return candidateView;
     }
 
     @Override
     public void onStartInputView(EditorInfo info, boolean restarting) {
-        int backgroundColor = Color.WHITE;
-        int textColor = Color.BLACK;
-
-        final int nightMode = AppCompatDelegate.getDefaultNightMode();
-        if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-            backgroundColor = Color.BLACK;
-            textColor = Color.WHITE;
+        if (wubiCodeTV != null) {
+            wubiCodeTV.setBackgroundColor(tvBackgroundColor);
+            wubiCodeTV.setTextColor(tvTextColor);
         }
-
-        candidateTV.setBackgroundColor(backgroundColor);
-        candidateTV.setTextColor(textColor);
-        wubiCodeTV.setBackgroundColor(backgroundColor);
-        wubiCodeTV.setTextColor(textColor);
     }
 
     @Override
@@ -638,16 +662,6 @@ public class WubiIME extends InputMethodService {
     private void resetWubiCodeAndCandidates() {
         clearWubiCodeSB();
         candidates.clear();
-    }
-
-    /**
-     * Clear the keyboard's candidate words and wubi code text
-     */
-    private void clearInputMethodText() {
-        if (wubiCodeTV != null && candidateTV != null) {
-            wubiCodeTV.setText(R.string.nul);
-            candidateTV.setText(R.string.nul);
-        }
     }
 
     /**
@@ -684,18 +698,31 @@ public class WubiIME extends InputMethodService {
      * Set the keyboard candidate words and wubi code text
      */
     private void updateInputMethodText() {
-        String wubiCodeStr = wubiCodeSB.toString();
-        StringBuilder candidatesSB = new StringBuilder();
-        for (int i = 0, candidatesSize = candidates.size() - 1; i < candidatesSize; i++) {
-            String candidate = candidates.get(i);
-            candidatesSB.append(toSuperscriptNumberChar(i + 1)).append(candidate).append(' ');
+        if (candidateLayout == null) {
+            return;
         }
-        if (candidates.size() > 0)
-            candidatesSB.append(toSuperscriptNumberChar(candidates.size())).append(candidates.get(candidates.size() - 1));
 
-        if (wubiCodeTV != null && candidateTV != null) {
+        String wubiCodeStr = wubiCodeSB.toString();
+        if (wubiCodeTV != null) {
             wubiCodeTV.setText(wubiCodeStr);
-            candidateTV.setText(candidatesSB.toString());
+        }
+
+        candidateLayout.removeAllViews();
+        for (int i = 0; i < candidates.size(); i++) {
+            String candidate = candidates.get(i);
+            String cellStr = toSuperscriptNumberChar(i + 1) + candidate;
+
+            TextView cellTV = View.inflate(this, R.layout.wubi_candidate_cell, null).findViewById(R.id.tv);
+            cellTV.setBackgroundColor(tvBackgroundColor);
+            cellTV.setTextColor(tvTextColor);
+            cellTV.setText(cellStr);
+
+            cellTV.setOnClickListener(v -> {
+                commitText(candidate);
+                clear();
+            });
+
+            candidateLayout.addView(cellTV);
         }
     }
 
@@ -812,5 +839,35 @@ public class WubiIME extends InputMethodService {
 
     public static void checkCodeOrThrow(@NotNull String code) {
         if (!checkCode(code)) throw new IllegalArgumentException();
+    }
+
+    private class TemporaryAlphabetModeManager {
+        // TAM: Temporary Alphabet Mode
+        private void start() {
+            if (candidateLayout != null && wubiCodeTV != null) {
+                wubiCodeTV.setText(R.string.temporary_english_mode);
+                composing = true;
+                tempEnglishMode = true;
+                candidateLayout.removeAllViews();
+                candidateLayout.addView(candidateHintTV);
+            }
+        }
+
+        private void finish() {
+            if (candidateLayout != null) {
+                composing = false;
+                tempEnglishMode = false;
+                candidateLayout.removeAllViews();
+                candidateHintTV.setText(R.string.nul);
+            }
+        }
+
+        private void setText(String text) {
+            candidateHintTV.setText(text);
+        }
+
+        private @NotNull String getText() {
+            return candidateHintTV.getText().toString();
+        }
     }
 }
