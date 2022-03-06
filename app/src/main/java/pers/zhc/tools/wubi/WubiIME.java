@@ -2,6 +2,7 @@ package pers.zhc.tools.wubi;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
 import android.speech.tts.TextToSpeech;
@@ -192,9 +193,17 @@ public class WubiIME extends InputMethodService {
                             clear();
                             break;
                         default:
-                            if (keyCode == KeyEvent.KEYCODE_N) {
-                                // show dialog: add new words
-                                showAddingNewWordsDialog();
+                            switch (keyCode) {
+                                case KeyEvent.KEYCODE_N:
+                                    // show dialog: add new words
+                                    showAddingNewWordsDialog();
+                                    break;
+                                case KeyEvent.KEYCODE_O:
+                                    final Intent intent = new Intent(WubiIME.this, WubiDatabaseEditActivity.class);
+                                    intent.putExtra(WubiDatabaseEditActivity.EXTRA_WUBI_CODE, wubiCodeTV.getText().toString());
+                                    startActivity(intent);
+                                    break;
+                                default:
                             }
                     }
                     return true;

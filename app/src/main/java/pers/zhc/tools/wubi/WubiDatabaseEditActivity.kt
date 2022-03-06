@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.wubi_word_with_ordinal_view.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtils
+import pers.zhc.tools.utils.NotifyLatch
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.views.WrapLayout
 import java.util.*
@@ -35,6 +36,11 @@ class WubiDatabaseEditActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.wubi_database_edit_activity)
 
+        val intent = intent
+        val wubiCode = if (intent.hasExtra(EXTRA_WUBI_CODE)) {
+            intent.getStringExtra(EXTRA_WUBI_CODE)
+        } else null
+
         val wubiDatabaseInfoTV = wubi_code_database_info
         wubiCodeET = wubi_code_shet!!.editText
         val addBtn = add_btn
@@ -45,6 +51,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
         ItemTouchHelper(TouchHelperCallback(this)).attachToRecyclerView(recyclerView)
         dictDatabase = DictionaryDatabase.dictDatabase
 
+        val latch = NotifyLatch()
         Thread {
             var totalRow = 0
             for (a in 'a'..'z') {
@@ -56,6 +63,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
             runOnUiThread {
                 wubiDatabaseInfoTV.text = getString(R.string.wubi_code_database_info, totalRow)
             }
+            latch.unlatch()
         }.start()
 
         wubiCodeET.doAfterTextChanged {
@@ -82,6 +90,15 @@ class WubiDatabaseEditActivity : BaseActivity() {
                 width = ViewGroup.LayoutParams.MATCH_PARENT
             ).show()
         }
+
+        Thread {
+            latch.await()
+            runOnUiThread {
+                if (wubiCode != null) {
+                    wubiCodeET.setText(wubiCode)
+                }
+            }
+        }.start()
     }
 
     private fun refreshList() {
@@ -202,5 +219,12 @@ class WubiDatabaseEditActivity : BaseActivity() {
                 it.updateUpdateMark(true)
             }
         }
+    }
+
+    companion object {
+        /**
+         * string intent extra
+         */
+        const val EXTRA_WUBI_CODE = "wubiCode"
     }
 }
