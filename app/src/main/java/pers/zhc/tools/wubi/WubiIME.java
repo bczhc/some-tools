@@ -322,18 +322,20 @@ public class WubiIME extends InputMethodService {
                             break;
                         case SEMICOLON:
                             // commit Chinese semicolon and exit temporary English mode
-                            if (candidateTV.getText().toString().isEmpty()) {
+                            if (event.isCtrlPressed()) {
+                                commitText(candidateTV.getText().toString());
                                 commitText("；");
                                 composing = false;
                                 tempEnglishMode = false;
                                 clear();
-                                return true;
                             }
                             // otherwise, input ";"
                         default:
                             // input alphabet
-                            String text = candidateTV.getText().toString() + c;
-                            candidateTV.setText(text);
+                            if (c != 0) {
+                                String text = candidateTV.getText().toString() + c;
+                                candidateTV.setText(text);
+                            }
                     }
                     return true;
                 }
