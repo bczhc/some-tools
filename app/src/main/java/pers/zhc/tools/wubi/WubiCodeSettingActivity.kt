@@ -1,4 +1,4 @@
-package pers.zhc.tools.inputmethod
+package pers.zhc.tools.wubi
 
 import android.app.Dialog
 import android.content.Context

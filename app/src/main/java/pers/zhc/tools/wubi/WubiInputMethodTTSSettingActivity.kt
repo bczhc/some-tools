@@ -1,4 +1,4 @@
-package pers.zhc.tools.inputmethod
+package pers.zhc.tools.wubi
 
 import android.os.Bundle
 import android.widget.Switch

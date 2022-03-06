@@ -1,4 +1,4 @@
-package pers.zhc.tools.inputmethod
+package pers.zhc.tools.wubi
 
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.jni.JNI

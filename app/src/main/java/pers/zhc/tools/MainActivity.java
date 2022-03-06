@@ -27,7 +27,7 @@ import pers.zhc.tools.document.Document;
 import pers.zhc.tools.email.EmailMainActivity;
 import pers.zhc.tools.fdb.FdbMainActivity;
 import pers.zhc.tools.fourierseries.FourierSeriesActivity;
-import pers.zhc.tools.inputmethod.WubiInputMethodActivity;
+import pers.zhc.tools.wubi.WubiInputMethodActivity;
 import pers.zhc.tools.magic.FileListActivity;
 import pers.zhc.tools.stcflash.FlashMainActivity;
 import pers.zhc.tools.transfer.TransferMainActivity;

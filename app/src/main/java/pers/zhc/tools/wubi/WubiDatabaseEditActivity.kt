@@ -1,4 +1,4 @@
-package pers.zhc.tools.inputmethod
+package pers.zhc.tools.wubi
 
 import android.annotation.SuppressLint
 import android.content.Context

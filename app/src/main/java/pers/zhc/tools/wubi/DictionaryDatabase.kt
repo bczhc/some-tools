@@ -1,8 +1,8 @@
-package pers.zhc.tools.inputmethod
+package pers.zhc.tools.wubi
 
 import android.content.Context
 import pers.zhc.jni.sqlite.SQLite3
-import pers.zhc.tools.inputmethod.WubiIME.checkCodeOrThrow
+import pers.zhc.tools.wubi.WubiIME.checkCodeOrThrow
 import pers.zhc.tools.utils.Common
 
 /**

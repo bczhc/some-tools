@@ -35,7 +35,7 @@
 
         <!-- Declares the input input_method service -->
         <service
-                android:name=".inputmethod.WubiIME"
+                android:name=".wubi.WubiIME"
                 android:permission="android.permission.BIND_INPUT_METHOD"
                 android:label="@string/wubi_input_method"
                 android:exported="true">
@@ -390,7 +390,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".inputmethod.WubiInputMethodActivity"
+                android:name=".wubi.WubiInputMethodActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
                 android:theme="@style/Theme.Application"
@@ -404,7 +404,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".inputmethod.WubiInputMethodTTSSettingActivity"
+                android:name=".wubi.WubiInputMethodTTSSettingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
                 android:theme="@style/Theme.Application" android:exported="false">
@@ -413,7 +413,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".inputmethod.WubiCodeSettingActivity"
+                android:name=".wubi.WubiCodeSettingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
                 android:theme="@style/Theme.Application" android:exported="false">
@@ -448,7 +448,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".inputmethod.WubiDatabaseEditActivity"
+                android:name=".wubi.WubiDatabaseEditActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
                 android:theme="@style/Theme.Application" android:exported="false">
@@ -711,7 +711,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".inputmethod.WubiCodeLookingUpActivity"
+                android:name=".wubi.WubiCodeLookingUpActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application"
                 android:label="@string/wubi_code_look_up_label"
