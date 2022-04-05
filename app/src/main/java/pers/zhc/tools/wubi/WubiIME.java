@@ -229,6 +229,7 @@ public class WubiIME extends InputMethodService {
                                 case KeyEvent.KEYCODE_O:
                                     final Intent intent = new Intent(WubiIME.this, WubiDatabaseEditActivity.class);
                                     intent.putExtra(WubiDatabaseEditActivity.EXTRA_WUBI_CODE, wubiCodeTV.getText().toString());
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                     break;
                                 default:
