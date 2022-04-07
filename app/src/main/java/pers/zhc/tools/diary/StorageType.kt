@@ -11,7 +11,7 @@ enum class StorageType(val enumInt: Int, @StringRes val textResInt: Int) {
     AUDIO(3, R.string.audio);
 
     companion object {
-        fun get(enumInt: Int): StorageType {
+        fun from(enumInt: Int): StorageType {
             val values = values()
             values.forEach {
                 if (it.enumInt == enumInt) return it

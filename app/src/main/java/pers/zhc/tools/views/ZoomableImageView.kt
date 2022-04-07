@@ -12,7 +12,7 @@ import pers.zhc.tools.utils.GestureResolver
 /**
  * @author bczhc
  */
-class ScalableImageView : View {
+class ZoomableImageView : View {
     private lateinit var mGestureResolver: GestureResolver
     private var srcBitmap: Bitmap? = null
     private var mBitmap: Bitmap? = null

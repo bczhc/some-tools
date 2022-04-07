@@ -5,6 +5,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.diary_file_library_file_detail_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
+import pers.zhc.tools.filebrowser.ImageFileBrowser
 import java.io.File
 
 /**
@@ -27,16 +28,25 @@ class FileLibraryFileDetailActivity : DiaryBaseActivity() {
         container.addView(filePreviewView)
 
         browserFileBtn.setOnClickListener {
-            if (fileInfo.storageTypeEnumInt != StorageType.TEXT.enumInt) {
-                val path = File(DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase), identifier).path
-                if (!File(path).exists()) {
-                    FileLibraryFragment.showFileNotExistDialog(this, diaryDatabase, identifier)
-                    return@setOnClickListener
+
+            when (StorageType.from(fileInfo.storageTypeEnumInt)) {
+                StorageType.RAW -> TODO()
+                StorageType.TEXT -> {
+                    startActivity(Intent(this, TextBrowserActivity::class.java).apply {
+                        putExtra(TextBrowserActivity.EXTRA_IDENTIFIER, fileInfo.identifier)
+                    })
                 }
+                StorageType.IMAGE -> {
+                    val filePath = File(
+                        DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)!!, fileInfo.identifier
+                    ).path
+
+                    startActivity(Intent(this, ImageFileBrowser::class.java).apply {
+                        putExtra(ImageFileBrowser.EXTRA_PATH, filePath)
+                    })
+                }
+                StorageType.AUDIO -> TODO()
             }
-            val i = Intent(this, FileBrowserActivity::class.java)
-            i.putExtra(FileBrowserActivity.EXTRA_FILE_INFO, fileInfo)
-            startActivity(i)
         }
     }
 

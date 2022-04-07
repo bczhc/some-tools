@@ -12,7 +12,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_file_library_file_preview_view.view.*
-import kotlinx.android.synthetic.main.diary_file_library_fragment.*
 import kotlinx.android.synthetic.main.diary_file_library_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
@@ -188,7 +187,7 @@ WHERE identifier IS ?"""
             view.storage_type_tv.text =
                 ctx.getString(
                     R.string.storage_type_is,
-                    ctx.getString(StorageType.get(fileInfo.storageTypeEnumInt).textResInt)
+                    ctx.getString(StorageType.from(fileInfo.storageTypeEnumInt).textResInt)
                 )
 
             val descriptionTV = view.description_tv!!
