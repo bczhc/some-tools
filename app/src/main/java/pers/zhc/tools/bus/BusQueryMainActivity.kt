@@ -1,19 +1,21 @@
 package pers.zhc.tools.bus
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.android.synthetic.main.bus_lines_list_view_item_view.view.*
 import kotlinx.android.synthetic.main.bus_query_activity.*
 import org.json.JSONArray
 import org.json.JSONObject
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.AdapterWithClickListener
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.readToString
 import java.io.IOException
@@ -27,7 +29,7 @@ class BusQueryMainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bus_query_activity)
 
-        val linesLV = lines_lv!!
+        val linesRV = lines_rv!!
         val queryBtn = query_btn!!
         val lineNumET = line_num_et!!.editText
 
@@ -40,7 +42,7 @@ class BusQueryMainActivity : BaseActivity() {
                 return@setOnClickListener
             }
 
-            fetchAndSetListView(lineNum, linesLV)
+            fetchAndSetListView(lineNum, linesRV)
         }
     }
 
@@ -51,25 +53,32 @@ class BusQueryMainActivity : BaseActivity() {
         val runPathId: String,
     )
 
-    inner class BusLineItemAdapter(context: Context, resource: Int, objects: MutableList<BusLineInfo>) :
-        ArrayAdapter<BusLineInfo>(context, resource, objects) {
-        @SuppressLint("ViewHolder")
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    inner class BusLineItemAdapter(val context: Context, val resource: Int, val objects: MutableList<BusLineInfo>) :
+        AdapterWithClickListener<BusLineItemAdapter.MyViewHolder>() {
+        inner class MyViewHolder(view: View) : ViewHolder(view) {
+            val startStationNameTV = view.start_station_name_tv!!
+            val endStationNameTV = view.end_station_name_tv!!
+            val lineNumTV = view.line_num_tv!!
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {
             val inflate = View.inflate(context, R.layout.bus_lines_list_view_item_view, null)
-            val startStationNameTV = inflate.start_station_name_tv
-            val endStationNameTV = inflate.end_station_name_tv
-            val lineNumTV = inflate.line_num_tv
+            return MyViewHolder(inflate)
+        }
 
-            val busInfo = getItem(position)!!
-            startStationNameTV.text = busInfo.startStationName
-            endStationNameTV.text = busInfo.endStationName
-            lineNumTV.text = busInfo.busLineName
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val busInfo = objects[position]
+            holder.startStationNameTV.text = busInfo.startStationName
+            holder.endStationNameTV.text = busInfo.endStationName
+            holder.lineNumTV.text = busInfo.busLineName
+        }
 
-            return inflate
+        override fun getItemCount(): Int {
+            return objects.size
         }
     }
 
-    private fun fetchAndSetListView(lineNum: Int, linesLV: ListView) {
+    private fun fetchAndSetListView(lineNum: Int, linesRV: RecyclerView) {
         Thread {
             val resultJSON =
                 syncFetchResultJSON("http://61.177.44.242:8080/BusSysWebService/bus/allStationOfRPName?name=$lineNum")
@@ -91,14 +100,20 @@ class BusQueryMainActivity : BaseActivity() {
             }
 
             runOnUiThread {
-                val myArrayAdapter = BusLineItemAdapter(this, android.R.layout.simple_list_item_1, busLineInfoList)
-                linesLV.adapter = myArrayAdapter
-
-                linesLV.setOnItemClickListener { _, _, position, _ ->
-                    val intent = Intent(this@BusQueryMainActivity, BusLineDetailActivity::class.java)
-                    intent.putExtra(BusLineDetailActivity.EXTRA_RUN_PATH_ID, busLineInfoList[position].runPathId)
-                    startActivity(intent)
-                }
+                val myArrayAdapter =
+                    BusLineItemAdapter(this, android.R.layout.simple_list_item_1, busLineInfoList).apply {
+                        this.setOnItemClickListener { position, _ ->
+                            val intent = Intent(this@BusQueryMainActivity, BusLineDetailActivity::class.java)
+                            intent.putExtra(
+                                BusLineDetailActivity.EXTRA_RUN_PATH_ID,
+                                busLineInfoList[position].runPathId
+                            )
+                            startActivity(intent)
+                        }
+                    }
+                linesRV.adapter = myArrayAdapter
+                linesRV.layoutManager = LinearLayoutManager(this)
+                linesRV.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
             }
         }.start()
     }

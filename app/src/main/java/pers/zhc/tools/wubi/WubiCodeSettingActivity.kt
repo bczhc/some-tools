@@ -1,14 +1,12 @@
 package pers.zhc.tools.wubi
 
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import androidx.recyclerview.widget.RecyclerView
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.Infos
@@ -23,37 +21,31 @@ import java.net.URL
 class WubiCodeSettingActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val listView = ListView(this)
-        setContentView(listView)
+        val recyclerView = RecyclerView(this)
+        setContentView(recyclerView)
         val data = resources.getStringArray(R.array.wubi_code_settings)
 
-        class MyArrayAdapter(context: Context, val resource: Int, objects: Array<out String>) :
-            ArrayAdapter<String>(context, resource, objects) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                @Suppress("ViewHolder")
-                val view = View.inflate(this@WubiCodeSettingActivity, resource, null)
-                val textView = view.findViewById<TextView>(android.R.id.text1)
-                textView.text = getItem(position)!!
-                return textView
+        val adapter = RecyclerViewUtils.buildSimpleItem1ListAdapter(
+            this, data.toList()
+        )
+        adapter.setOnItemClickListener { position, view ->
+            view.setOnClickListener {
+                arrayOf(
+                    {
+                        downloadWordsDictAction()
+                    },
+                    {
+                        startActivity(Intent(this, WubiDatabaseEditActivity::class.java))
+                    },
+                    {
+                        startActivity(Intent(this, WubiCodeLookingUpActivity::class.java))
+                    }
+                )[position]()
             }
         }
-
-        listView.adapter = MyArrayAdapter(this, android.R.layout.simple_list_item_1, data)
-        listView.onItemClickListener = AdapterView.OnItemClickListener { _, view, position, _ ->
-            arrayOf(
-                View.OnClickListener {
-
-                    downloadWordsDictAction()
-
-                },
-                View.OnClickListener {
-                    startActivity(Intent(this, WubiDatabaseEditActivity::class.java))
-                },
-                View.OnClickListener {
-                    startActivity(Intent(this, WubiCodeLookingUpActivity::class.java))
-                }
-            )[position].onClick(view)
-        }
+        recyclerView.adapter = adapter
+        recyclerView.setLinearLayoutManager()
+        recyclerView.addDividerLines()
     }
 
     private fun downloadWordsDictAction() {
@@ -229,7 +221,7 @@ class WubiCodeSettingActivity : BaseActivity() {
         exportFilePickerLauncher.launch(FilePicker.PICK_FOLDER)
     }
 
-    private val importFilePickerLauncher = FilePicker.getLauncher(this) {path->
+    private val importFilePickerLauncher = FilePicker.getLauncher(this) { path ->
         DictionaryDatabase.changeDatabase(path ?: return@getLauncher)
         ToastUtils.show(this, R.string.importing_succeeded)
     }

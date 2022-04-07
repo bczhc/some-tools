@@ -1,17 +1,15 @@
 package pers.zhc.tools.wubi
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.TextView
+import kotlinx.android.synthetic.main.wubi_input_method_setting_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.RecyclerViewUtils
+import pers.zhc.tools.utils.addDividerLines
+import pers.zhc.tools.utils.setLinearLayoutManager
 
 class WubiInputMethodActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,24 +33,18 @@ class WubiInputMethodActivity : BaseActivity() {
             }
         )
 
-
-        class MyArrayAdapter(context: Context, val resource: Int, objects: Array<out String>) :
-            ArrayAdapter<String>(context, resource, objects) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val view = View.inflate(this@WubiInputMethodActivity, resource, null)
-                val textView = view.findViewById<TextView>(android.R.id.text1)
-                textView.text = getItem(position)!!
-                return textView
-            }
-        }
-
         val data = resources.getStringArray(R.array.wubi_settings)
         setContentView(R.layout.wubi_input_method_setting_activity)
-        val listView = findViewById<ListView>(R.id.lv)
-        val adapter = MyArrayAdapter(this, android.R.layout.simple_list_item_1, data)
-        listView.adapter = adapter
-        listView.onItemClickListener = AdapterView.OnItemClickListener { _, view, position, _ ->
+
+        val recyclerView = recycler_view!!
+        val adapter = RecyclerViewUtils.buildSimpleItem1ListAdapter(
+            this, data.toList()
+        )
+        adapter.setOnItemClickListener { position, view ->
             onClickListeners[position].onClick(view)
         }
+        recyclerView.adapter = adapter
+        recyclerView.setLinearLayoutManager()
+        recyclerView.addDividerLines()
     }
 }

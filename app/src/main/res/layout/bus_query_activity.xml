@@ -3,7 +3,9 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+>
     <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
     >
         <pers.zhc.tools.views.SmartHintEditText
@@ -20,7 +22,10 @@
                 android:id="@+id/query_btn"
         />
     </RelativeLayout>
-    <ListView android:layout_width="match_parent" android:layout_height="match_parent"
-              android:id="@+id/lines_lv"
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lines_rv"
+            tools:listitem="@layout/bus_lines_list_view_item_view"
     />
 </LinearLayout>
