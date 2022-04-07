@@ -81,7 +81,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
                         dictDatabase.addRecord(wubiWordET.text.toString(), wubiCodeET.text.toString())
                         ToastUtils.show(this, R.string.adding_succeeded)
                     } catch (_: IllegalArgumentException) {
-                        ToastUtils.show(this, R.string.please_enter_correct_wubi_code)
+                        ToastUtils.show(this, R.string.wubi_incorrect_wubi_code_toast)
                     }
                     refreshList()
                 },

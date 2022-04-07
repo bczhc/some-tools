@@ -5,8 +5,6 @@
     <string name="app_menu_update">更新</string>
     <string name="app_update_download_dialog">是否下载最新快照版本</string>
     <string name="settings_github_raw_root_url">GitHub raw根URL</string>
-    <string name="processing">正在处理</string>
-    <string name="press_to_stop">点击以停止</string>
     <string name="app_menu_git_log">git log</string>
     <string name="app_menu_switch_themes">切换主题</string>
     <string name="app_menu_wake_lock">Wake lock</string>
@@ -19,6 +17,7 @@
     <string name="wake_lock_release_success">释放成功</string>
     <string name="app_menu_test">测试</string>
     <string name="app_menu_little_tools">小工具</string>
+    <string name="app_download_confirmation_dialog_title">是否确认下载</string>
     <!-- app end -->
 
     <!-- common -->
@@ -65,6 +64,7 @@
     <string name="regex_bad_pattern">正则表达式有误</string>
     <string name="io_error">IO异常</string>
     <string name="function_not_implemented_toast">还未实现此功能</string>
+    <string name="processing_msg">正在处理</string>
     <!-- end -->
 
     <!-- old -->
@@ -414,8 +414,13 @@
     <string name="wubi_word_to_look_up_hint">待查询字词</string>
     <string name="wubi_inverse_dict_update_alert">五笔反查表需要更新，是否更新？</string>
     <string name="wubi_word">字词</string>
-    <string name="please_enter_correct_wubi_code">请输入正确的五笔编码</string>
+    <string name="wubi_incorrect_wubi_code_toast">请输入正确的五笔编码</string>
     <string name="wubi_inverse_dict_update_action">更新反查表</string>
+    <string name="wubi_words_adding_new_word_hint">新增词</string>
+    <string name="wubi_words_adding_wubi_code_hint">五笔编码</string>
+    <string name="wubi_words_adding_word_already_exists_alert">已存在该词</string>
+    <string name="wubi_code_invalid_toast">无效的五笔编码</string>
+    <string name="wubi_words_adding_word_already_exists_ignore_toast">已经存在，忽略添加</string>
     <!-- module end -->
 
     <!-- app settings -->
@@ -467,6 +472,13 @@
     <string name="diary_advanced_search_menu">高级搜索</string>
     <string name="diary_advanced_search_dialog_title">搜索</string>
     <string name="diary_searching_progress_dialog_title">搜索中……</string>
+    <string name="diary_taking_find_text_dialog_title">查找</string>
+    <string name="diary_taking_find_text_et_hint">查找内容</string>
+    <string name="diary_found_nothing_toast">未找到</string>
+    <string name="diary_menu_statistics">统计</string>
+    <string name="diary_statistics_dialog_title">统计</string>
+    <string name="diary_statistics_dialog_content">字符总数：%1$d\n条目数：%2$d</string>
+    <string name="diary_record_statistics_dialog_content">字符总数：%1$d</string>
     <!-- module end -->
 
     <!-- module: bus -->
@@ -575,7 +587,6 @@
     <string name="capture_permission_denied">未同意权限</string>
     <string name="screen_color_picker_running_notification_title">屏幕取色正在运行</string>
     <string name="stop_notification_action">停止</string>
-    <string name="app_download_confirmation_dialog_title">是否确认下载</string>
     <!-- end -->
 
     <!-- module: transfer -->
@@ -614,13 +625,6 @@
     <string name="email_contact_email">邮箱</string>
     <string name="email_add_contact_dialog_title">添加联系人</string>
     <string name="email_contact_already_exist_toast">已经存在相同邮箱联系人</string>
-    <string name="diary_taking_find_text_dialog_title">查找</string>
-    <string name="diary_taking_find_text_et_hint">查找内容</string>
-    <string name="diary_found_nothing_toast">未找到</string>
-    <string name="diary_menu_statistics">统计</string>
-    <string name="diary_statistics_dialog_title">统计</string>
-    <string name="diary_statistics_dialog_content">字符总数：%1$d\n条目数：%2$d</string>
-    <string name="diary_record_statistics_dialog_content">字符总数：%1$d</string>
     <!-- end -->
 
     <!-- module: fourier series -->
@@ -644,11 +648,6 @@
     <string name="fourier_series_epicycles_drawing_option_speed">速度</string>
     <string name="fourier_series_epicycles_drawing_option_reset_path">重置路径</string>
     <string name="fourier_series_sort_shuffle">乱序</string>
-    <string name="wubi_words_adding_new_word_hint">新增词</string>
-    <string name="wubi_words_adding_wubi_code_hint">五笔编码</string>
-    <string name="wubi_words_adding_word_already_exists_alert">已存在该词</string>
-    <string name="wubi_code_invalid_toast">无效的五笔编码</string>
-    <string name="wubi_words_adding_word_already_exists_ignore_toast">已经存在，忽略添加</string>
     <!-- end -->
 
     <!-- module: chars_splitter -->

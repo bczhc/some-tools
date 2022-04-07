@@ -90,7 +90,7 @@ class WubiCodeSettingActivity : BaseActivity() {
                         val dialog = Dialog(this)
                         val progressView = ProgressView(this)
                         progressView.setIsIndeterminateMode(true)
-                        progressView.setTitle(getString(R.string.processing))
+                        progressView.setTitle(getString(R.string.processing_msg))
                         dialog.apply {
                             setCanceledOnTouchOutside(false)
                             setContentView(progressView)
