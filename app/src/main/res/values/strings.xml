@@ -99,7 +99,7 @@
     <string name="generate_pi">计算Pi</string>
     <string name="calc">计算</string>
     <string name="pi______type">输入小数点后位数：</string>
-    <string name="please_wait">请等待…</string>
+    <string name="please_wait">请等待……</string>
     <string name="toast" translatable="false">Toast</string>
     <string name="copy">复制</string>
     <string name="html_clipboard_unsupported">android版本不支持HTML放入剪切板</string>
@@ -221,7 +221,7 @@
     <string name="uploading_failed">上传失败</string>
     <string name="uploading">正在上传</string>
     <string name="upload_done">上传完成</string>
-    <string name="please_choose">请选择…</string>
+    <string name="please_choose">请选择……</string>
     <string name="saving">正在保存</string>
     <string name="floating_board">悬浮窗</string>
     <string name="input_event">输入事件</string>
@@ -246,7 +246,7 @@
     <string name="drawing_board_name_is_">画板名：\"%1$s\"</string>
     <string name="found_update_whether_to_install">发现更新，是否安装</string>
     <string name="version_info">当前版本：%1$s(%2$d)\n最新版本：%3$s(%4$d)</string>
-    <string name="downloading">正在下载…</string>
+    <string name="downloading">正在下载……</string>
     <string name="apk">apk</string>
     <string name="download_progress">%1$d/%2$d</string>
     <string name="can_not_import_itself">不能导入自己</string>
@@ -270,7 +270,7 @@
     <string name="filter_with_regex">过滤器（正则表达式）</string>
     <string name="wrong_regex">错误的正则</string>
     <string name="crash_test">崩溃测试</string>
-    <string name="crash_title">程序崩溃了…</string>
+    <string name="crash_title">程序崩溃了……</string>
     <string name="opacity">不透明度</string>
     <string name="note_deletion_tip">点击以选择要删除的笔记</string>
     <string name="no_notes_were_selected">未选择笔记</string>
@@ -570,7 +570,7 @@
     <string name="fdb_import_failed">导入失败</string>
     <string name="fdb_path_info_corrupt_toast">路径信息损坏，无法导入</string>
     <string name="fdb_export_image_redrawing_phase_title">正在重绘：图层 %1$s</string>
-    <string name="fdb_export_image_compressing_phase_title">正在压缩 ...</string>
+    <string name="fdb_export_image_compressing_phase_title">正在压缩……</string>
     <string name="fdb_open_cache_path_file_button">打开缓存路径文件</string>
     <!-- module end -->
 
