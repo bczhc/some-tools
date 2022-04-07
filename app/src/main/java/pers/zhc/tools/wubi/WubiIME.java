@@ -1,10 +1,13 @@
 package pers.zhc.tools.wubi;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.inputmethodservice.InputMethodService;
+import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,18 +17,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import kotlin.Unit;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import pers.zhc.tools.R;
-import pers.zhc.tools.utils.Common;
-import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.utils.*;
 import pers.zhc.tools.views.SmartHintEditText;
 import pers.zhc.util.Assertion;
 
@@ -33,6 +41,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * @author bczhc
@@ -136,6 +148,11 @@ public class WubiIME extends InputMethodService {
     private boolean tempEnglishMode = false;
     private final TemporaryAlphabetModeManager tam = new TemporaryAlphabetModeManager();
     private int tvBackgroundColor, tvTextColor;
+    /**
+     * when is {@code null}, it's disabled
+     */
+    @Nullable
+    private static SingleCharCodesChecker singleCharCodesChecker = null;
 
     @Override
     public void onCreate() {
@@ -227,10 +244,15 @@ public class WubiIME extends InputMethodService {
                                     showAddingNewWordsDialog();
                                     break;
                                 case KeyEvent.KEYCODE_O:
+                                    // open Wubi dictionary editing activity
                                     final Intent intent = new Intent(WubiIME.this, WubiDatabaseEditActivity.class);
                                     intent.putExtra(WubiDatabaseEditActivity.EXTRA_WUBI_CODE, wubiCodeTV.getText().toString());
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
+                                    break;
+                                case KeyEvent.KEYCODE_T:
+                                    // tools
+                                    showToolsDialog();
                                     break;
                                 default:
                             }
@@ -400,6 +422,31 @@ public class WubiIME extends InputMethodService {
         }
     });
 
+    @SuppressWarnings("SameParameterValue")
+    private void setDialogAttrs(@NotNull Dialog dialog, IBinder token, int width, int height) {
+        final Window window = dialog.getWindow();
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.token = token;
+        lp.width = width;
+        lp.height = height;
+        lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
+
+        window.setAttributes(lp);
+        window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+    }
+
+    @Contract(" -> new")
+    private @NotNull ContextThemeWrapper getThemedContext() {
+        int theme = R.style.Theme_Application_NoActionBar;
+
+        final int nightMode = AppCompatDelegate.getDefaultNightMode();
+        if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            theme = R.style.Theme_Application_Dark_NoActionBar;
+        }
+        return new ContextThemeWrapper(this, theme);
+    }
+
     private void showAddingNewWordsDialog() {
         if (candidateLayout != null) {
             int theme = R.style.Theme_Application_NoActionBar;
@@ -455,14 +502,7 @@ public class WubiIME extends InputMethodService {
                     .setNegativeButton(R.string.cancel, (dialog1, which) -> inverseDictDatabase.close())
                     .create();
 
-            final Window window = dialog.getWindow();
-            final WindowManager.LayoutParams lp = window.getAttributes();
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            lp.token = candidateLayout.getWindowToken();
-            lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
-            window.setAttributes(lp);
-            window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            setDialogAttrs(dialog, candidateLayout.getWindowToken(), MATCH_PARENT, WRAP_CONTENT);
 
             dialog.show();
 
@@ -510,6 +550,90 @@ public class WubiIME extends InputMethodService {
             });
             wordET.setText(ic.getSelectedText(0));
         }
+    }
+
+    private void showToolsDialog() {
+        if (candidateLayout == null) return;
+        IBinder token = candidateLayout.getWindowToken();
+        Context context = getThemedContext();
+
+        final View inflate = View.inflate(context, R.layout.wubi_tools_dialog, null);
+        RecyclerView rv = inflate.findViewById(R.id.recycler_view);
+
+        List<String> data = Arrays.asList(context.getResources().getStringArray(R.array.wubi_tools_names));
+
+        final RecyclerViewArrayAdapter<String> adapter = RecyclerViewUtils.Companion.buildSimpleItem1ListAdapter(
+                context, data, true
+        );
+
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(context));
+        rv.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(inflate);
+        setDialogAttrs(dialog, token, MATCH_PARENT, WRAP_CONTENT);
+        dialog.show();
+
+        final View.OnClickListener[] listeners = {
+                v -> {
+                    // single character codes records
+                    showSingleCharCodesRecordingDialog();
+                }
+        };
+
+        adapter.setOnItemClickListener((position, view) -> {
+            listeners[position].onClick(view);
+            return Unit.INSTANCE;
+        });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void showSingleCharCodesRecordingDialog() {
+        if (candidateLayout == null) {
+            return;
+        }
+
+        Context context = getThemedContext();
+        final View inflate = View.inflate(context, R.layout.wubi_single_char_codes_recording_dialog, null);
+        SwitchMaterial switchMaterial = inflate.findViewById(R.id.switch_);
+        Button emptyButton = inflate.findViewById(R.id.empty_button);
+        RecyclerView recyclerView = inflate.findViewById(R.id.recycler_view);
+
+        switchMaterial.setChecked(singleCharCodesChecker != null);
+
+        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                singleCharCodesChecker = new SingleCharCodesChecker();
+            } else {
+                singleCharCodesChecker = null;
+            }
+        });
+
+        final AtomicReference<SingleCharCodesChecker.RecyclerViewAdapter> adapter = new AtomicReference<>(null);
+
+        emptyButton.setOnClickListener(v -> {
+            if (singleCharCodesChecker != null) {
+                singleCharCodesChecker.clear();
+                adapter.get().notifyDataSetChanged();
+
+            } else {
+                recyclerView.setVisibility(View.GONE);
+            }
+        });
+
+        if (singleCharCodesChecker != null) {
+            adapter.set(singleCharCodesChecker.getRecyclerViewAdapter(context));
+
+            recyclerView.setAdapter(adapter.get());
+            RecyclerViewUtilsKt.setLinearLayoutManager(recyclerView);
+            RecyclerViewUtilsKt.addDividerLines(recyclerView);
+        }
+
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(inflate);
+        setDialogAttrs(dialog, candidateLayout.getWindowToken(), MATCH_PARENT, WRAP_CONTENT);
+        dialog.show();
     }
 
     /**
@@ -753,6 +877,11 @@ public class WubiIME extends InputMethodService {
                 }
                 tts.speak(s, TextToSpeech.QUEUE_ADD, null, String.valueOf(System.currentTimeMillis()));
             } else tts = null;
+
+            if (SingleCharCodesChecker.Companion.checkIfSingleChar(s)
+                    && singleCharCodesChecker != null) {
+                singleCharCodesChecker.commit(s, wubiCodeSB.toString());
+            }
         }
     }
 

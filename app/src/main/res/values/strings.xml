@@ -65,6 +65,8 @@
     <string name="io_error">IO异常</string>
     <string name="function_not_implemented_toast">还未实现此功能</string>
     <string name="processing_msg">正在处理</string>
+    <string name="switch_switch_label">开关</string>
+    <string name="empty_button">清空</string>
     <!-- end -->
 
     <!-- old -->
@@ -421,6 +423,8 @@
     <string name="wubi_words_adding_word_already_exists_alert">已存在该词</string>
     <string name="wubi_code_invalid_toast">无效的五笔编码</string>
     <string name="wubi_words_adding_word_already_exists_ignore_toast">已经存在，忽略添加</string>
+    <string name="wubi_single_char_code_check_input_code_tv">实际输入：%1$s</string>
+    <string name="wubi_single_char_code_check_shortest_code_tv">最短编码：%1$s</string>
     <!-- module end -->
 
     <!-- app settings -->

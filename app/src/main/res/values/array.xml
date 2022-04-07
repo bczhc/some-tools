@@ -69,4 +69,10 @@
         <item>变换设置</item>
     </array>
     <!-- module end -->
+
+    <!-- module: wubi tools -->
+    <array name="wubi_tools_names">
+        <item>单字简码记录</item>
+    </array>
+    <!-- module end -->
 </resources>
