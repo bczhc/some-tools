@@ -60,7 +60,6 @@ val ndkTargets = propNdkTarget.split(',').map { it.trim() }.map {
         Pair("abi", TargetAbi.from(captured[0][1])!!), Pair("api", captured[0][2].toInt())
     )
 }
-println("NDK targets: $ndkTargets")
 
 
 android {
@@ -139,16 +138,9 @@ android {
 
     val sdkDir = android.sdkDirectory
     val ndkDir = android.ndkDirectory
-    println(
-        """Build environment info:
-        |SDK path: ${sdkDir.path}
-        |NDK path: ${ndkDir.path}
-    """.trimMargin()
-    )
 
     val tools = Tools(ndkDir, sdkDir)
     val cmakeVersion = tools.cMakeVersion as String
-    println("CMake version: $cmakeVersion")
 
     externalNativeBuild {
         cmake {
@@ -225,6 +217,15 @@ val compileRustTask: Task = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME
 
 appProject.tasks.getByName("preBuild").dependsOn(compileRustTask)
 compileRustTask.dependsOn(copyOpensslLibsTask)
+
+
+println("""Build environment info:
+    |SDK path: ${android.sdkDirectory.path}
+    |NDK path: ${android.ndkDirectory.path}
+    |CMake version: ${android.externalNativeBuild.cmake.version}
+    |NDK targets: $ndkTargets
+    |Rust build extra env: $rustBuildExtraEnv
+""".trimMargin())
 
 
 repositories {
