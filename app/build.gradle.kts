@@ -174,7 +174,9 @@ val opensslDir = getOpensslDir(configPropertiesFile)!!
 val rustBuildExtraEnv = HashMap<String, String>()
 ndkTargets.forEach {
     val env = (getRustOpensslBuildEnv(AndroidAbi.from(it["abi"].toString()).toRustTarget())
-            as Map<*, *>).mapKeys { k -> k.toString() }.mapValues { v -> v.toString() }
+            as Map<*, *>).map { e ->
+        Pair(e.key.toString(), e.value.toString())
+    }.toMap()
     val opensslPath = getOpensslPath(opensslDir, it["abi"] as TargetAbi)
     rustBuildExtraEnv[env["libDir"].toString()] = opensslPath.lib!!.path
     rustBuildExtraEnv[env["includeDir"].toString()] = opensslPath.include!!.path
