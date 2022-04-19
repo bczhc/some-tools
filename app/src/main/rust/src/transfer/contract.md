@@ -2,22 +2,16 @@
 
 ## Send
 
-| Header (8) | Mark (1) | MessageLength (4, BE) | Message |
-| :--------: | :------- | --------------------- | ------- |
-
-
-## Return
-
-| Header (8) | Status (1) |
-| ---------- | ---------- |
+| Header (8) | Mark (1) | FileNameLength (4, BE) | FileName | Message |
+| :--------: | :------- | ---------------------- | -------- | ------- |
 
 ## Mark
 
 - **FILE**: 1
 - **TEXT**: 2
-- **END**: 3
+- **TAR**: 3
 
-## Status
+[//]: # "- **EOF**: 4"
 
-- **OK**: 1
+When `Mark` is not `FILE`, `FileNameLength` is 0, and `FileName` is not presented.
 

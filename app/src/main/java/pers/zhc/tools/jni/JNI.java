@@ -1,7 +1,6 @@
 /*翟灿hhh*/
 package pers.zhc.tools.jni;
 
-import android.graphics.Bitmap;
 import androidx.annotation.Size;
 import pers.zhc.tools.fourierseries.InputPoint;
 import pers.zhc.tools.pi.JNICallback;
@@ -241,21 +240,22 @@ public class JNI {
     }
 
     public static class Transfer {
-        public static native void send(byte[] ipv4, short port, String msg);
 
-        public static native void startAsyncReceive(short port, Callback callback);
+        public static native long asyncStartServer(int port, String savingPath, OnReceiveDoneCallback callback);
 
-        public static native byte[] getLocalIpv4();
+        public static native void stopServer(long addr);
 
+        public interface OnReceiveDoneCallback {
+            void onReceiveDone(int mark, long receivingTimestamp, long size, String path);
+        }
+    }
+
+    public static class Ip {
         public static native String getLocalIpInfo();
 
-        public interface Callback {
-            /**
-             * @param msg   received message or error message
-             * @param error if the result has errors
-             */
-            void onResult(String msg, boolean error);
-        }
+        public static native long getLocalIpObj();
+
+        public static native String ipObjToString(long addr);
     }
 
     public static class Email {
@@ -352,5 +352,9 @@ public class JNI {
 
     public static class Bitmap {
         public static native void compressToPng(android.graphics.Bitmap bitmap, String outputPath);
+    }
+
+    public static class ByteSize {
+        public static native String toHumanReadable(long size, boolean siUnit);
     }
 }

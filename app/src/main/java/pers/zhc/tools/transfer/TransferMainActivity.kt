@@ -19,7 +19,7 @@ class TransferMainActivity : BaseActivity() {
         val receiveButton = receive_btn!!
         val ipInfoTV = ip_info_tv!!
 
-        ipInfoTV.text = JNI.Transfer.getLocalIpInfo()!!
+        ipInfoTV.text = JNI.Ip.getLocalIpInfo()!!
 
         sendButton.setOnClickListener {
             startActivity(Intent(this, TransferSendActivity::class.java))

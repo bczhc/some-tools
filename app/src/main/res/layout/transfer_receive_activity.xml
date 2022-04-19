@@ -3,6 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:padding="10dp"
 >
     <pers.zhc.tools.views.SmartHintEditText
@@ -20,13 +21,11 @@
             android:layout_alignTop="@id/listen_port"
             android:layout_alignBottom="@id/listen_port"
             android:layout_alignParentEnd="true"
-            />
-    <pers.zhc.tools.views.ScrollEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/output_et"
-            android:layout_below="@id/listen_port"
-            android:layout_alignParentBottom="true"
-            android:fillViewport="true"
-            />
+    />
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:layout_below="@id/receive_start_btn"
+            tools:listitem="@layout/transfer_received_item"
+            android:id="@+id/recycler_view"
+    />
 </RelativeLayout>

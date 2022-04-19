@@ -605,6 +605,8 @@
     <string name="transfer_send_label">发送</string>
     <string name="transfer_invalid_address_toast">无效的地址</string>
     <string name="transfer_invalid_port_toast">无效的端口</string>
+    <string name="transfer_receiving_type_text">接收类型：%1$s</string>
+    <string name="transfer_receiving_time_text">接收时间：%1$s</string>
     <!-- end -->
 
     <!-- module: email -->
@@ -691,5 +693,8 @@
 
     <!-- file_browser -->
     <string name="file_browser_label">文件浏览</string>
+    <string name="transfer_receiving_size_text">大小：%1$s</string>
+    <string name="transfer_empty_port_toast">请输入监听端口</string>
+    <string name="transfer_server_started_toast">已启动服务</string>
     <!-- end -->
 </resources>

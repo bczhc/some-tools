@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import pers.zhc.plugins.BuildUtils.*
 import pers.zhc.plugins.FileUtils.requireCreate
 import pers.zhc.plugins.NdkVersion
