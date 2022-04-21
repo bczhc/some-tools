@@ -27,7 +27,5 @@
             android:layout_below="@id/receive_start_btn"
             tools:listitem="@layout/transfer_received_item"
             android:id="@+id/recycler_view"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
     />
 </RelativeLayout>

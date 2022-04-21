@@ -24,6 +24,10 @@ class ReceiveItemView : WrapLayout {
     private val errorMsgTV by lazy { failureView.err_msg_tv!! }
     private val errorTimeTV by lazy { failureView.error_time_tv!! }
 
+    init {
+        setBackgroundResource(R.drawable.selectable_bg)
+    }
+
     fun setSuccess(time: String, size: String, type: String) {
         if (state != State.SUCCESS) {
             this.setView(successView)
