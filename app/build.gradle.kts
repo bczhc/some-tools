@@ -73,7 +73,6 @@ android {
             keyAlias = "key0"
             keyPassword = "123456"
         }
-        configs["release"] = configs["debug"]!!
     }
     compileSdkVersion(31)
     defaultConfig {
@@ -103,6 +102,7 @@ android {
             proguardFiles("proguard-rules-debug.pro")
             isDebuggable = true
             isJniDebuggable = true
+            signingConfig = signingConfigs["debug"]
         }
         types["release"]!!.apply {
             isMinifyEnabled = true
@@ -110,6 +110,7 @@ android {
             proguardFiles("proguard-rules.pro")
             isDebuggable = true
             isJniDebuggable = true
+            signingConfig = signingConfigs["debug"]
         }
     }
     compileOptions {
@@ -221,13 +222,15 @@ appProject.tasks.getByName("preBuild").dependsOn(compileRustTask)
 compileRustTask.dependsOn(copyOpensslLibsTask)
 
 
-println("""Build environment info:
+println(
+    """Build environment info:
     |SDK path: ${android.sdkDirectory.path}
     |NDK path: ${android.ndkDirectory.path}
     |CMake version: ${android.externalNativeBuild.cmake.version}
     |NDK targets: $ndkTargets
     |Rust build extra env: $rustBuildExtraEnv
-""".trimMargin())
+""".trimMargin()
+)
 
 
 repositories {
