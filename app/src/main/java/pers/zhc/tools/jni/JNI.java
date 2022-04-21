@@ -241,12 +241,14 @@ public class JNI {
 
     public static class Transfer {
 
-        public static native long asyncStartServer(int port, String savingPath, OnReceiveDoneCallback callback);
+        public static native long asyncStartServer(int port, String savingPath, Callback callback);
 
         public static native void stopServer(long addr);
 
-        public interface OnReceiveDoneCallback {
-            void onReceiveDone(int mark, long receivingTimestamp, long size, String path);
+        public interface Callback {
+            void onReceiveResult(int mark, long receivingTime, long size, String path);
+
+            void onError(String msg);
         }
     }
 

@@ -33,14 +33,15 @@ class TransferReceiveActivity : BaseActivity() {
             val port = listenPort.toInt()
             try {
                 val listenerAddress =
-                    JNI.Transfer.asyncStartServer(port, savingPath.path) { mark, receivingTimestamp, size, path ->
-                        ToastUtils.show(this, "Received: $mark $receivingTimestamp $size $path")
-                    }
-//                ToastUtils.show(this, R.string.tran
-//
-//
-//
-//                sfer_server_started_toast)
+                    JNI.Transfer.asyncStartServer(port, savingPath.path, object : JNI.Transfer.Callback {
+                        override fun onReceiveResult(mark: Int, receivingTime: Long, size: Long, path: String?) {
+                            ToastUtils.show(this@TransferReceiveActivity, "Received: $mark $receivingTime $size $path")
+                        }
+
+                        override fun onError(msg: String?) {
+                            ToastUtils.show(this@TransferReceiveActivity, "Error: $msg")
+                        }
+                    })
                 ToastUtils.show(this, listenerAddress.toString())
             } catch (e: Exception) {
                 Common.showException(e, this)

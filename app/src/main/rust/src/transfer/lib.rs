@@ -64,27 +64,41 @@ fn accept_loop(listener: TcpListener) -> Result<()> {
 
             let receiving_result = handle_connection(stream);
             jni_log(*env_guard, &format!("{:?}", receiving_result)).unwrap();
-            let receiving_result = receiving_result.unwrap();
 
             let callback = rw_read!(RECEIVE_DONE_CALLBACK);
             let callback = callback.as_ref().unwrap();
+            match receiving_result {
+                Ok(result) => {
+                    let location_jstring = env_guard.new_string(&result.location).unwrap();
 
-            let location_jstring = env_guard.new_string(&receiving_result.location).unwrap();
-
-            jni_log(*env_guard, "call").unwrap();
-            env_guard
-                .call_method(
-                    callback,
-                    "onReceiveDone",
-                    "(IJJLjava/lang/String;)V",
-                    &[
-                        JValue::Int(receiving_result.mark as jint),
-                        JValue::Long(receiving_result.time as jlong),
-                        JValue::Long(receiving_result.size as jlong),
-                        JValue::Object(location_jstring.into()),
-                    ],
-                )
-                .unwrap();
+                    jni_log(*env_guard, "call").unwrap();
+                    env_guard
+                        .call_method(
+                            callback,
+                            "onReceiveResult",
+                            "(IJJLjava/lang/String;)V",
+                            &[
+                                JValue::Int(result.mark as jint),
+                                JValue::Long(result.time as jlong),
+                                JValue::Long(result.size as jlong),
+                                JValue::Object(location_jstring.into()),
+                            ],
+                        )
+                        .unwrap();
+                }
+                Err(err) => {
+                    env_guard
+                        .call_method(
+                            callback,
+                            "onError",
+                            "(Ljava/lang/String;)V",
+                            &[JValue::Object(
+                                env_guard.new_string(&format!("{:?}", err)).unwrap().into(),
+                            )],
+                        )
+                        .unwrap();
+                }
+            }
         });
     }
 }
