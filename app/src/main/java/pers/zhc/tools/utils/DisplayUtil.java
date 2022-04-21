@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import android.widget.EditText;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,5 +59,9 @@ public class DisplayUtil {
 
     public static int cm2px(Context context, float cm) {
         return dip2px(context, (float) cm2dp(cm));
+    }
+
+    public static float getDefaultEditTextTextSize(Context context) {
+        return ((float) DisplayUtil.px2sp(context, new EditText(context).getTextSize()));
     }
 }

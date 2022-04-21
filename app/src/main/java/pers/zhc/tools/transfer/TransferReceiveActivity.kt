@@ -1,12 +1,15 @@
 package pers.zhc.tools.transfer
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.transfer_receive_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.filebrowser.TextFileBrowser
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.jni.JNI.ByteSize
 import pers.zhc.tools.utils.*
@@ -36,6 +39,31 @@ class TransferReceiveActivity : BaseActivity() {
         val listAdapter = ListAdapter(this, results)
 
         recyclerView.adapter = listAdapter
+
+        listAdapter.setOnItemClickListener { position, _ ->
+
+            val openPath = { path: String ->
+                // open this path in file manager
+                val uri = path.toUri()
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType(uri, "*/*")
+                startActivity(intent)
+            }
+
+            val result = results[position]
+            if (result is ReceivingResult.Companion.Success) {
+                val path = result.path
+                when (result.mark) {
+                    Mark.FILE -> openPath(File(path).parent!!)
+                    Mark.TEXT -> {
+                        startActivity(Intent(this, TextFileBrowser::class.java).apply {
+                            putExtra(TextFileBrowser.EXTRA_PATH, path)
+                        })
+                    }
+                    Mark.TAR -> openPath(path)
+                }
+            }
+        }
 
         receiveStartButton.setOnClickListener {
             val listenPort = listenPortET.text.toString()

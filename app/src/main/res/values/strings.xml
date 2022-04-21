@@ -68,6 +68,7 @@
     <string name="switch_switch_label">开关</string>
     <string name="empty_button">清空</string>
     <string name="time_is_">时间：%1$s</string>
+    <string name="no_app_to_open">没有可供打开的应用</string>
     <!-- end -->
 
     <!-- old -->
