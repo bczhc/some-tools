@@ -2,6 +2,7 @@
 package pers.zhc.tools.jni;
 
 import androidx.annotation.Size;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.fourierseries.InputPoint;
 import pers.zhc.tools.pi.JNICallback;
 import pers.zhc.tools.stcflash.JNIInterface;
@@ -70,12 +71,7 @@ public class JNI {
         public static native int byteArrayToInt(@Size(min = 4) byte[] bytes, int offset);
 
 
-        public static native void packStrokeInfo3_1(
-                @Size(min = 12) byte[] dest,
-                int color,
-                float width,
-                float blurRadius
-        );
+        public static native void packStrokeInfo3_1(@Size(min = 12) byte[] dest, int color, float width, float blurRadius);
     }
 
     public static class MAllocTest {
@@ -246,9 +242,9 @@ public class JNI {
         public static native void stopServer(long addr);
 
         public interface Callback {
-            void onReceiveResult(int mark, long receivingTime, long size, String path);
+            void onReceiveResult(int mark, long receivingTime, long size, @NotNull String path);
 
-            void onError(String msg);
+            void onError(@NotNull String msg);
         }
     }
 
@@ -261,14 +257,7 @@ public class JNI {
     }
 
     public static class Email {
-        public static native void send(String smtpServer,
-                                       String username,
-                                       String password,
-                                       String from,
-                                       String[] to,
-                                       String[] cc,
-                                       String subject,
-                                       String body);
+        public static native void send(String smtpServer, String username, String password, String from, String[] to, String[] cc, String subject, String body);
     }
 
     public static class Utf8 {
@@ -293,15 +282,7 @@ public class JNI {
         public static final int LINEAR_PATH_EVALUATOR = 0;
         public static final int TIME_PATH_EVALUATOR = 1;
 
-        public static native void compute(
-                InputPoint[] points,
-                int integralFragment,
-                double period,
-                int epicycleNum,
-                int threadNum,
-                int pathEvaluatorType,
-                Callback callback
-        );
+        public static native void compute(InputPoint[] points, int integralFragment, double period, int epicycleNum, int threadNum, int pathEvaluatorType, Callback callback);
     }
 
     public static class Char {
@@ -357,6 +338,7 @@ public class JNI {
     }
 
     public static class ByteSize {
+        @NotNull
         public static native String toHumanReadable(long size, boolean siUnit);
     }
 }

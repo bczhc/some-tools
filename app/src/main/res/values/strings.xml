@@ -67,6 +67,7 @@
     <string name="processing_msg">正在处理</string>
     <string name="switch_switch_label">开关</string>
     <string name="empty_button">清空</string>
+    <string name="time_is_">时间：%1$s</string>
     <!-- end -->
 
     <!-- old -->
@@ -605,8 +606,16 @@
     <string name="transfer_send_label">发送</string>
     <string name="transfer_invalid_address_toast">无效的地址</string>
     <string name="transfer_invalid_port_toast">无效的端口</string>
-    <string name="transfer_receiving_type_text">接收类型：%1$s</string>
-    <string name="transfer_receiving_time_text">接收时间：%1$s</string>
+    <string name="transfer_receiving_type_tv">接收类型：%1$s</string>
+    <string name="transfer_receiving_time_tv">接收时间：%1$s</string>
+    <string name="transfer_receiving_size_tv">大小：%1$s</string>
+    <string name="transfer_empty_port_toast">请输入监听端口</string>
+    <string name="transfer_server_started_toast">已启动服务</string>
+    <string name="transfer_receiving_failed_title">接收失败</string>
+    <string name="transfer_error_message_title">错误信息：</string>
+    <string name="transfer_receive_type_file">文件</string>
+    <string name="transfer_receive_type_files">多文件</string>
+    <string name="transfer_receive_type_text">文本</string>
     <!-- end -->
 
     <!-- module: email -->
@@ -693,8 +702,5 @@
 
     <!-- file_browser -->
     <string name="file_browser_label">文件浏览</string>
-    <string name="transfer_receiving_size_text">大小：%1$s</string>
-    <string name="transfer_empty_port_toast">请输入监听端口</string>
-    <string name="transfer_server_started_toast">已启动服务</string>
     <!-- end -->
 </resources>

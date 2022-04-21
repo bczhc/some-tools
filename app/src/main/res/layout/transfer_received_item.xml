@@ -5,16 +5,19 @@
               android:layout_height="wrap_content"
               android:paddingVertical="2.5dp"
 >
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/transfer_receiving_type_text"
-              android:theme="@style/TextAppearance.Material3.TitleMedium"
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="@string/transfer_receiving_type_tv"
+              style="@style/TextAppearance.Material3.TitleMedium"
+              android:id="@+id/receiving_type_tv"
     />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/transfer_receiving_time_text"
-              android:theme="@style/TextAppearance.Material3.TitleMedium"
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="@string/transfer_receiving_time_tv"
+              style="@style/TextAppearance.Material3.TitleMedium"
+              android:id="@+id/receiving_time_tv"
     />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/transfer_receiving_size_text"
-              android:theme="@style/TextAppearance.Material3.TitleMedium"
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="@string/transfer_receiving_size_tv"
+              style="@style/TextAppearance.Material3.TitleMedium"
+              android:id="@+id/receiving_size_tv"
     />
 </LinearLayout>

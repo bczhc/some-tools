@@ -18,6 +18,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="red">#FFFF0000</color>
+    <color name="dark_red">#DD2C00</color>
     <color name="blue">#FF0000FF</color>
     <color name="highContrastTextColor">@color/black</color>
 
