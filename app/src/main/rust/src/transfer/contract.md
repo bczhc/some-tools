@@ -13,5 +13,5 @@
 
 [//]: # "- **EOF**: 4"
 
-When `Mark` is not `FILE`, `FileNameLength` is 0, and `FileName` is not presented.
+When `Mark` is not `FILE`, `FileNameLength` and `FileName` is not presented.
 

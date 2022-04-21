@@ -8,7 +8,7 @@ use jni::sys::{jint, jlong, jobject};
 use jni::{AttachGuard, JNIEnv, JavaVM};
 use num_traits::FromPrimitive;
 use once_cell::sync::Lazy;
-use std::fs::{create_dir_all, File};
+use std::fs::{create_dir, create_dir_all, File};
 use std::io;
 use std::io::{BufWriter, Cursor, Read, Write};
 use std::net::{SocketAddrV4, TcpListener, TcpStream};
@@ -107,10 +107,11 @@ fn handle_connection(mut stream: TcpStream) -> Result<ReceivingResult> {
     let mark: Mark = result.unwrap();
 
     let timestamp = get_current_time_millis();
-    let file_location = new_file_location(timestamp)?;
 
     let (size, file_location) = match mark {
         Mark::File => {
+            let dir = new_file_location(timestamp, LocationType::Directory)?;
+
             let file_name_len = stream.read_u32::<BigEndian>()? as usize;
             let mut file_name_bytes = vec![0_u8; file_name_len];
             stream.read_exact(&mut file_name_bytes)?;
@@ -119,8 +120,8 @@ fn handle_connection(mut stream: TcpStream) -> Result<ReceivingResult> {
 
             jni_log(*env_guard, &format!("file name: {}", file_name))?;
 
-            let mut file_path = PathBuf::from(&file_location);
-            create_dir_all(&file_path)?;
+            let mut file_path = PathBuf::from(&dir);
+            create_dir(&file_path)?;
             jni_log(*env_guard, &format!("file path: {:?}", file_path))?;
             jni_log(*env_guard, "3")?;
             file_path.push(file_name);
@@ -158,16 +159,21 @@ fn handle_connection(mut stream: TcpStream) -> Result<ReceivingResult> {
             )
         }
         Mark::Text => {
+            let file_location =
+                new_file_location(timestamp, LocationType::File { extension: "txt" })?;
+
             let mut cursor = Cursor::new(Vec::new());
             let size = io::copy(&mut stream, &mut cursor)?;
             File::create(&file_location)?.write_all(cursor.get_ref())?;
             (size, file_location)
         }
         Mark::Tar => {
+            let unpack_dir = new_file_location(timestamp, LocationType::Directory)?;
+
             let mut reader_counter = ReaderCounter::new(&mut stream);
-            receive_tar(&mut reader_counter, &file_location)?;
+            receive_tar(&mut reader_counter, &unpack_dir)?;
             let size = reader_counter.read_size();
-            (size, file_location)
+            (size, unpack_dir)
         }
     };
 
@@ -199,7 +205,7 @@ where
     Ok(())
 }
 
-fn new_file_location(timestamp: u64) -> Result<String> {
+fn new_file_location(timestamp: u64, location_type: LocationType) -> Result<String> {
     let guard = rw_read!(SAVING_PATH);
     let saving_path = guard.as_ref().unwrap();
     let mut path = PathBuf::from(saving_path);
@@ -208,11 +214,25 @@ fn new_file_location(timestamp: u64) -> Result<String> {
         create_dir_all(&path)?;
     }
 
-    path.push(timestamp.to_string());
+    match location_type {
+        LocationType::File { extension } => {
+            let filename = format!("{}.{}", timestamp, extension);
+            path.push(filename);
+        }
+        LocationType::Directory => {
+            path.push(timestamp.to_string());
+        }
+    }
+
     let path_str = path
         .to_str()
         .map_or_else(|| Err(Error::InvalidPathName), Ok)?;
     Ok(String::from(path_str))
+}
+
+enum LocationType<'a> {
+    File { extension: &'a str },
+    Directory,
 }
 
 #[derive(Debug)]
