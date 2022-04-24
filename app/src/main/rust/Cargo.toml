@@ -25,6 +25,9 @@ once_cell = "1.10.0"
 num-traits = "0.2.14"
 num-derive = "0.3.3"
 tar = "0.4.38"
+phone-transfer = { path = "./third_party/bczhc_rust/apps/phone-transfer" }
+walkdir = "2.3.2"
+pathdiff = "0.2.1"
 
 [profile.release]
 panic = "abort"

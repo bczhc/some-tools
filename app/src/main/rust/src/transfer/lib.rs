@@ -2,17 +2,17 @@ use crate::jni_helper::{jni_log, GetString};
 use crate::transfer::errors::*;
 use bczhc_lib::time::get_current_time_millis;
 use bczhc_lib::{rw_read, rw_write};
-use byteorder::{BigEndian, ReadBytesExt};
+use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 use jni::objects::{GlobalRef, JString, JValue};
-use jni::sys::{jint, jlong, jobject};
+use jni::sys::{jfloat, jint, jlong, jobject};
 use jni::{AttachGuard, JNIEnv, JavaVM};
 use num_traits::FromPrimitive;
 use once_cell::sync::Lazy;
 use std::fs::{create_dir, create_dir_all, File};
 use std::io;
-use std::io::{BufWriter, Cursor, Read, Write};
-use std::net::{SocketAddrV4, TcpListener, TcpStream};
-use std::path::PathBuf;
+use std::io::{BufReader, BufWriter, Cursor, Read, Write};
+use std::net::{SocketAddr, SocketAddrV4, TcpListener, TcpStream};
+use std::path::{Path, PathBuf};
 use std::sync::RwLock;
 use std::thread::spawn;
 use tar::Archive;
@@ -257,7 +257,7 @@ struct ReceivingResult {
     size: u64,
 }
 
-const HEADER: &[u8; 8] = b"bczhc\0\0\0";
+const HEADER: &[u8; 8] = phone_transfer::HEADER;
 
 #[derive(num_derive::FromPrimitive, Copy, Clone, Debug)]
 pub enum Mark {
@@ -296,4 +296,99 @@ where
         self.size += read_size as u64;
         Ok(read_size)
     }
+}
+
+pub fn send(
+    env: JNIEnv,
+    socket_addr: JString,
+    mark: jint,
+    path: JString,
+    callback: jobject,
+) -> Result<()> {
+    let s = env.get_string(socket_addr)?;
+    let socket_addr = s.to_str()?;
+    let s = env.get_string(path)?;
+    let path = s.to_str()?;
+
+    let mark: Mark = FromPrimitive::from_i32(mark).ok_or(Error::InvalidMark)?;
+
+    let addr = socket_addr.parse::<SocketAddrV4>()?;
+
+    let stream = TcpStream::connect(&addr)?;
+
+    let mut writer = BufWriter::new(&stream);
+
+    writer.write_all(HEADER)?;
+
+    match mark {
+        Mark::File => {
+            let path = Path::new(path);
+            let file = File::open(path)?;
+            let file_size = file.metadata()?.len();
+
+            let file_name = path
+                .file_name()
+                .unwrap()
+                .to_str()
+                .ok_or(Error::InvalidCharset)?;
+
+            let file_name_bytes = file_name.as_bytes();
+
+            let mut reader = BufReader::new(file);
+
+            writer.write_u8(Mark::File as u8)?;
+            writer.write_u32::<BigEndian>(file_name_bytes.len() as u32)?;
+            writer.write_all(file_name_bytes)?;
+
+            const BUF_SIZE: u64 = 4096;
+            let mut buffer = [0u8; BUF_SIZE as usize];
+            let mut sum = 0_u64;
+            loop {
+                let read_size = reader.read(&mut buffer)?;
+                if read_size == 0 {
+                    break;
+                }
+                writer.write_all(&buffer[..read_size])?;
+                env.call_method(
+                    callback,
+                    "fileProgress",
+                    "(F)V",
+                    &[JValue::Float((sum as f64 / file_size as f64) as jfloat)],
+                )?;
+                sum += BUF_SIZE;
+            }
+        }
+        Mark::Text => {
+            writer.write_u8(Mark::Text as u8)?;
+            let mut file = File::open(path)?;
+            let mut string = String::new();
+            file.read_to_string(&mut string)?;
+
+            let mut cursor = Cursor::new(string.as_bytes());
+            io::copy(&mut cursor, &mut writer)?;
+        }
+        Mark::Tar => {
+            writer.write_u8(Mark::Tar as u8)?;
+            let path = Path::new(path);
+            let mut builder = tar::Builder::new(writer);
+            let entries = walkdir::WalkDir::new(path)
+                .into_iter()
+                .map(|x| x.unwrap())
+                .filter(|x| x.path().is_file());
+
+            for entry in entries {
+                let relative_path = pathdiff::diff_paths(entry.path(), path).unwrap();
+                builder.append_file(relative_path, &mut File::open(entry.path())?)?;
+                let path_str = path.to_str().ok_or(Error::InvalidCharset)?;
+                let log_line_jstring = env.new_string(path_str)?;
+                env.call_method(
+                    callback,
+                    "tarProgress",
+                    "(Ljava/lang/String;)V",
+                    &[JValue::Object(log_line_jstring.into())],
+                )?;
+            }
+        }
+    }
+    Ok(())
 }

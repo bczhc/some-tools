@@ -2,6 +2,7 @@ use crate::transfer::lib;
 use jni::objects::{JClass, JString};
 use jni::sys::{jint, jlong, jobject};
 use jni::JNIEnv;
+use crate::jni_helper::CheckOrThrow;
 
 #[no_mangle]
 #[allow(non_snake_case)]
@@ -20,4 +21,18 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Transfer_asyncStartServer(
             0
         }
     }
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+pub fn Java_pers_zhc_tools_jni_JNI_00024Transfer_send(
+    env: JNIEnv,
+    _class: JClass,
+    socket_addr: JString,
+    mark: jint,
+    path: JString,
+    callback: jobject,
+) {
+    let result = lib::send(env, socket_addr, mark, path, callback);
+    result.check_or_throw(env).unwrap();
 }

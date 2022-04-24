@@ -246,6 +246,16 @@ public class JNI {
 
             void onError(@NotNull String msg);
         }
+
+        public static native void send(String socketAddr, int mark, String path, ReceiveProgressCallback callback);
+
+        public static class ReceiveProgressCallback {
+            protected void fileProgress(float progress) {
+            }
+
+            protected void tarProgress(String logLine) {
+            }
+        }
     }
 
     public static class Ip {

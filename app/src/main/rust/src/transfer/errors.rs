@@ -21,6 +21,10 @@ pub enum Error {
     Utf8Error(#[from] std::str::Utf8Error),
     #[error("InvalidPathName")]
     InvalidPathName,
+    #[error("{0}")]
+    AddressParse(#[from] std::net::AddrParseError),
+    #[error("InvalidCharset")]
+    InvalidCharset,
 }
 
 impl From<GetStringError> for Error {
