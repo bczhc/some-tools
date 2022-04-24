@@ -15,6 +15,12 @@
             android:id="@+id/receive_btn"
             android:layout_gravity="center_horizontal"
     />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:id="@+id/ip_tv"
+              android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+              android:gravity="center_horizontal"
+              android:text="@string/transfer_wifi_ip_tv"
+    />
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/ip_info_tv"
