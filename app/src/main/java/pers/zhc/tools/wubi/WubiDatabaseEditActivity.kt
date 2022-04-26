@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
@@ -13,13 +15,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.wubi_database_edit_activity.*
-import kotlinx.android.synthetic.main.wubi_dict_add_view.view.*
 import kotlinx.android.synthetic.main.wubi_word_with_ordinal_view.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.NotifyLatch
-import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.views.WrapLayout
 import java.util.*
 
@@ -71,24 +71,9 @@ class WubiDatabaseEditActivity : BaseActivity() {
         }
 
         addBtn.setOnClickListener {
-            val inflate = View.inflate(this, R.layout.wubi_dict_add_view, null)
-            val wubiWordET = inflate.wubi_word_et!!.editText
-
-            DialogUtils.createConfirmationAlertDialog(
-                this,
-                { _, _ ->
-                    try {
-                        dictDatabase.addRecord(wubiWordET.text.toString(), wubiCodeET.text.toString())
-                        ToastUtils.show(this, R.string.adding_succeeded)
-                    } catch (_: IllegalArgumentException) {
-                        ToastUtils.show(this, R.string.wubi_incorrect_wubi_code_toast)
-                    }
-                    refreshList()
-                },
-                view = inflate,
-                titleRes = R.string.add_new,
-                width = ViewGroup.LayoutParams.MATCH_PARENT
-            ).show()
+            WubiIME.createAddingNewWordsDialog(this, null).apply {
+                DialogUtils.setDialogAttr(this, width = MATCH_PARENT, height = WRAP_CONTENT)
+            }.show()
         }
 
         Thread {
@@ -101,6 +86,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
         }.start()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun refreshList() {
         candidateList.clear()
         try {
@@ -148,8 +134,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
 
 
     class MyAdapter(
-        private val context: Context,
-        private val candidates: ArrayList<String>
+        private val context: Context, private val candidates: ArrayList<String>
     ) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
         class MyHolder(val wordView: WubiWordView) : RecyclerView.ViewHolder(wordView)
 
@@ -173,15 +158,12 @@ class WubiDatabaseEditActivity : BaseActivity() {
     ) : ItemTouchHelper.Callback() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
             return makeMovementFlags(
-                ItemTouchHelper.UP.xor(ItemTouchHelper.DOWN),
-                ItemTouchHelper.LEFT.xor(ItemTouchHelper.RIGHT)
+                ItemTouchHelper.UP.xor(ItemTouchHelper.DOWN), ItemTouchHelper.LEFT.xor(ItemTouchHelper.RIGHT)
             )
         }
 
         override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
+            recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
         ): Boolean {
             val fromIndex = viewHolder.layoutPosition
             val toIndex = target.layoutPosition
@@ -192,6 +174,7 @@ class WubiDatabaseEditActivity : BaseActivity() {
             return true
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val index = viewHolder.layoutPosition
             outer.candidateList.removeAt(index)
@@ -205,9 +188,10 @@ class WubiDatabaseEditActivity : BaseActivity() {
             outer.myAdapter.notifyDataSetChanged()
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
-            // workaround: send the list updating UI operation message in another thread
+            // workaround: send the list updating UI operation message in another thread,
             // or it will have "cannot call this method while RecyclerView is computing a layout or scrolling..."
             Thread {
                 outer.runOnUiThread {

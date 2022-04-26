@@ -53,86 +53,24 @@ public class WubiIME extends InputMethodService {
     /**
      * Chinese punctuation array
      */
-    private final static String[] punctuationStrings = {
-            "。",
-            "，",
-            "、",
-            "【",
-            "】",
-            "/",
-            "-",
-            "=",
-            "`"
-    };
+    private final static String[] punctuationStrings = {"。", "，", "、", "【", "】", "/", "-", "=", "`"};
 
     /**
      * One-to-one correspondence with {@link WubiIME#punctuationStrings}
      */
-    private final static int[] punctuationKeyCodes = {
-            KeyEvent.KEYCODE_PERIOD,
-            KeyEvent.KEYCODE_COMMA,
-            KeyEvent.KEYCODE_BACKSLASH,
-            KeyEvent.KEYCODE_LEFT_BRACKET,
-            KeyEvent.KEYCODE_RIGHT_BRACKET,
-            KeyEvent.KEYCODE_SLASH,
-            KeyEvent.KEYCODE_MINUS,
-            KeyEvent.KEYCODE_EQUALS,
-            KeyEvent.KEYCODE_GRAVE
-    };
+    private final static int[] punctuationKeyCodes = {KeyEvent.KEYCODE_PERIOD, KeyEvent.KEYCODE_COMMA, KeyEvent.KEYCODE_BACKSLASH, KeyEvent.KEYCODE_LEFT_BRACKET, KeyEvent.KEYCODE_RIGHT_BRACKET, KeyEvent.KEYCODE_SLASH, KeyEvent.KEYCODE_MINUS, KeyEvent.KEYCODE_EQUALS, KeyEvent.KEYCODE_GRAVE};
     /**
      * punctuations that need to input with shift key
      */
-    private final static String[] chinesePunctuationWithShiftStrings = {
-            "《",
-            "》",
-            "？",
-            "：",
-            "！",
-            "·",
-            "#",
-            "￥",
-            "%",
-            "……",
-            "——",
-            "*",
-            "（",
-            "）",
-            "「",
-            "」",
-            "——",
-            "+"
-    };
+    private final static String[] chinesePunctuationWithShiftStrings = {"《", "》", "？", "：", "！", "·", "#", "￥", "%", "……", "——", "*", "（", "）", "「", "」", "——", "+"};
     /**
      * One-to-one correspondence with {@link WubiIME#chinesePunctuationWithShiftStrings}
      */
-    private final static int[] punctuationWithShiftKeyCodes = {
-            KeyEvent.KEYCODE_COMMA,
-            KeyEvent.KEYCODE_PERIOD,
-            KeyEvent.KEYCODE_SLASH,
-            KeyEvent.KEYCODE_SEMICOLON,
-            KeyEvent.KEYCODE_1,
-            KeyEvent.KEYCODE_2,
-            KeyEvent.KEYCODE_3,
-            KeyEvent.KEYCODE_4,
-            KeyEvent.KEYCODE_5,
-            KeyEvent.KEYCODE_6,
-            KeyEvent.KEYCODE_7,
-            KeyEvent.KEYCODE_8,
-            KeyEvent.KEYCODE_9,
-            KeyEvent.KEYCODE_0,
-            KeyEvent.KEYCODE_LEFT_BRACKET,
-            KeyEvent.KEYCODE_RIGHT_BRACKET,
-            KeyEvent.KEYCODE_MINUS,
-            KeyEvent.KEYCODE_EQUALS
-    };
+    private final static int[] punctuationWithShiftKeyCodes = {KeyEvent.KEYCODE_COMMA, KeyEvent.KEYCODE_PERIOD, KeyEvent.KEYCODE_SLASH, KeyEvent.KEYCODE_SEMICOLON, KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_3, KeyEvent.KEYCODE_4, KeyEvent.KEYCODE_5, KeyEvent.KEYCODE_6, KeyEvent.KEYCODE_7, KeyEvent.KEYCODE_8, KeyEvent.KEYCODE_9, KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_LEFT_BRACKET, KeyEvent.KEYCODE_RIGHT_BRACKET, KeyEvent.KEYCODE_MINUS, KeyEvent.KEYCODE_EQUALS};
     /**
      * The keys only matter when composing, otherwise it'll be consumed by the next receiver.
      */
-    private final static int[] keysMatterWhenComposing = {
-            KeyEvent.KEYCODE_BACK,
-            KeyEvent.KEYCODE_DEL,
-            KeyEvent.KEYCODE_ENTER
-    };
+    private final static int[] keysMatterWhenComposing = {KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_DEL, KeyEvent.KEYCODE_ENTER};
     private final StringBuilder wubiCodeSB = new StringBuilder();
     private final Quotation quotation = new Quotation();
     private final List<String> candidates = new ArrayList<>();
@@ -422,6 +360,18 @@ public class WubiIME extends InputMethodService {
         }
     });
 
+    private void showAddingNewWordsDialog() {
+        if (candidateLayout != null) {
+            ContextThemeWrapper themedContext = getThemedContext();
+            CharSequence selectedText = ic.getSelectedText(0);
+            Dialog dialog = createAddingNewWordsDialog(themedContext, selectedText != null ? selectedText.toString() : null);
+
+            IBinder windowToken = candidateLayout.getWindowToken();
+            setDialogAttrs(dialog, windowToken, MATCH_PARENT, WRAP_CONTENT);
+            dialog.show();
+        }
+    }
+
     @SuppressWarnings("SameParameterValue")
     private void setDialogAttrs(@NotNull Dialog dialog, IBinder token, int width, int height) {
         final Window window = dialog.getWindow();
@@ -447,109 +397,94 @@ public class WubiIME extends InputMethodService {
         return new ContextThemeWrapper(this, theme);
     }
 
-    private void showAddingNewWordsDialog() {
-        if (candidateLayout != null) {
-            int theme = R.style.Theme_Application_NoActionBar;
+    static Dialog createAddingNewWordsDialog(Context context, @Nullable String defaultString) {
+        final View inflate = View.inflate(context, R.layout.wubi_adding_new_words_dialog, null);
 
-            final int nightMode = AppCompatDelegate.getDefaultNightMode();
-            if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-                theme = R.style.Theme_Application_Dark_NoActionBar;
+        final EditText wordET = ((SmartHintEditText) inflate.findViewById(R.id.wubi_word_et)).getEditText();
+        final EditText codeET = ((SmartHintEditText) inflate.findViewById(R.id.wubi_code_et)).getEditText();
+        final TextView existAlertTV = inflate.findViewById(R.id.alert_tv);
+        final TextView existWordCodeTV = inflate.findViewById(R.id.wubi_word_tv);
+
+        AtomicBoolean alreadyExists = new AtomicBoolean(false);
+        final WubiInverseDictDatabase inverseDictDatabase = WubiInverseDictManager.Companion.openDatabase();
+
+        final DialogInterface.OnClickListener positiveButtonAction = (dialog1, which) -> {
+            final String word = wordET.getText().toString();
+            final String code = codeET.getText().toString();
+            if (!checkCode(code)) {
+                ToastUtils.show(context, R.string.wubi_code_invalid_toast);
+                return;
+            }
+            final String[] query = inverseDictDatabase.query(word);
+
+            boolean existInDict = false;
+            if (query.length != 0) {
+                for (String s : query) {
+                    if (s.equals(code)) {
+                        existInDict = true;
+                        break;
+                    }
+                }
+            }
+            if (existInDict) {
+                ToastUtils.show(context, R.string.wubi_words_adding_word_already_exists_ignore_toast);
+                return;
+            }
+            DictionaryDatabase.Companion.getDictDatabase().addRecord(word, code);
+            ToastUtils.show(context, R.string.adding_succeeded);
+        };
+
+        Dialog dialog = new AlertDialog.Builder(context).setView(inflate).setPositiveButton(R.string.confirm, (dialog1, which) -> {
+            positiveButtonAction.onClick(dialog1, which);
+            inverseDictDatabase.close();
+        }).setNegativeButton(R.string.cancel, (dialog1, which) -> inverseDictDatabase.close()).create();
+
+        wordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
-            final ContextThemeWrapper themedContext = new ContextThemeWrapper(this, theme);
-            final View inflate = View.inflate(themedContext, R.layout.wubi_adding_new_words_dialog, null);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            final EditText wordET = ((SmartHintEditText) inflate.findViewById(R.id.wubi_word_et)).getEditText();
-            final EditText codeET = ((SmartHintEditText) inflate.findViewById(R.id.wubi_code_et)).getEditText();
-            final TextView existAlertTV = inflate.findViewById(R.id.alert_tv);
-            final TextView existWordCodeTV = inflate.findViewById(R.id.wubi_word_tv);
+            }
 
-            AtomicBoolean alreadyExists = new AtomicBoolean(false);
-            final WubiInverseDictDatabase inverseDictDatabase = WubiInverseDictManager.Companion.openDatabase();
-
-            final DialogInterface.OnClickListener positiveButtonAction = (dialog1, which) -> {
+            @Override
+            public void afterTextChanged(Editable s) {
                 final String word = wordET.getText().toString();
-                final String code = codeET.getText().toString();
-                if (!checkCode(code)) {
-                    ToastUtils.show(this, R.string.wubi_code_invalid_toast);
-                    return;
-                }
                 final String[] query = inverseDictDatabase.query(word);
-
-                boolean existInDict = false;
                 if (query.length != 0) {
-                    for (String s : query) {
-                        if (s.equals(code)) {
-                            existInDict = true;
-                            break;
-                        }
+                    // the word already exists
+                    existAlertTV.setVisibility(View.VISIBLE);
+                    existWordCodeTV.setVisibility(View.VISIBLE);
+                    StringBuilder sb = new StringBuilder();
+                    for (String sbs : query) {
+                        sb.append(sbs).append('\n');
                     }
-                }
-                if (existInDict) {
-                    ToastUtils.show(this, R.string.wubi_words_adding_word_already_exists_ignore_toast);
-                    return;
-                }
-                DictionaryDatabase.Companion.getDictDatabase().addRecord(word, code);
-                ToastUtils.show(this, R.string.adding_succeeded);
-            };
+                    sb.deleteCharAt(sb.length() - 1);
+                    existWordCodeTV.setText(sb.toString());
+                    codeET.setText("");
+                    alreadyExists.set(true);
+                } else {
+                    existAlertTV.setVisibility(View.GONE);
+                    existWordCodeTV.setText("");
+                    existWordCodeTV.setVisibility(View.GONE);
 
-            Dialog dialog = new AlertDialog.Builder(themedContext)
-                    .setView(inflate)
-                    .setPositiveButton(R.string.confirm, (dialog1, which) -> {
-                        positiveButtonAction.onClick(dialog1, which);
-                        inverseDictDatabase.close();
-                    })
-                    .setNegativeButton(R.string.cancel, (dialog1, which) -> inverseDictDatabase.close())
-                    .create();
-
-            setDialogAttrs(dialog, candidateLayout.getWindowToken(), MATCH_PARENT, WRAP_CONTENT);
-
-            dialog.show();
-
-            wordET.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    final String word = wordET.getText().toString();
-                    final String[] query = inverseDictDatabase.query(word);
-                    if (query.length != 0) {
-                        // the word already exists
-                        existAlertTV.setVisibility(View.VISIBLE);
-                        existWordCodeTV.setVisibility(View.VISIBLE);
-                        StringBuilder sb = new StringBuilder();
-                        for (String sbs : query) {
-                            sb.append(sbs).append('\n');
-                        }
-                        sb.deleteCharAt(sb.length() - 1);
-                        existWordCodeTV.setText(sb.toString());
-                        codeET.setText("");
-                        alreadyExists.set(true);
+                    final String composedWubiCode = inverseDictDatabase.composeCodeFromWord(word);
+                    if (composedWubiCode != null) {
+                        codeET.setText(composedWubiCode);
                     } else {
-                        existAlertTV.setVisibility(View.GONE);
-                        existWordCodeTV.setText("");
-                        existWordCodeTV.setVisibility(View.GONE);
-
-                        final String composedWubiCode = inverseDictDatabase.composeCodeFromWord(word);
-                        if (composedWubiCode != null) {
-                            codeET.setText(composedWubiCode);
-                        } else {
-                            codeET.setText("");
-                        }
-                        alreadyExists.set(false);
+                        codeET.setText("");
                     }
+                    alreadyExists.set(false);
                 }
-            });
-            wordET.setText(ic.getSelectedText(0));
+            }
+        });
+        if (defaultString != null) {
+            wordET.setText(defaultString);
         }
+        return dialog;
     }
 
     private void showToolsDialog() {
@@ -562,9 +497,7 @@ public class WubiIME extends InputMethodService {
 
         List<String> data = Arrays.asList(context.getResources().getStringArray(R.array.wubi_tools_names));
 
-        final RecyclerViewArrayAdapter<String> adapter = RecyclerViewUtils.Companion.buildSimpleItem1ListAdapter(
-                context, data, true
-        );
+        final RecyclerViewArrayAdapter<String> adapter = RecyclerViewUtils.Companion.buildSimpleItem1ListAdapter(context, data, true);
 
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(context));
@@ -575,12 +508,10 @@ public class WubiIME extends InputMethodService {
         setDialogAttrs(dialog, token, MATCH_PARENT, WRAP_CONTENT);
         dialog.show();
 
-        final View.OnClickListener[] listeners = {
-                v -> {
-                    // single character codes records
-                    showSingleCharCodesRecordingDialog();
-                }
-        };
+        final View.OnClickListener[] listeners = {v -> {
+            // single character codes records
+            showSingleCharCodesRecordingDialog();
+        }};
 
         adapter.setOnItemClickListener((position, view) -> {
             listeners[position].onClick(view);
@@ -685,18 +616,7 @@ public class WubiIME extends InputMethodService {
     }
 
     public enum InputRange {
-        A_Z,
-        PUNCTUATION,
-        BACKSPACE,
-        SPACE,
-        SHIFT,
-        SEMICOLON,
-        APOSTROPHE,
-        ENTER,
-        NUM0_9,
-        CTRL,
-        SOME_MATTERS_WITH_SHIFT,
-        OTHERS
+        A_Z, PUNCTUATION, BACKSPACE, SPACE, SHIFT, SEMICOLON, APOSTROPHE, ENTER, NUM0_9, CTRL, SOME_MATTERS_WITH_SHIFT, OTHERS
     }
 
     /**
@@ -708,8 +628,7 @@ public class WubiIME extends InputMethodService {
         if (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z) return InputRange.A_Z;
         if (keyCode == KeyEvent.KEYCODE_DEL) return InputRange.BACKSPACE;
         if (keyCode == KeyEvent.KEYCODE_SPACE) return InputRange.SPACE;
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
-            return InputRange.SHIFT;
+        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) return InputRange.SHIFT;
         for (int punctuationKeyCode : punctuationKeyCodes) {
             if (punctuationKeyCode == keyCode) {
                 return InputRange.PUNCTUATION;
@@ -792,18 +711,7 @@ public class WubiIME extends InputMethodService {
     /**
      * 0-9 number superscript modifier characters
      */
-    private static final char[] numberSuperscriptModifier = {
-            '\u2070',
-            '\u00b9',
-            '\u00b2',
-            '\u00b3',
-            '\u2074',
-            '\u2075',
-            '\u2076',
-            '\u2077',
-            '\u2078',
-            '\u2079',
-    };
+    private static final char[] numberSuperscriptModifier = {'\u2070', '\u00b9', '\u00b2', '\u00b3', '\u2074', '\u2075', '\u2076', '\u2077', '\u2078', '\u2079',};
 
     @NotNull
     @Contract("_ -> new")
@@ -878,8 +786,7 @@ public class WubiIME extends InputMethodService {
                 tts.speak(s, TextToSpeech.QUEUE_ADD, null, String.valueOf(System.currentTimeMillis()));
             } else tts = null;
 
-            if (SingleCharCodesChecker.Companion.checkIfSingleChar(s)
-                    && singleCharCodesChecker != null) {
+            if (SingleCharCodesChecker.Companion.checkIfSingleChar(s) && singleCharCodesChecker != null) {
                 singleCharCodesChecker.commit(s, wubiCodeSB.toString());
             }
         }
