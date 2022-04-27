@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:padding="10dp"
 >
     <pers.zhc.tools.views.SmartHintEditText
@@ -10,18 +11,39 @@
             app:hint="@string/transfer_destination_address_et"
             android:id="@+id/destination_address_et"
     />
-    <pers.zhc.tools.views.ScrollEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/destination_address_et"
-            android:layout_above="@id/send_msg_btn"
-            android:fillViewport="true"
-            android:id="@+id/msg_et"
-    />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_below="@id/destination_address_et"
+                  android:id="@+id/ll"
+    >
+        <Spinner android:layout_width="0dp" android:layout_height="match_parent"
+                 android:id="@+id/type_spinner"
+                 tools:listitem="@android:layout/simple_dropdown_item_1line"
+                 android:gravity="center_vertical"
+                 android:layout_weight="1"
+                 android:layout_marginEnd="2.5dp"
+        />
+        <Button android:layout_width="0dp" android:layout_height="match_parent"
+                android:text="@string/pick_file_btn"
+                android:id="@+id/pick_file_btn"
+                android:layout_weight="1"
+                android:layout_marginStart="2.5dp"
+        />
+    </LinearLayout>
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+                android:layout_below="@id/ll"
+                android:layout_above="@id/send_btn"
+    >
+        <pers.zhc.tools.views.WrapLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/container_layout"
+        />
+    </ScrollView>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/transfer_send_button"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:id="@+id/send_msg_btn"
+            android:id="@+id/send_btn"
     />
 </RelativeLayout>

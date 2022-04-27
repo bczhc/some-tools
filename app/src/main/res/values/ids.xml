@@ -3,4 +3,5 @@
     <item name="bar" type="id"/>
     <item name="bar_l" type="id"/>
     <item name="view" type="id"/>
+    <item name="text_et" type="id"/>
 </resources>

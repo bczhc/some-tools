@@ -373,20 +373,37 @@ pub fn send(
             let mut builder = tar::Builder::new(writer);
             let entries = walkdir::WalkDir::new(path)
                 .into_iter()
-                .map(|x| x.unwrap())
+                .map(|x| {
+                    jni_log(env, &format!("{:?}", x)).unwrap();
+                    x.unwrap()
+                })
                 .filter(|x| x.path().is_file());
 
             for entry in entries {
-                let relative_path = pathdiff::diff_paths(entry.path(), path).unwrap();
-                builder.append_file(relative_path, &mut File::open(entry.path())?)?;
-                let path_str = path.to_str().ok_or(Error::InvalidCharset)?;
+                let entry_path = entry.path();
+
+                let s = format!("{:?} {:?}", entry_path, path);
+                jni_log(env, &s)?;
+                jni_log(env, "1")?;
+
+                let relative_path = pathdiff::diff_paths(entry_path, path).unwrap();
+                jni_log(env, "2")?;
+                jni_log(env, relative_path.to_str().unwrap())?;
+                jni_log(env, "3")?;
+                builder.append_file(relative_path, &mut File::open(entry_path)?)?;
+                jni_log(env, "4")?;
+                let path_str = entry_path.to_str().ok_or(Error::InvalidCharset)?;
+                jni_log(env, "5")?;
                 let log_line_jstring = env.new_string(path_str)?;
+                jni_log(env, "6")?;
                 env.call_method(
                     callback,
                     "tarProgress",
                     "(Ljava/lang/String;)V",
                     &[JValue::Object(log_line_jstring.into())],
                 )?;
+                jni_log(env, "7")?;
+                jni_log(env, "\n")?;
             }
         }
     }

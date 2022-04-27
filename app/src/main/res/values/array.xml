@@ -75,4 +75,12 @@
         <item>单字简码记录</item>
     </array>
     <!-- module end -->
+
+    <!-- module: transfer -->
+    <array name="transfer_types">
+        <item>文件</item>
+        <item>文件夹</item>
+        <item>文本</item>
+    </array>
+    <!-- module end -->
 </resources>

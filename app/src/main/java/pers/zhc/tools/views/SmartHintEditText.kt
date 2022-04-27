@@ -2,6 +2,7 @@ package pers.zhc.tools.views
 
 import android.content.Context
 import android.graphics.Point
+import android.text.Editable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
@@ -17,6 +18,7 @@ import kotlin.math.max
 class SmartHintEditText : WrapLayout {
     private lateinit var mET: EditText
     val editText get() = mET
+    val text: Editable get() = mET.text
 
     lateinit var inputLayout: TextInputLayout
     val textInputLayout get() = inputLayout

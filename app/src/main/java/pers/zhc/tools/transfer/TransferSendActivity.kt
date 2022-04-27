@@ -1,20 +1,207 @@
 package pers.zhc.tools.transfer
 
+import android.app.Dialog
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ScrollView
 import kotlinx.android.synthetic.main.transfer_send_activity.*
+import kotlinx.android.synthetic.main.transfer_tar_progress_view.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.jni.JNI
+import pers.zhc.tools.jni.JNI.Transfer.ReceiveProgressCallback
+import pers.zhc.tools.utils.Assertion
+import pers.zhc.tools.utils.AsyncTryDo
+import pers.zhc.tools.utils.ProgressDialog
 import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.util.Assertion
-import java.net.InetAddress
+import pers.zhc.tools.views.SmartHintEditText
+import pers.zhc.tools.views.WrapLayout
+import java.io.File
 
 /**
  * @author bczhc
  */
 class TransferSendActivity : BaseActivity() {
+    private lateinit var containerLayout: WrapLayout
+
+    private val launchers = object {
+        val filePicker = FilePicker.getLauncher(this@TransferSendActivity) { path ->
+            path ?: return@getLauncher
+            when (val child = containerLayout.getChildAt(0)) {
+                is SmartHintEditText -> {
+                    // file path
+                    child.editText.setText(path)
+                }
+                is EditText -> {
+                    // text
+                    child.setText(File(path).readText())
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.transfer_send_activity)
+
+        val addressET = destination_address_et!!.editText
+        val typeSpinner = type_spinner!!
+        val pickFileButton = pick_file_btn!!
+        containerLayout = container_layout!!
+        val sendButton = send_btn!!
+
+        val typeStrings = resources.getStringArray(R.array.transfer_types)
+        typeSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, typeStrings)
+
+        typeSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0 || position == 1) {
+                    val inflate = View.inflate(this@TransferSendActivity, R.layout.transfer_path_et, null).apply {
+                        layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+                    }
+                    containerLayout.setView(inflate)
+                } else {
+                    val et = EditText(this@TransferSendActivity).apply {
+                        layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+                        gravity = Gravity.START or Gravity.TOP
+                        hint = getString(R.string.text)
+                    }
+                    containerLayout.setView(et)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+
+        pickFileButton.setOnClickListener {
+            when (typeSpinner.selectedItemPosition) {
+                0 -> {
+                    // file
+                    launchers.filePicker.launch(FilePicker.PICK_FILE)
+                }
+                1 -> {
+                    // folder
+                    launchers.filePicker.launch(FilePicker.PICK_FOLDER)
+                }
+                2 -> {
+                    // text
+                    launchers.filePicker.launch(FilePicker.PICK_FILE)
+                }
+            }
+        }
+
+        sendButton.setOnClickListener {
+            val address = addressET.text.toString()
+
+            val mark = when (typeSpinner.selectedItemPosition) {
+                0 -> Mark.FILE
+                1 -> Mark.TAR
+                2 -> Mark.TEXT
+                else -> throw Assertion.Companion.UnreachableError()
+            }
+            val file = if (mark == Mark.TEXT) {
+                val text = (containerLayout.getChildAt(0) as EditText).text.toString()
+                saveTempText(text).also { pers.zhc.util.Assertion.doAssertion(it.exists()) }
+            } else {
+                File((containerLayout.getChildAt(0) as SmartHintEditText).text.toString())
+            }
+
+            if (!file.exists()) {
+                ToastUtils.show(this, R.string.file_not_exist)
+                return@setOnClickListener
+            }
+
+            showSendingDialog(mark, address, file)
+        }
+    }
+
+    private fun showSendingDialog(mark: Mark, address: String, file: File) {
+        val pair = when (mark) {
+            Mark.FILE -> {
+                val progressDialog = ProgressDialog(this)
+                val progressView = progressDialog.getProgressView()
+                progressView.apply {
+                    setIsIndeterminateMode(false)
+                }
+                val tryDo = AsyncTryDo()
+                val callback = object : ReceiveProgressCallback() {
+                    override fun fileProgress(progress: Float) {
+                        tryDo.tryDo { _, notifier ->
+                            runOnUiThread {
+                                progressView.setProgress(progress)
+                                notifier.finish()
+                            }
+                        }
+                    }
+                }
+                Pair(progressDialog, callback)
+            }
+            Mark.TEXT -> {
+                val progressDialog = ProgressDialog(this)
+                val progressView = progressDialog.getProgressView()
+                progressView.apply {
+                    setIsIndeterminateMode(true)
+                }
+                val callback = object : ReceiveProgressCallback() {}
+                Pair(progressDialog, callback)
+            }
+            Mark.TAR -> {
+                val dialog = Dialog(this)
+                val inflate = View.inflate(this, R.layout.transfer_tar_progress_view, null).apply {
+                    layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+                }
+                dialog.setContentView(inflate)
+
+                val textView = inflate.tar_files_tv!!
+                val scrollView = inflate.scrollView!!
+
+                val callback = object : ReceiveProgressCallback() {
+                    override fun tarProgress(logLine: String?) {
+                        runOnUiThread {
+                            textView.append(logLine)
+                            textView.append("\n")
+                            scrollView.scrollToBottom()
+                        }
+                    }
+                }
+                Pair(dialog, callback)
+            }
+        }
+        val dialog = pair.first
+        val progressCallback = pair.second
+
+        dialog.show()
+
+        Thread {
+            try {
+                JNI.Transfer.send(address, mark.enumInt, file.path, progressCallback)
+                runOnUiThread {
+                    dialog.dismiss()
+                }
+            } catch (e: Exception) {
+                ToastUtils.showException(this, e)
+                runOnUiThread {
+                    dialog.dismiss()
+                }
+            }
+        }.start()
+    }
+
+    private fun saveTempText(text: String): File {
+        return File(cacheDir, "temp-${System.currentTimeMillis()}.txt").also { it.writeText(text) }
+    }
+
+    fun ScrollView.scrollToBottom() {
+        this.fullScroll(View.FOCUS_DOWN)
     }
 }

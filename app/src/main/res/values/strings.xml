@@ -69,6 +69,10 @@
     <string name="empty_button">清空</string>
     <string name="time_is_">时间：%1$s</string>
     <string name="no_app_to_open">没有可供打开的应用</string>
+    <string name="pick_file_btn">选择文件</string>
+    <string name="file_path_hint">文件路径</string>
+    <string name="file_not_exist">文件不存在</string>
+    <string name="text">文本</string>
     <!-- end -->
 
     <!-- old -->
@@ -325,7 +329,6 @@
     <string name="over_quantity_limit">超出数量限制</string>
     <string name="closed">已关闭</string>
     <string name="regular_expression_test">正则表达式测试</string>
-    <string name="text">文本</string>
     <string name="corrupted_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
     <string name="wubi_test">五笔测试</string>
     <string name="something_went_wrong">something went wrong</string>
@@ -600,7 +603,7 @@
     <string name="transfer_label">传输</string>
     <string name="transfer_send_button">发送</string>
     <string name="transfer_receive_button">接收</string>
-    <string name="transfer_destination_address_et">目标地址（ip:端口）</string>
+    <string name="transfer_destination_address_et">目标地址（格式为IP:端口）</string>
     <string name="transfer_listen_port">监听端口</string>
     <string name="transfer_start_btn">启动</string>
     <string name="transfer_receive_label">接收</string>
@@ -704,5 +707,6 @@
 
     <!-- file_browser -->
     <string name="file_browser_label">文件浏览</string>
+    <string name="transfer_tar_sending_progress_msg">正在发送……</string>
     <!-- end -->
 </resources>
