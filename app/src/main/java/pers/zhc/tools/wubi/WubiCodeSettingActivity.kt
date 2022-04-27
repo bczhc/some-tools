@@ -28,20 +28,18 @@ class WubiCodeSettingActivity : BaseActivity() {
         val adapter = RecyclerViewUtils.buildSimpleItem1ListAdapter(
             this, data.toList()
         )
-        adapter.setOnItemClickListener { position, view ->
-            view.setOnClickListener {
-                arrayOf(
-                    {
-                        downloadWordsDictAction()
-                    },
-                    {
-                        startActivity(Intent(this, WubiDatabaseEditActivity::class.java))
-                    },
-                    {
-                        startActivity(Intent(this, WubiCodeLookingUpActivity::class.java))
-                    }
-                )[position]()
-            }
+        adapter.setOnItemClickListener { position, _ ->
+            arrayOf(
+                {
+                    downloadWordsDictAction()
+                },
+                {
+                    startActivity(Intent(this, WubiDatabaseEditActivity::class.java))
+                },
+                {
+                    startActivity(Intent(this, WubiCodeLookingUpActivity::class.java))
+                }
+            )[position]()
         }
         recyclerView.adapter = adapter
         recyclerView.setLinearLayoutManager()
