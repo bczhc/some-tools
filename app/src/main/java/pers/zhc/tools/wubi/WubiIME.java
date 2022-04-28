@@ -181,10 +181,7 @@ public class WubiIME extends InputMethodService {
                                     break;
                                 case KeyEvent.KEYCODE_O:
                                     // open Wubi dictionary editing activity
-                                    final Intent intent = new Intent(WubiIME.this, WubiDatabaseEditActivity.class);
-                                    intent.putExtra(WubiDatabaseEditActivity.EXTRA_WUBI_CODE, wubiCodeTV.getText().toString());
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
+                                    startWubiDictEditingActivity(wubiCodeTV.getText().toString());
                                     break;
                                 case KeyEvent.KEYCODE_T:
                                     // tools
@@ -357,6 +354,13 @@ public class WubiIME extends InputMethodService {
             return inputRange != InputRange.OTHERS;
         }
     });
+
+    private void startWubiDictEditingActivity(@NotNull String code) {
+        final Intent intent = new Intent(WubiIME.this, WubiDatabaseEditActivity.class);
+        intent.putExtra(WubiDatabaseEditActivity.EXTRA_WUBI_CODE, code);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
     private void showAddingNewWordsDialog() {
         if (candidateLayout != null) {
@@ -624,17 +628,31 @@ public class WubiIME extends InputMethodService {
             headTV.setText(getString(R.string.wubi_inverse_lookup_dialog_head, text));
         }
 
-        if (queried.isEmpty() && !noSelectionHint) {
+        boolean noResults = queried.isEmpty();
+        if (noResults && !noSelectionHint) {
             queried = Collections.singletonList(getString(R.string.none));
         }
 
         RecyclerView recyclerView = inflate.findViewById(R.id.recycler_view);
         RecyclerViewArrayAdapter<String> adapter = new RecyclerViewArrayAdapter<>(context, queried, android.R.layout.simple_list_item_1, (view, s) -> {
             TextView textView = (TextView) view;
-            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+            textView.setGravity(Gravity.CENTER);
             textView.setText(s);
+            if (!noResults) {
+                textView.setBackgroundResource(R.drawable.selectable_bg);
+            }
             return Unit.INSTANCE;
         });
+
+        List<String> finalQueried = queried;
+        adapter.setOnItemClickListener((position, view) -> {
+            if (!noResults) {
+                String code = finalQueried.get(position);
+                startWubiDictEditingActivity(code);
+            }
+            return Unit.INSTANCE;
+        });
+
         recyclerView.setAdapter(adapter);
         RecyclerViewUtilsKt.setLinearLayoutManager(recyclerView);
 
