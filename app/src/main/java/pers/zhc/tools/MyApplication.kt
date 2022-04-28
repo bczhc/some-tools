@@ -19,6 +19,7 @@ import pers.zhc.tools.email.Database
 import pers.zhc.tools.wubi.DictionaryDatabase
 import pers.zhc.tools.wubi.WubiInverseDictManager
 import pers.zhc.tools.words.WordsMainActivity
+import pers.zhc.tools.wubi.SingleCharCodesChecker
 import java.io.File
 
 /**
@@ -39,6 +40,7 @@ class MyApplication : Application() {
         DictionaryDatabase.init(this)
         WubiInverseDictManager.init(this)
         CharLookupActivity.init(this)
+        SingleCharCodesChecker.RecordDatabase.init(this)
 
         registerNotificationChannel()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
