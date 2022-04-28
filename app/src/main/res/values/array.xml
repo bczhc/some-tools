@@ -73,6 +73,7 @@
     <!-- module: wubi tools -->
     <array name="wubi_tools_names">
         <item>单字简码记录</item>
+        <item>反查</item>
     </array>
     <!-- module end -->
 

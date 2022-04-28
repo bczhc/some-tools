@@ -11,10 +11,7 @@ import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.Button;
@@ -39,6 +36,7 @@ import pers.zhc.util.Assertion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -511,6 +509,10 @@ public class WubiIME extends InputMethodService {
         final View.OnClickListener[] listeners = {v -> {
             // single character codes records
             showSingleCharCodesRecordingDialog();
+        }, v -> {
+            // wubi code inverse lookup
+            CharSequence selectedText = ic.getSelectedText(0);
+            handleInverseLookup(LangUtils.Companion.nullMap(selectedText, CharSequence::toString));
         }};
 
         adapter.setOnItemClickListener((position, view) -> {
@@ -564,6 +566,78 @@ public class WubiIME extends InputMethodService {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(inflate);
         setDialogAttrs(dialog, candidateLayout.getWindowToken(), MATCH_PARENT, WRAP_CONTENT);
+        dialog.show();
+    }
+
+    private void handleInverseLookup(@Nullable String text) {
+        IBinder windowToken = getWindowToken();
+        if (windowToken == null) return;
+
+        ContextThemeWrapper context = getThemedContext();
+
+        if (text == null) {
+            showInverseDictLookupDialog(context, null, new ArrayList<>(), true, windowToken);
+            return;
+        }
+
+        Dialog progressDialog = createProgressDialog(context, windowToken);
+
+        progressDialog.show();
+        new Thread(() -> {
+            final List<String> queried = new ArrayList<>();
+            WubiInverseDictManager.Companion.useDatabase(db -> {
+                queried.addAll(Arrays.asList(db.query(text)));
+                return Unit.INSTANCE;
+            });
+
+            Common.runOnUiThread(context, () -> {
+                progressDialog.dismiss();
+                showInverseDictLookupDialog(context, text, queried, false, windowToken);
+            });
+        }).start();
+    }
+
+    @NotNull
+    private Dialog createProgressDialog(Context context, IBinder windowToken) {
+        Dialog progressDialog = new Dialog(context);
+        setDialogAttrs(progressDialog, windowToken, MATCH_PARENT, WRAP_CONTENT);
+
+        View inflate = View.inflate(context, R.layout.progress_bar_indeterminate_compat, null);
+        TextView titleTV = inflate.findViewById(R.id.title);
+        titleTV.setText(getString(R.string.looking_up));
+        progressDialog.setContentView(inflate);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        return progressDialog;
+    }
+
+    private void showInverseDictLookupDialog(Context context, @Nullable String text, List<String> queried, boolean noSelectionHint, IBinder windowToken) {
+        Dialog dialog = new Dialog(context);
+        View inflate = View.inflate(context, R.layout.wubi_inverse_dict_lookup_dialog, null);
+        dialog.setContentView(inflate);
+        setDialogAttrs(dialog, windowToken, MATCH_PARENT, WRAP_CONTENT);
+
+        TextView headTV = inflate.findViewById(R.id.head_tv);
+        if (noSelectionHint) {
+            headTV.setText(getString(R.string.wubi_no_selected_text_hint));
+        } else {
+            headTV.setText(getString(R.string.wubi_inverse_lookup_dialog_head, text));
+        }
+
+        if (queried.isEmpty() && !noSelectionHint) {
+            queried = Collections.singletonList(getString(R.string.none));
+        }
+
+        RecyclerView recyclerView = inflate.findViewById(R.id.recycler_view);
+        RecyclerViewArrayAdapter<String> adapter = new RecyclerViewArrayAdapter<>(context, queried, android.R.layout.simple_list_item_1, (view, s) -> {
+            TextView textView = (TextView) view;
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+            textView.setText(s);
+            return Unit.INSTANCE;
+        });
+        recyclerView.setAdapter(adapter);
+        RecyclerViewUtilsKt.setLinearLayoutManager(recyclerView);
+
         dialog.show();
     }
 
@@ -906,5 +980,10 @@ public class WubiIME extends InputMethodService {
         private @NotNull String getText() {
             return candidateHintTV.getText().toString();
         }
+    }
+
+    @Nullable
+    private IBinder getWindowToken() {
+        return LangUtils.Companion.nullMap(candidateLayout, View::getWindowToken);
     }
 }

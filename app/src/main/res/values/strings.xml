@@ -73,6 +73,8 @@
     <string name="file_path_hint">文件路径</string>
     <string name="file_not_exist">文件不存在</string>
     <string name="text">文本</string>
+    <string name="looking_up">正在查询</string>
+    <string name="none">无</string>
     <!-- end -->
 
     <!-- old -->
@@ -430,6 +432,8 @@
     <string name="wubi_words_adding_word_already_exists_ignore_toast">已经存在，忽略添加</string>
     <string name="wubi_single_char_code_check_input_code_tv">实际输入：%1$s</string>
     <string name="wubi_single_char_code_check_shortest_code_tv">最短编码：%1$s</string>
+    <string name="wubi_no_selected_text_hint">未选择文字</string>
+    <string name="wubi_inverse_lookup_dialog_head">“%1$s”的反查结果</string>
     <!-- module end -->
 
     <!-- app settings -->
