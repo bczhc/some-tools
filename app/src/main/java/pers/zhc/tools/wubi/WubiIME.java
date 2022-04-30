@@ -1,6 +1,5 @@
 package pers.zhc.tools.wubi;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -525,7 +524,6 @@ public class WubiIME extends InputMethodService {
         });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void showSingleCharCodesRecordingDialog() {
         if (candidateLayout == null) {
             return;
@@ -538,21 +536,37 @@ public class WubiIME extends InputMethodService {
         RecyclerView recyclerView = inflate.findViewById(R.id.recycler_view);
 
         switchMaterial.setChecked(singleCharCodesChecker != null);
+        emptyButton.setEnabled(singleCharCodesChecker != null);
+
+        final AtomicReference<SingleCharCodesChecker.RecyclerViewAdapter> adapter = new AtomicReference<>(null);
+
+        final Runnable setupRecyclerView = () -> {
+            adapter.set(singleCharCodesChecker.getRecyclerViewAdapter(context));
+
+            recyclerView.setAdapter(adapter.get());
+            RecyclerViewUtilsKt.setLinearLayoutManager(recyclerView);
+            RecyclerViewUtilsKt.addDividerLines(recyclerView);
+        };
 
         switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 singleCharCodesChecker = new SingleCharCodesChecker();
+                emptyButton.setEnabled(true);
+                if (adapter.get() == null) {
+                    setupRecyclerView.run();
+                }
+                recyclerView.setVisibility(View.VISIBLE);
             } else {
                 singleCharCodesChecker = null;
+                emptyButton.setEnabled(false);
+                recyclerView.setVisibility(View.GONE);
             }
         });
-
-        final AtomicReference<SingleCharCodesChecker.RecyclerViewAdapter> adapter = new AtomicReference<>(null);
 
         emptyButton.setOnClickListener(v -> {
             if (singleCharCodesChecker != null) {
                 singleCharCodesChecker.clear();
-                adapter.get().notifyDataSetChanged();
+                adapter.get().updateList();
 
             } else {
                 recyclerView.setVisibility(View.GONE);
@@ -560,11 +574,7 @@ public class WubiIME extends InputMethodService {
         });
 
         if (singleCharCodesChecker != null) {
-            adapter.set(singleCharCodesChecker.getRecyclerViewAdapter(context));
-
-            recyclerView.setAdapter(adapter.get());
-            RecyclerViewUtilsKt.setLinearLayoutManager(recyclerView);
-            RecyclerViewUtilsKt.addDividerLines(recyclerView);
+            setupRecyclerView.run();
         }
 
         final Dialog dialog = new Dialog(context);
@@ -879,7 +889,7 @@ public class WubiIME extends InputMethodService {
             } else tts = null;
 
             if (SingleCharCodesChecker.Companion.checkIfSingleChar(s) && singleCharCodesChecker != null) {
-                singleCharCodesChecker.commit(s, wubiCodeSB.toString());
+                singleCharCodesChecker.asyncCommit(s, wubiCodeSB.toString());
             }
         }
     }

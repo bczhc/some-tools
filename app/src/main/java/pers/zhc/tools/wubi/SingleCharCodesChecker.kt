@@ -1,5 +1,6 @@
 package pers.zhc.tools.wubi
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,34 +12,32 @@ import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
 import pers.zhc.tools.jni.JNI.Utf8
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.execute
 import java.io.File
+import java.util.concurrent.Executors
 
 /**
  * @author bczhc
  */
 class SingleCharCodesChecker {
     private val inverseDictDatabase = WubiInverseDictManager.openDatabase()
-    private val records = ArrayList<Record>()
     private val recordDatabase = RecordDatabase.openDatabase()
+    private val threadPool = Executors.newFixedThreadPool(1)
 
-    init {
-        records.addAll(recordDatabase.queryAll())
-    }
-
-    fun commit(char: String, code: String) {
-        val query = inverseDictDatabase.query(char)
-        if (query.isEmpty()) return
-        val shortestCode = query.minOfWith({ a: String, b: String ->
-            a.length.compareTo(b.length)
-        }, {
-            it
-        })
-        if (code.length > shortestCode.length) {
-            if (records.find { it.char == char } == null) {
-                records.add(Record(char, shortestCode, code))
-                Thread {
-                    recordDatabase.update(records)
-                }.start()
+    fun asyncCommit(char: String, code: String) {
+        threadPool.execute {
+            val query = inverseDictDatabase.query(char)
+            if (query.isEmpty()) return@execute
+            val shortestCode = query.minOfWith({ a: String, b: String ->
+                a.length.compareTo(b.length)
+            }, {
+                it
+            })
+            if (code.length > shortestCode.length) {
+                val record = Record(char, shortestCode, code)
+                if (!recordDatabase.exist(record)) {
+                    recordDatabase.insert(record)
+                }
             }
         }
     }
@@ -51,13 +50,105 @@ class SingleCharCodesChecker {
 
     protected fun finalize() {
         inverseDictDatabase.close()
+        threadPool.shutdown()
     }
 
     class Record(
         val char: String, val shortestCode: String, val inputCode: String
     )
 
-    inner class RecyclerViewAdapter(val context: Context) : Adapter<RecyclerViewAdapter.MyViewHolder>() {
+    fun clear() {
+        recordDatabase.deleteAll()
+    }
+
+    fun getRecyclerViewAdapter(context: Context): RecyclerViewAdapter {
+        return object : RecyclerViewAdapter(context) {
+            override fun onQuery(): List<Record> {
+                return recordDatabase.queryAll()
+            }
+        }
+    }
+
+    // TODO: database lifetime and resources releasing
+    class RecordDatabase private constructor(val database: SQLite3) {
+
+        private val existenceStatement = database.compileStatement(
+            """SELECT *
+FROM record
+WHERE char IS ?
+  AND shortest_code IS ?
+  AND input_code IS ?"""
+        )
+
+        private val insertStatement =
+            database.compileStatement("""INSERT INTO record (char, shortest_code, input_code) VALUES (?, ?, ?)""")
+
+        private val selectAllStatement = database.compileStatement("SELECT char, shortest_code, input_code FROM record")
+
+        init {
+            database.exec(
+                """CREATE TABLE IF NOT EXISTS record
+(
+    char          TEXT NOT NULL,
+    shortest_code TEXT NOT NULL,
+    input_code    TEXT NOT NULL
+)"""
+            )
+        }
+
+        fun exist(record: Record): Boolean {
+            existenceStatement.reset()
+            existenceStatement.bind(getFullBinds(record))
+            return existenceStatement.cursor.step()
+        }
+
+        fun insert(record: Record) {
+            insertStatement.execute(getFullBinds(record))
+        }
+
+        private fun getFullBinds(record: Record): Array<Any> {
+            return arrayOf(record.char, record.shortestCode, record.inputCode)
+        }
+
+        fun queryAll(): ArrayList<Record> {
+            val records = ArrayList<Record>()
+
+            selectAllStatement.reset()
+            val cursor = selectAllStatement.cursor
+            while (cursor.step()) {
+                val record = Record(cursor.getText(0), cursor.getText(1), cursor.getText(2))
+                records.add(record)
+            }
+
+            return records
+        }
+
+        fun deleteAll() {
+            @Suppress("SqlWithoutWhere") database.exec("DELETE FROM record")
+        }
+
+        companion object {
+            private lateinit var path: File
+
+            fun init(context: Context) {
+                path = Common.getInternalDatabaseFile(context, "wubi-single-char-records.db")
+            }
+
+            private val database by lazy {
+                SQLite3.open(path.path)
+            }
+
+            fun openDatabase(): RecordDatabase {
+                return RecordDatabase(database)
+            }
+        }
+    }
+
+    abstract class RecyclerViewAdapter(val context: Context) : Adapter<RecyclerViewAdapter.MyViewHolder>() {
+        private val records = ArrayList<Record>().apply {
+            addAll(onQuery())
+        }
+
         inner class MyViewHolder(view: View) : ViewHolder(view) {
             val charTV = view.char_tv!!
             val inputCodeTV = view.input_code_tv!!
@@ -82,87 +173,14 @@ class SingleCharCodesChecker {
         override fun getItemCount(): Int {
             return records.size
         }
-    }
 
-    fun getRecyclerViewAdapter(context: Context) = RecyclerViewAdapter(context)
+        protected abstract fun onQuery(): List<Record>
 
-    fun clear() {
-        records.clear()
-        recordDatabase.deleteAll()
-    }
-
-    // TODO: database resource lifetime
-    class RecordDatabase private constructor(val database: SQLite3) {
-
-        init {
-            database.exec(
-                """CREATE TABLE IF NOT EXISTS record
-(
-    char          TEXT NOT NULL,
-    shortest_code TEXT NOT NULL,
-    input_code    TEXT NOT NULL
-)"""
-            )
-        }
-
-        fun update(records: Iterable<Record>) {
-            this.deleteAll()
-            for (record in records) {
-                val hasRecord = database.hasRecord(
-                    """SELECT *
-FROM record
-WHERE char IS ?
-  AND shortest_code IS ?
-  AND input_code IS ?""",
-                    arrayOf(record.char, record.shortestCode, record.inputCode)
-                )
-
-                if (!hasRecord) {
-                    insert(record)
-                }
-            }
-        }
-
-        fun insert(record: Record) {
-            database.execBind(
-                "INSERT INTO record (char, shortest_code, input_code) VALUES (?, ?, ?)",
-                arrayOf(record.char, record.shortestCode, record.inputCode)
-            )
-        }
-
-        fun queryAll(): ArrayList<Record> {
-            val records = ArrayList<Record>()
-
-            val statement = database.compileStatement("SELECT char, shortest_code, input_code FROM record")
-            val cursor = statement.cursor
-            while (cursor.step()) {
-                val record = Record(cursor.getText(0), cursor.getText(1), cursor.getText(2))
-                records.add(record)
-            }
-            statement.release()
-
-            return records
-        }
-
-        fun deleteAll() {
-            @Suppress("SqlWithoutWhere")
-            database.exec("DELETE FROM record")
-        }
-
-        companion object {
-            private lateinit var path: File
-
-            fun init(context: Context) {
-                path = Common.getInternalDatabaseFile(context, "wubi-single-char-records.db")
-            }
-
-            private val database by lazy {
-                SQLite3.open(path.path)
-            }
-
-            fun openDatabase(): RecordDatabase {
-                return RecordDatabase(database)
-            }
+        @SuppressLint("NotifyDataSetChanged")
+        fun updateList() {
+            records.clear()
+            records.addAll(onQuery())
+            notifyDataSetChanged()
         }
     }
 }

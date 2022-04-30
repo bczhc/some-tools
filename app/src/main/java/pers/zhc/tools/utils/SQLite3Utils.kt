@@ -28,3 +28,14 @@ inline fun SQLite3.withCompiledStatement(@Language("SQLite") sql: String, block:
     block(statement)
     statement.release()
 }
+
+fun Statement.execute(binds: Array<Any>) {
+    this.reset()
+    this.bind(binds)
+    this.step()
+}
+
+fun Statement.execute() {
+    this.reset()
+    this.step()
+}
