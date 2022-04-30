@@ -113,7 +113,8 @@ class SingleCharCodesChecker {
 FROM record
 WHERE char IS ?
   AND shortest_code IS ?
-  AND input_code IS ?"""
+  AND input_code IS ?""",
+                    arrayOf(record.char, record.shortestCode, record.inputCode)
                 )
 
                 if (!hasRecord) {
