@@ -106,6 +106,7 @@ class SingleCharCodesChecker {
         }
 
         fun update(records: Iterable<Record>) {
+            this.deleteAll()
             for (record in records) {
                 val hasRecord = database.hasRecord(
                     """SELECT *
