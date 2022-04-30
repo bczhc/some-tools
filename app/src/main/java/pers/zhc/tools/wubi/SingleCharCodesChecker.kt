@@ -88,6 +88,7 @@ class SingleCharCodesChecker {
 
     fun clear() {
         records.clear()
+        recordDatabase.deleteAll()
     }
 
     // TODO: database resource lifetime
@@ -139,6 +140,11 @@ WHERE char IS ?
             statement.release()
 
             return records
+        }
+
+        fun deleteAll() {
+            @Suppress("SqlWithoutWhere")
+            database.exec("DELETE FROM record")
         }
 
         companion object {
