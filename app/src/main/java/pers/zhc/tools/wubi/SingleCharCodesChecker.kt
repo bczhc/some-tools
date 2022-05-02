@@ -72,6 +72,17 @@ class SingleCharCodesChecker {
     // TODO: database lifetime and resources releasing
     class RecordDatabase private constructor(val database: SQLite3) {
 
+        init {
+            database.exec(
+                """CREATE TABLE IF NOT EXISTS record
+(
+    char          TEXT NOT NULL,
+    shortest_code TEXT NOT NULL,
+    input_code    TEXT NOT NULL
+)"""
+            )
+        }
+
         private val existenceStatement = database.compileStatement(
             """SELECT *
 FROM record
@@ -84,17 +95,6 @@ WHERE char IS ?
             database.compileStatement("""INSERT INTO record (char, shortest_code, input_code) VALUES (?, ?, ?)""")
 
         private val selectAllStatement = database.compileStatement("SELECT char, shortest_code, input_code FROM record")
-
-        init {
-            database.exec(
-                """CREATE TABLE IF NOT EXISTS record
-(
-    char          TEXT NOT NULL,
-    shortest_code TEXT NOT NULL,
-    input_code    TEXT NOT NULL
-)"""
-            )
-        }
 
         fun exist(record: Record): Boolean {
             existenceStatement.reset()
