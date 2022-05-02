@@ -75,6 +75,7 @@
     <string name="text">文本</string>
     <string name="looking_up">正在查询</string>
     <string name="none">无</string>
+    <string name="qr_code">二维码</string>
     <!-- end -->
 
     <!-- old -->
@@ -712,5 +713,6 @@
     <!-- file_browser -->
     <string name="file_browser_label">文件浏览</string>
     <string name="transfer_tar_sending_progress_msg">正在发送……</string>
+    <string name="transfer_receive_qr_code_menu">@string/qr_code</string>
     <!-- end -->
 </resources>

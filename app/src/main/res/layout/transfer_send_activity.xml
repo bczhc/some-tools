@@ -5,15 +5,26 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:padding="10dp"
 >
-    <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hint="@string/transfer_destination_address_et"
-            android:id="@+id/destination_address_et"
-    />
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:id="@+id/rl0"
+                    android:orientation="horizontal"
+    >
+        <pers.zhc.tools.views.SmartHintEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hint="@string/transfer_destination_address_et"
+                android:id="@+id/destination_address_et"
+                android:layout_toStartOf="@id/qr_code_btn"
+        />
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:id="@+id/qr_code_btn"
+                android:layout_alignParentEnd="true"
+                android:text="@string/qr_code"
+        />
+    </RelativeLayout>
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="horizontal"
-                  android:layout_below="@id/destination_address_et"
+                  android:layout_below="@id/rl0"
                   android:id="@+id/ll"
     >
         <Spinner android:layout_width="0dp" android:layout_height="match_parent"

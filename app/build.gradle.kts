@@ -253,6 +253,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.20")
     implementation("com.google.code.gson:gson:2.9.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0") {
+        isTransitive = false
+    }
+    implementation("com.google.zxing:core:3.5.0")
 }
 
 task("saveNdkPath") {

@@ -12,6 +12,8 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ScrollView
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.android.synthetic.main.transfer_send_activity.*
 import kotlinx.android.synthetic.main.transfer_tar_progress_view.view.*
 import pers.zhc.tools.BaseActivity
@@ -32,6 +34,7 @@ import java.io.File
  */
 class TransferSendActivity : BaseActivity() {
     private lateinit var containerLayout: WrapLayout
+    private lateinit var addressET: EditText
 
     private val launchers = object {
         val filePicker = FilePicker.getLauncher(this@TransferSendActivity) { path ->
@@ -53,11 +56,12 @@ class TransferSendActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.transfer_send_activity)
 
-        val addressET = destination_address_et!!.editText
+        addressET = destination_address_et!!.editText
         val typeSpinner = type_spinner!!
         val pickFileButton = pick_file_btn!!
         containerLayout = container_layout!!
         val sendButton = send_btn!!
+        val qrCodeButton = qr_code_btn!!
 
         val typeStrings = resources.getStringArray(R.array.transfer_types)
         typeSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, typeStrings)
@@ -122,6 +126,10 @@ class TransferSendActivity : BaseActivity() {
             }
 
             showSendingDialog(mark, address, file)
+        }
+
+        qrCodeButton.setOnClickListener {
+            handleScanQrCode()
         }
     }
 
@@ -203,5 +211,24 @@ class TransferSendActivity : BaseActivity() {
 
     fun ScrollView.scrollToBottom() {
         this.fullScroll(View.FOCUS_DOWN)
+    }
+
+    private val socketIpv4AddrPattern = Regex("^\\d+\\.\\d+\\.\\d+\\.\\d+:\\d{1,5}$")
+
+    private val qrCodeLauncher = registerForActivityResult(ScanContract()) {
+        it ?: return@registerForActivityResult
+        val contents = it.contents ?: return@registerForActivityResult
+        if (contents.matches(socketIpv4AddrPattern)) {
+            addressET.setText(contents)
+        } else {
+            ToastUtils.show(this, R.string.transfer_invalid_address_toast)
+        }
+    }
+
+    private fun handleScanQrCode() {
+        qrCodeLauncher.launch(ScanOptions().apply {
+            setOrientationLocked(false)
+            setBeepEnabled(false)
+        })
     }
 }

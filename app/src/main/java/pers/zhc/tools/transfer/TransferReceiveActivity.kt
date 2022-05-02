@@ -1,11 +1,16 @@
 package pers.zhc.tools.transfer
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
+import android.view.*
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import kotlinx.android.synthetic.main.transfer_receive_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
@@ -15,18 +20,20 @@ import pers.zhc.tools.jni.JNI.ByteSize
 import pers.zhc.tools.utils.*
 import java.io.File
 import java.util.*
+import kotlin.math.min
 
 /**
  * @author bczhc
  */
 class TransferReceiveActivity : BaseActivity() {
     val results = ArrayList<ReceivingResult>()
+    private lateinit var listenPortET: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.transfer_receive_activity)
 
-        val listenPortET = listen_port!!.editText
+        listenPortET = listen_port!!.editText
         val receiveStartButton = receive_start_btn!!
 
         val receiveDir = File(Common.getAppMainExternalStoragePathFile(this), "transfer")
@@ -108,6 +115,44 @@ class TransferReceiveActivity : BaseActivity() {
                 Common.showException(e, this)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.transfer_receive, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.qr_code -> {
+                showQrCode()
+            }
+            else -> {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun showQrCode() {
+        val wifiIp = WifiUtils.getWifiIpString(this)
+        val socketAddrString = "$wifiIp:${listenPortET.text}"
+
+        val screenSize = DisplayUtil.getScreenSize(this)
+        val min = min(screenSize.x, screenSize.y)
+        val qrSide = (min.toDouble() * .7).toInt()
+
+        val barcodeEncoder = BarcodeEncoder()
+        val bitmap = barcodeEncoder.encodeBitmap(socketAddrString, BarcodeFormat.QR_CODE, qrSide, qrSide)
+
+        val imageView = ImageView(this).apply {
+            setImageBitmap(bitmap)
+        }
+        Dialog(this).apply {
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
+            setContentView(imageView)
+        }.show()
     }
 
     class ListAdapter(val context: Context, val results: ReceivingResults) :
