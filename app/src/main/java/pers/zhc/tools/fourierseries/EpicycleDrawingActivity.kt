@@ -10,6 +10,7 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.PopupMenuUtil
+import pers.zhc.tools.utils.setBaseLayoutSizeMM
 
 /**
  * @author bczhc
@@ -24,7 +25,9 @@ class EpicycleDrawingActivity : BaseActivity() {
         val container = container!!
         val optionButton = option_btn!!
 
-        drawingView = EpicycleDrawingView(this, FourierSeriesActivity.epicycleData)
+        drawingView = EpicycleDrawingView(this, FourierSeriesActivity.epicycleData).apply {
+            this.setBaseLayoutSizeMM()
+        }
         container.addView(drawingView)
         drawingView.startAnimation()
 

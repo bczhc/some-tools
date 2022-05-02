@@ -12,3 +12,7 @@ fun View.setBaseLayoutSize(width: Int, height: Int) {
 fun View.setBaseLayoutSizeMW() {
     this.setBaseLayoutSize(MATCH_PARENT, WRAP_CONTENT)
 }
+
+fun View.setBaseLayoutSizeMM() {
+    this.setBaseLayoutSize(MATCH_PARENT, MATCH_PARENT)
+}
