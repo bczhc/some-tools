@@ -8,6 +8,7 @@ import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.regex_input_view.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.setBaseLayoutSizeMW
 import java.util.regex.PatternSyntaxException
 
 /**
@@ -28,7 +29,9 @@ class RegexInputView : WrapLayout {
     }
 
     private fun init() {
-        val inflate = View.inflate(context, R.layout.regex_input_view, null).regex_et!!
+        val inflate = View.inflate(context, R.layout.regex_input_view, null).regex_et!!.apply {
+            this.setBaseLayoutSizeMW()
+        }
         this.setView(inflate)
         shet = inflate
 

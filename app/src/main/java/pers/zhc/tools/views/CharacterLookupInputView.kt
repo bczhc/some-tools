@@ -3,6 +3,8 @@ package pers.zhc.tools.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
 import androidx.core.widget.doAfterTextChanged
 import kotlinx.android.synthetic.main.character_lookup_input_dialog.view.*
@@ -26,7 +28,9 @@ class CharacterLookupInputView : WrapLayout {
     }
 
     private fun init() {
-        val inflate = View.inflate(context, R.layout.character_lookup_input_dialog, null)
+        val inflate = View.inflate(context, R.layout.character_lookup_input_dialog, null).apply {
+            layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+        }
         this.setView(inflate)
 
         codepointET = inflate.codepoint_et!!.editText
