@@ -308,15 +308,6 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".diary.FileBrowserActivity"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:label="@string/diary_browser_label"
-                android:theme="@style/Theme.Application" android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
                 android:name=".diary.DiaryAttachmentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_preview_activity_label"

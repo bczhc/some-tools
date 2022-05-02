@@ -626,6 +626,8 @@
     <string name="transfer_receive_type_files">多文件</string>
     <string name="transfer_receive_type_text">文本</string>
     <string name="transfer_wifi_ip_tv">Wi-Fi IP地址：%1$s</string>
+    <string name="transfer_tar_sending_progress_msg">正在发送……</string>
+    <string name="transfer_receive_qr_code_menu">@string/qr_code</string>
     <!-- end -->
 
     <!-- module: email -->
@@ -712,7 +714,5 @@
 
     <!-- file_browser -->
     <string name="file_browser_label">文件浏览</string>
-    <string name="transfer_tar_sending_progress_msg">正在发送……</string>
-    <string name="transfer_receive_qr_code_menu">@string/qr_code</string>
     <!-- end -->
 </resources>
