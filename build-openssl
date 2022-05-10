@@ -64,7 +64,7 @@ end
 
 def clean
   # for the first build when Makefile hasn't been generated
-  return if Dir.exist? "#{$openssl_dir}/Makefile"
+  return unless File.exist? "#{$openssl_dir}/Makefile"
   Dir.chdir $openssl_dir
   system 'make clean'
 end
