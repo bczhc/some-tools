@@ -1,108 +1,96 @@
-#!/bin/groovy
-def selfDir = new File(getClass().protectionDomain.codeSource.location.path).parentFile
-metaClass.mixin new GroovyScriptEngine(selfDir.canonicalPath).with {
-    loadScriptByName('lib.groovy')
+#!/bin/env ruby
+
+require 'etc'
+require 'fileutils'
+
+ANDROID_ABI2OPENSSL_MAP = {
+  'armeabi-v7a' => 'android-arm',
+  'arm64-v8a' => 'android-arm64',
+  'x86' => 'android-x86',
+  'x86_64' => 'android-x86_64',
 }
 
-def androidAbi2OpensslTargetMap = [
-        "armeabi-v7a": "android-arm",
-        "arm64-v8a"  : "android-arm64",
-        "x86"        : "android-x86",
-        "x86_64"     : "android-x86_64"
-]
+PROCESSOR_NUM = Etc.nprocessors
 
-if (args.length != 1) {
-    println "Usage: command <openssl-project-dir>"
-    return
-}
-def opensslDir = new File(args[0])
+define_method :system do |*args|
+  Kernel.system *args
+  fail if $? == nil
+  raise "Command non-zero exit status: #{args}" unless $?.exitstatus == 0
+end
 
-checkRun new ProcessBuilder([s("${selfDir}/gradlew"), ':app:saveNdkPath']).with {
-    directory(selfDir)
-    inheritIO()
-}.start().waitFor()
+self_dir = File.dirname $0
 
-def tmpFile = new File(selfDir, 'tmp')
-def ndkPath = tmpFile.readLines()[0]
-tmpFile.delete()
+argv = ARGV
+if argv.length != 1
+  puts "Usage: #{File.basename $0} <openssl-project-dir>"
+  exit 1
+end
+$openssl_dir = argv[0]
 
-def toolchainBinDir = new File("$ndkPath/toolchains/llvm/prebuilt").listFiles().with {
-    if (it.length != 1) throw new Exception('Multiple hosts')
-    new File(it[0], "bin")
-}
+system "#{self_dir}/gradlew :app:saveNdkPath"
+tmp_file = File.open "#{self_dir}/tmp"
+File.delete tmp_file
+$ndk_path = tmp_file.readlines[0]
 
-def build = { String target, int ndkApi ->
-    checkRun new ProcessBuilder([
-            './Configure',
-            target,
-            s("-D__ANDROID_API__=$ndkApi"),
-            '-latomic'
-    ]).with {
-        def env = it.environment()
-        env.PATH = s("$toolchainBinDir:${env.PATH}")
-        env.put("ANDROID_NDK_ROOT", ndkPath)
-        inheritIO()
-        directory(opensslDir)
-    }.start().waitFor()
+ndk_prebuilt_dir = "#{$ndk_path}/toolchains/llvm/prebuilt"
+if Dir.children(ndk_prebuilt_dir).length != 1
+  raise "Multiple hosts found in #{ndk_prebuilt_dir}"
+end
+$toolchain_bin_dir = Dir.children(ndk_prebuilt_dir).map { |x| "#{ndk_prebuilt_dir}/#{x}/bin" }[0]
 
-    checkRun new ProcessBuilder(['make', s("-j${Runtime.getRuntime().availableProcessors()}")]).with {
-        def env = it.environment()
-        env.PATH = s("$toolchainBinDir:${env.PATH}")
-        env.put("ANDROID_NDK_ROOT", ndkPath)
-        inheritIO()
-        directory(opensslDir)
-    }.start().waitFor()
-}
+def build(target, ndk_api)
+  Dir.chdir $openssl_dir
+  env = ENV
+  path_env = env['PATH']
+  path_env = "#{$toolchain_bin_dir}:#{path_env}"
 
-def clean = {
-    // for the first build when Makefile hasn't been generated
-    if (!new File(opensslDir, "Makefile").exists()) return
-    checkRun new ProcessBuilder(['make', 'clean']).with {
-        inheritIO()
-        directory(opensslDir)
-    }.start().waitFor()
-}
+  env['PATH'] = path_env
+  env['ANDROID_NDK_ROOT'] = $ndk_path
 
-def ndkTargetProperty = new Properties().with {
-    new File(selfDir, "config.properties").withReader { r ->
-        load(r)
-    }
-    it
-}.getProperty("ndk.target")
+  system env, './Configure', target, "-D__ANDROID_API__=#{ndk_api}", '-latomic'
 
-def outputLibsDir = new File(opensslDir, "libs").with { mkdir(); it }
-ndkTargetProperty.split(',').toList().stream().map { it.trim() }.forEach {
-    clean.call()
+  system env, "make -j#{PROCESSOR_NUM}"
+end
 
-    List<List<String>> captured = capture(it, '^(.*)-([0-9]+)$')
-    def ndkAbi = captured[0][1]
-    def ndkApi = captured[0][2] as int
+def get_property(properties, key)
+  prefix = "#{key}="
+  lines = properties.lines
+  lines.each do |line|
+    index = line.index prefix
+    return line[(index + prefix.length)..] unless index == nil
+  end
+  nil
+end
 
-    println("Build: $ndkAbi, $ndkApi")
-    build.call(androidAbi2OpensslTargetMap[ndkAbi], ndkApi)
+def clean
+  # for the first build when Makefile hasn't been generated
+  return if Dir.exist? "#{$openssl_dir}/Makefile"
+  Dir.chdir $openssl_dir
+  system 'make clean'
+end
 
-    [
-            "libcrypto.so",
-            "libcrypto.a",
-            "libssl.so",
-            "libssl.a"
-    ].forEach {
-        def outputDir = new File(outputLibsDir, ndkAbi).with { mkdir(); it }
-        copyFile(new File(opensslDir, it), new File(outputDir, it))
-    }
-}
+properties = File.open("#{self_dir}/config.properties").read
+ndk_target_property = get_property properties, 'ndk.target'
+fail if ndk_target_property == nil
 
-static def copyFile(File src, File dest) {
-    dest.withOutputStream { os ->
-        src.withInputStream { is ->
-            byte[] buf = new byte[4096]
-            int readLen
-            while ((readLen = is.read(buf)) != -1) {
-                os.write(buf, 0, readLen)
-            }
-        }
-        os.flush()
-    }
-}
+output_libs_dir = "#{$openssl_dir}/libs"
+ndk_target_property.split(',').each do |it|
+  clean
 
-println("Done")
+  captures = it.match(/^(.*)-(\d+)$/).captures
+  ndk_abi = captures[0]
+  ndk_api = captures[1].to_i
+
+  puts "Build: #{ndk_abi}, #{ndk_api}"
+  build ANDROID_ABI2OPENSSL_MAP[ndk_abi], ndk_api
+
+  %w[libcrypto.so libcrypto.a libssl.so libssl.a].each do |name|
+    output_dir = "#{output_libs_dir}/#{ndk_abi}"
+
+    FileUtils.mkdir_p output_dir unless Dir.exist? output_dir
+
+    FileUtils.copy_file "#{$openssl_dir}/#{name}", "#{output_dir}/#{name}"
+  end
+end
+
+puts 'Done'

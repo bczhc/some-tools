@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/env ruby
 
-set -e
+targets = %w[aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android]
 
-for t in aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android; do
-  rustup target add $t
-done
+targets.each { |target|
+  system "rustup target add #{target}"
+}
