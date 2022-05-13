@@ -241,9 +241,9 @@ repositories {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("org.mariuszgromada.math:MathParser.org-mXparser:4.4.2")
+    implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.0.2")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.20")
-    implementation("com.google.android.material:material:1.5.0")
+    implementation("com.google.android.material:material:1.6.0")
     implementation("com.github.mik3y:usb-serial-for-android:3.3.0")
     implementation("com.github.bczhc:java-lib:18a858c167")
     implementation("androidx.navigation:navigation-fragment-ktx:2.4.2")
