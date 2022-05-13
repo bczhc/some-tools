@@ -126,12 +126,12 @@ android {
     }
 
 
-    val fontSdkDir = try {
+    val foundSdkDir = try {
         file(SdkPath.getSdkPath(project))
     } catch (_: FileNotFoundException) {
         throw GradleException("Cannot found sdk path. Please define \"sdk.dir\" in the project \"local.properties\"")
     }
-    val detectedNdkVersion = NdkVersion.getLatestNdkVersion(fontSdkDir) ?: run {
+    val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
         NdkVersion.readLocalProperties(project) ?: run {
             throw GradleException(
                 "Cannot get NDK version. Please check NDK directory \"\$SDK/ndk/\" " + "or try to define \"ndk.version\" in the project \"local.properties\""
