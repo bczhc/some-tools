@@ -30,7 +30,7 @@ RUN echo 'sdk.dir=/sdk' > local.properties && \
     echo 'ndk.target=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29' >> config.properties
 
 # test clean
-RUN ./gradlew cleanAll
+RUN . ~/.cargo/env && ./gradlew cleanAll
 
 # build openssl of all Android ABI
 RUN ./build-openssl /openssl
