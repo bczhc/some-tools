@@ -21,6 +21,8 @@ plugins {
 }
 apply<RustBuildPlugin>()
 
+val rootProjectDir = rootProject.projectDir
+
 val base64Encoder = Base64.getEncoder()!!
 val commitLogResult = try {
     val gitVersion = BuildUtils2.checkGitVersion()!!
@@ -272,8 +274,10 @@ cleanAllTask.doLast {
         buildDir,
         rootProject.buildDir,
         jniOutputDir,
-        File(rootProject.projectDir, ".gradle"),
-        File(rootProject.projectDir, "app/.cxx"),
+        File(rootProjectDir, ".gradle"),
+        File(rootProjectDir, "app/.cxx"),
+        File(rootProjectDir, "buildSrc/build"),
+        File(rootProjectDir, "buildSrc/.gradle")
     ).forEach { requireDelete(it) }
 }
 
