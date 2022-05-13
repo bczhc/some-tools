@@ -9,6 +9,7 @@ import pers.zhc.tools.plugin.rust.AndroidAbi
 import pers.zhc.tools.plugin.rust.RustBuildPlugin
 import pers.zhc.tools.plugin.rust.RustBuildPlugin.RustBuildPluginExtension
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.util.*
 import pers.zhc.plugins.`BuildUtils2$`.`MODULE$` as BuildUtils2
 import pers.zhc.tools.plugin.util.`FileUtils$`.`MODULE$` as FileUtils
@@ -168,8 +169,7 @@ val opensslDir = getOpensslDir(configPropertiesFile)!!
 
 val rustBuildExtraEnv = HashMap<String, String>()
 ndkTargets.forEach {
-    val env = (getRustOpensslBuildEnv(AndroidAbi.from(it["abi"].toString()).toRustTarget())
-            as Map<*, *>).map { e ->
+    val env = (getRustOpensslBuildEnv(AndroidAbi.from(it["abi"].toString()).toRustTarget()) as Map<*, *>).map { e ->
         Pair(e.key.toString(), e.value.toString())
     }.toMap()
     val opensslPath = getOpensslPath(opensslDir, it["abi"] as TargetAbi)
@@ -182,8 +182,7 @@ configure<RustBuildPluginExtension> {
     androidApi.set(21)
     targets.set(ndkTargets.map {
         mapOf(
-            Pair("abi", it["abi"].toString()),
-            Pair("api", it["api"])
+            Pair("abi", it["abi"].toString()), Pair("api", it["api"])
         )
     })
     buildType.set("release")
@@ -199,8 +198,7 @@ val copyOpensslLibsTask = project.task("copyOpensslLibs") {
             val abi = it["abi"] as TargetAbi
             val opensslPath = getOpensslPath(opensslDir, abi)
             listOf(
-                "libssl.so",
-                "libcrypto.so"
+                "libssl.so", "libcrypto.so"
             ).map { libName ->
                 File(opensslPath.lib!!, libName)
             }.forEach { file ->
@@ -263,5 +261,26 @@ task("saveNdkPath") {
     doLast {
         val path = android.ndkDirectory.path
         File(rootDir, "tmp").writeText(path)
+    }
+}
+
+val cleanAllTask = rootProject.task("cleanAll").also {
+    it.dependsOn("clean", ":app:cleanRust")
+}
+cleanAllTask.doLast {
+    listOf(
+        buildDir,
+        rootProject.buildDir,
+        jniOutputDir,
+        File(rootProject.projectDir, ".gradle"),
+        File(rootProject.projectDir, "app/.cxx"),
+    ).forEach { requireDelete(it) }
+}
+
+fun requireDelete(file: File) {
+    if (file.exists()) {
+        if (!delete(file)) {
+            throw IOException("Failed to delete ${file.path}")
+        }
     }
 }

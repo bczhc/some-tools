@@ -4,10 +4,14 @@ import org.gradle.api.provider.Property
 import org.gradle.api.{GradleException, Plugin, Project, Task}
 import pers.zhc.tools.plugin.rust.BuildRunner.BuildOptions
 import pers.zhc.tools.plugin.rust.RustBuildPlugin._
-import pers.zhc.tools.plugin.util.FileUtils
+import pers.zhc.tools.plugin.util.{FileUtils, ProcessUtils}
 
 import java.io.File
-import scala.jdk.CollectionConverters.{ListHasAsScala, MapHasAsScala}
+import scala.jdk.CollectionConverters.{
+  ListHasAsScala,
+  MapHasAsScala,
+  SeqHasAsJava
+}
 
 class RustBuildPlugin extends Plugin[Project] {
   var appProjectDir: File = _
@@ -15,16 +19,33 @@ class RustBuildPlugin extends Plugin[Project] {
   var project: Project = _
 
   override def apply(project: Project): Unit = {
-    project.task(
-      TASK_NAME,
-      { task: Task =>
-        val extension = project.getExtensions
-          .create("rustBuild", classOf[RustBuildPluginExtension])
-        task.doFirst { _: Task => this.config = getConfigurations(extension) }
-        task.doLast { _: Task =>
-          compileReleaseRust()
+    val extension = project.getExtensions
+      .create("rustBuild", classOf[RustBuildPluginExtension])
+    val setConfigs = { () =>
+      this.config = getConfigurations(extension)
+    }
+
+    val registerTask = { (name: String, taskAction: Task => Unit) =>
+      project.task(
+        name,
+        { task: Task =>
+          task.doFirst { _: Task => setConfigs() }
+          task.doLast { task: Task => taskAction(task) }
         }
-        ()
+      )
+    }
+
+    registerTask(
+      TASK_NAME,
+      { _ =>
+        compileReleaseRust()
+      }
+    )
+
+    registerTask(
+      TASK_CLEAN_NAME,
+      { _ =>
+        cleanRust()
       }
     )
 
@@ -32,6 +53,18 @@ class RustBuildPlugin extends Plugin[Project] {
     require(appProject != null)
     this.appProjectDir = appProject.getProjectDir
     this.project = project
+  }
+
+  def cleanRust(): Unit = {
+    val command = List("cargo", "clean")
+    val pb = new ProcessBuilder(command.asJava)
+      .directory(config.rustProjectDir)
+    val status = ProcessUtils.executeWithOutput(pb.start())
+    if (status != 0) {
+      throw new GradleException(
+        s"Failed to clean rust project: non-zero exit code: $status"
+      )
+    }
   }
 
   def compileReleaseRust(): Unit = {
@@ -155,6 +188,8 @@ class RustBuildPlugin extends Plugin[Project] {
 
 object RustBuildPlugin {
   val TASK_NAME = "compileRust"
+  val TASK_CLEAN_NAME = "cleanRust"
+
   trait RustBuildPluginExtension {
     def getOutputDir: Property[String]
 
