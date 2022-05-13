@@ -38,7 +38,7 @@ class RustBuildPlugin extends Plugin[Project] {
     registerTask(
       TASK_NAME,
       { _ =>
-        compileReleaseRust()
+        compileRust()
       }
     )
 
@@ -67,7 +67,7 @@ class RustBuildPlugin extends Plugin[Project] {
     }
   }
 
-  def compileReleaseRust(): Unit = {
+  def compileRust(): Unit = {
     val jniLibsDir = getJniLibsDir
 
     for (target <- config.targets) {
