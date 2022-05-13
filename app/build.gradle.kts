@@ -66,6 +66,18 @@ val ndkTargets = propNdkTarget.split(',').map { it.trim() }.map {
     )
 }
 
+val foundSdkDir = try {
+    file(SdkPath.getSdkPath(project))
+} catch (_: FileNotFoundException) {
+    throw GradleException("Cannot found sdk path. Please define \"sdk.dir\" in the project \"local.properties\"")
+}
+val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
+    NdkVersion.readLocalProperties(project) ?: run {
+        throw GradleException(
+            "Cannot get NDK version. Please check NDK directory \"\$SDK/ndk/\" " + "or try to define \"ndk.version\" in the project \"local.properties\""
+        )
+    }
+}
 
 android {
     signingConfigs {
@@ -124,21 +136,6 @@ android {
         isCheckReleaseBuilds = false
         isAbortOnError = false
     }
-
-
-    val foundSdkDir = try {
-        file(SdkPath.getSdkPath(project))
-    } catch (_: FileNotFoundException) {
-        throw GradleException("Cannot found sdk path. Please define \"sdk.dir\" in the project \"local.properties\"")
-    }
-    val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
-        NdkVersion.readLocalProperties(project) ?: run {
-            throw GradleException(
-                "Cannot get NDK version. Please check NDK directory \"\$SDK/ndk/\" " + "or try to define \"ndk.version\" in the project \"local.properties\""
-            )
-        }
-    }
-
 
     ndkVersion = detectedNdkVersion
 
@@ -226,6 +223,7 @@ println(
     """Build environment info:
     |SDK path: ${android.sdkDirectory.path}
     |NDK path: ${android.ndkDirectory.path}
+    |NDK version: $detectedNdkVersion
     |CMake version: ${android.externalNativeBuild.cmake.version}
     |NDK targets: $ndkTargets
     |Rust build extra env: $rustBuildExtraEnv
