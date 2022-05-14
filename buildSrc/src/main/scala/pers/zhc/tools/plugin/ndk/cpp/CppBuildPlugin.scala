@@ -10,6 +10,7 @@ import pers.zhc.tools.plugin.ndk.cpp.CppBuildPlugin.{
   CppBuildPluginExtension
 }
 import pers.zhc.tools.plugin.ndk.{BuildType, NdkBaseExtension, NdkUtils}
+import pers.zhc.tools.plugin.util.FileUtils
 
 import java.io.File
 
@@ -43,7 +44,9 @@ class CppBuildPlugin extends Plugin[Project] {
     new BuildRunner(configs).run()
   }
 
-  private def cleanTask(configs: Configurations) = ???
+  private def cleanTask(configs: Configurations): Unit = {
+    FileUtils.requireDelete(new File(configs.srcDir, "build"))
+  }
 
   private def extToConfigs(
       extensions: CppBuildPluginExtension

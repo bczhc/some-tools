@@ -256,8 +256,8 @@ task("saveNdkPath") {
     }
 }
 
-val cleanAllTask = rootProject.task("cleanAll").also {
-    it.dependsOn("clean", ":app:cleanRust")
+val cleanAllTask = rootProject.task("cleanAll") {
+    dependsOn("clean", ":app:cleanRust", ":app:cleanCpp")
 }
 cleanAllTask.doLast {
     listOf(
