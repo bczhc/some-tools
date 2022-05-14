@@ -1,17 +1,16 @@
-package pers.zhc.tools.plugin.rust
+package pers.zhc.tools.plugin.ndk.rust
 
 import org.gradle.api.provider.Property
 import org.gradle.api.{GradleException, Plugin, Project, Task}
-import pers.zhc.tools.plugin.rust.BuildRunner.BuildOptions
-import pers.zhc.tools.plugin.rust.RustBuildPlugin._
+import pers.zhc.tools.plugin.ndk.NdkUtils.JMap
+import pers.zhc.tools.plugin.ndk.Target.Targets
+import pers.zhc.tools.plugin.ndk.rust.BuildRunner.BuildOptions
+import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin._
+import pers.zhc.tools.plugin.ndk.{BuildType, NdkBaseExtension, NdkUtils}
 import pers.zhc.tools.plugin.util.{FileUtils, ProcessUtils}
 
 import java.io.File
-import scala.jdk.CollectionConverters.{
-  ListHasAsScala,
-  MapHasAsScala,
-  SeqHasAsJava
-}
+import scala.jdk.CollectionConverters.{MapHasAsScala, SeqHasAsJava}
 
 class RustBuildPlugin extends Plugin[Project] {
   var appProjectDir: File = _
@@ -31,6 +30,7 @@ class RustBuildPlugin extends Plugin[Project] {
         { task: Task =>
           task.doFirst { _: Task => setConfigs() }
           task.doLast { task: Task => taskAction(task) }
+          ()
         }
       )
     }
@@ -138,39 +138,25 @@ class RustBuildPlugin extends Plugin[Project] {
     def toOption[T](value: Property[T]) = Option(value.getOrNull())
 
     def unwrap[T](p: Property[T], name: String): T = {
-      require(
-        p.isPresent,
-        s"Configuration field \"$name\" is missing"
-      )
-      p.get()
+      NdkUtils.unwrapProperty(p, name)
     }
 
     new Configurations {
       override val outputDir: Option[String] = toOption(extension.getOutputDir)
 
       override val rustProjectDir: File =
-        toOption(extension.getRustProjectDir).map(new File(_)) match {
+        toOption(extension.getSrcDir).map(new File(_)) match {
           case Some(value) => value
           case None =>
             new File(appProjectDir, "src/main/jni/rust")
         }
 
       override val androidNdkDir: File = new File(
-        unwrap(extension.getAndroidNdkDir, "androidNdkDir")
+        unwrap(extension.getNdkDir, "androidNdkDir")
       )
 
-      override val targets: Targets = {
-        unwrap(extension.getTargets, "targets")
-          .asInstanceOf[JList[JMap[String, Any]]]
-          .asScala
-          .toList
-          .map { it =>
-            Target(
-              AndroidAbi.from(it.get("abi").asInstanceOf[String]),
-              it.get("api").asInstanceOf[Int]
-            )
-          }
-      }
+      override val targets: Targets =
+        NdkUtils.propertyToTargets(extension.getTargets)
 
       override val buildType: BuildType =
         BuildType.from(toOption(extension.getBuildType).getOrElse("debug"))
@@ -187,17 +173,7 @@ object RustBuildPlugin {
   val TASK_NAME = "compileRust"
   val TASK_CLEAN_NAME = "cleanRust"
 
-  trait RustBuildPluginExtension {
-    def getOutputDir: Property[String]
-
-    def getRustProjectDir: Property[String]
-
-    def getAndroidNdkDir: Property[String]
-
-    def getTargets: Property[Any]
-
-    def getBuildType: Property[String]
-
+  trait RustBuildPluginExtension extends NdkBaseExtension {
     def getExtraEnv: Property[Any]
   }
 
@@ -209,37 +185,6 @@ object RustBuildPlugin {
     val buildType: BuildType
     val extraEnv: Option[Map[String, String]]
   }
-
-  class BuildType {
-    override def toString: String = this match {
-      case BuildType.Debug   => BuildType.Debug.toString
-      case BuildType.Release => BuildType.Release.toString
-    }
-  }
-
-  object BuildType {
-    def from(string: String): BuildType = {
-      string match {
-        case "debug"   => Debug
-        case "release" => Release
-        case _         => throw new NoSuchElementException("Invalid build type")
-      }
-    }
-
-    case object Debug extends BuildType {
-      override def toString = "debug"
-    }
-
-    case object Release extends BuildType {
-      override def toString = "release"
-    }
-  }
-
-  type JMap[K, V] = java.util.Map[K, V]
-  type JList[T] = java.util.List[T]
-
-  case class Target(abi: AndroidAbi, api: Int)
-  type Targets = List[Target]
 
   type Environments = Map[String, String]
 }

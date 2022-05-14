@@ -1,11 +1,8 @@
-package pers.zhc.tools.plugin.rust
+package pers.zhc.tools.plugin.ndk.rust
 
-import pers.zhc.tools.plugin.rust.BuildRunner.BuildOptions
-import pers.zhc.tools.plugin.rust.RustBuildPlugin.{
-  BuildType,
-  Environments,
-  Target
-}
+import pers.zhc.tools.plugin.ndk.rust.BuildRunner.BuildOptions
+import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin.Environments
+import pers.zhc.tools.plugin.ndk.{BuildType, Target}
 import pers.zhc.tools.plugin.util.ProcessUtils
 
 import java.io.File

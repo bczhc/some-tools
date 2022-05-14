@@ -1,4 +1,4 @@
-package pers.zhc.tools.plugin.rust
+package pers.zhc.tools.plugin.ndk.rust
 
 import java.io.File
 

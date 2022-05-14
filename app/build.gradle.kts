@@ -5,9 +5,9 @@ import pers.zhc.plugins.FileUtils.requireCreate
 import pers.zhc.plugins.NdkVersion
 import pers.zhc.plugins.RegexUtils
 import pers.zhc.plugins.SdkPath
-import pers.zhc.tools.plugin.rust.AndroidAbi
-import pers.zhc.tools.plugin.rust.RustBuildPlugin
-import pers.zhc.tools.plugin.rust.RustBuildPlugin.RustBuildPluginExtension
+import pers.zhc.tools.plugin.ndk.AndroidAbi
+import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin
+import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin.RustBuildPluginExtension
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
@@ -63,6 +63,11 @@ val ndkTargets = propNdkTarget.split(',').map { it.trim() }.map {
     val captured = RegexUtils.capture(it, "^(.*)-([0-9]+)\$")
     mapOf(
         Pair("abi", TargetAbi.from(captured[0][1])!!), Pair("api", captured[0][2].toInt())
+    )
+}
+val ndkTargetsForConfigs = ndkTargets.map {
+    mapOf(
+        Pair("abi", it["abi"].toString()), Pair("api", it["api"])
     )
 }
 
@@ -177,14 +182,10 @@ ndkTargets.forEach {
 }
 
 configure<RustBuildPluginExtension> {
-    androidNdkDir.set(android.ndkDirectory.path)
-    targets.set(ndkTargets.map {
-        mapOf(
-            Pair("abi", it["abi"].toString()), Pair("api", it["api"])
-        )
-    })
+    ndkDir.set(android.ndkDirectory.path)
+    targets.set(ndkTargetsForConfigs)
     buildType.set("release")
-    rustProjectDir.set(File(appProject.projectDir, "src/main/rust").path)
+    srcDir.set(File(appProject.projectDir, "src/main/rust").path)
     outputDir.set(jniOutputDir.path)
     extraEnv.set(rustBuildExtraEnv)
 }

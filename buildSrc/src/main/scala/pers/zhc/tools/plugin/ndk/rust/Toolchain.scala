@@ -1,5 +1,6 @@
-package pers.zhc.tools.plugin.rust
+package pers.zhc.tools.plugin.ndk.rust
 
+import pers.zhc.tools.plugin.ndk.AndroidAbi
 import java.io.File
 
 /** @author
