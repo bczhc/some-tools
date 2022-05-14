@@ -46,25 +46,26 @@ class BuildRunner(configs: Configurations) {
       target: Target,
       buildDir: File
   ): Unit = {
-    FileUtils.requireDelete(buildDir)
     FileUtils.requireMkdir(buildDir)
 
-    val cmakeCommand = List(
-      s"${configs.cmakeBinDir}/cmake",
-      s"-DCMAKE_TOOLCHAIN_FILE=${cmakeToolchainFile.getAbsolutePath}",
-      s"-DANDROID_ABI=${target.abi}",
-      s"-DANDROID_PLATFORM=${target.api}",
-      "-G",
-      "Ninja",
-      s"-DCMAKE_BUILD_TYPE=${configs.buildType.toString.capitalize}",
-      configs.srcDir.getAbsolutePath
-    )
+    if (!new File(buildDir, "build.ninja").exists()) {
+      val cmakeCommand = List(
+        s"${configs.cmakeBinDir}/cmake",
+        s"-DCMAKE_TOOLCHAIN_FILE=${cmakeToolchainFile.getAbsolutePath}",
+        s"-DANDROID_ABI=${target.abi}",
+        s"-DANDROID_PLATFORM=${target.api}",
+        "-G",
+        "Ninja",
+        s"-DCMAKE_BUILD_TYPE=${configs.buildType.toString.capitalize}",
+        configs.srcDir.getAbsolutePath
+      )
 
-    ProcessUtils.systemAndCheck(
-      new ProcessBuilder(cmakeCommand: _*)
-        .directory(buildDir)
-        .start()
-    )
+      ProcessUtils.systemAndCheck(
+        new ProcessBuilder(cmakeCommand: _*)
+          .directory(buildDir)
+          .start()
+      )
+    }
 
     val makeCommand =
       List(

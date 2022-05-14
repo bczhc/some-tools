@@ -204,8 +204,6 @@ val copyOpensslLibsTask = project.task("copyOpensslLibs") {
 
 
 val compileRustTask: Task = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME())
-
-appProject.tasks.getByName("preBuild").dependsOn(compileRustTask)
 compileRustTask.dependsOn(copyOpensslLibsTask)
 
 val sdkDir = android.sdkDirectory
@@ -281,9 +279,6 @@ fun requireDelete(file: File) {
     }
 }
 
-println(android.ndkDirectory)
-println(android.sdkDirectory)
-
 configure<CppBuildPluginExtension> {
     srcDir.set("$projectDir/src/main/cpp")
     ndkDir.set(android.ndkDirectory.path)
@@ -292,3 +287,12 @@ configure<CppBuildPluginExtension> {
     outputDir.set(jniOutputDir.path)
     cmakeBinDir.set(tools.cmakeBinDir.path)
 }
+
+val compileCppTask: Task = project.tasks.getByName("compileCpp")
+
+val compileJniTask = task("compileJni") {
+    dependsOn(compileCppTask)
+    dependsOn(compileRustTask)
+}
+
+appProject.tasks.getByName("preBuild").dependsOn(compileJniTask)
