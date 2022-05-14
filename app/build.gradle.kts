@@ -97,15 +97,15 @@ android {
             keyPassword = "123456"
         }
     }
-    compileSdkVersion(31)
+    compileSdk = 31
     defaultConfig {
         applicationId = "pers.zhc.tools"
-        minSdkVersion(21)
-        targetSdkVersion(31)
+        minSdk = 21
+        targetSdk = 31
 
         val verInfo = gVersion()!! as ArrayList<*>
-        versionCode(verInfo[0] as Int)
-        versionName(verInfo[1].toString())
+        versionCode = verInfo[0] as Int
+        versionName = verInfo[1].toString()
 
         ndk {
             abiFilters.addAll(ndkTargets.map {
