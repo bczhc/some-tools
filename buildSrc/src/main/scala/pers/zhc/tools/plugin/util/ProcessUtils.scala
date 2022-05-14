@@ -11,4 +11,15 @@ object ProcessUtils {
     process.waitFor()
     process.exitValue()
   }
+
+  def systemAndCheck(
+      process: Process
+  ): Unit = {
+    val status = executeWithOutput(process)
+    if (status != 0) {
+      throw new RuntimeException(
+        s"Process exited with non-zero status: $status"
+      )
+    }
+  }
 }

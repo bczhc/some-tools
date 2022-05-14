@@ -4,10 +4,11 @@ import pers.zhc.util.IOUtils
 
 import java.io.{File, FileInputStream, FileOutputStream}
 import java.nio.charset.StandardCharsets
+import org.apache.commons.io.{FileUtils => ApacheFileUtils}
 
-/**
- * @author bczhc
- */
+/** @author
+  *   bczhc
+  */
 object FileUtils {
   def copyFile(src: File, dest: File): Unit = {
     val is = new FileInputStream(src)
@@ -34,5 +35,21 @@ object FileUtils {
     os.write(string.getBytes(StandardCharsets.UTF_8))
     os.flush()
     os.close()
+  }
+
+  def requireDelete(file: File): Unit = {
+    if (file.exists()) {
+      if (file.isDirectory) {
+        ApacheFileUtils.deleteDirectory(file)
+      } else {
+        ApacheFileUtils.delete(file)
+      }
+    }
+  }
+
+  def requireMkdir(file: File): Unit = {
+    if (!file.exists()) {
+      ApacheFileUtils.forceMkdir(file)
+    }
   }
 }

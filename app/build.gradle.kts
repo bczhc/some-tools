@@ -6,6 +6,8 @@ import pers.zhc.plugins.NdkVersion
 import pers.zhc.plugins.RegexUtils
 import pers.zhc.plugins.SdkPath
 import pers.zhc.tools.plugin.ndk.AndroidAbi
+import pers.zhc.tools.plugin.ndk.cpp.CppBuildPlugin
+import pers.zhc.tools.plugin.ndk.cpp.CppBuildPlugin.CppBuildPluginExtension
 import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin
 import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin.RustBuildPluginExtension
 import java.io.FileNotFoundException
@@ -20,6 +22,7 @@ plugins {
     id("kotlin-android-extensions")
 }
 apply<RustBuildPlugin>()
+apply<CppBuildPlugin>()
 
 val rootProjectDir = rootProject.projectDir
 
@@ -144,19 +147,6 @@ android {
 
     ndkVersion = detectedNdkVersion
 
-    val sdkDir = android.sdkDirectory
-    val ndkDir = android.ndkDirectory
-
-    val tools = Tools(ndkDir, sdkDir)
-    val cmakeVersion = tools.cMakeVersion as String
-
-    externalNativeBuild {
-        cmake {
-            version = cmakeVersion
-            path = file("src/main/cpp/CMakeLists.txt")
-        }
-    }
-
     sourceSets {
         val sets = asMap
         sets["main"]!!.apply {
@@ -218,13 +208,17 @@ val compileRustTask: Task = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME
 appProject.tasks.getByName("preBuild").dependsOn(compileRustTask)
 compileRustTask.dependsOn(copyOpensslLibsTask)
 
+val sdkDir = android.sdkDirectory
+val ndkDir = android.ndkDirectory
+val tools = Tools(ndkDir, sdkDir)
+val cmakeVersion = tools.cMakeVersion as String
 
 println(
     """Build environment info:
     |SDK path: ${android.sdkDirectory.path}
     |NDK path: ${android.ndkDirectory.path}
     |NDK version: $detectedNdkVersion
-    |CMake version: ${android.externalNativeBuild.cmake.version}
+    |CMake version: $cmakeVersion
     |NDK targets: $ndkTargets
     |Rust build extra env: $rustBuildExtraEnv
 """.trimMargin()
@@ -285,4 +279,16 @@ fun requireDelete(file: File) {
             throw IOException("Failed to delete ${file.path}")
         }
     }
+}
+
+println(android.ndkDirectory)
+println(android.sdkDirectory)
+
+configure<CppBuildPluginExtension> {
+    srcDir.set("$projectDir/src/main/cpp")
+    ndkDir.set(android.ndkDirectory.path)
+    targets.set(ndkTargetsForConfigs)
+    buildType.set("release")
+    outputDir.set(jniOutputDir.path)
+    cmakeBinDir.set(tools.cmakeBinDir.path)
 }

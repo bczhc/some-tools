@@ -9,7 +9,7 @@ class BuildType {
 
 object BuildType {
   def from(string: String): BuildType = {
-    string match {
+    string.toLowerCase match {
       case "debug"   => Debug
       case "release" => Release
       case _         => throw new NoSuchElementException("Invalid build type")

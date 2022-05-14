@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import org.apache.commons.io.FileUtils as ApacheFileUtils
 
 /**
  * @author bczhc
@@ -23,8 +24,7 @@ class BuildUtils {
             if (c > 0xFFFF && c < 0x110000) {
                 sb.append((Math.floor((c - 0x10000) / 0x400) + 0xD800) as char)
                         .append(((c - 0x10000) % 0x400 + 0xDC00) as char)
-            } else
-                sb.append(c as char)
+            } else sb.append(c as char)
         }
         return sb.toString()
     }
@@ -36,10 +36,8 @@ class BuildUtils {
         def which = 0
         def verString = "1.0.0"
         def emoji = ranEmoji()
-        return [
-                Integer.parseInt(dateString + which),
-                "${verString}-${dateString}${time}-$emoji"
-        ]
+        return [Integer.parseInt(dateString + which),
+                "${verString}-${dateString}${time}-$emoji"]
     }
 
     static ranEmoji() {
@@ -153,9 +151,9 @@ class BuildUtils {
             def br = new BufferedReader(isr)
             def lines = br.readLines()
             for (String line : lines) {
-                Matcher matcher = Pattern.compile("(?<=Pkg\\.Revision ?= ?).*").matcher(line)
+                Matcher matcher = Pattern.compile("Pkg.Revision ?= ?(\\d+\\.\\d+(\\.\\d+)?)").matcher(line)
                 if (matcher.find()) {
-                    versionString = matcher.group(0)
+                    versionString = matcher.group(1)
                 }
             }
             br.close()
@@ -166,6 +164,11 @@ class BuildUtils {
         synchronized getNdkVersion() {
             def sourcePropertiesFile = new File(ndkDir as String, "source.properties")
             return getVersionStringFromPropertiesFile(sourcePropertiesFile)
+        }
+
+        synchronized File getCmakeBinDir() {
+            return ApacheFileUtils.getFile(new File(sdkDir as String),
+                    "cmake", getCMakeVersion() as String, "bin")
         }
     }
 
@@ -187,9 +190,7 @@ class BuildUtils {
         }
         def properties = openPropertiesFile(configPropertiesFile)
         if (!properties.containsKey(key)) {
-            throw new GradleException(
-                    "Could not find OpenSSL library. Please define \"$key\" in $configPropertiesFile.path"
-            )
+            throw new GradleException("Could not find OpenSSL library. Please define \"$key\" in $configPropertiesFile.path")
         }
 
         def opensslDir = new File(properties.getProperty(key))
@@ -255,9 +256,7 @@ class BuildUtils {
     }
 
     static OpensslPath getOpensslPath(File opensslDir, TargetAbi targetAbi) {
-        new OpensslPath(
-                new File(new File(opensslDir, "libs"), targetAbi.toString()),
-                new File(opensslDir, "include")
-        )
+        new OpensslPath(new File(new File(opensslDir, "libs"), targetAbi.toString()),
+                new File(opensslDir, "include"))
     }
 }
