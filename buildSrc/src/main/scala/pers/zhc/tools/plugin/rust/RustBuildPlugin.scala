@@ -159,9 +159,6 @@ class RustBuildPlugin extends Plugin[Project] {
         unwrap(extension.getAndroidNdkDir, "androidNdkDir")
       )
 
-      override val androidApi: Int =
-        unwrap(extension.getAndroidApi, "androidApi")
-
       override val targets: Targets = {
         unwrap(extension.getTargets, "targets")
           .asInstanceOf[JList[JMap[String, Any]]]
@@ -197,8 +194,6 @@ object RustBuildPlugin {
 
     def getAndroidNdkDir: Property[String]
 
-    def getAndroidApi: Property[Int]
-
     def getTargets: Property[Any]
 
     def getBuildType: Property[String]
@@ -210,7 +205,6 @@ object RustBuildPlugin {
     val outputDir: Option[String]
     val rustProjectDir: File
     val androidNdkDir: File
-    val androidApi: Int
     val targets: Targets
     val buildType: BuildType
     val extraEnv: Option[Map[String, String]]

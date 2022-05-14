@@ -178,7 +178,6 @@ ndkTargets.forEach {
 
 configure<RustBuildPluginExtension> {
     androidNdkDir.set(android.ndkDirectory.path)
-    androidApi.set(21)
     targets.set(ndkTargets.map {
         mapOf(
             Pair("abi", it["abi"].toString()), Pair("api", it["api"])
