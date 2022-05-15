@@ -57,6 +57,7 @@ class BuildRunner(configs: Configurations) {
         "-G",
         "Ninja",
         s"-DCMAKE_BUILD_TYPE=${configs.buildType.toString.capitalize}",
+        s"-DCMAKE_MAKE_PROGRAM=${configs.cmakeBinDir}/ninja",
         configs.srcDir.getAbsolutePath
       )
 
