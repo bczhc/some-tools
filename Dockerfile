@@ -29,12 +29,6 @@ RUN echo 'sdk.dir=/sdk' > local.properties && \
     echo 'opensslLib.dir=/openssl' > config.properties && \
     echo 'ndk.target=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29' >> config.properties
 
-# test clean
-RUN . ~/.cargo/env && ./gradlew cleanAll
-
-# build openssl of all Android ABI
-RUN ./build-openssl /openssl
-
 # install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     chmod +x install && \
@@ -43,6 +37,12 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     rustup default nightly && \
     rustc --version && \
     ./configure-rust
+
+# test clean
+RUN . ~/.cargo/env && ./gradlew cleanAll
+
+# build openssl of all Android ABI
+RUN ./build-openssl /openssl
 
 # build single-Android-ABI App
 RUN . ~/.cargo/env && \
