@@ -17,13 +17,13 @@ class BuildRunner(configs: Configurations) {
       )
     }
 
-    ApacheFileUtils.forceMkdirParent(configs.jniLibDir)
+    ApacheFileUtils.forceMkdir(configs.jniLibDir)
 
     for (target <- configs.targets) {
       val buildDir = new File(configs.srcDir, "build")
       val targetBuildDir = new File(buildDir, target.abi.toString)
 
-      ApacheFileUtils.forceMkdirParent(targetBuildDir)
+      ApacheFileUtils.forceMkdir(targetBuildDir)
 
       println(s"Compiling for target: $target")
       runBuild(cmakeToolchainFile, target, targetBuildDir)
