@@ -19,12 +19,15 @@ class BuildRunner(configs: Configurations) {
 
     ApacheFileUtils.forceMkdirParent(configs.jniLibDir)
 
-    val buildDir = new File(configs.srcDir, "build")
-
     for (target <- configs.targets) {
+      val buildDir = new File(configs.srcDir, "build")
+      val targetBuildDir = new File(buildDir, target.abi.toString)
+
+      ApacheFileUtils.forceMkdirParent(targetBuildDir)
+
       println(s"Compiling for target: $target")
-      runBuild(cmakeToolchainFile, target, buildDir)
-      copyFiles(buildDir, configs.jniLibDir, target)
+      runBuild(cmakeToolchainFile, target, targetBuildDir)
+      copyFiles(targetBuildDir, configs.jniLibDir, target)
     }
   }
 
@@ -46,8 +49,6 @@ class BuildRunner(configs: Configurations) {
       target: Target,
       buildDir: File
   ): Unit = {
-    FileUtils.requireMkdir(buildDir)
-
     if (!new File(buildDir, "build.ninja").exists()) {
       val cmakeCommand = List(
         s"${configs.cmakeBinDir}/cmake",
