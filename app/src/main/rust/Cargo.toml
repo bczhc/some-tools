@@ -28,6 +28,7 @@ tar = "0.4.38"
 phone-transfer = { path = "./third_party/bczhc_rust/apps/phone-transfer" }
 walkdir = "2.3.2"
 pathdiff = "0.2.1"
+rusqlite = "0.27.0"
 
 [profile.release]
 panic = "abort"

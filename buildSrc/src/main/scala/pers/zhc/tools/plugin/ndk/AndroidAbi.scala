@@ -37,6 +37,13 @@ case object AndroidAbi {
       case _             => throw new NoSuchElementException("Invalid ABI name")
     }
 
+  def tryFrom(targetName: String): Option[AndroidAbi] =
+    try {
+      Some(from(targetName))
+    } catch {
+      case _: NoSuchElementException => None
+    }
+
   case object Arm extends AndroidAbi {}
 
   case object Arm64 extends AndroidAbi {}

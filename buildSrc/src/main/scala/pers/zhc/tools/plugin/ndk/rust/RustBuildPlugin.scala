@@ -6,7 +6,12 @@ import pers.zhc.tools.plugin.ndk.NdkUtils.JMap
 import pers.zhc.tools.plugin.ndk.Target.Targets
 import pers.zhc.tools.plugin.ndk.rust.BuildRunner.BuildOptions
 import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin._
-import pers.zhc.tools.plugin.ndk.{BuildType, NdkBaseExtension, NdkUtils}
+import pers.zhc.tools.plugin.ndk.{
+  AndroidAbi,
+  BuildType,
+  NdkBaseExtension,
+  NdkUtils
+}
 import pers.zhc.tools.plugin.util.{FileUtils, ProcessUtils}
 
 import java.io.File
@@ -79,7 +84,7 @@ class RustBuildPlugin extends Plugin[Project] {
         BuildOptions(
           target,
           config.buildType,
-          config.extraEnv,
+          Some(getBuildEnv(config.extraEnv, config.targetEnv, target.abi)),
           config.rustProjectDir
         )
       ).run()
@@ -165,7 +170,27 @@ class RustBuildPlugin extends Plugin[Project] {
         toOption(extension.getExtraEnv).map({
           _.asInstanceOf[JMap[String, String]].asScala.toMap
         })
+      override val targetEnv: Option[Map[String, Environments]] =
+        toOption(extension.getTargetEnv).map({
+          _.asInstanceOf[JMap[String, JMap[String, String]]].asScala.view
+            .mapValues(_.asScala.toMap)
+            .toMap
+        })
     }
+  }
+
+  def getBuildEnv(
+      extraEnv: Option[Environments],
+      targetEnv: Option[TargetEnv],
+      abi: AndroidAbi
+  ): Environments = {
+    val env1 = extraEnv.getOrElse(Map.empty)
+    val env2 = targetEnv
+      .map({ e =>
+        e.getOrElse(abi.toString, Map.empty)
+      })
+      .getOrElse(Map.empty)
+    env1 ++ env2
   }
 }
 
@@ -175,6 +200,7 @@ object RustBuildPlugin {
 
   trait RustBuildPluginExtension extends NdkBaseExtension {
     def getExtraEnv: Property[Any]
+    def getTargetEnv: Property[Any]
   }
 
   abstract class Configurations {
@@ -184,7 +210,9 @@ object RustBuildPlugin {
     val targets: Targets
     val buildType: BuildType
     val extraEnv: Option[Map[String, String]]
+    val targetEnv: Option[Map[String, Environments]]
   }
 
   type Environments = Map[String, String]
+  type TargetEnv = Map[String, Environments]
 }

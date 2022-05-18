@@ -16,5 +16,9 @@ pub extern "C" fn Java_pers_zhc_tools_jni_JNI_00024JniDemo_hello(
     let s = env.new_string(content.clone()).unwrap();
 
     jni_helper::toast(env, context, &content).unwrap();
+
+    let s = rusqlite::version();
+    let s = env.new_string(s).unwrap();
+
     s.into_inner()
 }

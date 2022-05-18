@@ -31,7 +31,7 @@ class BuildRunner(toolchain: Toolchain, options: BuildOptions) {
     val env = pb.environment()
     env.put("TARGET_CC", toolchain.linker.getPath)
     env.put("TARGET_AR", toolchain.ar.getPath)
-    options.extraEnv.foreach(_.foreach({ i => env.put(i._1, i._2) }))
+    options.env.foreach(_.foreach({ i => env.put(i._1, i._2) }))
 
     val targetEnvName = rustTarget.replace('-', '_').toUpperCase
     env.put(
@@ -50,7 +50,7 @@ object BuildRunner {
   case class BuildOptions(
       target: Target,
       buildType: BuildType,
-      extraEnv: Option[Environments],
+      env: Option[Environments],
       rustProjectDir: File
   )
 }

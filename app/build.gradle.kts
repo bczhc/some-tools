@@ -140,7 +140,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    lintOptions {
+    lint {
         isCheckReleaseBuilds = false
         isAbortOnError = false
     }
@@ -171,6 +171,16 @@ ndkTargets.forEach {
     rustBuildExtraEnv[env["includeDir"].toString()] = opensslPath.include!!.path
 }
 
+val rustBuildTargetEnv = HashMap<String, Map<String, String>>()
+ndkTargets.forEach {
+    val abi = it["abi"].toString()
+    rustBuildTargetEnv[abi] = HashMap<String, String>().apply {
+        this["SQLITE3_INCLUDE_DIR"] =
+            "$projectDir/app/src/main/cpp/third_party/jni-lib/third_party/my-cpp-lib/third_party/sqlite3-single-c"
+        this["SQLITE3_LIB_DIR"] = File(jniOutputDir, abi).path
+    }
+}
+
 configure<RustBuildPluginExtension> {
     ndkDir.set(android.ndkDirectory.path)
     targets.set(ndkTargetsForConfigs)
@@ -178,6 +188,7 @@ configure<RustBuildPluginExtension> {
     srcDir.set(File(appProject.projectDir, "src/main/rust").path)
     outputDir.set(jniOutputDir.path)
     extraEnv.set(rustBuildExtraEnv)
+    targetEnv.set(rustBuildTargetEnv)
 }
 
 
@@ -219,6 +230,7 @@ println(
     |CMake version: $cmakeVersion
     |NDK targets: $ndkTargets
     |Rust build extra env: $rustBuildExtraEnv
+    |Rust build target env: $rustBuildTargetEnv
 """.trimMargin()
 )
 
