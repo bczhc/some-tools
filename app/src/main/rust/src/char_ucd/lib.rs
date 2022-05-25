@@ -90,6 +90,7 @@ where
     F: Fn(i32),
 {
     let mut database = UcdDatabase::new(database_path)?;
+    database.begin_transaction()?;
 
     let mut xml_reader = get_xml_reader(xml_path);
 

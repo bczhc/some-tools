@@ -16,13 +16,6 @@ macro_rules! ref_raw {
 }
 
 impl<'a> UcdDatabase<'a> {
-    pub fn commit(&self) -> Result<()> {
-        ref_raw!(self.conn).execute("COMMIT", params![])?;
-        Ok(())
-    }
-}
-
-impl<'a> UcdDatabase<'a> {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<UcdDatabase<'a>> {
         let conn = Connection::open(path)?;
         let conn = Box::into_raw(Box::new(conn));
@@ -48,6 +41,16 @@ impl<'a> UcdDatabase<'a> {
     #[inline]
     pub fn insert(&mut self, codepoint: u32, properties: &str) -> Result<()> {
         self.insert_stmt.execute(params![codepoint, properties])?;
+        Ok(())
+    }
+
+    pub fn begin_transaction(&self) -> Result<()> {
+        ref_raw!(self.conn).execute("BEGIN TRANSACTION", params![])?;
+        Ok(())
+    }
+
+    pub fn commit(&self) -> Result<()> {
+        ref_raw!(self.conn).execute("COMMIT", params![])?;
         Ok(())
     }
 }
