@@ -60,7 +60,6 @@ class CharLookupActivity : BaseActivity() {
         val paths = object {
             val download = File(filesDir, "ucd-xml.zip")
             val xml = File(filesDir, "ucd-xml")
-            val intermediate = File(filesDir, "ucd-xml-parsed-intermediate")
             val database = UCD_DATABASE_PATH
         }
 
@@ -123,7 +122,9 @@ class CharLookupActivity : BaseActivity() {
 
             progressViewOnUiThread.setActionText(ParseAction.PARSING_XML.getActionMsg(this))
             progressViewOnUiThread.resetProgress()
-            JNI.CharUcd.parseXml(paths.xml.path, paths.intermediate.path) {
+            // delete, and recreate it (SQLite3 "open" function automatically does)
+            paths.database.requireDelete()
+            JNI.CharUcd.parseXml(paths.xml.path, paths.database.path) {
                 tryDo.tryDo { _, notifier ->
                     handler.post {
                         progressView.setProgressAndTitle(it.toFloat() / count.toFloat())
@@ -132,19 +133,6 @@ class CharLookupActivity : BaseActivity() {
                 }
             }
             paths.xml.requireDelete()
-
-            progressViewOnUiThread.setActionText(ParseAction.WRITING_DATABASE.getActionMsg(this))
-            // delete, and recreate it (SQLite3 "open" function automatically does)
-            paths.database.requireDelete()
-            JNI.CharUcd.writeDatabase(paths.intermediate.path, paths.database.path) {
-                tryDo.tryDo { _, notifier ->
-                    handler.post {
-                        progressView.setProgressAndTitle(it.toFloat() / count.toFloat())
-                        notifier.finish()
-                    }
-                }
-            }
-            paths.intermediate.requireDelete()
 
             handler.post {
                 progressView.setProgress(1F)
@@ -159,8 +147,7 @@ class CharLookupActivity : BaseActivity() {
         DOWNLOADING(R.string.char_ucd_parse_downloading_action_msg),
         DECOMPRESSING(R.string.char_ucd_parse_decompressing_action_msg),
         COUNTING(R.string.char_ucd_parse_counting_action_msg),
-        PARSING_XML(R.string.char_ucd_parse_processing_xml_action_msg),
-        WRITING_DATABASE(R.string.char_ucd_parse_writing_database_action_msg);
+        PARSING_XML(R.string.char_ucd_parse_processing_xml_action_msg);
 
         fun getActionMsg(context: Context): String {
             return context.getString(this.msgStrRes)

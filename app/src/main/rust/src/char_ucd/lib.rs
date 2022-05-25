@@ -1,11 +1,14 @@
 use std::fs::File;
-use std::io::{BufReader, BufWriter, Write};
+use std::io::BufReader;
 
-use bczhc_lib::io::OpenOrCreate;
 use quick_xml::events::attributes::Attributes;
 use quick_xml::events::Event;
 use quick_xml::Reader;
 use serde_json::Value;
+
+use crate::char_ucd::ucd_database::UcdDatabase;
+
+use super::errors::*;
 
 fn get_xml_reader(path: &str) -> Reader<BufReader<File>> {
     let file = File::open(path).unwrap();
@@ -17,8 +20,8 @@ fn get_xml_reader(path: &str) -> Reader<BufReader<File>> {
 }
 
 pub fn read_total_count<F>(path: &str, callback: F) -> u32
-    where
-        F: Fn(u32),
+where
+    F: Fn(u32),
 {
     let mut total = 0_u32;
 
@@ -42,9 +45,11 @@ pub fn read_total_count<F>(path: &str, callback: F) -> u32
                     repertoire_enter = true;
                 }
             }
-            Ok(Event::End(ref e)) => if repertoire_enter && e.name() == b"repertoire" {
-                break;
-            },
+            Ok(Event::End(ref e)) => {
+                if repertoire_enter && e.name() == b"repertoire" {
+                    break;
+                }
+            }
             Ok(Event::Eof) => {
                 unreachable!()
             }
@@ -59,23 +64,19 @@ pub fn read_total_count<F>(path: &str, callback: F) -> u32
 }
 
 fn attributes2json(attrs: Attributes) -> Value {
-    serde_json::Value::Array(
+    Value::Array(
         attrs
             .map(|x| {
                 let x = x.unwrap();
                 let mut m = serde_json::Map::new();
                 m.insert(
                     String::from_utf8_lossy(x.key).to_string(),
-                    serde_json::Value::String(String::from_utf8_lossy(&*x.value).to_string()),
+                    Value::String(String::from_utf8_lossy(&*x.value).to_string()),
                 );
-                serde_json::value::Value::Object(m)
+                Value::Object(m)
             })
             .collect(),
     )
-}
-
-fn to_output_line(codepoint: u32, attrs_json: Value) -> String {
-    format!("{} {}", codepoint, attrs_json)
 }
 
 struct HoldProp {
@@ -84,12 +85,13 @@ struct HoldProp {
 }
 
 // TODO: handle some `unwrap` (e.g. IO `Error`) and throw it to Java7
-pub fn write_intermediate<F>(xml_path: &str, output_path: &str, callback: F)
-    where
-        F: Fn(i32),
+pub fn parse_xml<F>(xml_path: &str, database_path: &str, callback: F) -> Result<()>
+where
+    F: Fn(i32),
 {
+    let mut database = UcdDatabase::new(database_path)?;
+
     let mut xml_reader = get_xml_reader(xml_path);
-    let mut output_writer = BufWriter::new(File::open_or_create(output_path).unwrap());
 
     let mut buf = Vec::new();
     let mut alias_vec = Vec::new();
@@ -108,12 +110,10 @@ pub fn write_intermediate<F>(xml_path: &str, output_path: &str, callback: F)
                             std::str::from_utf8(first_attr.value.as_ref()).unwrap(),
                             16,
                         )
-                            .unwrap();
+                        .unwrap();
                         let attr_json = attributes2json(e.attributes());
-                        let output_line = to_output_line(codepoint, attr_json);
 
-                        output_writer.write_all(output_line.as_bytes()).unwrap();
-                        output_writer.write_all(b"\n").unwrap();
+                        database.insert(codepoint, &attr_json.to_string())?;
 
                         count += 1;
                         if count % 1000 == 0 {
@@ -139,7 +139,7 @@ pub fn write_intermediate<F>(xml_path: &str, output_path: &str, callback: F)
                             std::str::from_utf8(first_attr.value.as_ref()).unwrap(),
                             16,
                         )
-                            .unwrap();
+                        .unwrap();
 
                         let attr_json = attributes2json(e.attributes());
 
@@ -176,9 +176,7 @@ pub fn write_intermediate<F>(xml_path: &str, output_path: &str, callback: F)
                             });
                             hold_prop.json.as_array_mut().unwrap().push(alias_json);
 
-                            let output_line = to_output_line(hold_prop.codepoint, hold_prop.json);
-                            output_writer.write_all(output_line.as_bytes()).unwrap();
-                            output_writer.write_all(b"\n").unwrap();
+                            database.insert(hold_prop.codepoint, &hold_prop.json.to_string())?;
 
                             alias_vec.clear();
 
@@ -200,4 +198,8 @@ pub fn write_intermediate<F>(xml_path: &str, output_path: &str, callback: F)
             _ => {}
         }
     }
+
+    database.commit()?;
+
+    Ok(())
 }

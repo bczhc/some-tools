@@ -1,12 +1,13 @@
 use jni::objects::{JClass, JString, JValue};
-use jni::sys::{jobject};
+use jni::sys::jobject;
 use jni::JNIEnv;
 
 use crate::char_ucd::lib;
+use crate::jni_helper::GetString;
 
-use crate::jni_helper::{GetString, GetStringError};
+use super::errors::*;
 
-fn count(env: JNIEnv, src: JString, callback: jobject) -> Result<u32, GetStringError> {
+fn count(env: JNIEnv, src: JString, callback: jobject) -> Result<u32> {
     let src = env.get_string_owned(src)?;
     let count = lib::read_total_count(&src, |i| {
         env.call_method(callback, "progress", "(I)V", &[JValue::Int(i as i32)])
@@ -34,19 +35,14 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024CharUcd_count(
     }) as i32
 }
 
-fn parse_xml(
-    env: JNIEnv,
-    src: JString,
-    dest: JString,
-    callback: jobject,
-) -> Result<(), GetStringError> {
+fn parse_xml(env: JNIEnv, src: JString, dest: JString, callback: jobject) -> Result<()> {
     let src = env.get_string_owned(src)?;
     let dest = env.get_string_owned(dest)?;
 
-    lib::write_intermediate(&src, &dest, |i| {
+    lib::parse_xml(&src, &dest, |i| {
         env.call_method(callback, "progress", "(I)V", &[JValue::Int(i)])
             .unwrap();
-    });
+    })?;
     Ok(())
 }
 
