@@ -435,6 +435,7 @@
     <string name="wubi_single_char_code_check_shortest_code_tv">最短编码：%1$s</string>
     <string name="wubi_no_selected_text_hint">未选择文字</string>
     <string name="wubi_inverse_lookup_dialog_head">“%1$s”的反查结果</string>
+    <string name="wubi_single_char_code_check_notify_toast"><![CDATA[%1$s: %2$s -> %3$s]]></string>
     <!-- module end -->
 
     <!-- app settings -->

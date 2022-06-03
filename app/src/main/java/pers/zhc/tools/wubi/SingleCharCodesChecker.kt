@@ -19,7 +19,9 @@ import java.util.concurrent.Executors
 /**
  * @author bczhc
  */
-class SingleCharCodesChecker {
+class SingleCharCodesChecker(
+    private val notifyCallback: (record: Record) -> Unit
+) {
     private val inverseDictDatabase = WubiInverseDictManager.openDatabase()
     private val recordDatabase = RecordDatabase.openDatabase()
     private val threadPool = Executors.newFixedThreadPool(1)
@@ -35,6 +37,7 @@ class SingleCharCodesChecker {
             })
             if (code.length > shortestCode.length) {
                 val record = Record(char, shortestCode, code)
+                notifyCallback(record)
                 if (!recordDatabase.exist(record)) {
                     recordDatabase.insert(record)
                 }

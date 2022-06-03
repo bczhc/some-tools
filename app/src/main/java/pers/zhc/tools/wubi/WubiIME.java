@@ -550,7 +550,15 @@ public class WubiIME extends InputMethodService {
 
         switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                singleCharCodesChecker = new SingleCharCodesChecker();
+                singleCharCodesChecker = new SingleCharCodesChecker(record -> {
+                    ToastUtils.show(context, context.getString(
+                        R.string.wubi_single_char_code_check_notify_toast,
+                        record.getChar(),
+                        record.getInputCode(),
+                        record.getShortestCode()
+                    ));
+                    return Unit.INSTANCE;
+                });
                 emptyButton.setEnabled(true);
                 if (adapter.get() == null) {
                     setupRecyclerView.run();
