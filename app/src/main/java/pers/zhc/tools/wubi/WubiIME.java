@@ -765,7 +765,8 @@ public class WubiIME extends InputMethodService {
         if (keyCode >= KeyEvent.KEYCODE_A && keyCode <= KeyEvent.KEYCODE_Z) return InputRange.A_Z;
         if (keyCode == KeyEvent.KEYCODE_DEL) return InputRange.BACKSPACE;
         if (keyCode == KeyEvent.KEYCODE_SPACE) return InputRange.SPACE;
-        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) return InputRange.SHIFT;
+        if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT)
+            return InputRange.SHIFT;
         for (int punctuationKeyCode : punctuationKeyCodes) {
             if (punctuationKeyCode == keyCode) {
                 return InputRange.PUNCTUATION;
@@ -774,8 +775,10 @@ public class WubiIME extends InputMethodService {
         if (keyCode == KeyEvent.KEYCODE_SEMICOLON) return InputRange.SEMICOLON;
         if (keyCode == KeyEvent.KEYCODE_APOSTROPHE) return InputRange.APOSTROPHE;
         if (keyCode == KeyEvent.KEYCODE_ENTER) return InputRange.ENTER;
-        if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) return InputRange.NUM0_9;
-        if (keyCode == KeyEvent.KEYCODE_CTRL_LEFT || keyCode == KeyEvent.KEYCODE_CTRL_RIGHT) return InputRange.CTRL;
+        if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9)
+            return InputRange.NUM0_9;
+        if (keyCode == KeyEvent.KEYCODE_CTRL_LEFT || keyCode == KeyEvent.KEYCODE_CTRL_RIGHT)
+            return InputRange.CTRL;
         for (int code : punctuationWithShiftKeyCodes) {
             if (code == keyCode) return InputRange.SOME_MATTERS_WITH_SHIFT;
         }
