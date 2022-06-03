@@ -15,19 +15,25 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import kotlin.Unit;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.*;
 import pers.zhc.tools.views.SmartHintEditText;
@@ -533,10 +539,16 @@ public class WubiIME extends InputMethodService {
         final View inflate = View.inflate(context, R.layout.wubi_single_char_codes_recording_dialog, null);
         SwitchMaterial switchMaterial = inflate.findViewById(R.id.switch_);
         Button emptyButton = inflate.findViewById(R.id.empty_button);
+        Button copyButton = inflate.findViewById(R.id.copy_button);
         RecyclerView recyclerView = inflate.findViewById(R.id.recycler_view);
+        LinearLayout optionLL = inflate.findViewById(R.id.option_ll);
 
         switchMaterial.setChecked(singleCharCodesChecker != null);
-        emptyButton.setEnabled(singleCharCodesChecker != null);
+        if (singleCharCodesChecker == null) {
+            optionLL.setVisibility(View.GONE);
+        } else {
+            optionLL.setVisibility(View.VISIBLE);
+        }
 
         final AtomicReference<SingleCharCodesChecker.RecyclerViewAdapter> adapter = new AtomicReference<>(null);
 
@@ -559,14 +571,14 @@ public class WubiIME extends InputMethodService {
                     ));
                     return Unit.INSTANCE;
                 });
-                emptyButton.setEnabled(true);
+                optionLL.setVisibility(View.VISIBLE);
                 if (adapter.get() == null) {
                     setupRecyclerView.run();
                 }
                 recyclerView.setVisibility(View.VISIBLE);
             } else {
                 singleCharCodesChecker = null;
-                emptyButton.setEnabled(false);
+                optionLL.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.GONE);
             }
         });
@@ -579,6 +591,21 @@ public class WubiIME extends InputMethodService {
             } else {
                 recyclerView.setVisibility(View.GONE);
             }
+        });
+
+        copyButton.setOnClickListener(v -> {
+            StringBuilder sb = new StringBuilder();
+
+            ArrayList<SingleCharCodesChecker.Record> records = singleCharCodesChecker.queryAll();
+            for (SingleCharCodesChecker.Record record : records) {
+                sb.append(context.getString(
+                    R.string.wubi_single_char_code_check_notify_toast,
+                    record.getChar(), record.getInputCode(), record.getShortestCode()
+                ));
+                sb.append("\n");
+            }
+
+            ClipboardUtils.Companion.putWithToast(context, sb.toString());
         });
 
         if (singleCharCodesChecker != null) {

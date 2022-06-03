@@ -13,13 +13,24 @@
             android:text="@string/switch_switch_label"
             android:id="@+id/switch_"
     />
-    <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/empty_button"
-            android:id="@+id/empty_button"
-    />
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_gravity="center_horizontal"
+                  android:id="@+id/option_ll"
+    >
+        <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_button"
+                android:id="@+id/empty_button"
+        />
+        <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/copy_button"
+                android:id="@+id/copy_button"
+        />
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

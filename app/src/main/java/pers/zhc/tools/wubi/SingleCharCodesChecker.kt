@@ -72,6 +72,10 @@ class SingleCharCodesChecker(
         }
     }
 
+    fun queryAll(): ArrayList<Record> {
+        return recordDatabase.queryAll()
+    }
+
     // TODO: database lifetime and resources releasing
     class RecordDatabase private constructor(val database: SQLite3) {
 
