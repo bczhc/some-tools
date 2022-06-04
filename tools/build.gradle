@@ -20,9 +20,9 @@ task fatJar(type: Jar) {
 }
 
 dependencies {
-    implementation 'org.scala-lang:scala-library:2.13.6'
-    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'org.scala-lang:scala-library:2.13.8'
+    implementation 'org.jetbrains:annotations:23.0.0'
     implementation 'com.github.bczhc:java-lib:18a858c167'
-    implementation 'org.json:json:20210307'
+    implementation 'org.json:json:20220320'
     implementation 'commons-io:commons-io:2.11.0'
 }
