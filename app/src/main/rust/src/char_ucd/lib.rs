@@ -84,7 +84,7 @@ struct HoldProp {
     json: Value,
 }
 
-// TODO: handle some `unwrap` (e.g. IO `Error`) and throw it to Java7
+// TODO: handle some `unwrap` (e.g. IO `Error`) and throw it to Java
 pub fn parse_xml<F>(xml_path: &str, database_path: &str, callback: F) -> Result<()>
 where
     F: Fn(i32),
