@@ -9,12 +9,10 @@ use super::errors::*;
 
 fn count(env: JNIEnv, src: JString, callback: jobject) -> Result<u32> {
     let src = env.get_string_owned(src)?;
-    let count = lib::read_total_count(&src, |i| {
+    lib::read_total_count(&src, |i| {
         env.call_method(callback, "progress", "(I)V", &[JValue::Int(i as i32)])
             .unwrap();
-    });
-
-    Ok(count)
+    })
 }
 
 #[no_mangle]

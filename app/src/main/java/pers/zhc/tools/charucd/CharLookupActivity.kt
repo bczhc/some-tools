@@ -59,7 +59,6 @@ class CharLookupActivity : BaseActivity() {
     private fun fetchAndProcessDatabase() {
         val paths = object {
             val download = File(filesDir, "ucd-xml.zip")
-            val xml = File(filesDir, "ucd-xml")
             val database = UCD_DATABASE_PATH
         }
 
@@ -96,22 +95,11 @@ class CharLookupActivity : BaseActivity() {
                     }
                 }
             }, null)
-
-            progressViewOnUiThread.setActionText(ParseAction.DECOMPRESSING.getActionMsg(this))
-            progressViewOnUiThread.resetProgress()
-            ZipUtils.decompressSingleFile(paths.download, paths.xml) {
-                tryDo.tryDo { _, notifier ->
-                    handler.post {
-                        progressView.setProgress(it)
-                        notifier.finish()
-                    }
-                }
-            }
-            paths.download.requireDelete()
+            os.close()
 
             progressViewOnUiThread.setActionText(ParseAction.COUNTING.getActionMsg(this))
             progressViewOnUiThread.resetProgress()
-            val count = JNI.CharUcd.count(paths.xml.path) {
+            val count = JNI.CharUcd.count(paths.download.path) {
                 tryDo.tryDo { _, notifier ->
                     handler.post {
                         progressView.setProgressTitle(getString(R.string.char_ucd_parse_counting_entries, it))
@@ -124,7 +112,7 @@ class CharLookupActivity : BaseActivity() {
             progressViewOnUiThread.resetProgress()
             // delete, and recreate it (SQLite3 "open" function automatically does)
             paths.database.requireDelete()
-            JNI.CharUcd.parseXml(paths.xml.path, paths.database.path) {
+            JNI.CharUcd.parseXml(paths.download.path, paths.database.path) {
                 tryDo.tryDo { _, notifier ->
                     handler.post {
                         progressView.setProgressAndTitle(it.toFloat() / count.toFloat())
@@ -132,7 +120,7 @@ class CharLookupActivity : BaseActivity() {
                     }
                 }
             }
-            paths.xml.requireDelete()
+            paths.download.requireDelete()
 
             handler.post {
                 progressView.setProgress(1F)
@@ -145,7 +133,6 @@ class CharLookupActivity : BaseActivity() {
 
     private enum class ParseAction(val msgStrRes: Int) {
         DOWNLOADING(R.string.char_ucd_parse_downloading_action_msg),
-        DECOMPRESSING(R.string.char_ucd_parse_decompressing_action_msg),
         COUNTING(R.string.char_ucd_parse_counting_action_msg),
         PARSING_XML(R.string.char_ucd_parse_processing_xml_action_msg);
 

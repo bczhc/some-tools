@@ -5,27 +5,25 @@ use quick_xml::events::attributes::Attributes;
 use quick_xml::events::Event;
 use quick_xml::Reader;
 use serde_json::Value;
+use zip::ZipArchive;
 
 use crate::char_ucd::ucd_database::UcdDatabase;
 
 use super::errors::*;
 
-fn get_xml_reader(path: &str) -> Reader<BufReader<File>> {
-    let file = File::open(path).unwrap();
-    let reader = BufReader::new(file);
-
-    let mut xml_reader = Reader::from_reader(reader);
-    xml_reader.trim_text(true);
-    xml_reader
-}
-
-pub fn read_total_count<F>(path: &str, callback: F) -> u32
+pub fn read_total_count<F>(zip_path: &str, callback: F) -> Result<u32>
 where
     F: Fn(u32),
 {
     let mut total = 0_u32;
 
-    let mut xml_reader = get_xml_reader(path);
+    let archive = ZipArchive::new(File::open(zip_path)?)?;
+    let mut archive = Box::new(archive);
+    assert_eq!(archive.len(), 1);
+    let zip_file = archive.by_index(0)?;
+
+    let mut xml_reader = Reader::from_reader(BufReader::new(zip_file));
+    xml_reader.trim_text(true);
 
     let mut buf = Vec::new();
     let mut repertoire_enter = false;
@@ -60,7 +58,7 @@ where
         }
     }
     callback(total);
-    total
+    Ok(total)
 }
 
 fn attributes2json(attrs: Attributes) -> Value {
@@ -83,14 +81,20 @@ struct HoldProp {
 }
 
 // TODO: handle some `unwrap` (e.g. IO `Error`) and throw it to Java
-pub fn parse_xml<F>(xml_path: &str, database_path: &str, callback: F) -> Result<()>
+pub fn parse_xml<F>(zip_path: &str, database_path: &str, callback: F) -> Result<()>
 where
     F: Fn(i32),
 {
     let mut database = UcdDatabase::new(database_path)?;
     database.begin_transaction()?;
 
-    let mut xml_reader = get_xml_reader(xml_path);
+    let archive = ZipArchive::new(File::open(zip_path)?)?;
+    let mut archive = Box::new(archive);
+    assert_eq!(archive.len(), 1);
+    let zip_file = archive.by_index(0)?;
+
+    let mut xml_reader = Reader::from_reader(BufReader::new(zip_file));
+    xml_reader.trim_text(true);
 
     let mut buf = Vec::new();
     let mut alias_vec = Vec::new();

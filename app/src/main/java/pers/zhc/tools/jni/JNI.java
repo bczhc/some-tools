@@ -319,7 +319,7 @@ public class JNI {
         /**
          * parse XML and write data to an intermediate file
          *
-         * @param src  XML path
+         * @param src  XML zip file path
          * @param dest SQLite3 database output path
          * @param f    progress callback
          */
@@ -328,7 +328,7 @@ public class JNI {
         /**
          * count the total entries count
          *
-         * @param src      XML path
+         * @param src      XML zip file path
          * @param callback counting progress callback
          * @return counted total number
          */
