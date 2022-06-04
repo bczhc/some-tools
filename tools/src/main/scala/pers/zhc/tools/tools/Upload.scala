@@ -9,11 +9,12 @@ import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util
 import java.util.Base64
+import scala.collection.mutable
 import scala.util.control.Breaks.{break, breakable}
 
-/**
- * @author bczhc
- */
+/** @author
+  *   bczhc
+  */
 object Upload {
 
   // Usage: program <apk-file> <encoded-commit-info>
@@ -43,7 +44,8 @@ object Upload {
     assert(jsonFile.exists())
 
     val jsonArray = new JSONArray(readFileToString(jsonFile))
-    val newCommit = createGitCommitJSON(commitInfo, computeFileSha1String(apkFile))
+    val newCommit =
+      createGitCommitJSON(commitInfo, computeFileSha1String(apkFile))
     val commits = new util.ArrayList[JSONObject]()
     for (i <- 0 until jsonArray.length()) {
       commits.add(jsonArray.getJSONObject(i))
@@ -73,9 +75,12 @@ object Upload {
     val baos = new ByteArrayOutputStream()
     val is = new FileInputStream(file)
 
-    bufferedReadBytes(is, (bytes, readLen) => {
-      baos.write(bytes, 0, readLen)
-    })
+    bufferedReadBytes(
+      is,
+      (bytes, readLen) => {
+        baos.write(bytes, 0, readLen)
+      }
+    )
 
     is.close()
     baos.toString("UTF-8")
@@ -107,11 +112,13 @@ object Upload {
       }
       exist
     }
-    files.withFilter(f => f.isDirectory).foreach(f => {
-      if (!exist(f.getName)) {
-        FileUtils.deleteDirectory(f)
-      }
-    })
+    files
+      .withFilter(f => f.isDirectory)
+      .foreach(f => {
+        if (!exist(f.getName)) {
+          FileUtils.deleteDirectory(f)
+        }
+      })
   }
 
   def copyFile(src: File, dest: File): Unit = {
@@ -125,9 +132,12 @@ object Upload {
   def computeFileSha1(f: File): Array[Byte] = {
     val md = MessageDigest.getInstance("SHA1")
     val is = new FileInputStream(f)
-    bufferedReadBytes(is, (bytes, readLen) => {
-      md.update(bytes, 0, readLen)
-    })
+    bufferedReadBytes(
+      is,
+      (bytes, readLen) => {
+        md.update(bytes, 0, readLen)
+      }
+    )
     md.digest()
   }
 
@@ -136,7 +146,7 @@ object Upload {
   }
 
   def bytes2hexString(bytes: Array[Byte]): String = {
-    val digestString = new StringBuilder
+    val digestString = new mutable.StringBuilder
     for (b <- bytes) {
       val str = Integer.toHexString(if (b < 0) 256 + b else b)
       digestString.append(if (str.length == 1) s"0$str" else str)
@@ -144,7 +154,10 @@ object Upload {
     digestString.toString()
   }
 
-  def bufferedReadBytes(is: InputStream, f: (Array[Byte], Int) => Unit): Unit = {
+  def bufferedReadBytes(
+      is: InputStream,
+      f: (Array[Byte], Int) => Unit
+  ): Unit = {
     val buf = new Array[Byte](4096)
     var readLen = 0
     breakable {
