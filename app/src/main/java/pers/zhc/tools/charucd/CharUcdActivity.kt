@@ -1,6 +1,3 @@
-@file:OptIn(ExperimentalUnsignedTypes::class)
-@file:Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
-
 package pers.zhc.tools.charucd
 
 import android.os.Bundle
