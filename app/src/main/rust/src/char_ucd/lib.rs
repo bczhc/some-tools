@@ -64,19 +64,17 @@ where
 }
 
 fn attributes2json(attrs: Attributes) -> Value {
-    Value::Array(
-        attrs
-            .map(|x| {
-                let x = x.unwrap();
-                let mut m = serde_json::Map::new();
-                m.insert(
-                    String::from_utf8_lossy(x.key).to_string(),
-                    Value::String(String::from_utf8_lossy(&*x.value).to_string()),
-                );
-                Value::Object(m)
-            })
-            .collect(),
-    )
+    let mut json = serde_json::Map::new();
+    for attr in attrs {
+        let attr = attr.unwrap();
+        assert!(json
+            .insert(
+                String::from_utf8_lossy(attr.key).to_string(),
+                Value::String(String::from_utf8_lossy(&*attr.value).to_string()),
+            )
+            .is_none());
+    }
+    Value::Object(json)
 }
 
 struct HoldProp {
@@ -162,9 +160,11 @@ where
                         b"char" => {
                             let mut hold_prop = hold_prop.take().unwrap();
 
-                            let alias_json = Value::Object({
-                                let mut obj_map = serde_json::Map::new();
-                                obj_map.insert(
+                            assert!(hold_prop
+                                .json
+                                .as_object_mut()
+                                .unwrap()
+                                .insert(
                                     String::from("alias"),
                                     Value::Array(
                                         alias_vec
@@ -172,10 +172,8 @@ where
                                             .map(|x| Value::String(x.clone()))
                                             .collect(),
                                     ),
-                                );
-                                obj_map
-                            });
-                            hold_prop.json.as_array_mut().unwrap().push(alias_json);
+                                )
+                                .is_none());
 
                             database.insert(hold_prop.codepoint, &hold_prop.json.to_string())?;
 

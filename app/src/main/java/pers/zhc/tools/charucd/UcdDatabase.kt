@@ -1,7 +1,8 @@
 package pers.zhc.tools.charucd
 
-import org.json.JSONArray
+import com.google.gson.JsonObject
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.tools.MyApplication
 import java.io.File
 
 /**
@@ -16,12 +17,12 @@ class UcdDatabase(val file: File) {
         database.close()
     }
 
-    fun query(codepoint: Int): JSONArray? {
+    fun query(codepoint: Int): JsonObject? {
         queryStatement.reset()
         queryStatement.bind(1, codepoint)
         val cursor = queryStatement.cursor
         return if (cursor.step()) {
-            JSONArray(cursor.getText(0))
+            MyApplication.defaultGson.fromJson(cursor.getText(0), JsonObject::class.java)
         } else null
     }
 }

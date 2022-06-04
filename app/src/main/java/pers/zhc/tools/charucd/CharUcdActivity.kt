@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.char_ucd_activity.*
 import kotlinx.android.synthetic.main.char_ucd_table_row.view.*
-import org.json.JSONArray
 import pers.zhc.jni.JNI.Struct.packInt
 import pers.zhc.jni.JNI.Struct.packShort
 import pers.zhc.jni.struct.Struct
@@ -13,7 +12,6 @@ import pers.zhc.tools.R
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.utils.CharUtils
-import pers.zhc.util.Assertion
 import java.util.*
 
 /**
@@ -70,18 +68,15 @@ class CharUcdActivity : BaseActivity() {
 
             runOnUiThread {
                 ucdTL.removeAllViews()
-                for (i in 0 until properties.length()) {
-                    val obj = properties.getJSONObject(i)
-                    val key = run {
-                        Assertion.doAssertion(obj.length() == 1)
-                        obj.keys().next()!!
-                    }
-                    val value = obj.get(key)
+                for (entry in properties.entrySet()) {
+                    val key = entry.key
+                    val value = entry.value
+
                     val valueString = if (key != "alias") {
-                        value as String
+                        value.asString
                     } else {
-                        val aliasArray = value as JSONArray
-                        aliasArray.join(", ")
+                        val aliasArray = value.asJsonArray
+                        aliasArray.joinToString { it.asString }
                     }
 
                     val inflate = View.inflate(this, R.layout.char_ucd_table_row, null)
