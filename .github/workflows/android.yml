@@ -33,7 +33,7 @@ jobs:
           docker cp some-tools:/apks .
       - name: Compile CI tool jar
         run: |
-          cd ci
+          cd tools
           chmod +x gradlew
           ./gradlew fatJar
           mv build/libs/ci-all.jar ../
