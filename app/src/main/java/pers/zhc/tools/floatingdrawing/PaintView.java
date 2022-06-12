@@ -1557,6 +1557,8 @@ public class PaintView extends View {
         layerArray.addAll(newLayerArray);
         switchLayer(layerState.getCheckedId());
 
+        redrawAllLayerBitmap();
+
         invalidate();
     }
 
