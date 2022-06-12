@@ -53,7 +53,7 @@ jobs:
           fi
 
           cp ../apks/release/arm64-v8a-29.apk ../some-tools.apk
-          java -cp ../ci-all.jar pers.zhc.tools.ci.Upload ../some-tools.apk $encoded_commit_info
+          java -cp ../ci-all.jar pers.zhc.tools.tools.Upload ../some-tools.apk $encoded_commit_info
 
           git config --global user.email "bczhc0@126.com"
           git config --global user.name "bczhc"
