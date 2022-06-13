@@ -26,17 +26,12 @@ class SingleCharCodesChecker(
     private val recordDatabase = RecordDatabase.openDatabase()
     private val threadPool = Executors.newFixedThreadPool(1)
 
-    fun asyncCommit(char: String, code: String) {
+    fun asyncCommit(char: String, code: String, rule: CheckingRule) {
         threadPool.execute {
             val query = inverseDictDatabase.query(char)
             if (query.isEmpty()) return@execute
-            val shortestCode = query.minOfWith({ a: String, b: String ->
-                a.length.compareTo(b.length)
-            }, {
-                it
-            })
-            if (code.length > shortestCode.length) {
-                val record = Record(char, shortestCode, code)
+            if (rule.test(code, query)) {
+                val record = Record(char, getShortest(query), code)
                 notifyCallback(record)
                 if (!recordDatabase.exist(record)) {
                     recordDatabase.insert(record)
@@ -49,6 +44,12 @@ class SingleCharCodesChecker(
         fun checkIfSingleChar(s: String): Boolean {
             return Utf8.codepointLength(s) == 1
         }
+
+        fun getShortest(codes: Array<String>) = codes.minOfWith({ a: String, b: String ->
+            a.length.compareTo(b.length)
+        }, {
+            it
+        })
     }
 
     protected fun finalize() {
@@ -189,5 +190,17 @@ WHERE char IS ?
             records.addAll(onQuery())
             notifyDataSetChanged()
         }
+    }
+
+    enum class CheckingRule(val test: (code: String, inverseCode: Array<String>) -> Boolean) {
+        SHORTCUT_1_2_3({ code, inverseCode ->
+            val shortestCode = getShortest(inverseCode)
+            code.length > shortestCode.length && shortestCode.length in 1..3
+        }),
+
+        SHORTCUT_1_2({ code, inverseCode ->
+            val shortestCode = getShortest(inverseCode)
+            code.length > shortestCode.length && shortestCode.length in 1..2
+        });
     }
 }

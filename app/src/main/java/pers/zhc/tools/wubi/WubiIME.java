@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.*;
 import pers.zhc.tools.views.SmartHintEditText;
+import pers.zhc.tools.wubi.SingleCharCodesChecker.CheckingRule;
 import pers.zhc.util.Assertion;
 
 import java.util.ArrayList;
@@ -155,7 +156,9 @@ public class WubiIME extends InputMethodService {
      * when is {@code null}, it's disabled
      */
     @Nullable
-    private static SingleCharCodesChecker singleCharCodesChecker = null;
+    private SingleCharCodesChecker singleCharCodesChecker = null;
+    @Nullable
+    private CheckingRule sccAlternativeRule = null;
 
     @Override
     public void onCreate() {
@@ -299,6 +302,7 @@ public class WubiIME extends InputMethodService {
                             }
                             // on the fifth code
                             if (wubiCodeSB.length() == 4) {
+                                sccAlternativeRule = CheckingRule.SHORTCUT_1_2;
                                 commitTheFirstCandidate();
                                 clear();
                             }
@@ -306,6 +310,7 @@ public class WubiIME extends InputMethodService {
                             update();
                             // on the fourth code & have the only one candidate word
                             if (wubiCodeSB.length() == 4 && candidates.size() == 1) {
+                                sccAlternativeRule = CheckingRule.SHORTCUT_1_2;
                                 commitTheFirstCandidate();
                                 clear();
                                 composing = false;
@@ -1016,7 +1021,14 @@ public class WubiIME extends InputMethodService {
             } else tts = null;
 
             if (SingleCharCodesChecker.Companion.checkIfSingleChar(s) && singleCharCodesChecker != null) {
-                singleCharCodesChecker.asyncCommit(s, wubiCodeSB.toString());
+                CheckingRule rule;
+                if (sccAlternativeRule != null) {
+                    rule = sccAlternativeRule;
+                    sccAlternativeRule = null;
+                } else {
+                    rule = CheckingRule.SHORTCUT_1_2_3;
+                }
+                singleCharCodesChecker.asyncCommit(s, wubiCodeSB.toString(), rule);
             }
         }
     }
