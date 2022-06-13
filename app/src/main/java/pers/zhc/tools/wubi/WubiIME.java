@@ -56,24 +56,86 @@ public class WubiIME extends InputMethodService {
     /**
      * Chinese punctuation array
      */
-    private final static String[] punctuationStrings = {"。", "，", "、", "【", "】", "/", "-", "=", "`"};
+    private final static String[] punctuationStrings = {
+            "。",
+            "，",
+            "、",
+            "【",
+            "】",
+            "/",
+            "-",
+            "=",
+            "`"
+    };
 
     /**
      * One-to-one correspondence with {@link WubiIME#punctuationStrings}
      */
-    private final static int[] punctuationKeyCodes = {KeyEvent.KEYCODE_PERIOD, KeyEvent.KEYCODE_COMMA, KeyEvent.KEYCODE_BACKSLASH, KeyEvent.KEYCODE_LEFT_BRACKET, KeyEvent.KEYCODE_RIGHT_BRACKET, KeyEvent.KEYCODE_SLASH, KeyEvent.KEYCODE_MINUS, KeyEvent.KEYCODE_EQUALS, KeyEvent.KEYCODE_GRAVE};
+    private final static int[] punctuationKeyCodes = {
+            KeyEvent.KEYCODE_PERIOD,
+            KeyEvent.KEYCODE_COMMA,
+            KeyEvent.KEYCODE_BACKSLASH,
+            KeyEvent.KEYCODE_LEFT_BRACKET,
+            KeyEvent.KEYCODE_RIGHT_BRACKET,
+            KeyEvent.KEYCODE_SLASH,
+            KeyEvent.KEYCODE_MINUS,
+            KeyEvent.KEYCODE_EQUALS,
+            KeyEvent.KEYCODE_GRAVE
+    };
     /**
      * punctuations that need to input with shift key
      */
-    private final static String[] chinesePunctuationWithShiftStrings = {"《", "》", "？", "：", "！", "·", "#", "￥", "%", "……", "——", "*", "（", "）", "「", "」", "——", "+"};
+    private final static String[] chinesePunctuationWithShiftStrings = {
+            "《",
+            "》",
+            "？",
+            "：",
+            "！",
+            "·",
+            "#",
+            "￥",
+            "%",
+            "……",
+            "——",
+            "*",
+            "（",
+            "）",
+            "「",
+            "」",
+            "——",
+            "+"
+    };
     /**
      * One-to-one correspondence with {@link WubiIME#chinesePunctuationWithShiftStrings}
      */
-    private final static int[] punctuationWithShiftKeyCodes = {KeyEvent.KEYCODE_COMMA, KeyEvent.KEYCODE_PERIOD, KeyEvent.KEYCODE_SLASH, KeyEvent.KEYCODE_SEMICOLON, KeyEvent.KEYCODE_1, KeyEvent.KEYCODE_2, KeyEvent.KEYCODE_3, KeyEvent.KEYCODE_4, KeyEvent.KEYCODE_5, KeyEvent.KEYCODE_6, KeyEvent.KEYCODE_7, KeyEvent.KEYCODE_8, KeyEvent.KEYCODE_9, KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_LEFT_BRACKET, KeyEvent.KEYCODE_RIGHT_BRACKET, KeyEvent.KEYCODE_MINUS, KeyEvent.KEYCODE_EQUALS};
+    private final static int[] punctuationWithShiftKeyCodes = {
+            KeyEvent.KEYCODE_COMMA,
+            KeyEvent.KEYCODE_PERIOD,
+            KeyEvent.KEYCODE_SLASH,
+            KeyEvent.KEYCODE_SEMICOLON,
+            KeyEvent.KEYCODE_1,
+            KeyEvent.KEYCODE_2,
+            KeyEvent.KEYCODE_3,
+            KeyEvent.KEYCODE_4,
+            KeyEvent.KEYCODE_5,
+            KeyEvent.KEYCODE_6,
+            KeyEvent.KEYCODE_7,
+            KeyEvent.KEYCODE_8,
+            KeyEvent.KEYCODE_9,
+            KeyEvent.KEYCODE_0,
+            KeyEvent.KEYCODE_LEFT_BRACKET,
+            KeyEvent.KEYCODE_RIGHT_BRACKET,
+            KeyEvent.KEYCODE_MINUS,
+            KeyEvent.KEYCODE_EQUALS
+    };
     /**
      * The keys only matter when composing, otherwise it'll be consumed by the next receiver.
      */
-    private final static int[] keysMatterWhenComposing = {KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_DEL, KeyEvent.KEYCODE_ENTER};
+    private final static int[] keysMatterWhenComposing = {
+            KeyEvent.KEYCODE_BACK,
+            KeyEvent.KEYCODE_DEL,
+            KeyEvent.KEYCODE_ENTER
+    };
     private final StringBuilder wubiCodeSB = new StringBuilder();
     private final Quotation quotation = new Quotation();
     private final List<String> candidates = new ArrayList<>();
@@ -504,7 +566,9 @@ public class WubiIME extends InputMethodService {
 
         List<String> data = Arrays.asList(context.getResources().getStringArray(R.array.wubi_tools_names));
 
-        final RecyclerViewArrayAdapter<String> adapter = RecyclerViewUtils.Companion.buildSimpleItem1ListAdapter(context, data, true);
+        final RecyclerViewArrayAdapter<String> adapter = RecyclerViewUtils.Companion.buildSimpleItem1ListAdapter(
+                context, data, true
+        );
 
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(context));
@@ -515,14 +579,17 @@ public class WubiIME extends InputMethodService {
         setDialogAttrs(dialog, token, MATCH_PARENT, WRAP_CONTENT);
         dialog.show();
 
-        final View.OnClickListener[] listeners = {v -> {
-            // single character codes records
-            showSingleCharCodesRecordingDialog();
-        }, v -> {
-            // wubi code inverse lookup
-            CharSequence selectedText = ic.getSelectedText(0);
-            handleInverseLookup(LangUtils.Companion.nullMap(selectedText, CharSequence::toString));
-        }};
+        final View.OnClickListener[] listeners = {
+                v -> {
+                    // single character codes records
+                    showSingleCharCodesRecordingDialog();
+                },
+                v -> {
+                    // wubi code inverse lookup
+                    CharSequence selectedText = ic.getSelectedText(0);
+                    handleInverseLookup(LangUtils.Companion.nullMap(selectedText, CharSequence::toString));
+                }
+        };
 
         adapter.setOnItemClickListener((position, view) -> {
             listeners[position].onClick(view);
@@ -564,10 +631,10 @@ public class WubiIME extends InputMethodService {
             if (isChecked) {
                 singleCharCodesChecker = new SingleCharCodesChecker(record -> {
                     ToastUtils.show(context, context.getString(
-                        R.string.wubi_single_char_code_check_notify_toast,
-                        record.getChar(),
-                        record.getInputCode(),
-                        record.getShortestCode()
+                            R.string.wubi_single_char_code_check_notify_toast,
+                            record.getChar(),
+                            record.getInputCode(),
+                            record.getShortestCode()
                     ));
                     return Unit.INSTANCE;
                 });
@@ -599,8 +666,8 @@ public class WubiIME extends InputMethodService {
             ArrayList<SingleCharCodesChecker.Record> records = singleCharCodesChecker.queryAll();
             for (SingleCharCodesChecker.Record record : records) {
                 sb.append(context.getString(
-                    R.string.wubi_single_char_code_check_notify_toast,
-                    record.getChar(), record.getInputCode(), record.getShortestCode()
+                        R.string.wubi_single_char_code_check_notify_toast,
+                        record.getChar(), record.getInputCode(), record.getShortestCode()
                 ));
                 sb.append("\n");
             }
@@ -753,7 +820,18 @@ public class WubiIME extends InputMethodService {
     }
 
     public enum InputRange {
-        A_Z, PUNCTUATION, BACKSPACE, SPACE, SHIFT, SEMICOLON, APOSTROPHE, ENTER, NUM0_9, CTRL, SOME_MATTERS_WITH_SHIFT, OTHERS
+        A_Z,
+        PUNCTUATION,
+        BACKSPACE,
+        SPACE,
+        SHIFT,
+        SEMICOLON,
+        APOSTROPHE,
+        ENTER,
+        NUM0_9,
+        CTRL,
+        SOME_MATTERS_WITH_SHIFT,
+        OTHERS
     }
 
     /**
@@ -851,7 +929,18 @@ public class WubiIME extends InputMethodService {
     /**
      * 0-9 number superscript modifier characters
      */
-    private static final char[] numberSuperscriptModifier = {'\u2070', '\u00b9', '\u00b2', '\u00b3', '\u2074', '\u2075', '\u2076', '\u2077', '\u2078', '\u2079',};
+    private static final char[] numberSuperscriptModifier = {
+            '\u2070',
+            '\u00b9',
+            '\u00b2',
+            '\u00b3',
+            '\u2074',
+            '\u2075',
+            '\u2076',
+            '\u2077',
+            '\u2078',
+            '\u2079',
+    };
 
     @NotNull
     @Contract("_ -> new")

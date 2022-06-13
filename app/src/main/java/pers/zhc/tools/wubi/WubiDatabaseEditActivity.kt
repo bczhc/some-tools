@@ -134,7 +134,8 @@ class WubiDatabaseEditActivity : BaseActivity() {
 
 
     class MyAdapter(
-        private val context: Context, private val candidates: ArrayList<String>
+        private val context: Context,
+        private val candidates: ArrayList<String>
     ) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
         class MyHolder(val wordView: WubiWordView) : RecyclerView.ViewHolder(wordView)
 
@@ -158,12 +159,15 @@ class WubiDatabaseEditActivity : BaseActivity() {
     ) : ItemTouchHelper.Callback() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
             return makeMovementFlags(
-                ItemTouchHelper.UP.xor(ItemTouchHelper.DOWN), ItemTouchHelper.LEFT.xor(ItemTouchHelper.RIGHT)
+                ItemTouchHelper.UP.xor(ItemTouchHelper.DOWN),
+                ItemTouchHelper.LEFT.xor(ItemTouchHelper.RIGHT)
             )
         }
 
         override fun onMove(
-            recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
         ): Boolean {
             val fromIndex = viewHolder.layoutPosition
             val toIndex = target.layoutPosition
