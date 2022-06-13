@@ -44,6 +44,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         this.addView(inflate)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun addLayerAction() {
         DialogUtils.createPromptDialog(context, R.string.fdb_layer_naming_dialog_title, { _, et ->
             val input = et.text.toString()
@@ -51,8 +52,10 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
 
             val layerInfo = LayerInfo(id, input, true)
             listItems.add(0, layerInfo)
-
             listAdapter.notifyItemInserted(0)
+
+            listAdapter.setChecked(layerInfo.id)
+            listAdapter.notifyDataSetChanged()
 
             onLayerAddedCallback(layerInfo)
         }).also { DialogUtils.setDialogAttr(it, overlayWindow = true) }.show()
