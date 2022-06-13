@@ -32,6 +32,7 @@ class MainActivity {
             val download = { item: GithubActionDownloadItem ->
                 val storagePath = Common.getAppMainExternalStoragePath(context)
                 val updateDir = File(storagePath, "update")
+                updateDir.requireMkdirs()
                 val localFile = File(updateDir, "some-tools.apk")
 
                 val url = URL(Infos.staticResourceRootURL + "/apks/some-tools/" + findCommitHash(item.commitInfo) + "/some-tools.apk")
