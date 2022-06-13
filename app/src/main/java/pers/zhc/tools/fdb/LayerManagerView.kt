@@ -5,10 +5,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fdb_layer_item_view.view.*
 import kotlinx.android.synthetic.main.fdb_layer_manager_view.view.*
 import pers.zhc.tools.R
@@ -20,7 +21,7 @@ import java.util.*
  */
 @SuppressLint("ViewConstructor")
 class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLayerAddedCallback) :
-    RelativeLayout(context) {
+    CoordinatorLayout(context) {
     private var listAdapter: MyAdapter
     private var recyclerView: RecyclerView
     private val listItems = ArrayList<LayerInfo>()
@@ -29,7 +30,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         val inflate = View.inflate(context, R.layout.fdb_layer_manager_view, null)
         recyclerView = inflate.recycler_view!!
 
-        listAdapter = MyAdapter(context, listItems)
+        listAdapter = MyAdapter(context, listItems, this)
         recyclerView.adapter = listAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -57,7 +58,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         }).also { DialogUtils.setDialogAttr(it, overlayWindow = true) }.show()
     }
 
-    class MyAdapter(private val context: Context, val items: ArrayList<LayerInfo>) :
+    class MyAdapter(private val context: Context, val items: ArrayList<LayerInfo>, val outer: LayerManagerView) :
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
         private var checkedId = -1L
 
@@ -156,8 +157,20 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val index = viewHolder.layoutPosition
-            listAdapter.items.removeAt(index)
+            val removed = listAdapter.items.removeAt(index)
             listAdapter.notifyItemRemoved(index)
+
+            showDeletedSnackbar(index, removed)
+        }
+
+        private fun showDeletedSnackbar(index: Int, removed: LayerInfo) {
+            val snackbar = Snackbar.make(listAdapter.outer, R.string.deleted_message, Snackbar.LENGTH_LONG).apply {
+                setAction(R.string.redo) {
+                    listAdapter.items.add(index, removed)
+                    listAdapter.notifyItemInserted(index)
+                }
+            }
+            snackbar.show()
         }
     }
 
