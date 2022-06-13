@@ -49,9 +49,9 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             val id = System.currentTimeMillis()
 
             val layerInfo = LayerInfo(id, input, true)
-            listItems.add(layerInfo)
+            listItems.add(0, layerInfo)
 
-            listAdapter.notifyItemInserted(listItems.size)
+            listAdapter.notifyItemInserted(0)
 
             onLayerAddedCallback(layerInfo)
         }).also { DialogUtils.setDialogAttr(it, overlayWindow = true) }.show()
@@ -162,8 +162,8 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     }
 
     fun add1Layer(layerInfo: LayerInfo) {
-        listItems.add(layerInfo)
-        listAdapter.notifyItemInserted(listItems.size)
+        listItems.add(0, layerInfo)
+        listAdapter.notifyItemInserted(0)
     }
 
     fun getLayerState(): LayerState {

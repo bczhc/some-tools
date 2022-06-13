@@ -1048,7 +1048,8 @@ public class PaintView extends View {
         float[] transformationValue = new float[9];
         defaultTransformation.getValues(transformationValue);
 
-        for (LayerInfo layerInfo : layersInfo) {
+        for (int i = layersInfo.size() - 1; i >= 0; i--) {
+            LayerInfo layerInfo = layersInfo.get(i);
             final long originalLayerId = layerInfo.getId();
             add1Layer(layerInfo);
             switchLayer(layerInfo.getId());
@@ -1504,7 +1505,7 @@ public class PaintView extends View {
 
     public long add1Layer(LayerInfo layerInfo) {
         final Layer layer = new Layer(width, height, layerInfo);
-        layerArray.add(layer);
+        layerArray.add(0, layer);
         pathSaver.addNewLayerPathSaver(layerInfo.getId());
         return layer.getId();
     }
