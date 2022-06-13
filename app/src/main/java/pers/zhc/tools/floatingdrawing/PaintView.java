@@ -990,7 +990,8 @@ public class PaintView extends View {
             return;
         }
 
-        for (LayerInfo layerInfo : layersInfo) {
+        for (int i = layersInfo.size() - 1; i >= 0; i--) {
+            LayerInfo layerInfo = layersInfo.get(i);
             final long originalLayerId = layerInfo.getId();
             add1Layer(layerInfo);
             switchLayer(layerInfo.getId());
