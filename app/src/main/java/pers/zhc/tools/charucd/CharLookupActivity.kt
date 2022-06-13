@@ -62,7 +62,9 @@ class CharLookupActivity : BaseActivity() {
             val database = UCD_DATABASE_PATH
         }
 
-        val progressView = ParseProgressView(this)
+        val progressView = ParseProgressView(this).apply {
+            setActionText(ParseAction.DOWNLOADING.getActionMsg(this@CharLookupActivity))
+        }
         val dialog = Dialog(this).apply {
             setContentView(progressView)
             DialogUtils.setDialogAttr(this, width = MATCH_PARENT)
@@ -73,7 +75,6 @@ class CharLookupActivity : BaseActivity() {
 
         val tryDo = AsyncTryDo()
 
-        progressView.setActionText(ParseAction.DOWNLOADING.getActionMsg(this))
         val handler = Handler(Looper.getMainLooper())
 
         Thread {

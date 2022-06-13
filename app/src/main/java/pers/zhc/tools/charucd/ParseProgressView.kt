@@ -7,6 +7,7 @@ import android.widget.TextView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import kotlinx.android.synthetic.main.char_ucd_progress_view.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.setBaseLayoutSizeMW
 import pers.zhc.tools.views.WrapLayout
 
 /**
@@ -24,7 +25,9 @@ class ParseProgressView : WrapLayout {
     }
 
     private fun init() {
-        val inflate = View.inflate(context, R.layout.char_ucd_progress_view, null)
+        val inflate = View.inflate(context, R.layout.char_ucd_progress_view, null).apply {
+            setBaseLayoutSizeMW()
+        }
         actionTV = inflate.action_tv!!
         progressTV = inflate.progress_tv!!
         progressBar = inflate.progress_bar!!
