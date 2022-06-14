@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
@@ -57,13 +58,22 @@ public class Document extends BaseActivity {
         deleteBtn.setOnClickListener(v -> {
             if (state.equals("del")) {
                 try {
+                    SQLiteStatement deleteStmt = db.compileStatement("DELETE FROM doc WHERE t=?");
+                    db.beginTransaction();
                     for (int i = 0; i < ((LinearLayout) sv.getChildAt(0)).getChildCount(); i++) {
                         LinearLayout childLL = (LinearLayout) ((LinearLayout) sv.getChildAt(0)).getChildAt(i);
+
                         if (((TextView) (((LinearLayout) childLL.getChildAt(0))).getChildAt(0)).getCurrentTextColor() == 0xFFFF0000) {
-                            db.delete("doc", "t=?", new String[]{String.valueOf(((LinearLayoutWithTimestamp) childLL).timestamp)});
-                            ToastUtils.show(this, getString(R.string.deleted_notes, chooseNum));
+                            long timestamp = ((LinearLayoutWithTimestamp) childLL).timestamp;
+                            deleteStmt.bindLong(1, timestamp);
+                            deleteStmt.execute();
                         }
                     }
+                    deleteStmt.close();
+                    db.setTransactionSuccessful();
+                    db.endTransaction();
+                    ToastUtils.show(this, getString(R.string.deleted_notes, chooseNum));
+
                     setSVViews();
                     topView = findViewById(R.id.note_top_view);
                     topView.removeAllViews();
