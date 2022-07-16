@@ -2,7 +2,6 @@ package pers.zhc.tools.diary.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -51,6 +50,9 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
         createAdvancedSearchDialog()
     }
     private var searchRegex: Regex? = null
+    private val weeks: Array<String> by lazy {
+        requireContext().resources.getStringArray(R.array.weeks)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflate = inflater.inflate(R.layout.diary_main_diary_fragment, container, false)
@@ -106,7 +108,7 @@ WHERE instr(lower("date"), lower(?)) > 0
 
         Common.runOnUiThread(requireContext()) {
 
-            recyclerViewAdapter = MyAdapter(requireContext(), diaryItemDataList)
+            recyclerViewAdapter = MyAdapter(this, diaryItemDataList)
             recyclerView.adapter = recyclerViewAdapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -168,7 +170,7 @@ WHERE instr(lower("date"), lower(?)) > 0
 
     private fun popupMenuDelete(position: Int) {
         val dateInt = diaryItemDataList[position].dateInt
-        DialogUtil.createConfirmationAlertDialog(requireContext(), { dialog, _ ->
+        DialogUtils.createConfirmationAlertDialog(requireContext(), { dialog, _ ->
             val statement = diaryDatabase.compileStatement(
                 """DELETE
 FROM diary
@@ -182,7 +184,7 @@ WHERE "date" IS ?"""
             // update view
             diaryItemDataList.removeAt(position)
             recyclerViewAdapter.notifyItemRemoved(position)
-        }, R.string.whether_to_delete).show()
+        }, titleRes = R.string.whether_to_delete, message = makeTitle(MyDate(dateInt))).show()
     }
 
     private fun changeDate(oldDateString: Int, newDate: Int) {
@@ -559,11 +561,11 @@ WHERE "date" IS ?"""
     private class DiaryItemData(var dateInt: Int, var content: String)
 
     private class MyAdapter(
-        private val context: Context,
+        private val outer: DiaryFragment,
         private val data: List<DiaryItemData>
     ) :
         AdapterWithClickListener<MyAdapter.MyViewHolder?>() {
-        private val weeks: Array<String> = context.resources.getStringArray(R.array.weeks)
+        private val context = outer.requireContext()
 
         private class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -575,16 +577,7 @@ WHERE "date" IS ?"""
         private fun bindDiaryItemRL(item: View, myDate: MyDate, content: String) {
             val dateTV = item.findViewById<TextView>(R.id.date_tv)
             val contentTV = item.findViewById<TextView>(R.id.content_tv)
-            var weekString: String? = null
-            try {
-                val calendar = Calendar.getInstance()
-                calendar[myDate.year, myDate.month - 1] = myDate.day
-                val weekIndex = calendar[Calendar.DAY_OF_WEEK] - 1
-                weekString = weeks[weekIndex]
-            } catch (e: Exception) {
-                Common.showException(e, context)
-            }
-            dateTV.text = "$myDate $weekString"
+            dateTV.text = outer.makeTitle(myDate)
             contentTV.text = limitText(content)
         }
 
@@ -605,5 +598,18 @@ WHERE "date" IS ?"""
         override fun getItemCount(): Int {
             return data.size
         }
+    }
+
+    private val titleCalendar = Calendar.getInstance()
+    private fun makeTitle(date: MyDate): String {
+        var weekString: String? = null
+        try {
+            titleCalendar.set(date.year, date.month - 1, date.day)
+            val weekIndex = titleCalendar[Calendar.DAY_OF_WEEK] - 1
+            weekString = weeks[weekIndex]
+        } catch (e: Exception) {
+            Common.showException(e, context)
+        }
+        return "$date $weekString"
     }
 }
