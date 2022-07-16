@@ -9,7 +9,7 @@ class SdkPath {
     static String getSdkPath(Project project) {
         def propertiesFile = new File(project.rootProject.projectDir, "local.properties")
         if (!propertiesFile.exists()) {
-            return null
+            throw new FileNotFoundException()
         }
         def properties = BuildUtils.openPropertiesFile(propertiesFile)
         def sdkDir = properties.getProperty("sdk.dir")
