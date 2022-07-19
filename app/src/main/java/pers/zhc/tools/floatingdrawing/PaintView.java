@@ -93,6 +93,7 @@ public class PaintView extends View {
     private float canvasScale = 1F;
 
     private float strokeHardness = 100F;
+    private float eraserHardness = 100F;
 
     @Nullable
     private OnImportLayerAddedListener onImportLayerAddedListener = null;
@@ -1639,6 +1640,20 @@ public class PaintView extends View {
 
     public float getStrokeHardness() {
         return strokeHardness;
+    }
+
+    public float getEraserHardness() {
+        return eraserHardness;
+    }
+
+    public void setEraserHardness(float hardness) {
+        if (hardness == 100.0) {
+            eraserPaint.setMaskFilter(null);
+        } else {
+            final float blurRadius = toBlurRadius(getEraserStrokeWidth(), hardness);
+            eraserPaint.setMaskFilter(new BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL));
+        }
+        this.eraserHardness = hardness;
     }
 
     /**

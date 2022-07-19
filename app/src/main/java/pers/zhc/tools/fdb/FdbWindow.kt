@@ -343,7 +343,6 @@ class FdbWindow(private val context: BaseActivity) {
         val lockBrushCB = inflate.cb!!
         val hardnessSlider = inflate.hardness_slider!!
         val strokeShowView = inflate.stroke_show!!
-        val hardnessLayout = inflate.hardness_layout!!
 
         lockBrushCB.isChecked = paintView.isLockStrokeEnabled
         rg.check(
@@ -361,14 +360,27 @@ class FdbWindow(private val context: BaseActivity) {
                 BrushMode.IN_USE -> paintView.strokeWidthInUse
             }
         }
+        val getHardness = { mode: BrushMode ->
+            when (mode) {
+                BrushMode.DRAWING -> paintView.strokeHardness
+                BrushMode.ERASING -> paintView.eraserHardness
+                BrushMode.IN_USE -> if (paintView.isEraserMode) {
+                    paintView.eraserHardness
+                } else {
+                    paintView.strokeHardness
+                }
+            }
+        }
 
         // for non-linear width adjustment
         val base = 1.07
         val updateDisplay = { mode: BrushMode ->
             val width = getStrokeWidth(mode)
+            val hardness = getHardness(mode)
+
             strokeShowView.apply {
                 setWidth(width * paintView.scale)
-                strokeHardness = paintView.strokeHardness
+                strokeHardness = hardness
                 setColor(paintView.drawingColor)
             }
 
@@ -379,6 +391,8 @@ class FdbWindow(private val context: BaseActivity) {
                 paintView.scale * width,
                 paintView.scale * 100F
             )
+
+            hardnessSlider.value = hardness
         }
 
         updateDisplay(BrushMode.IN_USE)
@@ -424,11 +438,9 @@ class FdbWindow(private val context: BaseActivity) {
             when (id) {
                 R.id.brush_radio -> {
                     updateDisplay(BrushMode.DRAWING)
-                    hardnessLayout.visibility = View.VISIBLE
                 }
                 R.id.eraser_radio -> {
                     updateDisplay(BrushMode.ERASING)
-                    hardnessLayout.visibility = View.GONE
                 }
                 else -> {
                 }
@@ -439,13 +451,22 @@ class FdbWindow(private val context: BaseActivity) {
             paintView.isLockStrokeEnabled = isChecked
         }
 
-        hardnessSlider.value = paintView.strokeHardness
         hardnessSlider.addOnChangeListener { _, value, fromUser ->
             if (!fromUser) {
                 return@addOnChangeListener
             }
-            paintView.strokeHardness = value
-            strokeShowView.strokeHardness = value
+            when (rg.checkedRadioButtonId) {
+                R.id.brush_radio -> {
+                    paintView.strokeHardness = value
+                    updateDisplay(BrushMode.DRAWING)
+                }
+                R.id.eraser_radio -> {
+                    paintView.eraserHardness = value
+                    updateDisplay(BrushMode.ERASING)
+                }
+                else -> {
+                }
+            }
         }
 
         return inflate
