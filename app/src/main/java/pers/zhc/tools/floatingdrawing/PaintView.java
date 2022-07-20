@@ -1216,9 +1216,9 @@ public class PaintView extends View {
 
                     setEraserMode(true);
                     setEraserAlpha(color2);
-                    setEraserStrokeWidth(width2 * defaultTransformationScale / canvasScale);
-                    // TODO: 8/16/21 eraser hardness (blur radius)
-//                    setBlurRadius(blurRadius2 * defaultTransformationScale / canvasScale);
+                    float eraserStrokeWidth = width2 * defaultTransformationScale / canvasScale;
+                    setEraserStrokeWidth(eraserStrokeWidth);
+                    setEraserHardness(toStrokeHardness(eraserStrokeWidth, blurRadius2 * defaultTransformationScale / canvasScale));
 
                     transformedOnTouchAction(
                             MotionEvent.ACTION_DOWN,
@@ -1264,7 +1264,9 @@ public class PaintView extends View {
     private final PointF inverseTransformedPoint = new PointF();
 
     private void onTouchAction(int motionAction, float x, float y) {
-        final float blurRadius = toBlurRadius(getDrawingStrokeWidth(), strokeHardness);
+        final float strokeBlurRadius = toBlurRadius(getDrawingStrokeWidth(), strokeHardness);
+        final float eraserBlurRadius = toBlurRadius(getEraserStrokeWidth(), eraserHardness);
+
         canvasTransformer.getInvertedTransformedPoint(inverseTransformedPoint, x, y);
         // convert the screen coordinates to a new unknown point
         // which after the transformation coincides with the screen point
@@ -1275,9 +1277,9 @@ public class PaintView extends View {
         switch (motionAction) {
             case MotionEvent.ACTION_DOWN:
                 if (eraserMode) {
-                    layerPathSaverRef.onErasingTouchDown(x, y, getEraserAlpha(), getEraserStrokeWidth(), blurRadius);
+                    layerPathSaverRef.onErasingTouchDown(x, y, getEraserAlpha(), getEraserStrokeWidth(), eraserBlurRadius);
                 } else {
-                    layerPathSaverRef.onDrawingTouchDown(x, y, getDrawingColor(), getDrawingStrokeWidth(), blurRadius);
+                    layerPathSaverRef.onDrawingTouchDown(x, y, getDrawingColor(), getDrawingStrokeWidth(), strokeBlurRadius);
                 }
                 //路径
                 mPath = new Path();
