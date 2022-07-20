@@ -1321,6 +1321,7 @@ public class PaintView extends View {
 
     public void setEraserStrokeWidth(float w) {
         eraserPaint.setStrokeWidth(w);
+        updateHardness();
     }
 
     public void importImage(@NonNull Bitmap imageBitmap, float left, float top, int scaledWidth, int scaledHeight) {
@@ -1632,10 +1633,11 @@ public class PaintView extends View {
     }
 
     /**
-     * because `blurRadius` is related with stroke width
+     * because `blurRadius` is related to the stroke width
      */
     private void updateHardness() {
         setStrokeHardness(strokeHardness);
+        setEraserHardness(eraserHardness);
     }
 
     public float getStrokeHardness() {
