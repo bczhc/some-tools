@@ -165,7 +165,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
             @Override
             public void getItemOffsets(@NonNull @NotNull Rect outRect, @NonNull @NotNull View view,
                                        @NonNull @NotNull RecyclerView parent, @NonNull @NotNull RecyclerView.State state) {
-                outRect.right = DisplayUtil.dip2px(context, 4F);
+                outRect.right = DisplayUtil.dip2px(context, 7F);
             }
         });
     }
