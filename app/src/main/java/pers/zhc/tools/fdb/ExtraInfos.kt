@@ -37,7 +37,7 @@ class ExtraInfos(
          */
         fun getExtraInfos(db: SQLite3): ExtraInfos? {
             return Gson().newBuilder().apply {
-                registerTypeAdapter(FloatArray::class.java, OldMatrixDataSerializer())
+                registerTypeAdapter(FloatArray::class.java, MatrixDataSerializer())
                 registerTypeAdapter(LayerInfo::class.java, LayersInfoDeserializer())
                 registerTypeAdapter(SavedColor::class.java, OldSavedColorDeserializer())
             }.create().fromJsonOrNull(
@@ -47,7 +47,7 @@ class ExtraInfos(
         }
     }
 
-    private class OldMatrixDataSerializer : JsonDeserializer<FloatArray?> {
+    private class MatrixDataSerializer : JsonDeserializer<FloatArray?> {
         override fun deserialize(
             json: JsonElement?,
             typeOfT: Type?,
@@ -56,10 +56,16 @@ class ExtraInfos(
             json ?: return null
 
             if (json is JsonObject) {
-                // check if is a "OldMatrixData" JSON object
+                // it's an "OldMatrixData" JSON object
                 if (json.keySet().all { ExtraInfos::OldMatrixData.parameters.map { p -> p.name }.contains(it) }) {
                     val oldMatrixData = defaultGson.fromJson(json, OldMatrixData::class.java)!!
                     return oldMatrixData.getData()
+                }
+            } else if (json.isJsonArray) {
+                return try {
+                    json.asJsonArray.map { it.asFloat }.toFloatArray()
+                } catch (_: ClassCastException) {
+                    null
                 }
             }
 
