@@ -83,7 +83,7 @@ class MyApplication : Application() {
         private lateinit var infoFile: File
 
         // the default global Gson
-        val defaultGson = Gson()
+        val GSON = Gson()
 
         @JvmField
         var wakeLock: WakeLock? = null

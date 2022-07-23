@@ -2,7 +2,7 @@ package pers.zhc.tools.fdb
 
 import com.google.gson.*
 import pers.zhc.jni.sqlite.SQLite3
-import pers.zhc.tools.MyApplication.Companion.defaultGson
+import pers.zhc.tools.MyApplication.Companion.GSON
 import pers.zhc.tools.utils.fromJsonOrNull
 import pers.zhc.tools.utils.withCompiledStatement
 import pers.zhc.tools.views.HSVAColorPickerRL.SavedColor
@@ -58,7 +58,7 @@ class ExtraInfos(
             if (json is JsonObject) {
                 // it's an "OldMatrixData" JSON object
                 if (json.keySet().all { ExtraInfos::OldMatrixData.parameters.map { p -> p.name }.contains(it) }) {
-                    val oldMatrixData = defaultGson.fromJson(json, OldMatrixData::class.java)!!
+                    val oldMatrixData = GSON.fromJson(json, OldMatrixData::class.java)!!
                     return oldMatrixData.getData()
                 }
             } else if (json.isJsonArray) {
@@ -90,7 +90,7 @@ class ExtraInfos(
                     json.add("id", json.get("layerId"))
                     json.remove("layerId")
                 }
-                return defaultGson.fromJson(json, LayerInfo::class.java)
+                return GSON.fromJson(json, LayerInfo::class.java)
             }
             return null
         }
@@ -115,7 +115,7 @@ class ExtraInfos(
                     return SavedColor(hsva.take(3).map { it.asFloat }.toFloatArray(), hsva[3].asInt, name.asString)
                 }
 
-                return defaultGson.fromJson(json, SavedColor::class.java)
+                return GSON.fromJson(json, SavedColor::class.java)
             }
 
             return null

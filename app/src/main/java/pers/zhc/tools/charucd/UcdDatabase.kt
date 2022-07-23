@@ -22,7 +22,7 @@ class UcdDatabase(val file: File) {
         queryStatement.bind(1, codepoint)
         val cursor = queryStatement.cursor
         return if (cursor.step()) {
-            MyApplication.defaultGson.fromJson(cursor.getText(0), JsonObject::class.java)
+            MyApplication.GSON.fromJson(cursor.getText(0), JsonObject::class.java)
         } else null
     }
 }
