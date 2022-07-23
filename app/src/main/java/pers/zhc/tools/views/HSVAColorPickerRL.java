@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 
@@ -45,7 +46,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
     private View[] hsvaViews;
     private ColorView colorView;
     private OnColorPickedInterface onColorPickedInterface = null;
-    private int width = 0;
+    private int width = -1;
     private RecyclerView savedColorRV;
     private List<SavedColor> savedColors = new ArrayList<>();
     private SavedColorAdapter savedColorAdapter;
@@ -116,11 +117,9 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 new AView(context)
         };
         for (View v : hsvaViews) {
-            v.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT, DisplayUtil.dip2px(context, 63 /* 1cm */)));
+            v.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, DisplayUtil.dip2px(context, 63 /* 1cm */)));
         }
         currentXPos = new float[hsvaViews.length];
-
-        updateCurrentX();
 
         final View inflate = View.inflate(context, R.layout.hsva_color_picker_view, null);
         final LinearLayout hsvaViewsLL = inflate.findViewById(R.id.hsva_views_ll);
@@ -156,6 +155,13 @@ public class HSVAColorPickerRL extends RelativeLayout {
             });
             popupMenu.show();
         });
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        width = getMeasuredWidth();
+        updateCurrentX();
     }
 
     private void onColorViewClicked() {
@@ -275,12 +281,6 @@ public class HSVAColorPickerRL extends RelativeLayout {
         public SavedColorListView(Context context, int w, int h) {
             super(context);
         }
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        width = getMeasuredWidth();
     }
 
     private class HView extends BaseView {
