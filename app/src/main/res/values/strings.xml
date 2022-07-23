@@ -718,4 +718,8 @@
     <!-- file_browser -->
     <string name="file_browser_label">文件浏览</string>
     <!-- end -->
+
+    <!-- HSVA color picker -->
+    <string name="color_picker_update_color">更新颜色</string>
+    <!-- end -->
 </resources>

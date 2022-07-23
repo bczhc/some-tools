@@ -2,6 +2,7 @@ package pers.zhc.tools.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -155,6 +156,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 if (itemId == R.id.delete) {
                     savedColors.remove(position);
                     savedColorAdapter.notifyItemRemoved(position);
+                } else if (itemId == R.id.edit) {
+                    showSavedColorEditingDialog(position);
                 }
                 return true;
             });
@@ -168,6 +171,31 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 outRect.right = DisplayUtil.dip2px(context, 7F);
             }
         });
+    }
+
+    private void showSavedColorEditingDialog(int position) {
+        SavedColor savedColor = savedColors.get(position);
+
+        EditText editText = new EditText(context);
+        editText.setText(savedColor.name);
+
+
+        AlertDialog dialog = DialogUtils.Companion.createPromptDialog(context, R.string.color_naming, (dialogInterface, et) -> {
+
+            savedColors.set(position, new SavedColor(savedColor.hsv, savedColor.alpha, editText.getText().toString()));
+            savedColorAdapter.notifyItemChanged(position);
+
+            return Unit.INSTANCE;
+        }, (dialogInterface, et) -> Unit.INSTANCE, editText);
+        dialog.setButton(
+                DialogInterface.BUTTON_NEUTRAL,
+                context.getString(R.string.color_picker_update_color), (d, which) -> {
+                    savedColors.set(position, new SavedColor(hsv, alpha, editText.getText().toString()));
+                    savedColorAdapter.notifyItemChanged(position);
+                }
+        );
+        DialogUtil.setDialogAttr(dialog, null);
+        dialog.show();
     }
 
     private void saveColor(int color, String name) {
