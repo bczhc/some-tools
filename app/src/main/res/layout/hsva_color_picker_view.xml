@@ -34,5 +34,7 @@
             android:id="@+id/recycler_view"
             android:scrollbars="horizontal"
             tools:itemCount="1"
+            android:paddingTop="4dp"
+            android:paddingHorizontal="4dp"
     />
 </RelativeLayout>

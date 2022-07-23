@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.text.Selection;
 import android.view.MotionEvent;
 import android.view.View;
@@ -131,7 +132,11 @@ public class HSVAColorPickerRL extends RelativeLayout {
         }
 
         colorView.setColor(Color.HSVToColor(alpha, hsv));
-        colorView.setOnClickListener(v -> onColorViewClicked());
+        colorView.setOnClickListener(v -> showSavingColorDialog());
+        colorView.setOnLongClickListener(v -> {
+            saveColor(getColor(), ColorUtils.getHexString(getColor(), true));
+            return true;
+        });
 
         this.addView(inflate);
 
@@ -155,6 +160,19 @@ public class HSVAColorPickerRL extends RelativeLayout {
             });
             popupMenu.show();
         });
+
+        savedColorRV.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull @NotNull Rect outRect, @NonNull @NotNull View view,
+                                       @NonNull @NotNull RecyclerView parent, @NonNull @NotNull RecyclerView.State state) {
+                outRect.right = DisplayUtil.dip2px(context, 4F);
+            }
+        });
+    }
+
+    private void saveColor(int color, String name) {
+        savedColors.add(new SavedColor(hsv, alpha, name));
+        savedColorAdapter.notifyItemInserted(savedColors.size() - 1);
     }
 
     @Override
@@ -164,7 +182,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
         updateCurrentX();
     }
 
-    private void onColorViewClicked() {
+    private void showSavingColorDialog() {
         AlertDialog.Builder adb = new AlertDialog.Builder(this.context);
         EditText editText = new EditText(this.context);
         int color = this.getColor();
@@ -199,8 +217,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                     R.string.color_naming,
                     (dialogInterface, editText12) -> {
 
-                        savedColors.add(new SavedColor(hsv, alpha, editText12.getText().toString()));
-                        savedColorAdapter.notifyItemInserted(savedColors.size() - 1);
+                        saveColor(getColor(), editText12.getText().toString());
 
                         return Unit.INSTANCE;
                     },
