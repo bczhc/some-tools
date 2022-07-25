@@ -114,9 +114,11 @@ android {
             })
         }
 
+        val compressedGitLog = BuildUtils2.lzmaCompress(commitLogResult.toByteArray(StandardCharsets.UTF_8))
+
         buildConfigField(
             "String[]", "commitLogEncodedSplit", BuildUtils2.longStringToStringArray(
-                base64Encoder.encodeToString(commitLogResult.toByteArray(StandardCharsets.UTF_8)),
+                base64Encoder.encodeToString(compressedGitLog),
                 100
             )
         )

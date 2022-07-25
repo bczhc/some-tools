@@ -27,6 +27,7 @@ import pers.zhc.tools.document.Document;
 import pers.zhc.tools.email.EmailMainActivity;
 import pers.zhc.tools.fdb.FdbMainActivity;
 import pers.zhc.tools.fourierseries.FourierSeriesActivity;
+import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.wubi.WubiInputMethodActivity;
 import pers.zhc.tools.magic.FileListActivity;
 import pers.zhc.tools.stcflash.FlashMainActivity;
@@ -140,12 +141,13 @@ public class MainActivity extends BaseActivity {
         for (String s : commitLogSplit) {
             sb.append(s);
         }
-        String commitLogEncoded = sb.toString();
-        String commitLog = new String(Base64.decode(commitLogEncoded, Base64.DEFAULT), StandardCharsets.UTF_8);
+        String compressedGitLogEncoded = sb.toString();
+        byte[] gitLogData = JNI.Lzma.decompress(Base64.decode(compressedGitLogEncoded, Base64.DEFAULT));
+        String gitLog = new String(gitLogData, StandardCharsets.UTF_8);
 
         final View inflate = View.inflate(this, R.layout.git_log_view, null);
         TextView tv = inflate.findViewById(R.id.tv);
-        tv.setText(commitLog);
+        tv.setText(gitLog);
 
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(inflate);

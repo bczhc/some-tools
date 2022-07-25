@@ -343,4 +343,8 @@ public class JNI {
         @NotNull
         public static native String toHumanReadable(long size, boolean siUnit);
     }
+
+    public static class Lzma {
+        public static native byte[] decompress(byte[] data);
+    }
 }

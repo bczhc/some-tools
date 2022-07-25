@@ -2,10 +2,17 @@ package pers.zhc.plugins
 
 import pers.zhc.util.IOUtils
 
-import java.io.{ByteArrayOutputStream, File, InputStream}
+import java.io.{
+  ByteArrayInputStream,
+  ByteArrayOutputStream,
+  File,
+  InputStream,
+  OutputStream
+}
 import java.util
 import java.util.regex.Pattern
 import java.nio.charset.StandardCharsets
+import scala.language.implicitConversions
 
 /** @author
   *   bczhc
@@ -68,5 +75,32 @@ object BuildUtils2 {
       list.add(split)
     }
     list
+  }
+
+  implicit def whateverToRunnable[F](f: => F): Runnable = new Runnable() {
+    def run(): Unit = { f }
+  }
+
+  def lzmaCompress(input: InputStream, output: OutputStream): Unit = {
+    val process = new ProcessBuilder(List("xz", "--format=lzma"): _*).start()
+    val pIS = process.getInputStream
+    val pOS = process.getOutputStream
+    new Thread({
+      input.transferTo(pOS)
+      pOS.close()
+    }).start()
+
+    pIS.transferTo(output)
+    pIS.close()
+    if (process.waitFor() != 0) {
+      throw new RuntimeException("Non-zero exit status")
+    }
+  }
+
+  def lzmaCompress(data: Array[Byte]): Array[Byte] = {
+    val is = new ByteArrayInputStream(data)
+    val os = new ByteArrayOutputStream()
+    lzmaCompress(is, os)
+    os.toByteArray
   }
 }
