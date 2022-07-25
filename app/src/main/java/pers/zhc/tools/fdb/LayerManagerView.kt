@@ -167,13 +167,13 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         }
 
         private fun showDeletedSnackbar(index: Int, removed: LayerInfo) {
-            val snackbar = Snackbar.make(listAdapter.outer, R.string.deleted_message, Snackbar.LENGTH_LONG).apply {
-                setAction(R.string.redo) {
+            val snackBar = Snackbar.make(listAdapter.outer, R.string.deleted_message, Snackbar.LENGTH_LONG).apply {
+                setAction(R.string.undo) {
                     listAdapter.items.add(index, removed)
                     listAdapter.notifyItemInserted(index)
                 }
             }
-            snackbar.show()
+            snackBar.show()
         }
     }
 
