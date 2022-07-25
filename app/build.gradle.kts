@@ -12,6 +12,7 @@ import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin
 import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin.RustBuildPluginExtension
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.nio.charset.StandardCharsets
 import java.util.*
 import pers.zhc.plugins.`BuildUtils2$`.`MODULE$` as BuildUtils2
 import pers.zhc.tools.plugin.util.`FileUtils$`.`MODULE$` as FileUtils
@@ -114,7 +115,10 @@ android {
         }
 
         buildConfigField(
-            "String[]", "commitLogEncodedSplit", BuildUtils2.longStringToStringArray("a", 100)
+            "String[]", "commitLogEncodedSplit", BuildUtils2.longStringToStringArray(
+                base64Encoder.encodeToString(commitLogResult.toByteArray(StandardCharsets.UTF_8)),
+                100
+            )
         )
     }
     buildTypes {
