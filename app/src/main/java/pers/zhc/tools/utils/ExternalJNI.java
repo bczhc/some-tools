@@ -6,7 +6,7 @@ import android.os.Build;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import org.jetbrains.annotations.NotNull;
-import pers.zhc.tools.Infos;
+import pers.zhc.tools.Info;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -92,7 +92,7 @@ public class ExternalJNI {
         Handler handler = new Handler();
         new Thread(() -> {
             abi = getABI();
-            downloadURL = Infos.serverRootURL
+            downloadURL = Info.serverRootURL
                     + "/tools_app/jni.zhc?abi=" + abi + "&name=libex1.so";
             File libsDir = new File(activity.getFilesDir(), "libs");
             if (!libsDir.exists()) {

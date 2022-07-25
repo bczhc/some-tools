@@ -87,9 +87,9 @@ enum class PathVersion(val versionName: String) {
          */
         private fun checkMore(path: String): PathVersion {
             SQLite3::class.withNew(path) { db ->
-                // the path file has been recognized to be path 3.0, so extraInfos must be valid
-                val extraInfos = ExtraInfos.getExtraInfos(db)!!
-                if (extraInfos.layersInfo != null) {
+                // the path file has been recognized to be path 3.0, so extraInfo must be valid
+                val extraInfo = ExtraInfo.getExtraInfo(db)!!
+                if (extraInfo.layersInfo != null) {
                     // the path is actually path 3.1 (with layers info)
                     return VERSION_3_1
                 }

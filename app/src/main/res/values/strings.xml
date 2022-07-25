@@ -569,7 +569,7 @@
     <string name="fdb_transformation_rotate">旋转</string>
     <string name="fdb_transformation_set_as_default">设为默认变换</string>
     <string name="fdb_transformation_reset_to_default">重置默认变换</string>
-    <string name="fdb_import_get_extra_infos_failed">获取附加信息失败</string>
+    <string name="fdb_import_get_extra_info_failed">获取附加信息失败</string>
     <string name="fdb_layer_naming_dialog_title">图层命名</string>
     <string name="fdb_layer_default_name">默认图层</string>
     <string name="fdb_import_path_version_3_0_toast">使用3.0版本path导入</string>

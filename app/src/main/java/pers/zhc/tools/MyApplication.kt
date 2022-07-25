@@ -69,13 +69,13 @@ class MyApplication : Application() {
         val jsonObject = JSONObject(read)
 
         if (jsonObject.has(KEY_SERVER_ROOT_URL)) {
-            Infos.serverRootURL = jsonObject.getString(KEY_SERVER_ROOT_URL)
+            Info.serverRootURL = jsonObject.getString(KEY_SERVER_ROOT_URL)
         }
         if (jsonObject.has(KEY_STATIC_RESOURCE_ROOT_URL)) {
-            Infos.staticResourceRootURL = jsonObject.getString(KEY_STATIC_RESOURCE_ROOT_URL)
+            Info.staticResourceRootURL = jsonObject.getString(KEY_STATIC_RESOURCE_ROOT_URL)
         }
         if (jsonObject.has(KEY_GITHUB_RAW_ROOT_URL)) {
-            Infos.githubRawRootURL = jsonObject.getString(KEY_GITHUB_RAW_ROOT_URL)
+            Info.githubRawRootURL = jsonObject.getString(KEY_GITHUB_RAW_ROOT_URL)
         }
     }
 

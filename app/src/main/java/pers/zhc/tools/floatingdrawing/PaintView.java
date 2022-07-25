@@ -22,7 +22,6 @@ import pers.zhc.tools.fdb.*;
 import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.*;
 import pers.zhc.util.Assertion;
-import pers.zhc.util.Random;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -836,7 +835,7 @@ public class PaintView extends View {
         return list;
     }
 
-    private void setupExtraConfig(ExtraInfos extraInfos) {
+    private void setupExtraConfig(ExtraInfo extraInfo) {
         // TODO: 8/16/21
     }
 
@@ -850,11 +849,11 @@ public class PaintView extends View {
 
         final Matrix savedTransformation = new Matrix(getTransformationMatrix());
 
-        final ExtraInfos extraInfos = getNonNull(ExtraInfos.Companion.getExtraInfos(db), getDefaultExtraInfos());
+        final ExtraInfo extraInfo = getNonNull(ExtraInfo.Companion.getExtraInfo(db), getDefaultExtraInfos());
 
         Matrix defaultTransformation = new Matrix();
 
-        final float[] values = extraInfos.getDefaultTransformation();
+        final float[] values = extraInfo.getDefaultTransformation();
         if (values != null) defaultTransformation.setValues(values);
 
         float defaultTransformationScale = CanvasTransformer.getRealScale(defaultTransformation);
@@ -943,17 +942,17 @@ public class PaintView extends View {
             }
         }
 
-        setLockingStrokesFromExtraInfos(extraInfos);
+        setLockingStrokesFromExtraInfos(extraInfo);
 
         transformTo(savedTransformation);
 
         postInvalidate();
     }
 
-    private void setLockingStrokesFromExtraInfos(@NotNull ExtraInfos extraInfos) {
-        setLockStrokeEnabled(Boolean.TRUE.equals(extraInfos.isLockingStroke()));
-        lockedDrawingStrokeWidth = getNonNull(extraInfos.getLockedDrawingStrokeWidth(), 10F);
-        lockedEraserStrokeWidth = getNonNull(extraInfos.getLockedEraserStrokeWidth(), 10F);
+    private void setLockingStrokesFromExtraInfos(@NotNull ExtraInfo extraInfo) {
+        setLockStrokeEnabled(Boolean.TRUE.equals(extraInfo.isLockingStroke()));
+        lockedDrawingStrokeWidth = getNonNull(extraInfo.getLockedDrawingStrokeWidth(), 10F);
+        lockedEraserStrokeWidth = getNonNull(extraInfo.getLockedEraserStrokeWidth(), 10F);
         updateStrokeWidthIfLocked();
     }
 
@@ -964,8 +963,8 @@ public class PaintView extends View {
             throw new SQLiteDatabaseCorruptException();
         }
 
-        final ExtraInfos extraInfos = ExtraInfos.Companion.getExtraInfos(db);
-        if (extraInfos == null) {
+        final ExtraInfo extraInfo = ExtraInfo.Companion.getExtraInfo(db);
+        if (extraInfo == null) {
             throw new InvalidExtraInfoException(ctx.getString(R.string.fdb_path_info_corrupt_toast));
         }
 
@@ -973,12 +972,12 @@ public class PaintView extends View {
 
         Matrix defaultTransformation = new Matrix();
 
-        final float[] values = extraInfos.getDefaultTransformation();
+        final float[] values = extraInfo.getDefaultTransformation();
         if (values != null) {
             defaultTransformation.setValues(values);
         }
 
-        List<LayerInfo> layersInfo = extraInfos.getLayersInfo();
+        List<LayerInfo> layersInfo = extraInfo.getLayersInfo();
 
         float defaultTransformationScale = CanvasTransformer.getRealScale(defaultTransformation);
 
@@ -1010,7 +1009,7 @@ public class PaintView extends View {
             );
         }
 
-        setLockingStrokesFromExtraInfos(extraInfos);
+        setLockingStrokesFromExtraInfos(extraInfo);
 
         transformTo(savedTransformation);
 
@@ -1024,9 +1023,9 @@ public class PaintView extends View {
             throw new SQLiteDatabaseCorruptException();
         }
 
-        final ExtraInfos extraInfos = ExtraInfos.Companion.getExtraInfos(db);
+        final ExtraInfo extraInfo = ExtraInfo.Companion.getExtraInfo(db);
         // multi-layer info is needed, and they're stored in extraInfos
-        if (extraInfos == null) {
+        if (extraInfo == null) {
             throw new InvalidExtraInfoException(ctx.getString(R.string.fdb_path_info_corrupt_toast));
         }
 
@@ -1034,13 +1033,13 @@ public class PaintView extends View {
 
         Matrix defaultTransformation = new Matrix();
 
-        final float[] values = extraInfos.getDefaultTransformation();
+        final float[] values = extraInfo.getDefaultTransformation();
         if (values != null) {
             defaultTransformation.setValues(values);
         }
 
         // stored layer information is required
-        final List<LayerInfo> layersInfo = extraInfos.getLayersInfo();
+        final List<LayerInfo> layersInfo = extraInfo.getLayersInfo();
         if (layersInfo == null) {
             ToastUtils.show(ctx, R.string.fdb_layer_info_missing_importing_terminated_toast);
             return;
@@ -1069,7 +1068,7 @@ public class PaintView extends View {
             );
         }
 
-        setLockingStrokesFromExtraInfos(extraInfos);
+        setLockingStrokesFromExtraInfos(extraInfo);
 
         transformTo(savedTransformation);
 
@@ -1675,10 +1674,10 @@ public class PaintView extends View {
         return (float) ((1.0 - ((double) blurRadius) * 2.0 / ((double) strokeWidth)) * 100.0);
     }
 
-    public ExtraInfos getDefaultExtraInfos() {
+    public ExtraInfo getDefaultExtraInfos() {
         float[] defaultTransformation = new float[9];
         new Matrix().getValues(defaultTransformation);
-        return new ExtraInfos(
+        return new ExtraInfo(
                 false,
                 10F,
                 10F,

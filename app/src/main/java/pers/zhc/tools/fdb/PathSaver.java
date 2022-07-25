@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *                 {@link MotionEvent#ACTION_DOWN}:
  *                 <ul>
  *                     <li>mark: {@code 0x01}</li>
- *                     <li>info: some infos about the stroke</li>
+ *                     <li>info: some info about the stroke</li>
  *                     <li>x: the x coordinate</li>
  *                     <li>y: the y coordinate</li>
  *                 </ul>
@@ -70,7 +70,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *                 {@link MotionEvent#ACTION_DOWN}:
  *                 <ul>
  *                     <li>mark: {@code 0x11}</li>
- *                     <li>info: some infos about the stroke</li>
+ *                     <li>info: some info about the stroke</li>
  *                     <li>x: the x coordinate</li>
  *                     <li>y: the y coordinate</li>
  *                 </ul>
@@ -152,8 +152,8 @@ public class PathSaver {
         layerPathSaverList.add(layerPathSaver);
     }
 
-    public void setExtraInfos(@NotNull ExtraInfos extraInfos) {
-        final String extraInfosJson = new Gson().toJson(extraInfos);
+    public void setExtraInfos(@NotNull ExtraInfo extraInfo) {
+        final String extraInfosJson = new Gson().toJson(extraInfo);
         Statement infoStatement = pathDatabase.compileStatement("UPDATE info\n" +
                 "SET extra_infos = ?");
         infoStatement.bind(new Object[]{extraInfosJson});

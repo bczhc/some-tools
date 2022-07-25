@@ -21,9 +21,9 @@ class Settings : BaseActivity() {
         val githubET = github_raw_url_et!!
         val saveBtn = save!!
 
-        serverET.editText.setText(Infos.serverRootURL)
-        resourceET.editText.setText(Infos.staticResourceRootURL)
-        githubET.editText.setText(Infos.githubRawRootURL)
+        serverET.editText.setText(Info.serverRootURL)
+        resourceET.editText.setText(Info.staticResourceRootURL)
+        githubET.editText.setText(Info.githubRawRootURL)
 
         saveBtn.setOnClickListener {
             val jsonObject = JSONObject()
@@ -36,9 +36,9 @@ class Settings : BaseActivity() {
             MyApplication.writeInfoJSON(jsonObject)
 
 
-            Infos.serverRootURL = newServerURL
-            Infos.staticResourceRootURL = newResourceURL
-            Infos.githubRawRootURL = newGithubRawURL
+            Info.serverRootURL = newServerURL
+            Info.staticResourceRootURL = newResourceURL
+            Info.githubRawRootURL = newGithubRawURL
 
             ToastUtils.show(this, R.string.saved)
             finish()

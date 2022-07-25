@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BuildConfig;
-import pers.zhc.tools.Infos;
+import pers.zhc.tools.Info;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ToastUtils;
 
@@ -50,7 +50,7 @@ public class CrashReportActivity extends BaseActivity {
         restartButton.setOnClickListener(v -> {
             Intent launchIntent = new Intent();
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .setClass(this, Infos.LAUNCHER_CLASS);
+                    .setClass(this, Info.LAUNCHER_CLASS);
             startActivity(launchIntent);
             killProcess();
         });
@@ -85,7 +85,7 @@ public class CrashReportActivity extends BaseActivity {
      * 收集设备参数信息
      */
     public Map<String, String> collectDeviceInfo() {
-        Map<String, String> infos = new HashMap<>(16);
+        Map<String, String> info = new HashMap<>(16);
         List<Field> declaredFields = new ArrayList<>();
         declaredFields.addAll(Arrays.asList(BuildConfig.class.getDeclaredFields()));
         declaredFields.addAll(Arrays.asList(Build.class.getDeclaredFields()));
@@ -97,9 +97,9 @@ public class CrashReportActivity extends BaseActivity {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            infos.put(field.getName(), o == null ? "null" : o.toString());
+            info.put(field.getName(), o == null ? "null" : o.toString());
         }
-        return infos;
+        return info;
     }
 
     private void upload(String filename, String information) {
@@ -123,7 +123,7 @@ public class CrashReportActivity extends BaseActivity {
         byte[] finalContentBytes = contentBytes;
         byte[] finalBytes = bytes;
         new Thread(() -> {
-            final String crashUploadSite = Infos.serverRootURL + "/tools_app/crash_report.zhc";
+            final String crashUploadSite = Info.serverRootURL + "/tools_app/crash_report.zhc";
 //                MultipartUploader.formUpload(crashUploadSite, finalBytes, finalContentBytes);
             // TODO: 6/13/21 crash file upload
             runOnUiThread(() -> {

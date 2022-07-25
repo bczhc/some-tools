@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.github_action_download_view.view.*
 import org.json.JSONArray
 import org.json.JSONException
-import pers.zhc.tools.Infos
+import pers.zhc.tools.Info
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.*
 import java.io.File
@@ -35,7 +35,7 @@ class MainActivity {
                 updateDir.requireMkdirs()
                 val localFile = File(updateDir, "some-tools.apk")
 
-                val url = URL(Infos.staticResourceRootURL + "/apks/some-tools/" + findCommitHash(item.commitInfo) + "/some-tools.apk")
+                val url = URL(Info.staticResourceRootURL + "/apks/some-tools/" + findCommitHash(item.commitInfo) + "/some-tools.apk")
                 Download.startDownloadWithDialog(context, url, localFile) {
                     // TODO: check file integrity
                     Common.installApk(context, localFile)
@@ -114,7 +114,7 @@ class MainActivity {
         }
 
         private fun asyncFetchLogJson(f: (jsonArray: JSONArray?) -> Unit) {
-            val url = URL(Infos.staticResourceRootURL + "/apks/some-tools/log.json")
+            val url = URL(Info.staticResourceRootURL + "/apks/some-tools/log.json")
             Thread {
                 val read = url.readText()
                 try {

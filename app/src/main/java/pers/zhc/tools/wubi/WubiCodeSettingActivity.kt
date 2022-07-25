@@ -9,7 +9,7 @@ import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
-import pers.zhc.tools.Infos
+import pers.zhc.tools.Info
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
@@ -50,7 +50,7 @@ class WubiCodeSettingActivity : BaseActivity() {
         val editText = EditText(this)
         editText.setText(
             String.format(
-                Infos.githubRawRootURL,
+                Info.githubRawRootURL,
                 "bczhc",
                 "rime-wubi86-jidian",
                 "master",

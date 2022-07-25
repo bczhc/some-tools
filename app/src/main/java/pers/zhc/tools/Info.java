@@ -2,7 +2,7 @@ package pers.zhc.tools;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Infos {
+public class Info {
     public static @NotNull
     String serverRootURL = "";
     public static @NotNull

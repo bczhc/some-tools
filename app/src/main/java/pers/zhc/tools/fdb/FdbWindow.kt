@@ -725,7 +725,7 @@ class FdbWindow(private val context: BaseActivity) {
                     3 -> {
                         // export path
 
-                        val extraInfos = ExtraInfos(
+                        val extraInfo = ExtraInfo(
                             paintView.isLockStrokeEnabled,
                             paintView.lockedDrawingStrokeWidth,
                             paintView.lockedEraserStrokeWidth,
@@ -733,7 +733,7 @@ class FdbWindow(private val context: BaseActivity) {
                             paintView.defaultTransformation.getValuesNew(),
                             layerManagerView.getLayersInfo()
                         )
-                        pathSaver.setExtraInfos(extraInfos)
+                        pathSaver.setExtraInfos(extraInfo)
                         pathSaver.flush()
 
                         createFilePickerDialog(
@@ -847,14 +847,14 @@ class FdbWindow(private val context: BaseActivity) {
 
                     when (pathVersion) {
                         PathVersion.VERSION_3_0, PathVersion.VERSION_3_1, PathVersion.VERSION_4_0 -> {
-                            var extraInfos: ExtraInfos? = null
+                            var extraInfo: ExtraInfo? = null
                             SQLite3::class.withNew(path) {
-                                extraInfos = ExtraInfos.getExtraInfos(it)
+                                extraInfo = ExtraInfo.getExtraInfo(it)
                             }
-                            extraInfos ?: return@runOnUiThread
+                            extraInfo ?: return@runOnUiThread
 
-                            extraInfos!!.savedColors?.let { colorPickers.brush.setSavedColor(it) }
-                            extraInfos!!.defaultTransformation?.let {
+                            extraInfo!!.savedColors?.let { colorPickers.brush.setSavedColor(it) }
+                            extraInfo!!.defaultTransformation?.let {
                                 paintView.defaultTransformation = Matrix::class.fromValues(it)
                             }
                         }
@@ -1156,7 +1156,7 @@ class FdbWindow(private val context: BaseActivity) {
     @Suppress("FunctionName")
     private fun getPathV3_0StatisticsInfoStr(db: SQLite3): String {
         /*
-         * infos:
+         * info:
          * creation time
          * total recorded points number,
          * total recorded paths number,

@@ -14,7 +14,7 @@ import androidx.core.content.FileProvider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BuildConfig;
-import pers.zhc.tools.Infos;
+import pers.zhc.tools.Info;
 import pers.zhc.tools.R;
 
 import java.io.File;
@@ -101,7 +101,7 @@ public class Common {
     @NotNull
     @Contract(pure = true)
     public static String getStaticResourceUrlString(String filename) {
-        return Infos.staticResourceRootURL + '/' + filename;
+        return Info.staticResourceRootURL + '/' + filename;
     }
 
     @Contract("false -> fail")

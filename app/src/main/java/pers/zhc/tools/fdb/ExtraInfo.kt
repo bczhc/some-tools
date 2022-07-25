@@ -11,7 +11,7 @@ import java.lang.reflect.Type
 /**
  * @author bczhc
  */
-class ExtraInfos(
+class ExtraInfo(
     val isLockingStroke: Boolean?,
     val lockedDrawingStrokeWidth: Float?,
     val lockedEraserStrokeWidth: Float?,
@@ -20,7 +20,7 @@ class ExtraInfos(
     val layersInfo: List<LayerInfo>?
 ) {
     companion object {
-        private fun queryExtraInfos(db: SQLite3): String? {
+        private fun queryExtraInfo(db: SQLite3): String? {
             var jsonString: String? = null
             db.withCompiledStatement("SELECT extra_infos FROM info") {
                 val cursor = it.cursor
@@ -35,14 +35,14 @@ class ExtraInfos(
          * returns null if [db] has no such database field or the info string
          * it stores has invalid json syntax
          */
-        fun getExtraInfos(db: SQLite3): ExtraInfos? {
+        fun getExtraInfo(db: SQLite3): ExtraInfo? {
             return Gson().newBuilder().apply {
                 registerTypeAdapter(FloatArray::class.java, MatrixDataSerializer())
                 registerTypeAdapter(LayerInfo::class.java, LayersInfoDeserializer())
                 registerTypeAdapter(SavedColor::class.java, OldSavedColorDeserializer())
             }.create().fromJsonOrNull(
-                queryExtraInfos(db) ?: return null,
-                ExtraInfos::class.java
+                queryExtraInfo(db) ?: return null,
+                ExtraInfo::class.java
             )
         }
     }
@@ -57,7 +57,7 @@ class ExtraInfos(
 
             if (json is JsonObject) {
                 // it's an "OldMatrixData" JSON object
-                if (json.keySet().all { ExtraInfos::OldMatrixData.parameters.map { p -> p.name }.contains(it) }) {
+                if (json.keySet().all { ExtraInfo::OldMatrixData.parameters.map { p -> p.name }.contains(it) }) {
                     val oldMatrixData = GSON.fromJson(json, OldMatrixData::class.java)!!
                     return oldMatrixData.getData()
                 }
