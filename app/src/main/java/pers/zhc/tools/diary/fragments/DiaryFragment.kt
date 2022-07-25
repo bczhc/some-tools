@@ -15,9 +15,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.diary_advenced_search_dialog.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import kotlinx.android.synthetic.main.diary_stat_dialog.view.*
@@ -45,6 +47,7 @@ import java.util.*
 class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: MyAdapter
+    private lateinit var constraintLayout: ConstraintLayout
     private val diaryItemDataList = ArrayList<DiaryItemData>()
     private val advancedSearchDialog by lazy {
         createAdvancedSearchDialog()
@@ -57,6 +60,7 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflate = inflater.inflate(R.layout.diary_main_diary_fragment, container, false)
         recyclerView = inflate.recycler_view!!
+        constraintLayout = inflate.constraint_layout
 
         loadRecyclerView()
 
@@ -171,19 +175,28 @@ WHERE instr(lower("date"), lower(?)) > 0
     private fun popupMenuDelete(position: Int) {
         val dateInt = diaryItemDataList[position].dateInt
         DialogUtils.createConfirmationAlertDialog(requireContext(), { dialog, _ ->
-            val statement = diaryDatabase.compileStatement(
-                """DELETE
-FROM diary
-WHERE "date" IS ?"""
-            )
-            statement.bind(1, dateInt)
-            statement.step()
-            statement.release()
+            diaryDatabase.execBind("""DELETE FROM diary WHERE "date" IS ?""", arrayOf(dateInt))
             dialog.dismiss()
 
             // update view
-            diaryItemDataList.removeAt(position)
+            val removed = diaryItemDataList.removeAt(position)
             recyclerViewAdapter.notifyItemRemoved(position)
+
+            Snackbar.make(constraintLayout, R.string.deleted_message, Snackbar.LENGTH_LONG).apply {
+                setAction(R.string.undo) {
+                    diaryDatabase.execBind(
+                        "INSERT INTO diary(\"date\", content) VALUES (?, ?)",
+                        arrayOf(removed.dateInt, removed.content)
+                    )
+                    Assertion.doAssertion(
+                        diaryDatabase.hasRecord(
+                            """SELECT COUNT() FROM diary WHERE "date" IS ?""", arrayOf(removed.dateInt)
+                        )
+                    )
+                    diaryItemDataList.add(position, removed)
+                    recyclerViewAdapter.notifyItemInserted(position)
+                }
+            }.show()
         }, titleRes = R.string.whether_to_delete, message = makeTitle(MyDate(dateInt))).show()
     }
 
