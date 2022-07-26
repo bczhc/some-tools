@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Contract
 class Assertion {
     companion object {
         @Contract(" -> fail")
-        fun unreachable() {
+        fun <T> unreachable(): T {
             throw UnreachableError()
         }
 

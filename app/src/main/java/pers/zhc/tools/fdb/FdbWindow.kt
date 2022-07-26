@@ -95,6 +95,7 @@ class FdbWindow(private val context: BaseActivity) {
     private var hasStartedScreenColorPicker = false
 
     var onExitListener: OnExitListener? = null
+    private lateinit var updateEraserOpacitySlider: (Float) -> Unit
 
     init {
         val ll = LinearLayout(context)
@@ -186,21 +187,13 @@ class FdbWindow(private val context: BaseActivity) {
                             }
                             6 -> {
                                 // drawing / erasing
-                                val tv = panelRL.getPanelTextView(6)
-                                when (brushMode) {
-                                    BrushMode.DRAWING -> {
-                                        brushMode = BrushMode.ERASING
-                                        tv.text = context.getString(R.string.fdb_panel_erasing_mode)
-                                        paintView.isEraserMode = true
-                                    }
-                                    BrushMode.ERASING -> {
-                                        brushMode = BrushMode.DRAWING
-                                        tv.text = context.getString(R.string.fdb_panel_drawing_mode)
-                                        paintView.isEraserMode = false
-                                    }
-                                    else -> {
-                                    }
+                                brushMode = brushMode.gerReverse()
+                                paintView.isEraserMode = when (brushMode) {
+                                    BrushMode.DRAWING -> false
+                                    BrushMode.ERASING -> true
+                                    else -> Assertion.unreachable()
                                 }
+                                updateBrushModeText()
                             }
                             7 -> {
                                 // clear
@@ -327,6 +320,11 @@ class FdbWindow(private val context: BaseActivity) {
             addAction(FdbBroadcastReceiver.ACTION_ON_SCREEN_ORIENTATION_CHANGED)
         }
         context.applicationContext.registerReceiver(receivers.main, filter)
+    }
+
+    private fun updateBrushModeText() {
+        val tv = panelRL.getPanelTextView(6)
+        tv.text = brushMode.getString(context)
     }
 
     private fun showBrushWidthAdjustingDialog() {
@@ -490,7 +488,28 @@ class FdbWindow(private val context: BaseActivity) {
     private enum class BrushMode {
         DRAWING,
         ERASING,
-        IN_USE
+        IN_USE;
+
+        fun getString(context: Context): String {
+            val res = when (this) {
+                DRAWING -> R.string.fdb_panel_drawing_mode
+                ERASING -> R.string.fdb_panel_erasing_mode
+                else -> {
+                    throw RuntimeException("invalid \"in use\" state")
+                }
+            }
+            return context.getString(res)
+        }
+
+        fun gerReverse(): BrushMode {
+            return when (this) {
+                DRAWING -> ERASING
+                ERASING -> DRAWING
+                else -> {
+                    throw RuntimeException("invalid \"in use\" state")
+                }
+            }
+        }
     }
 
     private class ColorPickers {
@@ -837,13 +856,14 @@ class FdbWindow(private val context: BaseActivity) {
                     )
 
                     colorPickers.brush.color = paintView.drawingColor
-                    panelRL.getPanelTextView(6).text = context.getString(
-                        if (paintView.isEraserMode) {
-                            R.string.fdb_panel_erasing_mode
-                        } else {
-                            R.string.fdb_panel_drawing_mode
-                        }
-                    )
+                    brushMode = if (paintView.isEraserMode) {
+                        BrushMode.ERASING
+                    } else {
+                        BrushMode.DRAWING
+                    }
+                    updateBrushModeText()
+
+                    updateEraserOpacitySlider(paintView.eraserAlpha.toFloat() / 255F)
 
                     when (pathVersion) {
                         PathVersion.VERSION_3_0, PathVersion.VERSION_3_1, PathVersion.VERSION_4_0 -> {
@@ -897,6 +917,10 @@ class FdbWindow(private val context: BaseActivity) {
             }
         })
 
+        updateEraserOpacitySlider = {value: Float ->
+            opacitySlider.value = value
+        }
+
         val dialog = createDialog(inflate, dim = false)
         DialogUtils.setDialogAttr(dialog, width = MATCH_PARENT, overlayWindow = true)
         return dialog
@@ -912,7 +936,7 @@ class FdbWindow(private val context: BaseActivity) {
         val dialog = createDialog(progressView).apply {
             setCanceledOnTouchOutside(false)
         }
-      //  dialog.show()
+        //  dialog.show()
 
         val tryDo = AsyncTryDo()
         Thread {
