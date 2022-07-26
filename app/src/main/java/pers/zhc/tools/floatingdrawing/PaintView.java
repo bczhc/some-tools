@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.*;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -216,35 +219,35 @@ public class PaintView extends View {
                 }
             }
 
+            private final Handler debounceHandler = new Handler(Looper.myLooper());
+            private boolean debounceFinished = true;
+
             @Override
             public void onTwoPointsUp(MotionEvent event) {
                 if (transformationEnabled()) {
-                    transBitmap = null;
-                    // redraw all layers' bitmaps
-                    redrawAllLayerBitmap();
-                    postInvalidate();
+                    int debounceInterval = 450;
+                    debounceHandler.removeCallbacksAndMessages(null);
+                    debounceFinished = false;
+                    debounceHandler.postDelayed(() -> {
+                        endTransformation();
+                        debounceFinished = true;
+                    }, debounceInterval);
                 }
             }
 
             @Override
             public void onTwoPointsDown(MotionEvent event) {
-                if (moveTransformationEnabled || zoomTransformationEnabled || rotateTransformationEnabled) {
+                if (transformationEnabled()) {
+                    // clear erroneous paths between two touch points while zooming and scrolling
                     mPath = null;
-                    if (transBitmap == null) {
-                        transBitmap = Bitmap.createBitmap(bitmapRef.getWidth(), bitmapRef.getHeight(), Bitmap.Config.ARGB_8888);
-                        Canvas transCanvas = new Canvas(transBitmap);
-
-                        for (int i = layerArray.size() - 1; i >= 0; i--) {
-                            final Layer layer = layerArray.get(i);
-                            if (layer.isVisible()) {
-                                transCanvas.drawBitmap(layer.bitmap, 0F, 0F, null);
-                            }
-                        }
-
-                        transCanvasTransformation = new Matrix();
-                    }
                     if (layerPathSaverRef != null) {
                         layerPathSaverRef.clearTempTable();
+                    }
+
+                    if (debounceFinished) {
+                        startTransformation();
+                    } else {
+                        debounceHandler.removeCallbacksAndMessages(null);
                     }
                 }
             }
@@ -256,6 +259,29 @@ public class PaintView extends View {
 
             @Override
             public void onTwoPointsPress(MotionEvent event) {
+            }
+
+            private void startTransformation() {
+                if (transBitmap == null) {
+                    transBitmap = Bitmap.createBitmap(bitmapRef.getWidth(), bitmapRef.getHeight(), Bitmap.Config.ARGB_8888);
+                    Canvas transCanvas = new Canvas(transBitmap);
+
+                    for (int i = layerArray.size() - 1; i >= 0; i--) {
+                        final Layer layer = layerArray.get(i);
+                        if (layer.isVisible()) {
+                            transCanvas.drawBitmap(layer.bitmap, 0F, 0F, null);
+                        }
+                    }
+
+                    transCanvasTransformation = new Matrix();
+                }
+            }
+
+            private void endTransformation() {
+                transBitmap = null;
+                // redraw all layers' bitmaps
+                redrawAllLayerBitmap();
+                postInvalidate();
             }
         });
 
