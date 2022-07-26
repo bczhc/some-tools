@@ -8,7 +8,9 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
+import androidx.core.content.ContextCompat
 import pers.zhc.tools.BaseView
+import pers.zhc.tools.R
 import java.util.*
 
 /**
@@ -31,7 +33,7 @@ class DrawingView : BaseView {
 
         paint.apply {
             setProperties(this)
-            color = Color.BLACK
+            color = ContextCompat.getColor(context, R.color.highContrastMain)
         }
         axesPaint.apply {
             setProperties(this)

@@ -6,7 +6,9 @@ import android.graphics.*
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
+import androidx.core.app.ActivityCompat
 import pers.zhc.tools.BaseView
+import pers.zhc.tools.R
 import pers.zhc.tools.utils.AsyncTryDo
 import pers.zhc.tools.utils.GestureResolver
 
@@ -34,7 +36,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
         }
         epicyclePaint.apply {
             strokeWidth = 0F
-            color = Color.BLACK
+            color = ActivityCompat.getColor(context, R.color.highContrastMain)
             style = Paint.Style.STROKE
         }
         pathPaint.apply {
