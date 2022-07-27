@@ -125,9 +125,6 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 new VView(context),
                 new AView(context)
         };
-        for (View v : hsvaViews) {
-            v.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, ((int) DisplayUtil.cm2px(context, 1.3F))));
-        }
         currentXPos = new float[hsvaViews.length];
 
         final View inflate = View.inflate(context, R.layout.hsva_color_picker_view, null);
@@ -136,6 +133,10 @@ public class HSVAColorPickerRL extends RelativeLayout {
         savedColorRV = inflate.findViewById(R.id.recycler_view);
 
         for (View view : hsvaViews) {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, 0);
+            layoutParams.weight = 1.0F;
+            view.setLayoutParams(layoutParams);
+
             hsvaViewsLL.addView(view);
         }
 

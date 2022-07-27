@@ -1,7 +1,6 @@
 package pers.zhc.tools.views;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -34,7 +33,7 @@ public class ColorShowRL extends RelativeLayout {
     }
 
     private void init(Context context) {
-        final View inflate = View.inflate(context, R.layout.color_picker_color_show_ll, null);
+        final View inflate = View.inflate(context, R.layout.color_picker_color_show_layout, null);
         colorView = inflate.findViewById(R.id.color_view);
         nameTV = inflate.findViewById(R.id.name_tv);
 

@@ -7,16 +7,18 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
+import pers.zhc.util.Assertion;
 
 /**
  * @author bczhc
  */
 public class RoundColorView extends View {
-    private float diameter = 50F;
     private int color = Color.TRANSPARENT;
     private Paint mPaint;
 
@@ -36,18 +38,7 @@ public class RoundColorView extends View {
 
         final TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.RoundColorView);
         color = ta.getColor(R.styleable.RoundColorView_color, Color.TRANSPARENT);
-        diameter = ((int) ta.getDimension(R.styleable.RoundColorView_diameter, 50));
         ta.recycle();
-    }
-
-    /**
-     *
-     * @param diameter in px
-     */
-    public void setDiameter(float diameter) {
-        this.diameter = diameter;
-        invalidate();
-        requestLayout();
     }
 
     public void setColor(@ColorInt int color) {
@@ -57,25 +48,23 @@ public class RoundColorView extends View {
 
     @Override
     protected void onDraw(@NotNull Canvas canvas) {
+        Assertion.doAssertion(getMeasuredWidth() == getMeasuredHeight());
         mPaint.setColor(this.color);
-        canvas.save();
+        int diameter = getMeasuredHeight();
         float start = diameter / 2F;
         canvas.translate(start, start);
         canvas.drawCircle(0, 0, start, mPaint);
-        canvas.restore();
     }
 
-    private int mMeasure(int defaultSize, int measureSpec) {
+    private int mMeasure(int measureSpec) {
         int mode = MeasureSpec.getMode(measureSpec);
         int size = MeasureSpec.getSize(measureSpec);
         switch (mode) {
             case MeasureSpec.EXACTLY:
+            case MeasureSpec.AT_MOST:
                 return size;
             case MeasureSpec.UNSPECIFIED:
-                return defaultSize;
-            case MeasureSpec.AT_MOST:
-                if (defaultSize > size) defaultSize = size;
-                return defaultSize;
+                return 0;
             default:
         }
         return 0;
@@ -83,12 +72,18 @@ public class RoundColorView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        final int d = ((int) Math.ceil(diameter));
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        int measuredWidth = mMeasure(d, widthMeasureSpec);
-        int measuredHeight = mMeasure(d, heightMeasureSpec);
+//        if (heightMode == MeasureSpec.EXACTLY && widthMode == MeasureSpec.UNSPECIFIED) {
+//            setMeasuredDimension(heightSize, heightSize);
+//        }
 
-        setMeasuredDimension(measuredWidth, measuredHeight);
+        int measuredWidth = mMeasure(widthMeasureSpec);
+        int measuredHeight = mMeasure(heightMeasureSpec);
+        int min = Math.min(measuredWidth, measuredHeight);
+        setMeasuredDimension(min, min);
     }
 }

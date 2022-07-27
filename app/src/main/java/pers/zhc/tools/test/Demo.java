@@ -13,5 +13,6 @@ public class Demo extends BaseActivity {
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.demo_activity);
+//        setContentView(R.layout.test_view);
     }
 }

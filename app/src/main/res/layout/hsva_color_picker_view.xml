@@ -27,14 +27,16 @@
             android:id="@+id/hsva_views_ll"
             android:orientation="vertical"
             android:layout_below="@id/head_ll"
+            android:layout_above="@id/recycler_view"
     />
     <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_below="@id/hsva_views_ll"
+            android:layout_width="match_parent" android:layout_height="70dp"
             android:id="@+id/recycler_view"
             android:scrollbars="horizontal"
             tools:itemCount="1"
             android:paddingTop="4dp"
             android:paddingHorizontal="4dp"
+            android:layout_alignParentBottom="true"
+            tools:listitem="@layout/color_picker_color_show_layout"
     />
 </RelativeLayout>

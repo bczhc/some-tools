@@ -284,7 +284,10 @@ class FdbWindow(private val context: BaseActivity) {
         }
 
         dialogs.apply {
-            brushColorPicker = createDialog(colorPickers.brush, true, dim = false)
+            brushColorPicker = createDialog(
+                colorPickers.brush, true, dim = false,
+                height = MATCH_PARENT
+            )
             panelColorPicker = createDialog(colorPickers.panel, true, dim = false)
             panelTextColorPicker = createDialog(colorPickers.panelText, true, dim = false)
             panelSettings = createPanelSettingsDialog()
@@ -917,7 +920,7 @@ class FdbWindow(private val context: BaseActivity) {
             }
         })
 
-        updateEraserOpacitySlider = {value: Float ->
+        updateEraserOpacitySlider = { value: Float ->
             opacitySlider.value = value
         }
 
