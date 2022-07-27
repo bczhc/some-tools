@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.Selection;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 @SuppressLint("ViewConstructor")
 public class HSVAColorPickerRL extends RelativeLayout {
     private float[] currentXPos;
-    private final float lW = 1.5F;
+    private float lineExtrusion = -1;
     private final float[] hsv = new float[3];
     private int alpha;
     private Paint oppositeColorPaint;
@@ -67,6 +68,10 @@ public class HSVAColorPickerRL extends RelativeLayout {
     }
 
     public HSVAColorPickerRL(Context context) {
+        this(context, Color.RED);
+    }
+
+    public HSVAColorPickerRL(Context context, AttributeSet attrs) {
         this(context, Color.RED);
     }
 
@@ -112,6 +117,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         oppositeColorPaint = new Paint();
         oppositeColorPaint.setColor(ColorUtils.invertColor(Color.HSVToColor(alpha, hsv)));
 
+        lineExtrusion = DisplayUtil.mm2px(context, 0.15F);
+
         hsvaViews = new View[]{
                 new HView(context),
                 new SView(context),
@@ -119,7 +126,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 new AView(context)
         };
         for (View v : hsvaViews) {
-            v.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, DisplayUtil.dip2px(context, 63 /* 1cm */)));
+            v.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, ((int) DisplayUtil.cm2px(context, 1.3F))));
         }
         currentXPos = new float[hsvaViews.length];
 
@@ -343,7 +350,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 hPaint.setColor(ColorUtils.HSVAtoColor(alpha, i * 360 / (float) hW, hsv[1], hsv[2]));
                 canvas.drawLine(i, 0, i, hH, hPaint);
             }
-            canvas.drawRect(currentXPos[0] - lW, 0, currentXPos[0] + lW, hH, oppositeColorPaint);
+            canvas.drawRect(currentXPos[0] - lineExtrusion, 0, currentXPos[0] + lineExtrusion, hH, oppositeColorPaint);
         }
 
         private void hInit() {
@@ -396,7 +403,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 sPaint.setColor(ColorUtils.HSVAtoColor(alpha, hsv[0], i / (float) sW, hsv[2]));
                 canvas.drawLine(i, 0F, i, ((float) sH), sPaint);
             }
-            canvas.drawRect(currentXPos[1] - lW, 0F, currentXPos[1] + lW, sH, oppositeColorPaint);
+            canvas.drawRect(currentXPos[1] - lineExtrusion, 0F, currentXPos[1] + lineExtrusion, sH, oppositeColorPaint);
         }
 
         @SuppressLint("ClickableViewAccessibility")
@@ -437,7 +444,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 vPaint.setColor(ColorUtils.HSVAtoColor(alpha, hsv[0], hsv[1], i / (float) vW));
                 canvas.drawLine(i, 0F, i, ((float) vH), vPaint);
             }
-            canvas.drawRect(currentXPos[2] - lW, 0F, currentXPos[2] + lW, vH, oppositeColorPaint);
+            canvas.drawRect(currentXPos[2] - lineExtrusion, 0F, currentXPos[2] + lineExtrusion, vH, oppositeColorPaint);
         }
 
         @SuppressLint("ClickableViewAccessibility")
@@ -471,7 +478,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 aPaint.setColor(Color.HSVToColor((int) (i * 255 / ((float) aW)), hsv));
                 canvas.drawLine(i, 0F, i, ((float) aH), aPaint);
             }
-            canvas.drawRect(currentXPos[3] - lW, 0F, currentXPos[3] + lW, aH, oppositeColorPaint);
+            canvas.drawRect(currentXPos[3] - lineExtrusion, 0F, currentXPos[3] + lineExtrusion, aH, oppositeColorPaint);
         }
 
         @Override

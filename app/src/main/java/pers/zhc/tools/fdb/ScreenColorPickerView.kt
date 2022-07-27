@@ -24,7 +24,7 @@ class ScreenColorPickerView : BaseView {
     private val bitmapPaint = Paint()
     private var pointX = 0F
     private var pointY = 0F
-    private val innerEdgeLength = DisplayUtil.cm2px(context, 2F)
+    private val innerEdgeLength = DisplayUtil.cm2px(context, 2F).toInt()
     private val edgeWidth = 2F
     private var color: Int = Color.TRANSPARENT
     private val edgePaint = Paint()

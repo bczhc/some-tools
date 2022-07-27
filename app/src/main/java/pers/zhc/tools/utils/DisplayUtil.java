@@ -5,9 +5,9 @@ import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.EditText;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class DisplayUtil {
@@ -18,8 +18,11 @@ public class DisplayUtil {
     }
 
     public static int dip2px(@NotNull Context context, float dipValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dipValue * scale + 0.5f);
+        return (int) (dipValue * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+    public static float mm2px(@NotNull Context context, float mm) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, mm, context.getResources().getDisplayMetrics());
     }
 
     public static int px2sp(@NotNull Context context, float pxValue) {
@@ -30,11 +33,6 @@ public class DisplayUtil {
     public static int sp2px(@NotNull Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
-    }
-
-    @Contract(pure = true)
-    public static int cm2dp(float cm) {
-        return (int) (cm * (8000F / 127F));
     }
 
     public static int getStatusBarHeight(@NotNull Activity activity) {
@@ -57,8 +55,8 @@ public class DisplayUtil {
         return point;
     }
 
-    public static int cm2px(Context context, float cm) {
-        return dip2px(context, (float) cm2dp(cm));
+    public static float cm2px(Context context, float cm) {
+        return mm2px(context, cm * 10);
     }
 
     public static float getDefaultEditTextTextSize(Context context) {
