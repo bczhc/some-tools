@@ -225,7 +225,7 @@ public class PaintView extends View {
             @Override
             public void onTwoPointsUp(MotionEvent event) {
                 if (transformationEnabled()) {
-                    int debounceInterval = 450;
+                    int debounceInterval = 265;
                     debounceHandler.removeCallbacksAndMessages(null);
                     debounceFinished = false;
                     debounceHandler.postDelayed(() -> {
