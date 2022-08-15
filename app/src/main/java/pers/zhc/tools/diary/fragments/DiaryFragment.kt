@@ -617,6 +617,7 @@ WHERE "date" IS ?"""
     private fun makeTitle(date: MyDate): String {
         var weekString: String? = null
         try {
+            titleCalendar.clear()
             titleCalendar.set(date.year, date.month - 1, date.day)
             val weekIndex = titleCalendar[Calendar.DAY_OF_WEEK] - 1
             weekString = weeks[weekIndex]
