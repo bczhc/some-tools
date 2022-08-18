@@ -258,7 +258,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.4.2")
     implementation("androidx.navigation:navigation-ui-ktx:2.4.2")
     implementation("me.zhanghai.android.fastscroll:library:1.1.7")
-    implementation("com.github.bczhc:jni-java:3a74b3d640")
+    implementation("com.github.bczhc:jni-java:9205bf19ea")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.20")
     implementation("com.google.code.gson:gson:2.9.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
