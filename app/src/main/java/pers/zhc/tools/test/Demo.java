@@ -4,6 +4,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
+import pers.zhc.tools.jni.JNI;
+import pers.zhc.tools.utils.ToastUtils;
 
 /**
  * @author bczhc
@@ -12,6 +14,6 @@ public class Demo extends BaseActivity {
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.demo_activity);
+        ToastUtils.show(this, String.valueOf(JNI.JniDemo.call()));
     }
 }

@@ -119,7 +119,7 @@ public class JNI {
     }
 
     public static class JniDemo {
-        public static native String hello(Object context, String name);
+        public static native int call();
     }
 
     public static class StcFlash {

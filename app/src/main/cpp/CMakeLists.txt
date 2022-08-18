@@ -46,7 +46,10 @@ add_library(
 
 add_subdirectory(third_party/jni-lib)
 
+include_directories(${OPENSSL_INCLUDE_DIR})
+
 target_link_libraries(myLib-android-dep myLib)
-target_link_libraries(Main myLib myLib-android-dep jni-lib magic)
+target_link_directories(Main PUBLIC ${OPENSSL_LIBS_DIR})
+target_link_libraries(Main myLib myLib-android-dep jni-lib magic crypto)
 
 #set_target_properties(Main myLib PROPERTIES LINK_FLAGS "-Wl,-rpath,./")

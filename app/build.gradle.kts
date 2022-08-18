@@ -14,6 +14,7 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.util.*
+import kotlin.collections.HashMap
 import pers.zhc.plugins.`BuildUtils2$`.`MODULE$` as BuildUtils2
 import pers.zhc.tools.plugin.util.`FileUtils$`.`MODULE$` as FileUtils
 
@@ -297,6 +298,16 @@ fun requireDelete(file: File) {
     }
 }
 
+val cmakeDefsMap = HashMap<String, Map<String, String>>()
+ndkTargets.forEach {
+    val abi = it["abi"] as TargetAbi
+    val opensslPath = getOpensslPath(opensslDir, abi)
+    cmakeDefsMap[abi.toString()] = mapOf(
+        Pair("OPENSSL_INCLUDE_DIR", opensslPath.include.path),
+        Pair("OPENSSL_LIBS_DIR", opensslPath.lib.path)
+    )
+}
+
 configure<CppBuildPluginExtension> {
     srcDir.set("$projectDir/src/main/cpp")
     ndkDir.set(android.ndkDirectory.path)
@@ -304,6 +315,7 @@ configure<CppBuildPluginExtension> {
     buildType.set("release")
     outputDir.set(jniOutputDir.path)
     cmakeBinDir.set(tools.cmakeBinDir.path)
+    cmakeDefs.set(cmakeDefsMap)
 }
 
 val compileCppTask: Task = project.tasks.getByName("compileCpp")

@@ -12,8 +12,8 @@ extern "C" {
  * Method:    call
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_call
-  (JNIEnv *, jclass, jint);
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024JniDemo_call
+  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }

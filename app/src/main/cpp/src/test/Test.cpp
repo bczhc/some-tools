@@ -7,6 +7,7 @@
 #include <third_party/jni-lib/src/jni_help.h>
 #include <cerrno>
 #include "third_party/my-cpp-lib/app/stc_flash/stc_flash_lib.h"
+#include <openssl/aes.h>
 
 void init(int fd) {
     termios options{};
@@ -61,7 +62,8 @@ void setSpeed(int fd, unsigned int speed) {
     throw String("Setting speed failed.");
 }
 
-JNIEXPORT void JNICALL Java_pers_zhc_tools_jni_JNI_00024JniTest_call
-        (JNIEnv *env, jclass, jint f) {
-
+JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024JniDemo_call
+        (JNIEnv *, jclass) {
+    size_t i = strlen(AES_options());
+    return (jint) i;
 }

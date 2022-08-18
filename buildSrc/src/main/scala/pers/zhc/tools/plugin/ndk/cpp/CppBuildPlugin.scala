@@ -13,6 +13,7 @@ import pers.zhc.tools.plugin.ndk.{BuildType, NdkBaseExtension, NdkUtils}
 import pers.zhc.tools.plugin.util.FileUtils
 
 import java.io.File
+import scala.jdk.CollectionConverters.MapHasAsScala
 
 class CppBuildPlugin extends Plugin[Project] {
   override def apply(project: Project): Unit = {
@@ -69,6 +70,14 @@ class CppBuildPlugin extends Plugin[Project] {
         NdkUtils.propertyToTargets(extensions.getTargets)
       override val buildType: BuildType =
         BuildType.from(unwrap(extensions.getBuildType, "buildType"))
+      override val cmakeDefs: Option[Map[String, Map[String, String]]] =
+        Option(extensions.getCmakeDefs.getOrNull())
+          .map({ x =>
+            import NdkUtils.JMap
+            val scala =
+              x.asInstanceOf[JMap[String, JMap[String, String]]].asScala
+            scala.view.mapValues(_.asScala.toMap).toMap
+          })
     }
   }
 }
@@ -79,6 +88,7 @@ object CppBuildPlugin {
 
   trait CppBuildPluginExtension extends NdkBaseExtension {
     def getCmakeBinDir: Property[String]
+    def getCmakeDefs: Property[Any]
   }
 
   abstract class Configurations {
@@ -88,5 +98,6 @@ object CppBuildPlugin {
     val cmakeBinDir: File
     val targets: Targets
     val buildType: BuildType
+    val cmakeDefs: Option[Map[String, Map[String, String]]]
   }
 }
