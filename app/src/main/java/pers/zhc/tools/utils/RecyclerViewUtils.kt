@@ -2,9 +2,11 @@ package pers.zhc.tools.utils
 
 import android.content.Context
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.R
 
 /**
@@ -40,3 +42,10 @@ fun RecyclerView.addDividerLines() {
 fun RecyclerView.setLinearLayoutManager() {
     this.layoutManager = LinearLayoutManager(this.context)
 }
+
+fun RecyclerView.setUpFastScroll(context: Context) {
+    FastScrollerBuilder(this).apply {
+        setThumbDrawable(AppCompatResources.getDrawable(context, R.drawable.thumb)!!)
+    }.build()
+}
+

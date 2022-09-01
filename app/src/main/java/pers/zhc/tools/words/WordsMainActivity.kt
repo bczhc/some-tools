@@ -50,6 +50,7 @@ class WordsMainActivity : BaseActivity() {
         showNotification()
 
         val recyclerView = recycler_view!!
+        recyclerView.setUpFastScroll(this)
 
         updateItems()
         listAdapter = MyAdapter(this, itemList)
