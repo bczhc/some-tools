@@ -197,6 +197,7 @@ class WordsMainActivity : BaseActivity() {
         override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {
             val inflate = LayoutInflater.from(ctx).inflate(android.R.layout.simple_list_item_1, parent, false).apply {
                 this.setBaseLayoutSizeMW()
+                this.setBackgroundResource(R.drawable.selectable_bg)
             }
             val viewHolder = MyViewHolder(inflate)
             viewHolder.tv = inflate.findViewById(android.R.id.text1)!!
