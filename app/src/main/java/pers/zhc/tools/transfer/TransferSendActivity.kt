@@ -1,6 +1,7 @@
 package pers.zhc.tools.transfer
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -23,6 +24,7 @@ import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.jni.JNI.Transfer.ReceiveProgressCallback
 import pers.zhc.tools.utils.Assertion
 import pers.zhc.tools.utils.AsyncTryDo
+import pers.zhc.tools.utils.LangUtils.Companion.nullMap
 import pers.zhc.tools.utils.ProgressDialog
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.views.SmartHintEditText
@@ -56,6 +58,13 @@ class TransferSendActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.transfer_send_activity)
 
+        val intent = intent
+        // activity is launched from "Open as" dialog
+        var initFilePath = if (intent.action == Intent.ACTION_VIEW) {
+            // TODO: workaround; should use content provider but not direct path
+            intent.data.nullMap { it.path }
+        } else null
+
         addressET = destination_address_et!!.editText
         val typeSpinner = type_spinner!!
         val pickFileButton = pick_file_btn!!
@@ -73,6 +82,12 @@ class TransferSendActivity : BaseActivity() {
                         layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
                     }
                     containerLayout.setView(inflate)
+
+                    if (inflate is SmartHintEditText) {
+                        inflate.editText.setText(initFilePath)
+                        // only set once
+                        initFilePath = null
+                    } else Assertion.unreachable()
                 } else {
                     val et = EditText(this@TransferSendActivity).apply {
                         layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
