@@ -1,3 +1,7 @@
 /gradle/
 /gradlew.bat
 /gradlew
+
+!/.idea/
+/.idea/*
+!/.idea/codeStyles/
