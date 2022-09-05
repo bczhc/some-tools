@@ -5,10 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.NotificationCompat
@@ -83,7 +80,7 @@ class WordsMainActivity : BaseActivity() {
     }
 
     class Item(
-        val word: String
+            val word: String
     )
 
     private fun deleteRecord(word: String) {
@@ -198,7 +195,9 @@ class WordsMainActivity : BaseActivity() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {
-            val inflate = View.inflate(ctx, android.R.layout.simple_list_item_1, null)
+            val inflate = LayoutInflater.from(ctx).inflate(android.R.layout.simple_list_item_1, parent, false).apply {
+                this.setBaseLayoutSizeMW()
+            }
             val viewHolder = MyViewHolder(inflate)
             viewHolder.tv = inflate.findViewById(android.R.id.text1)!!
             return viewHolder
@@ -234,7 +233,7 @@ class WordsMainActivity : BaseActivity() {
 
         private fun initDatabase(database: SQLite3) {
             database.exec(
-                """CREATE TABLE IF NOT EXISTS word
+                    """CREATE TABLE IF NOT EXISTS word
 (
     word          TEXT NOT NULL PRIMARY KEY,
     addition_time INTEGER
