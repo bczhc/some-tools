@@ -107,7 +107,7 @@ class ScreenColorPickerShow(
                         Common.showException(e, context)
                     }
                 }
-                MotionEvent.ACTION_UP -> {
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     screenColorPickerView.getColor()?.let { onColorPicked(it) }
                 }
                 else -> {
