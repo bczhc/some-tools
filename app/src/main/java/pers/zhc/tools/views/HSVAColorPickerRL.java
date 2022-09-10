@@ -186,6 +186,16 @@ public class HSVAColorPickerRL extends RelativeLayout {
         EditText editText = new EditText(context);
         editText.setText(savedColor.name);
 
+        try {
+            int color = ColorUtils.parseColorHex(savedColor.name);
+            if (savedColor.getColorInt() == color) {
+                // the saved color name is the hex code of itself
+                // fill with the new color name
+                editText.setText(ColorUtils.getHexString(Color.HSVToColor(alpha, hsv), true));
+            }
+        } catch (IllegalArgumentException ignored) {
+        }
+
 
         AlertDialog dialog = DialogUtils.Companion.createPromptDialog(context, R.string.color_naming, (dialogInterface, et) -> {
 

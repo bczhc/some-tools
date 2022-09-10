@@ -61,6 +61,13 @@ public class ColorUtils {
         Color.colorToHSV(color, hsv);
     }
 
+    public static int parseColorHex(String hex) {
+        if (!hex.startsWith("#")) {
+            throw new IllegalArgumentException("Invalid color hex code");
+        }
+        return Color.parseColor(hex);
+    }
+
     private static int parseColorInt(RGB rgb) {
         return 0xff000000 | (rgb.r << 16) | (rgb.g << 8) | rgb.b;
     }
