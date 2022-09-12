@@ -722,4 +722,8 @@
     <!-- HSVA color picker -->
     <string name="color_picker_update_color">更新颜色</string>
     <!-- end -->
+
+    <!-- Signal test -->
+    <string name="signal_test_label">信号测试</string>
+    <!-- end -->
 </resources>

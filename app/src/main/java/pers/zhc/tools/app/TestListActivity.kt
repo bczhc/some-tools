@@ -7,6 +7,7 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.test.*
 import pers.zhc.tools.test.malloctest.MAllocTest
+import pers.zhc.tools.test.signals.SignalTest
 
 /**
  * @author bczhc
@@ -25,7 +26,8 @@ class TestListActivity : BaseActivity() {
             ActivityItem(R.string.crash_test, CrashTest::class.java),
             ActivityItem(R.string.m_alloc_test, MAllocTest::class.java),
             ActivityItem(R.string.tts_test, TTS::class.java),
-            ActivityItem(R.string.drawing_board_test, DrawingBoardTest::class.java)
+            ActivityItem(R.string.drawing_board_test, DrawingBoardTest::class.java),
+            ActivityItem(R.string.signal_test_label, SignalTest::class.java)
         )
 
         recyclerView.adapter = AppMenuAdapter(this, list)

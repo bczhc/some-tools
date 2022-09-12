@@ -347,4 +347,12 @@ public class JNI {
     public static class Lzma {
         public static native byte[] decompress(byte[] data);
     }
+
+    public static class Signals {
+        public static native String[] getSignalNames();
+
+        public static native int[] getSignalInts();
+
+        public static native void raise(int signal);
+    }
 }

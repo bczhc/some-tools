@@ -31,6 +31,7 @@ pathdiff = "0.2.1"
 rusqlite = "0.27.0"
 zip = "0.6.2"
 lzma-rs = "0.2.0"
+signal = "0.7.0"
 
 [profile.release]
 panic = "abort"
