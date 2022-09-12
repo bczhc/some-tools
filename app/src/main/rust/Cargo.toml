@@ -12,12 +12,14 @@ crate-type = ["cdylib"]
 jni = "0.19.0"
 byteorder = "1.4.3"
 libc = "0.2.98"
-pnet = "0.28.0"
+pnet = { version = "0.31.0", features = ["ipnetwork"] }
+pnet_datalink = { version = "0.31.0" }
+ipnetwork = "0.19.0"
 lettre = "0.10.0-rc.3"
-bczhc_lib = {path = "./third_party/bczhc_rust/lib"}
+bczhc_lib = { path = "./third_party/bczhc_rust/lib" }
 serde_json = "1.0.78"
-quick-xml = "0.22.0"
-ndk = { version = "0.6.0", features = ["bitmap"] }
+quick-xml = "0.25.0"
+ndk = { version = "0.7.0", features = ["bitmap"] }
 image = "0.24.0"
 bytesize = "1.1.0"
 thiserror = "1.0.30"
@@ -28,10 +30,11 @@ tar = "0.4.38"
 phone-transfer = { path = "./third_party/bczhc_rust/apps/phone-transfer" }
 walkdir = "2.3.2"
 pathdiff = "0.2.1"
-rusqlite = "0.27.0"
+rusqlite = "0.28.0"
 zip = "0.6.2"
 lzma-rs = "0.2.0"
 signal = "0.7.0"
+nix = "0.25.0"
 
 [profile.release]
 panic = "abort"

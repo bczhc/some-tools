@@ -3,6 +3,7 @@ use std::io::BufReader;
 
 use quick_xml::events::attributes::Attributes;
 use quick_xml::events::Event;
+use quick_xml::name::QName;
 use quick_xml::Reader;
 use serde_json::Value;
 use zip::ZipArchive;
@@ -28,23 +29,23 @@ where
     let mut buf = Vec::new();
     let mut repertoire_enter = false;
     loop {
-        let event = xml_reader.read_event(&mut buf);
+        let event = xml_reader.read_event_into(&mut buf);
         match event {
             Ok(Event::Start(ref e)) | Ok(Event::Empty(ref e)) => {
                 let name_binary = e.name();
                 if repertoire_enter {
-                    if name_binary == b"char"
-                        && e.attributes().next().unwrap().unwrap().key == b"cp"
+                    if name_binary.as_ref() == b"char"
+                        && e.attributes().next().unwrap().unwrap().key.as_ref() == b"cp"
                     {
                         total += 1;
                         callback(total);
                     }
-                } else if name_binary == b"repertoire" {
+                } else if name_binary.as_ref() == b"repertoire" {
                     repertoire_enter = true;
                 }
             }
             Ok(Event::End(ref e)) => {
-                if repertoire_enter && e.name() == b"repertoire" {
+                if repertoire_enter && e.name().as_ref() == b"repertoire" {
                     break;
                 }
             }
@@ -67,7 +68,7 @@ fn attributes2json(attrs: Attributes) -> Value {
         let attr = attr.unwrap();
         assert!(json
             .insert(
-                String::from_utf8_lossy(attr.key).to_string(),
+                String::from_utf8_lossy(attr.key.as_ref()).to_string(),
                 Value::String(String::from_utf8_lossy(&*attr.value).to_string()),
             )
             .is_none());
@@ -102,13 +103,13 @@ where
     let mut hold_prop = None;
     let mut count = 0;
     loop {
-        let event = xml_reader.read_event(&mut buf);
+        let event = xml_reader.read_event_into(&mut buf);
         match event {
             Ok(Event::Empty(ref e)) => {
                 let name_binary = e.name();
                 if enter_repertoire {
                     let first_attr = e.attributes().next().unwrap().unwrap();
-                    if name_binary == b"char" && first_attr.key == b"cp" {
+                    if name_binary.as_ref() == b"char" && first_attr.key.as_ref() == b"cp" {
                         let codepoint = u32::from_str_radix(
                             std::str::from_utf8(first_attr.value.as_ref()).unwrap(),
                             16,
@@ -122,10 +123,10 @@ where
                         if count % 1000 == 0 {
                             callback(count);
                         }
-                    } else if name_binary == b"name-alias" {
+                    } else if name_binary.as_ref() == b"name-alias" {
                         let mut attrs = e.attributes();
                         let alias = attrs
-                            .find(|x| x.as_ref().unwrap().key == b"alias")
+                            .find(|x| x.as_ref().unwrap().key.as_ref() == b"alias")
                             .unwrap()
                             .unwrap();
                         let alias = std::str::from_utf8(alias.value.as_ref()).unwrap();
@@ -137,7 +138,7 @@ where
                 let name_binary = e.name();
                 if enter_repertoire {
                     let first_attr = e.attributes().next().unwrap().unwrap();
-                    if name_binary == b"char" && first_attr.key == b"cp" {
+                    if name_binary.as_ref() == b"char" && first_attr.key.as_ref() == b"cp" {
                         let codepoint = u32::from_str_radix(
                             std::str::from_utf8(first_attr.value.as_ref()).unwrap(),
                             16,
@@ -151,13 +152,13 @@ where
                             json: attr_json,
                         });
                     }
-                } else if name_binary == b"repertoire" {
+                } else if name_binary.as_ref() == b"repertoire" {
                     enter_repertoire = true;
                 }
             }
             Ok(Event::End(ref e)) => {
                 if enter_repertoire {
-                    match e.name() {
+                    match e.name().as_ref() {
                         b"repertoire" => {
                             break;
                         }

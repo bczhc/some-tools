@@ -1,7 +1,7 @@
+use ipnetwork::IpNetwork;
 use jni::objects::JClass;
 use jni::sys::{jlong, jstring};
 use jni::JNIEnv;
-use pnet::ipnetwork::IpNetwork;
 use std::net::IpAddr;
 
 #[no_mangle]
@@ -25,7 +25,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Ip_ipObjToString(
 #[no_mangle]
 #[allow(non_snake_case)]
 pub fn Java_pers_zhc_tools_jni_JNI_00024Ip_getLocalIpInfo(env: JNIEnv, _class: JClass) -> jstring {
-    let interfaces = pnet::datalink::interfaces();
+    let interfaces = pnet_datalink::interfaces();
     let mut info = String::new();
 
     let check_loopback = |ips: &Vec<IpNetwork>| {
