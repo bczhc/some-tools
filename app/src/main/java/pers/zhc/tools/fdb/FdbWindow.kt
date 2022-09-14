@@ -654,6 +654,10 @@ class FdbWindow(private val context: BaseActivity) {
             }
         }
 
+        // set to defaults
+        updatePanelColor(colorPickers.panel.color)
+        updatePanelTextColor(colorPickers.panelText.color)
+
         return dialog
     }
 
