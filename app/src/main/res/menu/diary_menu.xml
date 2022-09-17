@@ -29,4 +29,9 @@
             app:showAsAction="never"
             android:title="@string/diary_advanced_search_menu"
     />
+    <item
+            android:id="@+id/random"
+            app:showAsAction="never"
+            android:title="@string/diary_menu_random"
+    />
 </menu>

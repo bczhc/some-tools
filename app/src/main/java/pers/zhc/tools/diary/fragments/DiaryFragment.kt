@@ -268,8 +268,22 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             R.id.advanced_search -> {
                 showAdvancedSearchDialog()
             }
+            R.id.random -> {
+                openRandomDiary()
+            }
         }
         return true
+    }
+
+    private fun openRandomDiary() {
+        var randomDate: Int? = null
+        diaryDatabase.withCompiledStatement("SELECT \"date\" FROM diary ORDER BY random() LIMIT 1;") {
+            val cursor = it.cursor
+            randomDate = if (cursor.step()) {
+                cursor.getInt(0)
+            } else null
+        }
+        randomDate?.let { openDiaryPreview(it) }
     }
 
     private fun showAdvancedSearchDialog() {

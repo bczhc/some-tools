@@ -498,6 +498,7 @@
     <string name="diary_statistics_dialog_content">字符总数：%1$d\n条目数：%2$d</string>
     <string name="diary_record_statistics_dialog_content">字符总数：%1$d</string>
     <string name="text_browser_label">文本查看</string>
+    <string name="diary_menu_random">随机</string>
     <!-- module end -->
 
     <!-- module: bus -->
