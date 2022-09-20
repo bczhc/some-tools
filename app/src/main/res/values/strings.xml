@@ -461,7 +461,7 @@
     <string name="diary_duplicated_diary_dialog_title">已有该日期日记，是否打开？</string>
     <string name="diary_import_ref_count_not_zero_msg">数据库还有%1$d个连接引用，不能关闭，导入终止。</string>
     <string name="diary_attachment_with_date_format_title">附件-yyyy.MM.dd</string>
-    <string name="diary_preview_with_date_format_title">预览-yyyy.MM.dd</string>
+    <string name="diary_preview_with_date_format_title">yyyy.MM.dd</string>
     <string name="diary_attachment_library_activity_label_name">附件库</string>
     <string name="diary_attachment_library_menu_btn_text">@string/diary_attachment_library_activity_label_name</string>
     <string name="diary_attachment_activity_label_name">附件</string>
@@ -499,6 +499,8 @@
     <string name="diary_record_statistics_dialog_content">字符总数：%1$d</string>
     <string name="text_browser_label">文本查看</string>
     <string name="diary_menu_random">随机</string>
+    <string name="diary_menu_sort">排序</string>
+    <string name="diary_sort_random">@string/diary_menu_random</string>
     <!-- module end -->
 
     <!-- module: bus -->
@@ -726,5 +728,6 @@
 
     <!-- Signal test -->
     <string name="signal_test_label">信号测试</string>
+    <string name="diary_sort_date">日期</string>
     <!-- end -->
 </resources>

@@ -252,9 +252,6 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
                 intent.putExtra(FilePicker.EXTRA_OPTION, FilePicker.PICK_FILE)
                 startActivityForResult(intent, RequestCode.START_ACTIVITY_2)
             }
-            R.id.sort -> {
-                sort()
-            }
             R.id.attachment -> {
                 val intent = Intent(context, DiaryAttachmentActivity::class.java)
                 startActivity(intent)
@@ -268,11 +265,29 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             R.id.advanced_search -> {
                 showAdvancedSearchDialog()
             }
-            R.id.random -> {
-                openRandomDiary()
+            R.id.sort_date -> {
+                reorderDiary(Order.DATE)
+            }
+            R.id.sort_random -> {
+                reorderDiary(Order.RANDOM)
             }
         }
         return true
+    }
+
+    private enum class Order {
+        DATE, RANDOM
+    }
+    private fun reorderDiary(order: Order) {
+        when (order) {
+            Order.DATE -> {
+                refreshItemDataList()
+            }
+            Order.RANDOM -> {
+                refreshItemDataList("SELECT \"date\", content FROM diary ORDER BY random()")
+            }
+        }
+        recyclerViewAdapter.notifyDataSetChanged()
     }
 
     private fun openRandomDiary() {
