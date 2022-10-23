@@ -11,10 +11,12 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.note_item.view.*
 import kotlinx.android.synthetic.main.note_top_view.view.*
 import kotlinx.android.synthetic.main.notes_activity.*
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
@@ -89,6 +91,10 @@ class NotesActivity : NoteBaseActivity() {
         listAdapter = ListAdapter()
         recyclerView.adapter = listAdapter
         recyclerView.setLinearLayoutManager()
+
+        FastScrollerBuilder(recyclerView).apply {
+            setThumbDrawable(AppCompatResources.getDrawable(this@NotesActivity, R.drawable.thumb)!!)
+        }.build()
 
         listAdapter.setOnItemLongClickListener { position, view ->
             if (onDeleting) {

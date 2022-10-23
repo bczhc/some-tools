@@ -3,6 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
 >
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="horizontal"
@@ -12,14 +13,20 @@
         <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                   android:layout_weight="1"
                   android:id="@+id/date_tv"
+                  tools:text="date"
+                  android:paddingHorizontal="2dp"
         />
         <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                   android:layout_weight="1"
                   android:id="@+id/title_tv"
+                  tools:text="title"
+                  android:paddingHorizontal="2dp"
         />
         <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                   android:layout_weight="1"
                   android:id="@+id/content_tv"
+                  tools:text="content"
+                  android:paddingHorizontal="2dp"
         />
     </LinearLayout>
     <com.google.android.material.divider.MaterialDivider
