@@ -1,5 +1,7 @@
 package pers.zhc.tools.utils.rc
 
+import pers.zhc.tools.utils.LangUtils.Companion.nullMap
+
 abstract class ReusableRcManager<T> {
     protected abstract fun create(): T
 
@@ -20,5 +22,9 @@ abstract class ReusableRcManager<T> {
             }
         }
         return rcHolder!!.newRef()
+    }
+
+    fun getRefCount(): Int {
+        return rcHolder.nullMap { it.refCount } ?: 0
     }
 }

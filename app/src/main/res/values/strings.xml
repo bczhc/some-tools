@@ -738,5 +738,6 @@
     <string name="note_modify_record_btn">修改记录</string>
     <string name="note_modify_menu">修改</string>
     <string name="note_record_updating_succeeded">更新成功</string>
+    <string name="note_import_ref_count_not_zero_msg">数据库还有%1$d个连接引用，不能关闭，导入终止。</string>
     <!-- end -->
 </resources>

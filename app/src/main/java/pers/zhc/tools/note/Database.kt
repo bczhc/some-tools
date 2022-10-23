@@ -74,5 +74,9 @@ class Database(path: String) : BaseDatabase(path) {
         fun getDbRef(): Ref<Database> {
             return sharedDbManager.getRefOrCreate()
         }
+
+        fun getRefCount(): Int {
+            return sharedDbManager.getRefCount()
+        }
     }
 }

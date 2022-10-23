@@ -1,7 +1,8 @@
 package pers.zhc.tools.utils.rc
 
 abstract class RcHolder<T>(private val obj: T) {
-    private var refCount = 0
+    var refCount = 0
+        private set
     private var abandoned = false
 
     protected abstract fun release(obj: T)

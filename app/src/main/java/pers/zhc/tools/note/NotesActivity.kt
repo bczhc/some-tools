@@ -143,8 +143,27 @@ class NotesActivity : NoteBaseActivity() {
     }
 
     private fun import(path: File) {
-        // TODO: database reference checking
+        val refCount = Database.getRefCount()
+        // there are still other references (> 1); cannot import
+        if (refCount != 1) {
+            ToastUtils.show(
+                this,
+                getString(R.string.note_import_ref_count_not_zero_msg, refCount)
+            )
+            return
+        }
+        // release the current database
+        databaseRef.release()
+        androidAssert(Database.getRefCount() == 0)
+
         FileUtil.copy(path, Database.databasePath)
+
+        reopenDatabase()
+
+        updateAllRecords()
+        listAdapter.notifyDataSetChanged()
+
+        ToastUtils.show(this, R.string.importing_succeeded)
     }
 
     private fun export(dest: File) {
