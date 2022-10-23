@@ -730,4 +730,13 @@
     <string name="signal_test_label">信号测试</string>
     <string name="diary_sort_date">日期</string>
     <!-- end -->
+
+    <!-- note -->
+    <string name="note_label">笔记</string>
+    <string name="note_record_adding_succeeded">记录成功</string>
+    <string name="note_add_record_btn">增加记录</string>
+    <string name="note_modify_record_btn">修改记录</string>
+    <string name="note_modify_menu">修改</string>
+    <string name="note_record_updating_succeeded">更新成功</string>
+    <!-- end -->
 </resources>

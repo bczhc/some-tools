@@ -28,6 +28,7 @@ import pers.zhc.tools.email.EmailMainActivity;
 import pers.zhc.tools.fdb.FdbMainActivity;
 import pers.zhc.tools.fourierseries.FourierSeriesActivity;
 import pers.zhc.tools.jni.JNI;
+import pers.zhc.tools.note.NotesActivity;
 import pers.zhc.tools.wubi.WubiInputMethodActivity;
 import pers.zhc.tools.magic.FileListActivity;
 import pers.zhc.tools.stcflash.FlashMainActivity;
@@ -62,7 +63,7 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.app_menu_test, TestListActivity.class));
         activities.add(new ActivityItem(R.string.app_menu_little_tools, SmallToolsListActivity.class));
         activities.add(new ActivityItem(R.string.floating_drawing_board, FdbMainActivity.class));
-        activities.add(new ActivityItem(R.string.notes, Document.class));
+        activities.add(new ActivityItem(R.string.notes, NotesActivity.class));
         activities.add(new ActivityItem(R.string.diary, DiaryMainActivity.class));
         activities.add(new ActivityItem(R.string.wubi_input_method, WubiInputMethodActivity.class));
         activities.add(new ActivityItem(R.string.stc_flash, FlashMainActivity.class));

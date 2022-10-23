@@ -3,6 +3,7 @@ package pers.zhc.tools
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.os.Build
 import android.os.PowerManager.WakeLock
 import androidx.appcompat.app.AppCompatDelegate
@@ -32,6 +33,7 @@ class MyApplication : Application() {
     }
 
     private fun init() {
+        appContext = this
         CrashHandler.install(this)
         DiaryDatabase.init(this)
         WordsMainActivity.init(this)
@@ -81,6 +83,7 @@ class MyApplication : Application() {
 
     companion object {
         private lateinit var infoFile: File
+        lateinit var appContext: Context
 
         // the default global Gson
         val GSON = Gson()

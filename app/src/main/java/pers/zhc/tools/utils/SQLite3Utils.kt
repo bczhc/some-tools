@@ -39,3 +39,19 @@ fun Statement.execute() {
     this.reset()
     this.step()
 }
+
+fun <T> Cursor.collectRows(f: (row: Cursor) -> T): ArrayList<T> {
+    val list = ArrayList<T>()
+    while (this.step()) {
+        list.add(f(this))
+    }
+    return list
+}
+
+fun <T> SQLite3.queryRows(@Language("SQLite") sql: String, binds: Array<Any>? = null, mapRow: (row: Cursor) -> T): ArrayList<T> {
+    var collected: ArrayList<T>? = null
+    this.queryExec(sql, binds) {
+        collected = it.collectRows(mapRow)
+    }
+    return collected!!
+}

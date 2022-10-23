@@ -191,7 +191,7 @@ class FdbWindow(private val context: BaseActivity) {
                                 paintView.isEraserMode = when (brushMode) {
                                     BrushMode.DRAWING -> false
                                     BrushMode.ERASING -> true
-                                    else -> Assertion.unreachable()
+                                    else -> unreachable()
                                 }
                                 updateBrushModeText()
                             }

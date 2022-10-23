@@ -22,11 +22,8 @@ import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.jni.JNI.Transfer.ReceiveProgressCallback
-import pers.zhc.tools.utils.Assertion
-import pers.zhc.tools.utils.AsyncTryDo
+import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.LangUtils.Companion.nullMap
-import pers.zhc.tools.utils.ProgressDialog
-import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.views.SmartHintEditText
 import pers.zhc.tools.views.WrapLayout
 import java.io.File
@@ -87,7 +84,7 @@ class TransferSendActivity : BaseActivity() {
                         inflate.editText.setText(initFilePath)
                         // only set once
                         initFilePath = null
-                    } else Assertion.unreachable()
+                    } else unreachable()
                 } else {
                     val et = EditText(this@TransferSendActivity).apply {
                         layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -126,7 +123,7 @@ class TransferSendActivity : BaseActivity() {
                 0 -> Mark.FILE
                 1 -> Mark.TAR
                 2 -> Mark.TEXT
-                else -> throw Assertion.Companion.UnreachableError()
+                else -> unreachable()
             }
             val file = if (mark == Mark.TEXT) {
                 val text = (containerLayout.getChildAt(0) as EditText).text.toString()
