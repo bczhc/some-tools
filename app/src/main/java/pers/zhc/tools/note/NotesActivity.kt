@@ -143,32 +143,55 @@ class NotesActivity : NoteBaseActivity() {
     }
 
     private fun import(path: File) {
-        val refCount = Database.getRefCount()
-        // there are still other references (> 1); cannot import
-        if (refCount != 1) {
-            ToastUtils.show(
-                this,
-                getString(R.string.note_import_ref_count_not_zero_msg, refCount)
-            )
-            return
-        }
-        // release the current database
-        databaseRef.release()
-        androidAssert(Database.getRefCount() == 0)
+        DialogUtils.createConfirmationAlertDialog(
+            this,
+            titleRes = R.string.import_dialog,
+            message = getString(R.string.note_import_overwrite_alert),
+            width = MATCH_PARENT,
+            positiveAction = { _, _ ->
 
-        FileUtil.copy(path, Database.databasePath)
+                val refCount = Database.getRefCount()
+                // there are still other references (> 1); cannot import
+                if (refCount != 1) {
+                    ToastUtils.show(
+                        this,
+                        getString(R.string.note_import_ref_count_not_zero_msg, refCount)
+                    )
+                    return@createConfirmationAlertDialog
+                }
+                // release the current database
+                databaseRef.release()
+                androidAssert(Database.getRefCount() == 0)
 
-        reopenDatabase()
+                FileUtil.copy(path, Database.databasePath)
 
-        updateAllRecords()
-        listAdapter.notifyDataSetChanged()
+                reopenDatabase()
 
-        ToastUtils.show(this, R.string.importing_succeeded)
+                updateAllRecords()
+                listAdapter.notifyDataSetChanged()
+
+                ToastUtils.show(this, R.string.importing_succeeded)
+
+            }).show()
     }
 
     private fun export(dest: File) {
-        FileUtil.copy(Database.databasePath, dest)
-        ToastUtils.show(this, R.string.exporting_succeeded)
+        val export = {
+            FileUtil.copy(Database.databasePath, dest)
+            ToastUtils.show(this, R.string.exporting_succeeded)
+        }
+
+        if (dest.exists()) {
+            DialogUtils.createConfirmationAlertDialog(
+                this,
+                titleRes = R.string.export_dialog,
+                message = getString(R.string.note_filename_duplication_alert),
+                width = MATCH_PARENT,
+                positiveAction = { _, _ ->
+                    export()
+                }
+            ).show()
+        } else export()
     }
 
     private inner class ListAdapter : AdapterWithClickListener<ListAdapter.ViewHolder>() {

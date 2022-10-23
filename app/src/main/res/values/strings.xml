@@ -79,6 +79,8 @@
     <string name="copy_button">复制</string>
     <string name="undo">撤消</string>
     <string name="deleted_message">已删除</string>
+    <string name="import_dialog">导入</string>
+    <string name="export_dialog">导出</string>
     <!-- end -->
 
     <!-- old -->
@@ -214,7 +216,7 @@
     <string name="sort">排序</string>
     <string name="vector_module_ascending_order">向量模升序</string>
     <string name="vector_module_descending_order">向量模降序</string>
-    <string name="random_order">乱序</string>
+    <string name="random_order">乱序</string>导入
     <string name="view_test">view test</string>
     <string name="not_support">暂不支持</string>
     <string name="velocity_ascending_order">速度（e指数上t的系数大小）升序</string>
@@ -739,5 +741,7 @@
     <string name="note_modify_menu">修改</string>
     <string name="note_record_updating_succeeded">更新成功</string>
     <string name="note_import_ref_count_not_zero_msg">数据库还有%1$d个连接引用，不能关闭，导入终止。</string>
+    <string name="note_import_overwrite_alert">导入操作将会覆盖当前已有笔记，是否继续？</string>
+    <string name="note_filename_duplication_alert">当前目录下已有同名文件，继续将覆盖</string>
     <!-- end -->
 </resources>
