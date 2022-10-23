@@ -52,7 +52,7 @@ class Database(path: String) : BaseDatabase(path) {
     fun update(timestamp: Long, newRecord: Record) {
         db.execBind(
             "UPDATE doc SET title = ?, content = ? WHERE t IS ?",
-            arrayOf(newRecord.time, newRecord.content, timestamp)
+            arrayOf(newRecord.title, newRecord.content, timestamp)
         )
     }
 
