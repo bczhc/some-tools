@@ -9,9 +9,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.note_item.view.*
+import kotlinx.android.synthetic.main.note_top_view.view.*
 import kotlinx.android.synthetic.main.notes_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
@@ -61,42 +63,66 @@ class NotesActivity : NoteBaseActivity() {
                 return intent!!.getLongExtra(NoteTakingActivity.EXTRA_TIMESTAMP, 0)
             }
         }) { timestamp ->
-            val position = itemData.indexOfFirst {
-                it.time == timestamp
+            val position = listItems.indexOfFirst {
+                it.data.time == timestamp
             }
             androidAssert(position != -1)
-            itemData[position] = database.query(timestamp)!!
+            listItems[position] = ListItem(database.query(timestamp)!!)
             listAdapter.notifyItemChanged(position)
         }
     }
 
     private lateinit var listAdapter: ListAdapter
-    private var itemData = ArrayList<Record>()
+    private var listItems = ArrayList<ListItem>()
+    private lateinit var topDeleteBarLL: FrameLayout
+    private var onDeleting = false
+
+    // TODO: extract and encapsulate the top batch deletion bar
+    private var deleteSelectedCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.notes_activity)
 
+        topDeleteBarLL = top_ll!!
         val recyclerView = recycler_view!!
         listAdapter = ListAdapter()
         recyclerView.adapter = listAdapter
         recyclerView.setLinearLayoutManager()
 
         listAdapter.setOnItemLongClickListener { position, view ->
-            val record = itemData[position]
+            if (onDeleting) {
+                // in deletion mode, delete all selected
+                batchDeleteSelected()
+                return@setOnItemLongClickListener
+            }
+            val record = listItems[position]
 
             val menu = PopupMenuUtil.create(this, view, R.menu.note_item_menu)
             menu.show()
             menu.setOnMenuItemClickListener {
                 when (it.itemId) {
-                    R.id.modify -> {
-                        launchers.modify.launch(record.time)
-                    }
                     R.id.delete -> {
-                        delete(record.time, position)
+                        delete(record.data.time, position)
                     }
                 }
                 return@setOnMenuItemClickListener true
+            }
+        }
+
+        listAdapter.setOnItemClickListener { position, _ ->
+            val item = listItems[position]
+            if (onDeleting) {
+                item.selected = !item.selected
+                listAdapter.notifyItemChanged(position)
+                if (item.selected) {
+                    ++deleteSelectedCount
+                } else {
+                    --deleteSelectedCount
+                }
+                updateDeleteTopTV()
+            } else {
+                launchers.modify.launch(item.data.time)
             }
         }
 
@@ -106,13 +132,50 @@ class NotesActivity : NoteBaseActivity() {
         }.start()
     }
 
+    private fun updateDeleteTopTV() {
+        androidAssert(topDeleteBarLL.childCount == 1)
+        val topCountTV = topDeleteBarLL.getChildAt(0).top_tv!!
+        topCountTV.text = if (deleteSelectedCount == 0) {
+            getString(R.string.note_no_notes_selected_msg)
+        } else {
+            getString(R.string.note_selected_notes_count_msg, deleteSelectedCount)
+        }
+    }
+
+    private fun batchDeleteSelected() {
+        DialogUtils.createConfirmationAlertDialog(
+            this,
+            titleRes = R.string.delete_confirmation_dialog_title,
+            width = MATCH_PARENT,
+            positiveAction = { _, _ ->
+                database.batchDelete(listItems.filter { it.selected }.map { it.data.time }.iterator())
+
+                val sizeBefore = listItems.size
+                listItems.removeAll { it.selected }
+                val deleteCount = sizeBefore - listItems.size
+                listAdapter.notifyDataSetChanged()
+                ToastUtils.show(this, getString(R.string.note_batch_deleted_notes_done_toast, deleteCount))
+                exitDeletionMode()
+            }).show()
+    }
+
+    private fun exitDeletionMode() {
+        if (!onDeleting) return
+        topDeleteBarLL.removeAllViews()
+        for (item in listItems) {
+            item.selected = false
+        }
+        listAdapter.notifyDataSetChanged()
+        onDeleting = false
+    }
+
     private fun delete(timestamp: Long, position: Int) {
         DialogUtils.createConfirmationAlertDialog(
             this,
             titleRes = R.string.delete_confirmation_dialog_title,
             positiveAction = { _, _ ->
                 database.deleteRecord(timestamp)
-                itemData.removeAt(position)
+                listItems.removeAt(position)
                 listAdapter.notifyItemRemoved(position)
             }, width = MATCH_PARENT
         ).show()
@@ -129,17 +192,52 @@ class NotesActivity : NoteBaseActivity() {
                 launchers.create.launch(Unit)
             }
             R.id.import_ -> {
+                exitDeletionMode()
                 launchers.import.launch(FilePicker.PICK_FILE)
             }
             R.id.export -> {
+                exitDeletionMode()
                 launchers.export.launch(FilePicker.PICK_FOLDER)
+            }
+            R.id.delete -> {
+                batchDeleteAction()
             }
         }
         return true
     }
 
+    private fun batchDeleteAction() {
+        deleteSelectedCount = 0
+        if (onDeleting) {
+            exitDeletionMode()
+        } else {
+            onDeleting = true
+            val topView = View.inflate(this, R.layout.note_top_view, null)
+            topDeleteBarLL.removeAllViews()
+            topDeleteBarLL.addView(topView)
+
+            val chooseAllBtn = topView.choose_all!!
+            val cancelBtn = topView.cancel_deletion!!
+            chooseAllBtn.setOnCheckedChangeListener { _, isChecked ->
+                for (listItem in listItems) {
+                    listItem.selected = isChecked
+                }
+                deleteSelectedCount = if (isChecked) {
+                    listItems.size
+                } else {
+                    0
+                }
+                listAdapter.notifyDataSetChanged()
+                updateDeleteTopTV()
+            }
+            cancelBtn.setOnClickListener {
+                exitDeletionMode()
+            }
+        }
+    }
+
     private fun updateAllRecords() {
-        itemData = database.queryAll()
+        listItems = ArrayList(database.queryAll().map { ListItem(it) })
     }
 
     private fun import(path: File) {
@@ -194,11 +292,19 @@ class NotesActivity : NoteBaseActivity() {
         } else export()
     }
 
+    private data class ListItem(
+        val data: Record,
+        var selected: Boolean,
+    ) {
+        constructor(record: Record) : this(record, false)
+    }
+
     private inner class ListAdapter : AdapterWithClickListener<ListAdapter.ViewHolder>() {
         private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val dateTV = view.date_tv!!
             val titleTV = view.title_tv!!
             val contentTV = view.content_tv!!
+            val borderLL = view.border_ll!!
         }
 
         override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
@@ -207,14 +313,22 @@ class NotesActivity : NoteBaseActivity() {
         }
 
         override fun getItemCount(): Int {
-            return itemData.size
+            return listItems.size
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val record = itemData[position]
+            val item = listItems[position]
+            val record = item.data
             holder.dateTV.text = Date(record.time).toString()
             holder.titleTV.text = StringUtils.limitText(record.title)
             holder.contentTV.text = StringUtils.limitText(record.content)
+            holder.borderLL.setBackgroundResource(
+                if (item.selected) {
+                    R.drawable.clickable_view_stroke_red
+                } else {
+                    R.drawable.selectable_bg
+                }
+            )
         }
     }
 }

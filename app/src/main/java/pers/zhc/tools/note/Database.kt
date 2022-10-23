@@ -56,6 +56,16 @@ class Database(path: String) : BaseDatabase(path) {
         )
     }
 
+    fun batchDelete(timestamps: Iterator<Long>) {
+        db.beginTransaction()
+        db.withCompiledStatement("DELETE FROM doc WHERE t IS ?") {
+            for (timestamp in timestamps) {
+                it.execute(arrayOf(timestamp))
+            }
+        }
+        db.commit()
+    }
+
     companion object {
         val databasePath by lazy {
             Common.getInternalDatabaseFile(MyApplication.appContext, "notes")

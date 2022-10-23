@@ -9,6 +9,8 @@ import pers.zhc.tools.BaseViewGroup
 
 /**
  * @author bczhc
+ * TODO: bug exists!!!
+ * for example, can't be used as the container of [pers.zhc.tools.R.layout.note_top_view]
  */
 open class WrapLayout : BaseViewGroup {
     constructor(context: Context?) : this(context, null)
@@ -57,5 +59,9 @@ open class WrapLayout : BaseViewGroup {
             this.removeAllViews()
         }
         this.addView(view)
+    }
+
+    fun removeView() {
+        this.removeAllViews()
     }
 }
