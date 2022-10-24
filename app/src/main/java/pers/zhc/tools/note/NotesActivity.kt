@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.note_item.view.*
 import kotlinx.android.synthetic.main.note_top_view.view.*
 import kotlinx.android.synthetic.main.notes_activity.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
@@ -269,12 +270,23 @@ class NotesActivity : NoteBaseActivity() {
 
                 FileUtil.copy(path, Database.databasePath)
 
+                var msgResOnFinished = 0
+                SQLite3::class.withNew(Database.databasePath.path) {
+                    if (it.checkIfCorrupt()) {
+                        msgResOnFinished = R.string.corrupted_database_and_recreate_new_msg
+                        Database.databasePath.requireDelete()
+                    }
+                }
+
                 reopenDatabase()
 
                 updateAllRecords()
                 listAdapter.notifyDataSetChanged()
 
-                ToastUtils.show(this, R.string.importing_succeeded)
+                if (msgResOnFinished == 0) {
+                    msgResOnFinished = R.string.importing_succeeded
+                }
+                ToastUtils.show(this, msgResOnFinished)
 
             }).show()
     }

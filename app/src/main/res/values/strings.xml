@@ -81,6 +81,7 @@
     <string name="deleted_message">已删除</string>
     <string name="import_dialog">导入</string>
     <string name="export_dialog">导出</string>
+    <string name="corrupted_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
     <!-- end -->
 
     <!-- old -->
@@ -337,7 +338,6 @@
     <string name="over_quantity_limit">超出数量限制</string>
     <string name="closed">已关闭</string>
     <string name="regular_expression_test">正则表达式测试</string>
-    <string name="corrupted_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
     <string name="wubi_test">五笔测试</string>
     <string name="something_went_wrong">something went wrong</string>
     <string name="alphabet_mode">字母模式</string>
