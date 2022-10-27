@@ -12,6 +12,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.note_item.view.*
 import kotlinx.android.synthetic.main.note_top_view.view.*
@@ -24,7 +25,7 @@ import pers.zhc.tools.utils.*
 import java.io.File
 import java.util.Date
 
-class NotesActivity : NoteBaseActivity() {
+class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
     private val launchers = object {
         val import = FilePicker.getLauncher(this@NotesActivity) {
             it ?: return@getLauncher
@@ -92,6 +93,9 @@ class NotesActivity : NoteBaseActivity() {
         listAdapter = ListAdapter()
         recyclerView.adapter = listAdapter
         recyclerView.setLinearLayoutManager()
+
+        val toolbar = toolbar!!
+        toolbar.setOnMenuItemClickListener(this)
 
         FastScrollerBuilder(recyclerView).apply {
             setThumbDrawable(AppCompatResources.getDrawable(this@NotesActivity, R.drawable.thumb)!!)
@@ -186,31 +190,6 @@ class NotesActivity : NoteBaseActivity() {
                 listAdapter.notifyItemRemoved(position)
             }, width = MATCH_PARENT
         ).show()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.note_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.create -> {
-                launchers.create.launch(Unit)
-            }
-            R.id.import_ -> {
-                exitDeletionMode()
-                launchers.import.launch(FilePicker.PICK_FILE)
-            }
-            R.id.export -> {
-                exitDeletionMode()
-                launchers.export.launch(FilePicker.PICK_FOLDER)
-            }
-            R.id.delete -> {
-                batchDeleteAction()
-            }
-        }
-        return true
     }
 
     private fun batchDeleteAction() {
@@ -348,5 +327,25 @@ class NotesActivity : NoteBaseActivity() {
                 }
             )
         }
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.create -> {
+                launchers.create.launch(Unit)
+            }
+            R.id.import_ -> {
+                exitDeletionMode()
+                launchers.import.launch(FilePicker.PICK_FILE)
+            }
+            R.id.export -> {
+                exitDeletionMode()
+                launchers.export.launch(FilePicker.PICK_FOLDER)
+            }
+            R.id.delete -> {
+                batchDeleteAction()
+            }
+        }
+        return true
     }
 }

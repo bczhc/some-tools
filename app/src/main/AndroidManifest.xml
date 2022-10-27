@@ -806,7 +806,7 @@
         <activity
                 android:name=".note.NotesActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application"
+                android:theme="@style/Theme.Application.NoActionBar"
                 android:label="@string/note_label"
                 android:taskAffinity="pers.zhc.tools.note"
                 android:exported="true">
