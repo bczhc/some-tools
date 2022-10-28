@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.CompoundButton
 import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.content.res.AppCompatResources
@@ -23,7 +23,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
 import java.io.File
-import java.util.Date
+import java.util.*
 
 class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
     private val launchers = object {
@@ -80,6 +80,7 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
     private var listItems = ArrayList<ListItem>()
     private lateinit var topDeleteBarLL: FrameLayout
     private var onDeleting = false
+    private lateinit var chooseAllOnCheckedAction: (buttonView: CompoundButton, isChecked: Boolean) -> Unit
 
     // TODO: extract and encapsulate the top batch deletion bar
     private var deleteSelectedCount = 0
@@ -141,6 +142,19 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
             updateAllRecords()
             listAdapter.notifyDataSetChanged()
         }.start()
+
+        chooseAllOnCheckedAction = { _, isChecked ->
+            for (listItem in listItems) {
+                listItem.selected = isChecked
+            }
+            deleteSelectedCount = if (isChecked) {
+                listItems.size
+            } else {
+                0
+            }
+            listAdapter.notifyDataSetChanged()
+            updateDeleteTopTV()
+        }
     }
 
     private fun updateDeleteTopTV() {
@@ -150,6 +164,11 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
             getString(R.string.note_no_notes_selected_msg)
         } else {
             getString(R.string.note_selected_notes_count_msg, deleteSelectedCount)
+        }
+        topDeleteBarLL.choose_all!!.apply {
+            setOnCheckedChangeListener(null)
+            isChecked = deleteSelectedCount == listItems.size
+            setOnCheckedChangeListener(chooseAllOnCheckedAction)
         }
     }
 
@@ -202,20 +221,9 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
             topDeleteBarLL.removeAllViews()
             topDeleteBarLL.addView(topView)
 
-            val chooseAllBtn = topView.choose_all!!
+            val chooseAllCheckbox = topView.choose_all!!
             val cancelBtn = topView.cancel_deletion!!
-            chooseAllBtn.setOnCheckedChangeListener { _, isChecked ->
-                for (listItem in listItems) {
-                    listItem.selected = isChecked
-                }
-                deleteSelectedCount = if (isChecked) {
-                    listItems.size
-                } else {
-                    0
-                }
-                listAdapter.notifyDataSetChanged()
-                updateDeleteTopTV()
-            }
+            chooseAllCheckbox.setOnCheckedChangeListener(chooseAllOnCheckedAction)
             cancelBtn.setOnClickListener {
                 exitDeletionMode()
             }

@@ -48,6 +48,7 @@ class NoteTakingActivity : NoteBaseActivity() {
             Type.CREATE -> {
                 bottomButton.setOnClickListener {
                     createNewNote()
+                    modified = false
                 }
             }
             Type.UPDATE -> {
@@ -64,6 +65,7 @@ class NoteTakingActivity : NoteBaseActivity() {
 
                 bottomButton.setOnClickListener {
                     updateNote()
+                    modified = false
                 }
             }
         }
@@ -109,7 +111,8 @@ class NoteTakingActivity : NoteBaseActivity() {
                         }
                     }
                     super.finish()
-                }
+                },
+                negativeAction = { _, _ -> super.finish() }
             ).show()
         } else {
             super.finish()
