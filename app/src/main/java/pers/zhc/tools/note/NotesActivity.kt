@@ -305,7 +305,7 @@ class NotesActivity : NoteBaseActivity() {
             val dateTV = bindings.dateTv
             val titleTV = bindings.titleTv
             val contentTV = bindings.contentTv
-            val borderLL = bindings.borderLl
+            val itemLL = bindings.itemLl
         }
 
         override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
@@ -323,9 +323,10 @@ class NotesActivity : NoteBaseActivity() {
             holder.dateTV.text = Date(record.time).toString()
             holder.titleTV.text = StringUtils.limitText(record.title)
             holder.contentTV.text = StringUtils.limitText(record.content)
-            holder.borderLL.setBackgroundResource(
+            holder.itemLL.setBackgroundResource(
                 if (item.selected) {
-                    R.drawable.clickable_view_stroke_red
+                    R.drawable.clickable_view_selected
+
                 } else {
                     R.drawable.selectable_bg
                 }
