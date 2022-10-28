@@ -3,9 +3,9 @@
 
     <item
         android:bottom="0dp"
-        android:left="-2dp"
-        android:right="-2dp"
-        android:top="-2dp">
+        android:left="-3dp"
+        android:right="-3dp"
+        android:top="-3dp">
         <shape>
             <solid android:color="@android:color/transparent" />
             <stroke
