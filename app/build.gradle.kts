@@ -160,6 +160,10 @@ android {
             jniLibs.srcDirs("jniLibs")
         }
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 

@@ -9,17 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.CompoundButton
-import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.note_item.view.*
 import kotlinx.android.synthetic.main.note_top_view.view.*
-import kotlinx.android.synthetic.main.notes_activity.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.NoteItemBinding
+import pers.zhc.tools.databinding.NoteTopViewBinding
+import pers.zhc.tools.databinding.NotesActivityBinding
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
 import java.io.File
@@ -78,29 +78,30 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
 
     private lateinit var listAdapter: ListAdapter
     private var listItems = ArrayList<ListItem>()
-    private lateinit var topDeleteBarLL: FrameLayout
     private var onDeleting = false
     private lateinit var chooseAllOnCheckedAction: (buttonView: CompoundButton, isChecked: Boolean) -> Unit
+    private lateinit var bindings: NotesActivityBinding
 
     // TODO: extract and encapsulate the top batch deletion bar
     private var deleteSelectedCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.notes_activity)
 
-        topDeleteBarLL = top_ll!!
-        val recyclerView = recycler_view!!
+        bindings = NotesActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
+
         listAdapter = ListAdapter()
-        recyclerView.adapter = listAdapter
-        recyclerView.setLinearLayoutManager()
 
-        val toolbar = toolbar!!
-        toolbar.setOnMenuItemClickListener(this)
+        bindings.recyclerView.apply {
+            adapter = listAdapter
+            setLinearLayoutManager()
+            FastScrollerBuilder(this).apply {
+                setThumbDrawable(AppCompatResources.getDrawable(this@NotesActivity, R.drawable.thumb)!!)
+            }.build()
+        }
 
-        FastScrollerBuilder(recyclerView).apply {
-            setThumbDrawable(AppCompatResources.getDrawable(this@NotesActivity, R.drawable.thumb)!!)
-        }.build()
+        bindings.toolbar.setOnMenuItemClickListener(this)
 
         listAdapter.setOnItemLongClickListener { position, view ->
             if (onDeleting) {
@@ -158,6 +159,7 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
     }
 
     private fun updateDeleteTopTV() {
+        val topDeleteBarLL = bindings.topLl
         androidAssert(topDeleteBarLL.childCount == 1)
         val topCountTV = topDeleteBarLL.getChildAt(0).top_tv!!
         topCountTV.text = if (deleteSelectedCount == 0) {
@@ -191,7 +193,7 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
 
     private fun exitDeletionMode() {
         if (!onDeleting) return
-        topDeleteBarLL.removeAllViews()
+        bindings.topLl.removeAllViews()
         for (item in listItems) {
             item.selected = false
         }
@@ -217,14 +219,15 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
             exitDeletionMode()
         } else {
             onDeleting = true
-            val topView = View.inflate(this, R.layout.note_top_view, null)
-            topDeleteBarLL.removeAllViews()
-            topDeleteBarLL.addView(topView)
+            val topViewBindings = NoteTopViewBinding.inflate(layoutInflater)
+            val topView = topViewBindings.root
+            bindings.topLl.apply {
+                removeAllViews()
+                addView(topView)
+            }
 
-            val chooseAllCheckbox = topView.choose_all!!
-            val cancelBtn = topView.cancel_deletion!!
-            chooseAllCheckbox.setOnCheckedChangeListener(chooseAllOnCheckedAction)
-            cancelBtn.setOnClickListener {
+            topViewBindings.chooseAll.setOnCheckedChangeListener(chooseAllOnCheckedAction)
+            topViewBindings.cancelDeletion.setOnClickListener {
                 exitDeletionMode()
             }
         }
@@ -306,10 +309,12 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
 
     private inner class ListAdapter : AdapterWithClickListener<ListAdapter.ViewHolder>() {
         private inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val dateTV = view.date_tv!!
-            val titleTV = view.title_tv!!
-            val contentTV = view.content_tv!!
-            val borderLL = view.border_ll!!
+            val bindings = NoteItemBinding.bind(view)
+
+            val dateTV = bindings.dateTv
+            val titleTV = bindings.titleTv
+            val contentTV = bindings.contentTv
+            val borderLL = bindings.borderLl
         }
 
         override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {

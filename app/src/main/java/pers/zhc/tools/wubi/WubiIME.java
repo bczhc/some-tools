@@ -609,7 +609,7 @@ public class WubiIME extends InputMethodService {
 
         Context context = getThemedContext();
         final View inflate = View.inflate(context, R.layout.wubi_single_char_codes_recording_dialog, null);
-        SwitchMaterial switchMaterial = inflate.findViewById(R.id.switch_);
+        SwitchMaterial switchMaterial = inflate.findViewById(R.id.switch_btn);
         Button emptyButton = inflate.findViewById(R.id.empty_button);
         Button copyButton = inflate.findViewById(R.id.copy_button);
         RecyclerView recyclerView = inflate.findViewById(R.id.recycler_view);

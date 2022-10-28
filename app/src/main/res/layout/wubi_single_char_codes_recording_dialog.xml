@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/switch_switch_label"
-            android:id="@+id/switch_"
+            android:id="@+id/switch_btn"
     />
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:orientation="horizontal"
