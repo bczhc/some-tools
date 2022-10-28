@@ -12,14 +12,13 @@
               android:layout_marginBottom="7dp"/>
     <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent"
                                          android:layout_height="match_parent"
-                                         android:layout_margin="10dp"
                                          android:layout_above="@id/ll_bottom"
                                          android:layout_below="@id/doc_title_et"
                                          android:id="@+id/doc_content_et"
                                          app:gravity="top"
                                          app:hint="@string/content"
                                          android:fillViewport="true"
-    />
+                                         android:layout_margin="7dp"/>
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/ll_bottom" android:orientation="horizontal"
                   android:layout_alignParentBottom="true"
