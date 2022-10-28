@@ -3,29 +3,25 @@ package pers.zhc.tools.note
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.CompoundButton
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.note_top_view.view.*
+import com.google.android.material.checkbox.MaterialCheckBox
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.NoteItemBinding
-import pers.zhc.tools.databinding.NoteTopViewBinding
 import pers.zhc.tools.databinding.NotesActivityBinding
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
 import java.io.File
 import java.util.*
 
-class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
+class NotesActivity : NoteBaseActivity() {
     private val launchers = object {
         val import = FilePicker.getLauncher(this@NotesActivity) {
             it ?: return@getLauncher
@@ -78,18 +74,26 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
 
     private lateinit var listAdapter: ListAdapter
     private var listItems = ArrayList<ListItem>()
-    private var onDeleting = false
     private lateinit var chooseAllOnCheckedAction: (buttonView: CompoundButton, isChecked: Boolean) -> Unit
     private lateinit var bindings: NotesActivityBinding
 
+    /**
+     * multi-selection action mode
+     */
+    private var actionMode: ActionMode? = null
+    private val inActionMode
+        get() = actionMode != null
+
     // TODO: extract and encapsulate the top batch deletion bar
-    private var deleteSelectedCount = 0
+    private var selectedCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         bindings = NotesActivityBinding.inflate(layoutInflater)
         setContentView(bindings.root)
+
+        setSupportActionBar(bindings.toolbar)
 
         listAdapter = ListAdapter()
 
@@ -101,39 +105,65 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
             }.build()
         }
 
-        bindings.toolbar.setOnMenuItemClickListener(this)
 
-        listAdapter.setOnItemLongClickListener { position, view ->
-            if (onDeleting) {
-                // in deletion mode, delete all selected
-                batchDeleteSelected()
-                return@setOnItemLongClickListener
-            }
-            val record = listItems[position]
-
-            val menu = PopupMenuUtil.create(this, view, R.menu.note_item_menu)
-            menu.show()
-            menu.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.delete -> {
-                        delete(record.data.time, position)
+        listAdapter.setOnItemLongClickListener { position, _ ->
+            if (!inActionMode) {
+                androidAssert(actionMode == null)
+                actionMode = startSupportActionMode(object : ActionMode.Callback {
+                    override fun onCreateActionMode(mode: ActionMode?, menu: Menu): Boolean {
+                        menuInflater.inflate(R.menu.note_multi_selection_action_mode, menu)
+                        (menu.findItem(R.id.select_all).actionView as MaterialCheckBox).setOnCheckedChangeListener(
+                            chooseAllOnCheckedAction
+                        )
+                        return true
                     }
-                }
-                return@setOnMenuItemClickListener true
+
+                    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                        return true
+                    }
+
+                    override fun onActionItemClicked(mode: ActionMode?, item: MenuItem): Boolean {
+                        when (item.itemId) {
+                            R.id.delete -> {
+                                batchDeleteSelected()
+                            }
+                        }
+                        return true
+                    }
+
+                    override fun onDestroyActionMode(mode: ActionMode?) {
+                        actionMode = null
+                        clearSelectionState()
+                    }
+                })!!
+
+                // first select the current one
+                listItems[position].selected = true
+                listAdapter.notifyItemChanged(position)
+                ++selectedCount
+                androidAssert(selectedCount == 1)
+
+                actionMode!!.title = getString(R.string.note_selected_notes_count_msg, selectedCount)
             }
         }
 
         listAdapter.setOnItemClickListener { position, _ ->
             val item = listItems[position]
-            if (onDeleting) {
+            if (inActionMode) {
                 item.selected = !item.selected
                 listAdapter.notifyItemChanged(position)
                 if (item.selected) {
-                    ++deleteSelectedCount
+                    ++selectedCount
                 } else {
-                    --deleteSelectedCount
+                    --selectedCount
                 }
-                updateDeleteTopTV()
+                updateActionModeTitle()
+
+                (actionMode!!.menu.findItem(R.id.select_all).actionView as MaterialCheckBox).apply {
+                    setOnCheckedChangeListener(null)
+                    isChecked = selectedCount == listItems.size
+                    setOnCheckedChangeListener(chooseAllOnCheckedAction)
+                }
             } else {
                 launchers.modify.launch(item.data.time)
             }
@@ -148,30 +178,26 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
             for (listItem in listItems) {
                 listItem.selected = isChecked
             }
-            deleteSelectedCount = if (isChecked) {
+            selectedCount = if (isChecked) {
                 listItems.size
             } else {
                 0
             }
-            listAdapter.notifyDataSetChanged()
-            updateDeleteTopTV()
+            listAdapter.notifyItemRangeChanged(0, listItems.size)
+            updateActionModeTitle()
         }
     }
 
-    private fun updateDeleteTopTV() {
-        val topDeleteBarLL = bindings.topLl
-        androidAssert(topDeleteBarLL.childCount == 1)
-        val topCountTV = topDeleteBarLL.getChildAt(0).top_tv!!
-        topCountTV.text = if (deleteSelectedCount == 0) {
-            getString(R.string.note_no_notes_selected_msg)
-        } else {
-            getString(R.string.note_selected_notes_count_msg, deleteSelectedCount)
+    private fun clearSelectionState() {
+        selectedCount = 0
+        for (item in listItems) {
+            item.selected = false
         }
-        topDeleteBarLL.choose_all!!.apply {
-            setOnCheckedChangeListener(null)
-            isChecked = deleteSelectedCount == listItems.size
-            setOnCheckedChangeListener(chooseAllOnCheckedAction)
-        }
+        listAdapter.notifyItemRangeChanged(0, listItems.size)
+    }
+
+    private fun updateActionModeTitle() {
+        actionMode!!.title = getString(R.string.note_selected_notes_count_msg, selectedCount)
     }
 
     private fun batchDeleteSelected() {
@@ -187,50 +213,15 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
                 val deleteCount = sizeBefore - listItems.size
                 listAdapter.notifyDataSetChanged()
                 ToastUtils.show(this, getString(R.string.note_batch_deleted_notes_done_toast, deleteCount))
-                exitDeletionMode()
+
+                finishActionMode()
             }).show()
     }
 
-    private fun exitDeletionMode() {
-        if (!onDeleting) return
-        bindings.topLl.removeAllViews()
-        for (item in listItems) {
-            item.selected = false
-        }
-        listAdapter.notifyDataSetChanged()
-        onDeleting = false
-    }
-
-    private fun delete(timestamp: Long, position: Int) {
-        DialogUtils.createConfirmationAlertDialog(
-            this,
-            titleRes = R.string.delete_confirmation_dialog_title,
-            positiveAction = { _, _ ->
-                database.deleteRecord(timestamp)
-                listItems.removeAt(position)
-                listAdapter.notifyItemRemoved(position)
-            }, width = MATCH_PARENT
-        ).show()
-    }
-
-    private fun batchDeleteAction() {
-        deleteSelectedCount = 0
-        if (onDeleting) {
-            exitDeletionMode()
-        } else {
-            onDeleting = true
-            val topViewBindings = NoteTopViewBinding.inflate(layoutInflater)
-            val topView = topViewBindings.root
-            bindings.topLl.apply {
-                removeAllViews()
-                addView(topView)
-            }
-
-            topViewBindings.chooseAll.setOnCheckedChangeListener(chooseAllOnCheckedAction)
-            topViewBindings.cancelDeletion.setOnClickListener {
-                exitDeletionMode()
-            }
-        }
+    private fun finishActionMode() {
+        actionMode!!.finish()
+        actionMode = null
+        clearSelectionState()
     }
 
     private fun updateAllRecords() {
@@ -342,21 +333,23 @@ class NotesActivity : NoteBaseActivity(), Toolbar.OnMenuItemClickListener {
         }
     }
 
-    override fun onMenuItemClick(item: MenuItem): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.note_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.create -> {
                 launchers.create.launch(Unit)
             }
             R.id.import_ -> {
-                exitDeletionMode()
+                actionMode?.finish()
                 launchers.import.launch(FilePicker.PICK_FILE)
             }
             R.id.export -> {
-                exitDeletionMode()
+                actionMode?.finish()
                 launchers.export.launch(FilePicker.PICK_FOLDER)
-            }
-            R.id.delete -> {
-                batchDeleteAction()
             }
         }
         return true

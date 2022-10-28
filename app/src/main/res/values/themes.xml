@@ -17,6 +17,7 @@
     <style name="Theme.Application.NoActionBar" parent="Theme.Application">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="Theme.Application.Dark.NoActionBar" parent="Theme.Application.NoActionBar">

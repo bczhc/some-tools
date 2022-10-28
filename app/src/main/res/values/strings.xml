@@ -82,6 +82,8 @@
     <string name="import_dialog">导入</string>
     <string name="export_dialog">导出</string>
     <string name="corrupted_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
+    <string name="delete_menu">@string/delete_button</string>
+    <string name="select_all_btn">全选</string>
     <!-- end -->
 
     <!-- old -->
@@ -746,7 +748,6 @@
     <string name="note_no_notes_selected_msg">未选择笔记</string>
     <string name="note_selected_notes_count_msg">已选择%1$d项</string>
     <string name="note_batch_deleted_notes_done_toast">已删除%1$d条笔记</string>
-    <string name="note_delete_menu">删除</string>
     <string name="note_modified_save_alert">是否保存</string>
     <!-- end -->
 </resources>

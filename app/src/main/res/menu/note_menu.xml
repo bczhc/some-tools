@@ -5,10 +5,6 @@
             app:showAsAction="ifRoom"
             android:id="@+id/create"
     />
-    <item android:title="@string/note_delete_menu"
-          app:showAsAction="never"
-          android:id="@+id/delete"
-    />
     <item
             android:title="@string/menu_import"
             app:showAsAction="never"
