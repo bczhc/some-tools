@@ -19,6 +19,7 @@ import pers.zhc.tools.databinding.NotesActivityBinding
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
 
 class NotesActivity : NoteBaseActivity() {
@@ -317,10 +318,12 @@ class NotesActivity : NoteBaseActivity() {
             return listItems.size
         }
 
+        private val dateTimeFormatter = SimpleDateFormat.getDateTimeInstance()
+
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = listItems[position]
             val record = item.data
-            holder.dateTV.text = Date(record.time).toString()
+            holder.dateTV.text = dateTimeFormatter.format(Date(record.time)).toString()
             holder.titleTV.text = StringUtils.limitText(record.title)
             holder.contentTV.text = StringUtils.limitText(record.content)
             holder.itemLL.setBackgroundResource(
