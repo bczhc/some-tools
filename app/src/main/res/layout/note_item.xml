@@ -6,27 +6,25 @@
               xmlns:tools="http://schemas.android.com/tools"
 >
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  android:background="@drawable/selectable_bg"
+                  android:orientation="vertical"
                   android:id="@+id/item_ll"
+                  android:paddingHorizontal="2.5dp"
     >
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                  android:layout_weight="1"
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  tools:text="2022年5月20日"
+                  android:textStyle="bold"
                   android:id="@+id/date_tv"
-                  tools:text="date"
-                  android:paddingHorizontal="2dp"
+                  android:layout_marginTop="2.5dp"
         />
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                  android:layout_weight="1"
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  tools:text="Title"
                   android:id="@+id/title_tv"
-                  tools:text="title"
-                  android:paddingHorizontal="2dp"
+                  android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
         />
-        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                  android:layout_weight="1"
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  tools:text="Content\nContent\nContent\nContent\nContent"
                   android:id="@+id/content_tv"
-                  tools:text="content"
-                  android:paddingHorizontal="2dp"
+                  android:layout_marginBottom="2.5dp"
         />
     </LinearLayout>
     <com.google.android.material.divider.MaterialDivider
