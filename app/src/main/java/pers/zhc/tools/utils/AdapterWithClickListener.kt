@@ -19,6 +19,14 @@ abstract class AdapterWithClickListener<T : RecyclerView.ViewHolder?> : Recycler
         this.onItemLongClickListener = listener
     }
 
+    fun getOnItemClickListener(): OnItemClickListener? {
+        return onItemClickListener
+    }
+
+    fun getOnItemLongClickListener(): OnItemLongClickListener? {
+        return onItemLongClickListener
+    }
+
     abstract fun onCreateViewHolder(parent: ViewGroup): T
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T {

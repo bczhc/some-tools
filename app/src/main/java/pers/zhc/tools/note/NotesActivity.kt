@@ -107,7 +107,7 @@ class NotesActivity : NoteBaseActivity() {
         }
 
 
-        listAdapter.setOnItemLongClickListener { position, _ ->
+        listAdapter.setOnItemLongClickListener { position, v ->
             if (!inActionMode) {
                 androidAssert(actionMode == null)
                 actionMode = startSupportActionMode(object : ActionMode.Callback {
@@ -145,6 +145,10 @@ class NotesActivity : NoteBaseActivity() {
                 androidAssert(selectedCount == 1)
 
                 actionMode!!.title = getString(R.string.note_selected_notes_count_msg, selectedCount)
+            } else {
+                // long press in multi-selection mode
+                // equivalent to single-clicking the item (select it)
+                listAdapter.getOnItemClickListener()!!(position, v)
             }
         }
 
