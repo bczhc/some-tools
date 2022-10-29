@@ -10,6 +10,6 @@
     <item
             android:title="@string/delete_menu"
             android:id="@+id/delete"
-            app:showAsAction="never"
+            app:showAsAction="ifRoom"
     />
 </menu>
