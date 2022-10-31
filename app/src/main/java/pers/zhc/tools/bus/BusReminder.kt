@@ -164,13 +164,25 @@ class BusReminder(
     ): Notification {
         val cancelIntent = Intent(BusArrivalReminderNotificationReceiver.ACTION_BUS_CANCEL_CLICK)
         cancelIntent.putExtra(BusArrivalReminderNotificationReceiver.EXTRA_NOTIFICATION_ID, notificationId)
-        val cancelPI = PendingIntent.getBroadcast(context, notificationId, cancelIntent, 0)!!
+        val cancelPI = PendingIntent.getBroadcast(
+            context, notificationId, cancelIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
+        )!!
 
         val notificationContentIntent = Intent(context, BusLineDetailActivity::class.java)
         notificationContentIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         notificationContentIntent.putExtra(BusLineDetailActivity.EXTRA_RUN_PATH_ID, runPathId)
         notificationContentIntent.putExtra(BusLineDetailActivity.EXTRA_DIRECTION, direction.id)
-        val notificationContentPI = PendingIntent.getActivity(context, notificationId, notificationContentIntent, 0)!!
+        val notificationContentPI = PendingIntent.getActivity(
+            context, notificationId, notificationContentIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
+        )!!
 
         return NotificationCompat.Builder(context, MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL).apply {
             setSmallIcon(R.drawable.ic_launcher_foreground)

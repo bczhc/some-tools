@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
@@ -80,7 +81,7 @@ class WordsMainActivity : BaseActivity() {
     }
 
     class Item(
-            val word: String
+        val word: String
     )
 
     private fun deleteRecord(word: String) {
@@ -101,7 +102,13 @@ class WordsMainActivity : BaseActivity() {
 
     private fun showNotification() {
         val intent = Intent(this, DialogShowActivity::class.java)
-        val pi = PendingIntent.getActivity(this, RequestCode.START_ACTIVITY_0, intent, 0)
+        val pi = PendingIntent.getActivity(
+            this, RequestCode.START_ACTIVITY_0, intent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
+        )
 
         val notification = NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL).apply {
             setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -234,7 +241,7 @@ class WordsMainActivity : BaseActivity() {
 
         private fun initDatabase(database: SQLite3) {
             database.exec(
-                    """CREATE TABLE IF NOT EXISTS word
+                """CREATE TABLE IF NOT EXISTS word
 (
     word          TEXT NOT NULL PRIMARY KEY,
     addition_time INTEGER

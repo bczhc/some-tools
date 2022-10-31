@@ -921,7 +921,7 @@ class FdbWindow(private val context: BaseActivity) {
             }
         })
 
-        updateEraserOpacitySlider = {value: Float ->
+        updateEraserOpacitySlider = { value: Float ->
             opacitySlider.value = value
         }
 
@@ -1012,7 +1012,13 @@ class FdbWindow(private val context: BaseActivity) {
         intent.putExtra(FdbBroadcastReceiver.EXTRA_FDB_ID, timestamp)
 
         val notificationId = timestamp.hashCode()
-        val pi = PendingIntent.getBroadcast(context, notificationId, intent, 0)!!
+        val pi = PendingIntent.getBroadcast(
+            context, notificationId, intent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
+        )!!
 
         val nm =
             context.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -1087,7 +1093,16 @@ class FdbWindow(private val context: BaseActivity) {
         val intent = Intent(context, ScreenColorPickerActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)
-        val pi = PendingIntent.getActivity(context.applicationContext, timestamp.hashCode(), intent, 0)
+        val pi = PendingIntent.getActivity(
+            context.applicationContext,
+            timestamp.hashCode(),
+            intent,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
+        )
         pi.send()
     }
 

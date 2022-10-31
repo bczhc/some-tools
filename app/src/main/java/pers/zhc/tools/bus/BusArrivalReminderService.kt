@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.util.SparseArray
@@ -50,7 +51,13 @@ class BusArrivalReminderService : BaseService() {
     }
 
     private fun createForegroundNotification(): Notification {
-        val pi = PendingIntent.getBroadcast(this, System.currentTimeMillis().hashCode(), Intent(), 0)
+        val pi = PendingIntent.getBroadcast(
+            this, System.currentTimeMillis().hashCode(), Intent(), if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
+        )
 
         val builder = NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL)
         builder.apply {
