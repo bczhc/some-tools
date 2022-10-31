@@ -1,0 +1,95 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'base64'
+require 'digest/sha1'
+require 'fileutils'
+
+FILES_JSON_FILENAME = 'files.json'
+COMMITS_LIMIT = 10
+
+argv = ARGV
+
+if argv.length != 4
+  puts "Usage: command <release-dir> <stored-dir> <commit-hash> <encoded_commit-message>"
+  exit 1
+end
+
+release_dir = argv[0]
+stored_dir = argv[1]
+commit_hash = argv[2]
+commit_msg = Base64.decode64 argv[3]
+
+class Apk
+  attr_accessor :abi, :sha1, :name
+
+  def initialize(abi, sha1, name)
+    @abi = abi
+    @sha1 = sha1
+    @name = name
+  end
+
+  def to_json(_options = {})
+    {
+      'abi' => @abi,
+      'sha1' => @sha1,
+      'name' => @name
+    }.to_json
+  end
+end
+
+class Commit
+  attr_accessor :commit_hash, :commit_message, :apks
+
+  def initialize(commit_hash, commit_message, apks)
+    @commit_hash = commit_hash
+    @commit_message = commit_message
+    @apks = apks
+  end
+
+  def to_json(_options = {})
+    {
+      'commitHash' => @commit_hash,
+      'commitMessage' => @commit_message,
+      'apks' => @apks
+    }.to_json
+  end
+end
+
+files_json_file = File.join stored_dir, FILES_JSON_FILENAME
+if File.exist? files_json_file
+  files_json = File.read files_json_file
+else
+  files_json = [].to_json
+end
+# @type [Array]
+files_json = JSON.parse files_json
+
+apk_array = []
+Dir.each_child(release_dir) do |filename|
+  path = File.join(release_dir, filename)
+  abi = File.basename(filename, '.apk')
+  apk_array.push Apk.new(abi, Digest::SHA1.file(path), filename)
+end
+
+commit = Commit.new(commit_hash, commit_msg, apk_array)
+files_json.push commit
+fail if files_json.length >= COMMITS_LIMIT + 2
+if files_json.length == COMMITS_LIMIT + 1
+  # @type [Commit]
+  dropped = files_json[0]
+  files_json = files_json.drop 1
+
+  FileUtils.remove_dir File.join(stored_dir, dropped['commitHash'])
+end
+
+commit_dir = File.join stored_dir, commit_hash
+Dir.mkdir commit_dir
+
+Dir.each_child(release_dir) do |name|
+  FileUtils.copy_file(File.join(release_dir, name), File.join(commit_dir, name))
+end
+
+File.open(files_json_file, 'w') do |file|
+  file.puts files_json.to_json
+end
