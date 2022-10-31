@@ -18,8 +18,6 @@ define_method :system do |*args|
   raise "Command non-zero exit status: #{args}" unless $?.exitstatus == 0
 end
 
-self_dir = File.dirname $0
-
 argv = ARGV
 if argv.length != 1
   puts "Usage: #{File.basename $0} <openssl-project-dir>"
@@ -27,8 +25,8 @@ if argv.length != 1
 end
 $openssl_dir = argv[0]
 
-system "#{self_dir}/gradlew :app:saveNdkPath"
-tmp_file = File.open "#{self_dir}/tmp"
+system "./gradlew :app:saveNdkPath"
+tmp_file = File.open "./tmp"
 File.delete tmp_file
 $ndk_path = tmp_file.readlines[0]
 
@@ -69,7 +67,7 @@ def clean
   system 'make clean'
 end
 
-properties = File.open("#{self_dir}/config.properties").read
+properties = File.open("./config.properties").read
 ndk_target_property = get_property properties, 'ndk.target'
 fail if ndk_target_property == nil
 

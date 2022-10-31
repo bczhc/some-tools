@@ -36,13 +36,13 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     . ~/.cargo/env && \
     rustup default nightly-2022-09-20 && \
     rustc --version && \
-    ./configure-rust
+    ./tools/configure-rust
 
 # test clean
 RUN . ~/.cargo/env && ./gradlew cleanAll
 
 # build openssl of all Android ABI
-RUN ./build-openssl /openssl
+RUN ./tools/build-openssl /openssl
 
 # build single-Android-ABI App
 RUN . ~/.cargo/env && \

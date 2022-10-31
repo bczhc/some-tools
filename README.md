@@ -79,7 +79,7 @@ git fetch --all
 git checkout openssl-3.0.1
 ```
 
-Then go back into this project and run `./build-openssl <openssl-path>`  with an argument of the directory path of OpenSSL just cloned, and it will compile OpenSSL libraries in the targets defined in `config.properties`.
+Then go back into this project and run `./tools/build-openssl <openssl-path>`  with an argument of the directory path of OpenSSL just cloned, and it will compile OpenSSL libraries in the targets defined in `config.properties`.
 
 After compilation, the compiled libraries are stored in `<openssl-dir>/libs/<Android-ABI>/`.
 
@@ -97,7 +97,7 @@ Note: This installation method is recommended, since `rustup` is required in the
 
 #### Add Rust cross-compilation targets
 
-Run `./configure-rust`
+Run `./tools/configure-rust`
 
 ### Build Project
 
