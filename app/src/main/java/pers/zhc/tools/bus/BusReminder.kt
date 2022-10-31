@@ -125,7 +125,7 @@ class BusReminder(
                     vibrator.vibrate(it)
                 }
             } else {
-                @Suppress("Deprecation")
+                @Suppress("DEPRECATION")
                 vibrator.vibrate(1000)
             }
         }

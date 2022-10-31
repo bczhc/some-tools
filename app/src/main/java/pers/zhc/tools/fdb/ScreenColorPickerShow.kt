@@ -45,7 +45,7 @@ class ScreenColorPickerShow(
         val floatingWindowType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
-            @Suppress("deprecation")
+            @Suppress("DEPRECATION")
             (WindowManager.LayoutParams.TYPE_SYSTEM_ERROR)
         }
         screenColorPickerViewLP.apply {

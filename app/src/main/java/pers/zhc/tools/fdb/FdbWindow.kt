@@ -109,7 +109,7 @@ class FdbWindow(private val context: BaseActivity) {
         val floatingWindowType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             TYPE_APPLICATION_OVERLAY
         } else {
-            @Suppress("deprecation")
+            @Suppress("DEPRECATION")
             TYPE_SYSTEM_ERROR
         }
 
