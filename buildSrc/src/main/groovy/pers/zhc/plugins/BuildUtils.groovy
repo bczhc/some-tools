@@ -5,6 +5,8 @@ import pers.zhc.util.Assertion
 
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import org.apache.commons.io.FileUtils as ApacheFileUtils
@@ -30,9 +32,16 @@ class BuildUtils {
     }
 
     static gVersion() {
-        def date = Date.newInstance()
-        def dateString = new SimpleDateFormat("yyyyMMdd").format(date)
-        def time = new SimpleDateFormat("HHmmss").format(date)
+        def utcTimezone = TimeZone.getTimeZone(ZoneOffset.UTC)
+        def getUtcDateFormatter = {String pattern->
+            def formatter = new SimpleDateFormat(pattern)
+            formatter.timeZone = utcTimezone
+            formatter
+        }
+
+        def date = new Date()
+        def dateString = getUtcDateFormatter("yyyyMMdd").format(date)
+        def time = getUtcDateFormatter("HHmmss").format(date)
         def which = 0
         def verString = "1.0.0"
         def emoji = ranEmoji()
