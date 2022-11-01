@@ -68,7 +68,12 @@ files_json = JSON.parse files_json
 apk_array = []
 Dir.each_child(release_dir) do |filename|
   path = File.join(release_dir, filename)
-  abi = File.basename(filename, '.apk').scan(/^(.*)-[0-9]*$/)[0][0]
+  basename = File.basename(filename, '.apk')
+  if basename != 'universal'
+    abi = basename.scan(/^(.*)-[0-9]*$/)[0][0]
+  else
+    abi = basename
+  end
   apk_array.push Apk.new(abi, Digest::SHA1.file(path), filename)
 end
 
