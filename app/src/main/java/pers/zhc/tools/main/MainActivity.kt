@@ -2,14 +2,16 @@ package pers.zhc.tools.main
 
 import android.app.Dialog
 import android.content.Context
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.JsonArray
+import com.google.gson.JsonSyntaxException
 import kotlinx.android.synthetic.main.github_action_download_view.view.*
-import org.json.JSONArray
-import org.json.JSONException
 import pers.zhc.tools.Info
+import pers.zhc.tools.MyApplication.Companion.GSON
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.*
 import java.io.File
@@ -21,67 +23,61 @@ import java.net.URL
 class MainActivity {
     companion object {
         fun showGithubActionDownloadDialog(context: Context) {
+            val download = { item: Commit, abi: String ->
 
-            val findCommitHash = {commitInfo: String->
-                val firstLine = commitInfo.split(Regex("\\n"))[0]
-                val prefix = "commit "
-                val i = firstLine.indexOf(prefix)
-                firstLine.substring(i + prefix.length)
-            }
+                val apk = item.apks.find { it.abi == abi }!!
 
-            val download = { item: GithubActionDownloadItem ->
                 val storagePath = Common.getAppMainExternalStoragePath(context)
                 val updateDir = File(storagePath, "update")
                 updateDir.requireMkdirs()
                 val localFile = File(updateDir, "some-tools.apk")
 
-                val url = URL(Info.staticResourceRootURL + "/apks/some-tools/" + findCommitHash(item.commitInfo) + "/some-tools.apk")
+                val url =
+                    URL("${Info.staticResourceRootURL}/apks/some-tools/${item.commitHash}/${apk.name}")
                 Download.startDownloadWithDialog(context, url, localFile) {
                     // TODO: check file integrity
                     Common.installApk(context, localFile)
                 }
             }
 
-            val onItemClicked = { item: GithubActionDownloadItem, upperDialog: Dialog ->
-                DialogUtils.createConfirmationAlertDialog(
-                    context,
-                    { _, _ ->
-                        upperDialog.dismiss()
-                        download(item)
-                    },
-                    titleRes = R.string.app_download_confirmation_dialog_title,
-                    message = item.commitInfo,
-                    width = MATCH_PARENT
-                ).show()
+            val onItemClicked = { item: Commit, upperDialog: Dialog ->
+                // check abi
+                val supportedAbis = Build.SUPPORTED_ABIS
+                val foundAbi = item.apks.map { it.abi }.find {
+                    supportedAbis.contains(it)
+                }
+                if (foundAbi == null) {
+                    ToastUtils.show(context, R.string.app_unsupported_abi)
+                } else {
+                    DialogUtils.createConfirmationAlertDialog(
+                        context,
+                        { _, _ ->
+                            download(item, foundAbi)
+                            upperDialog.dismiss()
+                        },
+                        titleRes = R.string.app_download_confirmation_dialog_title,
+                        message = item.commitMessage,
+                        width = MATCH_PARENT
+                    ).show()
+                }
+
             }
 
-            val jsonArray2DataList = { jsonArray: JSONArray ->
-                try {
-                    val list = ArrayList<GithubActionDownloadItem>()
-                    for (i in 0 until jsonArray.length()) {
-                        val jsonObject = jsonArray.getJSONObject(i)
-                        list.add(
-                            GithubActionDownloadItem(
-                                jsonObject.getString("commitInfo"),
-                                jsonObject.getString("fileSha1")
-                            )
-                        )
-                    }
-                    list
-                } catch (e: JSONException) {
+            val showDownloadList = { infoJson: String ->
+                val commits = try {
+                    ArrayList(
+                        GSON.fromJson(infoJson, JsonArray::class.java).map { GSON.fromJson(it, Commit::class.java) })
+                } catch (_: JsonSyntaxException) {
                     null
                 }
-            }
 
-            val showDownloadList = { jsonArray: JSONArray ->
-                val data = jsonArray2DataList(jsonArray)
-                if (data == null) {
+                if (commits == null) {
                     ToastUtils.show(context, R.string.getting_information_failed)
                 } else {
                     val inflate = View.inflate(context, R.layout.github_action_download_view, null)
                     val recyclerView = inflate.recycler_view!!
                     recyclerView.layoutManager = LinearLayoutManager(context)
-                    val adapter = GithubActionDownloadListAdapter(context, data)
+                    val adapter = GithubActionDownloadListAdapter(context, commits)
                     recyclerView.adapter = adapter
 
                     val dialog = Dialog(context)
@@ -90,7 +86,7 @@ class MainActivity {
                     dialog.show()
 
                     adapter.setOnItemClickListener { position, _ ->
-                        onItemClicked(data[position], dialog)
+                        onItemClicked(commits[position], dialog)
                     }
                 }
             }
@@ -101,7 +97,7 @@ class MainActivity {
             progressView.setTitle(context.getString(R.string.getting_information))
             DialogUtils.setDialogAttr(progressDialog, width = MATCH_PARENT, height = WRAP_CONTENT)
             progressDialog.show()
-            asyncFetchLogJson {
+            asyncFetchInfo {
                 Common.runOnUiThread(context) {
                     progressDialog.dismiss()
                     if (it == null) {
@@ -113,12 +109,12 @@ class MainActivity {
             }
         }
 
-        private fun asyncFetchLogJson(f: (jsonArray: JSONArray?) -> Unit) {
-            val url = URL(Info.staticResourceRootURL + "/apks/some-tools/log.json")
+        private fun asyncFetchInfo(f: (read: String?) -> Unit) {
+            val url = URL(Info.staticResourceRootURL + "/apks/some-tools/files.json")
             Thread {
                 val read = url.readText()
                 try {
-                    f(JSONArray(read))
+                    f(read)
                 } catch (e: Exception) {
                     f(null)
                 }
@@ -126,3 +122,5 @@ class MainActivity {
         }
     }
 }
+
+typealias Commits = ArrayList<Commit>

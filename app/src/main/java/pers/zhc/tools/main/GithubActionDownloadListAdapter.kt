@@ -12,7 +12,7 @@ import pers.zhc.tools.utils.AdapterWithClickListener
 /**
  * @author bczhc
  */
-class GithubActionDownloadListAdapter(private val context: Context, private val data: List<GithubActionDownloadItem>) :
+class GithubActionDownloadListAdapter(private val context: Context, private val data: Commits) :
     AdapterWithClickListener<GithubActionDownloadListAdapter.MyViewHolder>() {
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val commitInfoTV = view.commit_info_tv!!
@@ -24,8 +24,7 @@ class GithubActionDownloadListAdapter(private val context: Context, private val 
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val (commitInfo, _) = data[position]
-        holder.commitInfoTV.text = commitInfo
+        holder.commitInfoTV.text = data[position].commitMessage
     }
 
     override fun getItemCount(): Int {

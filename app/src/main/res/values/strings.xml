@@ -18,6 +18,7 @@
     <string name="app_menu_test">测试</string>
     <string name="app_menu_little_tools">小工具</string>
     <string name="app_download_confirmation_dialog_title">是否确认下载</string>
+    <string name="app_unsupported_abi">不支持的ABI</string>
     <!-- app end -->
 
     <!-- common -->
