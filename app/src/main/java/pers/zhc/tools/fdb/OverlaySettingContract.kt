@@ -13,7 +13,7 @@ import androidx.annotation.RequiresApi
  */
 @RequiresApi(Build.VERSION_CODES.M)
 class OverlaySettingContract : ActivityResultContract<String, Unit>() {
-    override fun createIntent(context: Context, input: String?): Intent {
+    override fun createIntent(context: Context, input: String): Intent {
         return Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$input"))
     }
 

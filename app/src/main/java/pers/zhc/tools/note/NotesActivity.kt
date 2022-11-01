@@ -39,7 +39,7 @@ class NotesActivity : NoteBaseActivity() {
         }
 
         val create = registerForActivityResult(object : ActivityResultContract<Unit, Unit>() {
-            override fun createIntent(context: Context, input: Unit?): Intent {
+            override fun createIntent(context: Context, input: Unit): Intent {
                 return Intent(context, NoteTakingActivity::class.java).apply {
                     putExtra(NoteTakingActivity.EXTRA_TYPE, NoteTakingActivity.Type.CREATE)
                 }
@@ -53,7 +53,7 @@ class NotesActivity : NoteBaseActivity() {
         }
 
         val modify = registerForActivityResult(object : ActivityResultContract<Long, Long>() {
-            override fun createIntent(context: Context, input: Long?): Intent {
+            override fun createIntent(context: Context, input: Long): Intent {
                 return Intent(context, NoteTakingActivity::class.java).apply {
                     putExtra(NoteTakingActivity.EXTRA_TYPE, NoteTakingActivity.Type.UPDATE)
                     putExtra(NoteTakingActivity.EXTRA_TIMESTAMP, input)

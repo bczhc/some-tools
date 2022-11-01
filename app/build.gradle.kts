@@ -99,11 +99,11 @@ android {
             keyPassword = "123456"
         }
     }
-    compileSdk = 31
+    compileSdk = 32
     defaultConfig {
         applicationId = "pers.zhc.tools"
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 32
 
         val verInfo = gVersion()!! as ArrayList<*>
         versionCode = verInfo[0] as Int
@@ -147,10 +147,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    lint {
-        isCheckReleaseBuilds = false
-        isAbortOnError = false
-    }
+//    lint {
+//        isCheckReleaseBuilds = false
+//        isAbortOnError = false
+//    }
 
     ndkVersion = detectedNdkVersion
 
@@ -253,18 +253,18 @@ repositories {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.0.2")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.20")
-    implementation("com.google.android.material:material:1.6.0")
+    implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.0.7")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.10")
+    implementation("com.google.android.material:material:1.6.1")
     implementation("com.github.mik3y:usb-serial-for-android:3.3.0")
     implementation("com.github.bczhc:java-lib:18a858c167")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.4.2")
-    implementation("androidx.navigation:navigation-ui-ktx:2.4.2")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.2")
     implementation("me.zhanghai.android.fastscroll:library:1.1.7")
     implementation("com.github.bczhc:jni-java:9205bf19ea")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.20")
-    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
+    implementation("com.google.code.gson:gson:2.10")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0") {
         isTransitive = false
