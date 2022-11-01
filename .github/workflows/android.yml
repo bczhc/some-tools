@@ -50,7 +50,7 @@ jobs:
           mkdir -p apks/some-tools 2> /dev/null || true
           cd ..
 
-          tools/store-apk apks store/apks/some-tools $commit_hash $encoded_commit_info
+          tools/store-apk apks/release store/apks/some-tools $commit_hash $encoded_commit_info
 
           cd store
           git config --global user.email "<>"
