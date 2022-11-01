@@ -8,6 +8,8 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import pers.zhc.tools.R
 
 /**
  * @author bczhc
@@ -98,6 +100,14 @@ class DialogUtils {
             DialogUtil.setDialogAttr(dialog, isTransparent, width, height, overlayWindow)
         }
     }
+}
+
+fun MaterialAlertDialogBuilder.defaultNegativeButton(): MaterialAlertDialogBuilder {
+    return this.setNegativeButton(R.string.cancel_btn) { _, _ -> }
+}
+
+fun MaterialAlertDialogBuilder.setPositiveAction(action: (dialog: DialogInterface, which: Int) -> Unit): MaterialAlertDialogBuilder {
+    return this.setPositiveButton(R.string.confirm, action)
 }
 
 typealias PromptDialogCallback = (dialog: DialogInterface, editText: EditText) -> Unit

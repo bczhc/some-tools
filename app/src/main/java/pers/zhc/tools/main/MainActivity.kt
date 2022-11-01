@@ -6,7 +6,9 @@ import android.os.Build
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonSyntaxException
 import kotlinx.android.synthetic.main.github_action_download_view.view.*
@@ -49,16 +51,32 @@ class MainActivity {
                 if (foundAbi == null) {
                     ToastUtils.show(context, R.string.app_unsupported_abi)
                 } else {
-                    DialogUtils.createConfirmationAlertDialog(
-                        context,
-                        { _, _ ->
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle(R.string.app_download_confirmation_dialog_title)
+                        .setPositiveButton(R.string.confirm) { _, _ ->
                             download(item, foundAbi)
                             upperDialog.dismiss()
-                        },
-                        titleRes = R.string.app_download_confirmation_dialog_title,
-                        message = item.commitMessage,
-                        width = MATCH_PARENT
-                    ).show()
+                        }
+                        .setNeutralButton("ABI") { _, _ ->
+
+                            val abis = item.apks.map { it.abi }.toTypedArray()
+                            val abiIndex = abis.indexOfFirst { it == foundAbi }
+                            MaterialAlertDialogBuilder(context)
+                                .setTitle("ABI")
+                                .defaultNegativeButton()
+                                .setPositiveAction { self, _ ->
+                                    val selectedAbi = abis[(self as AlertDialog).listView.checkedItemPosition]
+                                    download(item, selectedAbi)
+                                    upperDialog.dismiss()
+                                }
+                                .apply {
+                                    setSingleChoiceItems(abis, abiIndex, null)
+                                }
+                                .show()
+
+                        }
+                        .setMessage(item.commitMessage)
+                        .show()
                 }
 
             }
@@ -66,7 +84,9 @@ class MainActivity {
             val showDownloadList = { infoJson: String ->
                 val commits = try {
                     ArrayList(
-                        GSON.fromJson(infoJson, JsonArray::class.java).map { GSON.fromJson(it, Commit::class.java) })
+                        GSON.fromJson(infoJson, JsonArray::class.java).map { GSON.fromJson(it, Commit::class.java) }
+                            .reversed()
+                    )
                 } catch (_: JsonSyntaxException) {
                     null
                 }
