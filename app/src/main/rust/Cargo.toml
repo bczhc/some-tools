@@ -35,6 +35,7 @@ zip = "0.6.2"
 lzma-rs = "0.2.0"
 signal = "0.7.0"
 nix = "0.25.0"
+rayon = "1.5.3"
 
 [profile.release]
 panic = "abort"

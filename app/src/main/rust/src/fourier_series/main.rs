@@ -1,10 +1,18 @@
+use std::sync::Mutex;
+
 use bczhc_lib::complex_num::ComplexValueF64;
 use bczhc_lib::epicycle::Epicycle;
-use bczhc_lib::fourier_series::{fourier_series_calc, EvaluatePath, LinearPath, TimePath};
+use bczhc_lib::fourier_series::{EvaluatePath, LinearPath, TimePath};
 use bczhc_lib::point::PointF64;
+use bczhc_lib::{fourier_series, mutex_lock};
 use jni::objects::{GlobalRef, JClass, JObject, JValue};
 use jni::sys::{jobject, jobjectArray};
 use jni::{JNIEnv, JavaVM};
+use once_cell::sync::Lazy;
+use rayon::prelude::*;
+
+static JAVA_VM: Lazy<Mutex<Option<JavaVM>>> = Lazy::new(|| Mutex::new(None));
+static RESULT_CALLBACK: Lazy<Mutex<Option<GlobalRef>>> = Lazy::new(|| Mutex::new(None));
 
 #[no_mangle]
 #[allow(non_snake_case, clippy::too_many_arguments)]
@@ -29,46 +37,32 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
         points_vec.push(PointF64::new(x as f64, y as f64))
     }
 
-    let g_callback = env.new_global_ref(callback).unwrap();
-    let g_callback_addr = &g_callback as *const GlobalRef as usize;
+    let global_callback = env.new_global_ref(callback).unwrap();
+    mutex_lock!(RESULT_CALLBACK).replace(global_callback);
 
     let jvm = env.get_java_vm().unwrap();
-    let jvm_addr = &jvm as *const JavaVM as usize;
-
-    let result_callback = move |r: Epicycle| {
-        let callback = unsafe { &*(g_callback_addr as *const GlobalRef) };
-        let callback = callback.as_obj();
-
-        let jvm = unsafe { &*(jvm_addr as *const JavaVM) };
-        let guard = jvm.attach_current_thread().unwrap();
-        callback_call(*guard, callback, r.a.re, r.a.im, r.n, r.p).unwrap();
-    };
+    mutex_lock!(JAVA_VM).replace(jvm);
 
     let path_evaluator_enum = PathEvaluator::from(path_evaluator_enum).unwrap();
+    // use static dispatching (monomorphization)
     match path_evaluator_enum {
         PathEvaluator::Linear => {
             let evaluator = LinearPath::new(&points_vec);
-
             compute(
                 epicycle_num as u32,
                 period,
-                thread_num as u32,
                 integral_segments as u32,
-                &evaluator,
-                result_callback,
-            )
+                evaluator,
+            );
         }
         PathEvaluator::Time => {
             let evaluator = TimePath::new(&points_vec);
-
             compute(
                 epicycle_num as u32,
                 period,
-                thread_num as u32,
                 integral_segments as u32,
-                &evaluator,
-                result_callback,
-            )
+                evaluator,
+            );
         }
     }
 }
@@ -88,49 +82,60 @@ impl PathEvaluator {
     }
 }
 
-fn compute<T, R>(
+fn compute<T>(
     epicycle_count: u32,
     period: f64,
-    thread_num: u32,
+    // thread_num: u32,
     integral_segments: u32,
-    path_evaluator: &T,
-    result_callback: R,
+    path_evaluator: T,
 ) where
     T: EvaluatePath,
-    R: Fn(Epicycle) + Send + Copy + 'static,
 {
-    let evaluator_addr = path_evaluator as *const T as usize;
-    fourier_series_calc(
-        epicycle_count,
-        period,
-        thread_num,
-        integral_segments,
-        move |t| {
-            let evaluator = unsafe { &*(evaluator_addr as *const T) };
-            let p = evaluator.evaluate(t / period);
-            ComplexValueF64::new(p.x, p.y)
-        },
-        result_callback,
-    );
+    let epicycle_count = epicycle_count as i32;
+    let n_to = epicycle_count / 2;
+    let n_from = -(epicycle_count - n_to) + 1;
+
+    let evaluator_addr = &path_evaluator as *const T as usize;
+
+    (n_from..=n_to)
+        .into_par_iter()
+        .map(move |n| {
+            fourier_series::calc_n(period, integral_segments, n, move |t| {
+                let evaluator = unsafe { &*(evaluator_addr as *const T) };
+                let p = evaluator.evaluate(t / period);
+                ComplexValueF64::new(p.x, p.y)
+            })
+        })
+        .for_each(|epicycle| {
+            let jvm_guard = mutex_lock!(JAVA_VM);
+            let callback_guard = mutex_lock!(RESULT_CALLBACK);
+
+            let jvm = jvm_guard.as_ref();
+            let jvm = jvm.unwrap();
+
+            let callback = callback_guard.as_ref();
+            let callback = callback.unwrap().as_obj();
+
+            let attached = jvm.attach_current_thread().unwrap();
+            let env = *attached;
+            callback_call(env, callback, epicycle).unwrap();
+            drop(attached);
+
+            drop(callback_guard);
+            drop(jvm_guard);
+        });
 }
 
-fn callback_call(
-    env: JNIEnv,
-    callback: JObject,
-    re: f64,
-    im: f64,
-    n: i32,
-    p: f64,
-) -> jni::errors::Result<()> {
+fn callback_call(env: JNIEnv, callback: JObject, epicycle: Epicycle) -> jni::errors::Result<()> {
     env.call_method(
         callback,
         "onResult",
         "(DDID)V",
         &[
-            JValue::Double(re),
-            JValue::Double(im),
-            JValue::Int(n),
-            JValue::Double(p),
+            JValue::Double(epicycle.a.re),
+            JValue::Double(epicycle.a.im),
+            JValue::Int(epicycle.n),
+            JValue::Double(epicycle.p),
         ],
     )?;
     Ok(())
