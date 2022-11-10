@@ -20,12 +20,12 @@ RUN mkdir sdk && \
     wget 'https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip' -O tools.zip && \
     unzip tools.zip && \
     yes | ./cmdline-tools/bin/sdkmanager --licenses --sdk_root=./sdk && \
-    ./cmdline-tools/bin/sdkmanager --sdk_root=./sdk --install ndk-bundle && \
+    ./cmdline-tools/bin/sdkmanager --sdk_root=./sdk --install 'ndk;25.1.8937393' && \
     ./cmdline-tools/bin/sdkmanager --sdk_root=./sdk --install 'cmake;3.18.1'
 
 WORKDIR /some-tools
 RUN git submodule update --init --recursive
-RUN echo 'sdk.dir=/sdk' > local.properties && \
+RUN (echo 'sdk.dir=/sdk'; echo 'ndk.dir=/sdk/ndk/25.1.8937393') > local.properties && \
     echo 'opensslLib.dir=/openssl' > config.properties && \
     echo 'ndk.target=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29' >> config.properties
 
@@ -34,7 +34,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     chmod +x install && \
     ./install -y && \
     . ~/.cargo/env && \
-    rustup default nightly-2022-09-20 && \
+    rustup default nightly && \
     rustc --version && \
     ./tools/configure-rust
 
