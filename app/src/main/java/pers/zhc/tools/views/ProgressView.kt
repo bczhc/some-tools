@@ -58,10 +58,22 @@ class ProgressView : RelativeLayout {
     /**
      * [0, 1]
      */
-    fun setProgress(progress: Float) {
+    fun setProgressAndText(progress: Float) {
         if (!isIndeterminateMode) {
             determinateProgressBar.progressBar.setProgressCompat((progress * 100F).toInt(), true)
             determinateProgressBar.textTV.text = context.getString(R.string.progress_tv, progress * 100F)
+        }
+    }
+
+    fun setProgress(progress: Float) {
+        if (!isIndeterminateMode) {
+            determinateProgressBar.progressBar.setProgressCompat((progress * 100F).toInt(), true)
+        }
+    }
+
+    fun setText(text: String) {
+        if (!isIndeterminateMode) {
+            determinateProgressBar.textTV.text = text
         }
     }
 

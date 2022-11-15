@@ -212,7 +212,7 @@
     <string name="definite_n">积分分段数</string>
     <string name="period">周期</string>
     <string name="epicycles_count">本轮数量</string>
-    <string name="epicycles_calc_progress" translatable="false">%1$f%%--%2$d/%3$d</string>
+    <string name="epicycles_calc_progress" translatable="false">%1$d/%2$d</string>
     <string name="thread_num">线程数</string>
     <string name="fourier_series_in_complex">复平面内傅里叶级数展开</string>
     <string name="appear_f_b">显示悬浮窗%1$s</string>

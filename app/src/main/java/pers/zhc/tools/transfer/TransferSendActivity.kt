@@ -158,7 +158,7 @@ class TransferSendActivity : BaseActivity() {
                     override fun fileProgress(progress: Float) {
                         tryDo.tryDo { _, notifier ->
                             runOnUiThread {
-                                progressView.setProgress(progress)
+                                progressView.setProgressAndText(progress)
                                 notifier.finish()
                             }
                         }

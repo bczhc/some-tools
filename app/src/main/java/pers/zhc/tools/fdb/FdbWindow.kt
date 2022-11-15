@@ -685,7 +685,7 @@ class FdbWindow(private val context: BaseActivity) {
                                         layerName
                                     )
                                 )
-                                progressView.setProgress(progress)
+                                progressView.setProgressAndText(progress)
                                 notifier.finish()
                             }
                         }

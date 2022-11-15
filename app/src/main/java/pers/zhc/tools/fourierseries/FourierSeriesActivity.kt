@@ -1,9 +1,9 @@
 package pers.zhc.tools.fourierseries
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -195,6 +195,7 @@ class FourierSeriesActivity : BaseActivity() {
         evaluatorSpinner.adapter = spinnerAdapter
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showComputeDialog() {
         val points = DrawingActivity.points
         if (points == null) {
@@ -232,11 +233,17 @@ class FourierSeriesActivity : BaseActivity() {
                 (evaluatorSpinner.selectedItem as PathEvaluator).enumInt
             ) { re, im, n, p ->
                 val epicycle = Epicycle(n, ComplexValue(re, im), p)
-                Log.d(TAG, "showComputeDialog: $epicycle")
+                // sequential result fetching; not require mutex lock
                 epicycleData.add(epicycle)
                 asyncTryDo.tryDo { _, notifier ->
                     runOnUiThread {
                         progressView.setProgress(epicycleData.size.toFloat() / epicycleNum.toFloat())
+                        progressView.setText(
+                            getString(
+                                R.string.epicycles_calc_progress,
+                                epicycleData.size, epicycleNum
+                            )
+                        )
                     }
                     notifier.finish()
                 }
