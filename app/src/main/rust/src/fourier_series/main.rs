@@ -2,7 +2,7 @@ use std::sync::Mutex;
 
 use bczhc_lib::complex_num::ComplexValueF64;
 use bczhc_lib::epicycle::Epicycle;
-use bczhc_lib::fourier_series::{EvaluatePath, LinearPath, TimePath};
+use bczhc_lib::fourier_series::{compute_iter, EvaluatePath, LinearPath, TimePath};
 use bczhc_lib::point::PointF64;
 use bczhc_lib::{fourier_series, mutex_lock};
 use jni::objects::{GlobalRef, JClass, JObject, JValue};
@@ -37,25 +37,23 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
         points_vec.push(PointF64::new(x as f64, y as f64))
     }
 
-    let global_callback = env.new_global_ref(callback).unwrap();
-    mutex_lock!(RESULT_CALLBACK).replace(global_callback);
-
-    let jvm = env.get_java_vm().unwrap();
-    mutex_lock!(JAVA_VM).replace(jvm);
-
     let pool = rayon::ThreadPoolBuilder::new()
         .num_threads(thread_num as usize)
         .build()
         .unwrap();
 
+    let thread_num = thread_num as usize;
     let path_evaluator_enum = PathEvaluator::from(path_evaluator_enum).unwrap();
     // for static dispatching (monomorphization)
-    let compute_fn = || match path_evaluator_enum {
+    match path_evaluator_enum {
         PathEvaluator::Linear => {
             let evaluator = LinearPath::new(&points_vec);
             compute(
+                env,
+                callback,
                 epicycle_num as u32,
                 period,
+                thread_num,
                 integral_segments as u32,
                 evaluator,
             );
@@ -63,14 +61,16 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
         PathEvaluator::Time => {
             let evaluator = TimePath::new(&points_vec);
             compute(
+                env,
+                callback,
                 epicycle_num as u32,
                 period,
+                thread_num,
                 integral_segments as u32,
                 evaluator,
             );
         }
     };
-    pool.install(compute_fn);
 }
 
 enum PathEvaluator {
@@ -89,50 +89,40 @@ impl PathEvaluator {
 }
 
 fn compute<T>(
+    env: JNIEnv,
+    callback: jobject,
     epicycle_count: u32,
     period: f64,
-    // thread_num: u32,
+    thread_num: usize,
     integral_segments: u32,
     path_evaluator: T,
 ) where
     T: EvaluatePath,
 {
+    let thread_pool = rayon::ThreadPoolBuilder::new()
+        .num_threads(thread_num)
+        .build()
+        .unwrap();
+
     let epicycle_count = epicycle_count as i32;
     let n_to = epicycle_count / 2;
     let n_from = -(epicycle_count - n_to) + 1;
 
     let evaluator_addr = &path_evaluator as *const T as usize;
-
-    (n_from..=n_to)
-        .into_par_iter()
-        .map(move |n| {
-            fourier_series::calc_n(period, integral_segments, n, move |t| {
-                let evaluator = unsafe { &*(evaluator_addr as *const T) };
-                let p = evaluator.evaluate(t / period);
-                ComplexValueF64::new(p.x, p.y)
-            })
+    let epicycles = thread_pool.install(|| {
+        compute_iter(n_from, n_to, period, integral_segments, move |t| {
+            let evaluator = unsafe { &*(evaluator_addr as *const T) };
+            let p = evaluator.evaluate(t / period);
+            ComplexValueF64::new(p.x, p.y)
         })
-        .for_each(|epicycle| {
-            let jvm_guard = mutex_lock!(JAVA_VM);
-            let callback_guard = mutex_lock!(RESULT_CALLBACK);
+    });
 
-            let jvm = jvm_guard.as_ref();
-            let jvm = jvm.unwrap();
-
-            let callback = callback_guard.as_ref();
-            let callback = callback.unwrap().as_obj();
-
-            let attached = jvm.attach_current_thread().unwrap();
-            let env = *attached;
-            callback_call(env, callback, epicycle).unwrap();
-            drop(attached);
-
-            drop(callback_guard);
-            drop(jvm_guard);
-        });
+    for e in epicycles {
+        callback_call(env, callback, e).unwrap();
+    }
 }
 
-fn callback_call(env: JNIEnv, callback: JObject, epicycle: Epicycle) -> jni::errors::Result<()> {
+fn callback_call(env: JNIEnv, callback: jobject, epicycle: Epicycle) -> jni::errors::Result<()> {
     env.call_method(
         callback,
         "onResult",

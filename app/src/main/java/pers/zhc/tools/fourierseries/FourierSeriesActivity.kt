@@ -221,7 +221,6 @@ class FourierSeriesActivity : BaseActivity() {
         dialog.show()
 
         val asyncTryDo = AsyncTryDo()
-        val lock = Any()
         Thread {
             val array = points.toArray(Array(0) { return@Array InputPoint(0F, 0F) })
             JNI.FourierSeries.compute(
@@ -232,16 +231,14 @@ class FourierSeriesActivity : BaseActivity() {
                 threadsNum,
                 (evaluatorSpinner.selectedItem as PathEvaluator).enumInt
             ) { re, im, n, p ->
-                synchronized(lock) {
-                    val epicycle = Epicycle(n, ComplexValue(re, im), p)
-                    Log.d(TAG, "showComputeDialog: $epicycle")
-                    epicycleData.add(epicycle)
-                    asyncTryDo.tryDo { _, notifier ->
-                        runOnUiThread {
-                            progressView.setProgress(epicycleData.size.toFloat() / epicycleNum.toFloat())
-                        }
-                        notifier.finish()
+                val epicycle = Epicycle(n, ComplexValue(re, im), p)
+                Log.d(TAG, "showComputeDialog: $epicycle")
+                epicycleData.add(epicycle)
+                asyncTryDo.tryDo { _, notifier ->
+                    runOnUiThread {
+                        progressView.setProgress(epicycleData.size.toFloat() / epicycleNum.toFloat())
                     }
+                    notifier.finish()
                 }
             }
             runOnUiThread {
