@@ -43,9 +43,14 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     let jvm = env.get_java_vm().unwrap();
     mutex_lock!(JAVA_VM).replace(jvm);
 
+    let pool = rayon::ThreadPoolBuilder::new()
+        .num_threads(thread_num as usize)
+        .build()
+        .unwrap();
+
     let path_evaluator_enum = PathEvaluator::from(path_evaluator_enum).unwrap();
-    // use static dispatching (monomorphization)
-    match path_evaluator_enum {
+    // for static dispatching (monomorphization)
+    let compute_fn = || match path_evaluator_enum {
         PathEvaluator::Linear => {
             let evaluator = LinearPath::new(&points_vec);
             compute(
@@ -64,7 +69,8 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
                 evaluator,
             );
         }
-    }
+    };
+    pool.install(compute_fn);
 }
 
 enum PathEvaluator {
