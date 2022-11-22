@@ -2,7 +2,7 @@ use bczhc_lib::complex::integral;
 use bczhc_lib::complex::integral::Integrate;
 
 use bczhc_lib::epicycle::Epicycle;
-use bczhc_lib::fourier_series::{compute_iter, EvaluatePath, LinearPath};
+use bczhc_lib::fourier_series::{compute_iter, EvaluatePath, LinearPath, TimePath};
 use bczhc_lib::point::PointF64;
 use jni::objects::{JClass, JValue};
 use jni::sys::{jobject, jobjectArray};
@@ -74,7 +74,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
             compute(integrator_enum, params);
         }
         PathEvaluator::Time => {
-            let evaluator = LinearPath::new(&points_vec);
+            let evaluator = TimePath::new(&points_vec);
             let params = Params {
                 env,
                 callback,
