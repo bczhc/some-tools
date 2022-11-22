@@ -8,17 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.AppCompatSpinner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import kotlinx.android.synthetic.main.fourier_series_epicycle_item.view.*
-import kotlinx.android.synthetic.main.fourier_series_main.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.FourierSeriesMainBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.*
 import kotlin.math.abs
@@ -27,7 +25,8 @@ import kotlin.math.abs
  * @author bczhc
  */
 class FourierSeriesActivity : BaseActivity() {
-    private lateinit var evaluatorSpinner: AppCompatSpinner
+    private lateinit var integratorMenu: MaterialAutoCompleteTextView
+    private lateinit var pathEvaluatorMenu: MaterialAutoCompleteTextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var periodET: EditText
     private lateinit var epicycleNumET: EditText
@@ -35,26 +34,29 @@ class FourierSeriesActivity : BaseActivity() {
     private lateinit var integralSegNumET: EditText
     private lateinit var listAdapter: ListAdapter
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fourier_series_main)
+        val bindings = FourierSeriesMainBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val drawButton = draw_btn!!
-        val computeButton = compute_btn!!
-        val startButton = start_btn!!
-        val sortButton = sort_btn!!
-        integralSegNumET = integral_fragment_number!!.editText
-        threadsNumET = threads_num!!.editText
-        epicycleNumET = epicycles_number!!.editText
-        periodET = period!!.editText
-        recyclerView = recycler_view!!
-        evaluatorSpinner = evaluator_spinner!!
+        val drawButton = bindings.drawBtn
+        val computeButton = bindings.computeBtn
+        val startButton = bindings.startBtn
+        val sortButton = bindings.sortBtn
+        integralSegNumET = bindings.integralFragmentNumber.editText
+        threadsNumET = bindings.threadsNum.editText
+        epicycleNumET = bindings.epicyclesNumber.editText
+        periodET = bindings.period.editText
+        recyclerView = bindings.recyclerView
+        pathEvaluatorMenu = bindings.pathEvaluatorMenu
+        integratorMenu = bindings.integratorMenu
+
+        configSpinner()
 
         listAdapter = ListAdapter(this, epicycleData)
         recyclerView.adapter = listAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-        configSpinner()
 
         // set the default values
         @Suppress("SetTextI18n")
@@ -157,8 +159,7 @@ class FourierSeriesActivity : BaseActivity() {
                         }
                     }
                     else -> {
-                        // no reach
-                        throw RuntimeException()
+                        unreachable()
                     }
                 }
                 epicycleData.sortWith(comparator)
@@ -169,30 +170,14 @@ class FourierSeriesActivity : BaseActivity() {
     }
 
     private fun configSpinner() {
-        val spinnerAdapter = object : ArrayAdapter<PathEvaluator>(
-            this, android.R.layout.simple_list_item_1, arrayOf(
-                PathEvaluator.LINEAR,
-                PathEvaluator.TIME
-            )
-        ) {
-            private fun setMyView(view: View, position: Int) {
-                val textView = view.findViewById<TextView>(android.R.id.text1)
-                textView.text = getItem(position)!!.toString(context)
-            }
-
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                return super.getView(position, convertView, parent).also {
-                    setMyView(it, position)
-                }
-            }
-
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                return super.getDropDownView(position, convertView, parent).also {
-                    setMyView(it, position)
-                }
-            }
+        pathEvaluatorMenu.apply {
+            setText(PathEvaluator.TIME.textRes)
+            setSimpleItems(PathEvaluator.values().map { it.toString(this@FourierSeriesActivity) }.toTypedArray())
         }
-        evaluatorSpinner.adapter = spinnerAdapter
+        integratorMenu.apply {
+            setText(Integrator.SIMPSON.displayName)
+            setSimpleItems(Integrator.values().map { it.displayName }.toTypedArray())
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -230,7 +215,9 @@ class FourierSeriesActivity : BaseActivity() {
                 period,
                 epicycleNum,
                 threadsNum,
-                (evaluatorSpinner.selectedItem as PathEvaluator).enumInt
+                // TODO: bad method to get index of selected item
+                PathEvaluator.values().find { getString(it.textRes) == pathEvaluatorMenu.text.toString() }!!.enumInt,
+                Integrator.values().find { it.displayName == integratorMenu.text.toString() }!!.enumInt
             ) { re, im, n, p ->
                 val epicycle = Epicycle(n, ComplexValue(re, im), p)
                 // sequential result fetching; not require mutex lock
@@ -286,6 +273,15 @@ class FourierSeriesActivity : BaseActivity() {
         fun toString(context: Context): String {
             return context.getString(textRes)
         }
+    }
+
+    enum class Integrator(val enumInt: Int, val displayName: String) {
+        TRAPEZOID(0, "Trapezoid"),
+        LEFT_RECTANGLE(1, "Left rectangle"),
+        RIGHT_RECTANGLE(2, "Right rectangle"),
+        SIMPSON(3, "Simpson's 1/3 rule"),
+        SIMPSON38(4, "Simpson's 3/8 rule"),
+        BOOLE(5, "Boole's rule"),
     }
 }
 

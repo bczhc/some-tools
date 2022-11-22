@@ -750,5 +750,7 @@
     <string name="note_selected_notes_count_msg">已选择%1$d项</string>
     <string name="note_batch_deleted_notes_done_toast">已删除%1$d条笔记</string>
     <string name="note_modified_save_alert">是否保存</string>
+    <string name="fourier_series_path_evaluator_menu_hint">路径求值器</string>
+    <string name="fourier_series_integrator_menu_hint">数值积分器</string>
     <!-- end -->
 </resources>

@@ -70,11 +70,32 @@
                     android:id="@+id/threads_num"
                     android:inputType="number"
             />
-            <androidx.appcompat.widget.AppCompatSpinner
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/evaluator_spinner"
-            />
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:hint="@string/fourier_series_path_evaluator_menu_hint"
+            >
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:id="@+id/path_evaluator_menu"
+                />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:hint="@string/fourier_series_integrator_menu_hint"
+            >
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:id="@+id/integrator_menu"
+                />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </HorizontalScrollView>
     <androidx.recyclerview.widget.RecyclerView
