@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat
 import pers.zhc.tools.BaseView
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.AsyncTryDo
+import pers.zhc.tools.utils.DisplayUtil
 import pers.zhc.tools.utils.GestureResolver
 
 /**
@@ -35,12 +36,12 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             style = Paint.Style.STROKE
         }
         epicyclePaint.apply {
-            strokeWidth = 0F
+            strokeWidth = DisplayUtil.dip2px(context, 0.8F).toFloat()
             color = ActivityCompat.getColor(context, R.color.highContrastMain)
             style = Paint.Style.STROKE
         }
         pathPaint.apply {
-            strokeWidth = 0F
+            strokeWidth = DisplayUtil.dip2px(context, 1.0F).toFloat()
             color = Color.RED
             style = Paint.Style.STROKE
         }

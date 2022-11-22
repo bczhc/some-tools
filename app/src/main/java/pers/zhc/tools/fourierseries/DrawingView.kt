@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import pers.zhc.tools.BaseView
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.DisplayUtil
 import java.util.*
 
 /**
@@ -26,18 +27,15 @@ class DrawingView : BaseView {
     private val axesPaint = Paint()
 
     init {
-        val setProperties = { paint: Paint ->
-            paint.strokeWidth = 0F
-            paint.style = Paint.Style.STROKE
-        }
-
         paint.apply {
-            setProperties(this)
+            strokeWidth = DisplayUtil.dip2px(context, 1.0F).toFloat()
+            style = Paint.Style.STROKE
             color = ContextCompat.getColor(context, R.color.highContrastMain)
         }
         axesPaint.apply {
-            setProperties(this)
+            strokeWidth = 0.0F
             color = Color.GRAY
+            style = Paint.Style.STROKE
         }
     }
 
