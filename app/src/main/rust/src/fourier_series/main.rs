@@ -1,15 +1,18 @@
+use bczhc_lib::complex::integral;
+use bczhc_lib::complex::integral::Integrate;
 use std::sync::Mutex;
 
-use bczhc_lib::complex_num::ComplexValueF64;
 use bczhc_lib::epicycle::Epicycle;
 use bczhc_lib::fourier_series::{compute_iter, EvaluatePath, LinearPath, TimePath};
 use bczhc_lib::point::PointF64;
-use bczhc_lib::{fourier_series, mutex_lock};
-use jni::objects::{GlobalRef, JClass, JObject, JValue};
+use jni::objects::{GlobalRef, JClass, JValue};
 use jni::sys::{jobject, jobjectArray};
 use jni::{JNIEnv, JavaVM};
+use num_complex::Complex64;
+use num_traits::FromPrimitive;
 use once_cell::sync::Lazy;
-use rayon::prelude::*;
+
+use crate::fourier_series::{Integrator, PathEvaluator};
 
 static JAVA_VM: Lazy<Mutex<Option<JavaVM>>> = Lazy::new(|| Mutex::new(None));
 static RESULT_CALLBACK: Lazy<Mutex<Option<GlobalRef>>> = Lazy::new(|| Mutex::new(None));
@@ -25,8 +28,12 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     epicycle_num: i32,
     thread_num: i32,
     path_evaluator_enum: i32,
+    integrator_enum: i32,
     callback: jobject,
 ) {
+    let path_evaluator_enum = PathEvaluator::from_i32(path_evaluator_enum).unwrap();
+    let integrator_enum = Integrator::from_i32(integrator_enum).unwrap();
+
     let mut points_vec = Vec::new();
 
     let points_length = env.get_array_length(points).unwrap();
@@ -43,82 +50,93 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
         .unwrap();
 
     let thread_num = thread_num as usize;
-    let path_evaluator_enum = PathEvaluator::from(path_evaluator_enum).unwrap();
     // for static dispatching (monomorphization)
+    fn compute<E>(integrator: Integrator, params: Params<E>)
+    where
+        E: EvaluatePath,
+    {
+        match integrator {
+            Integrator::Trapezoid => params.compute::<integral::Trapezoid>(),
+            Integrator::LeftRectangle => params.compute::<integral::LeftRectangle>(),
+            Integrator::RightRectangle => params.compute::<integral::RightRectangle>(),
+            Integrator::Simpson => params.compute::<integral::Simpson>(),
+            Integrator::Simpson38 => params.compute::<integral::Simpson38>(),
+            Integrator::Boole => params.compute::<integral::Boole>(),
+        }
+    }
     match path_evaluator_enum {
         PathEvaluator::Linear => {
             let evaluator = LinearPath::new(&points_vec);
-            compute(
+            let params = Params {
                 env,
                 callback,
-                epicycle_num as u32,
+                epicycle_count: epicycle_num as u32,
                 period,
                 thread_num,
-                integral_segments as u32,
-                evaluator,
-            );
+                integral_segments: integral_segments as u32,
+                path_evaluator: evaluator,
+            };
+            compute(integrator_enum, params);
         }
         PathEvaluator::Time => {
-            let evaluator = TimePath::new(&points_vec);
-            compute(
+            let evaluator = LinearPath::new(&points_vec);
+            let params = Params {
                 env,
                 callback,
-                epicycle_num as u32,
+                epicycle_count: epicycle_num as u32,
                 period,
                 thread_num,
-                integral_segments as u32,
-                evaluator,
-            );
+                integral_segments: integral_segments as u32,
+                path_evaluator: evaluator,
+            };
+            compute(integrator_enum, params);
         }
     };
 }
 
-enum PathEvaluator {
-    Linear,
-    Time,
-}
-
-impl PathEvaluator {
-    fn from(enum_int: i32) -> Option<Self> {
-        match enum_int {
-            0 => Some(PathEvaluator::Linear),
-            1 => Some(PathEvaluator::Time),
-            _ => None,
-        }
-    }
-}
-
-fn compute<T>(
-    env: JNIEnv,
+struct Params<'a, E>
+where
+    E: EvaluatePath,
+{
+    env: JNIEnv<'a>,
     callback: jobject,
     epicycle_count: u32,
     period: f64,
     thread_num: usize,
     integral_segments: u32,
-    path_evaluator: T,
-) where
-    T: EvaluatePath,
+    path_evaluator: E,
+}
+
+impl<'a, E> Params<'a, E>
+where
+    E: EvaluatePath,
 {
-    let thread_pool = rayon::ThreadPoolBuilder::new()
-        .num_threads(thread_num)
-        .build()
-        .unwrap();
+    fn compute<I>(self)
+    where
+        I: Integrate + Send,
+    {
+        let thread_pool = rayon::ThreadPoolBuilder::new()
+            .num_threads(self.thread_num)
+            .build()
+            .unwrap();
 
-    let epicycle_count = epicycle_count as i32;
-    let n_to = epicycle_count / 2;
-    let n_from = -(epicycle_count - n_to) + 1;
+        let epicycle_count = self.epicycle_count as i32;
+        let n_to = epicycle_count / 2;
+        let n_from = -(epicycle_count - n_to) + 1;
 
-    let evaluator_addr = &path_evaluator as *const T as usize;
-    let epicycles = thread_pool.install(|| {
-        compute_iter(n_from, n_to, period, integral_segments, move |t| {
-            let evaluator = unsafe { &*(evaluator_addr as *const T) };
-            let p = evaluator.evaluate(t / period);
-            ComplexValueF64::new(p.x, p.y)
-        })
-    });
+        let evaluator_addr = &self.path_evaluator as *const E as usize;
+        let period = self.period;
+        let epicycles = thread_pool.install(|| {
+            compute_iter::<I, _>(n_from, n_to, period, self.integral_segments, move |t| {
+                let evaluator = unsafe { &*(evaluator_addr as *const E) };
+                let p = evaluator.evaluate(t / period);
+                Complex64::new(p.x, p.y)
+            })
+        });
 
-    for e in epicycles {
-        callback_call(env, callback, e).unwrap();
+        for e in epicycles {
+            callback_call(self.env, self.callback, e).unwrap();
+        }
     }
 }
 

@@ -83,6 +83,8 @@ dependencies = [
  "errno",
  "float-cmp",
  "libc",
+ "num-complex",
+ "num-traits",
  "polling",
  "rayon",
  "thiserror",
@@ -1099,6 +1101,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "num-complex"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ae39348c8bc5fbd7f40c727a9925f03517afd2ab27d46702108b6a7e5414c19"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
 name = "num-derive"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1143,9 +1154,9 @@ dependencies = [
 
 [[package]]
 name = "num-traits"
-version = "0.2.14"
+version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9a64b1ec5cda2586e284722486d802acf1f7dbdc623e2bfc57e65ca1cd099290"
+checksum = "578ede34cf02f8924ab9447f50c28075b4d3e5b269972345e7e0372b38c6cdcd"
 dependencies = [
  "autocfg",
 ]
@@ -1798,6 +1809,7 @@ dependencies = [
  "lzma-rs",
  "ndk",
  "nix 0.25.0",
+ "num-complex",
  "num-derive",
  "num-traits",
  "once_cell",
