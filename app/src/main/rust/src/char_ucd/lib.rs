@@ -3,7 +3,7 @@ use std::io::BufReader;
 
 use quick_xml::events::attributes::Attributes;
 use quick_xml::events::Event;
-use quick_xml::name::QName;
+
 use quick_xml::Reader;
 use serde_json::Value;
 use zip::ZipArchive;
@@ -69,7 +69,7 @@ fn attributes2json(attrs: Attributes) -> Value {
         assert!(json
             .insert(
                 String::from_utf8_lossy(attr.key.as_ref()).to_string(),
-                Value::String(String::from_utf8_lossy(&*attr.value).to_string()),
+                Value::String(String::from_utf8_lossy(&attr.value).to_string()),
             )
             .is_none());
     }

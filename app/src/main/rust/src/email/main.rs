@@ -70,7 +70,7 @@ fn run(
     for cc in cc {
         message_builder = message_builder.cc(cc.parse()?);
     }
-    let message = message_builder.subject(&subject).body(body)?;
+    let message = message_builder.subject(subject).body(body)?;
 
     let smtp_transport = SmtpTransport::relay(smtp_server.as_str())?
         .credentials(credentials)

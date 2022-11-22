@@ -1,8 +1,8 @@
+use crate::jni_helper::CheckOrThrow;
 use crate::transfer::lib;
 use jni::objects::{JClass, JString};
 use jni::sys::{jint, jlong, jobject};
 use jni::JNIEnv;
-use crate::jni_helper::CheckOrThrow;
 
 #[no_mangle]
 #[allow(non_snake_case)]

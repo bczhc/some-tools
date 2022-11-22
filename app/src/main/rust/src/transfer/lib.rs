@@ -5,13 +5,13 @@ use bczhc_lib::{rw_read, rw_write};
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 use jni::objects::{GlobalRef, JString, JValue};
 use jni::sys::{jfloat, jint, jlong, jobject};
-use jni::{AttachGuard, JNIEnv, JavaVM};
+use jni::{JNIEnv, JavaVM};
 use num_traits::FromPrimitive;
 use once_cell::sync::Lazy;
 use std::fs::{create_dir, create_dir_all, File};
 use std::io;
 use std::io::{BufReader, BufWriter, Cursor, Read, Write};
-use std::net::{SocketAddr, SocketAddrV4, TcpListener, TcpStream};
+use std::net::{SocketAddrV4, TcpListener, TcpStream};
 use std::path::{Path, PathBuf};
 use std::sync::RwLock;
 use std::thread::spawn;
@@ -204,7 +204,7 @@ where
     R: Read,
 {
     let jvm_guard = rw_read!(JVM);
-    let env_guard = jvm_guard.as_ref().unwrap().attach_current_thread()?;
+    let _env_guard = jvm_guard.as_ref().unwrap().attach_current_thread()?;
 
     let mut archive = Archive::new(reader);
 
@@ -214,7 +214,7 @@ where
     //
     // jni_log(*env_guard, unpack_dir)?;
 
-    archive.unpack(&unpack_dir)?;
+    archive.unpack(unpack_dir)?;
 
     Ok(())
 }
@@ -314,7 +314,7 @@ pub fn send(
 
     let addr = socket_addr.parse::<SocketAddrV4>()?;
 
-    let stream = TcpStream::connect(&addr)?;
+    let stream = TcpStream::connect(addr)?;
 
     let mut writer = BufWriter::new(&stream);
 

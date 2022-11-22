@@ -1,6 +1,5 @@
 use std::mem::transmute;
 
-
 use jni::objects::JClass;
 use jni::sys::{jbyteArray, jint, jshortArray};
 use jni::JNIEnv;
@@ -8,7 +7,7 @@ use jni::JNIEnv;
 use crate::jni_helper::UnwrapOrThrow;
 
 fn get_char(env: JNIEnv, codepoint: u32) -> char {
-    char::from_u32(codepoint as u32).unwrap_or_throw(env, "Invalid codepoint")
+    char::from_u32(codepoint).unwrap_or_throw(env, "Invalid codepoint")
 }
 
 #[no_mangle]
@@ -44,7 +43,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Char_encodeUTF8(
     let mut buf = vec![0_u8; c.len_utf8()];
     c.encode_utf8(&mut buf);
 
-    env.set_byte_array_region(arr, start as i32, unsafe { transmute(&buf[..]) })
+    env.set_byte_array_region(arr, start, unsafe { transmute(&buf[..]) })
         .unwrap();
 }
 
@@ -61,6 +60,6 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Char_encodeUTF16(
     let mut buf = vec![0_u16; c.len_utf16()];
     c.encode_utf16(&mut buf);
 
-    env.set_short_array_region(arr, start as i32, unsafe { transmute(&buf[..]) })
+    env.set_short_array_region(arr, start, unsafe { transmute(&buf[..]) })
         .unwrap();
 }

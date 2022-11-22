@@ -1,7 +1,7 @@
-use std::io::Cursor;
 use jni::objects::JClass;
 use jni::sys::jbyteArray;
 use jni::JNIEnv;
+use std::io::Cursor;
 mod errors;
 use errors::*;
 

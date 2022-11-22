@@ -41,7 +41,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_hasNext(
     addr: jlong,
 ) -> jboolean {
     let iter = get_ref(addr);
-    (iter.chars.peek() != None) as jboolean
+    iter.chars.peek().is_some() as jboolean
 }
 
 #[no_mangle]
@@ -97,7 +97,7 @@ impl<'a> StringWithIter<'a> {
         let raw_ptr = Box::into_raw(Box::new(str));
         Self {
             str: raw_ptr,
-            chars: unsafe { (&*raw_ptr).chars().peekable() },
+            chars: unsafe { (*raw_ptr).chars().peekable() },
         }
     }
 }

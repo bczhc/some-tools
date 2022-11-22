@@ -6,7 +6,7 @@ use std::net::IpAddr;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Ip_getLocalIpObj(env: JNIEnv, _: JClass) -> jlong {
+pub fn Java_pers_zhc_tools_jni_JNI_00024Ip_getLocalIpObj(_env: JNIEnv, _: JClass) -> jlong {
     todo!()
 }
 

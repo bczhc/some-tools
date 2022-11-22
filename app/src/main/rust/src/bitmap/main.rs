@@ -1,8 +1,7 @@
 use image::{ColorType, ImageFormat};
 use jni::objects::{JClass, JString};
-use jni::sys::{jobject};
+use jni::sys::jobject;
 use jni::JNIEnv;
-
 
 use crate::bitmap::error::Result;
 

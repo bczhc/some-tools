@@ -1,21 +1,16 @@
 use bczhc_lib::complex::integral;
 use bczhc_lib::complex::integral::Integrate;
-use std::sync::Mutex;
 
 use bczhc_lib::epicycle::Epicycle;
-use bczhc_lib::fourier_series::{compute_iter, EvaluatePath, LinearPath, TimePath};
+use bczhc_lib::fourier_series::{compute_iter, EvaluatePath, LinearPath};
 use bczhc_lib::point::PointF64;
-use jni::objects::{GlobalRef, JClass, JValue};
+use jni::objects::{JClass, JValue};
 use jni::sys::{jobject, jobjectArray};
-use jni::{JNIEnv, JavaVM};
+use jni::JNIEnv;
 use num_complex::Complex64;
 use num_traits::FromPrimitive;
-use once_cell::sync::Lazy;
 
 use crate::fourier_series::{Integrator, PathEvaluator};
-
-static JAVA_VM: Lazy<Mutex<Option<JavaVM>>> = Lazy::new(|| Mutex::new(None));
-static RESULT_CALLBACK: Lazy<Mutex<Option<GlobalRef>>> = Lazy::new(|| Mutex::new(None));
 
 #[no_mangle]
 #[allow(non_snake_case, clippy::too_many_arguments)]
@@ -44,7 +39,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
         points_vec.push(PointF64::new(x as f64, y as f64))
     }
 
-    let pool = rayon::ThreadPoolBuilder::new()
+    let _pool = rayon::ThreadPoolBuilder::new()
         .num_threads(thread_num as usize)
         .build()
         .unwrap();
