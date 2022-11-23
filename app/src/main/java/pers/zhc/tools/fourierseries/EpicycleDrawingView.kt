@@ -28,6 +28,9 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
     private var transformation: Matrix? = null
     private var run = true
     var tIncrement = 0.01
+    private val unitEpicycleStrokeWidth = DisplayUtil.dip2px(context, 0.8F).toFloat()
+    private val unitPathStrokeWidth = DisplayUtil.dip2px(context, 1.0F).toFloat()
+    private var matrixScale = 1.0
 
     init {
         axesPaint.apply {
@@ -36,12 +39,12 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             style = Paint.Style.STROKE
         }
         epicyclePaint.apply {
-            strokeWidth = DisplayUtil.dip2px(context, 0.8F).toFloat()
+            strokeWidth = unitEpicycleStrokeWidth
             color = ActivityCompat.getColor(context, R.color.highContrastMain)
             style = Paint.Style.STROKE
         }
         pathPaint.apply {
-            strokeWidth = DisplayUtil.dip2px(context, 1.0F).toFloat()
+            strokeWidth = unitPathStrokeWidth
             color = Color.RED
             style = Paint.Style.STROKE
         }
@@ -77,6 +80,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             event: MotionEvent?
         ) {
             transformation!!.postScale(dScale, dScale, midPointX, midPointY)
+            this@EpicycleDrawingView.matrixScale *= dScale.toDouble()
         }
 
         override fun onTwoPointsUp(event: MotionEvent?) {
@@ -129,6 +133,10 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
         }
         // apply the transformation
         canvas.setMatrix(transformation)
+
+        // adjust to make their stroke width look unique when zooming
+        epicyclePaint.strokeWidth = unitEpicycleStrokeWidth / matrixScale.toFloat()
+        pathPaint.strokeWidth = unitPathStrokeWidth / matrixScale.toFloat()
 
         // draw the axes
         canvas.drawLine(-width / 2F, 0F, width / 2F, 0F, axesPaint)
