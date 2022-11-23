@@ -34,7 +34,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     chmod +x install && \
     ./install -y && \
     . ~/.cargo/env && \
-    rustup default nightly && \
+    rustup default nightly-2022-11-21 && \
     rustc --version && \
     ./tools/configure-rust
 
