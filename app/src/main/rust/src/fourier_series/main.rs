@@ -4,15 +4,14 @@ use bczhc_lib::complex::integral::Integrate;
 use bczhc_lib::epicycle::Epicycle;
 use bczhc_lib::fourier_series::{compute_iter, euclid, EvaluatePath, LinearPath, TimePath};
 use jni::objects::{JClass, JValue};
-use jni::sys::{jobject, jobjectArray};
+use jni::sys::{jfloat, jobject, jobjectArray};
 use jni::JNIEnv;
-use num_complex::Complex64;
-use num_traits::FromPrimitive;
+use num_complex::Complex;
+use num_traits::{AsPrimitive, Float, FromPrimitive, NumAssign};
 
 type Point<T> = euclid::Point2D<T, ()>;
-type PointF64 = Point<f64>;
 
-use crate::fourier_series::{Integrator, PathEvaluator};
+use crate::fourier_series::{FloatType, Integrator, PathEvaluator};
 
 #[no_mangle]
 #[allow(non_snake_case, clippy::too_many_arguments)]
@@ -26,19 +25,65 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     thread_num: i32,
     path_evaluator_enum: i32,
     integrator_enum: i32,
+    float_type_enum: i32,
     callback: jobject,
 ) {
     let path_evaluator_enum = PathEvaluator::from_i32(path_evaluator_enum).unwrap();
     let integrator_enum = Integrator::from_i32(integrator_enum).unwrap();
+    let float_type = FloatType::from_i32(float_type_enum).unwrap();
 
-    let mut points_vec = Vec::new();
+    match float_type {
+        FloatType::F32 => compute_with_float_type::<f32>(
+            env,
+            points,
+            integral_segments,
+            period as f32,
+            epicycle_num,
+            thread_num,
+            path_evaluator_enum,
+            integrator_enum,
+            callback,
+        ),
+        FloatType::F64 => compute_with_float_type::<f64>(
+            env,
+            points,
+            integral_segments,
+            period as f64,
+            epicycle_num,
+            thread_num,
+            path_evaluator_enum,
+            integrator_enum,
+            callback,
+        ),
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn compute_with_float_type<F>(
+    env: JNIEnv,
+    points: jobjectArray,
+    integral_segments: i32,
+    period: F,
+    epicycle_num: i32,
+    thread_num: i32,
+    path_evaluator_enum: PathEvaluator,
+    integrator_enum: Integrator,
+    callback: jobject,
+) where
+    F: bczhc_lib::fourier_series::FloatNum + NumAssign + Send + Sync + 'static,
+    jfloat: AsPrimitive<F>,
+    usize: AsPrimitive<F>,
+    i32: AsPrimitive<F>,
+    u32: AsPrimitive<F>,
+{
+    let mut points_vec: Vec<Point<F>> = Vec::new();
 
     let points_length = env.get_array_length(points).unwrap();
     for i in 0..points_length {
         let object = env.get_object_array_element(points, i).unwrap();
         let x = env.get_field(object, "x", "F").unwrap().f().unwrap();
         let y = env.get_field(object, "y", "F").unwrap().f().unwrap();
-        points_vec.push(PointF64::new(x as f64, y as f64))
+        points_vec.push(Point::new(x.as_(), y.as_()))
     }
 
     let _pool = rayon::ThreadPoolBuilder::new()
@@ -48,9 +93,12 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
 
     let thread_num = thread_num as usize;
     // for static dispatching (monomorphization)
-    fn compute<E>(integrator: Integrator, params: Params<E>)
+    fn compute<E, F>(integrator: Integrator, params: Params<E, F>)
     where
-        E: EvaluatePath<f64>,
+        E: EvaluatePath<F>,
+        F: bczhc_lib::fourier_series::FloatNum + NumAssign + Send + Sync + 'static,
+        i32: AsPrimitive<F>,
+        u32: AsPrimitive<F>,
     {
         match integrator {
             Integrator::Trapezoid => params.compute::<integral::Trapezoid>(),
@@ -91,22 +139,28 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     };
 }
 
-struct Params<'a, E>
+struct Params<'a, E, F>
 where
-    E: EvaluatePath<f64>,
+    E: EvaluatePath<F>,
+    F: bczhc_lib::fourier_series::FloatNum + NumAssign + Send + Sync + 'static,
+    i32: AsPrimitive<F>,
+    u32: AsPrimitive<F>,
 {
     env: JNIEnv<'a>,
     callback: jobject,
     epicycle_count: u32,
-    period: f64,
+    period: F,
     thread_num: usize,
     integral_segments: u32,
     path_evaluator: E,
 }
 
-impl<'a, E> Params<'a, E>
+impl<'a, E, F> Params<'a, E, F>
 where
-    E: EvaluatePath<f64>,
+    E: EvaluatePath<F>,
+    F: bczhc_lib::fourier_series::FloatNum + NumAssign + Send + Sync + 'static,
+    i32: AsPrimitive<F>,
+    u32: AsPrimitive<F>,
 {
     fn compute<I>(self)
     where
@@ -124,10 +178,10 @@ where
         let evaluator_addr = &self.path_evaluator as *const E as usize;
         let period = self.period;
         let epicycles = thread_pool.install(|| {
-            compute_iter::<I, _>(n_from, n_to, period, self.integral_segments, move |t| {
+            compute_iter::<I, _, F>(n_from, n_to, period, self.integral_segments, move |t| {
                 let evaluator = unsafe { &*(evaluator_addr as *const E) };
                 let p = evaluator.evaluate(t / period);
-                Complex64::new(p.x, p.y)
+                Complex::new(p.x, p.y)
             })
         });
 
@@ -137,16 +191,24 @@ where
     }
 }
 
-fn callback_call(env: JNIEnv, callback: jobject, epicycle: Epicycle) -> jni::errors::Result<()> {
+fn callback_call<F>(
+    env: JNIEnv,
+    callback: jobject,
+    epicycle: Epicycle<F>,
+) -> jni::errors::Result<()>
+where
+    F: Float,
+    F: AsPrimitive<f64>,
+{
     env.call_method(
         callback,
         "onResult",
         "(DDID)V",
         &[
-            JValue::Double(epicycle.a.re),
-            JValue::Double(epicycle.a.im),
+            JValue::Double(epicycle.a.re.as_()),
+            JValue::Double(epicycle.a.im.as_()),
             JValue::Int(epicycle.n),
-            JValue::Double(epicycle.p),
+            JValue::Double(epicycle.p.as_()),
         ],
     )?;
     Ok(())

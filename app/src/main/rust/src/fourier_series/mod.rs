@@ -19,3 +19,9 @@ enum Integrator {
     Simpson38 = 4,
     Boole = 5,
 }
+
+#[derive(FromPrimitive)]
+enum FloatType {
+    F32,
+    F64,
+}
