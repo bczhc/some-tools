@@ -81,6 +81,7 @@ version = "1.0.0"
 dependencies = [
  "cfg-if 1.0.0",
  "errno",
+ "euclid",
  "float-cmp",
  "libc",
  "num-complex",
@@ -515,6 +516,15 @@ checksum = "aa68f1b12764fab894d2755d2518754e71b4fd80ecfb822714a1206c2aab39bf"
 dependencies = [
  "cc",
  "libc",
+]
+
+[[package]]
+name = "euclid"
+version = "0.22.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b52c2ef4a78da0ba68fbe1fd920627411096d2ac478f7f4c9f3a54ba6705bade"
+dependencies = [
+ "num-traits",
 ]
 
 [[package]]

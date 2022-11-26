@@ -2,13 +2,15 @@ use bczhc_lib::complex::integral;
 use bczhc_lib::complex::integral::Integrate;
 
 use bczhc_lib::epicycle::Epicycle;
-use bczhc_lib::fourier_series::{compute_iter, EvaluatePath, LinearPath, TimePath};
-use bczhc_lib::point::PointF64;
+use bczhc_lib::fourier_series::{compute_iter, euclid, EvaluatePath, LinearPath, TimePath};
 use jni::objects::{JClass, JValue};
 use jni::sys::{jobject, jobjectArray};
 use jni::JNIEnv;
 use num_complex::Complex64;
 use num_traits::FromPrimitive;
+
+type Point<T> = euclid::Point2D<T, ()>;
+type PointF64 = Point<f64>;
 
 use crate::fourier_series::{Integrator, PathEvaluator};
 
@@ -48,7 +50,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     // for static dispatching (monomorphization)
     fn compute<E>(integrator: Integrator, params: Params<E>)
     where
-        E: EvaluatePath,
+        E: EvaluatePath<f64>,
     {
         match integrator {
             Integrator::Trapezoid => params.compute::<integral::Trapezoid>(),
@@ -91,7 +93,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
 
 struct Params<'a, E>
 where
-    E: EvaluatePath,
+    E: EvaluatePath<f64>,
 {
     env: JNIEnv<'a>,
     callback: jobject,
@@ -104,7 +106,7 @@ where
 
 impl<'a, E> Params<'a, E>
 where
-    E: EvaluatePath,
+    E: EvaluatePath<f64>,
 {
     fn compute<I>(self)
     where
