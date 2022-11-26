@@ -254,22 +254,22 @@ repositories {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.0.7")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.10")
-    implementation("com.google.android.material:material:1.6.1")
+    implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.1.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.20")
+    implementation("com.google.android.material:material:1.8.0-alpha03")
     implementation("com.github.mik3y:usb-serial-for-android:3.3.0")
     implementation("com.github.bczhc:java-lib:18a858c167")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.2")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.2")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     implementation("me.zhanghai.android.fastscroll:library:1.1.7")
     implementation("com.github.bczhc:jni-java:9205bf19ea")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
     implementation("com.google.code.gson:gson:2.10")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0") {
         isTransitive = false
     }
-    implementation("com.google.zxing:core:3.5.0")
+    implementation("com.google.zxing:core:3.5.1")
 }
 
 task("saveNdkPath") {
