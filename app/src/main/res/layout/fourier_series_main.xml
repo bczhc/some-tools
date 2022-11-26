@@ -81,6 +81,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="none"
                         android:id="@+id/float_type"
+                        android:hint="@string/fourier_series_float_type_menu_hint"
+                        android:textColorHint="@color/transparent"
                 />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -94,6 +96,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="none"
                         android:id="@+id/path_evaluator_menu"
+                        android:hint="@string/fourier_series_path_evaluator_menu_hint"
+                        android:textColorHint="@color/transparent"
                 />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -107,6 +111,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="none"
                         android:id="@+id/integrator_menu"
+                        android:hint="@string/fourier_series_integrator_menu_hint"
+                        android:textColorHint="@color/transparent"
                 />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
