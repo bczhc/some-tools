@@ -752,5 +752,6 @@
     <string name="note_modified_save_alert">是否保存</string>
     <string name="fourier_series_path_evaluator_menu_hint">路径求值器</string>
     <string name="fourier_series_integrator_menu_hint">数值积分器</string>
+    <string name="fourier_series_float_type_menu_hint">浮点类型</string>
     <!-- end -->
 </resources>

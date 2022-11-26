@@ -25,6 +25,7 @@ import kotlin.math.abs
  * @author bczhc
  */
 class FourierSeriesActivity : BaseActivity() {
+    private lateinit var floatTypeMenu: MaterialAutoCompleteTextView
     private lateinit var integratorMenu: MaterialAutoCompleteTextView
     private lateinit var pathEvaluatorMenu: MaterialAutoCompleteTextView
     private lateinit var recyclerView: RecyclerView
@@ -51,6 +52,7 @@ class FourierSeriesActivity : BaseActivity() {
         recyclerView = bindings.recyclerView
         pathEvaluatorMenu = bindings.pathEvaluatorMenu
         integratorMenu = bindings.integratorMenu
+        floatTypeMenu = bindings.floatType
 
         configSpinner()
 
@@ -178,6 +180,10 @@ class FourierSeriesActivity : BaseActivity() {
             setText(Integrator.SIMPSON.displayName)
             setSimpleItems(Integrator.values().map { it.displayName }.toTypedArray())
         }
+        floatTypeMenu.apply {
+            setText(FloatType.F64.display)
+            setSimpleItems(FloatType.values().map { it.display }.toTypedArray())
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -217,7 +223,8 @@ class FourierSeriesActivity : BaseActivity() {
                 threadsNum,
                 // TODO: bad method to get index of selected item
                 PathEvaluator.values().find { getString(it.textRes) == pathEvaluatorMenu.text.toString() }!!.enumInt,
-                Integrator.values().find { it.displayName == integratorMenu.text.toString() }!!.enumInt
+                Integrator.values().find { it.displayName == integratorMenu.text.toString() }!!.enumInt,
+                FloatType.values().find { it.display == floatTypeMenu.text.toString() }!!.enumInt
             ) { re, im, n, p ->
                 val epicycle = Epicycle(n, ComplexValue(re, im), p)
                 // sequential result fetching; not require mutex lock
@@ -282,6 +289,11 @@ class FourierSeriesActivity : BaseActivity() {
         SIMPSON(3, "Simpson's 1/3 rule"),
         SIMPSON38(4, "Simpson's 3/8 rule"),
         BOOLE(5, "Boole's rule"),
+    }
+
+    enum class FloatType(val enumInt: Int, val display: String) {
+        F32(0, "f32"),
+        F64(1, "f64"),
     }
 }
 

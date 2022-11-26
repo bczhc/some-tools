@@ -74,6 +74,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:hint="@string/fourier_series_float_type_menu_hint"
+            >
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:id="@+id/float_type"
+                />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:hint="@string/fourier_series_path_evaluator_menu_hint"
             >
                 <com.google.android.material.textfield.MaterialAutoCompleteTextView
