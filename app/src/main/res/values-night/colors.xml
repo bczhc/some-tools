@@ -3,4 +3,11 @@
     <color name="highContrastTextColor">@color/white</color>
     <color name="highContrastMain">@color/highContrastTextColor</color>
     <color name="highContrastBg">@color/black</color>
+
+    <color name="colorPrimary">#064A01</color>
+    <color name="colorOnPrimary">#E0F3FF</color>
+    <color name="colorSecondary">#71B0FF</color>
+    <color name="colorOnSecondary">#003578</color>
+    <color name="colorSurfaceVariant">#3D4453</color>
+    <color name="colorSecondaryContainer">#523755</color>
 </resources>

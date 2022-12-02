@@ -48,13 +48,14 @@
     <!-- ==================== Material 3 Themes ========================= -->
     <style name="Theme.M3Application" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
 
-        <item name="colorSecondary">#71B0FF</item>
-        <item name="colorOnSecondary">#003578</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
 
-<!--        <item name="colorSurface">@color/colorPrimary</item>-->
-<!--        <item name="colorOnSurface">@color/white</item>-->
+        <item name="colorSurfaceVariant">@color/colorSurfaceVariant</item>
+
+        <item name="colorSecondaryContainer">@color/colorSecondaryContainer</item>
     </style>
 
     <style name="Theme.M3Application.NoActionBar" parent="Theme.M3Application">
