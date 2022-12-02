@@ -5,6 +5,8 @@
               android:layout_height="match_parent">
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:text="@string/diary_navigation_view_title"
-              style="@style/TextAppearance.MaterialComponents.Headline5"
+              android:gravity="center_horizontal"
+              style="@style/TextAppearance.Material3.HeadlineLarge"
+              android:paddingTop="10sp"
     />
 </LinearLayout>

@@ -12,14 +12,12 @@
             app:title="@string/diary"
             app:menu="@menu/diary_taking_actionbar"
             android:id="@+id/toolbar"
-            style="@style/Theme.Application.Toolbar.Primary"
     >
         <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
         >
             <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.Application.TextView.Light"
                     android:id="@+id/text_count_tv"
                     tools:text="12345 chars"
                     android:layout_centerVertical="true"

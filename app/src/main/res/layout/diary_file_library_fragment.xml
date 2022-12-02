@@ -10,7 +10,6 @@
             android:layout_height="wrap_content"
             app:menu="@menu/diary_attachment_actionbar"
             app:title="@string/diary_file_library_label"
-            style="@style/Theme.Application.Toolbar.Primary"
             android:id="@+id/toolbar"
     />
     <androidx.recyclerview.widget.RecyclerView

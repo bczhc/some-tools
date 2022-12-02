@@ -159,7 +159,7 @@
                 android:name="pers.zhc.tools.document.Document"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:taskAffinity="pers.zhc.tools.document"
-                android:theme="@style/Theme.Application"
+                android:theme="@style/Theme.M3Application"
                 android:launchMode="singleTask"
                 android:exported="true">
             <intent-filter>
@@ -228,7 +228,7 @@
                 android:label="@string/diary"
                 android:taskAffinity="pers.zhc.tools.diary"
                 android:launchMode="singleTask"
-                android:theme="@style/Theme.Application.NoActionBar" android:exported="true">
+                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -239,7 +239,7 @@
                 android:name=".diary.DiaryTakingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/Theme.Application.Dark.NoActionBar" android:exported="false">
+                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -248,7 +248,7 @@
                 android:name=".diary.DiaryAttachmentActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_library_activity_label_name"
-                android:theme="@style/Theme.Application.NoActionBar" android:exported="false">
+                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -257,7 +257,7 @@
                 android:name=".diary.DiaryAttachmentAddingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_library_activity_label_name"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -266,7 +266,7 @@
                 android:name=".diary.FileLibraryActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/file_library"
-                android:theme="@style/Theme.Application.NoActionBar" android:exported="false">
+                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -275,7 +275,7 @@
                 android:name=".diary.FileLibraryAddingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/file_library"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -284,7 +284,7 @@
                 android:name=".diary.DiaryAttachmentSettingsActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/settings"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -293,7 +293,7 @@
                 android:name=".diary.DiaryContentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/preview"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -302,7 +302,7 @@
                 android:name=".diary.FileLibraryFileDetailActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/file_library"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -311,7 +311,7 @@
                 android:name=".diary.DiaryAttachmentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_preview_activity_label"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -320,7 +320,7 @@
                 android:name=".diary.DiaryFileLibraryEditTextActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_file_library_text_edit_activity_label"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -769,7 +769,7 @@
         <activity
                 android:name=".diary.TextBrowserActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application"
+                android:theme="@style/Theme.M3Application"
                 android:label="@string/text_browser_label"
                 android:exported="true">
             <intent-filter>
