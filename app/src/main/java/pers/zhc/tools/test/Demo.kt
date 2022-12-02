@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.R
 
 /**
  * @author bczhc
@@ -11,15 +12,6 @@ import pers.zhc.tools.BaseActivity
 class Demo : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Title")
-            .setSingleChoiceItems(('A'..'Z').map { it.toString() }.toTypedArray(), 1) { _, _ ->
-
-            }
-            .setPositiveButton("OK") { _, _ ->
-
-            }
-            .show()
+        setContentView(R.layout.test_activity)
     }
 }
