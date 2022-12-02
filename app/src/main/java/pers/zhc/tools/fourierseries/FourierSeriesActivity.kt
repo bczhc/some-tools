@@ -45,10 +45,10 @@ class FourierSeriesActivity : BaseActivity() {
         val computeButton = bindings.computeBtn
         val startButton = bindings.startBtn
         val sortButton = bindings.sortBtn
-        integralSegNumET = bindings.integralFragmentNumber.editText
-        threadsNumET = bindings.threadsNum.editText
-        epicycleNumET = bindings.epicyclesNumber.editText
-        periodET = bindings.period.editText
+        integralSegNumET = bindings.integralFragmentNumber
+        threadsNumET = bindings.threadNum
+        epicycleNumET = bindings.epicyclesNumber
+        periodET = bindings.period
         recyclerView = bindings.recyclerView
         pathEvaluatorMenu = bindings.pathEvaluatorMenu
         integratorMenu = bindings.integratorMenu

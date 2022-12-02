@@ -42,34 +42,70 @@
                       android:orientation="horizontal"
                       android:layout_margin="5dp"
         >
-            <pers.zhc.tools.views.SmartHintEditText
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:hint="@string/fourier_series_integral_fragment_number_hint"
-                    android:id="@+id/integral_fragment_number"
-                    android:inputType="number"
-            />
-            <pers.zhc.tools.views.SmartHintEditText
+                    android:hint="@string/fourier_series_integral_fragment_number_hint"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            >
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/integral_fragment_number"
+                        android:hint="@string/fourier_series_integral_fragment_number_hint"
+                        android:textColorHint="@color/transparent"
+                        android:inputType="number"
+                        style="@style/Widget.Material3.TextInputEditText.FilledBox"
+                />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:hint="@string/fourier_series_period_hint"
-                    android:id="@+id/period"
-                    android:inputType="numberDecimal"
-            />
-            <pers.zhc.tools.views.SmartHintEditText
+                    android:hint="@string/fourier_series_period_hint"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            >
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/period"
+                        android:hint="@string/fourier_series_period_hint"
+                        android:textColorHint="@color/transparent"
+                        android:inputType="numberDecimal"
+                        style="@style/Widget.Material3.TextInputEditText.FilledBox"
+                />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:hint="@string/fourier_series_epicycle_number"
-                    android:id="@+id/epicycles_number"
-                    android:inputType="number"
-            />
-            <pers.zhc.tools.views.SmartHintEditText
+                    android:hint="@string/fourier_series_epicycle_number"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            >
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/epicycles_number"
+                        android:hint="@string/fourier_series_epicycle_number"
+                        android:textColorHint="@color/transparent"
+                        android:inputType="number"
+                        style="@style/Widget.Material3.TextInputEditText.FilledBox"
+                />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:hint="@string/fourier_series_threads_number"
-                    android:id="@+id/threads_num"
-                    android:inputType="number"
-            />
+                    android:hint="@string/fourier_series_threads_number"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
+            >
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/thread_num"
+                        android:hint="@string/fourier_series_threads_number"
+                        android:textColorHint="@color/transparent"
+                        android:inputType="number"
+                        style="@style/Widget.Material3.TextInputEditText.FilledBox"
+                />
+            </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

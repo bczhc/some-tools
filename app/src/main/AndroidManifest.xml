@@ -676,7 +676,7 @@
         <activity
                 android:name=".fourierseries.FourierSeriesActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application"
+                android:theme="@style/Theme.M3Application"
                 android:label="@string/fourier_series_label"
                 android:launchMode="singleTask"
                 android:taskAffinity="pers.zhc.tools.fourier_series"
@@ -690,7 +690,7 @@
         <activity
                 android:name=".fourierseries.DrawingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application.NoActionBar"
+                android:theme="@style/Theme.M3Application.NoActionBar"
                 android:label="@string/fourier_series_label"
                 android:exported="false">
             <intent-filter>
@@ -700,7 +700,7 @@
         <activity
                 android:name=".fourierseries.EpicycleDrawingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application.NoActionBar"
+                android:theme="@style/Theme.M3Application.NoActionBar"
                 android:label="@string/fourier_series_label"
                 android:hardwareAccelerated="false"
                 android:exported="false">

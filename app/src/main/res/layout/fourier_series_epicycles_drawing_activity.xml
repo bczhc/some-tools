@@ -8,7 +8,7 @@
             android:id="@+id/container"
     />
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            style="@style/Widget.Application.Button.OutlinedButton"
+            style="@style/Widget.M3Application.Button.OutlinedButton"
             android:text="@string/option_btn"
             android:layout_gravity="end"
             android:id="@+id/option_btn"
