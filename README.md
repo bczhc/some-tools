@@ -24,9 +24,7 @@ Tools
 
 ### Set build targets
 
-First we set a "target string" in the format `<ABI>-<API>`, with `ABI` is Android ABI and `API` is Android target API level.
-
-The possible values of `ABI` are `armeabi-v7a`, `arm64-v8a`, `x86` and `x86_64`, and you can refer to [Android supported ABIs](https://developer.android.com/ndk/guides/abis#sa). The `API` value is an integer, you can refer to [Platform codenames, versions, API levels, and NDK releases](https://source.android.com/setup/start/build-numbers#platform-code-names-versions-api-levels-and-ndk-releases). Ensure that the NDK compiler for the specified target exists. Its path is: `$NDK_TOOLCHAIN_BIN_DIR/<target-triple><API>-clang[++]` (e.g. `$SDK_DIR/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang`).
+First we set a "target string" in the format `<ABI>-<API>`. The possible values of `ABI` are `armeabi-v7a`, `arm64-v8a`, `x86` and `x86_64`, and you can refer to [Android supported ABIs](https://developer.android.com/ndk/guides/abis#sa). The `API` value is an integer, you can refer to [Platform codenames, versions, API levels, and NDK releases](https://source.android.com/setup/start/build-numbers#platform-code-names-versions-api-levels-and-ndk-releases). Ensure that the NDK compiler for the specified target exists. Its path is: `$NDK_TOOLCHAIN_BIN_DIR/<target-triple><API>-clang[++]` (e.g. `$SDK_DIR/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang`).
 
 Now add a property with the key `ndk.target` in `config.properties` (create it if not existing), and its value is the "target string". If multiple build targets are required, join them together with commas.
 
