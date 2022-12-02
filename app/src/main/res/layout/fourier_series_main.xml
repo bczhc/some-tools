@@ -109,7 +109,7 @@
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:hint="@string/fourier_series_float_type_menu_hint"
             >
                 <com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -124,7 +124,7 @@
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:hint="@string/fourier_series_path_evaluator_menu_hint"
             >
                 <com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -139,7 +139,7 @@
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:hint="@string/fourier_series_integrator_menu_hint"
             >
                 <com.google.android.material.textfield.MaterialAutoCompleteTextView

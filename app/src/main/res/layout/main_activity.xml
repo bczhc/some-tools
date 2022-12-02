@@ -7,21 +7,21 @@
     <pers.zhc.tools.views.SmartHintEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.Application.TextInputLayout.FilledBox"
+            style="@style/Widget.M3Application.TextInputLayout.FilledBox"
             android:id="@+id/server_et"
             app:hint="@string/settings_server_root_url"
     />
     <pers.zhc.tools.views.SmartHintEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.Application.TextInputLayout.FilledBox"
+            style="@style/Widget.M3Application.TextInputLayout.FilledBox"
             android:id="@+id/resource_et"
             app:hint="@string/settings_static_resource_root_url"
     />
     <pers.zhc.tools.views.SmartHintEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.Application.TextInputLayout.FilledBox"
+            style="@style/Widget.M3Application.TextInputLayout.FilledBox"
             android:id="@+id/github_raw_url_et"
             app:hint="@string/settings_github_raw_root_url"
     />

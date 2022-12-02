@@ -10,6 +10,6 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:id="@+id/wubi_word_et"
-            app:hint="@string/wubi_word" style="@style/Widget.Application.TextInputLayout.FilledBox"
+            app:hint="@string/wubi_word" style="@style/Widget.M3Application.TextInputLayout.FilledBox"
     />
 </LinearLayout>

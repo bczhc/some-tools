@@ -28,7 +28,7 @@
     <pers.zhc.tools.views.SmartHintEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.Application.TextInputLayout.FilledBox"
+            style="@style/Widget.M3Application.TextInputLayout.FilledBox"
             app:hint="@string/filename_hint"
             android:layout_below="@id/rl2"
             android:id="@+id/filename_et"

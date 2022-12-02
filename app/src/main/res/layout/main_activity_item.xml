@@ -7,7 +7,7 @@
 >
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/tv"
-              style="@style/TextAppearance.MaterialComponents.Body1"
+              style="@style/TextAppearance.Material3.BodyMedium"
               android:textSize="30sp"
               android:layout_margin="5sp"
               android:background="@drawable/main_activity_item"

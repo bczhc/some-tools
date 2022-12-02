@@ -14,7 +14,7 @@
                 android:inputType="number"
                 app:hint="@string/bus_line_edit_text_hint"
                 android:layout_toStartOf="@id/query_btn"
-                style="@style/Widget.Application.TextInputLayout.FilledBox"
+                style="@style/Widget.M3Application.TextInputLayout.FilledBox"
         />
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="@string/bus_query_btn"

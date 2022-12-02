@@ -27,7 +27,7 @@
                       android:id="@+id/file_info_tv"
                       tools:text="file info"
                       android:textColor="@color/blue"
-                      style="@style/TextAppearance.MaterialComponents.Caption"
+                      style="@style/TextAppearance.Material3.BodyMedium"
             />
         </LinearLayout>
     </RelativeLayout>

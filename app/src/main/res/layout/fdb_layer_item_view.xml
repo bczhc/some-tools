@@ -11,7 +11,7 @@
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/name_tv"
               tools:text="Layer Name"
-              style="@style/TextAppearance.MaterialComponents.Headline5"
+              style="@style/TextAppearance.Material3.TitleLarge"
               android:layout_toStartOf="@id/visibility_btn"
     />
     <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"

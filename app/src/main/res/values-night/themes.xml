@@ -49,7 +49,7 @@
     <style name="Widget.Application.TextView.Light" parent="Widget.MaterialComponents.TextView">
     </style>
 
-    <style name="Theme.Transparent" parent="Theme.Application.NoActionBar">
+    <style name="Theme.Transparent" parent="Theme.M3Application.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>

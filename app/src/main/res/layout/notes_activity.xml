@@ -9,7 +9,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:menu="@menu/note_menu"
-            style="@style/Theme.Application.Toolbar.Primary"
             app:title="@string/note_label"
             android:id="@+id/toolbar"
     />
