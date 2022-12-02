@@ -185,7 +185,7 @@
                 android:name=".test.viewtest.MainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -193,7 +193,7 @@
         <activity
                 android:name=".test.SensorTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -201,7 +201,7 @@
         <activity
                 android:name=".crashhandler.CrashReportActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -209,7 +209,7 @@
         <activity
                 android:name=".test.CrashTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -217,7 +217,7 @@
         <activity
                 android:name=".test.malloctest.MAllocTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -239,7 +239,7 @@
                 android:name=".diary.DiaryTakingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="false">
+                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -248,7 +248,7 @@
                 android:name=".diary.DiaryAttachmentActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_library_activity_label_name"
-                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="false">
+                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -257,7 +257,7 @@
                 android:name=".diary.DiaryAttachmentAddingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_library_activity_label_name"
-                android:theme="@style/Theme.M3Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -266,7 +266,7 @@
                 android:name=".diary.FileLibraryActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/file_library"
-                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="false">
+                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -275,7 +275,7 @@
                 android:name=".diary.FileLibraryAddingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/file_library"
-                android:theme="@style/Theme.M3Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -284,7 +284,7 @@
                 android:name=".diary.DiaryAttachmentSettingsActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/settings"
-                android:theme="@style/Theme.M3Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -293,7 +293,7 @@
                 android:name=".diary.DiaryContentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/preview"
-                android:theme="@style/Theme.M3Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -302,7 +302,7 @@
                 android:name=".diary.FileLibraryFileDetailActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/file_library"
-                android:theme="@style/Theme.M3Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -311,7 +311,7 @@
                 android:name=".diary.DiaryAttachmentPreviewActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_attachment_preview_activity_label"
-                android:theme="@style/Theme.M3Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -320,7 +320,7 @@
                 android:name=".diary.DiaryFileLibraryEditTextActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary_file_library_text_edit_activity_label"
-                android:theme="@style/Theme.M3Application" android:exported="false">
+                android:theme="@style/Theme.M3Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -328,7 +328,7 @@
         <activity
                 android:name=".test.pressuretest.PressureTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -336,7 +336,7 @@
         <activity
                 android:name=".test.Demo"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -357,7 +357,7 @@
                 android:theme="@style/Theme.Application"
                 android:launchMode="singleTask"
                 android:taskAffinity="pers.zhc.tools.type_test"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -365,7 +365,7 @@
         <activity
                 android:name=".test.TTS"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -376,7 +376,7 @@
                 android:theme="@style/Theme.Application"
                 android:launchMode="singleTask"
                 android:taskAffinity="pers.zhc.tools.regex"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -399,7 +399,7 @@
                 android:name=".wubi.WubiInputMethodTTSSettingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -408,7 +408,7 @@
                 android:name=".wubi.WubiCodeSettingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -434,7 +434,7 @@
         <activity
                 android:name=".test.DrawingBoardTest"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -443,7 +443,7 @@
                 android:name=".wubi.WubiDatabaseEditActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/wubi_input_method"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -466,7 +466,7 @@
                 android:name=".bus.BusLineDetailActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/bus_query_label"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -478,7 +478,7 @@
                 android:theme="@style/Theme.Application"
                 android:launchMode="singleTask"
                 android:taskAffinity="pers.zhc.tools.sys_info"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -501,7 +501,7 @@
                 android:name=".Settings"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/settings"
-                android:theme="@style/Theme.Application" android:exported="false">
+                android:theme="@style/Theme.Application" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -513,7 +513,7 @@
                 android:label="@string/unicode_table_label"
                 android:launchMode="singleTask"
                 android:taskAffinity="pers.zhc.tools.unicode_table"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -551,7 +551,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Transparent"
                 android:excludeFromRecents="true"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -573,7 +573,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Transparent"
                 android:excludeFromRecents="true"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -584,7 +584,7 @@
                 android:theme="@style/Theme.Transparent"
                 android:launchMode="singleInstance"
                 android:excludeFromRecents="true"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -624,7 +624,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application"
                 android:label="@string/transfer_receive_label"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -648,7 +648,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application"
                 android:label="@string/email_compose_label"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -658,7 +658,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application"
                 android:label="@string/email_label"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -668,7 +668,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application"
                 android:label="@string/email_contact_label"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -692,7 +692,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.M3Application.NoActionBar"
                 android:label="@string/fourier_series_label"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -703,7 +703,7 @@
                 android:theme="@style/Theme.M3Application.NoActionBar"
                 android:label="@string/fourier_series_label"
                 android:hardwareAccelerated="false"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -713,7 +713,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application"
                 android:label="@string/wubi_code_look_up_label"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -751,7 +751,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Application"
                 android:label="@string/char_ucd_char_info_activity_label"
-                android:exported="false">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
