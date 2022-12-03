@@ -97,6 +97,18 @@ class FdbWindow(private val context: BaseActivity) {
     var onExitListener: OnExitListener? = null
     private lateinit var updateEraserOpacitySlider: (Float) -> Unit
 
+    var hardwareAcceleration = false
+        set(value) {
+            field = value
+            paintView.setLayerType(
+                if (value) {
+                    View.LAYER_TYPE_HARDWARE
+                } else {
+                    View.LAYER_TYPE_SOFTWARE
+                }, null
+            )
+        }
+
     init {
         val ll = LinearLayout(context)
         ll.addView(panelRL)

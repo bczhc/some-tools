@@ -175,7 +175,6 @@ public class PaintView extends View {
         //同上
         eraserPaint.setStrokeCap(Paint.Cap.ROUND);
         eraserPaint.setAlpha(255);
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         //画笔
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mPaintRef = mPaint;

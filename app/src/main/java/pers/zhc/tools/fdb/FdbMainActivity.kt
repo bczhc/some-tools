@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.result.ActivityResult
 import androidx.annotation.RequiresApi
 import kotlinx.android.synthetic.main.fdb_main_activity.*
@@ -21,6 +23,7 @@ import java.io.IOException
  */
 class FdbMainActivity : BaseActivity() {
     private lateinit var requestCapturePermissionCallback: ((result: ActivityResult) -> Unit)
+    private var hardwareAccelerated = false
 
     private val launcher = object {
         val overlaySetting = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -71,7 +74,10 @@ class FdbMainActivity : BaseActivity() {
         }
 
         openCacheDirButton.setOnClickListener {
-            createFdbWindow().also { it.startFDB() }.showImportPathDialog(pathTmpDir)
+            createFdbWindow().also {
+                it.startFDB()
+                it.hardwareAcceleration = hardwareAccelerated
+            }.showImportPathDialog(pathTmpDir)
         }
 
         val serviceIntent = Intent(this, FdbService::class.java)
@@ -109,6 +115,21 @@ class FdbMainActivity : BaseActivity() {
 
     private fun deleteTmpPathFiles() {
         getCacheFilesNotInUse().forEach { it.requireDelete() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.fdb_activity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.hardware_acceleration -> {
+                item.isChecked = !item.isChecked
+                hardwareAccelerated = item.isChecked
+            }
+        }
+        return true
     }
 
     companion object {
