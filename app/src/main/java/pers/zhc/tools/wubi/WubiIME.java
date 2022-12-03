@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import kotlin.Unit;
@@ -508,7 +509,8 @@ public class WubiIME extends InputMethodService {
             ToastUtils.show(context, R.string.adding_succeeded);
         };
 
-        Dialog dialog = new AlertDialog.Builder(context).setView(inflate).setPositiveButton(R.string.confirm, (dialog1, which) -> {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+        Dialog dialog = builder.setView(inflate).setPositiveButton(R.string.confirm, (dialog1, which) -> {
             positiveButtonAction.onClick(dialog1, which);
             inverseDictDatabase.close();
         }).setNegativeButton(R.string.cancel, (dialog1, which) -> inverseDictDatabase.close()).create();

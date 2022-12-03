@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.Common;
@@ -139,7 +140,7 @@ public class FilePickerRL extends RelativeLayout {
         });
         this.pathView = findViewById(R.id.textView);
         this.pathView.setOnClickListener((v) -> {
-            AlertDialog.Builder ad = new AlertDialog.Builder(ctx);
+            MaterialAlertDialogBuilder ad = new MaterialAlertDialogBuilder(ctx);
             EditText et = new EditText(ctx);
             String s = pathView.getText().toString();
             ctx.runOnUiThread(() -> et.setText(ctx.getString(R.string.str, ("/storage/emulated/".equals(s) ? s + "0" : s))));

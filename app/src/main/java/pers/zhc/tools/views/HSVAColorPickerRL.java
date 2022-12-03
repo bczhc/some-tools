@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import kotlin.Unit;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -228,7 +229,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
     }
 
     private void showSavingColorDialog() {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this.context);
+        MaterialAlertDialogBuilder adb = new MaterialAlertDialogBuilder(context);
         EditText editText = new EditText(this.context);
         int color = this.getColor();
         String hexString = ColorUtils.getHexString(color, true);

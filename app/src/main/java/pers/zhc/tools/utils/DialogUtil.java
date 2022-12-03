@@ -163,7 +163,7 @@ public class DialogUtil {
                                                                  @StringRes int neutralButtonText,
                                                                  DialogInterface.OnClickListener neutralButtonAction,
                                                                  @StringRes int titleStrRes) {
-        AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
+        MaterialAlertDialogBuilder adb = new MaterialAlertDialogBuilder(ctx);
         adb.setPositiveButton(positiveButtonText, positiveAction)
                 .setNegativeButton(negativeButtonText, negativeAction)
                 .setNeutralButton(neutralButtonText, neutralButtonAction)

@@ -17,6 +17,7 @@ import android.widget.*;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.filepicker.FilePicker;
@@ -202,7 +203,7 @@ public class Document extends BaseActivity {
                     }
                     String dbPath = db.getPath();
                     File file = new File(dbPath);
-                    AlertDialog.Builder adb = new AlertDialog.Builder(this);
+                    MaterialAlertDialogBuilder adb = new MaterialAlertDialogBuilder(this);
                     View inflate = View.inflate(this, R.layout.export_notes, null);
                     final EditText filename = inflate.findViewById(R.id.filename);
                     filename.setText("doc");

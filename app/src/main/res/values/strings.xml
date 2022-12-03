@@ -471,7 +471,8 @@
     <string name="diary_attachment_library_menu_btn_text">@string/diary_attachment_library_activity_label_name</string>
     <string name="diary_attachment_activity_label_name">附件</string>
     <string name="diary_setting_storage_path_changed_dialog_msg">路径已经修改，是否保存？</string>
-    <string name="diary_attachment_setting_move_file_dialog_title">是否要移动文件\n如果不移动文件，可能会导致文件引用丢失</string>
+    <string name="diary_attachment_setting_move_file_dialog_title">是否要移动文件</string>
+    <string name="diary_attachment_setting_move_file_dialog_message">如果不移动文件，可能会导致文件引用丢失</string>
     <string name="diary_file_not_exist_alert_msg">文件不存在</string>
     <string name="diary_browser_file_btn">预览文件</string>
     <string name="diary_browser_label">预览</string>

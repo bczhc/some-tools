@@ -3,6 +3,8 @@ package pers.zhc.tools.diary
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.diary_attachment_settings_activity.*
 import org.json.JSONObject
 import pers.zhc.tools.R
@@ -63,12 +65,16 @@ VALUES (?)"""
     }
 
     private fun save() {
-        DialogUtil.createAlertDialogWithNeutralButton(this, { _, _ ->
-            ToastUtils.show(this, R.string.save_success_toast)
-        }, { _, _ ->
-            changeStoragePath(storagePathTV.text.toString())
-            ToastUtils.show(this, R.string.save_success_toast)
-        }, R.string.diary_attachment_setting_move_file_dialog_title).show()
+        DialogUtil.createAlertDialogWithNeutralButton(this,
+            { _, _ ->
+                ToastUtils.show(this, R.string.save_success_toast)
+            }, { _, _ ->
+                changeStoragePath(storagePathTV.text.toString())
+                ToastUtils.show(this, R.string.save_success_toast)
+            }, R.string.diary_attachment_setting_move_file_dialog_title
+        ).apply {
+            setMessage(getString(R.string.diary_attachment_setting_move_file_dialog_message))
+        }.show()
     }
 
     companion object {
