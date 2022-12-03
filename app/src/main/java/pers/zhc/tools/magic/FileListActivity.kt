@@ -20,6 +20,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.Download
+import pers.zhc.tools.utils.unreachable
 import java.io.File
 import java.net.URL
 
@@ -126,7 +127,7 @@ class FileListActivity : BaseActivity() {
         FOLDER,
     }
 
-    class FileItem(
+    data class FileItem(
         val fileName: String,
         val fileInfo: String,
         val fileType: FileType,
@@ -188,25 +189,21 @@ class FileListActivity : BaseActivity() {
 
             progressCallback?.invoke(ProgressType.SORT, -1, -1)
 
-            result.sortWith { fileItem, fileItem2 ->
-                if (fileItem.fileType == fileItem2.fileType) {
-                    if (!fileItem.file.isHidden && !fileItem2.file.isHidden) {
-                        return@sortWith fileItem.fileName.compareTo(fileItem2.fileName)
-                    } else {
-                        return@sortWith if (fileItem.file.isHidden) {
-                            1
-                        } else {
-                            -1
-                        }
-                    }
-                } else {
-                    return@sortWith if (fileItem.fileType == FileType.FILE) {
-                        1
-                    } else {
-                        -1
-                    }
-                }
+            val nonHiddenFirstComparator = Comparator { f1: FileItem, f2: FileItem ->
+                if (f1.file.isHidden == f2.file.isHidden) return@Comparator 0
+                if (!f1.file.isHidden) return@Comparator -1
+                return@Comparator 1
             }
+            val fileTypeFirstComparator = Comparator { f1: FileItem, f2: FileItem ->
+                if (f1.fileType == f2.fileType) return@Comparator 0
+                if (f1.fileType == FileType.FOLDER) return@Comparator -1
+                return@Comparator 1
+            }
+
+            // perform multiple stable sorting operations
+            result.sortBy { it.fileName }
+            result.sortWith(nonHiddenFirstComparator)
+            result.sortWith(fileTypeFirstComparator)
 
             progressCallback?.invoke(ProgressType.DONE, filesCount, filesCount)
             return result
