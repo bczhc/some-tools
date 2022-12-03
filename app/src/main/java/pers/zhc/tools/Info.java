@@ -16,7 +16,7 @@ public class Info {
      * <li>%4$s: file path</li>
      * </ul>
      */
-    public static String githubRawRootURL = "https://raw.fastgit.org/%1$s/%2$s/%3$s/%4$s";
+    public static String githubRawRootURL = "https://raw.githubusercontent.com/%1$s/%2$s/%3$s/%4$s";
 
     public static final Class<?> LAUNCHER_CLASS = MainActivity.class;
 }

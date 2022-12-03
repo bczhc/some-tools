@@ -90,14 +90,6 @@ public class Common {
         return new File(getInternalDatabaseDir(context), name);
     }
 
-    public static @NotNull String getGithubRawFileURLString(String username, String branch, String filePathInRepo) {
-        try {
-            return String.format("https://hub.fastgit.org/%s/store/blob/%s/%s?raw=true", username, branch, URLEncoder.encode(filePathInRepo, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @NotNull
     @Contract(pure = true)
     public static String getStaticResourceUrlString(String filename) {
