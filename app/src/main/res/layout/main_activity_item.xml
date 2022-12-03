@@ -5,13 +5,18 @@
               android:layout_height="wrap_content"
               xmlns:tools="http://schemas.android.com/tools"
 >
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/tv"
-              style="@style/TextAppearance.Material3.BodyMedium"
-              android:textSize="30sp"
-              android:layout_margin="5sp"
-              android:background="@drawable/main_activity_item"
-              android:gravity="center"
-              tools:text="Text"
-    />
+    <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    >
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:id="@+id/tv"
+                  style="@style/TextAppearance.Material3.LabelLarge"
+                  android:textSize="30sp"
+                  android:gravity="center"
+                  android:padding="5sp"
+                  tools:text="Text"
+                  android:background="?selectableItemBackground"
+        />
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>
