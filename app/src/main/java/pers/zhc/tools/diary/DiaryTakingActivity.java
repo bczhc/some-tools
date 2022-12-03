@@ -18,7 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import kotlin.Unit;
 import kotlin.ranges.IntRange;
 import kotlin.text.MatchResult;
@@ -77,7 +77,7 @@ public class DiaryTakingActivity extends DiaryBaseActivity {
         et = scrollEditText.getEditText();
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         charactersCountTV = toolbar.findViewById(R.id.text_count_tv);
-        SwitchMaterial ttsSwitch = toolbar.findViewById(R.id.tts_switch);
+        MaterialSwitch ttsSwitch = toolbar.findViewById(R.id.tts_switch);
         ImageButton cancelButton = findViewById(R.id.cancel_button);
         findLayout = findViewById(R.id.find_layout);
         RegexInputView findInputView = findViewById(R.id.find_et);

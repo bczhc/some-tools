@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.materialswitch.MaterialSwitch;
 
 import kotlin.Unit;
 
@@ -611,13 +611,13 @@ public class WubiIME extends InputMethodService {
 
         Context context = getThemedContext();
         final View inflate = View.inflate(context, R.layout.wubi_single_char_codes_recording_dialog, null);
-        SwitchMaterial switchMaterial = inflate.findViewById(R.id.switch_btn);
+        MaterialSwitch materialSwitch = inflate.findViewById(R.id.switch_btn);
         Button emptyButton = inflate.findViewById(R.id.empty_button);
         Button copyButton = inflate.findViewById(R.id.copy_button);
         RecyclerView recyclerView = inflate.findViewById(R.id.recycler_view);
         LinearLayout optionLL = inflate.findViewById(R.id.option_ll);
 
-        switchMaterial.setChecked(singleCharCodesChecker != null);
+        materialSwitch.setChecked(singleCharCodesChecker != null);
         if (singleCharCodesChecker == null) {
             optionLL.setVisibility(View.GONE);
         } else {
@@ -634,7 +634,7 @@ public class WubiIME extends InputMethodService {
             RecyclerViewUtilsKt.addDividerLines(recyclerView);
         };
 
-        switchMaterial.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        materialSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 singleCharCodesChecker = new SingleCharCodesChecker(record -> {
                     ToastUtils.show(context, context.getString(
