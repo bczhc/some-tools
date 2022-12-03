@@ -5,14 +5,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.fdb_layer_item_view.view.*
 import kotlinx.android.synthetic.main.fdb_layer_manager_view.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.FdbLayerItemViewBinding
 import pers.zhc.tools.utils.DialogUtils
 import java.util.*
 
@@ -66,9 +69,11 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         private var checkedId = -1L
 
         class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val nameTV = view.name_tv!!
-            val rootView = view.rootView!!
-            val visibilityIV = view.visibility_btn!!
+            val bindings = FdbLayerItemViewBinding.bind(view)
+            val nameTV = bindings.nameTv
+            val rootView = bindings.root
+            val visibilityIV = bindings.visibilityBtn
+            val editIV = bindings.editButton
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -106,6 +111,25 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
                 // toggle visibility
                 layerInfo.visible = !layerInfo.visible
                 updateVisibilityIcon()
+            }
+
+            holder.editIV.setOnClickListener {
+                // change layer name
+                val editText = TextInputEditText(context)
+                    .apply {
+                        setText(layerInfo.name)
+                    }
+                DialogUtils.createPromptDialog(
+                    context, R.string.fdb_layer_naming_dialog_title,
+                    positiveAction = { _, et ->
+                        val newName = et.text.toString()
+                        layerInfo.name = newName
+                        notifyItemChanged(position)
+                    },
+                    editText = editText
+                ).apply {
+                    DialogUtils.setDialogAttr(this, width = ViewGroup.LayoutParams.MATCH_PARENT, overlayWindow = true)
+                }.show()
             }
         }
 
