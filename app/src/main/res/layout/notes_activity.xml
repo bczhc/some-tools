@@ -17,5 +17,6 @@
             android:layout_height="match_parent"
             android:id="@+id/recycler_view"
             tools:listitem="@layout/note_item"
+            tools:itemCount="10"
     />
 </LinearLayout>

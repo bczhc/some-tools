@@ -1,5 +1,7 @@
 @file:Suppress("UnstableApiUsage")
+@file:SuppressLint("JcenterRepositoryObsolete")
 
+import android.annotation.SuppressLint
 import pers.zhc.plugins.BuildUtils.*
 import pers.zhc.plugins.FileUtils.requireCreate
 import pers.zhc.plugins.NdkVersion
@@ -249,6 +251,13 @@ println(
 repositories {
     mavenCentral()
     google()
+    @Suppress("DEPRECATION")
+    jcenter {
+        content {
+            // https://github.com/reddit/IndicatorFastScroll/issues/45
+            includeGroup("com.reddit")
+        }
+    }
     maven { setUrl("https://jitpack.io") }
 }
 
@@ -261,7 +270,7 @@ dependencies {
     implementation("com.github.bczhc:java-lib:18a858c167")
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
-    implementation("me.zhanghai.android.fastscroll:library:1.1.7")
+    implementation("me.zhanghai.android.fastscroll:library:1.1.8")
     implementation("com.github.bczhc:jni-java:9205bf19ea")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
     implementation("com.google.code.gson:gson:2.10")
@@ -270,6 +279,8 @@ dependencies {
         isTransitive = false
     }
     implementation("com.google.zxing:core:3.5.1")
+    implementation("com.reddit:indicator-fast-scroll:1.4.0")
+    implementation("com.quiph.ui:recyclerviewfastscroller:1.0.0")
 }
 
 task("saveNdkPath") {

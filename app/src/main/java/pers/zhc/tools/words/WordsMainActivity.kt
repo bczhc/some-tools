@@ -15,12 +15,15 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.reddit.indicatorfastscroll.FastScrollItemIndicator
+import com.reddit.indicatorfastscroll.FastScrollerView
 import kotlinx.android.synthetic.main.words_activity.*
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
+import pers.zhc.tools.jni.JNI.Utf8
 import pers.zhc.tools.utils.*
 import java.io.File
 
@@ -48,7 +51,8 @@ class WordsMainActivity : BaseActivity() {
         showNotification()
 
         val recyclerView = recycler_view!!
-        recyclerView.setUpFastScroll(this)
+        val fastScroller = fast_scroller!!
+        val fastScrollerThumb = fast_scroller_thumb!!
 
         updateItems()
         listAdapter = MyAdapter(this, itemList)
@@ -78,6 +82,28 @@ class WordsMainActivity : BaseActivity() {
             }
             popupMenu.show()
         }
+
+        fastScroller.setupWithRecyclerView(recyclerView, { position ->
+            val chars = CodepointIterator(itemList[position].word)
+            val text = if (chars.hasNext()) {
+                Utf8.codepoint2str(chars.next()).uppercase()
+            } else {
+                ""
+            }
+            FastScrollItemIndicator.Text(text)
+        })
+        fastScroller.useDefaultScroller = false
+        fastScroller.itemIndicatorSelectedCallbacks += object : FastScrollerView.ItemIndicatorSelectedCallback {
+            override fun onItemIndicatorSelected(
+                indicator: FastScrollItemIndicator,
+                indicatorCenterY: Int,
+                itemPosition: Int
+            ) {
+               recyclerView.stopScroll()
+               recyclerView.scrollToPosition(itemPosition)
+            }
+        }
+        fastScrollerThumb.setupWithFastScroller(fastScroller)
     }
 
     class Item(
@@ -98,6 +124,10 @@ class WordsMainActivity : BaseActivity() {
             itemList.add(Item(word))
         }
         statement.release()
+
+        itemList.sortBy {
+            it.word.uppercase()
+        }
     }
 
     private fun showNotification() {
