@@ -53,6 +53,10 @@
                  android:enabled="true"
                  android:foregroundServiceType="mediaProjection"
         />
+        <service android:name=".colorpicker.ScreenColorPickerService"
+                 android:enabled="true"
+                 android:foregroundServiceType="mediaProjection"
+        />
 
         <provider
                 android:name="androidx.core.content.FileProvider"
@@ -792,6 +796,28 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.M3Application"
                 android:label="@string/note_label"
+                android:taskAffinity="pers.zhc.tools.note"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".colorpicker.ScreenColorPickerMainActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:theme="@style/Theme.M3Application"
+                android:label="@string/screen_color_picker_label"
+                android:taskAffinity="pers.zhc.tools.note"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".colorpicker.ScreenColorPickerActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:theme="@style/Theme.Transparent"
+                android:label="@string/screen_color_picker_label"
                 android:taskAffinity="pers.zhc.tools.note"
                 android:exported="true">
             <intent-filter>

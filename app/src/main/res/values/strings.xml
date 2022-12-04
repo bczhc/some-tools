@@ -755,5 +755,6 @@
     <string name="fourier_series_integrator_menu_hint">数值积分器</string>
     <string name="fourier_series_float_type_menu_hint">浮点类型</string>
     <string name="hardware_acceleration">硬件加速</string>
+    <string name="screen_color_picker_label">屏幕取色</string>
     <!-- end -->
 </resources>

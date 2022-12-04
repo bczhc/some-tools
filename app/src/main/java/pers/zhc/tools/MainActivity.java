@@ -22,6 +22,7 @@ import pers.zhc.tools.app.AppMenuAdapter;
 import pers.zhc.tools.app.SmallToolsListActivity;
 import pers.zhc.tools.app.TestListActivity;
 import pers.zhc.tools.bus.BusQueryMainActivity;
+import pers.zhc.tools.colorpicker.ScreenColorPickerMainActivity;
 import pers.zhc.tools.diary.DiaryMainActivity;
 import pers.zhc.tools.email.EmailMainActivity;
 import pers.zhc.tools.fdb.FdbMainActivity;
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity {
         activities.add(new ActivityItem(R.string.transfer_label, TransferMainActivity.class));
         activities.add(new ActivityItem(R.string.email_label, EmailMainActivity.class));
         activities.add(new ActivityItem(R.string.fourier_series_label, FourierSeriesActivity.class));
+        activities.add(new ActivityItem(R.string.screen_color_picker_label, ScreenColorPickerMainActivity.class));
     }
 
     private void loadRecyclerView() {
