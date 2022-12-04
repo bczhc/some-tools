@@ -12,16 +12,17 @@ import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DisplayUtil
-import pers.zhc.tools.utils.MediaUtils
+import pers.zhc.tools.utils.ProjectionScreenshotReader
 
 /**
  * @author bczhc
  */
-class ScreenColorPickerShow(
+class ScreenColorPickerManager(
     private val context: Context,
     private val fdbId: Long,
     private val projectionData: Intent
 ) {
+    private lateinit var screenshotReader: ProjectionScreenshotReader
     private lateinit var wm: WindowManager
     private lateinit var screenColorPickerView: ScreenColorPickerView
     private val screenColorPickerViewLP = WindowManager.LayoutParams()
@@ -68,26 +69,34 @@ class ScreenColorPickerShow(
             screenColorPickerViewPositionUpdater.updateParentDimension(newMetrics.widthPixels, newMetrics.heightPixels)
         }
 
+        screenshotReader = ProjectionScreenshotReader(context, projectionData)
+
         var screenshotDone = true
         @Suppress("ClickableViewAccessibility")
         screenColorPickerView.setOnTouchListener { v, event ->
             screenColorPickerViewPositionUpdater.onTouch(v, event)
 
+            if (!screenshotDone) {
+                return@setOnTouchListener false
+            }
+
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (!screenshotDone) {
-                        return@setOnTouchListener true
-                    }
                     screenshotDone = false
                     screenColorPickerView.setIsTransparent(true)
-                    MediaUtils.asyncTakeScreenshot(context, projectionData) { bitmap ->
-                        Common.runOnUiThread(context) {
-                            screenColorPickerView.getBitmap()?.recycle()
-                            screenColorPickerView.setBitmap(bitmap)
-                            screenColorPickerView.setIsTransparent(false)
-                            screenshotDone = true
+
+                    Thread {
+                        // manually delay, workaround for that the screenshot contains the colorPickerView itself
+                        Thread.sleep(100)
+                        screenshotReader.requestScreenshot { bitmap ->
+                            Common.runOnUiThread(context) {
+                                screenColorPickerView.getBitmap()?.recycle()
+                                screenColorPickerView.setBitmap(bitmap)
+                                screenColorPickerView.setIsTransparent(false)
+                                screenshotDone = true
+                            }
                         }
-                    }
+                    }.start()
                 }
                 MotionEvent.ACTION_MOVE -> {
                     val rawX = event.rawX
@@ -128,5 +137,6 @@ class ScreenColorPickerShow(
 
     fun stop() {
         wm.removeView(screenColorPickerView)
+        screenshotReader.close()
     }
 }

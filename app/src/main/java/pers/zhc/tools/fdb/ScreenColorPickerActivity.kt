@@ -7,8 +7,8 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.fdb.FdbBroadcastReceiver.Companion.ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED
 import pers.zhc.tools.fdb.FdbBroadcastReceiver.Companion.ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED
-import pers.zhc.tools.utils.MediaUtils
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.MediaUtils
 
 /**
  * @author bczhc
@@ -21,11 +21,12 @@ class ScreenColorPickerActivity : BaseActivity() {
     ) { result ->
         result!!
         if (result.resultCode == RESULT_OK) {
-            onPermissionGranted(result.data!!)
-
             val intent = Intent(ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED)
             intent.putExtra(FdbBroadcastReceiver.EXTRA_FDB_ID, fdbId)
             applicationContext.sendBroadcast(intent)
+
+            onPermissionGranted(result.data!!)
+
             finish()
         } else {
             ToastUtils.show(this, R.string.capture_permission_denied)
@@ -57,7 +58,7 @@ class ScreenColorPickerActivity : BaseActivity() {
         val intent = intent
         fdbId = intent.getLongExtra(EXTRA_FDB_ID, 0L)
 
-        // get the permission
+        // show the permission requesting dialog
         permissionRequestLauncher.launch(Unit)
     }
 

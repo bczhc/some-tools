@@ -28,7 +28,7 @@ class FdbBroadcastReceiver(private val fdbWindow: FdbWindow) : BaseBroadcastRece
             }
             ACTION_FDB_SHOW -> {
                 val fdbId = getFdbIdExtra(intent)
-                if (fdbWindow.getFdbId() != fdbId) {
+                if (fdbWindow.fdbId != fdbId) {
                     return
                 }
                 fdbWindow.restoreFDB()
@@ -38,7 +38,7 @@ class FdbBroadcastReceiver(private val fdbWindow: FdbWindow) : BaseBroadcastRece
             }
             ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED, ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED -> {
                 val fdbId = getFdbIdExtra(intent)
-                if (fdbWindow.getFdbId() != fdbId) {
+                if (fdbWindow.fdbId != fdbId) {
                     return
                 }
 

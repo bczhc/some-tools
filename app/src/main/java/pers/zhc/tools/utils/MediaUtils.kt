@@ -1,9 +1,11 @@
 package pers.zhc.tools.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.ImageFormat
 import android.graphics.PixelFormat
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
@@ -31,7 +33,8 @@ class MediaUtils {
             return bitmap
         }
 
-        private fun newImageReader(context: Context): ImageReader {
+        @SuppressLint("WrongConstant")
+        fun newImageReader(context: Context): ImageReader {
             val screenSize = DisplayUtil.getScreenSize(context)
             return ImageReader.newInstance(screenSize.x, screenSize.y, PixelFormat.RGBA_8888, 1)
         }

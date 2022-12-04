@@ -73,6 +73,8 @@ class FdbWindow(activity: FdbMainActivity) {
     private var followBrushColor = false
     private var invertTextColor = false
     val timestamp = System.currentTimeMillis()
+    val fdbId
+        get() = timestamp
     private val pathFiles = object {
         val tmpPathDir = File(context.filesDir, "path")
         val tmpPathFile = File(tmpPathDir, "$timestamp.path")
@@ -1071,10 +1073,11 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun pickScreenColorAction() {
-
+        // register color picker on-started receiver
+        // to set the flag indicating a color picker has been started
         if (receivers.startScreenColorPicker == null) {
             receivers.startScreenColorPicker = StartScreenColorPickerReceiver { fdbId ->
-                if (fdbId == this.getFdbId()) {
+                if (fdbId == this.fdbId) {
                     hasStartedScreenColorPicker = true
                 }
             }
@@ -1084,8 +1087,9 @@ class FdbWindow(activity: FdbMainActivity) {
             )
         }
 
+        // register on-color-picked receiver, picked result callback
         if (receivers.screenColorPickerResult == null) {
-            receivers.screenColorPickerResult = ScreenColorPickerResultReceiver(timestamp) { color ->
+            receivers.screenColorPickerResult = ScreenColorPickerResultReceiver(fdbId) { color ->
                 ToastUtils.show(context, ColorUtils.getHexString(color, true))
                 colorPickers.brush.color = color
             }
@@ -1100,31 +1104,28 @@ class FdbWindow(activity: FdbMainActivity) {
             return
         }
 
+        // hide the FDB first, otherwise the popup permission requesting dialog may be unclickable to the user
         stopFDB()
 
-        // start an transparent activity in `NEW_TASK` mode to pop up the capture screen permission dialog
-        val intent = Intent(context, ScreenColorPickerActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)
-        val pi = PendingIntent.getActivity(
+        // start a transparent activity in `NEW_TASK` mode to pop up the capture screen permission dialog
+        val intent = Intent(context, ScreenColorPickerActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)
+        }
+        PendingIntent.getActivity(
             context.applicationContext,
-            timestamp.hashCode(),
+            0,
             intent,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.FLAG_IMMUTABLE
             } else {
                 0
             }
-        )
-        pi.send()
+        ).send()
     }
 
     override fun toString(): String {
         return "FdbWindow(timestamp=$timestamp)"
-    }
-
-    fun getFdbId(): Long {
-        return timestamp
     }
 
     fun exit() {
