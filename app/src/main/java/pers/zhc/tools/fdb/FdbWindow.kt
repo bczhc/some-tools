@@ -36,7 +36,6 @@ import kotlinx.android.synthetic.main.fdb_stoke_settings_view.view.*
 import kotlinx.android.synthetic.main.fdb_transformation_settings_view.view.*
 import kotlinx.android.synthetic.main.progress_bar.view.*
 import pers.zhc.jni.sqlite.SQLite3
-import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePickerRL
@@ -54,7 +53,8 @@ import kotlin.math.pow
 /**
  * @author bczhc
  */
-class FdbWindow(private val context: BaseActivity) {
+class FdbWindow(activity: FdbMainActivity) {
+    private val context = activity as Context
     private val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
     private val panelRL = PanelRL(context)
@@ -318,7 +318,7 @@ class FdbWindow(private val context: BaseActivity) {
         // TODO: 7/11/21 handle storage permission request
 
         val displayMetrics = DisplayMetrics()
-        context.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
