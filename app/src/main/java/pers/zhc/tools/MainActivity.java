@@ -23,7 +23,6 @@ import pers.zhc.tools.app.SmallToolsListActivity;
 import pers.zhc.tools.app.TestListActivity;
 import pers.zhc.tools.bus.BusQueryMainActivity;
 import pers.zhc.tools.diary.DiaryMainActivity;
-import pers.zhc.tools.document.Document;
 import pers.zhc.tools.email.EmailMainActivity;
 import pers.zhc.tools.fdb.FdbMainActivity;
 import pers.zhc.tools.fourierseries.FourierSeriesActivity;

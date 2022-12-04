@@ -156,32 +156,6 @@
         <activity android:name="pers.zhc.tools.BaseActivity"/>
         <activity android:name=".diary.DiaryBaseActivity"/>
         <activity
-                android:name="pers.zhc.tools.document.Document"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:taskAffinity="pers.zhc.tools.document"
-                android:theme="@style/Theme.M3Application"
-                android:launchMode="singleTask"
-                android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name="pers.zhc.tools.document.NoteTakingActivity"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:launchMode="singleTask"
-                android:taskAffinity="pers.zhc.tools.document"
-                android:theme="@style/Theme.M3Application"
-                android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
                 android:name=".test.viewtest.MainActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.M3Application"
