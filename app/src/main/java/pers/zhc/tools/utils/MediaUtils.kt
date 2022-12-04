@@ -10,8 +10,8 @@ import android.hardware.display.VirtualDisplay
 import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjectionManager
-import android.os.Handler
-import android.os.Looper
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContract
 
 /**
  * @author bczhc
@@ -68,6 +68,20 @@ class MediaUtils {
                 null,
                 null
             )
+        }
+
+        fun createCapturePermissionContract(): ActivityResultContract<Unit, ActivityResult> {
+            return object : ActivityResultContract<Unit, ActivityResult>() {
+                override fun createIntent(context: Context, input: Unit): Intent {
+                    val mpm =
+                        context.applicationContext.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+                    return mpm.createScreenCaptureIntent()
+                }
+
+                override fun parseResult(resultCode: Int, intent: Intent?): ActivityResult {
+                    return ActivityResult(resultCode, intent)
+                }
+            }
         }
     }
 }

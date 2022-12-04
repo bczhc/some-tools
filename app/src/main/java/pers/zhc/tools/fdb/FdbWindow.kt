@@ -1102,6 +1102,7 @@ class FdbWindow(private val context: BaseActivity) {
 
         stopFDB()
 
+        // start an transparent activity in `NEW_TASK` mode to pop up the capture screen permission dialog
         val intent = Intent(context, ScreenColorPickerActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)

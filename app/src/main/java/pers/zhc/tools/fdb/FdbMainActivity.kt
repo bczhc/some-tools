@@ -6,12 +6,10 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.result.ActivityResult
 import androidx.annotation.RequiresApi
 import kotlinx.android.synthetic.main.fdb_main_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.media.ScreenCapturePermissionRequestActivity
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.requireDelete
 import pers.zhc.tools.utils.requireMkdir
@@ -22,7 +20,6 @@ import java.io.IOException
  * @author bczhc
  */
 class FdbMainActivity : BaseActivity() {
-    private lateinit var requestCapturePermissionCallback: ((result: ActivityResult) -> Unit)
     private var hardwareAccelerated = false
 
     private val launcher = object {
@@ -31,11 +28,6 @@ class FdbMainActivity : BaseActivity() {
         } else {
             null
         }
-
-        val requestCapturePermission =
-            ScreenCapturePermissionRequestActivity.getRequestLauncher(this@FdbMainActivity) { result ->
-                requestCapturePermissionCallback(result!!)
-            }
     }
 
     private val pathTmpDir by lazy { File(filesDir, "path").also { it.requireMkdir() } }
@@ -96,11 +88,6 @@ class FdbMainActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun checkDrawOverlayPermission(): Boolean {
         return Settings.canDrawOverlays(this)
-    }
-
-    fun requestCapturePermission(callback: (result: ActivityResult) -> Unit) {
-        requestCapturePermissionCallback = callback
-        launcher.requestCapturePermission.launch(Unit)
     }
 
     private fun getCacheFilesNotInUse(): List<File> {

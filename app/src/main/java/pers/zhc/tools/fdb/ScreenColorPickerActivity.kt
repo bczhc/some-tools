@@ -7,7 +7,7 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.fdb.FdbBroadcastReceiver.Companion.ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED
 import pers.zhc.tools.fdb.FdbBroadcastReceiver.Companion.ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED
-import pers.zhc.tools.media.ScreenCapturePermissionRequestActivity
+import pers.zhc.tools.utils.MediaUtils
 import pers.zhc.tools.utils.ToastUtils
 
 /**
@@ -16,17 +16,12 @@ import pers.zhc.tools.utils.ToastUtils
 class ScreenColorPickerActivity : BaseActivity() {
     private var fdbId = 0L
 
-    /**
-     * When isn't null, the screen capture permission has been granted
-     */
-    private var projectionData: Intent? = null
-
-    private val captureRequestLauncher = ScreenCapturePermissionRequestActivity.getRequestLauncher(this) { result ->
+    private val permissionRequestLauncher = registerForActivityResult(
+        MediaUtils.createCapturePermissionContract()
+    ) { result ->
         result!!
         if (result.resultCode == RESULT_OK) {
-            projectionData = result.data
-
-            onPermissionGranted()
+            onPermissionGranted(result.data!!)
 
             val intent = Intent(ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED)
             intent.putExtra(FdbBroadcastReceiver.EXTRA_FDB_ID, fdbId)
@@ -42,10 +37,10 @@ class ScreenColorPickerActivity : BaseActivity() {
         }
     }
 
-    private fun onPermissionGranted() {
+    private fun onPermissionGranted(projectionData: Intent) {
         val serviceIntent = Intent(this, ScreenColorPickerService::class.java)
         serviceIntent.putExtra(ScreenColorPickerService.EXTRA_FDB_ID, fdbId)
-        serviceIntent.putExtra(ScreenColorPickerService.EXTRA_PROJECTION_DATA, projectionData!!)
+        serviceIntent.putExtra(ScreenColorPickerService.EXTRA_PROJECTION_DATA, projectionData)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)
         } else {
@@ -63,7 +58,7 @@ class ScreenColorPickerActivity : BaseActivity() {
         fdbId = intent.getLongExtra(EXTRA_FDB_ID, 0L)
 
         // get the permission
-        captureRequestLauncher.launch(Unit)
+        permissionRequestLauncher.launch(Unit)
     }
 
     companion object {
