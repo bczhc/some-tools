@@ -86,9 +86,9 @@ class FdbMainActivity : BaseActivity() {
 
     private fun createFdbWindow(): FdbWindow {
         return FdbWindow(this).apply {
-            fdbMap[this.getFdbId()] = this
+            fdbMap[this.fdbId] = this
             onExitListener = {
-                fdbMap.remove(this.getFdbId())
+                fdbMap.remove(this.fdbId)
             }
         }
     }

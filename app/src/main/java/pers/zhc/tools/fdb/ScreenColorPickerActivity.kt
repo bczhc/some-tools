@@ -62,7 +62,7 @@ class ScreenColorPickerActivity : BaseActivity() {
         val intent = intent
         fdbId = intent.getLongExtra(EXTRA_FDB_ID, 0L)
 
-        // get the permission
+        // show the permission requesting dialog
         captureRequestLauncher.launch(Unit)
     }
 

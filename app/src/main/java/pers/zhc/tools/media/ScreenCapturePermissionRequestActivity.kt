@@ -38,7 +38,7 @@ class ScreenCapturePermissionRequestActivity : BaseActivity() {
                     return intent
                 }
 
-                override fun parseResult(resultCode: Int, intent: Intent?): ActivityResult? {
+                override fun parseResult(resultCode: Int, intent: Intent?): ActivityResult {
                     return ActivityResult(resultCode, intent)
                 }
             }) { result ->
