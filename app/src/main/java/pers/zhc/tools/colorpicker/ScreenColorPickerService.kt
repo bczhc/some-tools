@@ -28,6 +28,8 @@ class ScreenColorPickerService : BaseService() {
         })
 
         ScreenColorPickerMainActivity.serviceRunning = true
+
+        applicationContext.sendBroadcast(Intent(ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED))
     }
 
     override fun onDestroy() {

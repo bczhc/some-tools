@@ -8,17 +8,35 @@ import pers.zhc.tools.R
 import pers.zhc.tools.media.CapturePermissionContract
 import pers.zhc.tools.utils.ToastUtils
 
+/**
+ * This activity requests the screen capture permission
+ * and then starts the color picker service
+ *
+ * after the service is started, send [StartColorPickerViewReceiver.ACTION_START_COLOR_PICKER_VIEW] broadcast
+ * to start a new color picker view.
+ *
+ * Each request needs a [StartColorPickerViewReceiver.EXTRA_REQUEST_ID], and this allows multiple
+ * color picker view
+ */
 class ScreenColorPickerActivity: BaseActivity() {
     private val permissionRequestLauncher = registerForActivityResult(CapturePermissionContract()) {
-        val data = if (it.resultCode == RESULT_OK) {
-            it.data!!
-        } else {
-            ToastUtils.show(this, R.string.capture_permission_denied)
-            return@registerForActivityResult
+        when (it.resultCode) {
+            RESULT_OK -> {
+                applicationContext.sendBroadcast(Intent(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED))
+                onPermissionGranted(it.data!!)
+                finish()
+            }
+            RESULT_CANCELED -> {
+                ToastUtils.show(this, R.string.capture_permission_denied)
+                applicationContext.sendBroadcast(Intent(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED))
+                finish()
+            }
         }
+    }
 
+    private fun onPermissionGranted(projectionData: Intent) {
         val serviceIntent = Intent(this, ScreenColorPickerService::class.java).apply {
-            putExtra(ScreenColorPickerService.EXTRA_PROJECTION_DATA, data)
+            putExtra(ScreenColorPickerService.EXTRA_PROJECTION_DATA, projectionData)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)

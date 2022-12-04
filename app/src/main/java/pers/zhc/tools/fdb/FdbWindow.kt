@@ -38,6 +38,7 @@ import kotlinx.android.synthetic.main.progress_bar.view.*
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
+import pers.zhc.tools.colorpicker.*
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
@@ -88,8 +89,10 @@ class FdbWindow(activity: FdbMainActivity) {
 
     private val receivers = object {
         lateinit var main: FdbBroadcastReceiver
-        var startScreenColorPicker: StartScreenColorPickerReceiver? = null
-        var screenColorPickerResult: ScreenColorPickerResultReceiver? = null
+
+        //        var startScreenColorPicker: StartScreenColorPickerReceiver? = null
+//        var screenColorPickerResult: ScreenColorPickerResultReceiver? = null
+        var colorPickerCheckpoint: ScreenColorPickerCheckpointReceiver? = null
     }
 
     private var layerManagerView: LayerManagerView
@@ -1073,9 +1076,72 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun pickScreenColorAction() {
+        val sendStartPickerViewRequest = {
+            val intent = Intent(StartColorPickerViewReceiver.ACTION_START_COLOR_PICKER_VIEW).apply {
+                putExtra(StartColorPickerViewReceiver.EXTRA_REQUEST_ID, fdbId.toString())
+            }
+            context.applicationContext.sendBroadcast(intent)
+
+            val resultReceiver = ScreenColorPickerResultReceiver { requestId, color ->
+                if (requestId == fdbId.toString()) {
+                    // result belongs to this FDB
+                    colorPickers.brush.color = color
+                    ToastUtils.show(context, ColorUtils.getHexString(color, false))
+                }
+            }
+            context.applicationContext.registerReceiver(resultReceiver, IntentFilter().apply {
+                addAction(ScreenColorPickerResultReceiver.ACTION_ON_COLOR_PICKED)
+            })
+        }
+
+        receivers.colorPickerCheckpoint =
+            receivers.colorPickerCheckpoint ?: ScreenColorPickerCheckpointReceiver { action ->
+                when (action) {
+                    ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED,
+                    ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED -> {
+                        startFDB()
+                    }
+                    ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED -> {
+                        sendStartPickerViewRequest()
+                    }
+                    else -> {}
+                }
+            }.also {
+                context.applicationContext.registerReceiver(it, IntentFilter().apply {
+                    addAction(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED)
+                    addAction(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED)
+                    addAction(ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED)
+                })
+            }
+
+
+        if (ScreenColorPickerMainActivity.serviceRunning) {
+            // service is already running, so this means the `MediaProjection` can be reused
+            // just send the color picker view request broadcast
+            sendStartPickerViewRequest()
+        } else {
+            // request the permission
+            // hide the FDB first, otherwise the popup permission requesting dialog may be unclickable to the user
+            stopFDB()
+            val intent = Intent(context, ScreenColorPickerActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            PendingIntent.getActivity(
+                context.applicationContext,
+                0,
+                intent,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    PendingIntent.FLAG_IMMUTABLE
+                } else {
+                    0
+                }
+            ).send()
+        }
+
+
         // register color picker on-started receiver
         // to set the flag indicating a color picker has been started
-        if (receivers.startScreenColorPicker == null) {
+        /*if (receivers.startScreenColorPicker == null) {
             receivers.startScreenColorPicker = StartScreenColorPickerReceiver { fdbId ->
                 if (fdbId == this.fdbId) {
                     hasStartedScreenColorPicker = true
@@ -1102,26 +1168,7 @@ class FdbWindow(activity: FdbMainActivity) {
             sendScreenColorPickerStopRequestBroadcast()
             hasStartedScreenColorPicker = false
             return
-        }
-
-        // hide the FDB first, otherwise the popup permission requesting dialog may be unclickable to the user
-        stopFDB()
-
-        // start a transparent activity in `NEW_TASK` mode to pop up the capture screen permission dialog
-        val intent = Intent(context, ScreenColorPickerActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            putExtra(ScreenColorPickerActivity.EXTRA_FDB_ID, this@FdbWindow.timestamp)
-        }
-        PendingIntent.getActivity(
-            context.applicationContext,
-            0,
-            intent,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.FLAG_IMMUTABLE
-            } else {
-                0
-            }
-        ).send()
+        }*/
     }
 
     override fun toString(): String {
@@ -1135,16 +1182,17 @@ class FdbWindow(activity: FdbMainActivity) {
             hasStartedScreenColorPicker = false
         }
         context.applicationContext.unregisterReceiver(receivers.main)
-        receivers.screenColorPickerResult?.let { context.applicationContext.unregisterReceiver(it) }
-        receivers.startScreenColorPicker?.let { context.applicationContext.unregisterReceiver(it) }
+        receivers.colorPickerCheckpoint?.let { context.applicationContext.unregisterReceiver(it) }
+//        receivers.screenColorPickerResult?.let { context.applicationContext.unregisterReceiver(it) }
+//        receivers.startScreenColorPicker?.let { context.applicationContext.unregisterReceiver(it) }
 
         onExitListener?.invoke()
     }
 
     private fun sendScreenColorPickerStopRequestBroadcast() {
-        val stopIntent = Intent(ScreenColorPickerService.StopRequestReceiver.ACTION_SCREEN_COLOR_PICKER_STOP)
-        stopIntent.putExtra(ScreenColorPickerService.StopRequestReceiver.EXTRA_FDB_ID, timestamp)
-        context.applicationContext.sendBroadcast(stopIntent)
+//        val stopIntent = Intent(ScreenColorPickerService.StopRequestReceiver.ACTION_SCREEN_COLOR_PICKER_STOP)
+//        stopIntent.putExtra(ScreenColorPickerService.StopRequestReceiver.EXTRA_FDB_ID, timestamp)
+//        context.applicationContext.sendBroadcast(stopIntent)
     }
 
     private fun createTransformationSettingsDialog(): Dialog {
