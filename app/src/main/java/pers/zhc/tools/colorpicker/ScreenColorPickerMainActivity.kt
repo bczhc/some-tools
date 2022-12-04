@@ -19,8 +19,8 @@ class ScreenColorPickerMainActivity: BaseActivity() {
                 startActivity(Intent(this, ScreenColorPickerActivity::class.java))
             } else {
                 // notify for a color picker window
-                val intent = Intent(StartColorPickerViewReceiver.ACTION_START_COLOR_PICKER_VIEW).apply {
-                    putExtra(StartColorPickerViewReceiver.EXTRA_REQUEST_ID, "1")
+                val intent = Intent(ScreenColorPickerOperationReceiver.ACTION_START).apply {
+                    putExtra(ScreenColorPickerOperationReceiver.EXTRA_REQUEST_ID, "1")
                 }
                 sendBroadcast(intent)
             }

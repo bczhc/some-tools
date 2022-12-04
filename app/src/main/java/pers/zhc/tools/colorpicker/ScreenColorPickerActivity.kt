@@ -12,10 +12,11 @@ import pers.zhc.tools.utils.ToastUtils
  * This activity requests the screen capture permission
  * and then starts the color picker service
  *
- * after the service is started, send [StartColorPickerViewReceiver.ACTION_START_COLOR_PICKER_VIEW] broadcast
- * to start a new color picker view.
+ * after the service is started, send [ScreenColorPickerOperationReceiver.ACTION_START] broadcast
+ * to start a new color picker view. Also [ScreenColorPickerOperationReceiver.ACTION_STOP] for
+ * stopping the color picker view.
  *
- * Each request needs a [StartColorPickerViewReceiver.EXTRA_REQUEST_ID], and this allows multiple
+ * Each request needs a [ScreenColorPickerOperationReceiver.EXTRA_REQUEST_ID], and this allows multiple
  * color picker view
  */
 class ScreenColorPickerActivity: BaseActivity() {

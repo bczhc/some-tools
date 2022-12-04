@@ -22,9 +22,10 @@ class ScreenColorPickerService : BaseService() {
             buildForegroundNotification()
         )
 
-        val receiver = StartColorPickerViewReceiver(this)
+        val receiver = ScreenColorPickerOperationReceiver(this)
         registerReceiver(receiver, IntentFilter().apply {
-            addAction(StartColorPickerViewReceiver.ACTION_START_COLOR_PICKER_VIEW)
+            addAction(ScreenColorPickerOperationReceiver.ACTION_START)
+            addAction(ScreenColorPickerOperationReceiver.ACTION_STOP)
         })
 
         ScreenColorPickerMainActivity.serviceRunning = true
@@ -51,9 +52,10 @@ class ScreenColorPickerService : BaseService() {
         return START_NOT_STICKY
     }
 
-    fun start(requestId: String) {
+    fun start(requestId: String): ScreenColorPickerManager {
         val colorPickerManager = ScreenColorPickerManager(this, requestId, projectionData!!)
         colorPickerManager.start()
+        return colorPickerManager
     }
 
     companion object {

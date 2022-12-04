@@ -89,9 +89,6 @@ class FdbWindow(activity: FdbMainActivity) {
 
     private val receivers = object {
         lateinit var main: FdbBroadcastReceiver
-
-        //        var startScreenColorPicker: StartScreenColorPickerReceiver? = null
-//        var screenColorPickerResult: ScreenColorPickerResultReceiver? = null
         var colorPickerCheckpoint: ScreenColorPickerCheckpointReceiver? = null
     }
 
@@ -1076,9 +1073,16 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun pickScreenColorAction() {
+        // when an old one exists, this action is to close it
+        if (hasStartedScreenColorPicker) {
+            sendScreenColorPickerStopRequestBroadcast()
+            hasStartedScreenColorPicker = false
+            return
+        }
+
         val sendStartPickerViewRequest = {
-            val intent = Intent(StartColorPickerViewReceiver.ACTION_START_COLOR_PICKER_VIEW).apply {
-                putExtra(StartColorPickerViewReceiver.EXTRA_REQUEST_ID, fdbId.toString())
+            val intent = Intent(ScreenColorPickerOperationReceiver.ACTION_START).apply {
+                putExtra(ScreenColorPickerOperationReceiver.EXTRA_REQUEST_ID, fdbId.toString())
             }
             context.applicationContext.sendBroadcast(intent)
 
@@ -1092,6 +1096,7 @@ class FdbWindow(activity: FdbMainActivity) {
             context.applicationContext.registerReceiver(resultReceiver, IntentFilter().apply {
                 addAction(ScreenColorPickerResultReceiver.ACTION_ON_COLOR_PICKED)
             })
+            hasStartedScreenColorPicker = true
         }
 
         receivers.colorPickerCheckpoint =
@@ -1137,38 +1142,6 @@ class FdbWindow(activity: FdbMainActivity) {
                 }
             ).send()
         }
-
-
-        // register color picker on-started receiver
-        // to set the flag indicating a color picker has been started
-        /*if (receivers.startScreenColorPicker == null) {
-            receivers.startScreenColorPicker = StartScreenColorPickerReceiver { fdbId ->
-                if (fdbId == this.fdbId) {
-                    hasStartedScreenColorPicker = true
-                }
-            }
-            context.applicationContext.registerReceiver(
-                receivers.startScreenColorPicker,
-                IntentFilter(StartScreenColorPickerReceiver.ACTION_SCREEN_COLOR_PICKER_ON_STARTED)
-            )
-        }
-
-        // register on-color-picked receiver, picked result callback
-        if (receivers.screenColorPickerResult == null) {
-            receivers.screenColorPickerResult = ScreenColorPickerResultReceiver(fdbId) { color ->
-                ToastUtils.show(context, ColorUtils.getHexString(color, true))
-                colorPickers.brush.color = color
-            }
-            val filter = IntentFilter(ScreenColorPickerResultReceiver.ACTION_ON_SCREEN_COLOR_PICKED)
-            context.applicationContext.registerReceiver(receivers.screenColorPickerResult, filter)
-        }
-
-        // close the old one if exists
-        if (hasStartedScreenColorPicker) {
-            sendScreenColorPickerStopRequestBroadcast()
-            hasStartedScreenColorPicker = false
-            return
-        }*/
     }
 
     override fun toString(): String {
@@ -1183,16 +1156,15 @@ class FdbWindow(activity: FdbMainActivity) {
         }
         context.applicationContext.unregisterReceiver(receivers.main)
         receivers.colorPickerCheckpoint?.let { context.applicationContext.unregisterReceiver(it) }
-//        receivers.screenColorPickerResult?.let { context.applicationContext.unregisterReceiver(it) }
-//        receivers.startScreenColorPicker?.let { context.applicationContext.unregisterReceiver(it) }
 
         onExitListener?.invoke()
     }
 
     private fun sendScreenColorPickerStopRequestBroadcast() {
-//        val stopIntent = Intent(ScreenColorPickerService.StopRequestReceiver.ACTION_SCREEN_COLOR_PICKER_STOP)
-//        stopIntent.putExtra(ScreenColorPickerService.StopRequestReceiver.EXTRA_FDB_ID, timestamp)
-//        context.applicationContext.sendBroadcast(stopIntent)
+        val intent = Intent(ScreenColorPickerOperationReceiver.ACTION_STOP).apply {
+            putExtra(ScreenColorPickerOperationReceiver.EXTRA_REQUEST_ID, fdbId.toString())
+        }
+        context.applicationContext.sendBroadcast(intent)
     }
 
     private fun createTransformationSettingsDialog(): Dialog {

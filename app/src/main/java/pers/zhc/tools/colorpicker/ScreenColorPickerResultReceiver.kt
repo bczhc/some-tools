@@ -22,7 +22,7 @@ class ScreenColorPickerResultReceiver(private val callback: (requestId: String, 
         /**
          * string intent extra
          */
-        const val EXTRA_REQUEST_ID = StartColorPickerViewReceiver.EXTRA_REQUEST_ID
+        const val EXTRA_REQUEST_ID = ScreenColorPickerOperationReceiver.EXTRA_REQUEST_ID
 
         /**
          * int intent extra
