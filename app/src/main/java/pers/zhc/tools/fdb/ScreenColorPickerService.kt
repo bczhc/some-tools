@@ -89,7 +89,7 @@ class ScreenColorPickerService : BaseService() {
                 showerMap[fdbId]!!.stop()
                 showerMap.remove(fdbId)
                 if (showerMap.size == 0) {
-                    // there's no more shower running
+                    // there's no more color picker running
                     service.stopForeground(true)
                     service.stopSelf()
                 }

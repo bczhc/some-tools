@@ -20,7 +20,6 @@ import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.Download
-import pers.zhc.tools.utils.unreachable
 import java.io.File
 import java.net.URL
 
@@ -32,13 +31,13 @@ class FileListActivity : BaseActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var magic: Magic
     private lateinit var magicDatabase: File
-    private lateinit var progressShower: ProgressDialogShower
+    private lateinit var progressManager: ProgressDialogManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         magicDatabase = File(filesDir, "magic.mgc")
         magic = Magic()
-        progressShower = ProgressDialogShower(this)
+        progressManager = ProgressDialogManager(this)
 
         // TODO: 7/4/21 check digest (when magic.mgc has a bad integrity, then the activity will keep crashing
         if (/*!magicDatabase.exists()*/ true/* every time download and overwrite (workaround) */) {
@@ -269,16 +268,16 @@ class FileListActivity : BaseActivity() {
         }
 
         fun asyncUpdateListWithProgress() {
-            val progressShower = outer.progressShower
-            progressShower.show()
+            val progressManager = outer.progressManager
+            progressManager.show()
             asyncUpdateData({ type, current, total ->
                 outer.runOnUiThread {
-                    progressShower.update(type, current, total)
+                    progressManager.update(type, current, total)
                 }
             }, {
                 outer.runOnUiThread {
                     notifyDataSetChanged()
-                    progressShower.dismiss()
+                    progressManager.dismiss()
                     onPathChangedListener?.invoke(getCurrentPath())
                     outer.recyclerView.smoothScrollToPosition(0)
                 }
@@ -286,7 +285,7 @@ class FileListActivity : BaseActivity() {
         }
     }
 
-    class ProgressDialogShower(private val context: Context) {
+    class ProgressDialogManager(private val context: Context) {
         private val content = View.inflate(context, R.layout.magic_progress_dialog, null)
         private val msgTV = content.msg_tv!!
 
