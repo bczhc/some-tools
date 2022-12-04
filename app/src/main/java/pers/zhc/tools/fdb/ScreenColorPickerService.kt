@@ -19,7 +19,7 @@ import pers.zhc.tools.utils.Common
  * @author bczhc
  */
 class ScreenColorPickerService : BaseService() {
-    private val showerMap = HashMap<Long, ScreenColorPickerShow>()
+    private val showerMap = HashMap<Long, ScreenColorPickerManager>()
     private var foregroundId = 0
     private lateinit var stopRequestReceiver: StopRequestReceiver
 
@@ -48,9 +48,9 @@ class ScreenColorPickerService : BaseService() {
         val fdbId = intent.getLongExtra(EXTRA_FDB_ID, 0L)
 
         val projectionData = intent.getParcelableExtra<Intent>(EXTRA_PROJECTION_DATA)!!
-        val shower = ScreenColorPickerShow(this, fdbId, projectionData)
-        showerMap[fdbId] = shower
-        shower.start()
+        val colorPicker = ScreenColorPickerManager(this, fdbId, projectionData)
+        showerMap[fdbId] = colorPicker
+        colorPicker.start()
         return START_NOT_STICKY
     }
 

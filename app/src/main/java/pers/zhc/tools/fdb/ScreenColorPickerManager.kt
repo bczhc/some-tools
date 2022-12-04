@@ -17,7 +17,7 @@ import pers.zhc.tools.utils.MediaUtils
 /**
  * @author bczhc
  */
-class ScreenColorPickerShow(
+class ScreenColorPickerManager(
     private val context: Context,
     private val fdbId: Long,
     private val projectionData: Intent
