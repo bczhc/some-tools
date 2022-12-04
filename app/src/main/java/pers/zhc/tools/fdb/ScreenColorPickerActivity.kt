@@ -26,11 +26,12 @@ class ScreenColorPickerActivity : BaseActivity() {
         if (result.resultCode == RESULT_OK) {
             projectionData = result.data
 
-            onPermissionGranted()
-
             val intent = Intent(ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED)
             intent.putExtra(FdbBroadcastReceiver.EXTRA_FDB_ID, fdbId)
             applicationContext.sendBroadcast(intent)
+
+            onPermissionGranted()
+
             finish()
         } else {
             ToastUtils.show(this, R.string.capture_permission_denied)
