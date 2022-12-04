@@ -11,6 +11,9 @@ import pers.zhc.tools.R
 
 class ScreenColorPickerService : BaseService() {
     private var projectionData: Intent? = null
+    private val receivers = object {
+        lateinit var colorPickerOperation: ScreenColorPickerOperationReceiver
+    }
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -22,11 +25,12 @@ class ScreenColorPickerService : BaseService() {
             buildForegroundNotification()
         )
 
-        val receiver = ScreenColorPickerOperationReceiver(this)
-        registerReceiver(receiver, IntentFilter().apply {
-            addAction(ScreenColorPickerOperationReceiver.ACTION_START)
-            addAction(ScreenColorPickerOperationReceiver.ACTION_STOP)
-        })
+        receivers.colorPickerOperation = ScreenColorPickerOperationReceiver(this).also {
+            registerReceiver(it, IntentFilter().apply {
+                addAction(ScreenColorPickerOperationReceiver.ACTION_START)
+                addAction(ScreenColorPickerOperationReceiver.ACTION_STOP)
+            })
+        }
 
         ScreenColorPickerMainActivity.serviceRunning = true
 
@@ -34,6 +38,7 @@ class ScreenColorPickerService : BaseService() {
     }
 
     override fun onDestroy() {
+        applicationContext.unregisterReceiver(receivers.colorPickerOperation)
         ScreenColorPickerMainActivity.serviceRunning = false
     }
 

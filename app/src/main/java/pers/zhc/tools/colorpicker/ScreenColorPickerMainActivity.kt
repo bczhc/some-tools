@@ -7,7 +7,9 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.databinding.ColorPickerMainBinding
 import pers.zhc.tools.utils.ToastUtils
 
-class ScreenColorPickerMainActivity: BaseActivity() {
+class ScreenColorPickerMainActivity : BaseActivity() {
+    lateinit var resultReceiver: ScreenColorPickerResultReceiver
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,13 +27,19 @@ class ScreenColorPickerMainActivity: BaseActivity() {
                 sendBroadcast(intent)
             }
 
-            val receiver = ScreenColorPickerResultReceiver {requestId, color ->
+            resultReceiver = ScreenColorPickerResultReceiver { requestId, color ->
                 ToastUtils.show(this, "$requestId $color")
+            }.also {
+                registerReceiver(it, IntentFilter().apply {
+                    addAction(ScreenColorPickerResultReceiver.ACTION_ON_COLOR_PICKED)
+                })
             }
-            registerReceiver(receiver, IntentFilter().apply {
-                addAction(ScreenColorPickerResultReceiver.ACTION_ON_COLOR_PICKED)
-            })
         }
+    }
+
+    override fun finish() {
+        unregisterReceiver(resultReceiver)
+        super.finish()
     }
 
     companion object {
