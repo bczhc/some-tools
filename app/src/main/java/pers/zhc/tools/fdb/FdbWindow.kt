@@ -1114,7 +1114,7 @@ class FdbWindow(private val context: BaseActivity) {
         }
         PendingIntent.getActivity(
             context.applicationContext,
-            timestamp.hashCode() /* TODO: this required? Poor robust. */,
+            0,
             intent,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.FLAG_IMMUTABLE
