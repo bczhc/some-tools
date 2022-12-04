@@ -162,6 +162,12 @@ class NotesActivity : NoteBaseActivity() {
                 } else {
                     --selectedCount
                 }
+
+                if (selectedCount == 0) {
+                    actionMode!!.finish()
+                    return@setOnItemClickListener
+                }
+
                 updateActionModeTitle()
 
                 (actionMode!!.menu.findItem(R.id.select_all).actionView as MaterialCheckBox).apply {
