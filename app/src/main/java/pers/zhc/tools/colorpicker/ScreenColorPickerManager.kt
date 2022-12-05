@@ -3,6 +3,7 @@ package pers.zhc.tools.colorpicker
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
+import android.media.projection.MediaProjection
 import android.os.Build
 import android.view.MotionEvent
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ import pers.zhc.tools.utils.ProjectionScreenshotReader
 class ScreenColorPickerManager(
     private val context: Context,
     private val requestId: String,
-    private val projectionData: Intent
+    private val mediaProjection: MediaProjection
 ) {
     private lateinit var screenshotReader: ProjectionScreenshotReader
     private lateinit var wm: WindowManager
@@ -69,7 +70,7 @@ class ScreenColorPickerManager(
             screenColorPickerViewPositionUpdater.updateParentDimension(newMetrics.widthPixels, newMetrics.heightPixels)
         }
 
-        screenshotReader = ProjectionScreenshotReader(context, projectionData)
+        screenshotReader = ProjectionScreenshotReader(context, mediaProjection)
 
         var screenshotDone = true
         @Suppress("ClickableViewAccessibility")

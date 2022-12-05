@@ -1,16 +1,22 @@
 package pers.zhc.tools.colorpicker
 
+import android.app.Activity
 import android.app.Notification
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.projection.MediaProjection
+import android.media.projection.MediaProjectionManager
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import pers.zhc.tools.BaseService
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.androidAssert
 
 class ScreenColorPickerService : BaseService() {
-    private var projectionData: Intent? = null
+    private var mediaProjection: MediaProjection? = null
+
     private val receivers = object {
         lateinit var colorPickerOperation: ScreenColorPickerOperationReceiver
     }
@@ -51,14 +57,20 @@ class ScreenColorPickerService : BaseService() {
         }.build()
     }
 
+    private var startTimes = 0
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent!!
-        projectionData = intent.getParcelableExtra(EXTRA_PROJECTION_DATA)
+        // only start once
+        androidAssert(startTimes++ == 0)
+        val projectionData = intent.getParcelableExtra<Intent>(EXTRA_PROJECTION_DATA)!!
+
+        val mpm = applicationContext.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        mediaProjection = mpm.getMediaProjection(Activity.RESULT_OK, projectionData)
         return START_NOT_STICKY
     }
 
     fun start(requestId: String): ScreenColorPickerManager {
-        val colorPickerManager = ScreenColorPickerManager(this, requestId, projectionData!!)
+        val colorPickerManager = ScreenColorPickerManager(this, requestId, mediaProjection!!)
         colorPickerManager.start()
         return colorPickerManager
     }
