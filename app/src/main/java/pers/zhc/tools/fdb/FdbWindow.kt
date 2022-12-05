@@ -90,6 +90,7 @@ class FdbWindow(activity: FdbMainActivity) {
     private val receivers = object {
         lateinit var main: FdbBroadcastReceiver
         var colorPickerCheckpoint: ScreenColorPickerCheckpointReceiver? = null
+        var colorPickerResult: ScreenColorPickerResultReceiver? = null
     }
 
     private var layerManagerView: LayerManagerView
@@ -1086,17 +1087,17 @@ class FdbWindow(activity: FdbMainActivity) {
             }
             context.applicationContext.sendBroadcast(intent)
 
-            val resultReceiver = ScreenColorPickerResultReceiver { requestId, color ->
+            receivers.colorPickerResult = ScreenColorPickerResultReceiver { requestId, color ->
                 if (requestId == fdbId.toString()) {
                     // result belongs to this FDB
                     colorPickers.brush.color = color
                     ToastUtils.show(context, ColorUtils.getHexString(color, false))
                 }
+            }.also {
+                context.applicationContext.registerReceiver(it, IntentFilter().apply {
+                    addAction(ScreenColorPickerResultReceiver.ACTION_ON_COLOR_PICKED)
+                })
             }
-            context.applicationContext.registerReceiver(resultReceiver, IntentFilter().apply {
-                addAction(ScreenColorPickerResultReceiver.ACTION_ON_COLOR_PICKED)
-            })
-            context.applicationContext.unregisterReceiver(resultReceiver)
             hasStartedScreenColorPicker = true
         }
 
@@ -1161,6 +1162,7 @@ class FdbWindow(activity: FdbMainActivity) {
         }
         context.applicationContext.unregisterReceiver(receivers.main)
         receivers.colorPickerCheckpoint?.let { context.applicationContext.unregisterReceiver(it) }
+        receivers.colorPickerResult?.let { context.applicationContext.unregisterReceiver(it) }
 
         onExitListener?.invoke()
     }
