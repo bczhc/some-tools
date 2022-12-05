@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import pers.zhc.tools.BaseBroadcastReceiver
 
-class ScreenColorPickerCheckpointReceiver(private val callback: (action: String) -> Unit) : BaseBroadcastReceiver() {
+class ScreenColorPickerCheckpointReceiver(private val callback: (requestId: String?, action: String) -> Unit) : BaseBroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         intent!!
-        callback(intent.action!!)
+        callback(intent.getStringExtra(EXTRA_REQUEST_ID), intent.action!!)
     }
 
     companion object {
@@ -15,5 +15,10 @@ class ScreenColorPickerCheckpointReceiver(private val callback: (action: String)
         const val ACTION_PERMISSION_DENIED = "pers.zhc.tools.ACTION_SCREEN_COLOR_PICKER_PERMISSION_DEINED"
         const val ACTION_SERVICE_STARTED =
             "pers.zhc.tools.ACTION_SCREEN_COLOR_PICKER_SERVICE_STARTED"
+
+        /**
+         * nullable string intent extra
+         */
+        const val EXTRA_REQUEST_ID = "requestId"
     }
 }

@@ -1096,18 +1096,22 @@ class FdbWindow(activity: FdbMainActivity) {
             context.applicationContext.registerReceiver(resultReceiver, IntentFilter().apply {
                 addAction(ScreenColorPickerResultReceiver.ACTION_ON_COLOR_PICKED)
             })
+            context.applicationContext.unregisterReceiver(resultReceiver)
             hasStartedScreenColorPicker = true
         }
 
         receivers.colorPickerCheckpoint =
-            receivers.colorPickerCheckpoint ?: ScreenColorPickerCheckpointReceiver { action ->
+            receivers.colorPickerCheckpoint ?: ScreenColorPickerCheckpointReceiver { requestId, action ->
                 when (action) {
                     ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED,
                     ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED -> {
-                        startFDB()
+//                        startFDB()
                     }
                     ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED -> {
-                        sendStartPickerViewRequest()
+                        requestId!!
+                        if (requestId == fdbId.toString()) {
+                            sendStartPickerViewRequest()
+                        }
                     }
                     else -> {}
                 }
@@ -1127,9 +1131,10 @@ class FdbWindow(activity: FdbMainActivity) {
         } else {
             // request the permission
             // hide the FDB first, otherwise the popup permission requesting dialog may be unclickable to the user
-            stopFDB()
+//            stopFDB()
             val intent = Intent(context, ScreenColorPickerActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                putExtra(ScreenColorPickerCheckpointReceiver.EXTRA_REQUEST_ID, fdbId.toString())
             }
             PendingIntent.getActivity(
                 context.applicationContext,

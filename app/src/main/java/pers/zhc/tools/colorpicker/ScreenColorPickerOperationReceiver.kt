@@ -13,11 +13,10 @@ class ScreenColorPickerOperationReceiver(private val service: ScreenColorPickerS
 
         when (intent.action) {
             ACTION_START -> {
-                val manager = service.start(requestId)
-                pickerManagersMap[requestId] = manager
+                service.start(requestId)
             }
             ACTION_STOP -> {
-                pickerManagersMap[requestId]!!.stop()
+                service.stop(requestId)
             }
             else -> {}
         }
@@ -31,7 +30,5 @@ class ScreenColorPickerOperationReceiver(private val service: ScreenColorPickerS
          * string intent extra
          */
         const val EXTRA_REQUEST_ID = "requestId"
-
-        val pickerManagersMap = HashMap<String, ScreenColorPickerManager>()
     }
 }

@@ -32,19 +32,18 @@ class ScreenColorPickerService : BaseService() {
         )
 
         receivers.colorPickerOperation = ScreenColorPickerOperationReceiver(this).also {
-            registerReceiver(it, IntentFilter().apply {
+            applicationContext.registerReceiver(it, IntentFilter().apply {
                 addAction(ScreenColorPickerOperationReceiver.ACTION_START)
                 addAction(ScreenColorPickerOperationReceiver.ACTION_STOP)
             })
         }
 
         ScreenColorPickerMainActivity.serviceRunning = true
-
-        applicationContext.sendBroadcast(Intent(ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED))
     }
 
     override fun onDestroy() {
         applicationContext.unregisterReceiver(receivers.colorPickerOperation)
+        mediaProjection!!.stop()
         ScreenColorPickerMainActivity.serviceRunning = false
     }
 
@@ -66,16 +65,33 @@ class ScreenColorPickerService : BaseService() {
 
         val mpm = applicationContext.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         mediaProjection = mpm.getMediaProjection(Activity.RESULT_OK, projectionData)
+
+        applicationContext.sendBroadcast(Intent(ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED).apply {
+            putExtra(EXTRA_REQUEST_ID, intent.getStringExtra(EXTRA_REQUEST_ID))
+        })
+
         return START_NOT_STICKY
     }
 
-    fun start(requestId: String): ScreenColorPickerManager {
+    fun start(requestId: String) {
         val colorPickerManager = ScreenColorPickerManager(this, requestId, mediaProjection!!)
         colorPickerManager.start()
-        return colorPickerManager
+        pickerManagersMap[requestId] = colorPickerManager
+    }
+
+    fun stop(requestId: String) {
+        pickerManagersMap.remove(requestId)!!.stop()
+        if (pickerManagersMap.isEmpty()) {
+            // all color pickers are stopped, close the service
+            stopSelf()
+        }
     }
 
     companion object {
+        val pickerManagersMap = HashMap<String, ScreenColorPickerManager>()
+
         const val EXTRA_PROJECTION_DATA = "projectionData"
+
+        const val EXTRA_REQUEST_ID = "requestId"
     }
 }
