@@ -49,10 +49,6 @@
         </service>
         <service android:name=".bus.BusArrivalReminderService"/>
         <service android:name=".fdb.FdbService"/>
-        <service android:name=".fdb.ScreenColorPickerService"
-                 android:enabled="true"
-                 android:foregroundServiceType="mediaProjection"
-        />
         <service android:name=".colorpicker.ScreenColorPickerService"
                  android:enabled="true"
                  android:foregroundServiceType="mediaProjection"
@@ -544,27 +540,6 @@
                 <category android:name="android.intent.category.DEFAULT"/>
 
                 <data android:mimeType="text/plain"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".media.ScreenCapturePermissionRequestActivity"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Transparent"
-                android:excludeFromRecents="true"
-                android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".fdb.ScreenColorPickerActivity"
-                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
-                android:theme="@style/Theme.Transparent"
-                android:launchMode="singleInstance"
-                android:excludeFromRecents="true"
-                android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
