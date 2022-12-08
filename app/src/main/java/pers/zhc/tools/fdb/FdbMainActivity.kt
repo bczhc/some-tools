@@ -46,7 +46,10 @@ class FdbMainActivity : BaseActivity() {
                     launcher.overlaySetting!!.launch(this.packageName)
                     return@setOnClickListener
                 } else {
-                    ToastUtils.show(this, createFdbWindow().also { it.startFDB() }.toString())
+                    ToastUtils.show(this, createFdbWindow().also {
+                        it.hardwareAcceleration = hardwareAccelerated
+                        it.startFDB()
+                    }.toString())
                 }
             } else return@setOnClickListener
         }
@@ -67,8 +70,8 @@ class FdbMainActivity : BaseActivity() {
 
         openCacheDirButton.setOnClickListener {
             createFdbWindow().also {
-                it.startFDB()
                 it.hardwareAcceleration = hardwareAccelerated
+                it.startFDB()
             }.showImportPathDialog(pathTmpDir)
         }
 
