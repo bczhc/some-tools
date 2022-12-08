@@ -22,8 +22,8 @@ class FileInfo(
         return 0
     }
 
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest!!.apply {
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.apply {
             writeString(filename)
             writeLong(additionTimestamp)
             writeInt(storageTypeEnumInt)
