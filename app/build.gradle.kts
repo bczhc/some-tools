@@ -92,6 +92,7 @@ val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
 }
 
 android {
+    namespace = "pers.zhc.tools"
     signingConfigs {
         val configs = asMap
         configs["debug"]!!.apply {
