@@ -102,11 +102,11 @@ android {
             keyPassword = "123456"
         }
     }
-    compileSdk = 32
+    compileSdk = 33
     defaultConfig {
         applicationId = "pers.zhc.tools"
         minSdk = 21
-        targetSdk = 32
+        targetSdk = 33
 
         val verInfo = gVersion()!! as ArrayList<*>
         versionCode = verInfo[0] as Int
