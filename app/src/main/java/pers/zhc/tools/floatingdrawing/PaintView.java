@@ -26,10 +26,7 @@ import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.*;
 import pers.zhc.util.Assertion;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -435,7 +432,10 @@ public class PaintView extends View {
 
         progressCallback.call(ImageExportProgressType.COMPRESSING, "", 0F);
 
-        JNI.Bitmap.compressToPng(resultBitmap, f.getPath());
+//        JNI.Bitmap.compressToPng(resultBitmap, f.getPath());
+        FileOutputStream os = new FileOutputStream(f);
+        resultBitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+        os.close();
     }
 
     /**
