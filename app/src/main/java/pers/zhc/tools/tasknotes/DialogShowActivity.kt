@@ -9,7 +9,6 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.databinding.TaskNotesRecordTakingPromptDialogBinding
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.*
-import pers.zhc.tools.utils.LangUtils.Companion.nullMap
 
 class DialogShowActivity : BaseActivity() {
     private val database = Database.database
