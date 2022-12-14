@@ -23,10 +23,11 @@ inline fun KClass<SQLite3>.withNew(path: String, block: (db: SQLite3) -> Unit) {
     db.close()
 }
 
-inline fun SQLite3.withCompiledStatement(@Language("SQLite") sql: String, block: (statement: Statement) -> Unit) {
+inline fun <R> SQLite3.withCompiledStatement(@Language("SQLite") sql: String, block: (statement: Statement) -> R): R {
     val statement = this.compileStatement(sql)
-    block(statement)
+    val r = block(statement)
     statement.release()
+    return r
 }
 
 fun Statement.execute(binds: Array<Any>) {
@@ -48,7 +49,11 @@ fun <T> Cursor.collectRows(f: (row: Cursor) -> T): ArrayList<T> {
     return list
 }
 
-fun <T> SQLite3.queryRows(@Language("SQLite") sql: String, binds: Array<Any>? = null, mapRow: (row: Cursor) -> T): ArrayList<T> {
+fun <T> SQLite3.queryRows(
+    @Language("SQLite") sql: String,
+    binds: Array<Any>? = null,
+    mapRow: (row: Cursor) -> T
+): ArrayList<T> {
     var collected: ArrayList<T>? = null
     this.queryExec(sql, binds) {
         collected = it.collectRows(mapRow)

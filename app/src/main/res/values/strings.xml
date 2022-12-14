@@ -757,4 +757,11 @@
     <string name="hardware_acceleration">硬件加速</string>
     <string name="screen_color_picker_label">屏幕取色</string>
     <!-- end -->
+
+    <!-- task notes -->
+    <string name="task_notes_label">任务记录</string>
+    <string name="task_notes_task_mark_start">开始</string>
+    <string name="task_notes_task_mark_end">结束</string>
+    <string name="task_notes_task_description_et_hint">任务描述</string>
+    <!-- end -->
 </resources>
