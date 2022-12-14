@@ -1,6 +1,7 @@
 package pers.zhc.tools.utils.rc
 
-import pers.zhc.tools.utils.LangUtils.Companion.nullMap
+import pers.zhc.tools.utils.nullMap
+
 
 abstract class ReusableRcManager<T> {
     protected abstract fun create(): T

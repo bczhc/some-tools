@@ -48,4 +48,3 @@ fun RecyclerView.setUpFastScroll(context: Context) {
         setThumbDrawable(AppCompatResources.getDrawable(context, R.drawable.thumb)!!)
     }.build()
 }
-

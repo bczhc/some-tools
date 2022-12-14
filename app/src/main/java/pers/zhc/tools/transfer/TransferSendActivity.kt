@@ -23,7 +23,6 @@ import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.jni.JNI.Transfer.ReceiveProgressCallback
 import pers.zhc.tools.utils.*
-import pers.zhc.tools.utils.LangUtils.Companion.nullMap
 import pers.zhc.tools.views.SmartHintEditText
 import pers.zhc.tools.views.WrapLayout
 import java.io.File

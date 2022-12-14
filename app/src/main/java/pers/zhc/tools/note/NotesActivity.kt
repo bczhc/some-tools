@@ -334,8 +334,8 @@ class NotesActivity : NoteBaseActivity() {
             val item = listItems[position]
             val record = item.data
             holder.dateTV.text = dateTimeFormatter.format(Date(record.time)).toString()
-            holder.titleTV.text = StringUtils.limitText(record.title)
-            holder.contentTV.text = StringUtils.limitText(record.content)
+            holder.titleTV.text = record.title.limitText(100)
+            holder.contentTV.text = record.content.limitText(100)
             holder.itemLL.setBackgroundResource(
                 if (item.selected) {
                     R.drawable.clickable_view_selected

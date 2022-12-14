@@ -5,7 +5,7 @@ import androidx.core.widget.doAfterTextChanged
 import kotlinx.android.synthetic.main.regular_expression_test_layout.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.utils.RegexUtils.Companion.capture
+import pers.zhc.tools.utils.capture
 
 class RegExpTest : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

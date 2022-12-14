@@ -895,7 +895,7 @@ public class PaintView extends View {
         final ArrayList<String> tables = getDatabaseTables(db);
         for (String table : tables) {
             if (table.matches("^path_layer_[0-9]+$")) {
-                final long layerId = Long.parseLong(RegexUtils.Companion.capture(table, "^path_layer_([0-9]+)$").get(0).get(1));
+                final long layerId = Long.parseLong(RegexUtilsKt.capture(table, "^path_layer_([0-9]+)$").get(0).get(1));
                 add1Layer(new LayerInfo(layerId, String.valueOf(layerId), true));
 
             }
@@ -1110,7 +1110,7 @@ public class PaintView extends View {
             int speedDelayMillis
     ) {
         final String pathTable = "path_layer_" + layerId;
-        final int rowCount = SQLiteUtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
+        final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
 
         final Statement statement = db.compileStatement("SELECT mark, p1, p2 FROM " + pathTable);
         final Cursor cursor = statement.getCursor();
@@ -1191,7 +1191,7 @@ public class PaintView extends View {
             int speedDelayMillis
     ) {
         final String pathTable = "path_layer_" + layerId;
-        final int rowCount = SQLiteUtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
+        final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
 
         final Statement statement = db.compileStatement("SELECT mark, info, x, y FROM " + pathTable);
         final Cursor cursor = statement.getCursor();

@@ -594,7 +594,7 @@ public class WubiIME extends InputMethodService {
                 v -> {
                     // wubi code inverse lookup
                     CharSequence selectedText = ic.getSelectedText(0);
-                    handleInverseLookup(LangUtils.Companion.nullMap(selectedText, CharSequence::toString));
+                    handleInverseLookup(LangUtilsKt.nullMap(selectedText, CharSequence::toString));
                 }
         };
 
@@ -1153,6 +1153,6 @@ public class WubiIME extends InputMethodService {
 
     @Nullable
     private IBinder getWindowToken() {
-        return LangUtils.Companion.nullMap(candidateLayout, View::getWindowToken);
+        return LangUtilsKt.nullMap(candidateLayout, View::getWindowToken);
     }
 }
