@@ -800,6 +800,28 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity
+                android:name=".tasknotes.TaskNotesMainActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:theme="@style/Theme.M3Application"
+                android:label="@string/task_notes_label"
+                android:taskAffinity="pers.zhc.tools.tasknotes"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".tasknotes.DialogShowActivity"
+                android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+                android:theme="@style/Theme.Transparent"
+                android:label="@string/task_notes_label"
+                android:taskAffinity="pers.zhc.tools.tasknotes"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
 
     </application>
 </manifest>

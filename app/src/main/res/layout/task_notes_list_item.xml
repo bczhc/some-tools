@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+>
+    <RelativeLayout
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2.5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+    >
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:layout_toStartOf="@id/right_ll"
+                  tools:text="Task Description"
+                  android:layout_alignBottom="@id/right_ll"
+                  android:layout_alignTop="@id/right_ll"
+                  android:gravity="center_vertical"
+                  android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                  android:id="@+id/description_tv"
+        />
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:layout_alignParentEnd="true"
+                      android:id="@+id/right_ll"
+                      android:orientation="vertical"
+        >
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      tools:text="Start"
+                      android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                      android:gravity="center"
+                      android:id="@+id/task_mark_tv"
+            />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      tools:text="Time"
+                      android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                      android:gravity="center"
+                      android:id="@+id/time_tv"
+            />
+        </LinearLayout>
+    </RelativeLayout>
+    <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    />
+</LinearLayout>
