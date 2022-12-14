@@ -4,4 +4,8 @@
             android:title="@string/delete_menu"
             android:id="@+id/delete"
     />
+    <item
+            android:title="@string/task_notes_recreate_menu"
+            android:id="@+id/recreate"
+    />
 </menu>

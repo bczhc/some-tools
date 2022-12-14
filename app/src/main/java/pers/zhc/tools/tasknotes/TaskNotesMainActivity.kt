@@ -45,6 +45,9 @@ class TaskNotesMainActivity : BaseActivity() {
                         R.id.delete -> {
                             showDeleteRecordDialog(listItems[position])
                         }
+                        R.id.recreate -> {
+                            recreateTaskRecord(listItems[position])
+                        }
                     }
                     return@setOnMenuItemClickListener true
                 }
@@ -52,6 +55,18 @@ class TaskNotesMainActivity : BaseActivity() {
         }
 
         showNotification(notificationId)
+    }
+
+    private val dialogShowActivityLauncher = registerForActivityResult(DialogShowActivity.DialogShowActivityContract()) { time->
+        time ?: return@registerForActivityResult
+        queryAndSetListItems()
+        val index = listItems.indexOfFirst { it.time == time }
+        androidAssert(index != -1)
+        listAdapter.notifyItemInserted(index)
+    }
+
+    private fun recreateTaskRecord(record: Record) {
+        dialogShowActivityLauncher.launch(record.description)
     }
 
     private fun queryAndSetListItems() {
