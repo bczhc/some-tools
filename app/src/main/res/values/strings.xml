@@ -764,5 +764,6 @@
     <string name="task_notes_task_mark_end">结束</string>
     <string name="task_notes_task_description_et_hint">任务描述</string>
     <string name="task_notes_recreate_menu">重建</string>
+    <string name="exit_menu">退出</string>
     <!-- end -->
 </resources>

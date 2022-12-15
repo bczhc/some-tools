@@ -26,4 +26,8 @@
             />
         </menu>
     </item>
+    <item
+            android:title="@string/exit_menu"
+            android:id="@+id/exit"
+    />
 </menu>

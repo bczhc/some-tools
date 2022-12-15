@@ -112,6 +112,8 @@ public class MainActivity extends BaseActivity {
             acquireWakeLockAction();
         } else if (itemId == R.id.wake_lock_release) {
             releaseWakeLockAction();
+        } else if (itemId == R.id.exit) {
+            System.exit(0);
         }
         return true;
     }
