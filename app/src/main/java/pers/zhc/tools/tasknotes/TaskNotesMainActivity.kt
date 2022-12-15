@@ -54,6 +54,7 @@ class TaskNotesMainActivity : BaseActivity() {
                 }
             }.show()
         }
+        listAdapter.setOnItemClickListener(listAdapter.getOnItemLongClickListener())
 
         showNotification()
     }
