@@ -17,16 +17,16 @@
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:layout_toStartOf="@id/right_ll"
                   tools:text="Task Description"
-                  android:layout_alignBottom="@id/right_ll"
-                  android:layout_alignTop="@id/right_ll"
                   android:gravity="center_vertical"
                   android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                   android:id="@+id/description_tv"
+                  android:layout_centerVertical="true"
         />
         <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:layout_alignParentEnd="true"
                       android:id="@+id/right_ll"
                       android:orientation="vertical"
+                      android:layout_centerVertical="true"
         >
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                       tools:text="Start"

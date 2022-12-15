@@ -45,6 +45,7 @@ class TaskNotesMainActivity : BaseActivity() {
                         R.id.delete -> {
                             showDeleteRecordDialog(listItems[position])
                         }
+
                         R.id.recreate -> {
                             recreateTaskRecord(listItems[position])
                         }
@@ -53,8 +54,9 @@ class TaskNotesMainActivity : BaseActivity() {
                 }
             }.show()
         }
+        listAdapter.setOnItemClickListener(listAdapter.getOnItemLongClickListener())
 
-        showNotification(notificationId)
+        showNotification()
     }
 
     private val dialogShowActivityLauncher = registerForActivityResult(DialogShowActivity.DialogShowActivityContract()) { time->
@@ -89,7 +91,7 @@ class TaskNotesMainActivity : BaseActivity() {
     }
 
     @Suppress("DuplicatedCode")
-    private fun showNotification(notificationId: Int) {
+    private fun showNotification() {
         val intent = Intent(this, DialogShowActivity::class.java)
         val pi = PendingIntent.getActivity(
             this, 0, intent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -107,7 +109,7 @@ class TaskNotesMainActivity : BaseActivity() {
         }.build()
 
         val nm = applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        nm.notify(notificationId, notification)
+        nm.notify(NOTIFICATION_ID, notification)
     }
 
     private class ListAdapter(private val context: Context, private val records: Records) :
@@ -140,7 +142,7 @@ class TaskNotesMainActivity : BaseActivity() {
     }
 
     companion object {
-        private val notificationId by lazy { System.currentTimeMillis().hashCode() }
+        private const val NOTIFICATION_ID = 1955794286
     }
 }
 
