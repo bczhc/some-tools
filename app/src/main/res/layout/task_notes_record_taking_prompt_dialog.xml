@@ -37,6 +37,7 @@
                 style="?materialButtonOutlinedStyle"
                 android:text="@string/task_notes_task_mark_start"
                 android:id="@+id/start"
+                android:insetBottom="0dp"
         />
         <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"
@@ -44,6 +45,7 @@
                 style="?materialButtonOutlinedStyle"
                 android:text="@string/task_notes_task_mark_end"
                 android:id="@+id/end"
+                android:insetTop="0dp"
         />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 </RelativeLayout>
