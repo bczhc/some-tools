@@ -2,13 +2,22 @@ package pers.zhc.tools
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.util.Base64
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.JsonArray
+import com.google.gson.JsonSyntaxException
+import kotlinx.android.synthetic.main.github_action_download_item.view.*
+import kotlinx.android.synthetic.main.github_action_download_view.view.*
 import pers.zhc.tools.app.ActivityItem
 import pers.zhc.tools.app.AppMenuAdapter
 import pers.zhc.tools.app.SmallToolsListActivity
@@ -23,15 +32,15 @@ import pers.zhc.tools.fdb.FdbMainActivity
 import pers.zhc.tools.fourierseries.FourierSeriesActivity
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.magic.FileListActivity
-import pers.zhc.tools.main.MainActivity.Companion.showGithubActionDownloadDialog
 import pers.zhc.tools.note.NotesActivity
 import pers.zhc.tools.stcflash.FlashMainActivity
 import pers.zhc.tools.tasknotes.TaskNotesMainActivity
 import pers.zhc.tools.transfer.TransferMainActivity
-import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.utils.setLinearLayoutManager
+import pers.zhc.tools.utils.*
 import pers.zhc.tools.words.WordsMainActivity
 import pers.zhc.tools.wubi.WubiInputMethodActivity
+import java.io.File
+import java.net.URL
 import java.nio.charset.StandardCharsets
 import kotlin.system.exitProcess
 
@@ -151,8 +160,166 @@ class MainActivity : BaseActivity() {
         showGithubActionDownloadDialog(this)
     }
 
+    private fun showGithubActionDownloadDialog(context: Context) {
+        val download = { item: Commit, abi: String ->
+
+            val apk = item.apks.find { it.abi == abi }!!
+
+            val storagePath = Common.getAppMainExternalStoragePath(context)
+            val updateDir = File(storagePath, "update")
+            updateDir.requireMkdirs()
+            val localFile = File(updateDir, "some-tools.apk")
+
+            val url =
+                URL("${Info.staticResourceRootURL}/apks/some-tools/${item.commitHash}/${apk.name}")
+            Download.startDownloadWithDialog(context, url, localFile) {
+                // TODO: check file integrity
+                Common.installApk(context, localFile)
+            }
+        }
+
+        val onItemClicked = { item: Commit, upperDialog: Dialog ->
+            // check abi
+            val supportedAbis = Build.SUPPORTED_ABIS
+            val foundAbi = item.apks.map { it.abi }.find {
+                supportedAbis.contains(it)
+            }
+            if (foundAbi == null) {
+                ToastUtils.show(context, R.string.app_unsupported_abi)
+            } else {
+                MaterialAlertDialogBuilder(context)
+                    .setTitle(R.string.app_download_confirmation_dialog_title)
+                    .setPositiveButton(R.string.confirm) { _, _ ->
+                        download(item, foundAbi)
+                        upperDialog.dismiss()
+                    }
+                    .setNeutralButton("ABI") { _, _ ->
+
+                        val abis = item.apks.map { it.abi }.toTypedArray()
+                        val abiIndex = abis.indexOfFirst { it == foundAbi }
+                        MaterialAlertDialogBuilder(context)
+                            .setTitle("ABI")
+                            .defaultNegativeButton()
+                            .setPositiveAction { self, _ ->
+                                val selectedAbi = abis[(self as AlertDialog).listView.checkedItemPosition]
+                                download(item, selectedAbi)
+                                upperDialog.dismiss()
+                            }
+                            .apply {
+                                setSingleChoiceItems(abis, abiIndex, null)
+                            }
+                            .show()
+
+                    }
+                    .setMessage(item.commitMessage)
+                    .show()
+            }
+
+        }
+
+        val showDownloadList = { infoJson: String ->
+            val commits = try {
+                ArrayList(
+                    MyApplication.GSON.fromJson(infoJson, JsonArray::class.java)
+                        .map { MyApplication.GSON.fromJson(it, Commit::class.java) }
+                        .reversed()
+                )
+            } catch (_: JsonSyntaxException) {
+                null
+            }
+
+            if (commits == null) {
+                ToastUtils.show(context, R.string.getting_information_failed)
+            } else {
+                val inflate = View.inflate(context, R.layout.github_action_download_view, null)
+                val recyclerView = inflate.recycler_view!!
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                val adapter = GithubActionDownloadListAdapter(context, commits)
+                recyclerView.adapter = adapter
+
+                val dialog = Dialog(context)
+                DialogUtils.setDialogAttr(
+                    dialog,
+                    width = ViewGroup.LayoutParams.MATCH_PARENT,
+                    height = ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                dialog.setContentView(inflate)
+                dialog.show()
+
+                adapter.setOnItemClickListener { position, _ ->
+                    onItemClicked(commits[position], dialog)
+                }
+            }
+        }
+
+        val progressDialog = ProgressDialog(context)
+        val progressView = progressDialog.getProgressView()
+        progressView.setIsIndeterminateMode(true)
+        progressView.setTitle(context.getString(R.string.getting_information))
+        DialogUtils.setDialogAttr(
+            progressDialog,
+            width = ViewGroup.LayoutParams.MATCH_PARENT,
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        progressDialog.show()
+        asyncFetchInfo {
+            Common.runOnUiThread(context) {
+                progressDialog.dismiss()
+                if (it == null) {
+                    ToastUtils.show(context, R.string.getting_information_failed)
+                    return@runOnUiThread
+                }
+                showDownloadList(it)
+            }
+        }
+    }
+
+    private fun asyncFetchInfo(f: (read: String?) -> Unit) {
+        val url = URL(Info.staticResourceRootURL + "/apks/some-tools/files.json")
+        Thread {
+            val read = url.readText()
+            try {
+                f(read)
+            } catch (e: Exception) {
+                f(null)
+            }
+        }.start()
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         overridePendingTransition(0, R.anim.fade_out)
     }
+
+    private class GithubActionDownloadListAdapter(private val context: Context, private val data: ArrayList<Commit>) :
+        AdapterWithClickListener<GithubActionDownloadListAdapter.MyViewHolder>() {
+        class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val commitInfoTV = view.commit_info_tv!!
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {
+            val inflate = LayoutInflater.from(context).inflate(R.layout.github_action_download_item, parent, false)
+            return MyViewHolder(inflate)
+        }
+
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            holder.commitInfoTV.text = data[position].commitMessage
+        }
+
+        override fun getItemCount(): Int {
+            return data.size
+        }
+    }
+
+    private data class Commit(
+        val commitHash: String,
+        val commitMessage: String,
+        val apks: ArrayList<Apk>,
+    )
+
+    private data class Apk(
+        val abi: String,
+        val sha1: String,
+        val name: String,
+    )
 }
