@@ -59,13 +59,14 @@ class TaskNotesMainActivity : BaseActivity() {
         showNotification()
     }
 
-    private val dialogShowActivityLauncher = registerForActivityResult(DialogShowActivity.DialogShowActivityContract()) { time->
-        time ?: return@registerForActivityResult
-        queryAndSetListItems()
-        val index = listItems.indexOfFirst { it.time == time }
-        androidAssert(index != -1)
-        listAdapter.notifyItemInserted(index)
-    }
+    private val dialogShowActivityLauncher =
+        registerForActivityResult(DialogShowActivity.DialogShowActivityContract()) { creationTime ->
+            creationTime ?: return@registerForActivityResult
+            queryAndSetListItems()
+            val index = listItems.indexOfFirst { it.creationTime == creationTime }
+            androidAssert(index != -1)
+            listAdapter.notifyItemInserted(index)
+        }
 
     private fun recreateTaskRecord(record: Record) {
         dialogShowActivityLauncher.launch(record.description)
@@ -79,9 +80,9 @@ class TaskNotesMainActivity : BaseActivity() {
     private fun showDeleteRecordDialog(record: Record) {
         DialogUtils.createConfirmationAlertDialog(
             this, positiveAction = { _, _ ->
-                database.delete(record.time)
+                database.delete(record.creationTime)
                 ToastUtils.show(this, R.string.deleting_succeeded)
-                val index = listItems.indexOfFirst { it.time == record.time }
+                val index = listItems.indexOfFirst { it.creationTime == record.creationTime }
                 androidAssert(index != -1)
                 listItems.removeAt(index)
                 listAdapter.notifyItemRemoved(index)
@@ -127,15 +128,23 @@ class TaskNotesMainActivity : BaseActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            val (description, mark, time) = records[position]
+            val (description, mark, time, creationTime) = records[position]
             holder.descriptionTV.text = description
             holder.taskMarkTV.text = context.getString(mark.getStringRes())
-            holder.timeTV.text = formatTime(time)
+            holder.timeTV.text = formatTime(creationTime, time)
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun formatTime(timestamp: Long): String =
-            SimpleDateFormat("MM-dd HH:mm").format(Date(timestamp))
+        fun formatTime(creationTime: Long, time: Time): String {
+            val calendar = Calendar.getInstance().apply {
+                this.time = Date(creationTime)
+                val year = get(Calendar.YEAR)
+                val month = get(Calendar.MONTH)
+                val day = get(Calendar.DAY_OF_MONTH)
+                set(year, month, day, time.hour, time.minute)
+            }
+            return SimpleDateFormat("MM-dd HH:mm").format(calendar.time)
+        }
 
 
         override fun getItemCount() = records.size

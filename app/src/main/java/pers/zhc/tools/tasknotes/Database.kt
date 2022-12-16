@@ -10,10 +10,12 @@ class Database(path: String) : BaseDatabase(path) {
         db.exec(
             """CREATE TABLE IF NOT EXISTS task_record
 (
-    description TEXT    NOT NULL,
+    description   TEXT    NOT NULL,
     -- 0: start; 1: end
-    mark        INTEGER NOT NULL,
-    "time"      INTEGER NOT NULL
+    mark          INTEGER NOT NULL,
+    -- time (minute of day) = hour * 60 + minute
+    "time"        INTEGER,
+    creation_time INTEGER NOT NULL PRIMARY KEY
 )
 """
         )
@@ -21,17 +23,17 @@ class Database(path: String) : BaseDatabase(path) {
 
     fun insert(record: Record) {
         db.execBind(
-            "INSERT INTO task_record (description, mark, \"time\") VALUES (?, ?, ?)",
-            arrayOf(record.description, record.mark.enumInt, record.time)
+            "INSERT INTO task_record (description, mark, \"time\", creation_time) VALUES (?, ?, ?, ?)",
+            arrayOf(record.description, record.mark.enumInt, record.time.minuteOfDay, record.creationTime)
         )
     }
 
     fun delete(timestamp: Long) {
-        db.execBind("DELETE FROM task_record WHERE \"time\" IS ?", arrayOf(timestamp))
+        db.execBind("DELETE FROM task_record WHERE creation_time IS ?", arrayOf(timestamp))
     }
 
     fun queryAll(): ArrayList<Record> {
-        return db.withCompiledStatement("SELECT description, mark, \"time\" FROM task_record") {
+        return db.withCompiledStatement("SELECT description, mark, \"time\", creation_time FROM task_record") {
             val cursor = it.cursor
             val records = ArrayList<Record>()
             while (cursor.step()) {
@@ -39,7 +41,8 @@ class Database(path: String) : BaseDatabase(path) {
                     Record(
                         cursor.getText(0),
                         TaskMark.from(cursor.getInt(1))!!,
-                        cursor.getLong(2)
+                        Time(cursor.getInt(2)),
+                        cursor.getLong(3)
                     )
                 )
             }

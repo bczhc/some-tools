@@ -9,6 +9,7 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.databinding.TaskNotesRecordTakingPromptDialogBinding
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.*
+import java.util.*
 
 class DialogShowActivity : BaseActivity() {
     private val database = Database.database
@@ -35,17 +36,18 @@ class DialogShowActivity : BaseActivity() {
                     R.id.end -> TaskMark.END
                     else -> unreachable()
                 }
-                val time = System.currentTimeMillis()
+                val creationTime = System.currentTimeMillis()
                 database.insert(
                     Record(
                         descriptionET.text.toString(),
                         taskMark,
-                        time
+                        Time(Date(creationTime)),
+                        creationTime
                     )
                 )
                 ToastUtils.show(this, R.string.adding_succeeded)
                 setResult(0, Intent().apply {
-                    putExtra(EXTRA_TIMESTAMP, time)
+                    putExtra(EXTRA_TIMESTAMP, creationTime)
                 })
                 finish()
             }.setNegativeAction { _, _ ->
@@ -65,7 +67,7 @@ class DialogShowActivity : BaseActivity() {
      * I: nullable default task description
      * O: timestamp of the created record; null indicates the task isn't created
      */
-    class DialogShowActivityContract: ActivityResultContract<String?, Long?>() {
+    class DialogShowActivityContract : ActivityResultContract<String?, Long?>() {
         override fun createIntent(context: Context, input: String?): Intent {
             return Intent(context, DialogShowActivity::class.java).apply {
                 putExtra(EXTRA_DESCRIPTION_TEXT, input)
