@@ -50,6 +50,42 @@ class Database(path: String) : BaseDatabase(path) {
         }
     }
 
+    fun query(creationTime: Long): Record? {
+        return db.withCompiledStatement(
+            """SELECT description, mark, "time", creation_time
+FROM task_record
+WHERE creation_time IS ?"""
+        ) { stmt ->
+            stmt.bind(arrayOf(creationTime))
+            val cursor = stmt.cursor
+            if (cursor.step()) {
+                Record(
+                    cursor.getText(0),
+                    TaskMark.from(cursor.getInt(1))!!,
+                    Time(cursor.getInt(2)),
+                    cursor.getLong(3)
+                )
+            } else {
+                null
+            }
+        }
+    }
+
+    fun update(creationTime: Long, record: Record) {
+        db.execBind(
+            """UPDATE task_record
+SET description=?,
+    mark=?,
+    "time"=?,
+    creation_time=?
+WHERE creation_time IS ?""",
+            arrayOf(
+                record.description, record.mark.enumInt, record.time.minuteOfDay, record.creationTime,
+                creationTime
+            )
+        )
+    }
+
     companion object {
         private val databasePath by lazy {
             Common.getInternalDatabaseFile(MyApplication.appContext, "task_notes")

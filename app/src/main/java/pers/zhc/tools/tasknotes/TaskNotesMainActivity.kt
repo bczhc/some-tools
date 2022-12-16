@@ -12,11 +12,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat.CLOCK_24H
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.TaskNotesListItemBinding
 import pers.zhc.tools.databinding.TaskNotesMainBinding
+import pers.zhc.tools.databinding.TaskNotesModifyRecordDialogBinding
 import pers.zhc.tools.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -49,6 +53,10 @@ class TaskNotesMainActivity : BaseActivity() {
                         R.id.recreate -> {
                             recreateTaskRecord(listItems[position])
                         }
+
+                        R.id.modify -> {
+                            showModifyRecordDialog(listItems[position])
+                        }
                     }
                     return@setOnMenuItemClickListener true
                 }
@@ -57,6 +65,66 @@ class TaskNotesMainActivity : BaseActivity() {
         listAdapter.setOnItemClickListener(listAdapter.getOnItemLongClickListener())
 
         showNotification()
+    }
+
+    private fun showModifyRecordDialog(record: Record) {
+        val bindings = TaskNotesModifyRecordDialogBinding.inflate(layoutInflater)
+
+        bindings.included.btg.check(
+            when (record.mark) {
+                TaskMark.START -> R.id.start
+                TaskMark.END -> R.id.end
+            }
+        )
+        bindings.included.descriptionEt.setText(record.description)
+        bindings.timeTv.text = record.time.format()
+
+        var newTime = record.time
+
+        val updateRecord = {
+            val description = bindings.included.descriptionEt.text.toString()
+            val taskMark = when (bindings.included.btg.checkedButtonId) {
+                R.id.start -> TaskMark.START
+                R.id.end -> TaskMark.END
+                else -> unreachable()
+            }
+
+            val newRecord = Record(
+                description,
+                taskMark,
+                newTime,
+                record.creationTime
+            )
+            database.update(record.creationTime, newRecord)
+
+            val index = listItems.indexOfFirst { it.creationTime == record.creationTime }
+            androidAssert(index != -1)
+            listItems[index] = newRecord
+            listAdapter.notifyItemChanged(index)
+            ToastUtils.show(this, R.string.modification_succeeded)
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setView(bindings.root)
+            .setPositiveAction { _, _ ->
+                updateRecord()
+            }
+            .setNegativeAction()
+            .show()
+
+        bindings.timeButton.setOnClickListener {
+            MaterialTimePicker.Builder()
+                .setTimeFormat(CLOCK_24H)
+                .setHour(record.time.hour)
+                .setMinute(record.time.minute)
+                .build().apply {
+                    addOnPositiveButtonClickListener {
+                        newTime=Time(hour, minute)
+                        bindings.timeTv.text = newTime.format()
+                    }
+                }
+                .show(supportFragmentManager, "Time Picker")
+        }
     }
 
     private val dialogShowActivityLauncher =
