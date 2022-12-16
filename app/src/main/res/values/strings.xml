@@ -85,6 +85,8 @@
     <string name="corrupted_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
     <string name="delete_menu">@string/delete_button</string>
     <string name="select_all_btn">全选</string>
+    <string name="hardware_acceleration">硬件加速</string>
+    <string name="exit_menu">退出</string>
     <!-- end -->
 
     <!-- old -->
@@ -507,6 +509,7 @@
     <string name="diary_menu_random">随机</string>
     <string name="diary_menu_sort">排序</string>
     <string name="diary_sort_random">@string/diary_menu_random</string>
+    <string name="diary_sort_date">日期</string>
     <!-- module end -->
 
     <!-- module: bus -->
@@ -615,6 +618,7 @@
     <string name="capture_permission_denied">未同意权限</string>
     <string name="screen_color_picker_running_notification_title">屏幕取色正在运行</string>
     <string name="stop_notification_action">停止</string>
+    <string name="screen_color_picker_label">屏幕取色</string>
     <!-- end -->
 
     <!-- module: transfer -->
@@ -689,6 +693,9 @@
     <string name="fourier_series_epicycles_drawing_option_speed">速度</string>
     <string name="fourier_series_epicycles_drawing_option_reset_path">重置路径</string>
     <string name="fourier_series_sort_shuffle">乱序</string>
+    <string name="fourier_series_path_evaluator_menu_hint">路径求值器</string>
+    <string name="fourier_series_integrator_menu_hint">数值积分器</string>
+    <string name="fourier_series_float_type_menu_hint">浮点类型</string>
     <!-- end -->
 
     <!-- module: chars_splitter -->
@@ -734,7 +741,6 @@
 
     <!-- Signal test -->
     <string name="signal_test_label">信号测试</string>
-    <string name="diary_sort_date">日期</string>
     <!-- end -->
 
     <!-- note -->
@@ -751,11 +757,6 @@
     <string name="note_selected_notes_count_msg">已选择%1$d项</string>
     <string name="note_batch_deleted_notes_done_toast">已删除%1$d条笔记</string>
     <string name="note_modified_save_alert">是否保存</string>
-    <string name="fourier_series_path_evaluator_menu_hint">路径求值器</string>
-    <string name="fourier_series_integrator_menu_hint">数值积分器</string>
-    <string name="fourier_series_float_type_menu_hint">浮点类型</string>
-    <string name="hardware_acceleration">硬件加速</string>
-    <string name="screen_color_picker_label">屏幕取色</string>
     <!-- end -->
 
     <!-- task notes -->
@@ -764,6 +765,5 @@
     <string name="task_notes_task_mark_end">结束</string>
     <string name="task_notes_task_description_et_hint">任务描述</string>
     <string name="task_notes_recreate_menu">重建</string>
-    <string name="exit_menu">退出</string>
     <!-- end -->
 </resources>
