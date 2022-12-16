@@ -12,11 +12,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat.CLOCK_24H
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.TaskNotesListItemBinding
 import pers.zhc.tools.databinding.TaskNotesMainBinding
+import pers.zhc.tools.databinding.TaskNotesModifyRecordDialogBinding
 import pers.zhc.tools.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -49,6 +53,10 @@ class TaskNotesMainActivity : BaseActivity() {
                         R.id.recreate -> {
                             recreateTaskRecord(listItems[position])
                         }
+
+                        R.id.modify -> {
+                            showModifyRecordDialog(listItems[position])
+                        }
                     }
                     return@setOnMenuItemClickListener true
                 }
@@ -59,13 +67,74 @@ class TaskNotesMainActivity : BaseActivity() {
         showNotification()
     }
 
-    private val dialogShowActivityLauncher = registerForActivityResult(DialogShowActivity.DialogShowActivityContract()) { time->
-        time ?: return@registerForActivityResult
-        queryAndSetListItems()
-        val index = listItems.indexOfFirst { it.time == time }
-        androidAssert(index != -1)
-        listAdapter.notifyItemInserted(index)
+    private fun showModifyRecordDialog(record: Record) {
+        val bindings = TaskNotesModifyRecordDialogBinding.inflate(layoutInflater)
+
+        bindings.included.btg.check(
+            when (record.mark) {
+                TaskMark.START -> R.id.start
+                TaskMark.END -> R.id.end
+            }
+        )
+        bindings.included.descriptionEt.setText(record.description)
+        bindings.timeTv.text = record.time.format()
+
+        var newTime = record.time
+
+        val updateRecord = {
+            val description = bindings.included.descriptionEt.text.toString()
+            val taskMark = when (bindings.included.btg.checkedButtonId) {
+                R.id.start -> TaskMark.START
+                R.id.end -> TaskMark.END
+                else -> unreachable()
+            }
+
+            val newRecord = Record(
+                description,
+                taskMark,
+                newTime,
+                record.creationTime
+            )
+            database.update(record.creationTime, newRecord)
+
+            val index = listItems.indexOfFirst { it.creationTime == record.creationTime }
+            androidAssert(index != -1)
+            listItems[index] = newRecord
+            listAdapter.notifyItemChanged(index)
+            ToastUtils.show(this, R.string.modification_succeeded)
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setView(bindings.root)
+            .setPositiveAction { _, _ ->
+                updateRecord()
+            }
+            .setNegativeAction()
+            .show()
+
+        bindings.timeButton.setOnClickListener {
+            MaterialTimePicker.Builder()
+                .setTimeFormat(CLOCK_24H)
+                .setHour(record.time.hour)
+                .setMinute(record.time.minute)
+                .build().apply {
+                    addOnPositiveButtonClickListener {
+                        newTime=Time(hour, minute)
+                        bindings.timeTv.text = newTime.format()
+                    }
+                }
+                .show(supportFragmentManager, "Time Picker")
+        }
     }
+
+    private val dialogShowActivityLauncher =
+        registerForActivityResult(DialogShowActivity.DialogShowActivityContract()) { creationTime ->
+            creationTime ?: return@registerForActivityResult
+            queryAndSetListItems()
+            val index = listItems.indexOfFirst { it.creationTime == creationTime }
+            androidAssert(index != -1)
+            listAdapter.notifyItemInserted(index)
+        }
 
     private fun recreateTaskRecord(record: Record) {
         dialogShowActivityLauncher.launch(record.description)
@@ -79,9 +148,9 @@ class TaskNotesMainActivity : BaseActivity() {
     private fun showDeleteRecordDialog(record: Record) {
         DialogUtils.createConfirmationAlertDialog(
             this, positiveAction = { _, _ ->
-                database.delete(record.time)
+                database.delete(record.creationTime)
                 ToastUtils.show(this, R.string.deleting_succeeded)
-                val index = listItems.indexOfFirst { it.time == record.time }
+                val index = listItems.indexOfFirst { it.creationTime == record.creationTime }
                 androidAssert(index != -1)
                 listItems.removeAt(index)
                 listAdapter.notifyItemRemoved(index)
@@ -127,15 +196,23 @@ class TaskNotesMainActivity : BaseActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            val (description, mark, time) = records[position]
+            val (description, mark, time, creationTime) = records[position]
             holder.descriptionTV.text = description
             holder.taskMarkTV.text = context.getString(mark.getStringRes())
-            holder.timeTV.text = formatTime(time)
+            holder.timeTV.text = formatTime(creationTime, time)
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun formatTime(timestamp: Long): String =
-            SimpleDateFormat("MM-dd HH:mm").format(Date(timestamp))
+        fun formatTime(creationTime: Long, time: Time): String {
+            val calendar = Calendar.getInstance().apply {
+                this.time = Date(creationTime)
+                val year = get(Calendar.YEAR)
+                val month = get(Calendar.MONTH)
+                val day = get(Calendar.DAY_OF_MONTH)
+                set(year, month, day, time.hour, time.minute)
+            }
+            return SimpleDateFormat("MM-dd HH:mm").format(calendar.time)
+        }
 
 
         override fun getItemCount() = records.size

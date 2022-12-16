@@ -5,6 +5,10 @@
             android:id="@+id/delete"
     />
     <item
+            android:title="@string/task_notes_modify_menu"
+            android:id="@+id/modify"
+    />
+    <item
             android:title="@string/task_notes_recreate_menu"
             android:id="@+id/recreate"
     />

@@ -87,6 +87,7 @@
     <string name="select_all_btn">全选</string>
     <string name="hardware_acceleration">硬件加速</string>
     <string name="exit_menu">退出</string>
+    <string name="modification_succeeded">修改成功</string>
     <!-- end -->
 
     <!-- old -->
@@ -765,5 +766,7 @@
     <string name="task_notes_task_mark_end">结束</string>
     <string name="task_notes_task_description_et_hint">任务描述</string>
     <string name="task_notes_recreate_menu">重建</string>
+    <string name="task_notes_change_time_button">修改时间</string>
+    <string name="task_notes_modify_menu">修改</string>
     <!-- end -->
 </resources>
