@@ -47,7 +47,7 @@ class DiaryTakingActivity : DiaryBaseActivity() {
         bindings = DiaryTakingActivityBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
-        updateStatement = diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?")
+        updateStatement = diaryDatabase.database.compileStatement("UPDATE diary SET content=? WHERE date=?")
 
         editText = bindings.et.let {
             it.setZoomFontSizeEnabled(true)
@@ -132,7 +132,7 @@ class DiaryTakingActivity : DiaryBaseActivity() {
         }
         dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)
 
-        val hasRecord = diaryDatabase.hasRecord(
+        val hasRecord = diaryDatabase.database.hasRecord(
             """SELECT *
 FROM diary
 WHERE "date" IS ?""", arrayOf(dateInt)
@@ -181,7 +181,7 @@ WHERE "date" IS ?""", arrayOf(dateInt)
     }
 
     private fun createNewRecord() {
-        val statement = diaryDatabase.compileStatement(
+        val statement = diaryDatabase.database.compileStatement(
             """
     INSERT INTO diary("date", content)
     VALUES (?, ?)
@@ -198,7 +198,7 @@ WHERE "date" IS ?""", arrayOf(dateInt)
     }
 
     private fun prepareContent() {
-        val statement = diaryDatabase.compileStatement(
+        val statement = diaryDatabase.database.compileStatement(
             """SELECT content
 FROM diary
 WHERE "date" IS ?"""

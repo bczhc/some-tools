@@ -139,7 +139,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
     }
 
     private fun insertFileRecord(identifier: String, filename: String?, storageTypeInt: Int, description: String) {
-        diaryDatabase.execBind(
+        diaryDatabase.database.execBind(
             """INSERT INTO diary_attachment_file(identifier, addition_timestamp, filename, storage_type, description)
 VALUES (?, ?, ?, ?, ?)""",
             arrayOf(identifier, System.currentTimeMillis(), filename, storageTypeInt, description)
@@ -148,13 +148,13 @@ VALUES (?, ?, ?, ?, ?)""",
 
     private fun insertTextRecord(identifier: String, content: String, description: String) {
         insertFileRecord(identifier, null, StorageType.TEXT.enumInt, description)
-        diaryDatabase.execBind(
+        diaryDatabase.database.execBind(
             """INSERT INTO diary_attachment_text(identifier, content)
 VALUES (?, ?)""", arrayOf(identifier, content))
     }
 
     private fun hasFileRecord(identifier: String): Boolean {
-        return diaryDatabase.hasRecord("""SELECT * FROM diary_attachment_file WHERE identifier IS ?""", arrayOf(identifier))
+        return diaryDatabase.database.hasRecord("""SELECT * FROM diary_attachment_file WHERE identifier IS ?""", arrayOf(identifier))
     }
 
     private fun addSpinner() {
@@ -229,7 +229,7 @@ VALUES (?, ?)""", arrayOf(identifier, content))
         identifier: String,
     ) {
         val statement =
-            diaryDatabase.compileStatement(
+            diaryDatabase.database.compileStatement(
                 """UPDATE diary_attachment_file
 SET filename     = ?,
     storage_type = $storageTypeOrdinal,

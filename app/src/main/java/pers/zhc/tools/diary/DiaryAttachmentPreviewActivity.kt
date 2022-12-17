@@ -23,7 +23,7 @@ class DiaryAttachmentPreviewActivity : DiaryBaseActivity() {
         Common.doAssertion(intent.hasExtra(EXTRA_ATTACHMENT_ID))
         val attachmentId = intent.getLongExtra(EXTRA_ATTACHMENT_ID, -1)
 
-        val statement = diaryDatabase.compileStatement(
+        val statement = diaryDatabase.database.compileStatement(
             """SELECT title, description
 FROM diary_attachment
 WHERE id IS ?"""
@@ -38,7 +38,7 @@ WHERE id IS ?"""
         titleTV.text = getString(R.string.diary_attachment_preview_activity_title_is, title)
         descriptionTV.text = getString(R.string.diary_attachment_preview_activity_description_is, description)
 
-        val statement2 = diaryDatabase.compileStatement(
+        val statement2 = diaryDatabase.database.compileStatement(
             """SELECT identifier
 FROM diary_attachment_file_reference
 WHERE attachment_id IS ?""",

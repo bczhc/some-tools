@@ -1,67 +1,24 @@
 package pers.zhc.tools.diary
 
-import android.content.Context
 import org.intellij.lang.annotations.Language
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.RefCountHolder
 import pers.zhc.jni.sqlite.SQLite3
-import pers.zhc.util.Assertion
+import pers.zhc.tools.MyApplication
+import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.androidAssert
+import pers.zhc.tools.utils.rc.Ref
+import pers.zhc.tools.utils.rc.ReusableRcManager
+import pers.zhc.tools.utils.withCompiledStatement
 
 /**
  * @author bczhc
+ * TODO: avoid directly operating with this [database] inner [SQLite3] object
  */
-class DiaryDatabase {
-    companion object {
-        private var holder: RefCountHolder<SQLite3>? = null
-        lateinit var internalDatabasePath: String
+class DiaryDatabase(path: String) {
+    val database = SQLite3.open(path)
 
-        @JvmStatic
-        fun init(ctx: Context) {
-            internalDatabasePath = Common.getInternalDatabaseDir(ctx, "diary.db").path
-        }
-
-        fun getDatabaseRef(): SQLite3 {
-            if (holder == null || holder!!.isAbandoned) {
-                val db = SQLite3.open(internalDatabasePath)
-                initDatabase(db)
-                holder = object : RefCountHolder<SQLite3>(db) {
-                    override fun onClose(obj: SQLite3?) {
-                        obj!!.close()
-                    }
-                }
-            }
-            return holder!!.newRef()
-        }
-
-        fun releaseDatabaseRef() {
-            if (holder != null) {
-                holder!!.releaseRef()
-            }
-        }
-
-        fun getHolder(): RefCountHolder<SQLite3> {
-            return holder!!
-        }
-
-        fun changeDatabase(path: String) {
-            val refCount = holder!!.refCount
-            if (refCount != 0) {
-                throw CloseFailureException(refCount)
-            }
-
-            val new = SQLite3.open(path)
-            holder = object : RefCountHolder<SQLite3>(new) {
-                override fun onClose(obj: SQLite3?) {
-                    obj!!.close()
-                }
-            }
-        }
-
-        class CloseFailureException(val refCount: Int) : Exception()
-
-        protected fun initDatabase(database: SQLite3) {
-            @Language("SQLite") val statements =
-                """PRAGMA foreign_keys = ON;
+    init {
+        @Language("SQLite") val statements =
+            """PRAGMA foreign_keys = ON;
 -- main diary content table
 CREATE TABLE IF NOT EXISTS diary
 (
@@ -121,18 +78,45 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
     FOREIGN KEY (diary_date) REFERENCES diary ("date"),
     FOREIGN KEY (referred_attachment_id) REFERENCES diary_attachment (id)
 );""".split(";\n")
-            statements.forEach {
-                database.exec(it)
+        statements.forEach {
+            database.exec(it)
+        }
+    }
+
+    fun getCharsCount(dateInt: Int): Int {
+        return database.withCompiledStatement("SELECT length(content) FROM diary WHERE \"date\" IS ?") {
+            it.bind(arrayOf(dateInt))
+            val cursor = it.cursor
+            androidAssert(cursor.step())
+            cursor.getInt(0)
+        }
+    }
+
+    private fun close() {
+        database.close()
+    }
+
+    companion object {
+        val internalDatabasePath by lazy {
+            Common.getInternalDatabaseDir(MyApplication.appContext, "diary.db")
+        }
+
+        private val databaseManager = object : ReusableRcManager<DiaryDatabase>() {
+            override fun create(): DiaryDatabase {
+                return DiaryDatabase(internalDatabasePath.path)
+            }
+
+            override fun release(obj: DiaryDatabase) {
+                obj.close()
             }
         }
 
-        fun getCharsCount(database: SQLite3, dateInt: Int): Int {
-            val statement = database.compileStatement("SELECT length(content) FROM diary WHERE \"date\" IS ?", arrayOf(dateInt))
-            val cursor = statement.cursor
-            Assertion.doAssertion(cursor.step())
-            val c = cursor.getInt(0)
-            statement.release()
-            return c
+        fun getDatabaseRef(): Ref<DiaryDatabase> {
+            return databaseManager.getRefOrCreate()
+        }
+
+        fun getDatabaseRefCount(): Int {
+            return databaseManager.getRefCount()
         }
     }
 }

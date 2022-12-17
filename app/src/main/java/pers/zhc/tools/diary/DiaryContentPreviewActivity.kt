@@ -79,7 +79,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
     }
 
     private fun fetchContent(dateInt: Int): String {
-        val statement = this.diaryDatabase.compileStatement(
+        val statement = this.diaryDatabase.database.compileStatement(
             """SELECT content
 FROM diary
 WHERE "date" IS ?"""
@@ -104,15 +104,18 @@ WHERE "date" IS ?"""
                 intent.putExtra(EXTRA_DATE_INT, dateInt)
                 startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
             }
+
             R.id.attachment -> {
                 val intent = Intent(this, DiaryAttachmentActivity::class.java)
                 intent.putExtra(DiaryAttachmentActivity.EXTRA_FROM_DIARY, true)
                 intent.putExtra(EXTRA_DATE_INT, dateInt)
                 startActivity(intent)
             }
+
             R.id.statistics -> {
                 createDiaryRecordStatDialog(this, diaryDatabase, dateInt).show()
             }
+
             else -> {
             }
         }
@@ -128,6 +131,7 @@ WHERE "date" IS ?"""
                 val content = fetchContent(dateInt)
                 contentTV.text = content
             }
+
             else -> {
             }
         }
@@ -157,13 +161,13 @@ WHERE "date" IS ?"""
          */
         const val EXTRA_HIGHLIGHT_REGEX = "highlightRegex"
 
-        fun createDiaryRecordStatDialog(context: Context, database: SQLite3, dateInt: Int): Dialog {
+        fun createDiaryRecordStatDialog(context: Context, database: DiaryDatabase, dateInt: Int): Dialog {
             return Dialog(context).apply {
                 setTitle(R.string.diary_statistics_dialog_title)
                 setContentView(View.inflate(context, R.layout.diary_record_stat_dialog, null).apply {
                     this.stat_content_tv!!.text = context.getString(
                         R.string.diary_record_statistics_dialog_content,
-                        DiaryDatabase.getCharsCount(database, dateInt)
+                        database.getCharsCount(dateInt)
                     )
                 })
                 DialogUtils.setDialogAttr(this, width = MATCH_PARENT)

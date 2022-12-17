@@ -11,19 +11,17 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.diary_attachment_fragment.*
 import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.jni.sqlite.Statement
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.diary.fragments.AttachmentFragment.Companion.EXTRA_PICKED_ATTACHMENT_ID
 import pers.zhc.tools.diary.fragments.AttachmentFragment.Companion.EXTRA_PICK_MODE
 import pers.zhc.tools.utils.*
-import pers.zhc.jni.sqlite.SQLite3
-import pers.zhc.jni.sqlite.Statement
-import java.util.*
 
 /**
  * @author bczhc
@@ -107,10 +105,10 @@ class AttachmentFragment(
                             if (fromDiary) {
                                 // delete from diary attached attachment records
                                 Common.doAssertion(dateInt != -1)
-                                deleteAttachedAttachment(diaryDatabase, dateInt, id)
+                                deleteAttachedAttachment(diaryDatabase.database, dateInt, id)
                             } else {
                                 // delete from the attachment library
-                                deleteAttachment(diaryDatabase, id)
+                                deleteAttachment(diaryDatabase.database, id)
                             }
                             itemDataList.removeAt(position)
                             itemAdapter.notifyItemRemoved(position)
@@ -125,6 +123,8 @@ class AttachmentFragment(
     }
 
     private fun refreshItemDataList() {
+        val diaryDatabase = diaryDatabase.database
+
         val statement: Statement
         if (dateInt == -1) {
             statement = diaryDatabase.compileStatement(
@@ -156,7 +156,7 @@ WHERE diary_attachment_mapping.diary_date IS ?"""
     private fun checkAttachmentInfoRecord() {
         val fileStoragePath = DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)
         if (fileStoragePath == null) {
-            // record "info_json" doesn't exists, then start to set it
+            // record "info_json" doesn't exist, then start to set it
             startActivity(Intent(context, DiaryAttachmentSettingsActivity::class.java))
         }
     }
@@ -224,6 +224,8 @@ WHERE diary_attachment_mapping.diary_date IS ?"""
     }
 
     private fun checkExistence(attachmentId: Long): Boolean {
+        val diaryDatabase = diaryDatabase.database
+
         Common.doAssertion(dateInt != -1)
         return diaryDatabase.hasRecord(
             """SELECT *
@@ -235,6 +237,8 @@ WHERE diary_date IS ?
     }
 
     private fun queryAttachment(id: Long): ItemData {
+        val diaryDatabase = diaryDatabase.database
+
         val statement = diaryDatabase.compileStatement(
             """SELECT *
 FROM diary_attachment
@@ -258,6 +262,8 @@ WHERE id IS ?"""
      * attach an attachment to diary
      */
     private fun attachAttachment(pickedAttachmentId: Long) {
+        val diaryDatabase = diaryDatabase.database
+
         Common.doAssertion(dateInt != -1)
         val statement =
             diaryDatabase.compileStatement(

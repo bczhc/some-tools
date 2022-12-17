@@ -29,14 +29,8 @@ import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity.RequestCode
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
-import pers.zhc.tools.diary.DiaryDatabase.Companion.changeDatabase
-import pers.zhc.tools.diary.DiaryDatabase.Companion.getDatabaseRef
-import pers.zhc.tools.diary.DiaryDatabase.Companion.getHolder
-import pers.zhc.tools.diary.DiaryDatabase.Companion.releaseDatabaseRef
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
-import pers.zhc.tools.utils.FileUtil.Companion.copy
-import pers.zhc.tools.utils.PopupMenuUtil.Companion.createPopupMenu
 import pers.zhc.util.Assertion
 import java.io.File
 import java.util.*
@@ -122,7 +116,7 @@ WHERE instr(lower("date"), lower(?)) > 0
                 )
             }
             recyclerViewAdapter.setOnItemLongClickListener { position, view ->
-                val popupMenu = createPopupMenu(
+                val popupMenu = PopupMenuUtil.create(
                     requireContext(),
                     view, R.menu.diary_popup_menu
                 )
@@ -173,6 +167,8 @@ WHERE instr(lower("date"), lower(?)) > 0
     }
 
     private fun popupMenuDelete(position: Int) {
+        val diaryDatabase = diaryDatabase.database
+
         val dateInt = diaryItemDataList[position].dateInt
         DialogUtils.createConfirmationAlertDialog(requireContext(), { dialog, _ ->
             diaryDatabase.execBind("""DELETE FROM diary WHERE "date" IS ?""", arrayOf(dateInt))
@@ -201,6 +197,8 @@ WHERE instr(lower("date"), lower(?)) > 0
     }
 
     private fun changeDate(oldDateString: Int, newDate: Int) {
+        val diaryDatabase = diaryDatabase.database
+
         diaryDatabase.execBind(
             """UPDATE diary
 SET "date"=?
@@ -221,6 +219,8 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun refreshItemDataList(@Language("SQLite") sql: String, binds: Array<out Any>? = null) {
+        val diaryDatabase = diaryDatabase.database
+
         diaryItemDataList.clear()
 
         val statement = diaryDatabase.compileStatement(sql, binds ?: arrayOf())
@@ -239,35 +239,44 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             R.id.write_diary -> {
                 writeDiary()
             }
+
             R.id.create -> {
                 showCreateSpecifiedDateDiaryDialog()
             }
+
             R.id.export -> {
                 val intent = Intent(context, FilePicker::class.java)
                 intent.putExtra(FilePicker.EXTRA_OPTION, FilePicker.PICK_FOLDER)
                 startActivityForResult(intent, RequestCode.START_ACTIVITY_1)
             }
+
             R.id.import_ -> {
                 val intent = Intent(context, FilePicker::class.java)
                 intent.putExtra(FilePicker.EXTRA_OPTION, FilePicker.PICK_FILE)
                 startActivityForResult(intent, RequestCode.START_ACTIVITY_2)
             }
+
             R.id.attachment -> {
                 val intent = Intent(context, DiaryAttachmentActivity::class.java)
                 startActivity(intent)
             }
+
             R.id.settings -> {
                 startActivity(Intent(context, DiaryAttachmentSettingsActivity::class.java))
             }
+
             R.id.statistics -> {
                 showStatDialog()
             }
+
             R.id.advanced_search -> {
                 showAdvancedSearchDialog()
             }
+
             R.id.sort_date -> {
                 reorderDiary(Order.DATE)
             }
+
             R.id.sort_random -> {
                 reorderDiary(Order.RANDOM)
             }
@@ -278,11 +287,13 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     private enum class Order {
         DATE, RANDOM
     }
+
     private fun reorderDiary(order: Order) {
         when (order) {
             Order.DATE -> {
                 refreshItemDataList()
             }
+
             Order.RANDOM -> {
                 refreshItemDataList("SELECT \"date\", content FROM diary ORDER BY random()")
             }
@@ -291,6 +302,8 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun openRandomDiary() {
+        val diaryDatabase = diaryDatabase.database
+
         var randomDate: Int? = null
         diaryDatabase.withCompiledStatement("SELECT \"date\" FROM diary ORDER BY random() LIMIT 1;") {
             val cursor = it.cursor
@@ -307,6 +320,8 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
 
     @SuppressLint("NotifyDataSetChanged")
     private fun createAdvancedSearchDialog(): AlertDialog {
+        val diaryDatabase = diaryDatabase.database
+
         val context = requireContext()
 
         val inflate = View.inflate(context, R.layout.diary_advenced_search_dialog, null)
@@ -366,6 +381,8 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun getTotalCharsCount(): Int {
+        val diaryDatabase = diaryDatabase.database
+
         val statement = diaryDatabase.compileStatement("SELECT SUM(length(content)) FROM diary")
         val cursor = statement.cursor
         Assertion.doAssertion(cursor.step())
@@ -375,6 +392,8 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun getRowsCount(): Int {
+        val diaryDatabase = diaryDatabase.database
+
         return diaryDatabase.getRowCount("SELECT COUNT() FROM diary")
     }
 
@@ -418,6 +437,8 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun checkRecordExistence(dateInt: Int): Boolean {
+        val diaryDatabase = diaryDatabase.database
+
         return diaryDatabase.hasRecord(
             """SELECT "date"
 FROM diary
@@ -426,6 +447,8 @@ WHERE "date" IS ?""", arrayOf<Any>(dateInt)
     }
 
     private fun sort() {
+        val diaryDatabase = diaryDatabase.database
+
         val foreignKeys: Int = getForeignKeyState()
         // disable foreign keys constraint
         setForeignKeyState(0)
@@ -454,6 +477,8 @@ WHERE type IS 'table'
     }
 
     private fun getForeignKeyState(): Int {
+        val diaryDatabase = diaryDatabase.database
+
         val fk = diaryDatabase.compileStatement("PRAGMA foreign_keys")
         val fkCursor = fk.cursor
         Common.doAssertion(fkCursor.step())
@@ -463,6 +488,8 @@ WHERE type IS 'table'
     }
 
     private fun setForeignKeyState(state: Int) {
+        val diaryDatabase = diaryDatabase.database
+
         val fk = diaryDatabase.compileStatement("PRAGMA foreign_keys=$state")
         fk.step()
         fk.release()
@@ -494,6 +521,8 @@ WHERE type IS 'table'
     }
 
     private fun queryDiaryContent(dateInt: Int): String? {
+        val diaryDatabase = diaryDatabase.database
+
         val statement = diaryDatabase.compileStatement(
             """SELECT content
 FROM diary
@@ -508,34 +537,37 @@ WHERE "date" IS ?"""
     }
 
     private fun importDiary(file: File) {
-        val refCount = getHolder().refCount
+        val refCount = DiaryDatabase.getDatabaseRefCount()
+
         // the only one reference is for the current activity
         if (refCount > 1) {
             ToastUtils.show(context, getString(R.string.diary_import_ref_count_not_zero_msg, refCount))
             return
         }
-        releaseDatabaseRef()
-        Common.doAssertion(getHolder().refCount == 0)
 
-        val latch = SpinLatch()
-        latch.suspend()
-        Thread {
-            copy(file, File(DiaryDatabase.internalDatabasePath))
-            latch.stop()
-        }.start()
-        latch.await()
-        ToastUtils.show(context, R.string.importing_succeeded)
-        val newDatabase = SQLite3.open(DiaryDatabase.internalDatabasePath)
-        if (newDatabase.checkIfCorrupt()) {
-            newDatabase.close()
-            if (!File(DiaryDatabase.internalDatabasePath).delete()) {
-                throw RuntimeException("Failed to delete corrupted database file.")
+        val diaryActivity = requireActivity() as DiaryBaseActivity
+        diaryActivity.diaryDatabaseRef.release()
+        androidAssert(DiaryDatabase.getDatabaseRefCount() == 0)
+
+        FileUtil.copy(file, DiaryDatabase.internalDatabasePath)
+
+        var msgResOnFinished = 0
+        SQLite3::class.withNew(DiaryDatabase.internalDatabasePath.path) {
+            if (it.checkIfCorrupt()) {
+                msgResOnFinished = R.string.corrupted_database_and_recreate_new_msg
+                DiaryDatabase.internalDatabasePath.requireDelete()
+            } else {
+                msgResOnFinished = R.string.importing_succeeded
             }
-            ToastUtils.show(context, R.string.corrupted_database_and_recreate_new_msg)
         }
-        changeDatabase(file.path)
-        (activity as DiaryBaseActivity).diaryDatabase = getDatabaseRef()
-        diaryDatabase = (activity as DiaryBaseActivity).diaryDatabase
+
+        // substitute old references
+        diaryActivity.diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
+        diaryActivity.diaryDatabase = diaryActivity.diaryDatabaseRef.get()
+        diaryDatabase = diaryActivity.diaryDatabase
+
+        ToastUtils.show(context, msgResOnFinished)
+
         refreshList()
     }
 
@@ -549,7 +581,7 @@ WHERE "date" IS ?"""
         val databaseFile = Common.getInternalDatabaseDir(context, "diary.db")
         Thread {
             try {
-                copy(databaseFile, File(dir, "diary.db"))
+                FileUtil.copy(databaseFile, File(dir, "diary.db"))
                 ToastUtils.show(context, R.string.exporting_succeeded)
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
@@ -571,18 +603,21 @@ WHERE "date" IS ?"""
                 diaryItemDataList.add(DiaryItemData(dateInt, queryDiaryContent(dateInt)!!))
                 recyclerViewAdapter.notifyItemInserted(diaryItemDataList.size - 1)
             }
+
             RequestCode.START_ACTIVITY_1 -> {
                 // export
                 data ?: return
                 val dir = data.getStringExtra(FilePicker.EXTRA_RESULT) ?: return
                 exportDiary(File(dir))
             }
+
             RequestCode.START_ACTIVITY_2 -> {
                 // import
                 data ?: return
                 val file = data.getStringExtra(FilePicker.EXTRA_RESULT) ?: return
                 importDiary(File(file))
             }
+
             RequestCode.START_ACTIVITY_3, RequestCode.START_ACTIVITY_4 -> {
                 // START_ACTIVITY_3:
                 // "write diary" action: start a diary taking activity directly when the diary of today's date already exists
@@ -595,6 +630,7 @@ WHERE "date" IS ?"""
                 diaryItemDataList[position].content = content!!
                 recyclerViewAdapter.notifyItemChanged(position)
             }
+
             else -> {
             }
         }

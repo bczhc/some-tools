@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import pers.zhc.tools.diary.DiaryBaseActivity
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.tools.diary.DiaryDatabase
 import pers.zhc.tools.diary.DiaryMainActivity
 import pers.zhc.tools.utils.androidAssert
 
@@ -16,7 +17,7 @@ open class DiaryBaseFragment : Fragment() {
     /**
      * A shortcut reference to the database object of the activity which attaches the current fragment
      */
-    protected lateinit var diaryDatabase: SQLite3
+    protected lateinit var diaryDatabase: DiaryDatabase
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

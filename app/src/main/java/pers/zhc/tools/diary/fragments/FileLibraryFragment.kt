@@ -63,7 +63,7 @@ class FileLibraryFragment(
             if (fileInfo.storageTypeEnumInt != StorageType.TEXT.enumInt) {
                 val storedFile = File(getFileStoredPath(diaryDatabase, fileInfo.identifier))
                 if (!storedFile.exists()) {
-                    showFileNotExistDialog(requireContext(), diaryDatabase, fileInfo.identifier)
+                    showFileNotExistDialog(requireContext(), diaryDatabase.database, fileInfo.identifier)
                     return@setOnItemClickListener
                 }
             }
@@ -103,9 +103,11 @@ class FileLibraryFragment(
     }
 
     private fun refreshItemDataList() {
+        val database = diaryDatabase.database
+
         itemDataList.clear()
         val statement =
-            diaryDatabase.compileStatement(
+            database.compileStatement(
                 """SELECT filename, addition_timestamp, description, storage_type, identifier
 FROM diary_attachment_file"""
             )
@@ -121,7 +123,7 @@ FROM diary_attachment_file"""
             var content: String? = null
             if (storageType == StorageType.TEXT.enumInt) {
                 val statement1 =
-                    diaryDatabase.compileStatement(
+                    database.compileStatement(
                         """SELECT content
 FROM diary_attachment_text
 WHERE identifier IS ?"""
@@ -157,7 +159,7 @@ WHERE identifier IS ?"""
             return View.inflate(ctx, R.layout.diary_file_library_file_preview_view, null)!!
         }
 
-        fun getFilePreviewView(ctx: Context, diaryDatabase: SQLite3, identifier: String): View {
+        fun getFilePreviewView(ctx: Context, diaryDatabase: DiaryDatabase, identifier: String): View {
             val fileInfo = getFileInfo(diaryDatabase, identifier)
             var content: String? = null
             if (fileInfo.storageTypeEnumInt == StorageType.TEXT.enumInt) {
@@ -211,9 +213,9 @@ WHERE identifier IS ?"""
             }
         }
 
-        fun getFileInfo(diaryDatabase: SQLite3, identifier: String): FileInfo {
+        fun getFileInfo(diaryDatabase: DiaryDatabase, identifier: String): FileInfo {
             val statement =
-                diaryDatabase.compileStatement(
+                diaryDatabase.database.compileStatement(
                     """SELECT *
 FROM diary_attachment_file
 WHERE identifier IS ?"""
@@ -237,9 +239,9 @@ WHERE identifier IS ?"""
             return FileInfo(filename, additionTimestamp, storageType, description, identifier)
         }
 
-        fun getTextContent(db: SQLite3, identifier: String): String {
+        fun getTextContent(db: DiaryDatabase, identifier: String): String {
             val statement =
-                db.compileStatement(
+                db.database.compileStatement(
                     """SELECT content
 FROM diary_attachment_text
 WHERE identifier IS ?"""
@@ -264,8 +266,8 @@ WHERE identifier IS ?;"""
             statement.release()
         }
 
-        fun getFileStoredPath(db: SQLite3, identifier: String): String {
-            val fileStoragePath = DiaryAttachmentSettingsActivity.getFileStoragePath(db)
+        fun getFileStoredPath(database: DiaryDatabase, identifier: String): String {
+            val fileStoragePath = DiaryAttachmentSettingsActivity.getFileStoragePath(database)
             return File(fileStoragePath, identifier).path
         }
 
@@ -282,7 +284,7 @@ WHERE identifier IS ?;"""
 
     private fun showDeleteDialog(identifier: String, storageType: Int, position: Int) {
         DialogUtil.createConfirmationAlertDialog(context, { _, _ ->
-            val hasRecord = diaryDatabase.hasRecord(
+            val hasRecord = diaryDatabase.database.hasRecord(
                 """SELECT *
 FROM diary_attachment_file
 WHERE diary_attachment_file.identifier IS ?
@@ -300,7 +302,7 @@ WHERE diary_attachment_file.identifier IS ?
                 if (storageType == StorageType.TEXT.enumInt) {
                     deleteTextRecord(identifier)
                 }
-                deleteFileRecord(diaryDatabase, identifier)
+                deleteFileRecord(diaryDatabase.database, identifier)
                 val fileStoragePath =
                     DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)!!
                 if (!File(fileStoragePath, identifier).delete()) {
@@ -314,7 +316,7 @@ WHERE diary_attachment_file.identifier IS ?
     }
 
     private fun deleteTextRecord(identifier: String) {
-        diaryDatabase.execBind(
+        diaryDatabase.database.execBind(
             """DELETE
 FROM diary_attachment_text
 WHERE identifier IS ?""", arrayOf(identifier)

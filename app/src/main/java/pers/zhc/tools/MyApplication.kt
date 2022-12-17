@@ -35,7 +35,6 @@ class MyApplication : Application() {
     private fun init() {
         appContext = this
         CrashHandler.install(this)
-        DiaryDatabase.init(this)
         WordsMainActivity.init(this)
         Database.initPath(this)
         ContactActivity.initPath(this)

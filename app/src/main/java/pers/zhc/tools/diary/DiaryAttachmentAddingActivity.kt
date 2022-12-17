@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.stepBind
 
 class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
     private lateinit var descriptionET: EditText
@@ -48,9 +49,10 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
      */
     private fun createAttachment(): Long {
         val attachmentId = System.currentTimeMillis()
-        diaryDatabase.beginTransaction()
+        val database = diaryDatabase.database
+        database.beginTransaction()
 
-        diaryDatabase.execBind(
+        database.execBind(
             """INSERT INTO diary_attachment(id, title, description)
 VALUES (?, ?, ?)""",
             arrayOf(
@@ -61,18 +63,15 @@ VALUES (?, ?, ?)""",
         )
 
         val statement =
-            diaryDatabase.compileStatement(
+            database.compileStatement(
                 """INSERT INTO diary_attachment_file_reference(attachment_id, identifier)
 VALUES (?, ?)"""
             )
         fileIdentifierList.forEach {
-            statement.reset()
-            statement.bind(1, attachmentId)
-            statement.bindText(2, it)
-            statement.step()
+            statement.stepBind(arrayOf(attachmentId, it))
         }
-        diaryDatabase.commit()
         statement.release()
+        database.commit()
 
         return attachmentId
     }
@@ -95,6 +94,7 @@ VALUES (?, ?)"""
                 fileListLL.addView(filePreviewView)
                 fileIdentifierList.add(identifier)
             }
+
             else -> {
 
             }

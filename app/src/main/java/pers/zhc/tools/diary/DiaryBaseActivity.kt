@@ -6,6 +6,7 @@ import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.jni.JNI
 import pers.zhc.tools.utils.DigestUtil
+import pers.zhc.tools.utils.rc.Ref
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -19,10 +20,12 @@ import java.util.*
  * @author bczhc
  */
 open class DiaryBaseActivity : BaseActivity() {
+    lateinit var diaryDatabaseRef: Ref<DiaryDatabase>
+
     /**
-     * the shortcut reference to [DiaryDatabase.getDatabaseRef]
+     * shortcut reference to [DiaryDatabase]
      */
-    lateinit var diaryDatabase: SQLite3
+    lateinit var diaryDatabase: DiaryDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +36,12 @@ open class DiaryBaseActivity : BaseActivity() {
             setDisplayShowHomeEnabled(true)
         }
 
-        diaryDatabase = DiaryDatabase.getDatabaseRef()
+        diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
+        diaryDatabase = diaryDatabaseRef.get()
     }
 
     override fun finish() {
-        DiaryDatabase.releaseDatabaseRef()
+        diaryDatabaseRef.release()
         super.finish()
     }
 

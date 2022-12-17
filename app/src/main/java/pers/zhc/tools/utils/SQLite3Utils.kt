@@ -73,3 +73,9 @@ fun SQLite3.getRowCount(@Language("SQLite") cmd: String): Int {
     statement.release()
     return count
 }
+
+fun Statement.stepBind(binds: Array<Any>) {
+    this.reset()
+    this.bind(binds)
+    this.step()
+}

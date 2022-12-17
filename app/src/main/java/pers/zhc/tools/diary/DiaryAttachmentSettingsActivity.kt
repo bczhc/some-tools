@@ -37,7 +37,7 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
             defaultInfoJson.put(storagePathJsonKey, getDefaultStoragePath())
 
             val statement =
-                diaryDatabase.compileStatement(
+                diaryDatabase.database.compileStatement(
                     """INSERT INTO diary_attachment_info (info_json)
 VALUES (?)"""
                 )
@@ -78,10 +78,10 @@ VALUES (?)"""
     }
 
     companion object {
-        fun getFileStoragePath(diaryDatabase: SQLite3): String? {
+        fun getFileStoragePath(diaryDatabase: DiaryDatabase): String? {
             var infoJSON: String? = null
 
-            diaryDatabase.exec(
+            diaryDatabase.database.exec(
                 """SELECT info_json
 FROM diary_attachment_info"""
             ) { content ->
@@ -116,7 +116,8 @@ FROM diary_attachment_info"""
     }
 
     private fun changeStoragePath(newStoragePath: String) {
-        var statement = diaryDatabase.compileStatement(
+        val database = diaryDatabase.database
+        var statement = database.compileStatement(
             """SELECT info_json
 FROM diary_attachment_info"""
         )
@@ -127,7 +128,7 @@ FROM diary_attachment_info"""
         val infoJONObject = JSONObject(infoJSON)
         infoJONObject.put(storagePathJsonKey, newStoragePath)
 
-        statement = diaryDatabase.compileStatement(
+        statement = database.compileStatement(
             """UPDATE diary_attachment_info
 SET info_json = ?"""
         )
