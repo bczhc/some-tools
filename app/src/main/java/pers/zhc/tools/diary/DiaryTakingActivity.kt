@@ -12,21 +12,16 @@ import android.text.style.BackgroundColorSpan
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
-import android.widget.CompoundButton
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.TextView
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.materialswitch.MaterialSwitch
-import org.jetbrains.annotations.Contract
+import androidx.core.widget.addTextChangedListener
 import pers.zhc.jni.sqlite.Statement
 import pers.zhc.tools.R
-import pers.zhc.tools.diary.DiaryAttachmentActivity
+import pers.zhc.tools.databinding.DiaryTakingActivityBinding
 import pers.zhc.tools.diary.DiaryContentPreviewActivity.Companion.createDiaryRecordStatDialog
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.views.RegexInputView
-import pers.zhc.tools.views.ScrollEditText
+import pers.zhc.tools.utils.unreachable
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,102 +29,86 @@ import java.util.*
  * @author bczhc
  */
 class DiaryTakingActivity : DiaryBaseActivity() {
-    var live = true
-    var speak = false
+    private var autoSaverRunning = true
+    private var ttsEnabled = false
     private var tts: TextToSpeech? = null
-    private var et: EditText? = null
-    private var charactersCountTV: TextView? = null
+    private lateinit var editText: EditText
+    private lateinit var charactersCountTV: TextView
     private var dateInt = 0
-    private var updateStatement: Statement? = null
+    private lateinit var updateStatement: Statement
     private var saver: ScheduledSaver? = null
-    private var ttsReplaceDict: MutableMap<String?, String>? = null
-    private var findLayout: ViewGroup? = null
-    private var setFoundCount: IntConsumer? = null
+    private val ttsReplaceDict by lazy { createTtsReplaceDict() }
+    private lateinit var findLayout: ViewGroup
+    private lateinit var setFoundCount: (count: Int) -> Unit
+    private lateinit var bindings: DiaryTakingActivityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_taking_activity)
+        bindings = DiaryTakingActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
+
         updateStatement = diaryDatabase.compileStatement("UPDATE diary SET content=? WHERE date=?")
-        val scrollEditText = findViewById<ScrollEditText>(R.id.et)
-        scrollEditText.setZoomFontSizeEnabled(true)
-        et = scrollEditText.editText
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        charactersCountTV = toolbar.findViewById(R.id.text_count_tv)
-        val ttsSwitch = toolbar.findViewById<MaterialSwitch>(R.id.tts_switch)
-        val cancelButton = findViewById<ImageButton>(R.id.cancel_button)
-        findLayout = findViewById(R.id.find_layout)
-        val findInputView = findViewById<RegexInputView>(R.id.find_et)
-        cancelButton.setOnClickListener { v: View? -> findLayout!!.setVisibility(View.GONE) }
-        findInputView.regexChangeListener = { regex: Regex? ->
-            highlightFind(regex!!)
-            Unit
+
+        editText = bindings.et.let {
+            it.setZoomFontSizeEnabled(true)
+            it.editText
         }
-        setFoundCount =
-            object : IntConsumer {
-                override fun call(count: Int) {
-                    findInputView.shet.inputLayout.suffixText = Integer.toString(count)
-                }
-            }
+        val toolbar = bindings.toolbar
+        charactersCountTV = bindings.textCountTv
+        val ttsSwitch = bindings.ttsSwitch
+        val cancelButton = bindings.cancelButton
+        findLayout = bindings.findLayout
+        val findInputView = bindings.findEt
+
+        cancelButton.setOnClickListener {
+            findLayout.visibility = View.GONE
+        }
+        findInputView.regexChangeListener = { regex ->
+            highlightFind(regex!!)
+        }
+        setFoundCount = { count ->
+            findInputView.shet.inputLayout.suffixText = count.toString()
+        }
 
         // set single-line and have ACTION_GO IME action
-        findInputView.shet.editText.inputType = InputType.TYPE_CLASS_TEXT
-        findInputView.shet.editText.imeOptions = EditorInfo.IME_ACTION_GO
+        findInputView.shet.editText.apply {
+            inputType = InputType.TYPE_CLASS_TEXT
+            imeOptions = EditorInfo.IME_ACTION_GO
+        }
 
         // On IME_ACTION_GO, invalidate text highlights, instead of refreshing on
         // EditText text changed - like Chrome, maybe for reducing lags
-        findInputView.shet.editText.setOnEditorActionListener { v: TextView?, actionId: Int, event: KeyEvent? ->
+        findInputView.shet.editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
-                val regex = findInputView.regex
-                regex?.let { highlightFind(it) }
+                findInputView.regex?.let { highlightFind(it) }
                 return@setOnEditorActionListener true
             }
             false
         }
-        ttsSwitch.setOnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
-            speak = isChecked
+        ttsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            ttsEnabled = isChecked
             if (isChecked) {
                 tts = TextToSpeech(this@DiaryTakingActivity, null)
             }
         }
-        toolbar.setOnMenuItemClickListener { item: MenuItem ->
+        toolbar.setOnMenuItemClickListener { item ->
             onMenuItemClick(item)
             true
         }
-        et!!.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN)
-        ttsReplaceDict = HashMap()
-        ttsReplaceDict!!["。"] = "句号"
-        ttsReplaceDict!!["，"] = "逗号"
-        ttsReplaceDict!!["\n"] = "换行"
-        ttsReplaceDict!!["["] = "左方括号"
-        ttsReplaceDict!!["]"] = "右方括号"
-        ttsReplaceDict!!["“"] = "上引号"
-        ttsReplaceDict!!["”"] = "下引号"
-        ttsReplaceDict!!["‘"] = "上引号"
-        ttsReplaceDict!!["’"] = "下引号"
-        ttsReplaceDict!![" "] = "空格"
-        ttsReplaceDict!!["、"] = "顿号"
-        ttsReplaceDict!!["…"] = "省略号"
-        ttsReplaceDict!!["……"] = "省略号"
+        editText.imeOptions = EditorInfo.IME_FLAG_NO_FULLSCREEN
+
         val debounceHandler = Handler(Looper.myLooper()!!)
-        val watcher: TextWatcher = object : TextWatcher {
-            private var last: String? = null
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+        var last: String? = null
+        editText.addTextChangedListener(
+            beforeTextChanged = { s, _, _, _ ->
                 debounceHandler.removeCallbacksAndMessages(null)
                 debounceHandler.postDelayed({ showCharactersCount() }, 2000)
-                if (speak) {
+                if (ttsEnabled) {
                     last = s.toString()
                 }
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (ttsReplaceDict == null) {
-                    ttsReplaceDict = HashMap()
-                    ttsReplaceDict!!["。"] = "句点"
-                    ttsReplaceDict!!["，"] = "逗号"
-                    ttsReplaceDict!!["\n"] = "换行"
-                    ttsReplaceDict!!["["] = "左方括号"
-                    ttsReplaceDict!!["]"] = "右方括号"
-                }
-                if (speak) {
+            },
+            onTextChanged = { s, start, before, count ->
+                if (ttsEnabled) {
                     if (count < before) {
                         //delete
                         ttsSpeak(
@@ -138,70 +117,63 @@ class DiaryTakingActivity : DiaryBaseActivity() {
                         )
                     } else {
                         //insert
-                        var changed: String? = s.subSequence(start, start + count).toString()
-                        if (ttsReplaceDict!!.containsKey(changed)) {
-                            changed = ttsReplaceDict!!.get(changed)
+                        val ttsText = s!!.subSequence(start, start + count).toString().let {
+                            ttsReplaceDict[it] ?: it
                         }
-                        ttsSpeak(changed)
+                        ttsSpeak(ttsText)
                     }
                 }
             }
+        )
 
-            @Contract(pure = true)
-            override fun afterTextChanged(s: Editable) {
-            }
-        }
-        et!!.addTextChangedListener(watcher)
         val intent = intent
-        if (intent.getIntExtra(EXTRA_DATE_INT, -1).also { dateInt = it } == -1) {
+        if (!intent.hasExtra(EXTRA_DATE_INT)) {
             throw RuntimeException("No dateInt provided.")
         }
+        dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)
+
         val hasRecord = diaryDatabase.hasRecord(
             """SELECT *
 FROM diary
-WHERE "date" IS ?""", arrayOf<Any>(dateInt)
+WHERE "date" IS ?""", arrayOf(dateInt)
         )
-        val resultIntent = Intent()
         val newRec = !hasRecord
-        resultIntent.putExtra("newRec", newRec)
-        resultIntent.putExtra(EXTRA_DATE_INT, dateInt)
+        val resultIntent = Intent().apply {
+            putExtra("newRec", newRec)
+            putExtra(EXTRA_DATE_INT, dateInt)
+        }
         setResult(0, resultIntent)
         prepareContent()
         if (newRec) {
             createNewRecord()
         }
-        saver = ScheduledSaver()
-        saver!!.start()
+        saver = ScheduledSaver().also { it.start() }
     }
 
     private fun highlightFind(regex: Regex) {
         // avoid finding with an empty pattern
         if (regex.pattern.isEmpty()) {
             // clear all colored span
-            et!!.setText(et!!.text.toString())
-            setFoundCount!!.call(0)
+            editText.setText(editText.text.toString())
+            setFoundCount(0)
             return
         }
-        val spannableString = SpannableString(et!!.text.toString())
-        val iterator = regex.findAll(et!!.text.toString(), 0).iterator()
-        var count = 0
-        while (iterator.hasNext()) {
-            val matchResult = iterator.next()
+        val spannableString = SpannableString(editText.text.toString())
+        val results = regex.findAll(editText.text.toString(), 0).toList()
+        for (matchResult in results) {
             val range = matchResult.range
             spannableString.setSpan(
                 BackgroundColorSpan(Color.YELLOW),
                 range.first,
-                range.last + 1 /* this argument is exclusive */,
+                range.last + 1, /* this argument is exclusive */
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
-            ++count
         }
-        setFoundCount!!.call(count)
-        et!!.setText(spannableString)
+        setFoundCount(results.size)
+        editText.setText(spannableString)
     }
 
-    private fun ttsSpeak(content: String?, queueMode: Int = TextToSpeech.QUEUE_ADD) {
-        Common.doAssertion(tts != null)
+    private fun ttsSpeak(content: String, queueMode: Int = TextToSpeech.QUEUE_ADD) {
         val speak = tts!!.speak(content, queueMode, null, System.currentTimeMillis().toString())
         if (speak != TextToSpeech.SUCCESS) {
             ToastUtils.showError(this, R.string.tts_speak_error, Exception("Error code: $speak"))
@@ -222,7 +194,7 @@ WHERE "date" IS ?""", arrayOf<Any>(dateInt)
     }
 
     private fun showCharactersCount() {
-        charactersCountTV!!.text = getString(R.string.characters_count_tv, et!!.length())
+        charactersCountTV.text = getString(R.string.characters_count_tv, editText.length())
     }
 
     private fun prepareContent() {
@@ -235,7 +207,7 @@ WHERE "date" IS ?"""
         val cursor = statement.cursor
         if (cursor.step()) {
             val content = cursor.getText(0)
-            et!!.setText(content)
+            editText.setText(content)
         }
         statement.release()
         showCharactersCount()
@@ -244,32 +216,49 @@ WHERE "date" IS ?"""
     private fun insertTime() {
         val date = Date()
         @SuppressLint("SimpleDateFormat") val time = SimpleDateFormat("[HH:mm]").format(date)
-        et!!.text.insert(et!!.selectionStart, getString(R.string.str, time))
+        editText.text.insert(editText.selectionStart, getString(R.string.str, time))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val menuInflater = menuInflater
         menuInflater.inflate(R.menu.diary_taking_actionbar, menu)
         return true
     }
 
     private fun onMenuItemClick(item: MenuItem) {
-        val itemId = item.itemId
-        if (itemId == R.id.record_time) {
-            insertTime()
-        } else if (itemId == R.id.attachment) {
-            val intent = Intent(this, DiaryAttachmentActivity::class.java)
-            intent.putExtra(DiaryAttachmentActivity.EXTRA_FROM_DIARY, true)
-            intent.putExtra(DiaryAttachmentActivity.EXTRA_DATE_INT, dateInt)
-            startActivity(intent)
-        } else if (itemId == R.id.find) {
+        when (item.itemId) {
+            R.id.record_time -> {
+                insertTime()
+            }
 
-            // toggle search layout's visibility
-            val visibility = findLayout!!.visibility
-            if (visibility == View.GONE) findLayout!!.visibility =
-                View.VISIBLE else if (visibility == View.VISIBLE) findLayout!!.visibility = View.GONE
-        } else if (itemId == R.id.statistics) {
-            createDiaryRecordStatDialog(this, diaryDatabase, dateInt).show()
+            R.id.attachment -> {
+                val intent = Intent(this, DiaryAttachmentActivity::class.java).apply {
+                    putExtra(DiaryAttachmentActivity.EXTRA_FROM_DIARY, true)
+                    putExtra(DiaryAttachmentActivity.EXTRA_DATE_INT, dateInt)
+                }
+                startActivity(intent)
+            }
+
+            R.id.find -> {
+                // toggle search layout's visibility
+                val visibility = findLayout.visibility
+                findLayout.visibility = when (visibility) {
+                    View.GONE -> {
+                        View.VISIBLE
+                    }
+
+                    View.VISIBLE -> {
+                        View.GONE
+                    }
+
+                    else -> {
+                        unreachable()
+                    }
+                }
+            }
+
+            R.id.statistics -> {
+                createDiaryRecordStatDialog(this, diaryDatabase, dateInt).show()
+            }
         }
     }
 
@@ -279,47 +268,43 @@ WHERE "date" IS ?"""
     }
 
     private fun save() {
-        updateDiary(et!!.text.toString(), dateInt)
+        updateDiary(editText.text.toString(), dateInt)
     }
 
     private fun updateDiary(content: String, dateString: Int) {
         try {
-            updateStatement!!.reset()
-            updateStatement!!.bindText(1, content)
-            updateStatement!!.bind(2, dateString)
-            updateStatement!!.step()
+            updateStatement.reset()
+            updateStatement.bindText(1, content)
+            updateStatement.bind(2, dateString)
+            updateStatement.step()
         } catch (e: Exception) {
             Common.showException(e, this)
         }
     }
 
     override fun finish() {
-        live = false
+        autoSaverRunning = false
         saver!!.stop()
         save()
-        updateStatement!!.release()
+        updateStatement.release()
         super.finish()
     }
 
     private inner class ScheduledSaver : Runnable {
         override fun run() {
-            while (live) {
+            while (autoSaverRunning) {
                 if (Thread.interrupted()) break
                 save()
                 try {
                     Thread.sleep(10000)
-                } catch (ignored: InterruptedException) {
+                } catch (_: InterruptedException) {
                     break
                 }
                 Log.d(TAG, "save diary...")
             }
         }
 
-        private val t: Thread
-
-        init {
-            t = Thread(this)
-        }
+        private val t: Thread = Thread(this)
 
         fun start() {
             t.start()
@@ -330,8 +315,22 @@ WHERE "date" IS ?"""
         }
     }
 
-    private interface IntConsumer {
-        fun call(count: Int)
+    private fun createTtsReplaceDict(): HashMap<String, String> {
+        return hashMapOf(
+            Pair("。", "句号"),
+            Pair("，", "逗号"),
+            Pair("\n", "换行"),
+            Pair("[", "左方括号"),
+            Pair("]", "右方括号"),
+            Pair("“", "上引号"),
+            Pair("”", "下引号"),
+            Pair("‘", "上引号"),
+            Pair("’", "下引号"),
+            Pair(" ", "空格"),
+            Pair("、", "顿号"),
+            Pair("…", "省略号"),
+            Pair("……", "省略号"),
+        )
     }
 
     companion object {

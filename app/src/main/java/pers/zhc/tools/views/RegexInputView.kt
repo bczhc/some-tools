@@ -77,6 +77,6 @@ class RegexInputView : WrapLayout {
 }
 
 /**
- * `regex` will be null when it's invalid regex pattern
+ * `regex` will be null when it's an invalid regex pattern
  */
 typealias RegexChangeListener = (regex: Regex?) -> Unit
