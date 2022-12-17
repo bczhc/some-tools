@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import pers.zhc.tools.diary.DiaryBaseActivity
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.diary.DiaryMainActivity
+import pers.zhc.tools.utils.androidAssert
 
 /**
  * @author bczhc
@@ -30,8 +31,7 @@ open class DiaryBaseFragment : Fragment() {
 
     protected fun setupOuterToolbar(toolbar: Toolbar) {
         val activity = requireActivity()
-        if (activity is DiaryMainActivity) {
-            activity.configureDrawerToggle(toolbar)
-        }
+        androidAssert(activity is DiaryMainActivity)
+        (activity as DiaryMainActivity).configureDrawerToggle(toolbar)
     }
 }

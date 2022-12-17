@@ -46,4 +46,8 @@ public class ToastUtils {
         show(ctx, e.toString());
         e.printStackTrace();
     }
+
+    public static void showTodo(Context context) {
+        Common.toastTodo(context);
+    }
 }
