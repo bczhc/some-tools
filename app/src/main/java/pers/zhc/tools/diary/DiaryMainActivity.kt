@@ -7,8 +7,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.appcompat.widget.Toolbar
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryMainActivityBinding
 import pers.zhc.tools.diary.fragments.AttachmentFragment
@@ -22,13 +20,15 @@ import pers.zhc.tools.utils.ToastUtils
 class DiaryMainActivity : DiaryBaseActivity() {
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var drawerArrowDrawable: DrawerArrowDrawable
+    private lateinit var bindings: DiaryMainActivityBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         load()
     }
 
     private fun load() {
-        setContentView(R.layout.diary_main_activity)
+        bindings = DiaryMainActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
         invalidateOptionsMenu()
         initDrawerLayout()
     }
@@ -46,9 +46,8 @@ class DiaryMainActivity : DiaryBaseActivity() {
     private fun initDrawerLayout() {
         val fragmentManager = supportFragmentManager
 
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val navigationView = findViewById<NavigationView>(R.id.navigation_view)
-        navigationView.setCheckedItem(R.id.diary)
+        val drawerLayout = bindings.drawerLayout
+        val navigationView = bindings.navigationView.also { it.setCheckedItem(R.id.diary) }
 
         // the initial diary view
         fragmentManager.beginTransaction().add(R.id.diary_fragment_container, DiaryFragment()).commit()
@@ -83,7 +82,7 @@ class DiaryMainActivity : DiaryBaseActivity() {
                 }
             }
             drawerLayout.closeDrawers()
-            true
+            return@setNavigationItemSelectedListener true
         }
     }
 
