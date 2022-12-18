@@ -142,6 +142,8 @@ public class JNI {
          * @return result
          */
         public static native String myDigest(String str);
+
+        public static native String computeFileIdentifier(String path);
     }
 
     public static class SysInfo {

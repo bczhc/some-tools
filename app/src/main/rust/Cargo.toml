@@ -37,6 +37,8 @@ signal = "0.7.0"
 nix = "0.25.0"
 rayon = "1.5.3"
 num-complex = "0.4.2"
+sha1 = "0.10.5"
+hex = "0.4.3"
 
 [profile.release]
 panic = "abort"

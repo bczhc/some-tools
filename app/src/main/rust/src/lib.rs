@@ -4,6 +4,7 @@ pub mod bitmap;
 pub mod byte_size;
 pub mod char;
 pub mod char_ucd;
+pub mod diary;
 pub mod email;
 pub mod fourier_series;
 pub mod hello;

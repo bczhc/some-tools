@@ -2,18 +2,14 @@ package pers.zhc.tools.diary
 
 import android.os.Bundle
 import android.view.MenuItem
-import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.jni.JNI.Struct
 import pers.zhc.tools.BaseActivity
-import pers.zhc.jni.JNI
+import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.DigestUtil
 import pers.zhc.tools.utils.rc.Ref
 import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
-import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.*
 
 /**
@@ -58,32 +54,15 @@ open class DiaryBaseActivity : BaseActivity() {
             return calendar.time
         }
 
-        @Throws(IOException::class)
         fun computeIdentifier(f: File): String {
-            val `is`: InputStream = FileInputStream(f)
-            val md: MessageDigest
-            md = try {
-                MessageDigest.getInstance("SHA1")
-            } catch (e: NoSuchAlgorithmException) {
-                throw RuntimeException(e)
-            }
-            DigestUtil.updateInputStream(md, `is`)
-            val length = f.length()
-            val packed = ByteArray(8)
-            JNI.Struct.packLong(length, packed, 0, JNI.Struct.MODE_LITTLE_ENDIAN)
-            md.update(packed)
-            return DigestUtil.bytesToHexString(md.digest())
+            return JNI.Diary.computeFileIdentifier(f.path)
         }
 
         private fun computeIdentifier(data: ByteArray): String {
             val length = data.size.toLong()
-            val md: MessageDigest = try {
-                MessageDigest.getInstance("SHA1")
-            } catch (e: NoSuchAlgorithmException) {
-                throw RuntimeException(e)
-            }
+            val md = MessageDigest.getInstance("SHA1")
             val packed = ByteArray(8)
-            JNI.Struct.packLong(length, packed, 0, JNI.Struct.MODE_LITTLE_ENDIAN)
+            Struct.packLong(length, packed, 0, Struct.MODE_LITTLE_ENDIAN)
             md.update(data)
             md.update(packed)
             return DigestUtil.bytesToHexString(md.digest())

@@ -39,7 +39,7 @@ public class DigestUtil {
      */
     public static void updateInputStream(MessageDigest md, @NotNull InputStream is) throws IOException {
         int readLen;
-        byte[] buf = new byte[40960];
+        byte[] buf = new byte[4096];
 
         while ((readLen = is.read(buf)) > 0) {
             md.update(buf, 0, readLen);
@@ -47,7 +47,7 @@ public class DigestUtil {
     }
 
     @NotNull
-    public static String bytesToHexString(@NotNull byte[] sha1Bytes) {
+    public static String bytesToHexString(byte @NotNull [] sha1Bytes) {
         StringBuilder digestString = new StringBuilder();
         for (byte sha1Byte : sha1Bytes) {
             String str = Integer.toHexString(sha1Byte < 0 ? (256 + sha1Byte) : sha1Byte);
