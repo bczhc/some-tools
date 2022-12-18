@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_file_library_file_preview_view.view.*
 import kotlinx.android.synthetic.main.diary_file_library_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
-import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.diary.FileLibraryActivity.Companion.EXTRA_PICKED_FILE_IDENTIFIER
@@ -34,6 +33,21 @@ class FileLibraryFragment(
     private lateinit var recyclerViewAdapter: MyAdapter
     private lateinit var recyclerView: RecyclerView
     private var itemDataList = ArrayList<ItemData>()
+
+    private val launchers = object {
+        val addFile = registerForActivityResult(FileLibraryAddingActivity.AddFileContract()) { result ->
+            result ?: return@registerForActivityResult
+
+            val identifier = result.identifier
+            val fileInfo = diaryDatabase.queryAttachmentFile(identifier)!!
+            var content: String? = null
+            if (fileInfo.storageType == StorageType.TEXT) {
+                content = diaryDatabase.queryTextAttachment(identifier)
+            }
+            itemDataList.add(ItemData(fileInfo, content))
+            recyclerViewAdapter.notifyItemInserted(itemDataList.size - 1)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflate = inflater.inflate(R.layout.diary_file_library_fragment, container, false)
@@ -122,13 +136,10 @@ class FileLibraryFragment(
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add -> {
-                startActivityForResult(
-                    Intent(context, FileLibraryAddingActivity::class.java),
-                    BaseActivity.RequestCode.START_ACTIVITY_0
-                )
+                launchers.addFile.launch(Unit)
             }
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     private fun getFileStoredPath(identifier: String): File {
@@ -226,24 +237,6 @@ class FileLibraryFragment(
                 recyclerViewAdapter.notifyItemRemoved(position)
             }
         }, R.string.whether_to_delete).show()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        // on FileLibraryAddingActivity returned
-        if (requestCode == BaseActivity.RequestCode.START_ACTIVITY_0) {
-            // not submit
-            data ?: return
-
-            val identifier = data.getStringExtra(FileLibraryAddingActivity.EXTRA_RESULT_IDENTIFIER)!!
-            val fileInfo = diaryDatabase.queryAttachmentFile(identifier)!!
-            var content: String? = null
-            if (fileInfo.storageType == StorageType.TEXT) {
-                content = diaryDatabase.queryTextAttachment(identifier)
-            }
-            itemDataList.add(ItemData(fileInfo, content))
-            recyclerViewAdapter.notifyItemInserted(itemDataList.size - 1)
-        }
     }
 
     class ItemData(

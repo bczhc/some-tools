@@ -1,14 +1,17 @@
 package pers.zhc.tools.diary
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.getLongExtraOrNull
 import pers.zhc.tools.utils.stepBind
 
 class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
@@ -16,6 +19,23 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
     private lateinit var titleET: EditText
     private val fileIdentifierList = ArrayList<String>()
     private lateinit var fileListLL: LinearLayout
+
+    private val launchers = object {
+        val pickFile = registerForActivityResult(FileLibraryActivity.PickFileContract()) { result ->
+            result ?: return@registerForActivityResult
+            val identifier = result.identifier
+            if (fileIdentifierList.contains(identifier)) {
+                ToastUtils.show(this@DiaryAttachmentAddingActivity, R.string.diary_attachment_library_duplicate_toast)
+                return@registerForActivityResult
+            }
+            val filePreviewView =
+                FileLibraryFragment.getFilePreviewView(this@DiaryAttachmentAddingActivity, diaryDatabase, identifier)
+            filePreviewView.background =
+                ContextCompat.getDrawable(this@DiaryAttachmentAddingActivity, R.drawable.view_stroke)
+            fileListLL.addView(filePreviewView)
+            fileIdentifierList.add(identifier)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +48,7 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
         val pickFileBtn = pick_file_btn
 
         pickFileBtn.setOnClickListener {
-            val filePickerIntent = Intent(this, FileLibraryActivity::class.java)
-            filePickerIntent.putExtra(FileLibraryActivity.EXTRA_PICK_MODE, true)
-            // pick file from the file library
-            startActivityForResult(filePickerIntent, RequestCode.START_ACTIVITY_0)
+            launchers.pickFile.launch(Unit)
         }
 
         createAttachmentBtn.setOnClickListener {
@@ -76,36 +93,26 @@ VALUES (?, ?)"""
         return attachmentId
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        // no file picked
-        data ?: return
-
-        when (requestCode) {
-            RequestCode.START_ACTIVITY_0 -> {
-                // pick file from the file library
-                val identifier = data.getStringExtra(FileLibraryActivity.EXTRA_PICKED_FILE_IDENTIFIER)!!
-                if (fileIdentifierList.contains(identifier)) {
-                    ToastUtils.show(this, R.string.diary_attachment_library_duplicate_toast)
-                    return
-                }
-                val filePreviewView = FileLibraryFragment.getFilePreviewView(this, diaryDatabase, identifier)
-                filePreviewView.background = ContextCompat.getDrawable(this, R.drawable.view_stroke)
-                fileListLL.addView(filePreviewView)
-                fileIdentifierList.add(identifier)
-            }
-
-            else -> {
-
-            }
-        }
-    }
-
     companion object {
         /**
          * intent string extra
          * the id of the added attachment
          */
         const val EXTRA_RESULT_ATTACHMENT_ID = "resultAttachmentId"
+    }
+
+    class AddAttachmentContract : ActivityResultContract<Unit, AddAttachmentContract.Result?>() {
+        class Result(
+            val attachmentId: Long
+        )
+
+        override fun createIntent(context: Context, input: Unit): Intent {
+            return Intent(context, DiaryAttachmentAddingActivity::class.java)
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Result? {
+            intent ?: return null
+            return Result(intent.getLongExtraOrNull(EXTRA_RESULT_ATTACHMENT_ID)!!)
+        }
     }
 }

@@ -1,6 +1,7 @@
 package pers.zhc.tools.diary
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -14,13 +15,12 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.widget.addTextChangedListener
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryTakingActivityBinding
 import pers.zhc.tools.diary.DiaryContentPreviewActivity.Companion.createDiaryRecordStatDialog
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.utils.unreachable
+import pers.zhc.tools.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -128,14 +128,10 @@ class DiaryTakingActivity : DiaryBaseActivity() {
         }
         dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)
 
-        val hasRecord = diaryDatabase.database.hasRecord(
-            """SELECT *
-FROM diary
-WHERE "date" IS ?""", arrayOf(dateInt)
-        )
+        val hasRecord = diaryDatabase.hasDiary(dateInt)
         val newRec = !hasRecord
         val resultIntent = Intent().apply {
-            putExtra("newRec", newRec)
+            putExtra(EXTRA_NEW_REC, newRec)
             putExtra(EXTRA_DATE_INT, dateInt)
         }
         setResult(0, resultIntent)
@@ -325,10 +321,36 @@ WHERE "date" IS ?"""
         )
     }
 
+    class ActivityContract: ActivityResultContract<MyDate, ActivityContract.Result>() {
+        class Result(
+            val dateInt: Int,
+            val isNewRecord: Boolean
+        )
+
+        override fun createIntent(context: Context, input: MyDate): Intent {
+            return Intent(context, DiaryTakingActivity::class.java).apply {
+                putExtra(EXTRA_DATE_INT, input.dateInt)
+            }
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Result {
+            intent!!
+            val dateInt = intent.getIntExtraOrNull(EXTRA_DATE_INT)!!
+            val newRecord = intent.getBooleanExtraOrNull(EXTRA_NEW_REC)!!
+            return Result(dateInt, newRecord)
+        }
+    }
+
     companion object {
         /**
-         * intent integer extra
+         * integer intent extra
          */
-        var EXTRA_DATE_INT = "dateInt"
+        const val EXTRA_DATE_INT = "dateInt"
+
+        /**
+         * boolean intent extra
+         * true indicates the diary with this [dateInt] doesn't exist and will be created
+         */
+        const val EXTRA_NEW_REC = "newRec"
     }
 }

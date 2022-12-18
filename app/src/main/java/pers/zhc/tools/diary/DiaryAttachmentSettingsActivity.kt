@@ -13,6 +13,7 @@ import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.utils.nullMap
 import java.io.File
 
@@ -22,6 +23,16 @@ import java.io.File
 class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
     private lateinit var storagePathTV: TextView
     private lateinit var oldPathStr: String
+
+    private val launchers = object {
+        val pickFolder = registerForActivityResult(FilePickerActivityContract(
+            FilePickerActivityContract.FilePickerType.PICK_FOLDER,
+            false
+        )) {result->
+            result ?: return@registerForActivityResult
+            storagePathTV.text = result.path
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +53,7 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
 
         changeBtn.setOnClickListener {
             ToastUtils.show(this, R.string.pick_folder)
-            val intent = Intent(this, FilePicker::class.java)
-            intent.putExtra("option", FilePicker.PICK_FOLDER)
-            startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
+            launchers.pickFolder.launch(Unit)
         }
 
         restoreToDefaultBtn.setOnClickListener {
@@ -73,13 +82,6 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
         val file = File(Common.getAppMainExternalStoragePathFile(this), "diary-attachment-files")
         file.mkdirs()
         return file.path
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        data!!
-        val result = data.getStringExtra("result") ?: return
-        storagePathTV.text = result
     }
 
     override fun onBackPressed() {

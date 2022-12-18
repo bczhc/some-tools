@@ -3,8 +3,13 @@ package pers.zhc.tools.utils
 import android.content.Intent
 
 fun Intent.getLongExtraOrNull(name: String): Long? {
-    if (this.hasExtra(name)) {
-        return this.getLongExtra(name, -1)
-    }
-    return null
+    return getLongExtra(name, -1).takeIf { hasExtra(name) }
+}
+
+fun Intent.getIntExtraOrNull(name: String): Int? {
+    return getIntExtra(name, -1).takeIf { hasExtra(name) }
+}
+
+fun Intent.getBooleanExtraOrNull(name: String): Boolean? {
+    return getBooleanExtra(name, false).takeIf { hasExtra(name) }
 }

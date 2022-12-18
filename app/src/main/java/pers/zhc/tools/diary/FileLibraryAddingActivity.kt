@@ -1,18 +1,22 @@
 package pers.zhc.tools.diary
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContract
+import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.description_et
 import kotlinx.android.synthetic.main.diary_file_library_add_progress_view.view.*
 import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity.*
 import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_file_mode.view.*
+import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_text_mode.*
 import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_text_mode.view.*
 import pers.zhc.tools.R
-import pers.zhc.tools.filepicker.FilePicker
+import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.FileUtil
 import pers.zhc.tools.utils.ToastUtils
@@ -28,6 +32,24 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
     private lateinit var currentStorageType: StorageType
     private var text: String? = null
     private var resultIdentifier: String? = null
+
+    private val launchers = object {
+        val pickFile = registerForActivityResult(
+            FilePickerActivityContract(
+                FilePickerActivityContract.FilePickerType.PICK_FILE,
+                false
+            )
+        ) { result ->
+            result ?: return@registerForActivityResult
+            val pickedFile = result.path
+            topDynamicLL.picked_file_et?.editText?.setText(pickedFile)
+        }
+        val editTextAttachment =
+            registerForActivityResult(DiaryFileLibraryEditTextActivity.TextEditContract()) { result ->
+                this@FileLibraryAddingActivity.text = result
+                topDynamicLL.length_tv?.text = getString(R.string.diary_file_library_edit_text_length_tv, text?.length)
+            }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -190,49 +212,20 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
 
     private fun changeTopView(storageType: StorageType) {
         val view = if (storageType == StorageType.TEXT) {
-            val inflate =
-                View.inflate(this, R.layout.diary_file_library_adding_file_activity_text_mode, null)
-            inflate.enter_text_btn.setOnClickListener {
-                val intent = Intent(this, DiaryFileLibraryEditTextActivity::class.java)
-                intent.putExtra(DiaryFileLibraryEditTextActivity.EXTRA_INITIAL_TEXT, this.text)
-                startActivityForResult(intent, RequestCode.START_ACTIVITY_1)
+            View.inflate(this, R.layout.diary_file_library_adding_file_activity_text_mode, null).also {
+                enter_text_btn.setOnClickListener {
+                    launchers.editTextAttachment.launch(this.text)
+                }
             }
-            inflate
         } else {
-            val inflate =
-                View.inflate(this, R.layout.diary_file_library_adding_file_activity_file_mode, null)
-            inflate.pick_file_btn.setOnClickListener {
-                val intent = Intent(this, FilePicker::class.java)
-                intent.putExtra("option", FilePicker.PICK_FILE)
-                startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
+            View.inflate(this, R.layout.diary_file_library_adding_file_activity_file_mode, null).also {
+                pick_file_btn.setOnClickListener {
+                    launchers.pickFile.launch(Unit)
+                }
             }
-            inflate
         }
         topDynamicLL.removeAllViews()
         topDynamicLL.addView(view)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            RequestCode.START_ACTIVITY_0 -> {
-                // pick file
-                data!!
-                val pickedFile = data.getStringExtra("result") ?: return
-                topDynamicLL.picked_file_et?.editText?.setText(pickedFile)
-            }
-
-            RequestCode.START_ACTIVITY_1 -> {
-                // edit text
-                data!!
-                this.text = data.getStringExtra(DiaryFileLibraryEditTextActivity.EXTRA_RESULT)
-                topDynamicLL.length_tv?.text =
-                    getString(R.string.diary_file_library_edit_text_length_tv, text?.length)
-            }
-
-            else -> {
-            }
-        }
     }
 
     override fun finish() {
@@ -249,5 +242,20 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
          * result string intent
          */
         const val EXTRA_RESULT_IDENTIFIER = "resultIdentifier"
+    }
+
+    class AddFileContract : ActivityResultContract<Unit, AddFileContract.Result?>() {
+        class Result(
+            val identifier: String
+        )
+
+        override fun createIntent(context: Context, input: Unit): Intent {
+            return Intent(context, FileLibraryAddingActivity::class.java)
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Result? {
+            intent ?: return null
+            return Result(intent.getStringExtra(EXTRA_RESULT_IDENTIFIER)!!)
+        }
     }
 }

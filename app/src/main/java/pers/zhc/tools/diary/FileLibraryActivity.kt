@@ -1,8 +1,11 @@
 package pers.zhc.tools.diary
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContract
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
 
@@ -43,5 +46,24 @@ class FileLibraryActivity : DiaryBaseActivity() {
          * the result extra key when [EXTRA_PICK_MODE] ([FileLibraryFragment.pickMode]) is true
          */
         const val EXTRA_PICKED_FILE_IDENTIFIER = "pickedFileIdentifier"
+    }
+
+    class PickFileContract : ActivityResultContract<Unit, PickFileContract.Result?>() {
+        class Result(
+            val identifier: String
+        )
+
+        override fun createIntent(context: Context, input: Unit): Intent {
+            return Intent(context, FileLibraryActivity::class.java).apply {
+                putExtra(EXTRA_PICK_MODE, true)
+            }
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Result? {
+            intent ?: return null
+            return Result(
+                intent.getStringExtra(EXTRA_PICKED_FILE_IDENTIFIER)!!
+            )
+        }
     }
 }

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
-import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.diary.fragments.AttachmentFragment.Companion.EXTRA_PICKED_ATTACHMENT_ID
@@ -45,6 +44,33 @@ class AttachmentFragment(
     private val itemDataList = ArrayList<Attachment>()
 
     private lateinit var recyclerView: RecyclerView
+
+    private val launchers = object {
+        val pickAttachment = registerForActivityResult(DiaryAttachmentActivity.PickAttachmentContract()) { result ->
+            result ?: return@registerForActivityResult
+
+            // `dateInt` indicates the specified diary to be attached with attachments
+            androidAssert(dateInt != -1)
+            val pickedAttachmentId = result.attachmentId
+
+            if (checkExistence(pickedAttachmentId)) {
+                ToastUtils.show(context, R.string.diary_attachment_adding_duplicate_toast)
+                return@registerForActivityResult
+            }
+            diaryDatabase.attachAttachment(dateInt, pickedAttachmentId)
+
+            itemDataList.add(diaryDatabase.queryAttachment(pickedAttachmentId))
+            itemAdapter.notifyItemChanged(itemDataList.size - 1)
+        }
+        val addAttachment = registerForActivityResult(DiaryAttachmentAddingActivity.AddAttachmentContract()) { result ->
+            result ?: return@registerForActivityResult
+            // id of the attachment just added
+            val attachmentId = result.attachmentId
+
+            itemDataList.add(diaryDatabase.queryAttachment(attachmentId))
+            itemAdapter.notifyItemChanged(itemDataList.size - 1)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflate = inflater.inflate(R.layout.diary_attachment_fragment, container, false)
@@ -139,58 +165,13 @@ class AttachmentFragment(
         when (item.itemId) {
             R.id.add -> {
                 if (fromDiary) {
-                    val intent = Intent(context, DiaryAttachmentActivity::class.java)
-                    intent.putExtra(EXTRA_PICK_MODE, true)
-                    startActivityForResult(intent, BaseActivity.RequestCode.START_ACTIVITY_0)
+                    launchers.pickAttachment.launch(Unit)
                 } else {
-                    val intent = Intent(context, DiaryAttachmentAddingActivity::class.java)
-                    startActivityForResult(intent, BaseActivity.RequestCode.START_ACTIVITY_1)
+                    launchers.addAttachment.launch(Unit)
                 }
             }
         }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            BaseActivity.RequestCode.START_ACTIVITY_0 -> {
-                // on `add` menu action button activity returned when `fromDiary` = true (select an attachment from the attachment library)
-
-                // no attachment picked
-                data ?: return
-
-                // `dateInt` indicates the specified diary to be attached with attachments
-                Common.doAssertion(dateInt != -1)
-                Common.doAssertion(data.hasExtra(EXTRA_PICKED_ATTACHMENT_ID))
-
-                val pickedAttachmentId = data.getLongExtra(EXTRA_PICKED_ATTACHMENT_ID, -1)
-                if (checkExistence(pickedAttachmentId)) {
-                    ToastUtils.show(context, R.string.diary_attachment_adding_duplicate_toast)
-                    return
-                }
-                diaryDatabase.attachAttachment(dateInt, pickedAttachmentId)
-
-                itemDataList.add(diaryDatabase.queryAttachment(pickedAttachmentId))
-                itemAdapter.notifyItemChanged(itemDataList.size - 1)
-            }
-
-            BaseActivity.RequestCode.START_ACTIVITY_1 -> {
-                // on attachment adding activity returned
-                // update view
-                data ?: return
-
-                Common.doAssertion(data.hasExtra(DiaryAttachmentAddingActivity.EXTRA_RESULT_ATTACHMENT_ID))
-                // id of the attachment just added
-                val attachmentId = data.getLongExtra(DiaryAttachmentAddingActivity.EXTRA_RESULT_ATTACHMENT_ID, -1)
-
-                itemDataList.add(diaryDatabase.queryAttachment(attachmentId))
-                itemAdapter.notifyItemChanged(itemDataList.size - 1)
-            }
-
-            else -> {
-            }
-        }
+        return true
     }
 
     private fun checkExistence(attachmentId: Long): Boolean {

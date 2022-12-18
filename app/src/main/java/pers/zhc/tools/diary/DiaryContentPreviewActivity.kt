@@ -17,7 +17,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.diary_content_preview_activity.*
 import kotlinx.android.synthetic.main.diary_record_stat_dialog.view.*
-import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.DisplayUtil
@@ -31,6 +30,13 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
     private lateinit var bottomAttachmentLL: LinearLayout
     private lateinit var contentTV: TextView
     private var dateInt: Int = -1
+
+    private val launchers = object {
+        val edit = registerForActivityResult(DiaryTakingActivity.ActivityContract()) {result->
+            val content = fetchContent(result.dateInt)
+            contentTV.text = content
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,9 +96,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.edit -> {
-                val intent = Intent(this, DiaryTakingActivity::class.java)
-                intent.putExtra(EXTRA_DATE_INT, dateInt)
-                startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
+                launchers.edit.launch(MyDate(dateInt))
             }
 
             R.id.attachment -> {
@@ -109,22 +113,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
             else -> {
             }
         }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            RequestCode.START_ACTIVITY_0 -> {
-                // start diary taking activity
-                // refresh the current content text view
-                val content = fetchContent(dateInt)
-                contentTV.text = content
-            }
-
-            else -> {
-            }
-        }
+        return true
     }
 
     override fun finish() {

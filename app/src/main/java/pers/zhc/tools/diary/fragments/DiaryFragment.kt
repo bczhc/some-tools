@@ -27,7 +27,7 @@ import pers.zhc.tools.BaseActivity.RequestCode
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryItemViewBinding
 import pers.zhc.tools.diary.*
-import pers.zhc.tools.filepicker.FilePicker
+import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.utils.*
 import pers.zhc.util.Assertion
 import java.io.File
@@ -47,6 +47,41 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private var searchRegex: Regex? = null
     private val weeks: Array<String> by lazy {
         requireContext().resources.getStringArray(R.array.weeks)
+    }
+
+    private val launchers = object {
+        val writeOrCreateDiary = registerForActivityResult(DiaryTakingActivity.ActivityContract()) { result ->
+            val dateInt = result.dateInt
+            if (result.isNewRecord) {
+                // add a new diary item
+                diaryItemDataList.add(Diary(dateInt, diaryDatabase.queryDiaryContent(dateInt)))
+                recyclerViewAdapter.notifyItemInserted(diaryItemDataList.size - 1)
+            } else {
+                // update list item
+                val content = diaryDatabase.queryDiaryContent(dateInt)
+                val position = diaryItemDataList.indexOfFirst { it.dateInt == dateInt }
+                diaryItemDataList[position].content = content
+                recyclerViewAdapter.notifyItemChanged(position)
+            }
+        }
+        val importDiary = registerForActivityResult(
+            FilePickerActivityContract(
+                FilePickerActivityContract.FilePickerType.PICK_FILE,
+                false
+            )
+        ) { result ->
+            result ?: return@registerForActivityResult
+            importDiary(File(result.path))
+        }
+        val exportDiary = registerForActivityResult(
+            FilePickerActivityContract(
+                FilePickerActivityContract.FilePickerType.PICK_FOLDER,
+                false
+            )
+        ) { result ->
+            result ?: return@registerForActivityResult
+            exportDiary(File(result.path))
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -205,7 +240,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             putExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, dateInt)
             searchRegex?.let { putExtra(DiaryContentPreviewActivity.EXTRA_HIGHLIGHT_REGEX, it) }
         }
-        startActivityForResult(intent, RequestCode.START_ACTIVITY_3)
+        startActivity(intent)
     }
 
     private fun refreshItemDataList(
@@ -229,15 +264,11 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             }
 
             R.id.export -> {
-                val intent = Intent(context, FilePicker::class.java)
-                intent.putExtra(FilePicker.EXTRA_OPTION, FilePicker.PICK_FOLDER)
-                startActivityForResult(intent, RequestCode.START_ACTIVITY_1)
+                launchers.exportDiary.launch(Unit)
             }
 
             R.id.import_ -> {
-                val intent = Intent(context, FilePicker::class.java)
-                intent.putExtra(FilePicker.EXTRA_OPTION, FilePicker.PICK_FILE)
-                startActivityForResult(intent, RequestCode.START_ACTIVITY_2)
+                launchers.importDiary.launch(Unit)
             }
 
             R.id.attachment -> {
@@ -401,34 +432,18 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun createDiary(dateInt: Int) {
-        val intent = Intent(context, DiaryTakingActivity::class.java)
-        // use the current time
-        intent.putExtra(DiaryTakingActivity.EXTRA_DATE_INT, dateInt)
-        startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
+        launchers.writeOrCreateDiary.launch(MyDate(dateInt))
     }
 
     private fun writeDiary() {
-        if (diaryDatabase.hasDiary(getCurrentDateInt())) {
-            val intent = Intent(context, DiaryTakingActivity::class.java)
-            intent.putExtra(DiaryTakingActivity.EXTRA_DATE_INT, getCurrentDateInt())
-            startActivityForResult(intent, RequestCode.START_ACTIVITY_4)
-        } else {
-            createDiary(getCurrentDateInt())
-        }
+        val date = MyDate(getCurrentDateInt())
+
+        launchers.writeOrCreateDiary.launch(date)
     }
 
     private fun getCurrentDateInt(): Int {
         val date = MyDate(Date(System.currentTimeMillis()))
         return date.dateInt
-    }
-
-    private fun getDiaryItemPosition(dateInt: Int): Int {
-        for (i in diaryItemDataList.indices) {
-            if (diaryItemDataList[i].dateInt == dateInt) {
-                return i
-            }
-        }
-        return -1
     }
 
     private fun importDiary(file: File) {
@@ -483,52 +498,6 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
                 ToastUtils.showError(context, R.string.copying_failed, e)
             }
         }.start()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            RequestCode.START_ACTIVITY_0 -> {
-                // "write diary" action: on diary taking activity returned
-                // it must be an activity which intends to create a new diary record
-                data!!
-                val dateInt = data.getIntExtra(DiaryTakingActivity.EXTRA_DATE_INT, -1)
-
-                // update view
-                diaryItemDataList.add(Diary(dateInt, diaryDatabase.queryDiaryContent(dateInt)))
-                recyclerViewAdapter.notifyItemInserted(diaryItemDataList.size - 1)
-            }
-
-            RequestCode.START_ACTIVITY_1 -> {
-                // export
-                data ?: return
-                val dir = data.getStringExtra(FilePicker.EXTRA_RESULT) ?: return
-                exportDiary(File(dir))
-            }
-
-            RequestCode.START_ACTIVITY_2 -> {
-                // import
-                data ?: return
-                val file = data.getStringExtra(FilePicker.EXTRA_RESULT) ?: return
-                importDiary(File(file))
-            }
-
-            RequestCode.START_ACTIVITY_3, RequestCode.START_ACTIVITY_4 -> {
-                // START_ACTIVITY_3:
-                // "write diary" action: start a diary taking activity directly when the diary of today's date already exists
-                // refresh the corresponding view
-                data!!
-                Common.doAssertion(data.hasExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT))
-                val dateInt = data.getIntExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, -1)
-                val content = diaryDatabase.queryDiaryContent(dateInt)
-                val position = getDiaryItemPosition(dateInt)
-                diaryItemDataList[position].content = content
-                recyclerViewAdapter.notifyItemChanged(position)
-            }
-
-            else -> {
-            }
-        }
     }
 
     private val titleCalendar = Calendar.getInstance()

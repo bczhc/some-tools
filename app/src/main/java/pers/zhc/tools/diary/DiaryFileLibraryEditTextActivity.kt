@@ -1,8 +1,10 @@
 package pers.zhc.tools.diary
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContract
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.views.ScrollEditText
@@ -45,5 +47,24 @@ class DiaryFileLibraryEditTextActivity : BaseActivity() {
          * intent string extra
          */
         const val EXTRA_INITIAL_TEXT = "result"
+    }
+
+    /**
+     * input: initial text
+     *
+     * output: result text
+     */
+    class TextEditContract: ActivityResultContract<String?, String>() {
+        override fun createIntent(context: Context, input: String?): Intent {
+            return Intent(context, DiaryFileLibraryEditTextActivity::class.java).apply {
+                input?.let { putExtra(EXTRA_INITIAL_TEXT, it) }
+            }
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): String {
+            intent!!
+            return intent.getStringExtra(EXTRA_RESULT)!!
+        }
+
     }
 }

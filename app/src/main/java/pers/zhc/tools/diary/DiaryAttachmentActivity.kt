@@ -1,10 +1,14 @@
 package pers.zhc.tools.diary
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContract
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.fragments.AttachmentFragment
+import pers.zhc.tools.utils.getLongExtraOrNull
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,5 +70,23 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
          * See [AttachmentFragment.fromDiary] property.
          */
         const val EXTRA_FROM_DIARY = "fromDiary"
+    }
+
+    class PickAttachmentContract: ActivityResultContract<Unit, PickAttachmentContract.Result?>() {
+        class Result(
+            val attachmentId: Long
+        )
+
+        override fun createIntent(context: Context, input: Unit): Intent {
+            return Intent(context, DiaryAttachmentActivity::class.java).apply {
+                putExtra(EXTRA_PICK_MODE, true)
+            }
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Result? {
+            intent ?: return null
+            val attachmentId = intent.getLongExtraOrNull(EXTRA_PICKED_ATTACHMENT_ID)!!
+            return Result(attachmentId)
+        }
     }
 }
