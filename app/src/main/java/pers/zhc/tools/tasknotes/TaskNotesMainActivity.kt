@@ -184,7 +184,7 @@ class TaskNotesMainActivity : BaseActivity() {
 
         val notification = NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID_UNIVERSAL).apply {
             setSmallIcon(R.drawable.ic_launcher_foreground)
-            setContentTitle(getString(R.string.task_notes_label))
+            setContentTitle(getString(R.string.task_notes_add_task_record_notification_title))
             setContentIntent(pi)
             setOngoing(true)
         }.build()
