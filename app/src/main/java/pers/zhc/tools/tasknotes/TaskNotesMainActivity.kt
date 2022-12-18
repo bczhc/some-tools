@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,6 +30,7 @@ class TaskNotesMainActivity : BaseActivity() {
     private val listItems = Records()
     private val database by lazy { Database.database }
     private lateinit var listAdapter: ListAdapter
+    private lateinit var onRecordAddedReceiver: OnRecordAddedReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +67,21 @@ class TaskNotesMainActivity : BaseActivity() {
         listAdapter.setOnItemClickListener(listAdapter.getOnItemLongClickListener())
 
         showNotification()
+
+        onRecordAddedReceiver = OnRecordAddedReceiver { creationTime ->
+            onRecordAdded(creationTime)
+        }.also {
+            registerReceiver(it, IntentFilter().apply {
+                addAction(OnRecordAddedReceiver.ACTION_RECORD_ADDED)
+            })
+        }
+    }
+
+    private fun onRecordAdded(creationTime: Long) {
+        queryAndSetListItems()
+        val index = listItems.indexOfFirst { it.creationTime == creationTime }
+        androidAssert(index != -1)
+        listAdapter.notifyItemInserted(index)
     }
 
     private fun showModifyRecordDialog(record: Record) {
@@ -119,7 +136,7 @@ class TaskNotesMainActivity : BaseActivity() {
                 .setMinute(record.time.minute)
                 .build().apply {
                     addOnPositiveButtonClickListener {
-                        newTime=Time(hour, minute)
+                        newTime = Time(hour, minute)
                         bindings.timeTv.text = newTime.format()
                     }
                 }
@@ -127,17 +144,12 @@ class TaskNotesMainActivity : BaseActivity() {
         }
     }
 
-    private val dialogShowActivityLauncher =
-        registerForActivityResult(DialogShowActivity.DialogShowActivityContract()) { creationTime ->
-            creationTime ?: return@registerForActivityResult
-            queryAndSetListItems()
-            val index = listItems.indexOfFirst { it.creationTime == creationTime }
-            androidAssert(index != -1)
-            listAdapter.notifyItemInserted(index)
-        }
-
     private fun recreateTaskRecord(record: Record) {
-        dialogShowActivityLauncher.launch(record.description)
+        Dialog.createRecordAddingDialog(this, record.description) { createdRecord ->
+            createdRecord ?: return@createRecordAddingDialog
+            database.insert(createdRecord)
+            onRecordAdded(createdRecord.creationTime)
+        }
     }
 
     private fun queryAndSetListItems() {
@@ -179,6 +191,11 @@ class TaskNotesMainActivity : BaseActivity() {
 
         val nm = applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         nm.notify(NOTIFICATION_ID, notification)
+    }
+
+    override fun finish() {
+        unregisterReceiver(onRecordAddedReceiver)
+        super.finish()
     }
 
     private class ListAdapter(private val context: Context, private val records: Records) :
