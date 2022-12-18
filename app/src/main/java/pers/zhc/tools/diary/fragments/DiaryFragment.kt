@@ -2,6 +2,7 @@ package pers.zhc.tools.diary.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,24 +11,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.diary_advenced_search_dialog.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import kotlinx.android.synthetic.main.diary_stat_dialog.view.*
-import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity.RequestCode
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryItemViewBinding
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.utils.*
@@ -40,7 +38,7 @@ import java.util.*
  */
 class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var recyclerViewAdapter: MyAdapter
+    private lateinit var recyclerViewAdapter: ListAdapter
     private lateinit var constraintLayout: ConstraintLayout
     private val diaryItemDataList = ArrayList<Diary>()
     private val advancedSearchDialog by lazy {
@@ -96,18 +94,17 @@ WHERE instr(lower("date"), lower(?)) > 0
     }
 
     private fun loadRecyclerView() {
-        FastScrollerBuilder(recyclerView).apply {
-            setThumbDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.thumb)!!)
-        }.build()
         Thread {
             refreshItemDataList()
         }.start()
 
-        Common.runOnUiThread(requireContext()) {
+        val context = requireContext()
 
-            recyclerViewAdapter = MyAdapter(this, diaryItemDataList)
+        Common.runOnUiThread(context) {
+            recyclerViewAdapter = ListAdapter(context, diaryItemDataList, this::makeTitle)
+            recyclerView.setUpFastScroll(context)
+            recyclerView.setLinearLayoutManager()
             recyclerView.adapter = recyclerViewAdapter
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
             recyclerViewAdapter.setOnItemClickListener { position, _ ->
                 openDiaryPreview(
@@ -116,7 +113,7 @@ WHERE instr(lower("date"), lower(?)) > 0
             }
             recyclerViewAdapter.setOnItemLongClickListener { position, view ->
                 val popupMenu = PopupMenuUtil.create(
-                    requireContext(),
+                    context,
                     view, R.menu.diary_popup_menu
                 )
                 popupMenu.setOnMenuItemClickListener { item: MenuItem ->
@@ -534,57 +531,40 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         }
     }
 
-    private class MyAdapter(
-        private val outer: DiaryFragment,
-        private val data: List<Diary>
+    private val titleCalendar = Calendar.getInstance()
+
+    private fun makeTitle(date: MyDate): String {
+        titleCalendar.apply {
+            clear()
+            set(date.year, date.month - 1, date.day)
+        }
+        val weekString = weeks[titleCalendar[Calendar.DAY_OF_WEEK] - 1]
+        return "$date $weekString"
+    }
+
+    private class ListAdapter(
+        private val context: Context,
+        private val data: List<Diary>,
+        private val makeTitle: (date: MyDate) -> String,
     ) :
-        AdapterWithClickListener<MyAdapter.MyViewHolder?>() {
-        private val context = outer.requireContext()
+        AdapterWithClickListener<ListAdapter.MyViewHolder?>() {
 
-        private class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
-        private fun createDiaryItemRL(parent: ViewGroup): View {
-            return LayoutInflater.from(context).inflate(R.layout.diary_item_view, parent, false)
-        }
-
-        @SuppressLint("SetTextI18n")
-        private fun bindDiaryItemRL(item: View, myDate: MyDate, content: String) {
-            val dateTV = item.findViewById<TextView>(R.id.date_tv)
-            val contentTV = item.findViewById<TextView>(R.id.content_tv)
-            dateTV.text = outer.makeTitle(myDate)
-            contentTV.text = limitText(content)
-        }
-
-        private fun limitText(s: String): String {
-            return if (s.length > 100) s.substring(0, 100) + "..." else s
-        }
+        private class MyViewHolder(val bindings: DiaryItemViewBinding) : RecyclerView.ViewHolder(bindings.root)
 
         override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {
-            val diaryItemRL = createDiaryItemRL(parent)
-            return MyViewHolder(diaryItemRL)
+            val bindings = DiaryItemViewBinding.inflate(LayoutInflater.from(context), parent, false)
+            return MyViewHolder(bindings)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val bindings = holder.bindings
             val itemData = data[position]
-            bindDiaryItemRL(holder.itemView, MyDate(itemData.dateInt), itemData.content)
+            bindings.dateTv.text = makeTitle(MyDate(itemData.dateInt))
+            bindings.contentTv.text = itemData.content.limitText(100)
         }
 
         override fun getItemCount(): Int {
             return data.size
         }
-    }
-
-    private val titleCalendar = Calendar.getInstance()
-    private fun makeTitle(date: MyDate): String {
-        var weekString: String? = null
-        try {
-            titleCalendar.clear()
-            titleCalendar.set(date.year, date.month - 1, date.day)
-            val weekIndex = titleCalendar[Calendar.DAY_OF_WEEK] - 1
-            weekString = weeks[weekIndex]
-        } catch (e: Exception) {
-            Common.showException(e, context)
-        }
-        return "$date $weekString"
     }
 }
