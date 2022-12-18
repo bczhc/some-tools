@@ -15,7 +15,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
-import pers.zhc.jni.sqlite.Statement
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryTakingActivityBinding
 import pers.zhc.tools.diary.DiaryContentPreviewActivity.Companion.createDiaryRecordStatDialog
@@ -35,7 +34,6 @@ class DiaryTakingActivity : DiaryBaseActivity() {
     private lateinit var editText: EditText
     private lateinit var charactersCountTV: TextView
     private var dateInt = 0
-    private lateinit var updateStatement: Statement
     private var saver: ScheduledSaver? = null
     private val ttsReplaceDict by lazy { createTtsReplaceDict() }
     private lateinit var findLayout: ViewGroup
@@ -46,8 +44,6 @@ class DiaryTakingActivity : DiaryBaseActivity() {
         super.onCreate(savedInstanceState)
         bindings = DiaryTakingActivityBinding.inflate(layoutInflater)
         setContentView(bindings.root)
-
-        updateStatement = diaryDatabase.database.compileStatement("UPDATE diary SET content=? WHERE date=?")
 
         editText = bindings.et.let {
             it.setZoomFontSizeEnabled(true)
@@ -268,15 +264,12 @@ WHERE "date" IS ?"""
     }
 
     private fun save() {
-        updateDiary(editText.text.toString(), dateInt)
+        updateDiary(dateInt, editText.text.toString())
     }
 
-    private fun updateDiary(content: String, dateString: Int) {
+    private fun updateDiary(dateInt: Int, content: String) {
         try {
-            updateStatement.reset()
-            updateStatement.bindText(1, content)
-            updateStatement.bind(2, dateString)
-            updateStatement.step()
+            diaryDatabase.updateDiaryContent(dateInt, content)
         } catch (e: Exception) {
             Common.showException(e, this)
         }
@@ -286,7 +279,6 @@ WHERE "date" IS ?"""
         autoSaverRunning = false
         saver!!.stop()
         save()
-        updateStatement.release()
         super.finish()
     }
 

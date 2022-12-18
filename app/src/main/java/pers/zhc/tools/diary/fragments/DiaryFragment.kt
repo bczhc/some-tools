@@ -42,7 +42,7 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: MyAdapter
     private lateinit var constraintLayout: ConstraintLayout
-    private val diaryItemDataList = ArrayList<DiaryItemData>()
+    private val diaryItemDataList = ArrayList<Diary>()
     private val advancedSearchDialog by lazy {
         createAdvancedSearchDialog()
     }
@@ -83,7 +83,6 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
 
                 refreshItemDataList(
                     """
-
 SELECT "date", content
 FROM diary
 WHERE instr(lower("date"), lower(?)) > 0
@@ -184,9 +183,9 @@ WHERE instr(lower("date"), lower(?)) > 0
                         "INSERT INTO diary(\"date\", content) VALUES (?, ?)",
                         arrayOf(removed.dateInt, removed.content)
                     )
-                    Assertion.doAssertion(
+                    androidAssert(
                         diaryDatabase.hasRecord(
-                            """SELECT COUNT() FROM diary WHERE "date" IS ?""", arrayOf(removed.dateInt)
+                            """SELECT "date" FROM diary WHERE "date" IS ?""", arrayOf(removed.dateInt)
                         )
                     )
                     diaryItemDataList.add(position, removed)
@@ -197,9 +196,7 @@ WHERE instr(lower("date"), lower(?)) > 0
     }
 
     private fun changeDate(oldDateString: Int, newDate: Int) {
-        val diaryDatabase = diaryDatabase.database
-
-        diaryDatabase.execBind(
+        diaryDatabase.database.execBind(
             """UPDATE diary
 SET "date"=?
 WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
@@ -214,24 +211,14 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         startActivityForResult(intent, RequestCode.START_ACTIVITY_3)
     }
 
-    private fun refreshItemDataList() {
-        refreshItemDataList("""SELECT "date", content FROM diary""")
-    }
-
-    private fun refreshItemDataList(@Language("SQLite") sql: String, binds: Array<out Any>? = null) {
-        val diaryDatabase = diaryDatabase.database
-
-        diaryItemDataList.clear()
-
-        val statement = diaryDatabase.compileStatement(sql, binds ?: arrayOf())
-        val cursor = statement.cursor
-        while (cursor.step()) {
-            val date = cursor.getInt(0)
-            val content = cursor.getText(1)
-            diaryItemDataList.add(DiaryItemData(date, content))
+    private fun refreshItemDataList(
+        @Language("SQLite") sql: String = "SELECT \"date\", content FROM diary",
+        binds: Array<Any>? = null
+    ) {
+        diaryItemDataList.let {
+            it.clear()
+            it.addAll(diaryDatabase.queryDiaries(sql, binds))
         }
-
-        statement.release()
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -301,19 +288,6 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         recyclerViewAdapter.notifyDataSetChanged()
     }
 
-    private fun openRandomDiary() {
-        val diaryDatabase = diaryDatabase.database
-
-        var randomDate: Int? = null
-        diaryDatabase.withCompiledStatement("SELECT \"date\" FROM diary ORDER BY random() LIMIT 1;") {
-            val cursor = it.cursor
-            randomDate = if (cursor.step()) {
-                cursor.getInt(0)
-            } else null
-        }
-        randomDate?.let { openDiaryPreview(it) }
-    }
-
     private fun showAdvancedSearchDialog() {
         advancedSearchDialog.show()
     }
@@ -350,7 +324,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
                             val date = cursor.getInt(0)
                             val content = cursor.getText(1)
                             if (regex.containsMatchIn(content)) {
-                                diaryItemDataList.add(DiaryItemData(date, content))
+                                diaryItemDataList.add(Diary(date, content))
                             }
                         }
                     }
@@ -404,7 +378,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             addOnPositiveButtonClickListener {
                 val dateInt = MyDate(Date(it)).dateInt
 
-                if (checkRecordExistence(dateInt)) {
+                if (diaryDatabase.hasDiary(dateInt)) {
                     showDuplicateConfirmDialog(dateInt)
                 } else {
                     createDiary(dateInt)
@@ -436,68 +410,8 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         startActivityForResult(intent, RequestCode.START_ACTIVITY_0)
     }
 
-    private fun checkRecordExistence(dateInt: Int): Boolean {
-        val diaryDatabase = diaryDatabase.database
-
-        return diaryDatabase.hasRecord(
-            """SELECT "date"
-FROM diary
-WHERE "date" IS ?""", arrayOf<Any>(dateInt)
-        )
-    }
-
-    private fun sort() {
-        val diaryDatabase = diaryDatabase.database
-
-        val foreignKeys: Int = getForeignKeyState()
-        // disable foreign keys constraint
-        setForeignKeyState(0)
-        diaryDatabase.exec("DROP TABLE IF EXISTS tmp")
-        diaryDatabase.beginTransaction()
-        val statement = diaryDatabase.compileStatement(
-            """SELECT sql
-FROM sqlite_master
-WHERE type IS 'table'
-  AND tbl_name IS 'diary'"""
-        )
-        val cursor = statement.cursor
-        Common.doAssertion(cursor.step())
-        val diaryTableSql = cursor.getText(statement.getIndexByColumnName("sql"))
-        statement.release()
-        val tmpTableSql = diaryTableSql.replaceFirst("diary".toRegex(), "tmp")
-        diaryDatabase.exec(tmpTableSql)
-        diaryDatabase.exec("INSERT INTO tmp SELECT * FROM diary ORDER BY \"date\"")
-        diaryDatabase.exec("DROP TABLE diary")
-        diaryDatabase.exec("ALTER TABLE tmp RENAME TO diary")
-        diaryDatabase.commit()
-        refreshList()
-
-        // restore foreign keys setting
-        setForeignKeyState(foreignKeys)
-    }
-
-    private fun getForeignKeyState(): Int {
-        val diaryDatabase = diaryDatabase.database
-
-        val fk = diaryDatabase.compileStatement("PRAGMA foreign_keys")
-        val fkCursor = fk.cursor
-        Common.doAssertion(fkCursor.step())
-        val foreignKey = fkCursor.getInt(0)
-        fk.release()
-        return foreignKey
-    }
-
-    private fun setForeignKeyState(state: Int) {
-        val diaryDatabase = diaryDatabase.database
-
-        val fk = diaryDatabase.compileStatement("PRAGMA foreign_keys=$state")
-        fk.step()
-        fk.release()
-    }
-
     private fun writeDiary() {
-        val recordExistence: Boolean = checkRecordExistence(getCurrentDateInt())
-        if (recordExistence) {
+        if (diaryDatabase.hasDiary(getCurrentDateInt())) {
             val intent = Intent(context, DiaryTakingActivity::class.java)
             intent.putExtra(DiaryTakingActivity.EXTRA_DATE_INT, getCurrentDateInt())
             startActivityForResult(intent, RequestCode.START_ACTIVITY_4)
@@ -518,22 +432,6 @@ WHERE type IS 'table'
             }
         }
         return -1
-    }
-
-    private fun queryDiaryContent(dateInt: Int): String? {
-        val diaryDatabase = diaryDatabase.database
-
-        val statement = diaryDatabase.compileStatement(
-            """SELECT content
-FROM diary
-WHERE "date" IS ?"""
-        )
-        statement.bind(1, dateInt)
-        val cursor = statement.cursor
-        Common.doAssertion(cursor.step())
-        val content = cursor.getText(0)
-        statement.release()
-        return content
     }
 
     private fun importDiary(file: File) {
@@ -600,7 +498,7 @@ WHERE "date" IS ?"""
                 val dateInt = data.getIntExtra(DiaryTakingActivity.EXTRA_DATE_INT, -1)
 
                 // update view
-                diaryItemDataList.add(DiaryItemData(dateInt, queryDiaryContent(dateInt)!!))
+                diaryItemDataList.add(Diary(dateInt, diaryDatabase.queryDiaryContent(dateInt)))
                 recyclerViewAdapter.notifyItemInserted(diaryItemDataList.size - 1)
             }
 
@@ -625,9 +523,9 @@ WHERE "date" IS ?"""
                 data!!
                 Common.doAssertion(data.hasExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT))
                 val dateInt = data.getIntExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, -1)
-                val content = queryDiaryContent(dateInt)
+                val content = diaryDatabase.queryDiaryContent(dateInt)
                 val position = getDiaryItemPosition(dateInt)
-                diaryItemDataList[position].content = content!!
+                diaryItemDataList[position].content = content
                 recyclerViewAdapter.notifyItemChanged(position)
             }
 
@@ -636,11 +534,9 @@ WHERE "date" IS ?"""
         }
     }
 
-    private class DiaryItemData(var dateInt: Int, var content: String)
-
     private class MyAdapter(
         private val outer: DiaryFragment,
-        private val data: List<DiaryItemData>
+        private val data: List<Diary>
     ) :
         AdapterWithClickListener<MyAdapter.MyViewHolder?>() {
         private val context = outer.requireContext()

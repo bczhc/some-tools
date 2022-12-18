@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.path_file_info_view.*
 import pers.zhc.tools.diary.DiaryBaseActivity
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.diary.DiaryDatabase
@@ -32,7 +33,8 @@ open class DiaryBaseFragment : Fragment() {
 
     protected fun setupOuterToolbar(toolbar: Toolbar) {
         val activity = requireActivity()
-        androidAssert(activity is DiaryMainActivity)
-        (activity as DiaryMainActivity).configureDrawerToggle(toolbar)
+        if (activity is DiaryMainActivity) {
+            activity.configureDrawerToggle(toolbar)
+        }
     }
 }

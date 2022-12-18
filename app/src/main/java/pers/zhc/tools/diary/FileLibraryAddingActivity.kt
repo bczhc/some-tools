@@ -80,13 +80,13 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
             runOnUiThread { msgTV.setText(R.string.insert_record) }
 
             val filename = file.name
-            val storageTypeEnumInt = currentStorageType.enumInt
+            val storageType = currentStorageType
             val description = descriptionET.text.toString()
 
-            if (hasFileRecord(identifier)) {
+            if (diaryDatabase.hasFileRecord(identifier)) {
                 runOnUiThread {
                     DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
-                        updateFileRecord(storageTypeEnumInt, filename, description, identifier)
+                        diaryDatabase.updateFileRecord(identifier, filename, storageType, description)
                         runOnUiThread { dialog.dismiss() }
                         ToastUtils.show(this, R.string.updating_done)
                         resultIdentifier = identifier
@@ -95,12 +95,21 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                     }, R.string.file_exists_alert_msg).show()
                 }
             } else {
-                insertFileRecord(identifier, filename, storageTypeEnumInt, description)
+                diaryDatabase.insertFileRecord(
+                    FileInfo(
+                        filename,
+                        System.currentTimeMillis(),
+                        storageType,
+                        description,
+                        identifier
+                    )
+                )
 
                 runOnUiThread { msgTV.setText(R.string.copying_file) }
+                val storagePath = diaryDatabase.queryExtraInfo()!!.diaryAttachmentFileLibraryStoragePath!!
                 FileUtil.copy(
                     file,
-                    File(DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)!!, identifier)
+                    File(storagePath, identifier)
                 )
 
                 runOnUiThread {
@@ -128,7 +137,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
 
         Thread {
             val identifier = computeIdentifier(text)
-            insertTextRecord(identifier, text, description)
+            diaryDatabase.insertTextRecord(identifier, text, description)
             dialog.cancel()
             resultIdentifier = identifier
             runOnUiThread {
@@ -136,25 +145,6 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                 finish()
             }
         }.start()
-    }
-
-    private fun insertFileRecord(identifier: String, filename: String?, storageTypeInt: Int, description: String) {
-        diaryDatabase.database.execBind(
-            """INSERT INTO diary_attachment_file(identifier, addition_timestamp, filename, storage_type, description)
-VALUES (?, ?, ?, ?, ?)""",
-            arrayOf(identifier, System.currentTimeMillis(), filename, storageTypeInt, description)
-        )
-    }
-
-    private fun insertTextRecord(identifier: String, content: String, description: String) {
-        insertFileRecord(identifier, null, StorageType.TEXT.enumInt, description)
-        diaryDatabase.database.execBind(
-            """INSERT INTO diary_attachment_text(identifier, content)
-VALUES (?, ?)""", arrayOf(identifier, content))
-    }
-
-    private fun hasFileRecord(identifier: String): Boolean {
-        return diaryDatabase.database.hasRecord("""SELECT * FROM diary_attachment_file WHERE identifier IS ?""", arrayOf(identifier))
     }
 
     private fun addSpinner() {
@@ -222,28 +212,6 @@ VALUES (?, ?)""", arrayOf(identifier, content))
         topDynamicLL.addView(view)
     }
 
-    private fun updateFileRecord(
-        storageTypeOrdinal: Int,
-        filename: String,
-        description: String,
-        identifier: String,
-    ) {
-        val statement =
-            diaryDatabase.database.compileStatement(
-                """UPDATE diary_attachment_file
-SET filename     = ?,
-    storage_type = $storageTypeOrdinal,
-    description  = ?
-WHERE identifier IS ?"""
-            )
-        statement.reset()
-        statement.bindText(1, filename)
-        statement.bindText(2, description)
-        statement.bindText(3, identifier)
-        statement.step()
-        statement.release()
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -253,6 +221,7 @@ WHERE identifier IS ?"""
                 val pickedFile = data.getStringExtra("result") ?: return
                 topDynamicLL.picked_file_et?.editText?.setText(pickedFile)
             }
+
             RequestCode.START_ACTIVITY_1 -> {
                 // edit text
                 data!!
@@ -260,6 +229,7 @@ WHERE identifier IS ?"""
                 topDynamicLL.length_tv?.text =
                     getString(R.string.diary_file_library_edit_text_length_tv, text?.length)
             }
+
             else -> {
             }
         }

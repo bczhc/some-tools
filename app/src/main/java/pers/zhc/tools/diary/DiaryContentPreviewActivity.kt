@@ -79,17 +79,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
     }
 
     private fun fetchContent(dateInt: Int): String {
-        val statement = this.diaryDatabase.database.compileStatement(
-            """SELECT content
-FROM diary
-WHERE "date" IS ?"""
-        )
-        statement.bind(1, dateInt)
-        val cursor = statement.cursor
-        cursor.step()
-        val content = cursor.getText(0)
-        statement.release()
-        return content
+        return diaryDatabase.queryDiaryContent(dateInt)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

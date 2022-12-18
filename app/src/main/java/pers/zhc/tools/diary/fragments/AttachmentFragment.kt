@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
-import pers.zhc.jni.sqlite.SQLite3
-import pers.zhc.jni.sqlite.Statement
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
@@ -44,7 +42,7 @@ class AttachmentFragment(
     private var dateInt: Int = -1
 ) : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var itemAdapter: MyAdapter
-    private val itemDataList = ArrayList<ItemData>()
+    private val itemDataList = ArrayList<Attachment>()
 
     private lateinit var recyclerView: RecyclerView
 
@@ -105,15 +103,16 @@ class AttachmentFragment(
                             if (fromDiary) {
                                 // delete from diary attached attachment records
                                 Common.doAssertion(dateInt != -1)
-                                deleteAttachedAttachment(diaryDatabase.database, dateInt, id)
+                                diaryDatabase.deleteAttachmentFromDiary(dateInt, id)
                             } else {
                                 // delete from the attachment library
-                                deleteAttachment(diaryDatabase.database, id)
+                                diaryDatabase.deleteAttachment(id)
                             }
                             itemDataList.removeAt(position)
                             itemAdapter.notifyItemRemoved(position)
                         }, R.string.whether_to_delete).show()
                     }
+
                     else -> {
                     }
                 }
@@ -123,38 +122,13 @@ class AttachmentFragment(
     }
 
     private fun refreshItemDataList() {
-        val diaryDatabase = diaryDatabase.database
-
-        val statement: Statement
-        if (dateInt == -1) {
-            statement = diaryDatabase.compileStatement(
-                """SELECT id, title, description
-FROM diary_attachment"""
-            )
-        } else {
-            statement =
-                diaryDatabase.compileStatement(
-                    """SELECT id, title, description
-FROM diary_attachment
-         INNER JOIN diary_attachment_mapping ON diary_attachment.id IS diary_attachment_mapping.referred_attachment_id
-WHERE diary_attachment_mapping.diary_date IS ?"""
-                )
-            statement.bind(1, dateInt)
-        }
-
-        val cursor = statement.cursor
-        while (cursor.step()) {
-            val id = cursor.getLong(0)
-            val title = cursor.getText(1)
-            val description = cursor.getText(2)
-
-            itemDataList.add(ItemData(title, description, id))
-        }
-        statement.release()
+        val attachments = diaryDatabase.queryAttachments(dateInt.takeIf { it != -1 })
+        itemDataList.clear()
+        itemDataList.addAll(attachments)
     }
 
     private fun checkAttachmentInfoRecord() {
-        val fileStoragePath = DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)
+        val fileStoragePath = diaryDatabase.queryExtraInfo().nullMap { it.diaryAttachmentFileLibraryStoragePath }
         if (fileStoragePath == null) {
             // record "info_json" doesn't exist, then start to set it
             startActivity(Intent(context, DiaryAttachmentSettingsActivity::class.java))
@@ -172,12 +146,6 @@ WHERE diary_attachment_mapping.diary_date IS ?"""
                     val intent = Intent(context, DiaryAttachmentAddingActivity::class.java)
                     startActivityForResult(intent, BaseActivity.RequestCode.START_ACTIVITY_1)
                 }
-            }
-            R.id.file_library -> {
-                startActivity(Intent(context, FileLibraryActivity::class.java))
-            }
-            R.id.setting_btn -> {
-                startActivity(Intent(context, DiaryAttachmentSettingsActivity::class.java))
             }
         }
         return super.onOptionsItemSelected(item)
@@ -201,11 +169,12 @@ WHERE diary_attachment_mapping.diary_date IS ?"""
                     ToastUtils.show(context, R.string.diary_attachment_adding_duplicate_toast)
                     return
                 }
-                attachAttachment(pickedAttachmentId)
+                diaryDatabase.attachAttachment(dateInt, pickedAttachmentId)
 
-                itemDataList.add(queryAttachment(pickedAttachmentId))
+                itemDataList.add(diaryDatabase.queryAttachment(pickedAttachmentId))
                 itemAdapter.notifyItemChanged(itemDataList.size - 1)
             }
+
             BaseActivity.RequestCode.START_ACTIVITY_1 -> {
                 // on attachment adding activity returned
                 // update view
@@ -215,70 +184,21 @@ WHERE diary_attachment_mapping.diary_date IS ?"""
                 // id of the attachment just added
                 val attachmentId = data.getLongExtra(DiaryAttachmentAddingActivity.EXTRA_RESULT_ATTACHMENT_ID, -1)
 
-                itemDataList.add(queryAttachment(attachmentId))
+                itemDataList.add(diaryDatabase.queryAttachment(attachmentId))
                 itemAdapter.notifyItemChanged(itemDataList.size - 1)
             }
+
             else -> {
             }
         }
     }
 
     private fun checkExistence(attachmentId: Long): Boolean {
-        val diaryDatabase = diaryDatabase.database
-
-        Common.doAssertion(dateInt != -1)
-        return diaryDatabase.hasRecord(
-            """SELECT *
-FROM diary_attachment_mapping
-WHERE diary_date IS ?
-  AND referred_attachment_id IS ?""",
-            arrayOf(dateInt, attachmentId)
-        )
+        androidAssert(dateInt != -1)
+        return diaryDatabase.checkDiaryAttachmentExists(dateInt, attachmentId)
     }
 
-    private fun queryAttachment(id: Long): ItemData {
-        val diaryDatabase = diaryDatabase.database
-
-        val statement = diaryDatabase.compileStatement(
-            """SELECT *
-FROM diary_attachment
-WHERE id IS ?"""
-        )
-        val titleColumn = statement.getIndexByColumnName("title")
-        val descriptionColumn = statement.getIndexByColumnName("description")
-        statement.bind(1, id)
-        val cursor = statement.cursor
-        Common.doAssertion(cursor.step())
-
-        val title = cursor.getText(titleColumn)
-        val description = cursor.getText(descriptionColumn)
-
-        statement.release()
-
-        return ItemData(title, description, id)
-    }
-
-    /**
-     * attach an attachment to diary
-     */
-    private fun attachAttachment(pickedAttachmentId: Long) {
-        val diaryDatabase = diaryDatabase.database
-
-        Common.doAssertion(dateInt != -1)
-        val statement =
-            diaryDatabase.compileStatement(
-                """INSERT INTO diary_attachment_mapping(diary_date, referred_attachment_id)
-VALUES (?, ?)"""
-            )
-        statement.bind(1, dateInt)
-        statement.bind(2, pickedAttachmentId)
-        statement.step()
-        statement.release()
-    }
-
-    class ItemData(val title: String, val description: String, val id: Long)
-
-    class MyAdapter(private val context: Context, private val itemDataList: List<ItemData>) :
+    class MyAdapter(private val context: Context, private val itemDataList: List<Attachment>) :
         AdapterWithClickListener<MyAdapter.MyViewHolder>() {
         class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
@@ -310,37 +230,6 @@ VALUES (?, ?)"""
     }
 
     companion object {
-        fun deleteAttachment(db: SQLite3, attachmentId: Long) {
-            var statement =
-                db.compileStatement(
-                    """DELETE
-FROM diary_attachment_file_reference
-WHERE attachment_id IS ?"""
-                )
-            statement.bind(1, attachmentId)
-            statement.step()
-            statement.release()
-
-            statement = db.compileStatement(
-                """DELETE
-FROM diary_attachment
-WHERE id IS ?"""
-            )
-            statement.bind(1, attachmentId)
-            statement.step()
-            statement.release()
-        }
-
-        fun deleteAttachedAttachment(db: SQLite3, diaryDateInt: Int, attachmentId: Long) {
-            db.execBind(
-                """DELETE
-FROM diary_attachment_mapping
-WHERE diary_date IS ?
-  AND referred_attachment_id IS ?""",
-                arrayOf(diaryDateInt, attachmentId)
-            )
-        }
-
         /**
          * intent long extra
          * When [EXTRA_PICK_MODE] extra is `true`, this extra will be used in the result intent extras.

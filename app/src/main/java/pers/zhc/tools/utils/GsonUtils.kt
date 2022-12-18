@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException
 
 /**
  * @author bczhc
+ * returns null on json exception occurred
  */
 fun <T> Gson.fromJsonOrNull(json: String, classOfT: Class<T>): T? {
     return try {

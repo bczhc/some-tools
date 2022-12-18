@@ -13,6 +13,7 @@ import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.tools.utils.nullMap
 import java.io.File
 
 /**
@@ -31,23 +32,12 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
         val doneBtn = done_btn
         val restoreToDefaultBtn = restore_to_default_btn
 
-        var fileStoragePath = getFileStoragePath(diaryDatabase)
-        if (fileStoragePath == null) {
-            val defaultInfoJson = JSONObject()
-            defaultInfoJson.put(storagePathJsonKey, getDefaultStoragePath())
+        val storagePath = diaryDatabase.queryExtraInfo().nullMap { it.diaryAttachmentFileLibraryStoragePath }
+            ?: getDefaultStoragePath().also {
+                diaryDatabase.updateExtraInfo(ExtraInfo(it))
+            }
 
-            val statement =
-                diaryDatabase.database.compileStatement(
-                    """INSERT INTO diary_attachment_info (info_json)
-VALUES (?)"""
-                )
-            statement.bindText(1, defaultInfoJson.toString())
-            statement.step()
-            statement.release()
-        }
-
-        fileStoragePath = getFileStoragePath(diaryDatabase)
-        storagePathTV.text = getString(R.string.str, fileStoragePath)
+        storagePathTV.text = getString(R.string.str, storagePath)
         oldPathStr = storagePathTV.text.toString()
 
         changeBtn.setOnClickListener {
@@ -65,11 +55,13 @@ VALUES (?)"""
     }
 
     private fun save() {
-        DialogUtil.createAlertDialogWithNeutralButton(this,
+        DialogUtil.createAlertDialogWithNeutralButton(
+            this,
             { _, _ ->
                 ToastUtils.show(this, R.string.save_success_toast)
-            }, { _, _ ->
-                changeStoragePath(storagePathTV.text.toString())
+            },
+            { _, _ ->
+                diaryDatabase.updateExtraInfo(ExtraInfo(storagePathTV.text.toString()))
                 ToastUtils.show(this, R.string.save_success_toast)
             }, R.string.diary_attachment_setting_move_file_dialog_title
         ).apply {
@@ -77,67 +69,10 @@ VALUES (?)"""
         }.show()
     }
 
-    companion object {
-        fun getFileStoragePath(diaryDatabase: DiaryDatabase): String? {
-            var infoJSON: String? = null
-
-            diaryDatabase.database.exec(
-                """SELECT info_json
-FROM diary_attachment_info"""
-            ) { content ->
-                infoJSON = content[0]
-                return@exec 0
-            }
-
-            // TODO this method should return `String` rather than nullable `String`
-            val r = if (infoJSON == null) {
-                null
-            } else {
-                val jsonObject = JSONObject(infoJSON!!)
-                jsonObject.getString(storagePathJsonKey)
-            }
-            if (r != null) {
-                val file = File(r)
-                if (!file.exists()) {
-                    // TODO handle the case that the directory doesn't exist but also cannot be made
-                    file.mkdirs()
-                }
-            }
-            return r
-        }
-
-        const val storagePathJsonKey = "diaryAttachmentFileLibraryStoragePath"
-    }
-
-    fun getDefaultStoragePath(): String {
+    private fun getDefaultStoragePath(): String {
         val file = File(Common.getAppMainExternalStoragePathFile(this), "diary-attachment-files")
         file.mkdirs()
         return file.path
-    }
-
-    private fun changeStoragePath(newStoragePath: String) {
-        val database = diaryDatabase.database
-        var statement = database.compileStatement(
-            """SELECT info_json
-FROM diary_attachment_info"""
-        )
-        statement.stepRow()
-        val infoJSON = statement.cursor.getText(statement.getIndexByColumnName("info_json"))
-        statement.release()
-
-        val infoJONObject = JSONObject(infoJSON)
-        infoJONObject.put(storagePathJsonKey, newStoragePath)
-
-        statement = database.compileStatement(
-            """UPDATE diary_attachment_info
-SET info_json = ?"""
-        )
-        statement.bindText(1, infoJONObject.toString())
-        statement.step()
-        statement.release()
-
-        val fileStoragePath = getFileStoragePath(diaryDatabase)
-        storagePathTV.text = getString(R.string.str, fileStoragePath)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

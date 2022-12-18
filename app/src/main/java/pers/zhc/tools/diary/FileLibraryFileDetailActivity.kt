@@ -22,14 +22,18 @@ class FileLibraryFileDetailActivity : DiaryBaseActivity() {
         val intent = intent
         val identifier = intent.getStringExtra(EXTRA_IDENTIFIER)!!
 
-        val fileInfo = FileLibraryFragment.getFileInfo(diaryDatabase, identifier)
+        val fileInfo = diaryDatabase.queryAttachmentFile(identifier)!!
 
         val filePreviewView = FileLibraryFragment.getFilePreviewView(this, fileInfo, null)
         container.addView(filePreviewView)
 
+        val fileStoragePath by lazy {
+            diaryDatabase.queryExtraInfo()!!.diaryAttachmentFileLibraryStoragePath!!
+        }
+
         browserFileBtn.setOnClickListener {
 
-            when (StorageType.from(fileInfo.storageTypeEnumInt)) {
+            when (fileInfo.storageType) {
                 StorageType.RAW -> TODO()
                 StorageType.TEXT -> {
                     startActivity(Intent(this, TextBrowserActivity::class.java).apply {
@@ -38,7 +42,7 @@ class FileLibraryFileDetailActivity : DiaryBaseActivity() {
                 }
                 StorageType.IMAGE -> {
                     val filePath = File(
-                        DiaryAttachmentSettingsActivity.getFileStoragePath(diaryDatabase)!!, fileInfo.identifier
+                        fileStoragePath, fileInfo.identifier
                     ).path
 
                     startActivity(Intent(this, ImageFileBrowser::class.java).apply {

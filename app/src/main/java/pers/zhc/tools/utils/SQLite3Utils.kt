@@ -11,11 +11,33 @@ import kotlin.reflect.KClass
  * @author bczhc
  */
 
-fun SQLite3.queryExec(@Language("SQLite") sql: String, binds: Array<Any>? = null, callback: (cursor: Cursor) -> Unit) {
+fun <T> SQLite3.queryExec(
+    @Language("SQLite") sql: String,
+    binds: Array<Any>? = null,
+    callback: (cursor: Cursor) -> T
+): T {
     val statement = this.compileStatement(sql, binds ?: arrayOf())
     val cursor = statement.cursor
-    callback(cursor)
+    val result = callback(cursor)
     statement.release()
+    return result
+}
+
+/**
+ * returns null if there's no such row
+ */
+fun <T> SQLite3.queryOne(
+    @Language("SQLite") sql: String,
+    binds: Array<Any>? = null,
+    mapRow: (row: Cursor) -> T
+): T? {
+    return this.queryExec(sql, binds) {
+        if (it.step()) {
+            mapRow(it)
+        } else {
+            null
+        }
+    }
 }
 
 inline fun KClass<SQLite3>.withNew(path: String, block: (db: SQLite3) -> Unit) {

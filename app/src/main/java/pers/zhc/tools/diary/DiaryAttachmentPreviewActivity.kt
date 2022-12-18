@@ -23,39 +23,32 @@ class DiaryAttachmentPreviewActivity : DiaryBaseActivity() {
         Common.doAssertion(intent.hasExtra(EXTRA_ATTACHMENT_ID))
         val attachmentId = intent.getLongExtra(EXTRA_ATTACHMENT_ID, -1)
 
-        val statement = diaryDatabase.database.compileStatement(
-            """SELECT title, description
-FROM diary_attachment
-WHERE id IS ?"""
-        )
-        statement.bind(1, attachmentId)
-        val cursor = statement.cursor
-        Common.doAssertion(cursor.step())
-        val title = cursor.getText(0)
-        val description = cursor.getText(1)
-        statement.release()
+        val attachment = diaryDatabase.queryAttachment(attachmentId)
 
-        titleTV.text = getString(R.string.diary_attachment_preview_activity_title_is, title)
-        descriptionTV.text = getString(R.string.diary_attachment_preview_activity_description_is, description)
-
-        val statement2 = diaryDatabase.database.compileStatement(
-            """SELECT identifier
-FROM diary_attachment_file_reference
-WHERE attachment_id IS ?""",
-            arrayOf(attachmentId)
+        titleTV.text =
+            getString(R.string.diary_attachment_preview_activity_title_is, attachment.title)
+        descriptionTV.text = getString(
+            R.string.diary_attachment_preview_activity_description_is,
+            attachment.description
         )
-        val cursor2 = statement2.cursor
-        while (cursor2.step()) {
-            val identifier = cursor2.getText(0)
-            val filePreviewView = FileLibraryFragment.getFilePreviewView(this, diaryDatabase, identifier)
+
+        // TODO: use RecyclerView
+        val attachmentFiles = diaryDatabase.queryAttachmentFiles(attachmentId)
+        for (fileInfo in attachmentFiles) {
+            val content = if (fileInfo.storageType == StorageType.TEXT) {
+                // TODO: lazily query text attachments
+                diaryDatabase.queryTextAttachment(fileInfo.identifier)
+            } else {
+                null
+            }
+            val filePreviewView = FileLibraryFragment.getFilePreviewView(this, fileInfo, content)
             filePreviewView.setOnClickListener {
                 val startIntent = Intent(this, FileLibraryFileDetailActivity::class.java)
-                startIntent.putExtra(FileLibraryFileDetailActivity.EXTRA_IDENTIFIER, identifier)
+                startIntent.putExtra(FileLibraryFileDetailActivity.EXTRA_IDENTIFIER, fileInfo.identifier)
                 startActivity(startIntent)
             }
             fileListLL.addView(filePreviewView)
         }
-        statement2.release()
     }
 
     companion object {

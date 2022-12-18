@@ -20,7 +20,7 @@ class TextBrowserActivity : DiaryBaseActivity() {
             return
         }
         val identifier = intent.getStringExtra(EXTRA_IDENTIFIER)!!
-        val content = FileLibraryFragment.getTextContent(diaryDatabase, identifier)
+        val content = diaryDatabase.queryTextAttachment(identifier)
 
         setContentView(ScrollView(this).apply {
             addView(TextView(this@TextBrowserActivity).apply {

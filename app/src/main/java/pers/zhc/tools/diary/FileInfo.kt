@@ -6,14 +6,14 @@ import android.os.Parcelable
 class FileInfo(
     val filename: String?,
     val additionTimestamp: Long,
-    val storageTypeEnumInt: Int,
+    val storageType: StorageType,
     val description: String,
     val identifier: String
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readLong(),
-        parcel.readInt(),
+        StorageType.from(parcel.readInt()),
         parcel.readString()!!,
         parcel.readString()!!
     )
@@ -26,7 +26,7 @@ class FileInfo(
         dest.apply {
             writeString(filename)
             writeLong(additionTimestamp)
-            writeInt(storageTypeEnumInt)
+            writeInt(storageType.enumInt)
             writeString(description)
             writeString(identifier)
         }
