@@ -2,6 +2,7 @@ package pers.zhc.tools.tasknotes
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.WindowManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.TaskNotesRecordTakingPromptDialogBinding
@@ -44,5 +45,12 @@ object Dialog {
                 onFinished(null)
             }
             .show()
+            .also {
+                val window = it.window
+                window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+                window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            }
+
+        bindings.descriptionEt.requestFocus()
     }
 }
