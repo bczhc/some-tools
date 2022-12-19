@@ -30,7 +30,7 @@ import java.io.File;
 public class FilePicker extends BaseActivity {
     public static final int PICK_FILE = 1;
     public static final int PICK_FOLDER = 2;
-    public static final int RESULT_CODE = 3;
+    public static final int RESULT_CODE = 0;
     private FilePickerRL filePickerRL;
 
     public static final String EXTRA_OPTION = "option";
@@ -68,11 +68,6 @@ public class FilePicker extends BaseActivity {
                 , intent.getIntExtra(EXTRA_OPTION, PICK_FILE)
                 , new File(initialPath)
                 , p -> {
-
-            Intent r = new Intent();
-            r.putExtra(EXTRA_RESULT, (String) null);
-            if (enableEditText) r.putExtra(EXTRA_FILENAME_RESULT, filePickerRL.getFilenameText());
-            setResult(RESULT_CODE, r);
             finish();
             overridePendingTransition(0, R.anim.fade_out);
 

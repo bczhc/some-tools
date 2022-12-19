@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import kotlinx.android.synthetic.main.diary_stat_dialog.view.*
 import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.SQLite3
-import pers.zhc.tools.BaseActivity.RequestCode
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryItemViewBinding
 import pers.zhc.tools.diary.*
@@ -81,6 +80,14 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
         ) { result ->
             result ?: return@registerForActivityResult
             exportDiary(File(result.path))
+        }
+        val openDiaryPreview = registerForActivityResult(DiaryContentPreviewActivity.ActivityContract()) { date ->
+            // in DiaryContentPreviewActivity, use "edit" menu can edit the diary, so
+            // here must do a list item updating
+            val position = diaryItemDataList.indexOfFirst { it.dateInt == date.dateInt }
+            androidAssert(position != -1)
+            diaryItemDataList[position].content = diaryDatabase.queryDiaryContent(date.dateInt)
+            recyclerViewAdapter.notifyItemChanged(position)
         }
     }
 
@@ -236,11 +243,12 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun openDiaryPreview(dateInt: Int) {
-        val intent = Intent(requireContext(), DiaryContentPreviewActivity::class.java).apply {
-            putExtra(DiaryContentPreviewActivity.EXTRA_DATE_INT, dateInt)
-            searchRegex?.let { putExtra(DiaryContentPreviewActivity.EXTRA_HIGHLIGHT_REGEX, it) }
-        }
-        startActivity(intent)
+        launchers.openDiaryPreview.launch(
+            DiaryContentPreviewActivity.ActivityContract.Input(
+                dateInt,
+                searchRegex
+            )
+        )
     }
 
     private fun refreshItemDataList(
@@ -303,6 +311,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         DATE, RANDOM
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun reorderDiary(order: Order) {
         when (order) {
             Order.DATE -> {

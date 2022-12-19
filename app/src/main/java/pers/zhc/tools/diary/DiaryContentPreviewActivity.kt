@@ -15,11 +15,13 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContract
 import kotlinx.android.synthetic.main.diary_content_preview_activity.*
 import kotlinx.android.synthetic.main.diary_record_stat_dialog.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.DisplayUtil
+import pers.zhc.tools.utils.getIntExtraOrNull
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -151,6 +153,25 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
                 })
                 DialogUtils.setDialogAttr(this, width = MATCH_PARENT)
             }
+        }
+    }
+
+    class ActivityContract: ActivityResultContract<ActivityContract.Input, MyDate>() {
+        class Input(
+            val dateInt: Int,
+            val highlightPattern: Regex?
+        )
+
+        override fun createIntent(context: Context, input: Input): Intent {
+            return Intent(context, DiaryContentPreviewActivity::class.java).apply {
+                putExtra(EXTRA_DATE_INT, input.dateInt)
+                input.highlightPattern?.let { putExtra(EXTRA_HIGHLIGHT_REGEX, it) }
+            }
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): MyDate {
+            intent!!
+            return MyDate(intent.getIntExtraOrNull(EXTRA_DATE_INT)!!)
         }
     }
 }
