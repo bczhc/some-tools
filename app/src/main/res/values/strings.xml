@@ -511,6 +511,7 @@
     <string name="diary_menu_sort">排序</string>
     <string name="diary_sort_random">@string/diary_menu_random</string>
     <string name="diary_sort_date">日期</string>
+    <string name="diary_attachment_has_reference_alert_msg">存在附件引用，无法删除</string>
     <!-- module end -->
 
     <!-- module: bus -->

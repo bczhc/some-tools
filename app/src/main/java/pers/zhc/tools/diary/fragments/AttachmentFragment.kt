@@ -125,13 +125,16 @@ class AttachmentFragment(
                 when (it.itemId) {
                     R.id.delete_btn -> {
                         DialogUtil.createConfirmationAlertDialog(context, { _, _ ->
-                            // TODO check for the existence of diary attachment in diary table... (???)
                             if (fromDiary) {
                                 // delete from diary attached attachment records
-                                Common.doAssertion(dateInt != -1)
+                                androidAssert(dateInt != -1)
                                 diaryDatabase.deleteAttachmentFromDiary(dateInt, id)
                             } else {
                                 // delete from the attachment library
+                                if (diaryDatabase.checkIfAttachmentUsedInDiary(id)) {
+                                    ToastUtils.show(requireContext(), R.string.diary_attachment_has_reference_alert_msg)
+                                    return@createConfirmationAlertDialog
+                                }
                                 diaryDatabase.deleteAttachment(id)
                             }
                             itemDataList.removeAt(position)

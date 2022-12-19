@@ -325,6 +325,13 @@ WHERE diary_attachment_file.identifier IS ?
         )
     }
 
+    fun checkIfAttachmentUsedInDiary(attachmentId: Long): Boolean {
+        return database.hasRecord(
+            "SELECT * FROM diary_attachment_mapping WHERE referred_attachment_id IS ?",
+            arrayOf(attachmentId)
+        )
+    }
+
     fun deleteTextAttachment(identifier: String) {
         val fileInfo = queryAttachmentFile(identifier)!!
         if (fileInfo.storageType != StorageType.TEXT) {
