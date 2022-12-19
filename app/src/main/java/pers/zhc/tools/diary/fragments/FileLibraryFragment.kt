@@ -17,10 +17,7 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.diary.FileLibraryActivity.Companion.EXTRA_PICKED_FILE_IDENTIFIER
-import pers.zhc.tools.utils.AdapterWithClickListener
-import pers.zhc.tools.utils.DialogUtil
-import pers.zhc.tools.utils.PopupMenuUtil
-import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.*
 import java.io.File
 import java.util.*
 
@@ -107,7 +104,7 @@ class FileLibraryFragment(
             pm.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.delete_btn -> {
-                        showDeleteDialog(fileInfo.identifier, fileInfo.storageType.enumInt, position)
+                        showDeleteDialog(fileInfo.identifier, fileInfo.storageType, position)
                     }
 
                     else -> {
@@ -216,26 +213,26 @@ class FileLibraryFragment(
         }
     }
 
-    private fun showDeleteDialog(identifier: String, storageType: Int, position: Int) {
+    private fun showDeleteDialog(identifier: String, storageType: StorageType, position: Int) {
         DialogUtil.createConfirmationAlertDialog(context, { _, _ ->
             if (diaryDatabase.checkIfFileUsedInAttachments(identifier)) {
-                // alert
                 ToastUtils.show(context, R.string.diary_file_library_has_file_reference_alert_msg)
                 return@createConfirmationAlertDialog
-            } else {
-                // delete
-                if (storageType == StorageType.TEXT.enumInt) {
+            }
+
+            when (storageType) {
+                StorageType.TEXT -> {
                     diaryDatabase.deleteTextAttachment(identifier)
                 }
-                diaryDatabase.deleteAttachmentFile(identifier)
-                val fileStoragePath = diaryDatabase.queryExtraInfo()!!.diaryAttachmentFileLibraryStoragePath!!
-                if (!File(fileStoragePath, identifier).delete()) {
-                    ToastUtils.show(context, R.string.deleting_failed)
+                else -> {
+                    // file
+                    diaryDatabase.deleteAttachmentFile(identifier)
+                    val fileStoragePath = diaryDatabase.queryExtraInfo()!!.diaryAttachmentFileLibraryStoragePath!!
+                    File(fileStoragePath, identifier).requireDelete()
                 }
-
-                itemDataList.removeAt(position)
-                recyclerViewAdapter.notifyItemRemoved(position)
             }
+            itemDataList.removeAt(position)
+            recyclerViewAdapter.notifyItemRemoved(position)
         }, R.string.whether_to_delete).show()
     }
 

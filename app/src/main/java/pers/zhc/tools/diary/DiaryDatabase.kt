@@ -332,8 +332,8 @@ WHERE diary_attachment_file.identifier IS ?
         }
         // TODO: check if the file to delete has presences in attachments
         // and if so, here now it's excepted to throw an SQL foreign key constraint error
-        database.execBind("DELETE FROM diary_attachment_file WHERE identifier IS ?", arrayOf(identifier))
         database.execBind("DELETE FROM diary_attachment_text WHERE identifier IS ?", arrayOf(identifier))
+        database.execBind("DELETE FROM diary_attachment_file WHERE identifier IS ?", arrayOf(identifier))
     }
 
     fun deleteAttachmentFile(identifier: String) {
