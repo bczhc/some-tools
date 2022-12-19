@@ -8,9 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -152,9 +150,14 @@ class TaskNotesMainActivity : BaseActivity() {
         }
     }
 
-    private fun queryAndSetListItems() {
+    private fun queryAndSetListItems(today: Boolean = true) {
         listItems.clear()
-        listItems.addAll(database.queryAll())
+        val records = database.queryAll().filter {
+            if (today) {
+                isToday(it.creationTime)
+            } else true
+        }
+        listItems.addAll(records)
     }
 
     private fun showDeleteRecordDialog(record: Record) {
@@ -196,6 +199,48 @@ class TaskNotesMainActivity : BaseActivity() {
     override fun finish() {
         unregisterReceiver(onRecordAddedReceiver)
         super.finish()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.task_notes_main, menu)
+        return true
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.show_today -> {
+                item.isChecked = true
+                queryAndSetListItems()
+                listAdapter.notifyDataSetChanged()
+            }
+
+            R.id.show_all -> {
+                item.isChecked = true
+                queryAndSetListItems(today = false)
+                listAdapter.notifyDataSetChanged()
+            }
+
+            else -> {}
+        }
+        return true
+    }
+
+    private fun isToday(timestamp: Long): Boolean {
+        val year: Int
+        val day: Int
+        val calendar = Calendar.getInstance()
+        calendar.apply { time = Date() }.let {
+            year = it.get(Calendar.YEAR)
+            day = it.get(Calendar.DAY_OF_YEAR)
+        }
+
+        calendar.apply {
+            clear()
+            time = Date(timestamp)
+        }.let {
+            return it.get(Calendar.YEAR) == year && it.get(Calendar.DAY_OF_YEAR) == day
+        }
     }
 
     private class ListAdapter(private val context: Context, private val records: Records) :

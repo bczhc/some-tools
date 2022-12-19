@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:title="@string/task_notes_item_show_type_menu"
+            app:showAsAction="never"
+    >
+        <menu>
+            <group android:checkableBehavior="single"
+                   android:id="@+id/show_type"
+            >
+                <item android:title="@string/task_notes_item_show_today"
+                      android:id="@+id/show_today"
+                      android:checked="true"
+                />
+                <item android:title="@string/task_notes_item_show_all"
+                      android:id="@+id/show_all"
+                />
+            </group>
+        </menu>
+    </item>
+</menu>
