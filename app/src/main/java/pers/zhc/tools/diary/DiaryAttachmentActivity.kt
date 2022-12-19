@@ -42,11 +42,6 @@ class DiaryAttachmentActivity : DiaryBaseActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        return false
-    }
-
     companion object {
         /**
          * intent long extra

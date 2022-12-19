@@ -30,11 +30,6 @@ class FileLibraryActivity : DiaryBaseActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        return false
-    }
-
     companion object {
         /**
          * intent boolean extra

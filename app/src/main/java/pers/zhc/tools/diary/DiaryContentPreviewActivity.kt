@@ -113,7 +113,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
             else -> {
             }
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
     override fun finish() {
