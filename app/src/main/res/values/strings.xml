@@ -770,5 +770,7 @@
     <string name="task_notes_change_time_button">修改时间</string>
     <string name="task_notes_modify_menu">修改</string>
     <string name="task_notes_add_task_record_notification_title">记录任务</string>
+    <string name="diary_pick_random_diary_button">随机一篇</string>
+    <string name="diary_no_diary_toast">没有日记</string>
     <!-- end -->
 </resources>

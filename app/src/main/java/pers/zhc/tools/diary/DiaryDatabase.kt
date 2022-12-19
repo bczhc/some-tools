@@ -353,6 +353,12 @@ WHERE diary_attachment_file.identifier IS ?
         }
     }
 
+    fun pickRandomDiary(): Int? {
+        return database.queryOne("SELECT \"date\" FROM diary ORDER BY random() LIMIT 1") {
+            it.getInt(0)
+        }
+    }
+
     fun hasDiary(dateInt: Int): Boolean {
         return database.hasRecord("SELECT \"date\" FROM diary WHERE \"date\" IS ?", arrayOf(dateInt))
     }

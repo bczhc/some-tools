@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.diary_advenced_search_dialog.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
@@ -25,6 +27,7 @@ import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryItemViewBinding
+import pers.zhc.tools.databinding.DiaryPickingRandomDiaryDialogBinding
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.utils.*
@@ -198,7 +201,7 @@ WHERE instr(lower("date"), lower(?)) > 0
             dateET,
             R.string.enter_new_date,
             MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+            WRAP_CONTENT,
             false
         )
         dialog.show()
@@ -296,33 +299,35 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
                 showAdvancedSearchDialog()
             }
 
-            R.id.sort_date -> {
-                reorderDiary(Order.DATE)
-            }
-
-            R.id.sort_random -> {
-                reorderDiary(Order.RANDOM)
+            R.id.random -> {
+                showPickingRandomDiaryDialog()
             }
         }
         return true
     }
 
-    private enum class Order {
-        DATE, RANDOM
-    }
+    private fun showPickingRandomDiaryDialog() {
+        val context = requireContext()
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun reorderDiary(order: Order) {
-        when (order) {
-            Order.DATE -> {
-                refreshItemDataList()
+        val bindings = DiaryPickingRandomDiaryDialogBinding.inflate(LayoutInflater.from(context))
+        bindings.root.setOnClickListener {
+            val randomDateInt = diaryDatabase.pickRandomDiary() ?: run {
+                ToastUtils.show(context, R.string.diary_no_diary_toast)
+                return@setOnClickListener
             }
-
-            Order.RANDOM -> {
-                refreshItemDataList("SELECT \"date\", content FROM diary ORDER BY random()")
-            }
+            openDiaryPreview(randomDateInt)
         }
-        recyclerViewAdapter.notifyDataSetChanged()
+
+        Dialog(context).apply {
+            setCancelable(true)
+            setContentView(bindings.root)
+            DialogUtils.setDialogAttr(
+                this,
+                isTransparent = true,
+                width = WRAP_CONTENT,
+                height = WRAP_CONTENT,
+            )
+        }.show()
     }
 
     private fun showAdvancedSearchDialog() {
@@ -434,7 +439,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             dialog,
             false,
             MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+            WRAP_CONTENT,
             false
         )
         dialog.show()

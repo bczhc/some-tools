@@ -30,19 +30,8 @@
             android:title="@string/diary_advanced_search_menu"
     />
     <item
-            android:id="@+id/sort"
+            android:id="@+id/random"
             app:showAsAction="never"
-            android:title="@string/diary_menu_sort"
-    >
-        <menu>
-            <item
-                    android:id="@+id/sort_date"
-                    android:title="@string/diary_sort_date"
-            />
-            <item
-                    android:id="@+id/sort_random"
-                    android:title="@string/diary_sort_random"
-            />
-        </menu>
-    </item>
+            android:title="@string/diary_menu_random"
+    />
 </menu>
