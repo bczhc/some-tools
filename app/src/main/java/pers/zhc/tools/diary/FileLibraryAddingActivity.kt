@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -16,6 +17,8 @@ import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_fi
 import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_text_mode.*
 import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_text_mode.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryFileLibraryAddingFileActivityFileModeBinding
+import pers.zhc.tools.databinding.DiaryFileLibraryAddingFileActivityTextModeBinding
 import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.FileUtil
@@ -211,18 +214,20 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
     }
 
     private fun changeTopView(storageType: StorageType) {
+        val layoutInflater = LayoutInflater.from(this)
+
         val view = if (storageType == StorageType.TEXT) {
-            View.inflate(this, R.layout.diary_file_library_adding_file_activity_text_mode, null).also {
-                enter_text_btn.setOnClickListener {
+            DiaryFileLibraryAddingFileActivityTextModeBinding.inflate(layoutInflater).also {
+                it.enterTextBtn.setOnClickListener {
                     launchers.editTextAttachment.launch(this.text)
                 }
-            }
+            }.root
         } else {
-            View.inflate(this, R.layout.diary_file_library_adding_file_activity_file_mode, null).also {
-                pick_file_btn.setOnClickListener {
+            DiaryFileLibraryAddingFileActivityFileModeBinding.inflate(layoutInflater).also {
+                it.pickFileBtn.setOnClickListener {
                     launchers.pickFile.launch(Unit)
                 }
-            }
+            }.root
         }
         topDynamicLL.removeAllViews()
         topDynamicLL.addView(view)
