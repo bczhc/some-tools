@@ -817,7 +817,9 @@
                 android:theme="@style/Theme.Transparent"
                 android:label="@string/task_notes_label"
                 android:taskAffinity="pers.zhc.tools.tasknotes"
-                android:exported="true">
+                android:exported="true"
+                android:excludeFromRecents="true"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
