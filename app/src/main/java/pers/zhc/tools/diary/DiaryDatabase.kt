@@ -3,8 +3,8 @@ package pers.zhc.tools.diary
 import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.Cursor
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.jni.sqlite.Statement
 import pers.zhc.tools.MyApplication
-import pers.zhc.tools.diary.fragments.DiaryFragment
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.rc.Ref
 import pers.zhc.tools.utils.rc.ReusableRcManager
@@ -15,8 +15,7 @@ import pers.zhc.tools.utils.rc.ReusableRcManager
  */
 class DiaryDatabase(path: String) {
     val database = SQLite3.open(path)
-    private val updateDiaryContentStatement =
-        database.compileStatement("UPDATE diary SET content = ? WHERE \"date\" IS ?")
+    private val updateDiaryContentStatement: Statement
 
     init {
         @Language("SQLite") val statements =
@@ -83,6 +82,7 @@ CREATE TABLE IF NOT EXISTS diary_attachment_mapping
         statements.forEach {
             database.exec(it)
         }
+        updateDiaryContentStatement = database.compileStatement("UPDATE diary SET content = ? WHERE \"date\" IS ?")
     }
 
     fun getCharsCount(dateInt: Int): Int {
