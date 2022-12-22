@@ -1,10 +1,7 @@
 package pers.zhc.tools.utils
 
 import org.intellij.lang.annotations.Language
-import pers.zhc.jni.sqlite.Cursor
-import pers.zhc.jni.sqlite.Rows
-import pers.zhc.jni.sqlite.SQLite3
-import pers.zhc.jni.sqlite.Statement
+import pers.zhc.jni.sqlite.*
 import pers.zhc.util.Assertion
 import kotlin.reflect.KClass
 
@@ -108,4 +105,8 @@ fun <T> SQLite3.queryMap(
     val statement = this.compileStatement(sql, binds)
     val rows = statement.queryRows(mapRow)
     return SQLiteRows(rows, statement)
+}
+
+fun SQLite3.getTables(): List<String> {
+    return this.querySchema().filter { it.type == Schema.Type.TABLE }.map { it.tableName }
 }

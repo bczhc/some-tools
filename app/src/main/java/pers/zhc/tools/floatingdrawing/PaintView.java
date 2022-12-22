@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
+import pers.zhc.jni.sqlite.Schema;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.R;
 import pers.zhc.tools.fdb.*;
@@ -849,17 +850,6 @@ public class PaintView extends View {
         onTouchAction(motionAction, importTmpPoint.x, importTmpPoint.y);
     }
 
-    private @NotNull ArrayList<String> getDatabaseTables(@NotNull SQLite3 db) {
-        ArrayList<String> list = new ArrayList<>();
-        final Statement statement = db.compileStatement("SELECT tbl_name FROM sqlite_master");
-        final Cursor cursor = statement.getCursor();
-        while (cursor.step()) {
-            list.add(cursor.getText(0));
-        }
-        statement.release();
-        return list;
-    }
-
     private void setupExtraConfig(ExtraInfo extraInfo) {
         // TODO: 8/16/21
     }
@@ -892,7 +882,7 @@ public class PaintView extends View {
 
         dontDrawWhileImporting = speedDelayMillis == 0;
 
-        final ArrayList<String> tables = getDatabaseTables(db);
+        final List<String> tables = SQLite3UtilsKt.getTables(db);
         for (String table : tables) {
             if (table.matches("^path_layer_[0-9]+$")) {
                 final long layerId = Long.parseLong(RegexUtilsKt.capture(table, "^path_layer_([0-9]+)$").get(0).get(1));
