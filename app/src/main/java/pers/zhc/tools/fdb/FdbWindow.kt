@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
 import android.view.View
@@ -55,6 +56,7 @@ import kotlin.math.pow
  * @author bczhc
  */
 class FdbWindow(activity: FdbMainActivity) {
+    private val TAG = javaClass.name
     private val context = activity as Context
     private val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
@@ -848,6 +850,8 @@ class FdbWindow(activity: FdbMainActivity) {
 
             Thread {
 
+                val stopwatch = Stopwatch.start()
+
                 try {
                     paintView.importPathFile(file, { progress ->
                         // progress callback
@@ -865,6 +869,8 @@ class FdbWindow(activity: FdbMainActivity) {
                     ToastUtils.showError(context, R.string.fdb_import_failed, e)
                     return@Thread
                 }
+
+                Log.i(TAG, "importPathFile time elapsed: ${stopwatch.stop()} ms")
 
                 Common.runOnUiThread(context) {
                     // done action

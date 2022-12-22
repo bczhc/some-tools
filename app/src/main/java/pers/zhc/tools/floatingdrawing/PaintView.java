@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.ColorInt;
@@ -21,6 +22,7 @@ import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Schema;
 import pers.zhc.jni.sqlite.Statement;
+import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
 import pers.zhc.tools.fdb.*;
 import pers.zhc.tools.jni.JNI;
@@ -39,7 +41,7 @@ import static pers.zhc.tools.utils.NullSafeHelper.getNonNull;
  * @author bczhc
  */
 @SuppressLint("ViewConstructor")
-public class PaintView extends View {
+public class PaintView extends BaseView {
 
     private int height = -1;
     private int width = -1;
@@ -323,6 +325,8 @@ public class PaintView extends View {
      * 撤销操作
      */
     public void undo() {
+        Stopwatch stopwatch = new Stopwatch();
+
         if (!undoListRef.isEmpty()) {
             layerPathSaverRef.undo();
 
@@ -337,6 +341,8 @@ public class PaintView extends View {
                 postInvalidate();
             }
         }
+
+        Log.i(TAG, "undo() time elapsed: " + stopwatch.stop() + " ms");
     }
 
     /**
