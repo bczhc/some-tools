@@ -2,6 +2,7 @@ package pers.zhc.tools.utils
 
 import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.Cursor
+import pers.zhc.jni.sqlite.Rows
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.jni.sqlite.Statement
 import pers.zhc.util.Assertion
@@ -64,24 +65,15 @@ fun Statement.execute() {
     this.step()
 }
 
-fun <T> Cursor.collectRows(f: (row: Cursor) -> T): ArrayList<T> {
-    val list = ArrayList<T>()
-    while (this.step()) {
-        list.add(f(this))
-    }
-    return list
-}
-
 fun <T> SQLite3.queryRows(
     @Language("SQLite") sql: String,
     binds: Array<Any>? = null,
     mapRow: (row: Cursor) -> T
 ): ArrayList<T> {
-    var collected: ArrayList<T>? = null
-    this.queryExec(sql, binds) {
-        collected = it.collectRows(mapRow)
-    }
-    return collected!!
+    val rows = this.queryMap(sql, binds ?: arrayOf(), mapRow)
+    val list = ArrayList<T>().also { it.addAll(rows.asSequence()) }
+    rows.release()
+    return list
 }
 
 /**
@@ -100,4 +92,20 @@ fun Statement.stepBind(binds: Array<Any>) {
     this.reset()
     this.bind(binds)
     this.step()
+}
+
+class SQLiteRows<T>(private val rows: Rows<T>, private val statement: Statement) : Iterator<T> {
+    override fun hasNext() = rows.hasNext()
+    override fun next(): T = rows.next()
+    fun release() = statement.release()
+}
+
+fun <T> SQLite3.queryMap(
+    @Language("SQLite") sql: String,
+    binds: Array<Any> = arrayOf(),
+    mapRow: (row: Cursor) -> T
+): SQLiteRows<T> {
+    val statement = this.compileStatement(sql, binds)
+    val rows = statement.queryRows(mapRow)
+    return SQLiteRows(rows, statement)
 }
