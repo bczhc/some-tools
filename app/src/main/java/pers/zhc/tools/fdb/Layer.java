@@ -3,6 +3,7 @@ package pers.zhc.tools.fdb;
 import android.graphics.*;
 import pers.zhc.tools.floatingdrawing.PaintView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -10,8 +11,8 @@ import java.util.LinkedList;
  */
 public class Layer {
     private LayerInfo layerInfo;
-    public LinkedList<PaintView.PathBean> undoList = new LinkedList<>();
-    public LinkedList<PaintView.PathBean> redoList = new LinkedList<>();
+    public ArrayList<PaintView.PathBean> undoList = new ArrayList<>();
+    public ArrayList<PaintView.PathBean> redoList = new ArrayList<>();
     public Bitmap bitmap;
 
     public Layer(int width, int height, LayerInfo layerInfo) {

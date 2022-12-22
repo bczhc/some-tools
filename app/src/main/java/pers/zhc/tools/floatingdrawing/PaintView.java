@@ -63,9 +63,9 @@ public class PaintView extends BaseView {
      */
     private float mLastX, mLastY;
     /**
-     * 使用LinkedList 模拟栈，来保存 Path
+     * 模拟栈，来保存 Path
      */
-    private LinkedList<PathBean> undoListRef, redoListRef;
+    private ArrayList<PathBean> undoListRef, redoListRef;
     private GestureResolver gestureResolver;
     private boolean dontDrawWhileImporting = false;
     private boolean lockStrokeEnabled = false;
@@ -331,7 +331,7 @@ public class PaintView extends BaseView {
             layerPathSaverRef.undo();
 
             clearPaint();//清除之前绘制内容
-            PathBean lastPb = undoListRef.removeLast();//将最后一个移除
+            PathBean lastPb = undoListRef.remove(undoListRef.size() - 1);//将最后一个移除
             redoListRef.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 headCanvas
             if (!dontDrawWhileImporting) {
@@ -352,7 +352,7 @@ public class PaintView extends BaseView {
         if (!redoListRef.isEmpty()) {
             layerPathSaverRef.redo();
 
-            PathBean pathBean = redoListRef.removeLast();
+            PathBean pathBean = redoListRef.remove(redoListRef.size() - 1);
             mCanvas.drawPath(pathBean.path, pathBean.paint);
             undoListRef.add(pathBean);
             if (!dontDrawWhileImporting) {
@@ -425,7 +425,7 @@ public class PaintView extends BaseView {
         for (int i = layerArray.size() - 1; i >= 0; i--) {
             final Layer layer = layerArray.get(i);
             if (!layer.isVisible()) continue;
-            final LinkedList<PathBean> undoList = layer.undoList;
+            final ArrayList<PathBean> undoList = layer.undoList;
 
 
             final Bitmap bitmap = drawPathsToBitmap(undoList, matrix, width, height, p -> {
