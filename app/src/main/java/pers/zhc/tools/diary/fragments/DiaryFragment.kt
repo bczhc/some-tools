@@ -18,7 +18,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.diary_advenced_search_dialog.view.*
 import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
@@ -260,7 +259,9 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     ) {
         diaryItemDataList.let {
             it.clear()
-            it.addAll(diaryDatabase.queryDiaries(sql, binds))
+            val rows = diaryDatabase.queryDiaries(sql, binds)
+            it.addAll(rows.asSequence())
+            rows.release()
         }
     }
 

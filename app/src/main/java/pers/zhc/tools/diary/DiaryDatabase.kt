@@ -347,8 +347,8 @@ WHERE diary_attachment_file.identifier IS ?
         database.execBind("DELETE FROM diary_attachment_file WHERE identifier IS ?", arrayOf(identifier))
     }
 
-    fun queryDiaries(@Language("SQLite") sql: String, binds: Array<Any>? = null): ArrayList<Diary> {
-        return database.queryRows(sql, binds) {
+    fun queryDiaries(@Language("SQLite") sql: String, binds: Array<Any>? = null): SQLiteRows<Diary> {
+        return database.queryMap(sql, binds ?: arrayOf()) {
             Diary(it.getInt(0), it.getText(1))
         }
     }
