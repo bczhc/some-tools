@@ -1131,7 +1131,7 @@ class FdbWindow(activity: FdbMainActivity) {
             }
 
 
-        if (ScreenColorPickerMainActivity.serviceRunning) {
+        if (ScreenColorPickerDemoActivity.serviceRunning) {
             // service is already running, so this means the `MediaProjection` can be reused
             // just send the color picker view request broadcast
             sendStartPickerViewRequest()

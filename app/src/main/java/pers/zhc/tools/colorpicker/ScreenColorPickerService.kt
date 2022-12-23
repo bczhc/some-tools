@@ -38,13 +38,13 @@ class ScreenColorPickerService : BaseService() {
             })
         }
 
-        ScreenColorPickerMainActivity.serviceRunning = true
+        ScreenColorPickerDemoActivity.serviceRunning = true
     }
 
     override fun onDestroy() {
         applicationContext.unregisterReceiver(receivers.colorPickerOperation)
         mediaProjection!!.stop()
-        ScreenColorPickerMainActivity.serviceRunning = false
+        ScreenColorPickerDemoActivity.serviceRunning = false
     }
 
     private fun buildForegroundNotification(): Notification {

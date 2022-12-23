@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.tools_activity_main.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.colorpicker.ScreenColorPickerDemoActivity
 import pers.zhc.tools.test.*
 import pers.zhc.tools.test.malloctest.MAllocTest
 import pers.zhc.tools.test.signals.SignalTest
@@ -27,7 +28,8 @@ class TestListActivity : BaseActivity() {
             ActivityItem(R.string.m_alloc_test, MAllocTest::class.java),
             ActivityItem(R.string.tts_test, TTS::class.java),
             ActivityItem(R.string.drawing_board_test, DrawingBoardTest::class.java),
-            ActivityItem(R.string.signal_test_label, SignalTest::class.java)
+            ActivityItem(R.string.signal_test_label, SignalTest::class.java),
+            ActivityItem(R.string.screen_color_picker_label, ScreenColorPickerDemoActivity::class.java),
         )
 
         recyclerView.adapter = AppMenuAdapter(this, list)

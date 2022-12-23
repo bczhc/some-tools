@@ -779,7 +779,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".colorpicker.ScreenColorPickerMainActivity"
+                android:name=".colorpicker.ScreenColorPickerDemoActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.M3Application"
                 android:label="@string/screen_color_picker_label"

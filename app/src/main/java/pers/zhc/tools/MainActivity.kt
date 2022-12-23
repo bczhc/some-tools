@@ -23,7 +23,7 @@ import pers.zhc.tools.app.AppMenuAdapter
 import pers.zhc.tools.app.SmallToolsListActivity
 import pers.zhc.tools.app.TestListActivity
 import pers.zhc.tools.bus.BusQueryMainActivity
-import pers.zhc.tools.colorpicker.ScreenColorPickerMainActivity
+import pers.zhc.tools.colorpicker.ScreenColorPickerDemoActivity
 import pers.zhc.tools.databinding.GitLogViewBinding
 import pers.zhc.tools.databinding.ToolsActivityMainBinding
 import pers.zhc.tools.diary.DiaryMainActivity
@@ -73,7 +73,7 @@ class MainActivity : BaseActivity() {
             ActivityItem(R.string.transfer_label, TransferMainActivity::class.java),
             ActivityItem(R.string.email_label, EmailMainActivity::class.java),
             ActivityItem(R.string.fourier_series_label, FourierSeriesActivity::class.java),
-            ActivityItem(R.string.screen_color_picker_label, ScreenColorPickerMainActivity::class.java),
+            ActivityItem(R.string.screen_color_picker_label, ScreenColorPickerDemoActivity::class.java),
             ActivityItem(R.string.task_notes_label, TaskNotesMainActivity::class.java),
         )
     }

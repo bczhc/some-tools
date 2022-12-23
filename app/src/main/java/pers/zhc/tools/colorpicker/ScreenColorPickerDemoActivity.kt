@@ -7,8 +7,8 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.databinding.ColorPickerMainBinding
 import pers.zhc.tools.utils.ToastUtils
 
-class ScreenColorPickerMainActivity : BaseActivity() {
-    lateinit var resultReceiver: ScreenColorPickerResultReceiver
+class ScreenColorPickerDemoActivity : BaseActivity() {
+    private lateinit var resultReceiver: ScreenColorPickerResultReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
