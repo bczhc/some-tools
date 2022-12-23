@@ -781,5 +781,6 @@
     <string name="task_notes_item_show_all">全部</string>
     <string name="fourier_series_menu_export_epicycles_data">导出本轮数据</string>
     <string name="fourier_series_menu_import_epicycles_data">导入本轮数据</string>
+    <string name="audio_player_failed_to_play_audio_toast">无法播放音频</string>
     <!-- end -->
 </resources>

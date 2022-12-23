@@ -10,6 +10,7 @@ import androidx.annotation.StringRes
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.AudioPlayerActivityBinding
+import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.androidAssert
 import pers.zhc.tools.utils.unreachable
 import java.io.File
@@ -18,7 +19,7 @@ import java.util.TimerTask
 
 class AudioPlayerActivity : BaseActivity() {
     private var stopProgressUpdater: (() -> Unit)? = null
-    private lateinit var stopMediaPlayer: () -> Unit
+    private var stopMediaPlayer: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +34,10 @@ class AudioPlayerActivity : BaseActivity() {
         }
 
         val mp = MediaPlayer.create(this, Uri.fromFile(File(path))).also {
+            if (it == null) {
+                ToastUtils.show(this, R.string.audio_player_failed_to_play_audio_toast)
+                return
+            }
             stopMediaPlayer = { it.stop() }
         }
         val duration = mp.duration.also { androidAssert(it != -1) }
@@ -135,7 +140,7 @@ class AudioPlayerActivity : BaseActivity() {
 
     override fun finish() {
         stopProgressUpdater?.invoke()
-        stopMediaPlayer()
+        stopMediaPlayer?.invoke()
         super.finish()
     }
 
