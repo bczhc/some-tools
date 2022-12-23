@@ -1,8 +1,9 @@
 package pers.zhc.tools.tasknotes
 
 import pers.zhc.tools.R
+import java.io.Serializable
 
-enum class TaskMark(val enumInt: Int) {
+enum class TaskMark(val enumInt: Int) : Serializable {
     START(0), END(1);
 
     fun getStringRes(): Int {

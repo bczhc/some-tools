@@ -1,9 +1,10 @@
 package pers.zhc.tools.tasknotes
 
+import java.io.Serializable
 import java.util.Calendar
 import java.util.Date
 
-class Time {
+class Time : Serializable {
     var minuteOfDay = 0
 
     val hour get() = minuteOfDay / 60
