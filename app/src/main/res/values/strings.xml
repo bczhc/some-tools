@@ -88,6 +88,7 @@
     <string name="hardware_acceleration">硬件加速</string>
     <string name="exit_menu">退出</string>
     <string name="modification_succeeded">修改成功</string>
+    <string name="importing_failed">导入失败</string>
     <!-- end -->
 
     <!-- old -->
@@ -775,5 +776,7 @@
     <string name="task_notes_item_show_type_menu">展示</string>
     <string name="task_notes_item_show_today">当天</string>
     <string name="task_notes_item_show_all">全部</string>
+    <string name="fourier_series_menu_export_epicycles_data">导出本轮数据</string>
+    <string name="fourier_series_menu_import_epicycles_data">导入本轮数据</string>
     <!-- end -->
 </resources>

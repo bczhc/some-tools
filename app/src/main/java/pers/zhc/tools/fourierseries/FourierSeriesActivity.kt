@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.EditText
 import androidx.annotation.StringRes
@@ -17,8 +15,10 @@ import kotlinx.android.synthetic.main.fourier_series_epicycle_item.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.FourierSeriesMainBinding
+import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.*
+import java.io.File
 import kotlin.math.abs
 
 /**
@@ -34,6 +34,42 @@ class FourierSeriesActivity : BaseActivity() {
     private lateinit var threadsNumET: EditText
     private lateinit var integralSegNumET: EditText
     private lateinit var listAdapter: ListAdapter
+    private val launchers = object {
+        val exportEpicyclesFilePicker = registerForActivityResult(
+            FilePickerActivityContract(
+                FilePickerActivityContract.FilePickerType.PICK_FOLDER,
+                true
+            )
+        ) { result ->
+            result ?: return@registerForActivityResult
+            result.filename ?: return@registerForActivityResult
+            val file = File(result.path, result.filename)
+            writeEpicyclesData(epicycleData, file)
+            ToastUtils.show(this@FourierSeriesActivity, R.string.exporting_succeeded)
+        }
+
+        @SuppressLint("NotifyDataSetChanged")
+        val importEpicyclesFilePicker = registerForActivityResult(
+            FilePickerActivityContract(
+                FilePickerActivityContract.FilePickerType.PICK_FILE,
+                false
+            )
+        ) { result ->
+            result ?: return@registerForActivityResult
+            val parsed = try {
+                parseEpicyclesData(File(result.path))
+            } catch (e: Exception) {
+                ToastUtils.showError(this@FourierSeriesActivity, R.string.importing_failed, e)
+                return@registerForActivityResult
+            }
+            epicycleData.apply {
+                clear()
+                addAll(parsed)
+            }
+            listAdapter.notifyDataSetChanged()
+            ToastUtils.show(this@FourierSeriesActivity, R.string.importing_succeeded)
+        }
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,15 +136,18 @@ class FourierSeriesActivity : BaseActivity() {
                                 radius1 < radius2 -> {
                                     -1
                                 }
+
                                 radius1 == radius2 -> {
                                     0
                                 }
+
                                 else -> {
                                     1
                                 }
                             }
                         }
                     }
+
                     R.id.radius_descent -> {
                         Comparator { o1, o2 ->
                             val radius1 = o1.radius()
@@ -117,15 +156,18 @@ class FourierSeriesActivity : BaseActivity() {
                                 radius1 < radius2 -> {
                                     1
                                 }
+
                                 radius1 == radius2 -> {
                                     0
                                 }
+
                                 else -> {
                                     -1
                                 }
                             }
                         }
                     }
+
                     R.id.speed_ascent -> {
                         Comparator { o1, o2 ->
                             val speed1 = abs(o1.p)
@@ -134,15 +176,18 @@ class FourierSeriesActivity : BaseActivity() {
                                 speed1 < speed2 -> {
                                     -1
                                 }
+
                                 speed1 == speed2 -> {
                                     0
                                 }
+
                                 else -> {
                                     1
                                 }
                             }
                         }
                     }
+
                     R.id.speed_descent -> {
                         Comparator { o1, o2 ->
                             val speed1 = abs(o1.p)
@@ -151,15 +196,18 @@ class FourierSeriesActivity : BaseActivity() {
                                 speed1 < speed2 -> {
                                     1
                                 }
+
                                 speed1 == speed2 -> {
                                     0
                                 }
+
                                 else -> {
                                     -1
                                 }
                             }
                         }
                     }
+
                     else -> {
                         unreachable()
                     }
@@ -249,6 +297,24 @@ class FourierSeriesActivity : BaseActivity() {
         }.start()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.fourier_series_activity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.import_ -> {
+                launchers.importEpicyclesFilePicker.launch(Unit)
+            }
+
+            R.id.export -> {
+                launchers.exportEpicyclesFilePicker.launch(Unit)
+            }
+        }
+        return true
+    }
+
     class ListAdapter(private val context: Context, private val epicycleData: Epicycles) :
         RecyclerView.Adapter<ListAdapter.Holder>() {
         class Holder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -267,6 +333,31 @@ class FourierSeriesActivity : BaseActivity() {
         override fun getItemCount(): Int {
             return epicycleData.size
         }
+    }
+
+    fun parseEpicyclesData(file: File): List<Epicycle> {
+        val reader = file.bufferedReader()
+        val epicycles = reader.lineSequence().map { line ->
+            // n p a_n.re a_n.im
+            val split = line.split(Regex("\\s")).filter { it.isNotEmpty() }
+            Epicycle(
+                n = split[0].toInt(),
+                p = split[1].toDouble(),
+                an = ComplexValue(split[2].toDouble(), split[3].toDouble())
+            )
+        }.toList()
+        reader.close()
+        return epicycles
+    }
+
+    fun writeEpicyclesData(epicycles: Epicycles, file: File) {
+        val writer = file.bufferedWriter()
+        for (epicycle in epicycles) {
+            // n p a_n.re a_n.im
+            val line = "${epicycle.n} ${epicycle.p} ${epicycle.an.re} ${epicycle.an.im}"
+            writer.appendLine(line)
+        }
+        writer.close()
     }
 
     companion object {
