@@ -8,7 +8,6 @@ import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.EditText
 import androidx.annotation.StringRes
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import kotlinx.android.synthetic.main.fourier_series_epicycle_item.view.*
@@ -93,8 +92,11 @@ class FourierSeriesActivity : BaseActivity() {
         configSpinner()
 
         listAdapter = ListAdapter(this, epicycleData)
-        recyclerView.adapter = listAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.apply {
+            adapter = listAdapter
+            setLinearLayoutManager()
+            setUpFastScroll(this@FourierSeriesActivity)
+        }
 
         // set the default values
         @Suppress("SetTextI18n")
