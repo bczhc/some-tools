@@ -6,7 +6,14 @@
         android:orientation="vertical"
         android:gravity="center_vertical"
         android:paddingHorizontal="5dp"
+        xmlns:tools="http://schemas.android.com/tools"
 >
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              tools:text="00:01:12/00:05:00"
+              android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+              android:id="@+id/progress_tv"
+    />
     <SeekBar
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:id="@+id/seek_bar"

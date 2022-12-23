@@ -26,6 +26,7 @@ class AudioPlayerActivity : BaseActivity() {
         setContentView(bindings.root)
         val controlButton = bindings.controlButton
         val seekBar = bindings.seekBar
+        val progressTV = bindings.progressTv
 
         val path = intent.getStringExtra(EXTRA_FILE_PATH) ?: run {
             throw RuntimeException("No path provided")
@@ -36,14 +37,23 @@ class AudioPlayerActivity : BaseActivity() {
         }
         val duration = mp.duration.also { androidAssert(it != -1) }
 
+        val updateSeekText = {
+            val currentPosition = mp.currentPosition
+            seekBar.progress =
+                (currentPosition.toDouble() / duration.toDouble() * SEEK_BAR_MAX_PROGRESS.toDouble()).toInt()
+            progressTV.text = formatSeekText(currentPosition, duration)
+        }
+        val seekAndUpdateMsg = { position: Int ->
+            mp.seekTo(position)
+            updateSeekText()
+        }
+        updateSeekText()
+
         val startProgressUpdater = {
             val timer = Timer()
             timer.schedule(object : TimerTask() {
                 override fun run() {
-                    runOnUiThread {
-                        seekBar.progress =
-                            (mp.currentPosition.toDouble() / duration.toDouble() * SEEK_BAR_MAX_PROGRESS.toDouble()).toInt()
-                    }
+                    runOnUiThread { updateSeekText() }
                 }
             }, 0, 10)
             stopProgressUpdater = {
@@ -61,7 +71,7 @@ class AudioPlayerActivity : BaseActivity() {
                     // if we don't do this, the media player will play 0s (also, immediately)
                     // and then turn into paused state
                     if (seekBar.progress == SEEK_BAR_MAX_PROGRESS) {
-                        mp.seekTo(0)
+                        seekAndUpdateMsg(0)
                     }
                     mp.start()
                     startProgressUpdater()
@@ -79,7 +89,7 @@ class AudioPlayerActivity : BaseActivity() {
         seekBar.setOnProgressChangedListener { _, progress, fromUser ->
             if (!fromUser) return@setOnProgressChangedListener
             val seekTime = (progress.toDouble() / SEEK_BAR_MAX_PROGRESS.toDouble() * duration.toDouble()).toInt()
-            mp.seekTo(seekTime)
+            seekAndUpdateMsg(seekTime)
         }
 
         mp.setOnCompletionListener {
@@ -127,6 +137,20 @@ class AudioPlayerActivity : BaseActivity() {
         stopProgressUpdater?.invoke()
         stopMediaPlayer()
         super.finish()
+    }
+
+    private fun formatSeekText(position: Int, duration: Int): String {
+        val completeTwoDigits = { num: Int ->
+            if (num < 10) "0$num"
+            else "$num"
+        }
+        val format = { time: Int ->
+            val hours = (time / 1000) / 3600
+            val minutes = (time / 1000) / 60
+            val seconds = (time / 1000) % 60
+            "${completeTwoDigits(hours)}:${completeTwoDigits(minutes)}:${completeTwoDigits(seconds)}"
+        }
+        return "${format(position)}/${format(duration)}"
     }
 
     companion object {
