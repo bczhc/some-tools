@@ -5,6 +5,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.diary_file_library_file_detail_activity.*
 import pers.zhc.tools.R
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
+import pers.zhc.tools.filebrowser.AudioPlayerActivity
 import pers.zhc.tools.filebrowser.ImageFileBrowser
 import java.io.File
 
@@ -40,16 +41,22 @@ class FileLibraryFileDetailActivity : DiaryBaseActivity() {
                         putExtra(TextBrowserActivity.EXTRA_IDENTIFIER, fileInfo.identifier)
                     })
                 }
+
                 StorageType.IMAGE -> {
-                    val filePath = File(
-                        fileStoragePath, fileInfo.identifier
-                    ).path
+                    val filePath = File(fileStoragePath, fileInfo.identifier).path
 
                     startActivity(Intent(this, ImageFileBrowser::class.java).apply {
                         putExtra(ImageFileBrowser.EXTRA_PATH, filePath)
                     })
                 }
-                StorageType.AUDIO -> TODO()
+
+                StorageType.AUDIO -> {
+                    val filePath = File(fileStoragePath, fileInfo.identifier).path
+
+                    startActivity(Intent(this, AudioPlayerActivity::class.java).apply {
+                        putExtra(AudioPlayerActivity.EXTRA_FILE_PATH, filePath)
+                    })
+                }
             }
         }
     }
