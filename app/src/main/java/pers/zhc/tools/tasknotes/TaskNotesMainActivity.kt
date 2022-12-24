@@ -79,6 +79,7 @@ class TaskNotesMainActivity : BaseActivity() {
         database.insert(record)
         listItems.add(record)
         listAdapter.notifyItemInserted(listItems.size - 1)
+        ToastUtils.show(this, R.string.adding_succeeded)
     }
 
     private fun showModifyRecordDialog(record: Record) {
