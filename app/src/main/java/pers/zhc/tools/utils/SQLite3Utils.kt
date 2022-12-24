@@ -110,3 +110,24 @@ fun <T> SQLite3.queryMap(
 fun SQLite3.getTables(): List<String> {
     return this.querySchema().filter { it.type == Schema.Type.TABLE }.map { it.tableName }
 }
+
+fun <T, R> SQLite3.withQueriedRows(
+    @Language("SQLite") sql: String,
+    binds: Array<Any>? = null,
+    block: (rows: SQLiteRows<T>) -> R,
+    mapRow: (row: Cursor) -> T
+): R {
+    val rows = this.queryMap(sql, binds ?: emptyArray(), mapRow)
+    val r = block(rows)
+    rows.release()
+    return r
+}
+
+fun <T> SQLite3.queryAdd(
+    @Language("SQLite") sql: String,
+    binds: Array<Any>? = null,
+    collection: MutableCollection<T>,
+    mapRow: (row: Cursor) -> T
+) {
+    this.withQueriedRows(sql, binds, { collection.addAll(it.asSequence()) }, mapRow)
+}

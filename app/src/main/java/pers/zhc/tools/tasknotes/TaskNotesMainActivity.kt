@@ -101,12 +101,13 @@ class TaskNotesMainActivity : BaseActivity() {
 
     private fun queryAndSetListItems(today: Boolean = true) {
         listItems.clear()
-        val records = database.queryAll().filter {
-            if (today) {
-                isToday(it.creationTime)
-            } else true
+        database.withQueryAll {
+            listItems.addAll(it.asSequence().filter {record->
+                if (today) {
+                    isToday(record.creationTime)
+                } else true
+            })
         }
-        listItems.addAll(records)
     }
 
     private fun showDeleteRecordDialog(record: Record) {

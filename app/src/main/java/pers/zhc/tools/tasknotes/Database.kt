@@ -1,10 +1,7 @@
 package pers.zhc.tools.tasknotes
 
 import pers.zhc.tools.MyApplication
-import pers.zhc.tools.utils.BaseDatabase
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.stepBind
-import pers.zhc.tools.utils.withCompiledStatement
+import pers.zhc.tools.utils.*
 
 class Database(path: String) : BaseDatabase(path) {
     init {
@@ -65,44 +62,34 @@ class Database(path: String) : BaseDatabase(path) {
         batchAdd(records.asSequence())
     }
 
-    fun queryAll(): ArrayList<Record> {
-        return db.withCompiledStatement(
-            "SELECT description, mark, \"time\", creation_time FROM task_record ORDER BY \"order\""
-        ) {
-            val cursor = it.cursor
-            val records = ArrayList<Record>()
-            while (cursor.step()) {
-                records.add(
-                    Record(
-                        cursor.getText(0),
-                        TaskMark.from(cursor.getInt(1))!!,
-                        Time(cursor.getInt(2)),
-                        cursor.getLong(3)
-                    )
+    fun withQueryAll(block: (rows: SQLiteRows<Record>) -> Unit) {
+        db.withQueriedRows(
+            "SELECT description, mark, \"time\", creation_time FROM task_record ORDER BY \"order\"",
+            block = block,
+            mapRow = {
+                Record(
+                    it.getText(0),
+                    TaskMark.from(it.getInt(1))!!,
+                    Time(it.getInt(2)),
+                    it.getLong(3)
                 )
             }
-            records
-        }
+        )
     }
 
     fun query(creationTime: Long): Record? {
-        return db.withCompiledStatement(
+        return db.queryOne(
             """SELECT description, mark, "time", creation_time
 FROM task_record
-WHERE creation_time IS ?"""
-        ) { stmt ->
-            stmt.bind(arrayOf(creationTime))
-            val cursor = stmt.cursor
-            if (cursor.step()) {
-                Record(
-                    cursor.getText(0),
-                    TaskMark.from(cursor.getInt(1))!!,
-                    Time(cursor.getInt(2)),
-                    cursor.getLong(3)
-                )
-            } else {
-                null
-            }
+WHERE creation_time IS ?""",
+            arrayOf(creationTime)
+        ) {
+            Record(
+                it.getText(0),
+                TaskMark.from(it.getInt(1))!!,
+                Time(it.getInt(2)),
+                it.getLong(3)
+            )
         }
     }
 
