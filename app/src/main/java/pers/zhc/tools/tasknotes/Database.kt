@@ -3,6 +3,7 @@ package pers.zhc.tools.tasknotes
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.utils.BaseDatabase
 import pers.zhc.tools.utils.Common
+import pers.zhc.tools.utils.stepBind
 import pers.zhc.tools.utils.withCompiledStatement
 
 class Database(path: String) : BaseDatabase(path) {
@@ -10,6 +11,7 @@ class Database(path: String) : BaseDatabase(path) {
         db.exec(
             """CREATE TABLE IF NOT EXISTS task_record
 (
+    "order"       INTEGER NOT NULL,
     description   TEXT    NOT NULL,
     -- 0: start; 1: end
     mark          INTEGER NOT NULL,
@@ -23,8 +25,8 @@ class Database(path: String) : BaseDatabase(path) {
 
     fun insert(record: Record) {
         db.execBind(
-            "INSERT INTO task_record (description, mark, \"time\", creation_time) VALUES (?, ?, ?, ?)",
-            arrayOf(record.description, record.mark.enumInt, record.time.minuteOfDay, record.creationTime)
+            "INSERT INTO task_record (\"order\", description, mark, \"time\", creation_time) VALUES (?, ?, ?, ?, ?)",
+            arrayOf(0, record.description, record.mark.enumInt, record.time.minuteOfDay, record.creationTime)
         )
     }
 
@@ -32,8 +34,41 @@ class Database(path: String) : BaseDatabase(path) {
         db.execBind("DELETE FROM task_record WHERE creation_time IS ?", arrayOf(timestamp))
     }
 
+    private fun batchDelete(timestamp: Sequence<Long>) {
+        db.withCompiledStatement("DELETE FROM task_record WHERE creation_time IS ?") {
+            timestamp.forEach { timestamp ->
+                it.stepBind(arrayOf(timestamp))
+            }
+        }
+    }
+
+    private fun batchAdd(records: Sequence<Record>) {
+        db.withCompiledStatement(
+            "INSERT INTO task_record (\"order\", description, mark, \"time\", creation_time) VALUES (?, ?, ?, ?, ?)"
+        ) {
+            records.forEachIndexed { index, record ->
+                it.stepBind(
+                    arrayOf(
+                        index,
+                        record.description,
+                        record.mark.enumInt,
+                        record.time.minuteOfDay,
+                        record.creationTime
+                    )
+                )
+            }
+        }
+    }
+
+    fun reorderRecords(records: List<Record>) {
+        batchDelete(records.asSequence().map { it.creationTime })
+        batchAdd(records.asSequence())
+    }
+
     fun queryAll(): ArrayList<Record> {
-        return db.withCompiledStatement("SELECT description, mark, \"time\", creation_time FROM task_record") {
+        return db.withCompiledStatement(
+            "SELECT description, mark, \"time\", creation_time FROM task_record ORDER BY \"order\""
+        ) {
             val cursor = it.cursor
             val records = ArrayList<Record>()
             while (cursor.step()) {

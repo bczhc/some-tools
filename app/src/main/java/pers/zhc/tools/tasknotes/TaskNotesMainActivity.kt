@@ -10,6 +10,8 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.core.app.NotificationCompat
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
@@ -38,9 +40,10 @@ class TaskNotesMainActivity : BaseActivity() {
             adapter = listAdapter
             setLinearLayoutManager()
             setUpFastScroll(this@TaskNotesMainActivity)
+            ItemTouchHelper(ListTouchHelperCallback(listAdapter, database)).attachToRecyclerView(this)
         }
 
-        listAdapter.setOnItemLongClickListener { position, view ->
+        listAdapter.setOnItemClickListener { position, view ->
             PopupMenuUtil.create(this, view, R.menu.task_notes_list_item_popup).apply {
                 setOnMenuItemClickListener {
                     when (it.itemId) {
@@ -60,7 +63,6 @@ class TaskNotesMainActivity : BaseActivity() {
                 }
             }.show()
         }
-        listAdapter.setOnItemClickListener(listAdapter.getOnItemLongClickListener())
 
         showNotification()
 
@@ -190,7 +192,7 @@ class TaskNotesMainActivity : BaseActivity() {
         }
     }
 
-    private class ListAdapter(private val context: Context, private val records: Records) :
+    private class ListAdapter(private val context: Context, val records: Records) :
         AdapterWithClickListener<ListAdapter.MyViewHolder>() {
         class MyViewHolder(view: View) : ViewHolder(view) {
             private val bindings = TaskNotesListItemBinding.bind(view)
@@ -225,6 +227,29 @@ class TaskNotesMainActivity : BaseActivity() {
 
 
         override fun getItemCount() = records.size
+    }
+
+    private class ListTouchHelperCallback(private val listAdapter: ListAdapter, private val database: Database) :
+        ItemTouchHelper.Callback() {
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: ViewHolder): Int {
+            val dragFlag = ItemTouchHelper.UP xor ItemTouchHelper.DOWN
+            return makeMovementFlags(dragFlag, 0)
+        }
+
+        override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
+            val fromIndex = viewHolder.layoutPosition
+            val toIndex = target.layoutPosition
+            Collections.swap(listAdapter.records, fromIndex, toIndex)
+            listAdapter.notifyItemMoved(fromIndex, toIndex)
+            return true
+        }
+
+        override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
+        }
+
+        override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
+            database.reorderRecords(listAdapter.records)
+        }
     }
 
     companion object {
