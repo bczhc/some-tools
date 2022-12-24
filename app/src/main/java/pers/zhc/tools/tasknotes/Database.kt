@@ -51,9 +51,11 @@ class Database(path: String) : BaseDatabase(path) {
 
     private fun batchDelete(timestamp: Sequence<Long>) {
         db.withCompiledStatement("DELETE FROM task_record WHERE creation_time IS ?") {
+            db.beginTransaction()
             timestamp.forEach { timestamp ->
                 it.stepBind(arrayOf(timestamp))
             }
+            db.commit()
         }
     }
 
@@ -61,6 +63,7 @@ class Database(path: String) : BaseDatabase(path) {
         db.withCompiledStatement(
             "INSERT INTO task_record (\"order\", description, mark, \"time\", creation_time) VALUES (?, ?, ?, ?, ?)"
         ) {
+            db.beginTransaction()
             records.forEachIndexed { index, record ->
                 it.stepBind(
                     arrayOf(
@@ -72,6 +75,7 @@ class Database(path: String) : BaseDatabase(path) {
                     )
                 )
             }
+            db.commit()
         }
     }
 

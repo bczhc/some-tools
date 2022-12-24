@@ -131,3 +131,10 @@ fun <T> SQLite3.queryAdd(
 ) {
     this.withQueriedRows(sql, binds, { collection.addAll(it.asSequence()) }, mapRow)
 }
+
+fun <T> SQLite3.withTransaction(block: (db: SQLite3) -> T): T {
+    this.beginTransaction()
+    val r = block(this)
+    this.commit()
+    return r
+}
