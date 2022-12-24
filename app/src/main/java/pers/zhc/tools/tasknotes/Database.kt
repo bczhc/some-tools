@@ -5,6 +5,11 @@ import pers.zhc.tools.utils.*
 
 class Database(path: String) : BaseDatabase(path) {
     init {
+        checkAndConvertOldDatabase()
+        initTable()
+    }
+
+    private fun initTable() {
         db.exec(
             """CREATE TABLE IF NOT EXISTS task_record
 (
@@ -18,6 +23,19 @@ class Database(path: String) : BaseDatabase(path) {
 )
 """
         )
+    }
+
+    private fun checkAndConvertOldDatabase() {
+        if (!db.hasTable("task_record")) return
+
+        val hasOrderColumn = db.queryTableInfo("task_record").asSequence().map { it.name }.contains("order")
+        if (!hasOrderColumn) {
+            // old database
+            val records = this.queryAll()
+            db.exec("DROP TABLE task_record")
+            initTable()
+            this.batchInsert(records.asSequence())
+        }
     }
 
     fun insert(record: Record) {
@@ -39,7 +57,7 @@ class Database(path: String) : BaseDatabase(path) {
         }
     }
 
-    private fun batchAdd(records: Sequence<Record>) {
+    private fun batchInsert(records: Sequence<Record>) {
         db.withCompiledStatement(
             "INSERT INTO task_record (\"order\", description, mark, \"time\", creation_time) VALUES (?, ?, ?, ?, ?)"
         ) {
@@ -59,11 +77,14 @@ class Database(path: String) : BaseDatabase(path) {
 
     fun reorderRecords(records: List<Record>) {
         batchDelete(records.asSequence().map { it.creationTime })
-        batchAdd(records.asSequence())
+        batchInsert(records.asSequence())
     }
 
-    fun withQueryAll(block: (rows: SQLiteRows<Record>) -> Unit) {
-        db.withQueriedRows(
+    fun <R> withQueryAll(block: (rows: SQLiteRows<Record>) -> R): R {
+        // note: the field `order` here with double quote, even when the table doesn't have
+        // `order` column, this compiles with no error, and sqlite just ignores it. This is
+        // a convenience for converting from an old version of database.
+        return db.withQueriedRows(
             "SELECT description, mark, \"time\", creation_time FROM task_record ORDER BY \"order\"",
             block = block,
             mapRow = {
@@ -75,6 +96,10 @@ class Database(path: String) : BaseDatabase(path) {
                 )
             }
         )
+    }
+
+    private fun queryAll(): List<Record> {
+        return this.withQueryAll { it.asSequence().toList() }
     }
 
     fun query(creationTime: Long): Record? {
