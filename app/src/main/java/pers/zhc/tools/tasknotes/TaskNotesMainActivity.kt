@@ -102,7 +102,7 @@ class TaskNotesMainActivity : BaseActivity() {
     private fun queryAndSetListItems(today: Boolean = true) {
         listItems.clear()
         database.withQueryAll {
-            listItems.addAll(it.asSequence().filter {record->
+            listItems.addAll(it.asSequence().filter { record ->
                 if (today) {
                     isToday(record.creationTime)
                 } else true
@@ -176,21 +176,21 @@ class TaskNotesMainActivity : BaseActivity() {
         return true
     }
 
+    /**
+     * in the local time zone
+     */
     private fun isToday(timestamp: Long): Boolean {
-        val year: Int
-        val day: Int
-        val calendar = Calendar.getInstance()
-        calendar.apply { time = Date() }.let {
-            year = it.get(Calendar.YEAR)
-            day = it.get(Calendar.DAY_OF_YEAR)
+        val calendar = Calendar.getInstance().also { it.time = Date() }.apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
-
-        calendar.apply {
-            clear()
-            time = Date(timestamp)
-        }.let {
-            return it.get(Calendar.YEAR) == year && it.get(Calendar.DAY_OF_YEAR) == day
-        }
+        // 00:00:00
+        val start = calendar.time.time
+        // 24:00:00
+        val end = calendar.also { it.set(Calendar.HOUR_OF_DAY, 24) }.time.time
+        return timestamp in start until end
     }
 
     private class ListAdapter(private val context: Context, val records: Records) :
