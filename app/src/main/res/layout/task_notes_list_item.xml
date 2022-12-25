@@ -13,9 +13,18 @@
             android:layout_height="wrap_content"
             android:background="?selectableItemBackground"
     >
-
+        <ImageView android:layout_width="40dp" android:layout_height="wrap_content"
+                   android:src="@drawable/drag_icon"
+                   android:id="@+id/drag_icon"
+                   android:layout_alignTop="@id/description_tv"
+                   android:layout_alignBottom="@id/description_tv"
+                   android:layout_centerVertical="true"
+                   android:contentDescription="Drag"
+                   tools:ignore="HardcodedText"
+        />
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:layout_toStartOf="@id/right_ll"
+                  android:layout_toEndOf="@id/drag_icon"
                   tools:text="Task Description"
                   android:gravity="center_vertical"
                   android:textAppearance="@style/TextAppearance.Material3.TitleLarge"

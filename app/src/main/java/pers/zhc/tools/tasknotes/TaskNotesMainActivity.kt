@@ -26,6 +26,7 @@ class TaskNotesMainActivity : BaseActivity() {
     private val listItems = Records()
     private val database by lazy { Database.database }
     private lateinit var listAdapter: ListAdapter
+    private lateinit var itemTouchHelper: ItemTouchHelper
     private lateinit var onRecordAddedReceiver: OnRecordAddedReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +36,13 @@ class TaskNotesMainActivity : BaseActivity() {
 
         val recyclerView = bindings.recyclerView
         queryAndSetListItems()
-        listAdapter = ListAdapter(this, listItems)
+        listAdapter = ListAdapter()
+        itemTouchHelper = ItemTouchHelper(ListTouchHelperCallback(listAdapter, database))
         recyclerView.apply {
             adapter = listAdapter
             setLinearLayoutManager()
             setUpFastScroll(this@TaskNotesMainActivity)
-            ItemTouchHelper(ListTouchHelperCallback(listAdapter, database)).attachToRecyclerView(this)
+            itemTouchHelper.attachToRecyclerView(this)
         }
 
         listAdapter.setOnItemClickListener { position, view ->
@@ -63,6 +65,7 @@ class TaskNotesMainActivity : BaseActivity() {
                 }
             }.show()
         }
+        listAdapter.setOnItemLongClickListener(listAdapter.getOnItemClickListener())
 
         showNotification()
 
@@ -194,13 +197,27 @@ class TaskNotesMainActivity : BaseActivity() {
         return timestamp in start until end
     }
 
-    private class ListAdapter(private val context: Context, val records: Records) :
+    inner class ListAdapter :
         AdapterWithClickListener<ListAdapter.MyViewHolder>() {
-        class MyViewHolder(view: View) : ViewHolder(view) {
+        private val context = this@TaskNotesMainActivity as Context
+        val records = this@TaskNotesMainActivity.listItems
+
+        @SuppressLint("ClickableViewAccessibility")
+        inner class MyViewHolder(view: View) : ViewHolder(view) {
             private val bindings = TaskNotesListItemBinding.bind(view)
             val descriptionTV = bindings.descriptionTv
             val taskMarkTV = bindings.taskMarkTv
             val timeTV = bindings.timeTv
+            private val dragIcon = bindings.dragIcon
+
+            init {
+                dragIcon.setOnTouchListener { _, event ->
+                    if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+                        itemTouchHelper.startDrag(this)
+                    }
+                    false
+                }
+            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {
@@ -235,7 +252,8 @@ class TaskNotesMainActivity : BaseActivity() {
         ItemTouchHelper.Callback() {
         override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: ViewHolder): Int {
             val dragFlag = ItemTouchHelper.UP xor ItemTouchHelper.DOWN
-            return makeMovementFlags(dragFlag, 0)
+            return makeFlag(ItemTouchHelper.ACTION_STATE_IDLE, 0)
+                .xor(makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, dragFlag))
         }
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
@@ -252,9 +270,14 @@ class TaskNotesMainActivity : BaseActivity() {
         override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
             database.reorderRecords(listAdapter.records)
         }
+
+        override fun isLongPressDragEnabled() = false
     }
 
     companion object {
+        /**
+         * randomly assigned
+         */
         private const val NOTIFICATION_ID = 1955794286
     }
 }
