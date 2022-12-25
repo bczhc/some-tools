@@ -72,9 +72,11 @@ class Database(path: String) : BaseDatabase(path) {
 
     fun reorderRecords(records: List<Record>) {
         db.withCompiledStatement("UPDATE task_record SET \"order\" = ? WHERE creation_time IS ?") {
+            db.beginTransaction()
             records.forEachIndexed { index, record ->
                 it.stepBind(arrayOf(index, record.creationTime))
             }
+            db.commit()
         }
     }
 
