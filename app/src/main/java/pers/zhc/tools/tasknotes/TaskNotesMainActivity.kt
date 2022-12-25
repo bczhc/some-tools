@@ -108,6 +108,8 @@ class TaskNotesMainActivity : BaseActivity() {
         if (today) {
             listItems.addAll(database.queryToday())
         } else {
+            // the `groupBy` prevents the original sequence order,
+            // so there's no need to sort by the order ordinal number again
             database.withQueryAll { rows ->
                 val records = rows.asSequence()
                     .map { Pair(IntDate(Date(it.creationTime)), it) }
