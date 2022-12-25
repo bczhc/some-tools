@@ -6,6 +6,7 @@ import pers.zhc.jni.JNI.Struct
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.DigestUtil
+import pers.zhc.tools.utils.IntDate
 import pers.zhc.tools.utils.rc.Ref
 import java.io.File
 import java.nio.charset.StandardCharsets
@@ -51,7 +52,7 @@ open class DiaryBaseActivity : BaseActivity() {
 
     companion object {
         fun getDateFromDateInt(dateInt: Int): Date {
-            val myDate = MyDate(dateInt)
+            val myDate = IntDate(dateInt)
             val calendar = Calendar.getInstance()
             calendar.set(myDate.year, myDate.month - 1, myDate.day)
             return calendar.time

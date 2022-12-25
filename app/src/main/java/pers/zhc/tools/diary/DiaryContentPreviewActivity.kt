@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.diary_record_stat_dialog.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.DisplayUtil
+import pers.zhc.tools.utils.IntDate
 import pers.zhc.tools.utils.getIntExtraOrNull
 import java.text.SimpleDateFormat
 import java.util.*
@@ -98,7 +99,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.edit -> {
-                launchers.edit.launch(MyDate(dateInt))
+                launchers.edit.launch(IntDate(dateInt))
             }
 
             R.id.attachment -> {
@@ -156,7 +157,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         }
     }
 
-    class ActivityContract: ActivityResultContract<ActivityContract.Input, MyDate>() {
+    class ActivityContract: ActivityResultContract<ActivityContract.Input, IntDate>() {
         class Input(
             val dateInt: Int,
             val highlightPattern: Regex?
@@ -169,9 +170,9 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
             }
         }
 
-        override fun parseResult(resultCode: Int, intent: Intent?): MyDate {
+        override fun parseResult(resultCode: Int, intent: Intent?): IntDate {
             intent!!
-            return MyDate(intent.getIntExtraOrNull(EXTRA_DATE_INT)!!)
+            return IntDate(intent.getIntExtraOrNull(EXTRA_DATE_INT)!!)
         }
     }
 }

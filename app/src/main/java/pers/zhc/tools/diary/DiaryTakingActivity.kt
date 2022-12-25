@@ -321,13 +321,13 @@ WHERE "date" IS ?"""
         )
     }
 
-    class ActivityContract: ActivityResultContract<MyDate, ActivityContract.Result>() {
+    class ActivityContract: ActivityResultContract<IntDate, ActivityContract.Result>() {
         class Result(
             val dateInt: Int,
             val isNewRecord: Boolean
         )
 
-        override fun createIntent(context: Context, input: MyDate): Intent {
+        override fun createIntent(context: Context, input: IntDate): Intent {
             return Intent(context, DiaryTakingActivity::class.java).apply {
                 putExtra(EXTRA_DATE_INT, input.dateInt)
             }

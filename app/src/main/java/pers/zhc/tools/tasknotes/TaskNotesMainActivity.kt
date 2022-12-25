@@ -109,7 +109,9 @@ class TaskNotesMainActivity : BaseActivity() {
             listItems.addAll(database.queryToday())
         } else {
             database.withQueryAll {
-                listItems.addAll(it.asSequence())
+                it.asSequence().groupBy {
+
+                }
             }
         }
     }

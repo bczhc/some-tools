@@ -233,7 +233,7 @@ WHERE instr(lower("date"), lower(?)) > 0
                     recyclerViewAdapter.notifyItemInserted(position)
                 }
             }.show()
-        }, titleRes = R.string.whether_to_delete, message = makeTitle(MyDate(dateInt))).show()
+        }, titleRes = R.string.whether_to_delete, message = makeTitle(IntDate(dateInt))).show()
     }
 
     private fun changeDate(oldDateString: Int, newDate: Int) {
@@ -419,7 +419,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
 
         }.build().apply {
             addOnPositiveButtonClickListener {
-                val dateInt = MyDate(Date(it)).dateInt
+                val dateInt = IntDate(Date(it)).dateInt
 
                 if (diaryDatabase.hasDiary(dateInt)) {
                     showDuplicateConfirmDialog(dateInt)
@@ -447,17 +447,17 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun createDiary(dateInt: Int) {
-        launchers.writeOrCreateDiary.launch(MyDate(dateInt))
+        launchers.writeOrCreateDiary.launch(IntDate(dateInt))
     }
 
     private fun writeDiary() {
-        val date = MyDate(getCurrentDateInt())
+        val date = IntDate(getCurrentDateInt())
 
         launchers.writeOrCreateDiary.launch(date)
     }
 
     private fun getCurrentDateInt(): Int {
-        val date = MyDate(Date(System.currentTimeMillis()))
+        val date = IntDate(Date(System.currentTimeMillis()))
         return date.dateInt
     }
 
@@ -517,7 +517,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
 
     private val titleCalendar = Calendar.getInstance()
 
-    private fun makeTitle(date: MyDate): String {
+    private fun makeTitle(date: IntDate): String {
         titleCalendar.apply {
             clear()
             set(date.year, date.month - 1, date.day)
@@ -529,7 +529,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     private class ListAdapter(
         private val context: Context,
         private val data: List<Diary>,
-        private val makeTitle: (date: MyDate) -> String,
+        private val makeTitle: (date: IntDate) -> String,
     ) :
         AdapterWithClickListener<ListAdapter.MyViewHolder?>() {
 
@@ -543,7 +543,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val bindings = holder.bindings
             val itemData = data[position]
-            bindings.dateTv.text = makeTitle(MyDate(itemData.dateInt))
+            bindings.dateTv.text = makeTitle(IntDate(itemData.dateInt))
             bindings.contentTv.text = itemData.content.limitText(100)
         }
 

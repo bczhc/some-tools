@@ -1,11 +1,11 @@
-package pers.zhc.tools.diary
+package pers.zhc.tools.utils
 
 import java.util.*
 
 /**
  * @author bczhc
  */
-class MyDate {
+class IntDate {
     var year = 0
     var month = 0
     var day = 0
@@ -72,7 +72,7 @@ class MyDate {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
-        val myDate = other as MyDate
+        val myDate = other as IntDate
         if (year != myDate.year) return false
         return if (month != myDate.month) false else day == myDate.day
     }
