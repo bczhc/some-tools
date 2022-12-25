@@ -108,10 +108,13 @@ class TaskNotesMainActivity : BaseActivity() {
         if (today) {
             listItems.addAll(database.queryToday())
         } else {
-            database.withQueryAll {
-                it.asSequence().groupBy {
-
-                }
+            database.withQueryAll { rows ->
+                val records = rows.asSequence()
+                    .map { Pair(IntDate(Date(it.creationTime)), it) }
+                    .groupBy { it.first.dateInt }
+                    .entries.sortedBy { it.key }
+                    .flatMap { it.value.map { x -> x.second } }
+                listItems.addAll(records)
             }
         }
     }
