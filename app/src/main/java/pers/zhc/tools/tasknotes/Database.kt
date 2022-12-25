@@ -49,16 +49,6 @@ class Database(path: String) : BaseDatabase(path) {
         db.execBind("DELETE FROM task_record WHERE creation_time IS ?", arrayOf(timestamp))
     }
 
-    private fun batchDelete(timestamp: Sequence<Long>) {
-        db.withCompiledStatement("DELETE FROM task_record WHERE creation_time IS ?") {
-            db.beginTransaction()
-            timestamp.forEach { timestamp ->
-                it.stepBind(arrayOf(timestamp))
-            }
-            db.commit()
-        }
-    }
-
     private fun batchInsert(records: Sequence<Record>) {
         db.withCompiledStatement(
             "INSERT INTO task_record (\"order\", description, mark, \"time\", creation_time) VALUES (?, ?, ?, ?, ?)"
@@ -80,8 +70,11 @@ class Database(path: String) : BaseDatabase(path) {
     }
 
     fun reorderRecords(records: List<Record>) {
-        batchDelete(records.asSequence().map { it.creationTime })
-        batchInsert(records.asSequence())
+        db.withCompiledStatement("UPDATE task_record SET \"order\" = ? WHERE creation_time IS ?") {
+            records.forEachIndexed { index, record ->
+                it.stepBind(arrayOf(index, record.creationTime))
+            }
+        }
     }
 
     fun <R> withQueryAll(block: (rows: SQLiteRows<Record>) -> R): R {
