@@ -69,8 +69,10 @@ class TaskNotesMainActivity : BaseActivity() {
 
         showNotification()
 
-        onRecordAddedReceiver = OnRecordAddedReceiver { record ->
-            onRecordAdded(record)
+        onRecordAddedReceiver = OnRecordAddedReceiver { creationTime ->
+            val record = database.query(creationTime)!!
+            listItems.add(record)
+            listAdapter.notifyItemInserted(listItems.size - 1)
         }.also {
             registerReceiver(it, IntentFilter().apply {
                 addAction(OnRecordAddedReceiver.ACTION_RECORD_ADDED)

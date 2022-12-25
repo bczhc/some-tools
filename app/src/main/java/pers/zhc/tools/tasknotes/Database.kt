@@ -95,6 +95,22 @@ class Database(path: String) : BaseDatabase(path) {
         )
     }
 
+    fun query(creationTime: Long): Record? {
+        return db.queryOne(
+            """SELECT description, mark, "time", creation_time
+FROM task_record
+WHERE creation_time IS ?""",
+            arrayOf(creationTime)
+        ) {
+            Record(
+                it.getText(0),
+                TaskMark.from(it.getInt(1))!!,
+                Time(it.getInt(2)),
+                it.getLong(3)
+            )
+        }
+    }
+
     fun queryToday(): List<Record> {
         val timestampRange = Time.getTodayTimestampRange()
         return db.withQueriedRows(

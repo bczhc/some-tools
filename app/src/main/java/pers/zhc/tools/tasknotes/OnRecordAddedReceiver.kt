@@ -6,20 +6,19 @@ import pers.zhc.tools.BaseBroadcastReceiver
 import pers.zhc.tools.utils.getLongExtraOrNull
 
 class OnRecordAddedReceiver(
-    private val callback: (record: Record) -> Unit
+    private val callback: (creationTime: Long) -> Unit
 ): BaseBroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        @Suppress("DEPRECATION")
-        val record = intent!!.getSerializableExtra(EXTRA_RECORD) as Record
-        callback(record)
+        callback(intent!!.getLongExtraOrNull(EXTRA_CREATION_TIME)!!)
     }
 
     companion object {
         const val ACTION_RECORD_ADDED = "pers.zhc.tools.tasknotes.RECORD_ADDED"
 
         /**
-         * serializable intent extra
+         * long intent extra
+         * the creation time of the added record
          */
-        const val EXTRA_RECORD = "record"
+        const val EXTRA_CREATION_TIME = "creationTime"
     }
 }
