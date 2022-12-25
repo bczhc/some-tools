@@ -35,4 +35,23 @@ class Time : Serializable {
         val minute = this.minute.toString()
         return "${"0".repeat(2 - hour.length)}$hour:${"0".repeat(2 - minute.length)}$minute"
     }
+
+    companion object {
+        /**
+         * in the local time zone
+         */
+        fun getTodayTimestampRange(): LongRange {
+            val calendar = Calendar.getInstance().also { it.time = Date() }.apply {
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            // 00:00:00
+            val start = calendar.time.time
+            // 24:00:00
+            val end = calendar.also { it.set(Calendar.HOUR_OF_DAY, 24) }.time.time
+            return start until end
+        }
+    }
 }

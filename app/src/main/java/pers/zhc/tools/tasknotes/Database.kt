@@ -102,24 +102,30 @@ class Database(path: String) : BaseDatabase(path) {
         )
     }
 
-    private fun queryAll(): List<Record> {
-        return this.withQueryAll { it.asSequence().toList() }
-    }
-
-    fun query(creationTime: Long): Record? {
-        return db.queryOne(
+    fun queryToday(): List<Record> {
+        val timestampRange = Time.getTodayTimestampRange()
+        return db.withQueriedRows(
             """SELECT description, mark, "time", creation_time
 FROM task_record
-WHERE creation_time IS ?""",
-            arrayOf(creationTime)
-        ) {
-            Record(
-                it.getText(0),
-                TaskMark.from(it.getInt(1))!!,
-                Time(it.getInt(2)),
-                it.getLong(3)
-            )
-        }
+WHERE creation_time BETWEEN ? AND ?
+ORDER BY "order"""",
+            arrayOf(timestampRange.first, timestampRange.last),
+            mapRow = {
+                Record(
+                    it.getText(0),
+                    TaskMark.from(it.getInt(1))!!,
+                    Time(it.getInt(2)),
+                    it.getLong(3)
+                )
+            },
+            block = { rows ->
+                rows.asSequence().toList()
+            },
+        )
+    }
+
+    private fun queryAll(): List<Record> {
+        return this.withQueryAll { it.asSequence().toList() }
     }
 
     fun update(creationTime: Long, record: Record) {
