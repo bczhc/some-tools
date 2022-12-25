@@ -39,9 +39,10 @@ class Database(path: String) : BaseDatabase(path) {
     }
 
     fun insert(record: Record) {
+        val order = getTodayNextOrder()
         db.execBind(
             "INSERT INTO task_record (\"order\", description, mark, \"time\", creation_time) VALUES (?, ?, ?, ?, ?)",
-            arrayOf(0, record.description, record.mark.enumInt, record.time.minuteOfDay, record.creationTime)
+            arrayOf(order, record.description, record.mark.enumInt, record.time.minuteOfDay, record.creationTime)
         )
     }
 
@@ -109,6 +110,16 @@ WHERE creation_time IS ?""",
                 it.getLong(3)
             )
         }
+    }
+
+    private fun getTodayNextOrder(): Int {
+        val timestampRange = Time.getTodayTimestampRange()
+        return db.queryOne(
+            """SELECT max("order")
+FROM task_record
+WHERE creation_time BETWEEN ? AND ?""",
+            arrayOf(timestampRange.first, timestampRange.last)
+        ) { it.getInt(0) }!! + 1
     }
 
     fun queryToday(): List<Record> {
