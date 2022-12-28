@@ -3,6 +3,7 @@ extern crate core;
 pub mod bitmap;
 pub mod byte_size;
 pub mod char;
+pub mod char_stat;
 pub mod char_ucd;
 pub mod diary;
 pub mod email;

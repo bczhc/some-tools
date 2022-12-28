@@ -359,4 +359,10 @@ public class JNI {
 
         public static native void raise(int signal);
     }
+
+    public static class CharStat {
+        public static native int codepointCount(String text);
+
+        public static native int graphemeCount(String text);
+    }
 }
