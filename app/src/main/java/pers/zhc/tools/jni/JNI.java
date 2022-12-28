@@ -368,4 +368,16 @@ public class JNI {
 
         public static native int graphemeCount(String text);
     }
+
+    public static class Unicode {
+        public static class Grapheme {
+            public static native long newIterator(String text);
+
+            public static native boolean hasNext(long addr);
+
+            public static native String next(long addr);
+
+            public static native void release(long addr);
+        }
+    }
 }

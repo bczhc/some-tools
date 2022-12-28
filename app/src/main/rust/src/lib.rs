@@ -14,4 +14,5 @@ pub mod jni_helper;
 pub mod lzma;
 pub mod signals;
 pub mod transfer;
+pub mod unicode;
 pub mod utf8;

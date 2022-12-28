@@ -1,6 +1,7 @@
 use std::str::Utf8Error;
 
 use jni::objects::JString;
+use jni::strings::JavaStr;
 use jni::JNIEnv;
 use thiserror::Error;
 
@@ -13,12 +14,28 @@ pub enum GetStringError {
 }
 
 pub trait GetString {
-    fn get_string_owned(&self, js: JString) -> Result<String, GetStringError>;
+    fn get_string_owned(&self, str: JString) -> Result<String, GetStringError>;
+}
+
+pub trait JavaStrExt {
+    fn to_str_or_throw(&self, env: JNIEnv) -> jni::errors::Result<&str>;
 }
 
 impl<'a> GetString for JNIEnv<'a> {
     fn get_string_owned(&self, js: JString) -> Result<String, GetStringError> {
         let java_str = self.get_string(js)?;
         Ok(String::from(java_str.to_str()?))
+    }
+}
+
+impl<'a, 'b> JavaStrExt for JavaStr<'a, 'b> {
+    fn to_str_or_throw(&self, env: JNIEnv) -> jni::errors::Result<&str> {
+        match self.to_str() {
+            Ok(s) => Ok(s),
+            Err(e) => {
+                env.throw(format!("UTF-8 error: {}", e))?;
+                Ok("")
+            }
+        }
     }
 }
