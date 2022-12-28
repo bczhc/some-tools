@@ -133,7 +133,7 @@ class WubiInverseDictDatabase(path: String) {
             }
         }
 
-        val codepoints = CodepointIterator(word).toList()
+        val codepoints = CodepointIterator(word).asSequence().toList()
 
         when (codepoints.size) {
             1 -> {

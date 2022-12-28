@@ -5,7 +5,7 @@ import pers.zhc.tools.jni.JNI.Utf8
 /**
  * @author bczhc
  */
-class CodepointIterator(s: String): Iterator<Int>, Iterable<Int> {
+class CodepointIterator(s: String): Iterator<Int> {
     private val addr = Utf8.getCodepointIterator(s)
 
     override fun hasNext(): Boolean {
@@ -18,10 +18,6 @@ class CodepointIterator(s: String): Iterator<Int>, Iterable<Int> {
 
     private fun release() {
         Utf8.release(addr)
-    }
-
-    override fun iterator(): Iterator<Int> {
-        return this
     }
 
     /**

@@ -76,7 +76,7 @@ class CharacterLookupInputView : WrapLayout {
             }
             val codepoints: List<Int>
             try {
-                codepoints = CodepointIterator(charInput).toList()
+                codepoints = CodepointIterator(charInput).asSequence().toList()
             } catch (e: Exception) {
                 ToastUtils.showError(context, R.string.please_enter_correct_value_toast, e)
                 setText {
