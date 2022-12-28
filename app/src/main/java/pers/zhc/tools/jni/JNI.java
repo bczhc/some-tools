@@ -340,7 +340,10 @@ public class JNI {
     }
 
     public static class Bitmap {
-        public static native void compressToPng(android.graphics.Bitmap bitmap, String outputPath);
+        /**
+         * @param bitmap instance of {@link android.graphics.Bitmap}
+         */
+        public static native void compressToPng(Object bitmap, String outputPath);
     }
 
     public static class ByteSize {
