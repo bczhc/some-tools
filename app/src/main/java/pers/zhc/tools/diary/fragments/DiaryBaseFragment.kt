@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.path_file_info_view.*
 import pers.zhc.tools.diary.DiaryBaseActivity
 import pers.zhc.jni.sqlite.SQLite3
+import pers.zhc.tools.BaseFragment
 import pers.zhc.tools.diary.DiaryDatabase
 import pers.zhc.tools.diary.DiaryMainActivity
 import pers.zhc.tools.utils.androidAssert
@@ -14,7 +15,7 @@ import pers.zhc.tools.utils.androidAssert
 /**
  * @author bczhc
  */
-open class DiaryBaseFragment : Fragment() {
+open class DiaryBaseFragment : BaseFragment() {
     /**
      * A shortcut reference to the database object of the activity which attaches the current fragment
      */

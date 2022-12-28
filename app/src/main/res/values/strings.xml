@@ -783,4 +783,10 @@
     <string name="fourier_series_menu_import_epicycles_data">导入本轮数据</string>
     <string name="audio_player_failed_to_play_audio_toast">无法播放音频</string>
     <!-- end -->
+
+    <!-- CharStat -->
+    <string name="char_stat_label">字符统计</string>
+    <string name="char_stat_codepoint_count_tv">Codepoint count: %1$d</string>
+    <string name="char_stat_grapheme_cluster_count_tv">Grapheme cluster count: %1$d</string>
+    <!-- end -->
 </resources>
