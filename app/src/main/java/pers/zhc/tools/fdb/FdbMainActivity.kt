@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import kotlinx.android.synthetic.main.fdb_main_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.jni.JNI.ByteSize
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.requireDelete
 import pers.zhc.tools.utils.requireMkdir
@@ -55,7 +56,8 @@ class FdbMainActivity : BaseActivity() {
         }
 
         val updateClearCacheButtonText = {
-            clearCacheButton.text = getString(R.string.fdb_clear_cache_button, getCacheSize() / 1024)
+            clearCacheButton.text =
+                getString(R.string.fdb_clear_cache_button, ByteSize.toHumanReadable(getCacheSize(), true))
         }
         updateClearCacheButtonText()
         clearCacheButton.setOnClickListener {

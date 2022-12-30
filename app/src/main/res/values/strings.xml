@@ -595,7 +595,7 @@
     <string name="fdb_import_path_version_4_0_toast">使用4.0版本path导入</string>
     <string name="fdb_eraser_opacity_adjusting_dialog_title">橡皮不透明度</string>
     <string name="fdb_stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
-    <string name="fdb_clear_cache_button">清除缓存（%1$dkB）</string>
+    <string name="fdb_clear_cache_button">清除缓存（%1$s）</string>
     <string name="fdb_clear_cache_success">清除成功</string>
     <string name="fdb_path_info">
         <![CDATA[创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d]]>
