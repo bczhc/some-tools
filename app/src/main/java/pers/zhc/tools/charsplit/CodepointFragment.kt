@@ -21,7 +21,7 @@ import pers.zhc.tools.utils.CodepointIterator
 import pers.zhc.tools.utils.setLinearLayoutManager
 import pers.zhc.tools.utils.setUpFastScroll
 
-class CodepointFragment: BaseFragment() {
+class CodepointFragment(private val defaultText: String = ""): BaseFragment() {
     private lateinit var listAdapter: MyAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -35,6 +35,8 @@ class CodepointFragment: BaseFragment() {
             setUpFastScroll(inflater.context)
             adapter = listAdapter
         }
+
+        updateList(defaultText)
 
         return bindings.root
     }

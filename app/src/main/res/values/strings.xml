@@ -790,5 +790,6 @@
     <string name="char_stat_grapheme_cluster_count_tv">Grapheme cluster count: %1$d</string>
     <string name="char_split_as_codepoint_button">以码点</string>
     <string name="char_split_as_grapheme_button">以字素</string>
+    <string name="char_split_codepoint_label">码点</string>
     <!-- end -->
 </resources>
