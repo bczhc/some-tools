@@ -1,33 +1,21 @@
-use jni::strings::JavaStr;
 use std::iter::Peekable;
-use std::str::Utf8Error;
+
 use unicode_segmentation::UnicodeSegmentation;
 
-pub struct Graphemes<'a, 'b, 'c>
-where
-    'a: 'c,
-    'b: 'c,
-{
-    string: *mut JavaStr<'a, 'b>,
-    iter: Peekable<unicode_segmentation::Graphemes<'c>>,
+pub struct Graphemes<'a> {
+    string: *mut str,
+    iter: Peekable<unicode_segmentation::Graphemes<'a>>,
 }
 
-impl<'a, 'b, 'c> Graphemes<'a, 'b, 'c>
-where
-    'a: 'c,
-    'b: 'c,
-{
-    pub fn new(string: JavaStr<'a, 'b>) -> Result<Self, Utf8Error> {
-        let raw = Box::into_raw(Box::new(string));
-        let graphemes = unsafe {
-            let str = (*raw).to_str()?;
-            str.graphemes(true).peekable()
-        };
+impl<'a> Graphemes<'a> {
+    pub fn new(string: String) -> Self {
+        let raw = Box::into_raw(string.into_boxed_str());
+        let graphemes = unsafe { (*raw).graphemes(true).peekable() };
 
-        Ok(Self {
+        Self {
             string: raw,
             iter: graphemes,
-        })
+        }
     }
 
     pub fn has_next(&mut self) -> bool {
@@ -39,11 +27,7 @@ where
     }
 }
 
-impl<'a, 'b, 'c> Drop for Graphemes<'a, 'b, 'c>
-where
-    'a: 'c,
-    'b: 'c,
-{
+impl<'a> Drop for Graphemes<'a> {
     fn drop(&mut self) {
         unsafe {
             drop(Box::from_raw(self.string));

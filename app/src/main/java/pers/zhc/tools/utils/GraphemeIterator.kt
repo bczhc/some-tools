@@ -13,7 +13,7 @@ class GraphemeIterator(string: String) : Iterator<String> {
         return Grapheme.next(addr)
     }
 
-    fun a() {
+    protected fun finalize() {
         if (addr != 0L) {
             Grapheme.release(addr)
         }

@@ -2,6 +2,7 @@ use jni::objects::{JClass, JString};
 use jni::sys::{jboolean, jlong, jstring};
 use jni::JNIEnv;
 
+use crate::jni_helper::{GetString, GetStringError};
 use crate::unicode::grapheme::Graphemes;
 
 mod grapheme;
@@ -13,16 +14,18 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_newIterator(
     _class: JClass,
     text: JString,
 ) -> jlong {
-    let text = env.get_string(text).unwrap();
-    let graphemes = match Graphemes::new(text) {
-        Ok(x) => x,
-        Err(e) => {
+    let text = match env.get_string_owned(text) {
+        Ok(s) => s,
+        Err(GetStringError::Utf8Error(e)) => {
             env.throw(format!("UTF-8 error: {}", e)).unwrap();
-            return 0;
+            "".into()
+        }
+        Err(GetStringError::JniError(_)) => {
+            panic!("JNI error");
         }
     };
 
-    let graphemes = Box::new(graphemes);
+    let graphemes = Box::new(Graphemes::new(text));
     Box::into_raw(graphemes) as jlong
 }
 
