@@ -16,6 +16,7 @@
                   android:paddingHorizontal="10dp"
                   android:paddingVertical="5dp"
                   android:typeface="monospace"
+                  android:gravity="center"
         />
         <com.google.android.material.divider.MaterialDivider
                 android:layout_width="1px"

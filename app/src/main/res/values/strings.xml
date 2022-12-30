@@ -788,5 +788,7 @@
     <string name="char_stat_label">字符统计</string>
     <string name="char_stat_codepoint_count_tv">Codepoint count: %1$d</string>
     <string name="char_stat_grapheme_cluster_count_tv">Grapheme cluster count: %1$d</string>
+    <string name="char_split_as_codepoint_button">以码点</string>
+    <string name="char_split_as_grapheme_button">以字素</string>
     <!-- end -->
 </resources>
