@@ -15,7 +15,7 @@ use crate::fourier_series::{FloatType, Integrator, PathEvaluator};
 
 #[no_mangle]
 #[allow(non_snake_case, clippy::too_many_arguments)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     env: JNIEnv,
     _class: JClass,
     points: jobjectArray,
@@ -48,7 +48,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
             env,
             points,
             integral_segments,
-            period as f64,
+            period,
             epicycle_num,
             thread_num,
             path_evaluator_enum,

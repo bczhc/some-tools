@@ -17,7 +17,7 @@ fn count(env: JNIEnv, src: JString, callback: jobject) -> Result<u32> {
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024CharUcd_count(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024CharUcd_count(
     env: JNIEnv,
     _class: JClass,
     src: JString,
@@ -46,7 +46,7 @@ fn parse_xml(env: JNIEnv, src: JString, dest: JString, callback: jobject) -> Res
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024CharUcd_parseXml(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024CharUcd_parseXml(
     env: JNIEnv,
     _class: JClass,
     src: JString,

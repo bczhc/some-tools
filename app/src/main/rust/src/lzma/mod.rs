@@ -16,7 +16,7 @@ fn decompress(env: JNIEnv, data: jbyteArray) -> Result<jbyteArray> {
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Lzma_decompress(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Lzma_decompress(
     env: JNIEnv,
     _: JClass,
     data: jbyteArray,

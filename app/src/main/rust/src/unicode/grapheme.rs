@@ -9,7 +9,7 @@ use crate::jni_helper::{GetString, GetStringError};
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_newIterator(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_newIterator(
     env: JNIEnv,
     _class: JClass,
     text: JString,
@@ -31,7 +31,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_newIterator(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_hasNext(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_hasNext(
     _env: JNIEnv,
     _class: JClass,
     addr: jlong,
@@ -41,7 +41,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_hasNext(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_next(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_next(
     env: JNIEnv,
     _class: JClass,
     addr: jlong,
@@ -52,7 +52,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_next(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_release(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_release(
     _env: JNIEnv,
     _class: JClass,
     addr: jlong,
@@ -82,6 +82,7 @@ impl<'a> Graphemes<'a> {
         self.iter.peek().is_some()
     }
 
+    #[allow(clippy::should_implement_trait)]
     pub fn next(&mut self) -> &str {
         self.iter.next().unwrap()
     }

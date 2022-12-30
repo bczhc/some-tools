@@ -4,7 +4,7 @@ use jni::JNIEnv;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024ByteSize_toHumanReadable(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024ByteSize_toHumanReadable(
     env: JNIEnv,
     _class: JClass,
     size: jlong,

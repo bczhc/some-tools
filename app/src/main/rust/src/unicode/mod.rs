@@ -1,2 +1,2 @@
-pub mod grapheme;
 pub mod codepoint;
+pub mod grapheme;

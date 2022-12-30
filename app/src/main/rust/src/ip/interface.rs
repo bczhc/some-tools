@@ -6,13 +6,16 @@ use std::net::IpAddr;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Ip_getLocalIpObj(_env: JNIEnv, _: JClass) -> jlong {
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Ip_getLocalIpObj(
+    _env: JNIEnv,
+    _: JClass,
+) -> jlong {
     todo!()
 }
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Ip_ipObjToString(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Ip_ipObjToString(
     env: JNIEnv,
     _: JClass,
     addr: jlong,
@@ -24,7 +27,10 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Ip_ipObjToString(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Ip_getLocalIpInfo(env: JNIEnv, _class: JClass) -> jstring {
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Ip_getLocalIpInfo(
+    env: JNIEnv,
+    _class: JClass,
+) -> jstring {
     let interfaces = pnet_datalink::interfaces();
     let mut info = String::new();
 

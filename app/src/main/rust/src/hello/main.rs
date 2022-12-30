@@ -5,7 +5,7 @@ use jni::JNIEnv;
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn Java_pers_zhc_tools_jni_JNI_00024JniDemo_hello(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024JniDemo_hello(
     env: JNIEnv,
     _: JClass,
     context: JObject,

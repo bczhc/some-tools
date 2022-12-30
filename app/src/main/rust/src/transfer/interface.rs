@@ -6,7 +6,7 @@ use jni::JNIEnv;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Transfer_asyncStartServer(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Transfer_asyncStartServer(
     env: JNIEnv,
     _: JClass,
     port: jint,
@@ -25,7 +25,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Transfer_asyncStartServer(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Transfer_send(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Transfer_send(
     env: JNIEnv,
     _class: JClass,
     socket_addr: JString,

@@ -17,7 +17,7 @@ static SIGNALS: Lazy<Vec<(String, i32)>> = Lazy::new(signals);
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Signals_getSignalNames(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Signals_getSignalNames(
     env: JNIEnv,
     _: JClass,
 ) -> jobjectArray {
@@ -45,7 +45,10 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Signals_getSignalNames(
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Signals_getSignalInts(env: JNIEnv, _: JClass) -> jintArray {
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Signals_getSignalInts(
+    env: JNIEnv,
+    _: JClass,
+) -> jintArray {
     fn ints(env: JNIEnv) -> Result<jintArray, Box<dyn Error>> {
         let int_array = env.new_int_array(SIGNALS.len() as jsize)?;
         let ints = SIGNALS.iter().map(|x| x.1 as jint).collect::<Vec<_>>();
@@ -63,7 +66,11 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Signals_getSignalInts(env: JNIEnv, _: JC
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Signals_raise(_env: JNIEnv, _: JClass, signal: jint) {
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Signals_raise(
+    _env: JNIEnv,
+    _: JClass,
+    signal: jint,
+) {
     unsafe {
         raise(signal as libc::c_int);
     }

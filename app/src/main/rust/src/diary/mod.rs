@@ -10,7 +10,7 @@ use sha1::digest::Digest;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Diary_computeFileIdentifier(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Diary_computeFileIdentifier(
     env: JNIEnv,
     _: JClass,
     path: JString,

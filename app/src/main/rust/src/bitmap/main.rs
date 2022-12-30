@@ -34,7 +34,7 @@ fn compress_to_png(env: JNIEnv, bitmap: jobject, dest_path: JString) -> Result<(
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Bitmap_compressToPng(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Bitmap_compressToPng(
     env: JNIEnv,
     _class: JClass,
     bitmap: jobject,

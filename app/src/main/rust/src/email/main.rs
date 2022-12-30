@@ -10,7 +10,7 @@ use crate::jni_helper::CheckOrThrow;
 
 #[no_mangle]
 #[allow(non_snake_case, clippy::too_many_arguments)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Email_send(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Email_send(
     env: JNIEnv,
     _class: JClass,
     smtp_server: JString,

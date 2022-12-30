@@ -12,7 +12,7 @@ fn get_char(env: JNIEnv, codepoint: u32) -> char {
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Char_getUtf8Len(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Char_getUtf8Len(
     env: JNIEnv,
     _class: JClass,
     codepoint: jint,
@@ -22,7 +22,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Char_getUtf8Len(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Char_getUtf16Len(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Char_getUtf16Len(
     env: JNIEnv,
     _class: JClass,
     codepoint: jint,
@@ -32,7 +32,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Char_getUtf16Len(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Char_encodeUTF8(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Char_encodeUTF8(
     env: JNIEnv,
     _class: JClass,
     codepoint: jint,
@@ -49,7 +49,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Char_encodeUTF8(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Char_encodeUTF16(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Char_encodeUTF16(
     env: JNIEnv,
     _class: JClass,
     codepoint: jint,

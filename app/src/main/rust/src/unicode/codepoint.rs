@@ -10,7 +10,7 @@ use crate::jni_helper::GetString;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_newIterator(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_newIterator(
     env: JNIEnv,
     _class: JClass,
     s: JString,
@@ -34,7 +34,7 @@ fn get_ref<'a>(addr: jlong) -> &'a mut StringWithIter<'a> {
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_hasNext(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_hasNext(
     _env: JNIEnv,
     _class: JClass,
     addr: jlong,
@@ -45,7 +45,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_hasNext(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_next(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_next(
     _env: JNIEnv,
     _class: JClass,
     addr: jlong,
@@ -56,7 +56,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_next(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_release(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_release(
     _env: JNIEnv,
     _class: JClass,
     addr: jlong,
@@ -67,7 +67,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_release(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_codepointLength(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_codepointLength(
     env: JNIEnv,
     _class: JClass,
     s: JString,
@@ -107,7 +107,7 @@ impl<'a> StringWithIter<'a> {
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_codepoint2str(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_codepoint2str(
     env: JNIEnv,
     _class: JClass,
     codepoint: i32,

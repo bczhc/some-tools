@@ -16,7 +16,7 @@ fn string_to_str_throw<'a>(env: JNIEnv, str: &'a JavaStr) -> jni::errors::Result
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024CharStat_codepointCount(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024CharStat_codepointCount(
     env: JNIEnv,
     _class: JClass,
     text: JString,
@@ -28,7 +28,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024CharStat_codepointCount(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024CharStat_graphemeCount(
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024CharStat_graphemeCount(
     env: JNIEnv,
     _class: JClass,
     text: JString,
