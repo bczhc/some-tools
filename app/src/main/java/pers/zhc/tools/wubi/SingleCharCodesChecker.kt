@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.android.synthetic.main.wubi_single_char_record_list_view.view.*
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
-import pers.zhc.tools.jni.JNI.Utf8
+import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.execute
 import java.io.File
@@ -42,7 +42,7 @@ class SingleCharCodesChecker(
 
     companion object {
         fun checkIfSingleChar(s: String): Boolean {
-            return Utf8.codepointLength(s) == 1
+            return JNI.Unicode.Codepoint.codepointLength(s) == 1
         }
 
         fun getShortest(codes: Array<String>) = codes.minOfWith({ a: String, b: String ->

@@ -3,7 +3,6 @@ use std::ptr::null;
 use std::str::Chars;
 
 use jni::objects::{JClass, JString};
-
 use jni::sys::{_jobject, jboolean, jint, jlong, jstring};
 use jni::JNIEnv;
 
@@ -11,7 +10,7 @@ use crate::jni_helper::GetString;
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_getCodepointIterator(
+pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_newIterator(
     env: JNIEnv,
     _class: JClass,
     s: JString,
@@ -35,7 +34,7 @@ fn get_ref<'a>(addr: jlong) -> &'a mut StringWithIter<'a> {
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_hasNext(
+pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_hasNext(
     _env: JNIEnv,
     _class: JClass,
     addr: jlong,
@@ -46,7 +45,7 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_hasNext(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_next(
+pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_next(
     _env: JNIEnv,
     _class: JClass,
     addr: jlong,
@@ -57,14 +56,18 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_next(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_release(_env: JNIEnv, _class: JClass, addr: jlong) {
+pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_release(
+    _env: JNIEnv,
+    _class: JClass,
+    addr: jlong,
+) {
     let b = unsafe { Box::from_raw(addr as usize as *mut StringWithIter) };
     drop(b)
 }
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_codepointLength(
+pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_codepointLength(
     env: JNIEnv,
     _class: JClass,
     s: JString,
@@ -104,7 +107,7 @@ impl<'a> StringWithIter<'a> {
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub fn Java_pers_zhc_tools_jni_JNI_00024Utf8_codepoint2str(
+pub fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_codepoint2str(
     env: JNIEnv,
     _class: JClass,
     codepoint: i32,

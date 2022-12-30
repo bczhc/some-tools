@@ -112,7 +112,7 @@ class WubiInverseDictDatabase(path: String) {
         }
         val queryChars = fun(codepoints: List<Int>): List<String>? {
             val queries = codepoints.map {
-                val char = JNI.Utf8.codepoint2str(it)!!
+                val char = JNI.Unicode.Codepoint.codepoint2str(it)!!
                 query(char)
             }
             queries.forEach {

@@ -55,7 +55,7 @@ class CharSplitActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: MyHolder, position: Int) {
             val codepoint = list[position]
-            val char = JNI.Utf8.codepoint2str(codepoint)
+            val char = JNI.Unicode.Codepoint.codepoint2str(codepoint)
 
             @SuppressLint("SetTextI18n")
             holder.ordinalTV.text = (position + 1).toString()

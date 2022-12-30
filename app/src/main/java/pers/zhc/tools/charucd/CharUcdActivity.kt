@@ -39,7 +39,7 @@ class CharUcdActivity : BaseActivity() {
         }
 
         val ucdTL = ucd_prop_tl!!
-        char_tv.text = JNI.Utf8.codepoint2str(codepoint)
+        char_tv.text = JNI.Unicode.Codepoint.codepoint2str(codepoint)
         unicode_tv!!.text =
             getString(R.string.char_ucd_unicode_codepoint_tv, UnicodeTable.codepoint2unicodeStr(codepoint))
         decimal_tv!!.text = getString(R.string.char_ucd_unicode_decimal_tv, codepoint)

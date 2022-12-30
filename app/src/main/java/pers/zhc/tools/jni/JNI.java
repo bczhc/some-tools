@@ -272,20 +272,6 @@ public class JNI {
         public static native void send(String smtpServer, String username, String password, String from, String[] to, String[] cc, String subject, String body);
     }
 
-    public static class Utf8 {
-        public static native long getCodepointIterator(String s);
-
-        public static native boolean hasNext(long addr);
-
-        public static native int next(long addr);
-
-        public static native void release(long addr);
-
-        public static native int codepointLength(String s);
-
-        public static native String codepoint2str(int codepoint);
-    }
-
     public static class FourierSeries {
         public interface Callback {
             void onResult(double re, double im, int n, double p);
@@ -378,6 +364,21 @@ public class JNI {
             public static native String next(long addr);
 
             public static native void release(long addr);
+        }
+
+        public static class Codepoint {
+
+            public static native long newIterator(String s);
+
+            public static native boolean hasNext(long addr);
+
+            public static native int next(long addr);
+
+            public static native void release(long addr);
+
+            public static native int codepointLength(String s);
+
+            public static native String codepoint2str(int codepoint);
         }
     }
 }

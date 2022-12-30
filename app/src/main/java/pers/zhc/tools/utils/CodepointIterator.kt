@@ -1,23 +1,23 @@
 package pers.zhc.tools.utils
 
-import pers.zhc.tools.jni.JNI.Utf8
+import pers.zhc.tools.jni.JNI
 
 /**
  * @author bczhc
  */
 class CodepointIterator(s: String): Iterator<Int> {
-    private val addr = Utf8.getCodepointIterator(s)
+    private val addr = JNI.Unicode.Codepoint.newIterator(s)
 
     override fun hasNext(): Boolean {
-        return Utf8.hasNext(addr)
+        return JNI.Unicode.Codepoint.hasNext(addr)
     }
 
     override fun next(): Int {
-        return Utf8.next(addr)
+        return JNI.Unicode.Codepoint.next(addr)
     }
 
     private fun release() {
-        Utf8.release(addr)
+        JNI.Unicode.Codepoint.release(addr)
     }
 
     /**

@@ -23,7 +23,7 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
-import pers.zhc.tools.jni.JNI.Utf8
+import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.*
 import java.io.File
 
@@ -86,7 +86,7 @@ class WordsMainActivity : BaseActivity() {
         fastScroller.setupWithRecyclerView(recyclerView, { position ->
             val chars = CodepointIterator(itemList[position].word)
             val text = if (chars.hasNext()) {
-                Utf8.codepoint2str(chars.next()).uppercase()
+                JNI.Unicode.Codepoint.codepoint2str(chars.next()).uppercase()
             } else {
                 ""
             }

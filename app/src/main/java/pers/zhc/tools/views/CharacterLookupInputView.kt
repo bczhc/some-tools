@@ -57,7 +57,7 @@ class CharacterLookupInputView : WrapLayout {
                 }
             }!!
             val s = String(intArrayOf(codepoint), 0, 1)
-            Assertion.doAssertion(JNI.Utf8.codepointLength(s) == 1)
+            Assertion.doAssertion(JNI.Unicode.Codepoint.codepointLength(s) == 1)
 
             setText {
                 charET.setText(s)
@@ -93,7 +93,7 @@ class CharacterLookupInputView : WrapLayout {
                     charET.setSelection(charET.length())
                 }
             }
-            Assertion.doAssertion(JNI.Utf8.codepointLength(charET.text.toString()) == 1)
+            Assertion.doAssertion(JNI.Unicode.Codepoint.codepointLength(charET.text.toString()) == 1)
             setText {
                 codepointET.setText(UnicodeTable.completeCodepointNum(codepoints[0].toString(16)))
             }

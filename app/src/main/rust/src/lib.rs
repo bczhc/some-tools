@@ -15,4 +15,3 @@ pub mod lzma;
 pub mod signals;
 pub mod transfer;
 pub mod unicode;
-pub mod utf8;
