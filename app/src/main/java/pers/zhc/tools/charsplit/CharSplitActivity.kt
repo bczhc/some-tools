@@ -1,4 +1,4 @@
-package pers.zhc.tools.tools
+package pers.zhc.tools.charsplit
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -23,7 +23,7 @@ import pers.zhc.tools.utils.CodepointIterator
 /**
  * @author bczhc
  */
-class CharsSplitter : BaseActivity() {
+class CharSplitActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chars_splitter_activity)
@@ -57,6 +57,7 @@ class CharsSplitter : BaseActivity() {
             val codepoint = list[position]
             val char = JNI.Utf8.codepoint2str(codepoint)
 
+            @SuppressLint("SetTextI18n")
             holder.ordinalTV.text = (position + 1).toString()
             holder.codepointTV.text = UnicodeTable.codepoint2unicodeStr(codepoint)
             holder.charTV.text = char

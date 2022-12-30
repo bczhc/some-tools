@@ -672,7 +672,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".tools.CharsSplitter"
+                android:name=".charsplit.CharSplitActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.M3Application"
                 android:label="@string/chars_splitter_label"

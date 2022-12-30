@@ -14,7 +14,7 @@ import pers.zhc.tools.test.SysInfo
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.test.toast.ToastTest
 import pers.zhc.tools.test.typetest.TypeTest
-import pers.zhc.tools.tools.CharsSplitter
+import pers.zhc.tools.charsplit.CharSplitActivity
 
 /**
  * @author bczhc
@@ -35,7 +35,7 @@ class SmallToolsListActivity : BaseActivity() {
             ActivityItem(R.string.regular_expression_test, RegExpTest::class.java),
             ActivityItem(R.string.sys_info_label, SysInfo::class.java),
             ActivityItem(R.string.unicode_table_label, UnicodeTable::class.java),
-            ActivityItem(R.string.chars_splitter_label, CharsSplitter::class.java),
+            ActivityItem(R.string.chars_splitter_label, CharSplitActivity::class.java),
             ActivityItem(R.string.char_ucd_lookup_activity_label, CharLookupActivity::class.java),
             ActivityItem(R.string.char_stat_label, CharStatActivity::class.java),
         )
