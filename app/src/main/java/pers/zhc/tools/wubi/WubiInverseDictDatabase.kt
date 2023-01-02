@@ -155,8 +155,8 @@ class WubiInverseDictDatabase(path: String) {
                 if (codepoints.size >= 4) {
                     // multi-character words
                     // take: x--- x--- x--- ---- ... ---- x---
-                    val toke = codepoints.take(3).toMutableList().also { it.add(codepoints.last()) }
-                    val queries = queryChars(toke) ?: return null
+                    val took = codepoints.take(3).toMutableList().also { it.add(codepoints.last()) }
+                    val queries = queryChars(took) ?: return null
                     return "${queries[0][0]}${queries[1][0]}${queries[2][0]}${queries[3][0]}"
                 }
             }
