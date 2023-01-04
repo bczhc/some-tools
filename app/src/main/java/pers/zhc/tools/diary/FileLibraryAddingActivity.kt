@@ -9,12 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContract
-import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import kotlinx.android.synthetic.main.diary_attachment_adding_activity.description_et
 import kotlinx.android.synthetic.main.diary_file_library_add_progress_view.view.*
 import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity.*
 import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_file_mode.view.*
-import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_text_mode.*
 import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_text_mode.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryFileLibraryAddingFileActivityFileModeBinding
@@ -131,10 +129,9 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
                 )
 
                 runOnUiThread { msgTV.setText(R.string.copying_file) }
-                val storagePath = diaryDatabase.queryExtraInfo()!!.diaryAttachmentFileLibraryStoragePath!!
                 FileUtil.copy(
                     file,
-                    File(storagePath, identifier)
+                    File(LocalInfo.attachmentStoragePath, identifier)
                 )
 
                 runOnUiThread {

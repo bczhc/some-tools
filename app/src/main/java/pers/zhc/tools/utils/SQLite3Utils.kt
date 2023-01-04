@@ -38,10 +38,11 @@ fun <T> SQLite3.queryOne(
     }
 }
 
-inline fun KClass<SQLite3>.withNew(path: String, block: (db: SQLite3) -> Unit) {
+inline fun <T> KClass<SQLite3>.withNew(path: String, block: (db: SQLite3) -> T): T {
     val db = SQLite3.open(path)
-    block(db)
+    val r = block(db)
     db.close()
+    return r
 }
 
 inline fun <R> SQLite3.withCompiledStatement(@Language("SQLite") sql: String, block: (statement: Statement) -> R): R {
