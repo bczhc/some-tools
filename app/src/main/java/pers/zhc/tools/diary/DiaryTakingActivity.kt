@@ -23,12 +23,13 @@ import pers.zhc.tools.diary.DiaryContentPreviewActivity.Companion.createDiaryRec
 import pers.zhc.tools.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 /**
  * @author bczhc
  */
 class DiaryTakingActivity : DiaryBaseActivity() {
-    private var autoSaverRunning = true
     private var ttsEnabled = false
     private var tts: TextToSpeech? = null
     private lateinit var editText: EditText
@@ -139,7 +140,7 @@ class DiaryTakingActivity : DiaryBaseActivity() {
         if (newRec) {
             createNewRecord()
         }
-        saver = ScheduledSaver().also { it.start() }
+        saver = ScheduledSaver { save() }.also { it.start() }
     }
 
     private fun highlightFind(regex: Regex) {
@@ -259,7 +260,9 @@ WHERE "date" IS ?"""
         super.onSaveInstanceState(outState)
     }
 
+    @Synchronized
     private fun save() {
+        Log.i(TAG, "save diary...")
         updateDiary(dateInt, editText.text.toString())
     }
 
@@ -272,34 +275,87 @@ WHERE "date" IS ?"""
     }
 
     override fun finish() {
-        autoSaverRunning = false
-        saver!!.stop()
         save()
+        saver!!.let {
+            it.stop()
+            it.waitForStopped()
+        }
         super.finish()
     }
 
-    private inner class ScheduledSaver : Runnable {
+    override fun onPause() {
+        saver!!.pause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        saver!!.resume()
+        super.onResume()
+    }
+
+    private class ScheduledSaver(private val onSave: () -> Unit) : Runnable {
+        private lateinit var state: State
+        private val lock = ReentrantLock()
+        private val condition = lock.newCondition()
+
+        private enum class State {
+            PAUSED, STOPPED, RUNNING
+        }
+
+        private val onStoppedLatch = SpinLatch()
+
         override fun run() {
-            while (autoSaverRunning) {
-                if (Thread.interrupted()) break
-                save()
-                try {
-                    Thread.sleep(10000)
-                } catch (_: InterruptedException) {
-                    break
+            onStoppedLatch.suspend()
+            while (true) {
+                when (state) {
+                    State.PAUSED -> {
+                        // pause here and wait for being waked up
+                        lock.withLock {
+                            condition.await()
+                        }
+                    }
+                    State.STOPPED -> {
+                        break
+                    }
+                    State.RUNNING -> {}
                 }
-                Log.d(TAG, "save diary...")
+
+                onSave()
+                try {
+                    Thread.sleep(1000)
+                } catch (_: InterruptedException) {
+                    // just skip this sleep
+                }
             }
+            onStoppedLatch.stop()
         }
 
         private val t: Thread = Thread(this)
 
+        fun waitForStopped() {
+            onStoppedLatch.await()
+        }
+
         fun start() {
+            state = State.RUNNING
             t.start()
         }
 
         fun stop() {
+            state = State.STOPPED
             t.interrupt()
+        }
+
+        fun pause() {
+            state = State.PAUSED
+            t.interrupt()
+        }
+
+        fun resume() {
+            state = State.RUNNING
+            lock.withLock {
+                condition.signalAll()
+            }
         }
     }
 
@@ -321,7 +377,7 @@ WHERE "date" IS ?"""
         )
     }
 
-    class ActivityContract: ActivityResultContract<IntDate, ActivityContract.Result>() {
+    class ActivityContract : ActivityResultContract<IntDate, ActivityContract.Result>() {
         class Result(
             val dateInt: Int,
             val isNewRecord: Boolean
