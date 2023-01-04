@@ -298,6 +298,10 @@ WHERE "date" IS ?"""
         private val lock = ReentrantLock()
         private val condition = lock.newCondition()
 
+        companion object {
+            const val INTERVAL_MILLIS: Long = 10_000
+        }
+
         private enum class State {
             PAUSED, STOPPED, RUNNING
         }
@@ -322,7 +326,7 @@ WHERE "date" IS ?"""
 
                 onSave()
                 try {
-                    Thread.sleep(1000)
+                    Thread.sleep(INTERVAL_MILLIS)
                 } catch (_: InterruptedException) {
                     // just skip this sleep
                 }
