@@ -202,7 +202,6 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale|screenLayout"
                 android:label="@string/diary"
                 android:taskAffinity="pers.zhc.tools.diary"
-                android:launchMode="singleTask"
                 android:theme="@style/Theme.M3Application.NoActionBar" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -214,7 +213,9 @@
                 android:name=".diary.DiaryTakingActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/diary"
-                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="true">
+                android:theme="@style/Theme.M3Application.NoActionBar" android:exported="true"
+                android:launchMode="singleTask"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
