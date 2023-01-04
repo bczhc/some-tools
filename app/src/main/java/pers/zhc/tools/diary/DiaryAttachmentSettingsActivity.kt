@@ -6,16 +6,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.diary_attachment_settings_activity.*
+import org.apache.commons.io.FileUtils
 import org.json.JSONObject
 import pers.zhc.tools.R
 import pers.zhc.tools.filepicker.FilePicker
-import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.DialogUtil
-import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.filepicker.FilePickerActivityContract
-import pers.zhc.tools.utils.nullMap
+import pers.zhc.tools.utils.*
 import java.io.File
+import java.io.IOException
 
 /**
  * @author bczhc
@@ -25,10 +24,12 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
     private lateinit var oldPathStr: String
 
     private val launchers = object {
-        val pickFolder = registerForActivityResult(FilePickerActivityContract(
-            FilePickerActivityContract.FilePickerType.PICK_FOLDER,
-            false
-        )) {result->
+        val pickFolder = registerForActivityResult(
+            FilePickerActivityContract(
+                FilePickerActivityContract.FilePickerType.PICK_FOLDER,
+                false
+            )
+        ) { result ->
             result ?: return@registerForActivityResult
             storagePathTV.text = result.path
         }
@@ -63,15 +64,50 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
         doneBtn.setOnClickListener { save() }
     }
 
+    /**
+     * returns if it succeeds
+     */
+    private fun moveOldFiles(newPath: File): Boolean {
+        val children = File(oldPathStr).listFiles() ?: return false
+        try {
+            children.filter { it.isFile }.forEach {
+                FileUtils.moveFile(it, File(newPath, it.name))
+            }
+        } catch (_: IOException) {
+            return false
+        }
+
+        return true
+    }
+
     private fun save() {
         DialogUtil.createAlertDialogWithNeutralButton(
             this,
             { _, _ ->
+                // don't move file
+                diaryDatabase.updateExtraInfo(ExtraInfo(storagePathTV.text.toString()))
                 ToastUtils.show(this, R.string.save_success_toast)
             },
             { _, _ ->
-                diaryDatabase.updateExtraInfo(ExtraInfo(storagePathTV.text.toString()))
-                ToastUtils.show(this, R.string.save_success_toast)
+                // move file
+                val progressDialog = ProgressDialog(this).also {
+                    it.getProgressView().apply {
+                        setIsIndeterminateMode(true)
+                        setText(getString(R.string.moving_files_progress_dialog))
+                    }
+                    it.show()
+                }
+                Thread {
+                    val result = moveOldFiles(File(storagePathTV.text.toString()))
+                    progressDialog.dismiss()
+                    if (!result) {
+                        ToastUtils.show(this, R.string.moving_file_failed)
+                    } else {
+                        ToastUtils.show(this, R.string.save_success_toast)
+                    }
+                    diaryDatabase.updateExtraInfo(ExtraInfo(storagePathTV.text.toString()))
+                }
+
             }, R.string.diary_attachment_setting_move_file_dialog_title
         ).apply {
             setMessage(getString(R.string.diary_attachment_setting_move_file_dialog_message))
@@ -85,7 +121,6 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
     }
 
     override fun onBackPressed() {
-        // TODO
         if (storagePathTV.text.toString() != oldPathStr) {
             // has changed the storage path
             DialogUtil.createConfirmationAlertDialog(this, { _, _ ->

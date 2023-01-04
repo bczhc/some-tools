@@ -91,6 +91,7 @@
     <string name="importing_failed">导入失败</string>
     <string name="media_play_button">播放</string>
     <string name="media_pause_button">暂停</string>
+    <string name="moving_files_progress_dialog">正在移动</string>
     <!-- end -->
 
     <!-- old -->
@@ -788,5 +789,6 @@
     <string name="char_stat_label">字符统计</string>
     <string name="char_stat_codepoint_count_tv">Codepoint count: %1$d</string>
     <string name="char_stat_grapheme_cluster_count_tv">Grapheme cluster count: %1$d</string>
+    <string name="moving_file_failed">移动失败</string>
     <!-- end -->
 </resources>
