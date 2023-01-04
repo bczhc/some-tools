@@ -81,7 +81,6 @@ class AttachmentFragment(
         toolbar.setOnMenuItemClickListener(this)
         setupOuterToolbar(toolbar)
 
-        checkAttachmentInfoRecord()
         refreshItemDataList()
         loadRecyclerView()
 
@@ -154,14 +153,6 @@ class AttachmentFragment(
         val attachments = diaryDatabase.queryAttachments(dateInt.takeIf { it != -1 })
         itemDataList.clear()
         itemDataList.addAll(attachments)
-    }
-
-    private fun checkAttachmentInfoRecord() {
-        val fileStoragePath = diaryDatabase.queryExtraInfo().nullMap { it.diaryAttachmentFileLibraryStoragePath }
-        if (fileStoragePath == null) {
-            // record "info_json" doesn't exist, then start to set it
-            startActivity(Intent(context, DiaryAttachmentSettingsActivity::class.java))
-        }
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
