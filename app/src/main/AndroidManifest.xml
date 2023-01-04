@@ -783,7 +783,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.M3Application"
                 android:label="@string/screen_color_picker_label"
-                android:taskAffinity="pers.zhc.tools.note"
+                android:taskAffinity="pers.zhc.tools.color_picker_demo"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -794,7 +794,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Transparent"
                 android:label="@string/screen_color_picker_label"
-                android:taskAffinity="pers.zhc.tools.note"
+                android:taskAffinity="pers.zhc.tools.color_picker"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -816,7 +816,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.Transparent"
                 android:label="@string/task_notes_label"
-                android:taskAffinity="pers.zhc.tools.tasknotes"
+                android:taskAffinity="pers.zhc.tools.tasknotes.dialog_show"
                 android:exported="true"
                 android:excludeFromRecents="true"
         >
@@ -829,7 +829,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.M3Application"
                 android:label="@string/audio_player_activity_label"
-                android:taskAffinity="pers.zhc.tools.tasknotes"
+                android:taskAffinity="pers.zhc.tools.audio_player"
                 android:exported="true"
         >
             <intent-filter>
@@ -841,7 +841,7 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.M3Application"
                 android:label="@string/char_stat_label"
-                android:taskAffinity="pers.zhc.tools.tasknotes"
+                android:taskAffinity="pers.zhc.tools.char_stat"
                 android:exported="true"
         >
             <intent-filter>
