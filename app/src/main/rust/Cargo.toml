@@ -43,6 +43,7 @@ unicode-segmentation = "1.10.0"
 
 [profile.release]
 panic = "abort"
+strip = "symbols"
 
 [profile.dev]
 panic = "abort"
