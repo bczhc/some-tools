@@ -18,4 +18,8 @@
             </group>
         </menu>
     </item>
+    <item
+            android:title="@string/create_shortcut"
+            android:id="@+id/create_shortcut"
+    />
 </menu>

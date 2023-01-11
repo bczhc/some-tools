@@ -10,6 +10,9 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.core.app.NotificationCompat
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -184,9 +187,30 @@ class TaskNotesMainActivity : BaseActivity() {
                 listAdapter.notifyDataSetChanged()
             }
 
+            R.id.create_shortcut -> {
+                createShortcut()
+            }
+
             else -> {}
         }
         return true
+    }
+
+
+    private fun createShortcut() {
+        if (!ShortcutManagerCompat.isRequestPinShortcutSupported(this)) {
+            ToastUtils.show(this, R.string.words_not_support_pinned_shortcut_toast)
+            return
+        }
+
+        val intent = Intent("NONE_ACTION")
+        intent.setClass(this, DialogShowActivity::class.java)
+        val shortcut = ShortcutInfoCompat.Builder(this, "shortcut.pin.task_notes.add_record").apply {
+            setIcon(IconCompat.createWithResource(this@TaskNotesMainActivity, R.drawable.ic_launcher_foreground))
+            setIntent(intent)
+            setShortLabel(getString(R.string.task_notes_add_record_shortcut_label))
+        }.build()
+        ShortcutManagerCompat.requestPinShortcut(this, shortcut, null)
     }
 
     inner class ListAdapter :
