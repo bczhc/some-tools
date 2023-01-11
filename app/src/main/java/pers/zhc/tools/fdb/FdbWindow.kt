@@ -154,6 +154,7 @@ class FdbWindow(activity: FdbMainActivity) {
                         panelRL.changeMode(PanelRL.MODE_PANEL)
                         updatePanelDimension()
                     }
+
                     PanelRL.MODE_PANEL -> {
                         when (buttonIndex) {
                             0 -> {
@@ -161,6 +162,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                 panelRL.changeMode(PanelRL.MODE_IMAGE_ICON)
                                 updatePanelDimension()
                             }
+
                             1 -> {
                                 // controlling / drawing
                                 val tv = panelRL.getPanelTextView(1)
@@ -172,6 +174,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                         tv.text = context.getString(R.string.fdb_panel_drawing_mode)
                                         operationMode = OperationMode.DRAWING
                                     }
+
                                     OperationMode.DRAWING -> {
                                         paintViewLP.flags = FLAG_NOT_TOUCHABLE
                                             .xor(FLAG_NOT_FOCUSABLE)
@@ -182,6 +185,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                     }
                                 }
                             }
+
                             2 -> {
                                 // color
                                 if (paintView.isEraserMode) {
@@ -190,18 +194,22 @@ class FdbWindow(activity: FdbMainActivity) {
                                     dialogs.brushColorPicker.show()
                                 }
                             }
+
                             3 -> {
                                 // stroke width
                                 showBrushWidthAdjustingDialog()
                             }
+
                             4 -> {
                                 // undo
                                 paintView.undo()
                             }
+
                             5 -> {
                                 // redo
                                 paintView.redo()
                             }
+
                             6 -> {
                                 // drawing / erasing
                                 brushMode = brushMode.gerReverse()
@@ -212,35 +220,42 @@ class FdbWindow(activity: FdbMainActivity) {
                                 }
                                 updateBrushModeText()
                             }
+
                             7 -> {
                                 // clear
                                 createConfirmationDialog({ _, _ ->
                                     paintView.clearAll()
                                 }, R.string.fdb_clear_confirmation_dialog).show()
                             }
+
                             8 -> {
                                 // pick screen color
                                 pickScreenColorAction()
                             }
+
                             9 -> {
                                 // panel
                                 dialogs.panelSettings.show()
                             }
+
                             10 -> {
                                 // more
                                 dialogs.moreMenu.show()
                             }
+
                             11 -> {
                                 // exit
                                 createConfirmationDialog({ _, _ ->
                                     exit()
                                 }, R.string.fdb_exit_confirmation_dialog).show()
                             }
+
                             else -> {
                             }
                         }
                         paintView.flushPathSaver()
                     }
+
                     else -> {
                     }
                 }
@@ -418,10 +433,12 @@ class FdbWindow(activity: FdbMainActivity) {
                     paintView.drawingStrokeWidth = width
                     updateDisplay(BrushMode.DRAWING)
                 }
+
                 R.id.eraser_radio -> {
                     paintView.eraserStrokeWidth = width
                     updateDisplay(BrushMode.ERASING)
                 }
+
                 else -> {
                 }
             }
@@ -454,9 +471,11 @@ class FdbWindow(activity: FdbMainActivity) {
                 R.id.brush_radio -> {
                     updateDisplay(BrushMode.DRAWING)
                 }
+
                 R.id.eraser_radio -> {
                     updateDisplay(BrushMode.ERASING)
                 }
+
                 else -> {
                 }
             }
@@ -475,10 +494,12 @@ class FdbWindow(activity: FdbMainActivity) {
                     paintView.strokeHardness = value
                     updateDisplay(BrushMode.DRAWING)
                 }
+
                 R.id.eraser_radio -> {
                     paintView.eraserHardness = value
                     updateDisplay(BrushMode.ERASING)
                 }
+
                 else -> {
                 }
             }
@@ -707,6 +728,7 @@ class FdbWindow(activity: FdbMainActivity) {
                             }
                         }
                     }
+
                     PaintView.ImageExportProgressType.COMPRESSING -> {
                         handler.post {
                             progressView.setIsIndeterminateMode(true)
@@ -730,6 +752,7 @@ class FdbWindow(activity: FdbMainActivity) {
                         // import image
                         Common.toastTodo(context)
                     }
+
                     1 -> {
                         // export image
                         createPromptDialog(
@@ -758,10 +781,12 @@ class FdbWindow(activity: FdbMainActivity) {
                             }.show()
                         }.show()
                     }
+
                     2 -> {
                         // import path
                         showImportPathDialog(externalPath.path)
                     }
+
                     3 -> {
                         // export path
 
@@ -786,14 +811,17 @@ class FdbWindow(activity: FdbMainActivity) {
                             exportPath(path, picker.filenameET!!.text.toString())
                         }.show()
                     }
+
                     4 -> {
                         // reset transformation
                         paintView.resetTransformation()
                     }
+
                     5 -> {
                         // manage layers
                         dialogs.layerManager.show()
                     }
+
                     6 -> {
                         // hide drawing board
                         createConfirmationDialog({ _, _ ->
@@ -801,14 +829,17 @@ class FdbWindow(activity: FdbMainActivity) {
                             dialogs.moreMenu.dismiss()
                         }, R.string.fdb_hide_fdb_confirmation_dialog).show()
                     }
+
                     7 -> {
                         // drawing statistics
                         showPathStatDialog()
                     }
+
                     8 -> {
                         // transformation settings
                         dialogs.transformationSettings.show()
                     }
+
                     else -> {
                     }
                 }
@@ -903,6 +934,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                 paintView.defaultTransformation = Matrix::class.fromValues(it)
                             }
                         }
+
                         else -> {
                         }
                     }
@@ -952,7 +984,7 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun exportPath(internalPath: String, filename: String) {
-
+        // path "undo" optimization
         val progressView = View.inflate(context, R.layout.progress_bar, null)
         val progressTitle = progressView.progress_bar_title!!
         val progressBar = progressView.progress_bar!!
@@ -960,60 +992,58 @@ class FdbWindow(activity: FdbMainActivity) {
 
         val dialog = createDialog(progressView).apply {
             setCanceledOnTouchOutside(false)
+        }.also { it.show() }
+
+        val setProgress = { layerNumber: Int, progress: Float, phase: PathProcessor.ProgressPhase ->
+            progressTitle.text = context.getString(
+                R.string.fdb_process_path_progress_title,
+                layerNumber, phase.number
+            )
+            progressTV.text = context.getString(R.string.progress_tv, progress * 100F)
+            progressBar.setProgressCompat((progress * 100F).toInt(), true)
         }
-        //  dialog.show()
 
         val tryDo = AsyncTryDo()
-        Thread {
-            try {
-                val pathFile = File(internalPath, filename)
-                FileUtil.copy(pathFiles.tmpPathFile, pathFile)
+        val threadAction = {
+            val destFile = File(internalPath, filename)
+            FileUtil.copy(pathFiles.tmpPathFile, destFile)
 
-                val first = arrayOf(true, true)
-                /*TODO
-                PathProcessor.optimizePath(pathFile.path) { phase, progress ->
-                    phase!!
+            val database = SQLite3.open(destFile.path)
+            val pathLayerTables = database.getTables().filter { it.startsWith("path_layer_") }
+
+            pathLayerTables.forEachIndexed { layerIndex, table ->
+                PathProcessor.optimizePath(destFile, table) { progress, phase ->
                     tryDo.tryDo { _, notifier ->
                         context.runOnUiThread {
                             when (phase) {
-                                PathProcessor.ProgressCallback.Phase.PHASE_1 -> {
-                                    if (first[0]) {
-                                        progressTitle.text =
-                                            context.getString(R.string.fdb_process_path_progress_title, 1)
-                                        first[0] = false
-                                    }
-                                    progressBar.progress = (progress * 100F).toInt()
-                                    progressTV.text = context.getString(R.string.progress_tv, progress * 100F)
+                                PathProcessor.ProgressPhase.PHASE1, PathProcessor.ProgressPhase.PHASE2 -> {
+                                    setProgress(layerIndex + 1, progress, phase)
                                 }
-                                PathProcessor.ProgressCallback.Phase.PHASE_2 -> {
-                                    if (first[1]) {
-                                        progressTitle.text =
-                                            context.getString(R.string.fdb_process_path_progress_title, 2)
-                                        first[1] = false
-                                    }
-                                    progressBar.progress = (progress * 100F).toInt()
-                                    progressTV.text = context.getString(R.string.progress_tv, progress * 100F)
-                                }
-                                PathProcessor.ProgressCallback.Phase.DONE -> {
-                                    progressBar.progress = 100
-                                    progressTitle.text = context.getString(R.string.process_done)
-                                    progressTV.text = context.getString(R.string.progress_tv, 100F)
+
+                                PathProcessor.ProgressPhase.DONE -> {
+                                    setProgress(layerIndex + 1, 100F, PathProcessor.ProgressPhase.PHASE2)
                                 }
                             }
                             notifier.finish()
                         }
                     }
-                    if (phase == PathProcessor.ProgressCallback.Phase.DONE) {
+                    if (phase == PathProcessor.ProgressPhase.DONE && layerIndex == pathLayerTables.lastIndex) {
                         context.runOnUiThread {
                             dialog.dismiss()
                         }
                     }
-                }*/
-
+                }
+            }
+        }
+        Thread {
+            try {
+                threadAction()
                 ToastUtils.show(context, R.string.fdb_exporting_path_succeeded_toast)
             } catch (e: IOException) {
-                Common.showException(e, context)
-                dialog.dismiss()
+                context.runOnUiThread {
+                    Common.showException(e, context)
+                    dialog.dismiss()
+                }
             }
         }.start()
     }
@@ -1114,12 +1144,14 @@ class FdbWindow(activity: FdbMainActivity) {
                     ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED -> {
 //                        startFDB()
                     }
+
                     ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED -> {
                         requestId!!
                         if (requestId == fdbId.toString()) {
                             sendStartPickerViewRequest()
                         }
                     }
+
                     else -> {}
                 }
             }.also {

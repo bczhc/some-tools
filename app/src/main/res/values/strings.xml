@@ -577,7 +577,7 @@
     <string name="fdb_hide_fdb_notification_text">点击以恢复画板\n%1$s</string>
     <string name="fdb_hide_fdb_confirmation_dialog">是否隐藏画板</string>
     <string name="fdb_start_fdb_button">开启悬浮窗</string>
-    <string name="fdb_process_path_progress_title">正在处理……阶段%1$d</string>
+    <string name="fdb_process_path_progress_title">正在处理……图层%1$d 阶段%2$d</string>
     <string name="fdb_exporting_path_succeeded_toast">导出成功</string>
     <!-- TODO: use universal string resources -->
     <string name="fdb_transformation_move">移动</string>
