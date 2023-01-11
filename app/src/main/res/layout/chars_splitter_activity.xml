@@ -1,17 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:padding="10dp">
+>
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/input_et"
               tools:ignore="Autofill,LabelFor,TextFields"/>
-    <androidx.recyclerview.widget.RecyclerView
+    <com.google.android.material.button.MaterialButtonToggleGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            android:id="@+id/btg"
+    >
+        <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/char_split_as_codepoint_button"
+                android:id="@+id/as_codepoint"
+                style="?materialButtonOutlinedStyle"
+        />
+        <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/char_split_as_grapheme_button"
+                android:id="@+id/as_grapheme"
+                style="?materialButtonOutlinedStyle"
+        />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+    <androidx.fragment.app.FragmentContainerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/chars_splitter_list_item"
-            android:id="@+id/recycler_view"
+            android:id="@+id/container"
     />
-
 </LinearLayout>

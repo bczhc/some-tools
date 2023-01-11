@@ -1,90 +1,57 @@
 package pers.zhc.tools.charsplit
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.chars_splitter_activity.*
-import kotlinx.android.synthetic.main.chars_splitter_list_item.view.*
+import androidx.fragment.app.commit
+import androidx.fragment.app.commitNow
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
-import pers.zhc.tools.charucd.CharUcdActivity
-import pers.zhc.tools.jni.JNI
-import pers.zhc.tools.test.UnicodeTable
-import pers.zhc.tools.utils.ClipboardUtils
-import pers.zhc.tools.utils.CodepointIterator
+import pers.zhc.tools.databinding.CharsSplitterActivityBinding
+import pers.zhc.tools.utils.unreachable
 
 /**
  * @author bczhc
  */
 class CharSplitActivity : BaseActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.chars_splitter_activity)
-
-        val inputET = input_et!!
-        val listView = recycler_view!!
-
-        listView.layoutManager = LinearLayoutManager(this)
-        val listAdapter = MyAdapter(this)
-        listView.adapter = listAdapter
-
-        inputET.doAfterTextChanged {
-            listAdapter.update(inputET.text.toString())
-        }
+    private val fragments = object {
+        val codepoint = CodepointFragment()
+        val grapheme = GraphemeFragment()
     }
 
-    private class MyAdapter(private val context: Context) : RecyclerView.Adapter<MyAdapter.MyHolder>() {
-        private class MyHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val ordinalTV = view.ordinal_tv!!
-            val codepointTV = view.codepoint_tv!!
-            val charTV = view.char_tv!!
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val bindings = CharsSplitterActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        private val list = ArrayList<Int>()
+        val btg = bindings.btg.also { it.check(R.id.as_codepoint) }
+        val inputET = bindings.inputEt
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-            return MyHolder(LayoutInflater.from(context).inflate(R.layout.chars_splitter_list_item, parent, false))
-        }
+        // initial
+        supportFragmentManager.commit { replace(R.id.container, fragments.codepoint) }
+        var updateList = fragments.codepoint::updateList
 
-        override fun onBindViewHolder(holder: MyHolder, position: Int) {
-            val codepoint = list[position]
-            val char = JNI.Unicode.Codepoint.codepoint2str(codepoint)
+        btg.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
 
-            @SuppressLint("SetTextI18n")
-            holder.ordinalTV.text = (position + 1).toString()
-            holder.codepointTV.text = UnicodeTable.codepoint2unicodeStr(codepoint)
-            holder.charTV.text = char
-
-            holder.charTV.setOnLongClickListener {
-                ClipboardUtils.putWithToast(context, char)
-                return@setOnLongClickListener true
-            }
-            holder.charTV.setOnClickListener {
-                val intent = Intent(context, CharUcdActivity::class.java).apply {
-                    putExtra(CharUcdActivity.EXTRA_CODEPOINT, codepoint)
+            when (checkedId) {
+                R.id.as_codepoint -> {
+                    supportFragmentManager.commitNow {
+                        replace(R.id.container, fragments.codepoint)
+                    }
+                    updateList = fragments.codepoint::updateList.also { it(inputET.text.toString()) }
                 }
-                context.startActivity(intent)
+                R.id.as_grapheme -> {
+                    supportFragmentManager.commitNow {
+                        replace(R.id.container, fragments.grapheme)
+                    }
+                    updateList = fragments.grapheme::updateList.also { it(inputET.text.toString()) }
+                }
+                else -> unreachable()
             }
         }
 
-        override fun getItemCount(): Int {
-            return list.size
-        }
-
-        @SuppressLint("NotifyDataSetChanged")
-        fun update(text: String) {
-            list.clear()
-            val iter = CodepointIterator(text)
-            iter.forEach { list.add(it) }
-
-            notifyDataSetChanged()
+        inputET.doAfterTextChanged {
+            updateList(it.toString())
         }
     }
 }

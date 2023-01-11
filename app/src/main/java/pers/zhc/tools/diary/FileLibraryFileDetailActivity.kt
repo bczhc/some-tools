@@ -28,9 +28,7 @@ class FileLibraryFileDetailActivity : DiaryBaseActivity() {
         val filePreviewView = FileLibraryFragment.getFilePreviewView(this, fileInfo, null)
         container.addView(filePreviewView)
 
-        val fileStoragePath by lazy {
-            diaryDatabase.queryExtraInfo()!!.diaryAttachmentFileLibraryStoragePath!!
-        }
+        val fileStoragePath by lazy { LocalInfo.attachmentStoragePath }
 
         browserFileBtn.setOnClickListener {
 

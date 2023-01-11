@@ -140,7 +140,7 @@ class FileLibraryFragment(
     }
 
     private fun getFileStoredPath(identifier: String): File {
-        return File(diaryDatabase.queryExtraInfo()!!.diaryAttachmentFileLibraryStoragePath!!, identifier)
+        return File(LocalInfo.attachmentStoragePath, identifier)
     }
 
     private fun showFileNotExistDialog(context: Context, identifier: String) {
@@ -227,8 +227,7 @@ class FileLibraryFragment(
                 else -> {
                     // file
                     diaryDatabase.deleteAttachmentFile(identifier)
-                    val fileStoragePath = diaryDatabase.queryExtraInfo()!!.diaryAttachmentFileLibraryStoragePath!!
-                    File(fileStoragePath, identifier).requireDelete()
+                    File(LocalInfo.attachmentStoragePath, identifier).requireDelete()
                 }
             }
             itemDataList.removeAt(position)
