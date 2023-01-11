@@ -578,7 +578,7 @@
     <string name="fdb_hide_fdb_notification_text">点击以恢复画板\n%1$s</string>
     <string name="fdb_hide_fdb_confirmation_dialog">是否隐藏画板</string>
     <string name="fdb_start_fdb_button">开启悬浮窗</string>
-    <string name="fdb_process_path_progress_title">正在处理……阶段%1$d</string>
+    <string name="fdb_process_path_progress_title">正在处理……图层%1$d 阶段%2$d</string>
     <string name="fdb_exporting_path_succeeded_toast">导出成功</string>
     <!-- TODO: use universal string resources -->
     <string name="fdb_transformation_move">移动</string>
@@ -596,7 +596,7 @@
     <string name="fdb_import_path_version_4_0_toast">使用4.0版本path导入</string>
     <string name="fdb_eraser_opacity_adjusting_dialog_title">橡皮不透明度</string>
     <string name="fdb_stroke_width_info">%1$fpx(原始大小)\n%2$fpx(%3$f%%缩放下显示大小)</string>
-    <string name="fdb_clear_cache_button">清除缓存（%1$dkB）</string>
+    <string name="fdb_clear_cache_button">清除缓存（%1$s）</string>
     <string name="fdb_clear_cache_success">清除成功</string>
     <string name="fdb_path_info">
         <![CDATA[创建时间：%1$s\n总记录点数：%2$d\n总记录路径数：%3$d\n绘画笔数：%4$d\n擦除笔数：%5$d\n撤销次数：%6$d\n重做次数：%7$d]]>
