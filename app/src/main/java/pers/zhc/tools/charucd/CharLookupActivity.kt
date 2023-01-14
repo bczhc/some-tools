@@ -113,10 +113,27 @@ class CharLookupActivity : BaseActivity() {
             progressViewOnUiThread.resetProgress()
             // delete, and recreate it (SQLite3 "open" function automatically does)
             paths.database.requireDelete()
-            JNI.CharUcd.parseXml(paths.download.path, paths.database.path) {
+            JNI.CharUcd.parseXml(paths.download.path, paths.database.path) { progress, phaseInt ->
+                // the code below will cause Kotlin compiler "internal error":
+                // > Backend Internal error: Exception during IR lowering
+                // I don't know why. Seems it happens when using Kotlin `when`
+                // on Java `enum`s.
+                /*val phase = when (JNI.CharUcd.Phase.from(phaseInt)!!) {
+                    JNI.CharUcd.Phase.STAT_ATTRIBUTES -> ParseAction.STAT_ATTRIBUTES
+                    JNI.CharUcd.Phase.PARSE_XML -> ParseAction.PARSING_XML
+                }*/
+
+                // alternative
+                val phase = when (phaseInt) {
+                    JNI.CharUcd.Phase.STAT_ATTRIBUTES.ordinal -> ParseAction.STAT_ATTRIBUTES
+                    JNI.CharUcd.Phase.PARSE_XML.ordinal -> ParseAction.PARSING_XML
+                    else -> unreachable()
+                }
+
                 tryDo.tryDo { _, notifier ->
                     handler.post {
-                        progressView.setProgressAndTitle(it.toFloat() / count.toFloat())
+                        progressViewOnUiThread.setActionText(getString(phase.msgStrRes))
+                        progressView.setProgressAndTitle(progress.toFloat() / count.toFloat())
                         notifier.finish()
                     }
                 }
@@ -128,14 +145,14 @@ class CharLookupActivity : BaseActivity() {
                 dialog.dismiss()
                 ToastUtils.show(this, R.string.char_ucd_parse_done_msg)
             }
-
         }.start()
     }
 
     private enum class ParseAction(val msgStrRes: Int) {
         DOWNLOADING(R.string.char_ucd_parse_downloading_action_msg),
         COUNTING(R.string.char_ucd_parse_counting_action_msg),
-        PARSING_XML(R.string.char_ucd_parse_processing_xml_action_msg);
+        STAT_ATTRIBUTES(R.string.char_ucd_parse_stat_attributes_action_msg),
+        PARSING_XML(R.string.char_ucd_parse_process_xml_action_msg);
 
         fun getActionMsg(context: Context): String {
             return context.getString(this.msgStrRes)

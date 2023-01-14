@@ -8,10 +8,12 @@ import pers.zhc.jni.JNI.Struct.packInt
 import pers.zhc.jni.JNI.Struct.packShort
 import pers.zhc.jni.struct.Struct
 import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.utils.CharUtils
+import pers.zhc.tools.utils.thread
 import java.util.*
 
 /**
@@ -53,9 +55,9 @@ class CharUcdActivity : BaseActivity() {
             }
         )
 
-        Thread {
+        thread {
             val ucdDatabasePath = CharLookupActivity.UCD_DATABASE_PATH
-            if (!ucdDatabasePath.exists()) return@Thread
+            if (!ucdDatabasePath.exists()) return@thread
 
             val database = UcdDatabase(ucdDatabasePath)
             val properties = database.query(codepoint)
@@ -63,20 +65,20 @@ class CharUcdActivity : BaseActivity() {
 
             if (properties == null) {
                 ucdContentPlaceholder.text = getString(R.string.char_ucd_ucd_properties_not_found_msg)
-                return@Thread
+                return@thread
             }
 
             runOnUiThread {
                 ucdTL.removeAllViews()
-                for (entry in properties.entrySet()) {
-                    val key = entry.key
-                    val value = entry.value
+                for (entry in properties) {
+                    val key = entry[0]
+                    val value = entry[1]
 
                     val valueString = if (key != "alias") {
-                        value.asString
+                        value
                     } else {
-                        val aliasArray = value.asJsonArray
-                        aliasArray.joinToString { it.asString }
+                        val aliasArray = MyApplication.GSON.fromJson(value, Array<String>::class.java)
+                        aliasArray.joinToString()
                     }
 
                     val inflate = View.inflate(this, R.layout.char_ucd_table_row, null)
@@ -85,7 +87,7 @@ class CharUcdActivity : BaseActivity() {
                     ucdTL.addView(inflate)
                 }
             }
-        }.start()
+        }
     }
 
     companion object {

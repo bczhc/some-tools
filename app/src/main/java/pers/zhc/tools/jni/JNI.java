@@ -306,14 +306,44 @@ public class JNI {
             void progress(int i);
         }
 
+        public enum Phase {
+            STAT_ATTRIBUTES(0),
+            PARSE_XML(1);
+
+            final int ordinal;
+
+            Phase(int ordinal) {
+                this.ordinal = ordinal;
+            }
+
+            public static Phase from(int ordinal) {
+                switch (ordinal) {
+                    case 0:
+                        return STAT_ATTRIBUTES;
+                    case 1:
+                        return PARSE_XML;
+                    default:
+                        throw new IllegalArgumentException();
+                }
+            }
+        }
+
+        public interface ProgressCallback {
+            /**
+             * @param i     like {@link OrdinaryCallback#progress(int)}
+             * @param phase ordinal of {@link Phase}
+             */
+            void progress(int i, int phase);
+        }
+
         /**
          * parse XML and write data to an intermediate file
          *
-         * @param src  XML zip file path
-         * @param dest SQLite3 database output path
-         * @param f    progress callback
+         * @param src      XML zip file path
+         * @param dest     SQLite3 database output path
+         * @param callback progress callback
          */
-        public static native void parseXml(String src, String dest, OrdinaryCallback f);
+        public static native void parseXml(String src, String dest, ProgressCallback callback);
 
         /**
          * count the total entries count

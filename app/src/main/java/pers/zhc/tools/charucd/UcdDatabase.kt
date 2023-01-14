@@ -1,8 +1,8 @@
 package pers.zhc.tools.charucd
 
-import com.google.gson.JsonObject
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.MyApplication
+import pers.zhc.tools.utils.queryOne
 import java.io.File
 
 /**
@@ -10,19 +10,17 @@ import java.io.File
  */
 class UcdDatabase(val file: File) {
     private val database = SQLite3.open(file.path)
-    private val queryStatement = database.compileStatement("SELECT properties FROM ucd WHERE codepoint IS ?")
+    private val queryStatement = database.compileStatement("SELECT json FROM ucd WHERE codepoint IS ?")
 
     fun close() {
         queryStatement.release()
         database.close()
     }
 
-    fun query(codepoint: Int): JsonObject? {
-        queryStatement.reset()
-        queryStatement.bind(1, codepoint)
-        val cursor = queryStatement.cursor
-        return if (cursor.step()) {
-            MyApplication.GSON.fromJson(cursor.getText(0), JsonObject::class.java)
-        } else null
+    fun query(codepoint: Int): Properties? {
+        val properties = queryStatement.queryOne(arrayOf(codepoint)) {
+            it.getText(0)
+        } ?: return null
+        return MyApplication.GSON.fromJson(properties, Properties::class.java)
     }
 }

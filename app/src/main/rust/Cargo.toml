@@ -30,7 +30,10 @@ tar = "0.4.38"
 phone-transfer = { path = "./third_party/bczhc_rust/apps/phone-transfer" }
 walkdir = "2.3.2"
 pathdiff = "0.2.1"
-rusqlite = "0.28.0"
+# `clear_bindings()` workaround
+# Because they havn't released a new version containing this PR:
+# https://github.com/rusqlite/rusqlite/pull/1268
+rusqlite = { git = "https://github.com/rusqlite/rusqlite", rev="964443213" }
 zip = "0.6.2"
 lzma-rs = "0.2.0"
 signal = "0.7.0"

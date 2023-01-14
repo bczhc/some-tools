@@ -139,3 +139,14 @@ fun <T> SQLite3.withTransaction(block: (db: SQLite3) -> T): T {
     this.commit()
     return r
 }
+
+/**
+ * returns null if there's no such row
+ */
+fun <T> Statement.queryOne(binds: Array<Any>?, mapRow: (row: Cursor) -> T): T? {
+    this.reset()
+    this.bind(binds)
+    val rows = this.queryRows(mapRow)
+    if (!rows.hasNext()) return null
+    return rows.next()
+}

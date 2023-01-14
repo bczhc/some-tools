@@ -725,8 +725,8 @@
     <string name="char_ucd_download_ucd_database_prompt_dialog">是否下载UCD数据库并进行处理</string>
     <string name="char_ucd_process_ucd_data_dialog_msg">处理数据可能会花费较长时间，请耐心等待。</string>
     <string name="char_ucd_parse_downloading_action_msg">下载中……</string>
-    <string name="char_ucd_parse_processing_xml_action_msg">正在处理XML</string>
-    <string name="char_ucd_parse_writing_database_action_msg">写入数据库……</string>
+    <string name="char_ucd_parse_stat_attributes_action_msg">正在统计属性</string>
+    <string name="char_ucd_parse_process_xml_action_msg">处理XML……</string>
     <string name="char_ucd_parse_counting_action_msg">正在计数</string>
     <string name="char_ucd_parse_done_msg">完成</string>
     <string name="char_ucd_get_ucd_database_button">获取UCD数据库</string>
