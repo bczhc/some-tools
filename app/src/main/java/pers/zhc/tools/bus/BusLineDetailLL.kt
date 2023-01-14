@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.bus_line_detail_station_view.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.BusLineDetailStationViewBinding
 import pers.zhc.tools.utils.Common
 
 /**
@@ -34,10 +34,11 @@ class BusLineDetailLL : LinearLayout {
 
     private fun getStationView(station: BusLineDetailActivity.Station): StationLL {
         val inflate =
-            View.inflate(context, R.layout.bus_line_detail_station_view, null).ll_root!!
-        inflate.ordinal_tv!!.text =
+            View.inflate(context, R.layout.bus_line_detail_station_view, null)
+        val bindings = BusLineDetailStationViewBinding.bind(inflate)
+        bindings.ordinalTv.text =
             context.getString(R.string.bus_line_detail_station_ordinal_tv, this.childCount + 1 /* ordinal */)
-        val stationNameTV = inflate.station_name_tv!!
+        val stationNameTV = bindings.stationNameTv
 
         stationNameTV.text = station.busStationName.join('\n')
             .replace('（', '︵')
@@ -46,10 +47,11 @@ class BusLineDetailLL : LinearLayout {
             .replace('(', '︵')
             .replace(')', '︶')
 
-        inflate.station = station
-        inflate.busState = TopNodeView.BusState.ARRIVED
-        inflate.getTopNodeView().setBusMarkDotCount(0)
-        return inflate
+        val llRoot = bindings.llRoot
+        llRoot.station = station
+        llRoot.busState = TopNodeView.BusState.ARRIVED
+        llRoot.getTopNodeView().setBusMarkDotCount(0)
+        return llRoot
     }
 
     /**
@@ -68,15 +70,15 @@ class BusLineDetailLL : LinearLayout {
                 val nextChild = getChildAt(onBusStationLlIndex + 1) as StationLL
                 if (nextChild.busState == TopNodeView.BusState.ARRIVED) {
                     // no such "on road" bus `StationLL` node, insert a new one
-                    val newStationLL =
-                        View.inflate(context, R.layout.bus_line_detail_station_view, null).ll_root as StationLL
+                    val newStationLL = View.inflate(context, R.layout.bus_line_detail_station_view, null)
+                        .findViewById<StationLL>(R.id.ll_root)
                     val topNodeView = newStationLL.getTopNodeView()
                     topNodeView.setBusState(TopNodeView.BusState.ON_ROAD)
                     topNodeView.setBusMarkDotCount(1)
                     newStationLL.setStationInfoVisibility(View.GONE)
                     addView(newStationLL, onBusStationLlIndex + 1)
                 } else {
-                    // is the "on road' bus `StationLL` node, change some parameters of `TopNodeView`
+                    // is the "on road" bus `StationLL` node, change some parameters of `TopNodeView`
                     // hide the below station info `LinearLayout`, with 0 width and height
                     val topNodeView = nextChild.getTopNodeView()
                     topNodeView.setBusState(TopNodeView.BusState.ON_ROAD)
@@ -124,13 +126,13 @@ class StationLL : LinearLayout {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
     fun getTopNodeView(): TopNodeView {
-        return this.top_line_node_view!!
+        return this.findViewById(R.id.top_line_node_view)
     }
 
     /**
      * [visibility] is a value among [View.INVISIBLE], [View.VISIBLE], [View.GONE]
      */
     fun setStationInfoVisibility(visibility: Int) {
-        this.below_bus_info_ll.visibility = visibility
+        this.findViewById<LinearLayout>(R.id.below_bus_info_ll).visibility = visibility
     }
 }

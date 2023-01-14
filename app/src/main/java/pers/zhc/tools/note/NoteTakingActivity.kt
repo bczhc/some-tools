@@ -6,8 +6,8 @@ import android.text.Editable
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.EditText
 import androidx.core.widget.doAfterTextChanged
-import kotlinx.android.synthetic.main.take_note_activity.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.TakeNoteActivityBinding
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.androidAssert
@@ -26,11 +26,12 @@ class NoteTakingActivity : NoteBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.take_note_activity)
+        val bindings = TakeNoteActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        titleET = doc_title_et!!
-        contentET = doc_content_et!!.editText
-        val bottomButton = add_record!!
+        titleET = bindings.docTitleEt
+        contentET = bindings.docContentEt.editText
+        val bottomButton = bindings.addRecord
 
         val intent = intent
         type = intent.getSerializableExtra(EXTRA_TYPE) as Type

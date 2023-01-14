@@ -3,14 +3,10 @@ package pers.zhc.tools.diary.fragments
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.path_file_info_view.*
 import pers.zhc.tools.diary.DiaryBaseActivity
-import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseFragment
 import pers.zhc.tools.diary.DiaryDatabase
 import pers.zhc.tools.diary.DiaryMainActivity
-import pers.zhc.tools.utils.androidAssert
 
 /**
  * @author bczhc

@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.chars_splitter_list_item.view.*
 import pers.zhc.tools.BaseFragment
 import pers.zhc.tools.R
 import pers.zhc.tools.charucd.CharUcdActivity

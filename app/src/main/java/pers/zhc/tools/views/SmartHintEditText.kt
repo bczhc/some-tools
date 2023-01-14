@@ -4,11 +4,11 @@ import android.content.Context
 import android.graphics.Point
 import android.text.Editable
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.android.synthetic.main.material_input_layout.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.MaterialInputLayoutBinding
 import pers.zhc.tools.utils.DisplayUtil
 import kotlin.math.max
 
@@ -49,12 +49,12 @@ class SmartHintEditText : WrapLayout {
     }
 
     private fun init(attrs: AttributeSet?) {
-        val inflate = View.inflate(context, R.layout.material_input_layout, null).layout!!
+        val bindings = MaterialInputLayoutBinding.inflate(LayoutInflater.from(context))
+        val inflate = bindings.layout
         this.setView(inflate)
         inputLayout = inflate
 
-        val til = inflate.layout!!
-        mET = inflate.edit_text!!
+        mET = bindings.editText
 
         if (attrs != null) {
             val inputType = attrs.getAttributeIntValue(
@@ -76,7 +76,7 @@ class SmartHintEditText : WrapLayout {
             mET.minWidth = minimumSize.x
             mET.minHeight = minimumSize.y
 
-            hint?.let { til.hint = it }
+            hint?.let { inflate.hint = it }
             text?.let { mET.setText(it) }
         }
     }

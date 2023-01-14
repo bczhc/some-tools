@@ -7,8 +7,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.diary_attachment_adding_activity.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryAttachmentAddingActivityBinding
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.getLongExtraOrNull
@@ -39,13 +39,13 @@ class DiaryAttachmentAddingActivity : DiaryBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.diary_attachment_adding_activity)
-        titleET = title_et!!
-        fileListLL = file_list_ll!!
-        descriptionET = description_et!!
-        val createAttachmentBtn = create_attachment_btn!!
-        val pickFileBtn = pick_file_btn
+        val bindings = DiaryAttachmentAddingActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
+        titleET = bindings.titleEt
+        fileListLL = bindings.fileListLl
+        descriptionET = bindings.descriptionEt
+        val createAttachmentBtn = bindings.createAttachmentBtn
+        val pickFileBtn = bindings.pickFileBtn
 
         pickFileBtn.setOnClickListener {
             launchers.pickFile.launch(Unit)

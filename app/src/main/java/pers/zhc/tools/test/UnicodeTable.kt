@@ -13,12 +13,12 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.unicode_cell_view.view.*
-import kotlinx.android.synthetic.main.unicode_table_activity.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.charucd.CharUcdActivity
+import pers.zhc.tools.databinding.UnicodeCellViewBinding
+import pers.zhc.tools.databinding.UnicodeTableActivityBinding
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.views.CharacterLookupInputView
@@ -33,9 +33,10 @@ class UnicodeTable : BaseActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.unicode_table_activity)
+        val bindings = UnicodeTableActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        recyclerView = recycler_view!!
+        recyclerView = bindings.recyclerView
 
         val point = Point()
         windowManager.defaultDisplay.getSize(point)
@@ -91,8 +92,9 @@ class UnicodeTable : BaseActivity() {
     class MyAdapter(private val ctx: Context, private val cellTextWidth: Float) :
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
         class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val charTV: TextView = view.char_tv!!
-            val codepointTV: TextView = view.codepoint_tv!!
+            private val bindings = UnicodeCellViewBinding.bind(view)
+            val charTV: TextView = bindings.charTv
+            val codepointTV: TextView = bindings.codepointTv
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

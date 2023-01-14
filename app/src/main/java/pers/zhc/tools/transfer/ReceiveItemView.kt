@@ -2,10 +2,10 @@ package pers.zhc.tools.transfer
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import kotlinx.android.synthetic.main.transfer_error_receiving_item.view.*
-import kotlinx.android.synthetic.main.transfer_received_item.view.*
+import android.view.LayoutInflater
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.TransferErrorReceivingItemBinding
+import pers.zhc.tools.databinding.TransferReceivedItemBinding
 import pers.zhc.tools.views.WrapLayout
 
 class ReceiveItemView : WrapLayout {
@@ -14,15 +14,18 @@ class ReceiveItemView : WrapLayout {
 
     private var state = State.UNINIT
 
-    private val successView by lazy { View.inflate(context, R.layout.transfer_received_item, null) }
-    private val failureView by lazy { View.inflate(context, R.layout.transfer_error_receiving_item, null) }
+    private val successViewBindings by lazy { TransferReceivedItemBinding.inflate(LayoutInflater.from(context)) }
+    private val failureViewBindings by lazy { TransferErrorReceivingItemBinding.inflate(LayoutInflater.from(context)) }
 
-    private val recvTimeTV by lazy { successView.receiving_time_tv!! }
-    private val recvSizeTV by lazy { successView.receiving_size_tv!! }
-    private val recvTypeTV by lazy { successView.receiving_type_tv!! }
+    private val successView by lazy { successViewBindings.root }
+    private val failureView by lazy { failureViewBindings.root }
 
-    private val errorMsgTV by lazy { failureView.err_msg_tv!! }
-    private val errorTimeTV by lazy { failureView.error_time_tv!! }
+    private val recvTimeTV by lazy { successViewBindings.receivingTimeTv }
+    private val recvSizeTV by lazy { successViewBindings.receivingSizeTv }
+    private val recvTypeTV by lazy { successViewBindings.receivingTypeTv }
+
+    private val errorMsgTV by lazy { failureViewBindings.errMsgTv }
+    private val errorTimeTV by lazy { failureViewBindings.errorTimeTv }
 
     init {
         setBackgroundResource(R.drawable.selectable_bg)

@@ -13,10 +13,9 @@ import android.widget.EditText
 import androidx.appcompat.widget.SwitchCompat
 import com.hoho.android.usbserial.driver.UsbSerialPort
 import com.hoho.android.usbserial.driver.UsbSerialProber
-import kotlinx.android.synthetic.main.file_picker_rl_activity.*
-import kotlinx.android.synthetic.main.stc_flash_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.StcFlashActivityBinding
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.Common
@@ -102,12 +101,13 @@ class FlashMainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerUsbReceiver()
-        setContentView(R.layout.stc_flash_activity)
-        connectSwitch = connect_switch!!
-        hexFilePathET = hex_file_path_et!!
-        val burnBtn = burn_btn!!
-        val callbackET = callback_et!!
-        val pickFileBtn = pick_file_btn!!
+        val bindings = StcFlashActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
+        connectSwitch = bindings.connectSwitch
+        hexFilePathET = bindings.hexFilePathEt
+        val burnBtn = bindings.burnBtn
+        val callbackET = bindings.callbackEt
+        val pickFileBtn = bindings.pickFileBtn
 
         pickFileBtn.setOnClickListener {
             val intent = Intent(this, FilePicker::class.java)

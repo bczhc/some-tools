@@ -12,10 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.android.synthetic.main.fdb_layer_item_view.view.*
-import kotlinx.android.synthetic.main.fdb_layer_manager_view.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.FdbLayerItemViewBinding
+import pers.zhc.tools.databinding.FdbLayerManagerViewBinding
 import pers.zhc.tools.utils.DialogUtils
 import java.util.*
 
@@ -31,13 +30,14 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
 
     init {
         val inflate = View.inflate(context, R.layout.fdb_layer_manager_view, null)
-        recyclerView = inflate.recycler_view!!
+        val bindings = FdbLayerManagerViewBinding.bind(inflate)
+        recyclerView = bindings.recyclerView
 
         listAdapter = MyAdapter(context, listItems, this)
         recyclerView.adapter = listAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        val createButton = inflate.create!!
+        val createButton = bindings.create
         createButton.setOnClickListener {
             addLayerAction()
         }

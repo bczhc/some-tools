@@ -7,9 +7,9 @@ import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.RequiresApi
-import kotlinx.android.synthetic.main.fdb_main_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.FdbMainActivityBinding
 import pers.zhc.tools.jni.JNI.ByteSize
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.requireDelete
@@ -35,11 +35,12 @@ class FdbMainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fdb_main_activity)
+        val bindings = FdbMainActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val startButton = start_button!!
-        val clearCacheButton = clear_cache_btn!!
-        val openCacheDirButton = open_cache_btn!!
+        val startButton = bindings.startButton
+        val clearCacheButton = bindings.clearCacheBtn
+        val openCacheDirButton = bindings.openCacheBtn
 
         startButton.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

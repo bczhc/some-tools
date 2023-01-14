@@ -16,9 +16,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContract
-import kotlinx.android.synthetic.main.diary_content_preview_activity.*
-import kotlinx.android.synthetic.main.diary_record_stat_dialog.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryContentPreviewActivityBinding
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.DisplayUtil
 import pers.zhc.tools.utils.IntDate
@@ -43,11 +42,12 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_content_preview_activity)
+        val bindings = DiaryContentPreviewActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        contentTV = content_tv!!
+        contentTV = bindings.contentTv
         contentTV.textSize = getEditTextTextSize(this)
-        bottomAttachmentLL = bottom_attachment_ll!!
+        bottomAttachmentLL = bindings.bottomAttachmentLl
 
         val intent = intent
         val dateInt = intent.getIntExtra(EXTRA_DATE_INT, -1)
@@ -147,7 +147,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
             return Dialog(context).apply {
                 setTitle(R.string.diary_statistics_dialog_title)
                 setContentView(View.inflate(context, R.layout.diary_record_stat_dialog, null).apply {
-                    this.stat_content_tv!!.text = context.getString(
+                    this.findViewById<TextView>(R.id.stat_content_tv).text = context.getString(
                         R.string.diary_record_statistics_dialog_content,
                         database.getCharsCount(dateInt)
                     )

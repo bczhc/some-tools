@@ -2,12 +2,11 @@ package pers.zhc.tools.fourierseries
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import kotlinx.android.synthetic.main.fourier_series_epicycles_drawing_activity.*
-import kotlinx.android.synthetic.main.fourier_series_epicycles_drawing_option_speed_dialog.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.FourierSeriesEpicyclesDrawingActivityBinding
+import pers.zhc.tools.databinding.FourierSeriesEpicyclesDrawingOptionSpeedDialogBinding
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.PopupMenuUtil
 import pers.zhc.tools.utils.setBaseLayoutSizeMM
@@ -20,10 +19,11 @@ class EpicycleDrawingActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fourier_series_epicycles_drawing_activity)
+        val bindings = FourierSeriesEpicyclesDrawingActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val container = container!!
-        val optionButton = option_btn!!
+        val container = bindings.container
+        val optionButton = bindings.optionBtn
 
         drawingView = EpicycleDrawingView(this, FourierSeriesActivity.epicycleData).apply {
             this.setBaseLayoutSizeMM()
@@ -51,13 +51,14 @@ class EpicycleDrawingActivity : BaseActivity() {
     }
 
     private fun showSpeedDialog() {
-        val view = View.inflate(this, R.layout.fourier_series_epicycles_drawing_option_speed_dialog, null)
+        val bindings = FourierSeriesEpicyclesDrawingOptionSpeedDialogBinding.inflate(layoutInflater)
+        val view = bindings.root
         Dialog(this).apply {
             setContentView(view)
             DialogUtils.setDialogAttr(this, width = MATCH_PARENT)
         }.show()
 
-        val speedSlider = view.speed_slider!!
+        val speedSlider = bindings.speedSlider
         speedSlider.value = (drawingView.tIncrement * 100.0).toFloat()
         speedSlider.addOnChangeListener { _, value, _ ->
             drawingView.tIncrement = value.toDouble() / 100.0

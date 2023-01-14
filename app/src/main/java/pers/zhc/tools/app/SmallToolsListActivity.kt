@@ -2,7 +2,6 @@ package pers.zhc.tools.app
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.tools_activity_main.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.charstat.CharStatActivity
@@ -15,6 +14,7 @@ import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.test.toast.ToastTest
 import pers.zhc.tools.test.typetest.TypeTest
 import pers.zhc.tools.charsplit.CharSplitActivity
+import pers.zhc.tools.databinding.ToolsActivityMainBinding
 
 /**
  * @author bczhc
@@ -22,9 +22,10 @@ import pers.zhc.tools.charsplit.CharSplitActivity
 class SmallToolsListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.tools_activity_main)
+        val bindings = ToolsActivityMainBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val recyclerView = recycler_view!!
+        val recyclerView = bindings.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val activities = listOf(

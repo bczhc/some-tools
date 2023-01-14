@@ -11,12 +11,12 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.magic_file_list_activity.*
-import kotlinx.android.synthetic.main.magic_file_list_item.view.*
-import kotlinx.android.synthetic.main.magic_progress_dialog.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.MagicFileListActivityBinding
+import pers.zhc.tools.databinding.MagicFileListItemBinding
+import pers.zhc.tools.databinding.MagicProgressDialogBinding
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.Download
@@ -70,10 +70,11 @@ class FileListActivity : BaseActivity() {
     }
 
     fun load() {
-        setContentView(R.layout.magic_file_list_activity)
+        val bindings = MagicFileListActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        recyclerView = file_list_rv!!
-        val pathTV = path_tv!!
+        recyclerView = bindings.fileListRv
+        val pathTV = bindings.pathTv
 
         initMagic()
 
@@ -233,9 +234,10 @@ class FileListActivity : BaseActivity() {
         }
 
         class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val filenameTV: TextView = view.filename_tv!!
-            val fileInfoTV: TextView = view.file_info_tv!!
-            val fileTypeIV: ImageView = view.iv!!
+            private val bindings = MagicFileListItemBinding.bind(view)
+            val filenameTV: TextView = bindings.filenameTv
+            val fileInfoTV: TextView = bindings.fileInfoTv
+            val fileTypeIV: ImageView = bindings.iv
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -287,7 +289,8 @@ class FileListActivity : BaseActivity() {
 
     class ProgressDialogManager(private val context: Context) {
         private val content = View.inflate(context, R.layout.magic_progress_dialog, null)
-        private val msgTV = content.msg_tv!!
+        private val bindings = MagicProgressDialogBinding.bind(content)
+        private val msgTV = bindings.msgTv
 
         private val dialog = Dialog(context).apply {
             setContentView(content)

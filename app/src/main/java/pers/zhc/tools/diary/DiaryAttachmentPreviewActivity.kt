@@ -2,8 +2,8 @@ package pers.zhc.tools.diary
 
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.diary_attachment_preview_activity.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryAttachmentPreviewActivityBinding
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.utils.Common
 
@@ -13,11 +13,12 @@ import pers.zhc.tools.utils.Common
 class DiaryAttachmentPreviewActivity : DiaryBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_attachment_preview_activity)
+        val bindings = DiaryAttachmentPreviewActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val titleTV = title_tv!!
-        val descriptionTV = description_tv!!
-        val fileListLL = file_list_ll!!
+        val titleTV = bindings.titleTv
+        val descriptionTV = bindings.descriptionTv
+        val fileListLL = bindings.fileListLl
 
         val intent = intent
         Common.doAssertion(intent.hasExtra(EXTRA_ATTACHMENT_ID))

@@ -9,11 +9,11 @@ import android.widget.TextView
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import kotlinx.android.synthetic.main.bus_line_detail_activity.*
 import org.json.JSONArray
 import org.json.JSONObject
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.BusLineDetailActivityBinding
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 import java.io.Serializable
@@ -34,19 +34,20 @@ class BusLineDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.bus_line_detail_activity)
+        val bindings = BusLineDetailActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
         val intent = intent
         runPathId = intent.getStringExtra(EXTRA_RUN_PATH_ID)!!
         currentDirection = Direction.fromId(intent.getIntExtra(EXTRA_DIRECTION, Direction.DIRECTION_1.id))
 
-        startStationNameTV = start_station_name_tv!!
-        endStationNameTV = end_station_name_tv!!
-        busRunTimeTV = bus_run_time_tv!!
-        busIntervalTV = bus_interval_tv!!
-        busTotalCountTV = bus_total_count_tv!!
-        busLineDetailLL = bus_line_detail_ll!!
-        val switchBusDirectionBtn = switch_bus_direction!!
+        startStationNameTV = bindings.startStationNameTv
+        endStationNameTV = bindings.endStationNameTv
+        busRunTimeTV = bindings.busRunTimeTv
+        busIntervalTV = bindings.busIntervalTv
+        busTotalCountTV = bindings.busTotalCountTv
+        busLineDetailLL = bindings.busLineDetailLl
+        val switchBusDirectionBtn = bindings.switchBusDirection
 
         switchBusDirectionBtn.setOnClickListener {
             // reverse the value

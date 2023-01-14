@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import kotlinx.android.synthetic.main.wubi_single_char_record_list_view.view.*
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.WubiSingleCharRecordListViewBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.execute
@@ -158,9 +158,10 @@ WHERE char IS ?
         }
 
         inner class MyViewHolder(view: View) : ViewHolder(view) {
-            val charTV = view.char_tv!!
-            val inputCodeTV = view.input_code_tv!!
-            val shortestCodeTV = view.shortest_code_tv!!
+            private val bindings = WubiSingleCharRecordListViewBinding.bind(view)
+            val charTV = bindings.charTv
+            val inputCodeTV = bindings.inputCodeTv
+            val shortestCodeTV = bindings.shortestCodeTv
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

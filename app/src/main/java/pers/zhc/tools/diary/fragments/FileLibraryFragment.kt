@@ -11,10 +11,10 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.diary_file_library_file_preview_view.view.*
-import kotlinx.android.synthetic.main.diary_file_library_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryFileLibraryFilePreviewViewBinding
+import pers.zhc.tools.databinding.DiaryFileLibraryFragmentBinding
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.diary.FileLibraryActivity.Companion.EXTRA_PICKED_FILE_IDENTIFIER
 import pers.zhc.tools.utils.*
@@ -47,15 +47,15 @@ class FileLibraryFragment(
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val inflate = inflater.inflate(R.layout.diary_file_library_fragment, container, false)
-        recyclerView = inflate.recycler_view!!
+        val bindings = DiaryFileLibraryFragmentBinding.inflate(inflater, container, false)
+        recyclerView = bindings.recyclerView
 
-        val toolbar = inflate.toolbar!!
+        val toolbar = bindings.toolbar
         toolbar.setOnMenuItemClickListener(this)
         setupOuterToolbar(toolbar)
 
         loadRecyclerView()
-        return inflate
+        return bindings.root
     }
 
     private fun loadRecyclerView() {
@@ -176,33 +176,33 @@ class FileLibraryFragment(
         }
 
         fun setFilePreviewView(ctx: Context, view: View, fileInfo: FileInfo, content: String?) {
+            val bindings = DiaryFileLibraryFilePreviewViewBinding.bind(view)
             if (fileInfo.storageType == StorageType.TEXT) {
-                view.filename_tv.visibility = View.GONE
+                bindings.filenameTv.visibility = View.GONE
             } else {
-                view.filename_tv.text = ctx.getString(R.string.filename_is, fileInfo.filename)
+                bindings.filenameTv.text = ctx.getString(R.string.filename_is, fileInfo.filename)
             }
 
-            view.add_time_tv.text =
+            bindings.addTimeTv.text =
                 ctx.getString(R.string.addition_time_is, Date(fileInfo.additionTimestamp).toString())
 
-            view.storage_type_tv.text =
+            bindings.storageTypeTv.text =
                 ctx.getString(
                     R.string.storage_type_is,
                     ctx.getString(fileInfo.storageType.textResInt)
                 )
 
-            val descriptionTV = view.description_tv!!
+            val descriptionTV = bindings.descriptionTv
             if (fileInfo.description.isEmpty()) {
-                view.description.visibility = View.GONE
                 descriptionTV.visibility = View.GONE
             } else {
                 descriptionTV.text = fileInfo.description
             }
 
-            val contentTV = view.content_tv!!
+            val contentTV = bindings.contentTv
             if (content == null) {
                 contentTV.visibility = View.GONE
-                view.content.visibility = View.GONE
+                bindings.content.visibility = View.GONE
             } else {
                 contentTV.text = if (content.length > 10) {
                     content.substring(0..10) + "..."

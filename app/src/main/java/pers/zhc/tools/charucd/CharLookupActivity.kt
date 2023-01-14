@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import kotlinx.android.synthetic.main.char_ucd_lookup_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.CharUcdLookupActivityBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.*
 import java.io.File
@@ -21,11 +21,12 @@ import java.net.URL
 class CharLookupActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.char_ucd_lookup_activity)
+        val bindings = CharUcdLookupActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val charLookupView = lookup_view!!
-        val button = btn!!
-        val getUcdDbButton = get_btn!!
+        val charLookupView = bindings.lookupView
+        val button = bindings.btn
+        val getUcdDbButton = bindings.getBtn
 
         button.setOnClickListener {
             val codepoint = charLookupView.getCodepoint().let {

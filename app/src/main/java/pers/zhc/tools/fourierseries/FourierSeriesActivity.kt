@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
-import kotlinx.android.synthetic.main.fourier_series_epicycle_item.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.FourierSeriesMainBinding
@@ -320,7 +320,7 @@ class FourierSeriesActivity : BaseActivity() {
     class ListAdapter(private val context: Context, private val epicycleData: Epicycles) :
         RecyclerView.Adapter<ListAdapter.Holder>() {
         class Holder(val view: View) : RecyclerView.ViewHolder(view) {
-            val textView = view.text_view!!
+            val textView = view.findViewById<TextView>(R.id.text_view)!!
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

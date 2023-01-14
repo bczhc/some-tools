@@ -14,10 +14,10 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.wubi_database_edit_activity.*
-import kotlinx.android.synthetic.main.wubi_word_with_ordinal_view.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.WubiDatabaseEditActivityBinding
+import pers.zhc.tools.databinding.WubiWordWithOrdinalViewBinding
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.NotifyLatch
 import pers.zhc.tools.views.WrapLayout
@@ -34,17 +34,18 @@ class WubiDatabaseEditActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.wubi_database_edit_activity)
+        val bindings = WubiDatabaseEditActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
         val intent = intent
         val wubiCode = if (intent.hasExtra(EXTRA_WUBI_CODE)) {
             intent.getStringExtra(EXTRA_WUBI_CODE)
         } else null
 
-        val wubiDatabaseInfoTV = wubi_code_database_info
-        wubiCodeET = wubi_code_shet!!.editText
-        val addBtn = add_btn
-        val recyclerView = recycler_view!!
+        val wubiDatabaseInfoTV = bindings.wubiCodeDatabaseInfo
+        wubiCodeET = bindings.wubiCodeShet.editText
+        val addBtn = bindings.addBtn
+        val recyclerView = bindings.recyclerView
         myAdapter = MyAdapter(this, candidateList)
         recyclerView.adapter = myAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -118,8 +119,9 @@ class WubiDatabaseEditActivity : BaseActivity() {
             val inflate = View.inflate(context, R.layout.wubi_word_with_ordinal_view, null)
             this.addView(inflate)
 
-            ordinalTV = inflate.ordinal_tv!!
-            wubiWordTV = inflate.wubi_word_tv!!
+            val bindings = WubiWordWithOrdinalViewBinding.bind(inflate)
+            ordinalTV = bindings.ordinalTv
+            wubiWordTV = bindings.wubiWordTv
         }
 
         @SuppressLint("SetTextI18n")

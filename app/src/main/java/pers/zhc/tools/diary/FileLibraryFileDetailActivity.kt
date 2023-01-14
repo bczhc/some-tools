@@ -2,8 +2,7 @@ package pers.zhc.tools.diary
 
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.diary_file_library_file_detail_activity.*
-import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryFileLibraryFileDetailActivityBinding
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.filebrowser.AudioPlayerActivity
 import pers.zhc.tools.filebrowser.ImageFileBrowser
@@ -15,10 +14,11 @@ import java.io.File
 class FileLibraryFileDetailActivity : DiaryBaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_file_library_file_detail_activity)
+        val bindings = DiaryFileLibraryFileDetailActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val container = container!!
-        val browserFileBtn = browser_file_btn!!
+        val container = bindings.container
+        val browserFileBtn = bindings.browserFileBtn
 
         val intent = intent
         val identifier = intent.getStringExtra(EXTRA_IDENTIFIER)!!

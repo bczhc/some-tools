@@ -5,14 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.email_contact_activity.*
-import kotlinx.android.synthetic.main.email_contact_add_dialog.view.*
-import kotlinx.android.synthetic.main.email_contact_list_item.view.*
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.EmailContactActivityBinding
+import pers.zhc.tools.databinding.EmailContactAddDialogBinding
 import pers.zhc.tools.utils.*
 
 /**
@@ -25,12 +25,13 @@ class ContactActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.email_contact_activity)
+        val bindings = EmailContactActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
         val intent = intent
         val selectMode = intent.getBooleanExtra(EXTRA_SELECT_MODE, false)
 
-        val recyclerView = recycler_view!!
+        val recyclerView = bindings.recyclerView
         listAdapter = MyAdapter(this, database)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = listAdapter
@@ -45,6 +46,7 @@ class ContactActivity : BaseActivity() {
                             ToastUtils.show(this, R.string.delete_success)
                         }, titleRes = R.string.delete_confirmation_dialog_title).show()
                     }
+
                     else -> {
                     }
                 }
@@ -68,7 +70,7 @@ class ContactActivity : BaseActivity() {
         private var itemData: ItemData = database.queryItemData()
 
         class MyHolder(val view: View) : RecyclerView.ViewHolder(view) {
-            val textView = view.email!!
+            val textView = view.findViewById<TextView>(R.id.email)!!
         }
 
         override fun onCreateViewHolder(parent: ViewGroup): MyHolder {
@@ -129,6 +131,7 @@ class ContactActivity : BaseActivity() {
             R.id.add -> {
                 addContactAction()
             }
+
             else -> {
             }
         }
@@ -136,9 +139,9 @@ class ContactActivity : BaseActivity() {
     }
 
     private fun addContactAction() {
-        val inflate = View.inflate(this, R.layout.email_contact_add_dialog, null)
-        val nameET = inflate.name_et!!.editText
-        val emailET = inflate.email_et!!.editText
+        val bindings = EmailContactAddDialogBinding.inflate(layoutInflater)
+        val nameET = bindings.nameEt.editText
+        val emailET = bindings.emailEt.editText
 
         val dialog = DialogUtils.createConfirmationAlertDialog(this, { _, _ ->
 
@@ -153,7 +156,7 @@ class ContactActivity : BaseActivity() {
             listAdapter.add(Contact(name, email))
             ToastUtils.show(this, R.string.adding_succeeded)
 
-        }, view = inflate, titleRes = R.string.email_add_contact_dialog_title, width = MATCH_PARENT)
+        }, view = bindings.root, titleRes = R.string.email_add_contact_dialog_title, width = MATCH_PARENT)
 
         dialog.show()
     }

@@ -7,8 +7,6 @@ import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import kotlinx.android.synthetic.main.progress_bar.view.*
-import kotlinx.android.synthetic.main.progress_bar_indeterminate.view.*
 import pers.zhc.tools.R
 
 /**
@@ -28,11 +26,11 @@ class ProgressView : RelativeLayout {
     private fun init() {
         val inflate = getProgressBarRootView()
         if (isIndeterminateMode) {
-            indeterminateProgressBar.titleTV = inflate.title!!
+            indeterminateProgressBar.titleTV = inflate.findViewById(R.id.title)!!
         } else {
-            determinateProgressBar.titleTV = inflate.progress_bar_title!!
-            determinateProgressBar.progressBar = inflate.progress_bar!!
-            determinateProgressBar.textTV = inflate.progress_tv!!
+            determinateProgressBar.titleTV = inflate.findViewById(R.id.progress_bar_title)!!
+            determinateProgressBar.progressBar = inflate.findViewById(R.id.progress_bar)!!
+            determinateProgressBar.textTV = inflate.findViewById(R.id.progress_tv)!!
         }
         this.addView(inflate)
     }

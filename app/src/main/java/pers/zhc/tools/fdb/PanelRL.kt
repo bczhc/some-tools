@@ -11,8 +11,6 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import kotlinx.android.synthetic.main.fdb_panel_btn_view.view.*
-import kotlinx.android.synthetic.main.fdb_panel_view.view.*
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
 
@@ -47,9 +45,9 @@ class PanelRL : RelativeLayout {
         btnStrings = context.resources.getStringArray(R.array.btn_string)
 
         // initialize buttons LinearLayout
-        mPanelLL = View.inflate(context, R.layout.fdb_panel_view, null).panel_ll!!
+        mPanelLL = View.inflate(context, R.layout.fdb_panel_view, null).findViewById(R.id.panel_ll)
         btnStrings.forEachIndexed { index, s ->
-            val textView = View.inflate(context, R.layout.fdb_panel_btn_view, null).btn_tv!!
+            val textView = View.inflate(context, R.layout.fdb_panel_btn_view, null).findViewById<TextView>(R.id.btn_tv)
             textView.text = s
             mPanelLL.addView(textView)
 

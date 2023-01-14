@@ -9,18 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContract
-import kotlinx.android.synthetic.main.diary_attachment_adding_activity.description_et
-import kotlinx.android.synthetic.main.diary_file_library_add_progress_view.view.*
-import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity.*
-import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_file_mode.view.*
-import kotlinx.android.synthetic.main.diary_file_library_adding_file_activity_text_mode.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryFileLibraryAddingFileActivityBinding
 import pers.zhc.tools.databinding.DiaryFileLibraryAddingFileActivityFileModeBinding
 import pers.zhc.tools.databinding.DiaryFileLibraryAddingFileActivityTextModeBinding
 import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.utils.DialogUtil
 import pers.zhc.tools.utils.FileUtil
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.views.SmartHintEditText
 import java.io.File
 
 /**
@@ -43,23 +40,24 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         ) { result ->
             result ?: return@registerForActivityResult
             val pickedFile = result.path
-            topDynamicLL.picked_file_et?.editText?.setText(pickedFile)
+            topDynamicLL.findViewById<SmartHintEditText>(R.id.picked_file_et)?.editText?.setText(pickedFile)
         }
         val editTextAttachment =
             registerForActivityResult(DiaryFileLibraryEditTextActivity.TextEditContract()) { result ->
                 this@FileLibraryAddingActivity.text = result
-                topDynamicLL.length_tv?.text = getString(R.string.diary_file_library_edit_text_length_tv, text?.length)
+                topDynamicLL.findViewById<TextView>(R.id.length_tv)?.text = getString(R.string.diary_file_library_edit_text_length_tv, text?.length)
             }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_file_library_adding_file_activity)
+        val bindings = DiaryFileLibraryAddingFileActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        descriptionET = description_et!!
-        val submitBtn = submit_btn!!
-        spinner = findViewById(R.id.spinner)!!
-        topDynamicLL = top_dynamic_ll!!
+        descriptionET = bindings.descriptionEt
+        val submitBtn = bindings.submitBtn
+        spinner = bindings.spinner
+        topDynamicLL = bindings.topDynamicLl
 
         addSpinner()
         submitBtn.setOnClickListener { submit() }
@@ -69,14 +67,14 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         if (currentStorageType == StorageType.TEXT) {
             syncSubmitText(if (this.text == null) "" else this.text!!)
         } else {
-            val pickedFileET = topDynamicLL.picked_file_et!!.editText
+            val pickedFileET = topDynamicLL.findViewById<SmartHintEditText>(R.id.picked_file_et)!!.editText
             syncSubmitFile(File(pickedFileET.text.toString()))
         }
     }
 
     private fun syncSubmitFile(file: File) {
         val progressView = View.inflate(this, R.layout.diary_file_library_add_progress_view, null)
-        val msgTV = progressView.msg_tv
+        val msgTV = progressView.findViewById<TextView>(R.id.msg_tv)
 
         if (!file.exists()) {
             ToastUtils.show(this, R.string.diary_file_not_exist_alert_msg)
@@ -147,7 +145,7 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
 
     private fun syncSubmitText(text: String) {
         val progressView = View.inflate(this, R.layout.diary_file_library_add_progress_view, null)
-        progressView.msg_tv.setText(R.string.diary_file_library_text_adding_msg)
+        progressView.findViewById<TextView>(R.id.msg_tv).setText(R.string.diary_file_library_text_adding_msg)
 
         val description = descriptionET.text.toString()
 

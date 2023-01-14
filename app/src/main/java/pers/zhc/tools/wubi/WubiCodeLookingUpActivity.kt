@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.widget.doAfterTextChanged
-import kotlinx.android.synthetic.main.wubi_code_looking_up_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.WubiCodeLookingUpActivityBinding
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ProgressDialog
 import pers.zhc.tools.utils.ToastUtils
@@ -19,7 +19,8 @@ class WubiCodeLookingUpActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.wubi_code_looking_up_activity)
+        val bindings = WubiCodeLookingUpActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
         dict = WubiInverseDictManager.openDatabase()
         val updateNeeded = dict.checkUpdate()
@@ -31,8 +32,8 @@ class WubiCodeLookingUpActivity : BaseActivity() {
             }, titleRes = R.string.wubi_inverse_dict_update_alert).show()
         }
 
-        val wubiWordET = wubi_word_et!!.editText
-        val resultTV = result_tv!!
+        val wubiWordET = bindings.wubiWordEt.editText
+        val resultTV = bindings.resultTv
 
         wubiWordET.doAfterTextChanged {
             val codes = dict.query(wubiWordET.text.toString())

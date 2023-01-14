@@ -1,11 +1,10 @@
 package pers.zhc.tools.test
 
 import android.os.Bundle
-import kotlinx.android.synthetic.main.sys_info_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.SysInfoActivityBinding
 import pers.zhc.tools.jni.JNI
-import java.util.*
 
 /**
  * @author bczhc
@@ -14,10 +13,11 @@ class SysInfo : BaseActivity() {
     private var runFlag = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.sys_info_activity)
+        val bindings = SysInfoActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val uptimeTV = uptime_tv!!
-        val processesTV = processes_tv!!
+        val uptimeTV = bindings.uptimeTv
+        val processesTV = bindings.processesTv
 
         Thread {
             while (runFlag) {

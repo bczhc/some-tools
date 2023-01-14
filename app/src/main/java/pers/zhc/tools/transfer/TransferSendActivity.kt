@@ -15,10 +15,10 @@ import android.widget.EditText
 import android.widget.ScrollView
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
-import kotlinx.android.synthetic.main.transfer_send_activity.*
-import kotlinx.android.synthetic.main.transfer_tar_progress_view.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.TransferSendActivityBinding
+import pers.zhc.tools.databinding.TransferTarProgressViewBinding
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.jni.JNI.Transfer.ReceiveProgressCallback
@@ -52,7 +52,8 @@ class TransferSendActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.transfer_send_activity)
+        val bindings = TransferSendActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
         val intent = intent
         // activity is launched from "Open as" dialog
@@ -61,12 +62,12 @@ class TransferSendActivity : BaseActivity() {
             intent.data.nullMap { it.path }
         } else null
 
-        addressET = destination_address_et!!.editText
-        val typeSpinner = type_spinner!!
-        val pickFileButton = pick_file_btn!!
-        containerLayout = container_layout!!
-        val sendButton = send_btn!!
-        val qrCodeButton = qr_code_btn!!
+        addressET = bindings.destinationAddressEt.editText
+        val typeSpinner = bindings.typeSpinner
+        val pickFileButton = bindings.pickFileBtn
+        containerLayout = bindings.containerLayout
+        val sendButton = bindings.sendBtn
+        val qrCodeButton = bindings.qrCodeBtn
 
         val typeStrings = resources.getStringArray(R.array.transfer_types)
         typeSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, typeStrings)
@@ -176,13 +177,14 @@ class TransferSendActivity : BaseActivity() {
             }
             Mark.TAR -> {
                 val dialog = Dialog(this)
-                val inflate = View.inflate(this, R.layout.transfer_tar_progress_view, null).apply {
+                val bindings = TransferTarProgressViewBinding.inflate(layoutInflater)
+                val inflate = bindings.root.apply {
                     layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
                 }
                 dialog.setContentView(inflate)
 
-                val textView = inflate.tar_files_tv!!
-                val scrollView = inflate.scrollView!!
+                val textView = bindings.tarFilesTv
+                val scrollView = bindings.scrollView
 
                 val callback = object : ReceiveProgressCallback() {
                     override fun tarProgress(logLine: String?) {

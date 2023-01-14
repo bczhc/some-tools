@@ -11,10 +11,10 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.diary_attachment_preview_view.view.*
-import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryAttachmentFragmentBinding
+import pers.zhc.tools.databinding.DiaryAttachmentPreviewViewBinding
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.diary.fragments.AttachmentFragment.Companion.EXTRA_PICKED_ATTACHMENT_ID
 import pers.zhc.tools.diary.fragments.AttachmentFragment.Companion.EXTRA_PICK_MODE
@@ -74,10 +74,11 @@ class AttachmentFragment(
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflate = inflater.inflate(R.layout.diary_attachment_fragment, container, false)
+        val bindings = DiaryAttachmentFragmentBinding.bind(inflate)
 
-        recyclerView = inflate.recycler_view!!
+        recyclerView = bindings.recyclerView
 
-        val toolbar = inflate.toolbar!!
+        val toolbar = bindings.toolbar
         toolbar.setOnMenuItemClickListener(this)
         setupOuterToolbar(toolbar)
 
@@ -182,9 +183,9 @@ class AttachmentFragment(
         }
 
         private fun bindPreviewView(viewHolder: MyViewHolder, title: String, description: String) {
-            val view = viewHolder.itemView
-            val titleTV = view.title_tv
-            val descriptionTV = view.description_tv
+            val bindings = DiaryAttachmentPreviewViewBinding.bind(viewHolder.itemView)
+            val titleTV = bindings.titleTv
+            val descriptionTV = bindings.descriptionTv
 
             titleTV.text = context.getString(R.string.title_is, title)
             descriptionTV.text = context.getString(R.string.description_is_text, description)

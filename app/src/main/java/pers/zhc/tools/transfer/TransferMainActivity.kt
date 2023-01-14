@@ -2,9 +2,9 @@ package pers.zhc.tools.transfer
 
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.transfer_main_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.TransferMainActivityBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.WifiUtils
 
@@ -14,12 +14,13 @@ import pers.zhc.tools.utils.WifiUtils
 class TransferMainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.transfer_main_activity)
+        val bindings = TransferMainActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val sendButton = send_btn!!
-        val receiveButton = receive_btn!!
-        val ipInfoTV = ip_info_tv!!
-        val wifiIpTv = ip_tv!!
+        val sendButton = bindings.sendBtn
+        val receiveButton = bindings.receiveBtn
+        val ipInfoTV = bindings.ipInfoTv
+        val wifiIpTv = bindings.ipTv
 
         ipInfoTV.text = JNI.Ip.getLocalIpInfo()!!
 

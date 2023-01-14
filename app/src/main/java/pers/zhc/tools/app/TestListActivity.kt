@@ -2,10 +2,10 @@ package pers.zhc.tools.app
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.tools_activity_main.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.colorpicker.ScreenColorPickerDemoActivity
+import pers.zhc.tools.databinding.ToolsActivityMainBinding
 import pers.zhc.tools.test.*
 import pers.zhc.tools.test.malloctest.MAllocTest
 import pers.zhc.tools.test.signals.SignalTest
@@ -16,8 +16,9 @@ import pers.zhc.tools.test.signals.SignalTest
 class TestListActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.tools_activity_main)
-        val recyclerView = recycler_view!!
+        val bindings = ToolsActivityMainBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
+        val recyclerView = bindings.recyclerView
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 

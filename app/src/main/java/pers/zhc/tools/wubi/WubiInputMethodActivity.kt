@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import kotlinx.android.synthetic.main.wubi_input_method_setting_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.WubiInputMethodSettingActivityBinding
 import pers.zhc.tools.utils.RecyclerViewUtils
 import pers.zhc.tools.utils.addDividerLines
 import pers.zhc.tools.utils.setLinearLayoutManager
@@ -34,9 +34,10 @@ class WubiInputMethodActivity : BaseActivity() {
         )
 
         val data = resources.getStringArray(R.array.wubi_settings)
-        setContentView(R.layout.wubi_input_method_setting_activity)
+        val bindings = WubiInputMethodSettingActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val recyclerView = recycler_view!!
+        val recyclerView = bindings.recyclerView
         val adapter = RecyclerViewUtils.buildSimpleItem1ListAdapter(
             this, data.toList()
         )

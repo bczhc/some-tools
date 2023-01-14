@@ -1,11 +1,11 @@
 package pers.zhc.tools
 
 import android.os.Bundle
-import kotlinx.android.synthetic.main.main_activity.*
 import org.json.JSONObject
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
+import pers.zhc.tools.databinding.MainActivityBinding
 import pers.zhc.tools.utils.ToastUtils
 
 /**
@@ -14,12 +14,13 @@ import pers.zhc.tools.utils.ToastUtils
 class Settings : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        val bindings = MainActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val serverET = server_et!!
-        val resourceET = resource_et!!
-        val githubET = github_raw_url_et!!
-        val saveBtn = save!!
+        val serverET = bindings.serverEt
+        val resourceET = bindings.resourceEt
+        val githubET = bindings.githubRawUrlEt
+        val saveBtn = bindings.save
 
         serverET.editText.setText(Info.serverRootURL)
         resourceET.editText.setText(Info.staticResourceRootURL)

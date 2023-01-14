@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -19,13 +20,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.diary_advenced_search_dialog.view.*
-import kotlinx.android.synthetic.main.diary_main_diary_fragment.view.*
-import kotlinx.android.synthetic.main.diary_stat_dialog.view.*
 import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryAdvencedSearchDialogBinding
 import pers.zhc.tools.databinding.DiaryItemViewBinding
+import pers.zhc.tools.databinding.DiaryMainDiaryFragmentBinding
 import pers.zhc.tools.databinding.DiaryPickingRandomDiaryDialogBinding
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.filepicker.FilePickerActivityContract
@@ -93,18 +93,19 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val inflate = inflater.inflate(R.layout.diary_main_diary_fragment, container, false)
-        recyclerView = inflate.recycler_view!!
-        constraintLayout = inflate.constraint_layout
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val bindings = DiaryMainDiaryFragmentBinding.inflate(inflater, container, false)
+        val inflate = bindings.root
+        recyclerView = bindings.recyclerView
+        constraintLayout = bindings.constraintLayout
 
         loadRecyclerView()
 
-        val toolbar = inflate.toolbar!!
+        val toolbar = bindings.toolbar
         toolbar.setOnMenuItemClickListener(this)
         setupOuterToolbar(toolbar)
 
-        val searchView = inflate.search_view!!
+        val searchView = bindings.searchView
         configSearchView(searchView)
 
         return inflate
@@ -342,7 +343,8 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         val context = requireContext()
 
         val inflate = View.inflate(context, R.layout.diary_advenced_search_dialog, null)
-        val regexView = inflate.regex_input!!
+        val bindings = DiaryAdvencedSearchDialogBinding.bind(inflate)
+        val regexView = bindings.regexInput
         return DialogUtils.createConfirmationAlertDialog(
             context,
             { _, _ ->
@@ -389,7 +391,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         val dialog = Dialog(context).apply {
             setTitle(R.string.diary_statistics_dialog_title)
             setContentView(View.inflate(context, R.layout.diary_stat_dialog, null).apply {
-                this.stat_content_tv!!.text =
+                this.findViewById<TextView>(R.id.stat_content_tv)!!.text =
                     context.getString(R.string.diary_statistics_dialog_content, getTotalCharsCount(), getRowsCount())
             })
             DialogUtils.setDialogAttr(this, width = MATCH_PARENT)

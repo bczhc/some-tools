@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.util.Base64
 import android.view.*
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,14 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonSyntaxException
-import kotlinx.android.synthetic.main.github_action_download_item.view.*
-import kotlinx.android.synthetic.main.github_action_download_view.view.*
 import pers.zhc.tools.app.ActivityItem
 import pers.zhc.tools.app.AppMenuAdapter
 import pers.zhc.tools.app.SmallToolsListActivity
 import pers.zhc.tools.app.TestListActivity
 import pers.zhc.tools.bus.BusQueryMainActivity
 import pers.zhc.tools.databinding.GitLogViewBinding
+import pers.zhc.tools.databinding.GithubActionDownloadViewBinding
 import pers.zhc.tools.databinding.ToolsActivityMainBinding
 import pers.zhc.tools.diary.DiaryMainActivity
 import pers.zhc.tools.email.EmailMainActivity
@@ -230,7 +230,8 @@ class MainActivity : BaseActivity() {
                 ToastUtils.show(context, R.string.getting_information_failed)
             } else {
                 val inflate = View.inflate(context, R.layout.github_action_download_view, null)
-                val recyclerView = inflate.recycler_view!!
+                val bindings = GithubActionDownloadViewBinding.bind(inflate)
+                val recyclerView = bindings.recyclerView
                 recyclerView.layoutManager = LinearLayoutManager(context)
                 val adapter = GithubActionDownloadListAdapter(context, commits)
                 recyclerView.adapter = adapter
@@ -292,7 +293,7 @@ class MainActivity : BaseActivity() {
     private class GithubActionDownloadListAdapter(private val context: Context, private val data: ArrayList<Commit>) :
         AdapterWithClickListener<GithubActionDownloadListAdapter.MyViewHolder>() {
         class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val commitInfoTV = view.commit_info_tv!!
+            val commitInfoTV = view.findViewById<TextView>(R.id.commit_info_tv)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {

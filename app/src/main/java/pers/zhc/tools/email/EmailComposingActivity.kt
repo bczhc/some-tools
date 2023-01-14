@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContract
-import kotlinx.android.synthetic.main.email_composing_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.EmailComposingActivityBinding
 import pers.zhc.tools.email.EmailMainActivity.Companion.currentAccount
 import pers.zhc.tools.utils.ProgressDialog
 import pers.zhc.tools.utils.SharedRef
@@ -55,15 +55,16 @@ class EmailComposingActivity : BaseActivity() {
         databaseRef = Database.getDatabaseRef()
         database = databaseRef.get()
 
-        setContentView(R.layout.email_composing_activity)
+        val bindings = EmailComposingActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val subjectET = subject_et!!.editText
-        val bodyET = body_et!!.editText
-        toET = to_et!!.editText
-        ccET = cc_et!!.editText
-        val sendButton = send_button!!
-        val toAddButton = to_add_btn!!
-        val ccAddButton = cc_add_btn!!
+        val subjectET = bindings.subjectEt.editText
+        val bodyET = bindings.bodyEt.editText
+        toET = bindings.toEt.editText
+        ccET = bindings.ccEt.editText
+        val sendButton = bindings.sendButton
+        val toAddButton = bindings.toAddBtn
+        val ccAddButton = bindings.ccAddBtn
 
         toAddButton.setOnClickListener {
             contactSelectorLauncher.launch(ContactAddTarget.TO)

@@ -1,15 +1,14 @@
 package pers.zhc.tools.charucd
 
 import android.os.Bundle
-import android.view.View
-import kotlinx.android.synthetic.main.char_ucd_activity.*
-import kotlinx.android.synthetic.main.char_ucd_table_row.view.*
 import pers.zhc.jni.JNI.Struct.packInt
 import pers.zhc.jni.JNI.Struct.packShort
 import pers.zhc.jni.struct.Struct
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.CharUcdActivityBinding
+import pers.zhc.tools.databinding.CharUcdTableRowBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.utils.CharUtils
@@ -20,6 +19,7 @@ import java.util.*
  * @author bczhc
  */
 class CharUcdActivity : BaseActivity() {
+    private lateinit var bindings: CharUcdActivityBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intent = intent
@@ -28,7 +28,8 @@ class CharUcdActivity : BaseActivity() {
         }
         val codepoint = intent.getIntExtra(EXTRA_CODEPOINT, 0)
 
-        setContentView(R.layout.char_ucd_activity)
+        bindings = CharUcdActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
         EncodingsTextViews(this).apply {
             utf8.text = getUtf8String(codepoint)
@@ -40,13 +41,13 @@ class CharUcdActivity : BaseActivity() {
             utf32be.text = getUtf32BytesString(codepoint, Struct.Endianness.BIG)
         }
 
-        val ucdTL = ucd_prop_tl!!
-        char_tv.text = JNI.Unicode.Codepoint.codepoint2str(codepoint)
-        unicode_tv!!.text =
+        val ucdTL = bindings.ucdPropTl
+        bindings.charTv.text = JNI.Unicode.Codepoint.codepoint2str(codepoint)
+        bindings.unicodeTv.text =
             getString(R.string.char_ucd_unicode_codepoint_tv, UnicodeTable.codepoint2unicodeStr(codepoint))
-        decimal_tv!!.text = getString(R.string.char_ucd_unicode_decimal_tv, codepoint)
+        bindings.decimalTv.text = getString(R.string.char_ucd_unicode_decimal_tv, codepoint)
 
-        val ucdContentPlaceholder = ucd_content_placeholder!!
+        val ucdContentPlaceholder = bindings.ucdContentPlaceholder
         ucdContentPlaceholder.text = getString(
             if (CharLookupActivity.UCD_DATABASE_PATH.exists()) {
                 R.string.char_ucd_querying_msg_text
@@ -81,10 +82,10 @@ class CharUcdActivity : BaseActivity() {
                         aliasArray.joinToString()
                     }
 
-                    val inflate = View.inflate(this, R.layout.char_ucd_table_row, null)
-                    inflate.key_tv!!.text = key
-                    inflate.value_tv!!.text = valueString
-                    ucdTL.addView(inflate)
+                    val bindings = CharUcdTableRowBinding.inflate(layoutInflater)
+                    bindings.keyTv.text = key
+                    bindings.valueTv.text = valueString
+                    ucdTL.addView(bindings.root)
                 }
             }
         }
@@ -98,13 +99,13 @@ class CharUcdActivity : BaseActivity() {
     }
 
     private class EncodingsTextViews(activity: CharUcdActivity) {
-        val utf8 = activity.enc_utf8_tv!!
-        val utf16 = activity.enc_utf16_tv!!
-        val utf32 = activity.enc_utf32_tv!!
-        val utf16le = activity.enc_utf16le_tv!!
-        val utf16be = activity.enc_utf16be_tv!!
-        val utf32le = activity.enc_utf32le_tv!!
-        val utf32be = activity.enc_utf32be_tv!!
+        val utf8 = activity.bindings.encUtf8Tv
+        val utf16 = activity.bindings.encUtf16Tv
+        val utf32 = activity.bindings.encUtf32Tv
+        val utf16le = activity.bindings.encUtf16leTv
+        val utf16be = activity.bindings.encUtf16beTv
+        val utf32le = activity.bindings.encUtf32leTv
+        val utf32be = activity.bindings.encUtf32beTv
     }
 
     private fun completeString(s: String, length: Int): String {

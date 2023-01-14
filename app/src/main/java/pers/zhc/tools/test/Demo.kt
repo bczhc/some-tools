@@ -24,13 +24,13 @@ class Demo : BaseActivity() {
         }.join()
         ToastUtils.show(this, body)
 
-        JavaDemo.Enum.A.ordinal
+        /*JavaDemo.Enum.A.ordinal
 
         for (enum in arrayOf(JavaDemo.Enum.A, JavaDemo.Enum.B)) {
             when (enum) {
                 JavaDemo.Enum.A -> TODO()
                 JavaDemo.Enum.B -> TODO()
             }
-        }
+        }*/
     }
 }

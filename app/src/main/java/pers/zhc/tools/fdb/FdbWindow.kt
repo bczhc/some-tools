@@ -15,11 +15,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.View
+import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -30,16 +27,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.slider.Slider
-import kotlinx.android.synthetic.main.fdb_eraser_opacity_adjusting_view.view.*
-import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.*
-import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.ll
-import kotlinx.android.synthetic.main.fdb_stoke_settings_view.view.*
-import kotlinx.android.synthetic.main.fdb_transformation_settings_view.view.*
-import kotlinx.android.synthetic.main.progress_bar.view.*
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.colorpicker.*
+import pers.zhc.tools.databinding.FdbEraserOpacityAdjustingViewBinding
+import pers.zhc.tools.databinding.FdbPanelSettingsViewBinding
+import pers.zhc.tools.databinding.FdbStokeSettingsViewBinding
+import pers.zhc.tools.databinding.FdbTransformationSettingsViewBinding
+import pers.zhc.tools.databinding.ProgressBarBinding
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
@@ -365,14 +361,14 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun createStrokeSettingsView(): View {
-        val inflate = View.inflate(context, R.layout.fdb_stoke_settings_view, null)!!
+        val bindings = FdbStokeSettingsViewBinding.inflate(LayoutInflater.from(context))
 
-        val rg = inflate.rg!!
-        val widthSlider = inflate.slider!!
-        val infoTV = inflate.tv!!
-        val lockBrushCB = inflate.cb!!
-        val hardnessSlider = inflate.hardness_slider!!
-        val strokeShowView = inflate.stroke_show!!
+        val rg = bindings.rg
+        val widthSlider = bindings.slider
+        val infoTV = bindings.tv
+        val lockBrushCB = bindings.cb
+        val hardnessSlider = bindings.hardnessSlider
+        val strokeShowView = bindings.strokeShow
 
         lockBrushCB.isChecked = paintView.isLockStrokeEnabled
         rg.check(
@@ -505,7 +501,7 @@ class FdbWindow(activity: FdbMainActivity) {
             }
         }
 
-        return inflate
+        return bindings.root
     }
 
     fun startFDB() {
@@ -657,13 +653,13 @@ class FdbWindow(activity: FdbMainActivity) {
 
     @Suppress("DuplicatedCode")
     private fun createPanelSettingsDialog(): Dialog {
-        val inflate = View.inflate(context, R.layout.fdb_panel_settings_view, null)
-        val dialog = createDialog(inflate)
+        val bindings = FdbPanelSettingsViewBinding.inflate(LayoutInflater.from(context))
+        val dialog = createDialog(bindings.root)
 
-        val panelColorBtn = inflate.panel_color!!
-        val textColorBtn = inflate.text_color!!
-        val followBrushColorSwitch = inflate.follow_painting_color!!
-        val invertTextColorSwitch = inflate.invert_text_color!!
+        val panelColorBtn = bindings.panelColor
+        val textColorBtn = bindings.textColor
+        val followBrushColorSwitch = bindings.followPaintingColor
+        val invertTextColorSwitch = bindings.invertTextColor
 
         panelColorBtn.setOnClickListener {
             dialogs.panelColorPicker.show()
@@ -847,7 +843,7 @@ class FdbWindow(activity: FdbMainActivity) {
         }
 
         val inflate = View.inflate(context, R.layout.fdb_panel_more_view, null)
-        val ll = inflate.ll!!
+        val ll = inflate.findViewById<LinearLayout>(R.id.ll)!!
 
         val btnStrings = context.resources.getStringArray(R.array.fdb_more_menu)
         btnStrings.forEachIndexed { i, btnString ->
@@ -864,13 +860,12 @@ class FdbWindow(activity: FdbMainActivity) {
         createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
             dialogs.moreMenu.dismiss()
 
-            val progressView = View.inflate(context, R.layout.progress_bar, null)
+            val bindings = ProgressBarBinding.inflate(LayoutInflater.from(context))
 
-            progressView.progress_bar_title!!.text =
-                context.getString(R.string.fdb_importing_path_progress_title)
-            val progressBar = progressView.progress_bar!!
-            val progressTV = progressView.progress_tv!!
-            val progressDialog = createDialog(progressView, width = MATCH_PARENT)
+            bindings.progressBarTitle.text = context.getString(R.string.fdb_importing_path_progress_title)
+            val progressBar = bindings.progressBar
+            val progressTV = bindings.progressTv
+            val progressDialog = createDialog(bindings.root, width = MATCH_PARENT)
             progressDialog.setCanceledOnTouchOutside(false)
             progressDialog.show()
 
@@ -962,8 +957,8 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun createEraserOpacityDialog(): Dialog {
-        val inflate = View.inflate(context, R.layout.fdb_eraser_opacity_adjusting_view, null)
-        val opacitySlider = inflate.opacity!!
+        val bindings = FdbEraserOpacityAdjustingViewBinding.inflate(LayoutInflater.from(context))
+        val opacitySlider = bindings.opacity
         opacitySlider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
 
@@ -978,19 +973,19 @@ class FdbWindow(activity: FdbMainActivity) {
             opacitySlider.value = value
         }
 
-        val dialog = createDialog(inflate, dim = false)
+        val dialog = createDialog(bindings.root, dim = false)
         DialogUtils.setDialogAttr(dialog, width = MATCH_PARENT, overlayWindow = true)
         return dialog
     }
 
     private fun exportPath(internalPath: String, filename: String) {
         // path "undo" optimization
-        val progressView = View.inflate(context, R.layout.progress_bar, null)
-        val progressTitle = progressView.progress_bar_title!!
-        val progressBar = progressView.progress_bar!!
-        val progressTV = progressView.progress_tv!!
+        val bindings = ProgressBarBinding.inflate(LayoutInflater.from(context))
+        val progressTitle = bindings.progressBarTitle
+        val progressBar = bindings.progressBar
+        val progressTV = bindings.progressTv
 
-        val dialog = createDialog(progressView).apply {
+        val dialog = createDialog(bindings.root).apply {
             setCanceledOnTouchOutside(false)
         }.also { it.show() }
 
@@ -1213,10 +1208,10 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun createTransformationSettingsDialog(): Dialog {
-        val inflate = View.inflate(context, R.layout.fdb_transformation_settings_view, null)
-        val moveCB = inflate.move!!
-        val zoomCB = inflate.zoom!!
-        val rotateCB = inflate.rotate!!
+        val bindings = FdbTransformationSettingsViewBinding.inflate(LayoutInflater.from(context))
+        val moveCB = bindings.move
+        val zoomCB = bindings.zoom
+        val rotateCB = bindings.rotate
 
         moveCB.setOnCheckedChangeListener { _, isChecked ->
             paintView.isMoveTransformationEnabled = isChecked
@@ -1228,8 +1223,8 @@ class FdbWindow(activity: FdbMainActivity) {
             paintView.isRotateTransformationEnabled = isChecked
         }
 
-        val setAsDefaultTransformation = inflate.set_as_default!!
-        val resetToDefaultTransformation = inflate.reset_to_default!!
+        val setAsDefaultTransformation = bindings.setAsDefault
+        val resetToDefaultTransformation = bindings.resetToDefault
 
         setAsDefaultTransformation.setOnClickListener {
             paintView.setAsDefaultTransformation()
@@ -1240,7 +1235,7 @@ class FdbWindow(activity: FdbMainActivity) {
             ToastUtils.show(context, R.string.reset_success_toast)
         }
 
-        return createDialog(inflate)
+        return createDialog(bindings.root)
     }
 
     private fun createLayerManagerDialog(): Dialog {

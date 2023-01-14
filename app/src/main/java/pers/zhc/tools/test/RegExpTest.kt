@@ -2,19 +2,19 @@ package pers.zhc.tools.test
 
 import android.os.Bundle
 import androidx.core.widget.doAfterTextChanged
-import kotlinx.android.synthetic.main.regular_expression_test_layout.*
 import pers.zhc.tools.BaseActivity
-import pers.zhc.tools.R
+import pers.zhc.tools.databinding.RegularExpressionTestLayoutBinding
 import pers.zhc.tools.utils.capture
 
 class RegExpTest : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.regular_expression_test_layout)
+        val bindings = RegularExpressionTestLayoutBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val inputET = input_et!!.editText
-        val regexInputView = regex_input!!
-        val resultTV = tv!!
+        val inputET = bindings.inputEt.editText
+        val regexInputView = bindings.regexInput
+        val resultTV = bindings.tv
 
         val update = { regex: Regex? ->
             if (regex != null) {

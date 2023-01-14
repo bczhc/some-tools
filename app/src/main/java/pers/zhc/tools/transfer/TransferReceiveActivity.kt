@@ -11,9 +11,9 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
-import kotlinx.android.synthetic.main.transfer_receive_activity.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.TransferReceiveActivityBinding
 import pers.zhc.tools.filebrowser.TextFileBrowser
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.jni.JNI.ByteSize
@@ -31,15 +31,16 @@ class TransferReceiveActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.transfer_receive_activity)
+        val bindings = TransferReceiveActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        listenPortET = listen_port!!.editText
-        val receiveStartButton = receive_start_btn!!
+        listenPortET = bindings.listenPort.editText
+        val receiveStartButton = bindings.receiveStartBtn
 
         val receiveDir = File(Common.getAppMainExternalStoragePathFile(this), "transfer")
         receiveDir.requireMkdir()
 
-        val recyclerView = recycler_view!!
+        val recyclerView = bindings.recyclerView
         recyclerView.addDividerLines()
         recyclerView.setLinearLayoutManager()
 

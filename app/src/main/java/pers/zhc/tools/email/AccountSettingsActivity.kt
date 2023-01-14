@@ -6,9 +6,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import kotlinx.android.synthetic.main.email_account_add_dialog.view.*
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.EmailAccountAddDialogBinding
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.SharedRef
 
@@ -44,11 +44,11 @@ class AccountSettingsActivity : BaseActivity() {
     }
 
     private fun buildAddAccountDialog(): Dialog {
-        val inflate = View.inflate(this, R.layout.email_account_add_dialog, null)
-        val smtpServerET = inflate.smtp_server_et!!.editText
-        val usernameET = inflate.username_et!!.editText
-        val passwordET = inflate.password_et!!.editText
-        val fromET = inflate.from_et!!.editText
+        val bindings = EmailAccountAddDialogBinding.inflate(layoutInflater)
+        val smtpServerET = bindings.smtpServerEt.editText
+        val usernameET = bindings.usernameEt.editText
+        val passwordET = bindings.passwordEt.editText
+        val fromET = bindings.fromEt.editText
 
         val confirmAction = {
             val account = Account(
@@ -66,7 +66,7 @@ class AccountSettingsActivity : BaseActivity() {
             { _, _ ->
                 confirmAction()
             },
-            view = inflate,
+            view = bindings.root,
             titleRes = R.string.email_add_account_dialog_title,
             width = MATCH_PARENT
         )

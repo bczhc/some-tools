@@ -17,11 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.reddit.indicatorfastscroll.FastScrollItemIndicator
 import com.reddit.indicatorfastscroll.FastScrollerView
-import kotlinx.android.synthetic.main.words_activity.*
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.WordsActivityBinding
 import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.*
@@ -45,14 +45,15 @@ class WordsMainActivity : BaseActivity() {
             notificationId = System.currentTimeMillis().hashCode()
         }
 
-        setContentView(R.layout.words_activity)
+        val bindings = WordsActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
         checkAndInitDatabase()
         showNotification()
 
-        val recyclerView = recycler_view!!
-        val fastScroller = fast_scroller!!
-        val fastScrollerThumb = fast_scroller_thumb!!
+        val recyclerView = bindings.recyclerView
+        val fastScroller = bindings.fastScroller
+        val fastScrollerThumb = bindings.fastScrollerThumb
 
         updateItems()
         listAdapter = MyAdapter(this, itemList)

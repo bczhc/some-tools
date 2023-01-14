@@ -2,13 +2,13 @@ package pers.zhc.tools.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
 import androidx.core.widget.doAfterTextChanged
-import kotlinx.android.synthetic.main.character_lookup_input_dialog.view.*
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.CharacterLookupInputDialogBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.utils.CodepointIterator
@@ -28,13 +28,14 @@ class CharacterLookupInputView : WrapLayout {
     }
 
     private fun init() {
-        val inflate = View.inflate(context, R.layout.character_lookup_input_dialog, null).apply {
+        val bindings = CharacterLookupInputDialogBinding.inflate(LayoutInflater.from(context))
+        val inflate = bindings.root.apply {
             layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
         }
         this.setView(inflate)
 
-        codepointET = inflate.codepoint_et!!.editText
-        val charET = inflate.char_et!!.editText
+        codepointET = bindings.codepointEt.editText
+        val charET = bindings.charEt.editText
 
         var doSetText = false
 

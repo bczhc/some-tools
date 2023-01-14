@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import kotlinx.android.synthetic.main.bus_lines_list_view_item_view.view.*
-import kotlinx.android.synthetic.main.bus_query_activity.*
 import org.json.JSONArray
 import org.json.JSONObject
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.BusLinesListViewItemViewBinding
+import pers.zhc.tools.databinding.BusQueryActivityBinding
 import pers.zhc.tools.utils.AdapterWithClickListener
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.readToString
@@ -27,11 +27,12 @@ import java.net.URL
 class BusQueryMainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.bus_query_activity)
+        val bindings = BusQueryActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        val linesRV = lines_rv!!
-        val queryBtn = query_btn!!
-        val lineNumET = line_num_et!!.editText
+        val linesRV = bindings.linesRv
+        val queryBtn = bindings.queryBtn
+        val lineNumET = bindings.lineNumEt.editText
 
         queryBtn.setOnClickListener {
             val input = lineNumET.text.toString()
@@ -56,9 +57,10 @@ class BusQueryMainActivity : BaseActivity() {
     inner class BusLineItemAdapter(val context: Context, val resource: Int, val objects: MutableList<BusLineInfo>) :
         AdapterWithClickListener<BusLineItemAdapter.MyViewHolder>() {
         inner class MyViewHolder(view: View) : ViewHolder(view) {
-            val startStationNameTV = view.start_station_name_tv!!
-            val endStationNameTV = view.end_station_name_tv!!
-            val lineNumTV = view.line_num_tv!!
+            private val bindings = BusLinesListViewItemViewBinding.bind(view)
+            val startStationNameTV = bindings.startStationNameTv
+            val endStationNameTV = bindings.endStationNameTv
+            val lineNumTV = bindings.lineNumTv
         }
 
         override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {

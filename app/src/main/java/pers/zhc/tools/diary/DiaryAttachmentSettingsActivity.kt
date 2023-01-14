@@ -2,9 +2,9 @@ package pers.zhc.tools.diary
 
 import android.os.Bundle
 import android.widget.TextView
-import kotlinx.android.synthetic.main.diary_attachment_settings_activity.*
 import org.apache.commons.io.FileUtils
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryAttachmentSettingsActivityBinding
 import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.utils.*
 import java.io.File
@@ -31,12 +31,13 @@ class DiaryAttachmentSettingsActivity : DiaryBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_attachment_settings_activity)
+        val bindings = DiaryAttachmentSettingsActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        storagePathTV = storage_path_tv!!
-        val changeBtn = change_btn!!
-        val doneBtn = done_btn
-        val restoreToDefaultBtn = restore_to_default_btn
+        storagePathTV = bindings.storagePathTv
+        val changeBtn = bindings.changeBtn
+        val doneBtn = bindings.doneBtn
+        val restoreToDefaultBtn = bindings.restoreToDefaultBtn
 
         val storagePath = LocalInfo.attachmentStoragePath
 
