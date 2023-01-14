@@ -6,6 +6,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.runBlocking
 import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.thread
 
@@ -22,5 +23,14 @@ class Demo : BaseActivity() {
             }
         }.join()
         ToastUtils.show(this, body)
+
+        JavaDemo.Enum.A.ordinal
+
+        for (enum in arrayOf(JavaDemo.Enum.A, JavaDemo.Enum.B)) {
+            when (enum) {
+                JavaDemo.Enum.A -> TODO()
+                JavaDemo.Enum.B -> TODO()
+            }
+        }
     }
 }

@@ -22,8 +22,7 @@ import pers.zhc.tools.plugin.util.`FileUtils$`.`MODULE$` as FileUtils
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-android-extensions")
+    id("org.jetbrains.kotlin.android")
 }
 apply<RustBuildPlugin>()
 apply<CppBuildPlugin>()
@@ -249,23 +248,10 @@ println(
 )
 
 
-repositories {
-    mavenCentral()
-    google()
-    @Suppress("DEPRECATION")
-    jcenter {
-        content {
-            // https://github.com/reddit/IndicatorFastScroll/issues/45
-            includeGroup("com.reddit")
-        }
-    }
-    maven { setUrl("https://jitpack.io") }
-}
-
 dependencies {
     implementation("androidx.appcompat:appcompat:1.5.1")
     implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.1.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.0")
     implementation("com.google.android.material:material:1.8.0-alpha03")
     implementation("com.github.mik3y:usb-serial-for-android:3.3.0")
     implementation("com.github.bczhc:java-lib:18a858c167")
@@ -273,7 +259,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     implementation("me.zhanghai.android.fastscroll:library:1.1.8")
     implementation("com.github.bczhc:jni-java:1c894fd591")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.20")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.0")
     implementation("com.google.code.gson:gson:2.10")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0") {
