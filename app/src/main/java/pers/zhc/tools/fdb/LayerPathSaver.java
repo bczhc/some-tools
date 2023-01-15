@@ -12,7 +12,7 @@ public class LayerPathSaver {
     private final Statement tmpStatement;
     private final Statement pathStatement;
     private final Statement clearTempStatement;
-    private final long layerId;
+    private final String layerId;
     private final SQLite3 mainDatabase;
     private final String pathTableName;
     private final String tempTableName;
@@ -23,7 +23,7 @@ public class LayerPathSaver {
      */
     private final byte[] packBuf = new byte[12];
 
-    public LayerPathSaver(@NotNull SQLite3 mainDatabase, long layerId) {
+    public LayerPathSaver(@NotNull SQLite3 mainDatabase, String layerId) {
         this.layerId = layerId;
         this.mainDatabase = mainDatabase;
 
@@ -117,7 +117,7 @@ public class LayerPathSaver {
         clearTempStatement.step();
     }
 
-    public long getLayerId() {
+    public String getLayerId() {
         return layerId;
     }
 

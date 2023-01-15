@@ -147,7 +147,7 @@ public class PathSaver {
         infoStatement.release();
     }
 
-    public void addNewLayerPathSaver(long id) {
+    public void addNewLayerPathSaver(String id) {
         final LayerPathSaver layerPathSaver = new LayerPathSaver(pathDatabase, id);
         layerPathSaverList.add(layerPathSaver);
     }
@@ -189,9 +189,9 @@ public class PathSaver {
 
     @org.jetbrains.annotations.Nullable
     @Nullable
-    public LayerPathSaver getLayerPathSaver(long id) {
+    public LayerPathSaver getLayerPathSaver(String id) {
         for (LayerPathSaver layerPathSaver : layerPathSaverList) {
-            if (layerPathSaver.getLayerId() == id) {
+            if (layerPathSaver.getLayerId().equals(id)) {
                 return layerPathSaver;
             }
         }

@@ -41,6 +41,7 @@ import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
 import pers.zhc.tools.floatingdrawing.PaintView
 import pers.zhc.tools.utils.*
+import pers.zhc.tools.utils.UUID
 import pers.zhc.tools.views.HSVAColorPickerRL
 import java.io.File
 import java.io.IOException
@@ -297,7 +298,7 @@ class FdbWindow(activity: FdbMainActivity) {
             }
             post {
                 // add the default layer
-                val id = System.currentTimeMillis()
+                val id = Layer.randomId()
                 val defaultLayerInfo = LayerInfo(id, context.getString(R.string.fdb_layer_default_name), true)
 
                 paintView.add1Layer(defaultLayerInfo)
@@ -1245,8 +1246,7 @@ class FdbWindow(activity: FdbMainActivity) {
 
         dialog.setOnDismissListener {
             val layerState = layerManagerView.getLayerState()
-            val checkedId = layerState.checkedId
-            Common.doAssertion(checkedId != -1L)
+            layerState.checkedId!!
             paintView.updateLayerState(layerState)
         }
         return dialog

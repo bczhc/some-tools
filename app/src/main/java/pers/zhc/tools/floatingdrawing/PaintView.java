@@ -890,9 +890,9 @@ public class PaintView extends BaseView {
 
         final List<String> tables = SQLite3UtilsKt.getTables(db);
         for (String table : tables) {
-            if (table.matches("^path_layer_[0-9]+$")) {
-                final long layerId = Long.parseLong(RegexUtilsKt.capture(table, "^path_layer_([0-9]+)$").get(0).get(1));
-                add1Layer(new LayerInfo(layerId, String.valueOf(layerId), true));
+            if (Layer.checkTableName(table)) {
+                String layerId = Layer.getTableLayerId(table);
+                add1Layer(new LayerInfo(layerId, layerId, true));
 
             }
         }
@@ -1013,7 +1013,7 @@ public class PaintView extends BaseView {
 
         for (int i = layersInfo.size() - 1; i >= 0; i--) {
             LayerInfo layerInfo = layersInfo.get(i);
-            final long originalLayerId = layerInfo.getId();
+            final String originalLayerId = layerInfo.getId();
             add1Layer(layerInfo);
             switchLayer(layerInfo.getId());
             if (onImportLayerAddedListener != null) {
@@ -1072,7 +1072,7 @@ public class PaintView extends BaseView {
 
         for (int i = layersInfo.size() - 1; i >= 0; i--) {
             LayerInfo layerInfo = layersInfo.get(i);
-            final long originalLayerId = layerInfo.getId();
+            final String originalLayerId = layerInfo.getId();
             add1Layer(layerInfo);
             switchLayer(layerInfo.getId());
             if (onImportLayerAddedListener != null) {
@@ -1099,7 +1099,7 @@ public class PaintView extends BaseView {
     @SuppressWarnings("DuplicatedCode")
     private void importLayerPath(
             SQLite3 db,
-            long layerId,
+            String layerId,
             float defaultTransformationScale,
             float[] transformationValue,
             Consumer<Float> progressCallback,
@@ -1180,7 +1180,7 @@ public class PaintView extends BaseView {
     @SuppressWarnings("DuplicatedCode")
     private void importLayerPath4_0(
             SQLite3 db,
-            long layerId,
+            String layerId,
             float defaultTransformationScale,
             float[] transformationValue,
             Consumer<Float> progressCallback,
@@ -1528,7 +1528,7 @@ public class PaintView extends BaseView {
         ++a;
     }
 
-    public long add1Layer(LayerInfo layerInfo) {
+    public String add1Layer(LayerInfo layerInfo) {
         final Layer layer = new Layer(width, height, layerInfo);
         layerArray.add(0, layer);
         pathSaver.addNewLayerPathSaver(layerInfo.getId());
@@ -1555,16 +1555,16 @@ public class PaintView extends BaseView {
         canvasTransformer.refresh();
     }
 
-    private int getLayerIndexById(long id) {
+    private int getLayerIndexById(String id) {
         for (int i = 0; i < layerArray.size(); i++) {
-            if (layerArray.get(i).getId() == id) {
+            if (layerArray.get(i).getId().equals(id)) {
                 return i;
             }
         }
         return -1;
     }
 
-    private Layer getLayerById(long id) {
+    private Layer getLayerById(String id) {
         final int i = getLayerIndexById(id);
         if (i != -1) {
             return layerArray.get(i);
@@ -1588,7 +1588,7 @@ public class PaintView extends BaseView {
         invalidate();
     }
 
-    public void switchLayer(long id) {
+    public void switchLayer(String id) {
         switchLayer(getLayerIndexById(id));
     }
 
@@ -1613,12 +1613,12 @@ public class PaintView extends BaseView {
         return defaultTransformation;
     }
 
-    public long getCurrentLayerId() {
+    public String getCurrentLayerId() {
         return layerRef.getId();
     }
 
-    public ArrayList<Long> getLayerIds() {
-        ArrayList<Long> list = new ArrayList<>();
+    public ArrayList<String> getLayerIds() {
+        ArrayList<String> list = new ArrayList<>();
         for (Layer layer : layerArray) {
             list.add(layer.getId());
         }

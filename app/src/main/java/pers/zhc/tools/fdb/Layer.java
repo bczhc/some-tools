@@ -1,10 +1,14 @@
 package pers.zhc.tools.fdb;
 
 import android.graphics.*;
+import kotlin.text.Regex;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.floatingdrawing.PaintView;
+import pers.zhc.tools.utils.RegexUtilsKt;
+import pers.zhc.tools.utils.UUID;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * @author bczhc
@@ -34,7 +38,7 @@ public class Layer {
         }
     }
 
-    public long getId() {
+    public String getId() {
         return layerInfo.getId();
     }
 
@@ -52,5 +56,18 @@ public class Layer {
 
     public LayerInfo getLayerInfo() {
         return layerInfo;
+    }
+
+    public static @NotNull String randomId() {
+        return UUID.INSTANCE.randomNoDash();
+    }
+
+    @Contract(pure = true)
+    public static boolean checkTableName(@NotNull String table) {
+        return table.startsWith("path_layer_");
+    }
+
+    public static String getTableLayerId(String table) {
+        return RegexUtilsKt.capture(table, new Regex("^path_layer_(.*)$")).get(0).get(1);
     }
 }

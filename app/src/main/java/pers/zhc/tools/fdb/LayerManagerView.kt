@@ -5,7 +5,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,7 +50,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     private fun addLayerAction() {
         DialogUtils.createPromptDialog(context, R.string.fdb_layer_naming_dialog_title, { _, et ->
             val input = et.text.toString()
-            val id = System.currentTimeMillis()
+            val id = Layer.randomId()
 
             val layerInfo = LayerInfo(id, input, true)
             listItems.add(0, layerInfo)
@@ -66,7 +65,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
 
     class MyAdapter(private val context: Context, val items: ArrayList<LayerInfo>, val outer: LayerManagerView) :
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
-        private var checkedId = -1L
+        private var checkedId: String? = null
 
         class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val bindings = FdbLayerItemViewBinding.bind(view)
@@ -137,19 +136,11 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             return items.size
         }
 
-        fun getIdOrderList(): ArrayList<Long> {
-            val idList = ArrayList<Long>()
-            items.forEach {
-                idList.add(it.id)
-            }
-            return idList
-        }
-
-        fun getCheckedLayerId(): Long {
+        fun getCheckedLayerId(): String? {
             return checkedId
         }
 
-        fun setChecked(id: Long) {
+        fun setChecked(id: String) {
             this.checkedId = id
         }
     }
@@ -212,10 +203,10 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
 
     class LayerState(
         val orderList: List<LayerInfo>,
-        val checkedId: Long
+        val checkedId: String?
     )
 
-    fun setChecked(id: Long) {
+    fun setChecked(id: String) {
         listAdapter.setChecked(id)
     }
 
