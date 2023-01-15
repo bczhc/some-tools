@@ -6,11 +6,9 @@ import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.*;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -20,7 +18,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
-import pers.zhc.jni.sqlite.Schema;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
@@ -31,7 +28,6 @@ import pers.zhc.util.Assertion;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -1013,16 +1009,18 @@ public class PaintView extends BaseView {
 
         for (int i = layersInfo.size() - 1; i >= 0; i--) {
             LayerInfo layerInfo = layersInfo.get(i);
-            final String originalLayerId = layerInfo.getId();
-            add1Layer(layerInfo);
-            switchLayer(layerInfo.getId());
+
+            LayerInfo newLayerInfo = new LayerInfo(Layer.randomId(), layerInfo.getName(), layerInfo.getVisible());
+            add1Layer(newLayerInfo);
+            switchLayer(newLayerInfo.getId());
+
             if (onImportLayerAddedListener != null) {
-                onImportLayerAddedListener.onAdded(new LayerInfo(layerInfo.getId(), layerInfo.getName(), layerInfo.getVisible()));
+                onImportLayerAddedListener.onAdded(newLayerInfo);
             }
 
-            importLayerPath(
+            importLayerPath3_0(
                     db,
-                    originalLayerId,
+                    layerInfo.getId(),
                     defaultTransformationScale,
                     transformationValue,
                     progressCallback,
@@ -1072,16 +1070,18 @@ public class PaintView extends BaseView {
 
         for (int i = layersInfo.size() - 1; i >= 0; i--) {
             LayerInfo layerInfo = layersInfo.get(i);
-            final String originalLayerId = layerInfo.getId();
-            add1Layer(layerInfo);
-            switchLayer(layerInfo.getId());
+
+            LayerInfo newLayerInfo = new LayerInfo(Layer.randomId(), layerInfo.getName(), layerInfo.getVisible());
+            add1Layer(newLayerInfo);
+            switchLayer(newLayerInfo.getId());
+
             if (onImportLayerAddedListener != null) {
-                onImportLayerAddedListener.onAdded(new LayerInfo(layerInfo.getId(), layerInfo.getName(), layerInfo.getVisible()));
+                onImportLayerAddedListener.onAdded(newLayerInfo);
             }
 
             importLayerPath4_0(
                     db,
-                    originalLayerId,
+                    layerInfo.getId(),
                     defaultTransformationScale,
                     transformationValue,
                     progressCallback,
@@ -1097,7 +1097,7 @@ public class PaintView extends BaseView {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void importLayerPath(
+    private void importLayerPath3_0(
             SQLite3 db,
             String layerId,
             float defaultTransformationScale,
