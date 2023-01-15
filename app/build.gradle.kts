@@ -268,6 +268,7 @@ dependencies {
     implementation("com.quiph.ui:recyclerviewfastscroller:1.0.0")
     implementation("commons-io:commons-io:2.11.0")
     implementation("io.ktor:ktor-client-cio-jvm:2.2.2")
+    implementation(kotlin("reflect"))
 }
 
 task("saveNdkPath") {
