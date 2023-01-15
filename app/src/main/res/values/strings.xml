@@ -794,5 +794,6 @@
     <string name="char_split_as_grapheme_button">以字素</string>
     <string name="char_split_codepoint_label">码点</string>
     <string name="task_notes_add_record_shortcut_label">记录任务</string>
+    <string name="char_ucd_char_name_et_hint">字符名称</string>
     <!-- end -->
 </resources>

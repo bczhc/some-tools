@@ -19,4 +19,10 @@
             android:text="@string/char_ucd_get_ucd_database_button"
             android:id="@+id/get_btn"
     />
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/container"
+            android:background="@drawable/view_stroke"
+    />
 </LinearLayout>

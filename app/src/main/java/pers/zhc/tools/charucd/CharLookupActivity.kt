@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.fragment.app.commit
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.CharUcdLookupActivityBinding
@@ -55,12 +56,17 @@ class CharLookupActivity : BaseActivity() {
                 setCanceledOnTouchOutside(false)
             }.show()
         }
+
+        val charNameLookupFragment = CharNameLookupFragment()
+        supportFragmentManager.commit {
+            add(R.id.container, charNameLookupFragment)
+        }
     }
 
     private fun fetchAndProcessDatabase() {
         val paths = object {
             val download = File(filesDir, "ucd-xml.zip")
-            val database = UCD_DATABASE_PATH
+            val database = UcdDatabase.databaseFile
         }
 
         val progressView = ParseProgressView(this).apply {
@@ -162,11 +168,5 @@ class CharLookupActivity : BaseActivity() {
 
     companion object {
         private const val UNICODE_UCD_XML_URL = "https://www.unicode.org/Public/UCD/latest/ucdxml/ucd.all.flat.zip"
-
-        lateinit var UCD_DATABASE_PATH: File
-
-        fun init(context: Context) {
-            UCD_DATABASE_PATH = File(context.filesDir, "ucd.db")
-        }
     }
 }

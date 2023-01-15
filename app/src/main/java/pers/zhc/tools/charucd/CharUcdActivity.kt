@@ -49,7 +49,7 @@ class CharUcdActivity : BaseActivity() {
 
         val ucdContentPlaceholder = bindings.ucdContentPlaceholder
         ucdContentPlaceholder.text = getString(
-            if (CharLookupActivity.UCD_DATABASE_PATH.exists()) {
+            if (UcdDatabase.databaseFile.exists()) {
                 R.string.char_ucd_querying_msg_text
             } else {
                 R.string.char_ucd_database_missing_msg
@@ -57,12 +57,11 @@ class CharUcdActivity : BaseActivity() {
         )
 
         thread {
-            val ucdDatabasePath = CharLookupActivity.UCD_DATABASE_PATH
-            if (!ucdDatabasePath.exists()) return@thread
+            if (!UcdDatabase.databaseFile.exists()) return@thread
 
-            val database = UcdDatabase(ucdDatabasePath)
-            val properties = database.query(codepoint)
-            database.close()
+            val properties = UcdDatabase.useDatabase {
+                it.query(codepoint)
+            }
 
             if (properties == null) {
                 ucdContentPlaceholder.text = getString(R.string.char_ucd_ucd_properties_not_found_msg)

@@ -40,7 +40,6 @@ class MyApplication : Application() {
         ContactActivity.initPath(this)
         DictionaryDatabase.init(this)
         WubiInverseDictManager.init(this)
-        CharLookupActivity.init(this)
         SingleCharCodesChecker.RecordDatabase.init(this)
 
         registerNotificationChannel()
