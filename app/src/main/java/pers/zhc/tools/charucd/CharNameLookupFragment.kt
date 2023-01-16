@@ -6,24 +6,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pers.zhc.tools.BaseFragment
+import pers.zhc.tools.R
 import pers.zhc.tools.databinding.CharNameLookupFragmentBinding
 import pers.zhc.tools.databinding.CharUcdNameLookupListItemBinding
 import pers.zhc.tools.jni.JNI
-import pers.zhc.tools.utils.AdapterWithClickListener
-import pers.zhc.tools.utils.setLinearLayoutManager
-import pers.zhc.tools.utils.setUpFastScroll
+import pers.zhc.tools.utils.*
 
 class CharNameLookupFragment : BaseFragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val context = inflater.context
         val bindings = CharNameLookupFragmentBinding.inflate(inflater, container, false)
 
         val recyclerView = bindings.recyclerView
         val charNameET = bindings.charNameEt
-        val lookupButton = bindings.lookupBtn
+        val hintTV = bindings.resultHintTv
 
         val listItems: ListItems = mutableListOf()
 
@@ -34,18 +39,23 @@ class CharNameLookupFragment : BaseFragment() {
             setUpFastScroll(requireContext())
         }
 
-        lookupButton.setOnClickListener {
+        val queryResult = {
             val lookupName = charNameET.text.toString()
-            val result = UcdDatabase.useDatabase {
+            UcdDatabase.useDatabase {
                 it.queryByNameLike(lookupName, LOOKUP_LIMIT)
-            }.map {
+            }
+        }
+
+        // process and prepare the data for RecyclerView
+        val processQueryResult = { result: UcdDatabase.NameLookupResult ->
+            result.result.map {
                 val displayName = buildList {
                     if (it.alias == null) {
                         listOf(it.na, it.na1)
                     } else {
                         listOf(it.na, it.na1, it.alias)
                     }.forEach { ucdName ->
-                        if (ucdName.contains(lookupName, ignoreCase = true)) {
+                        if (ucdName.contains(result.lookupName, ignoreCase = true)) {
                             this += ucdName
                         }
                     }
@@ -57,16 +67,34 @@ class CharNameLookupFragment : BaseFragment() {
                     displayName
                 )
             }
-            listItems.clear()
-            listItems.addAll(result)
-            listAdapter.notifyDataSetChanged()
         }
 
         listAdapter.setOnItemClickListener { position, _ ->
             val codepoint = listItems[position].codepoint
-            startActivity(Intent(inflater.context, CharUcdActivity::class.java).apply {
+            startActivity(Intent(context, CharUcdActivity::class.java).apply {
                 putExtra(CharUcdActivity.EXTRA_CODEPOINT, codepoint)
             })
+        }
+
+        val debounceInterval = 300L
+        var job: Job? = null
+        charNameET.doAfterTextChanged {
+            job?.cancel()
+            job = viewLifecycleOwner.lifecycleScope.launch {
+                delay(debounceInterval)
+                hintTV.setText(R.string.char_ucd_name_lookup_hint_tv_querying)
+                thread {
+                    val queried = queryResult()
+                    val processed = processQueryResult(queried)
+                    context.runOnUiThread {
+                        hintTV.text =
+                            getString(R.string.char_ucd_name_lookup_hint_tv_result, queried.totalCount, LOOKUP_LIMIT)
+                        listItems.clear()
+                        listItems.addAll(processed)
+                        listAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
         }
 
         return bindings.root
@@ -94,12 +122,12 @@ class CharNameLookupFragment : BaseFragment() {
     companion object {
         const val LOOKUP_LIMIT = 1000
     }
+
+    data class CharData(
+        val codepoint: Int,
+        val char: String,
+        val name: String,
+    )
 }
 
-typealias ListItems = MutableList<CharData>
-
-data class CharData(
-    val codepoint: Int,
-    val char: String,
-    val name: String,
-)
+typealias ListItems = MutableList<CharNameLookupFragment.CharData>

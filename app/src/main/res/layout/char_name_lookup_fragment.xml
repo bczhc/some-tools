@@ -5,30 +5,23 @@
         android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
 >
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?textInputOutlinedStyle"
     >
-        <com.google.android.material.textfield.TextInputLayout
+        <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="?textInputOutlinedStyle"
-                android:layout_toStartOf="@id/lookup_btn"
-        >
-            <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/char_ucd_char_name_et_hint"
-                    android:id="@+id/char_name_et"
-            />
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="@string/char_ucd_lookup_button"
-                android:id="@+id/lookup_btn"
+                android:hint="@string/char_ucd_char_name_et_hint"
+                android:id="@+id/char_name_et"
         />
-    </RelativeLayout>
+    </com.google.android.material.textfield.TextInputLayout>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:id="@+id/result_hint_tv"
+              tools:text="@string/char_ucd_name_lookup_hint_tv_result"
+              android:paddingHorizontal="2.5dp"
+    />
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

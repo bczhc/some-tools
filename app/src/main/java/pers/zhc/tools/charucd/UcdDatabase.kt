@@ -25,15 +25,21 @@ class UcdDatabase(val file: File) {
         return MyApplication.GSON.fromJson(properties, Properties::class.java)
     }
 
-    data class NameLookupResult(
+    data class NameLookupChar(
         val codepoint: Int,
         val na: String,
         val na1: String,
         val alias: String?,
     )
 
-    fun queryByNameLike(name: String, limit: Int): List<NameLookupResult> {
-        return database.queryRows(
+    data class NameLookupResult(
+        val lookupName: String,
+        val result: List<NameLookupChar>,
+        val totalCount: Int,
+    )
+
+    fun queryByNameLike(name: String, limit: Int): NameLookupResult {
+        val chars = database.queryRows(
             """SELECT codepoint, na, na1, alias
 FROM ucd
 WHERE na LIKE ?1
@@ -42,13 +48,18 @@ WHERE na LIKE ?1
 LIMIT ?2""",
             arrayOf("%$name%", limit)
         ) {
-            NameLookupResult(
+            NameLookupChar(
                 it.getInt(0),
                 it.getText(1),
                 it.getText(2),
                 it.getText(3),
             )
         }.toList()
+        val totalCount = database.queryOne(
+            "SELECT COUNT()\nFROM ucd\nWHERE na LIKE ?1\n   OR na1 LIKE ?1\n   OR alias LIKE ?1",
+            arrayOf("%$name%")
+        ) { it.getInt(0) }!!
+        return NameLookupResult(name, chars, totalCount)
     }
 
     companion object {

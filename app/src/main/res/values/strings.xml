@@ -795,5 +795,7 @@
     <string name="char_split_codepoint_label">码点</string>
     <string name="task_notes_add_record_shortcut_label">记录任务</string>
     <string name="char_ucd_char_name_et_hint">字符名称</string>
+    <string name="char_ucd_name_lookup_hint_tv_result">查询到%1$d个结果，显示%2$d个</string>
+    <string name="char_ucd_name_lookup_hint_tv_querying">查询中……</string>
     <!-- end -->
 </resources>
