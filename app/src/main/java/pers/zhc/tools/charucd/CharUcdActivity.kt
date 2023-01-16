@@ -12,6 +12,7 @@ import pers.zhc.tools.databinding.CharUcdTableRowBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.utils.CharUtils
+import pers.zhc.tools.utils.ClipboardUtils
 import pers.zhc.tools.utils.thread
 import java.util.*
 
@@ -41,11 +42,16 @@ class CharUcdActivity : BaseActivity() {
             utf32be.text = getUtf32BytesString(codepoint, Struct.Endianness.BIG)
         }
 
+        val charString = JNI.Unicode.Codepoint.codepoint2str(codepoint)
         val ucdTL = bindings.ucdPropTl
-        bindings.charTv.text = JNI.Unicode.Codepoint.codepoint2str(codepoint)
+        bindings.charTv.text = charString
         bindings.unicodeTv.text =
             getString(R.string.char_ucd_unicode_codepoint_tv, UnicodeTable.codepoint2unicodeStr(codepoint))
         bindings.decimalTv.text = getString(R.string.char_ucd_unicode_decimal_tv, codepoint)
+        bindings.charTv.setOnLongClickListener {
+            ClipboardUtils.putWithToast(this, charString)
+            true
+        }
 
         val ucdContentPlaceholder = bindings.ucdContentPlaceholder
         ucdContentPlaceholder.text = getString(

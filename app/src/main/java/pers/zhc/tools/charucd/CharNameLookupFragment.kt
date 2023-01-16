@@ -75,6 +75,9 @@ class CharNameLookupFragment : BaseFragment() {
                 putExtra(CharUcdActivity.EXTRA_CODEPOINT, codepoint)
             })
         }
+        listAdapter.setOnItemLongClickListener { position, _ ->
+            ClipboardUtils.putWithToast(context, listItems[position].char)
+        }
 
         val debounceInterval = 300L
         var job: Job? = null
