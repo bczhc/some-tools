@@ -249,9 +249,9 @@ println(
 
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.5.1")
     implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.1.0")
-    implementation("com.google.android.material:material:1.9.0-alpha01")
+    implementation("com.google.android.material:material:1.8.0-alpha03")
     implementation("com.github.mik3y:usb-serial-for-android:3.3.0")
     implementation("com.github.bczhc:java-lib:18a858c167")
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
@@ -267,8 +267,8 @@ dependencies {
     implementation("com.reddit:indicator-fast-scroll:1.4.0")
     implementation("com.quiph.ui:recyclerviewfastscroller:1.0.0")
     implementation("commons-io:commons-io:2.11.0")
+    implementation("io.ktor:ktor-client-cio-jvm:2.2.2")
     implementation(kotlin("reflect"))
-    implementation("io.ktor:ktor-client-cio-jvm:2.2.3")
 }
 
 task("saveNdkPath") {
