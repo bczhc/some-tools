@@ -396,6 +396,18 @@ public class JNI {
             public static native void release(long addr);
         }
 
+        public static class Normalization {
+            public static native String nfd(String s);
+
+            public static native String nfkd(String s);
+
+            public static native String nfc(String s);
+
+            public static native String nfkc(String s);
+
+            public static native String cjkCompatVariants(String s);
+        }
+
         public static class Codepoint {
 
             public static native long newIterator(String s);

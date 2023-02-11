@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="NFC"
+          android:id="@+id/nfc"
+          tools:ignore="HardcodedText"/>
+    <item android:title="NFD"
+          android:id="@+id/nfd"
+          tools:ignore="HardcodedText"/>
+    <item android:title="NFKC"
+          android:id="@+id/nfkc"
+          tools:ignore="HardcodedText"/>
+    <item android:title="NFKD"
+          android:id="@+id/nfkd"
+          tools:ignore="HardcodedText"/>
+    <item android:title="CJK Compat Variants"
+          android:id="@+id/cjk_compat_variants"
+          tools:ignore="HardcodedText"/>
+</menu>

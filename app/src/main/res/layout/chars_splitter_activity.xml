@@ -8,30 +8,40 @@
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
               android:id="@+id/input_et"
               tools:ignore="Autofill,LabelFor,TextFields"/>
-    <com.google.android.material.button.MaterialButtonToggleGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            app:singleSelection="true"
-            app:selectionRequired="true"
-            android:id="@+id/btg"
-    >
-        <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
+    <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/char_split_as_codepoint_button"
-                android:id="@+id/as_codepoint"
-                style="?materialButtonOutlinedStyle"
-        />
-        <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/char_split_as_grapheme_button"
-                android:id="@+id/as_grapheme"
-                style="?materialButtonOutlinedStyle"
-        />
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:id="@+id/btg"
+        >
+            <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/char_split_as_codepoint_button"
+                    android:id="@+id/as_codepoint"
+                    style="?materialButtonOutlinedStyle"
+            />
+            <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/char_split_as_grapheme_button"
+                    android:id="@+id/as_grapheme"
+                    style="?materialButtonOutlinedStyle"
+            />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+            <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="N"
+                    style="?materialButtonOutlinedStyle"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/unicode_norm_btn"
+                    tools:ignore="HardcodedText"/>
+        </RelativeLayout>
+    </FrameLayout>
     <androidx.fragment.app.FragmentContainerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
