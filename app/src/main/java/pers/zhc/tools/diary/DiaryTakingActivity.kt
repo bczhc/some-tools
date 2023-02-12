@@ -108,16 +108,22 @@ class DiaryTakingActivity : DiaryBaseActivity() {
                 if (ttsEnabled) {
                     if (count < before) {
                         //delete
-                        ttsSpeak(
-                            getString(R.string.deleted_xxx, last!!.subSequence(start, start + before)),
-                            TextToSpeech.QUEUE_FLUSH
-                        )
+                        val text = last!!.subSequence(start, start + before)
+                        val ttsText = getString(R.string.deleted_xxx, ttsReplaceDict[text] ?: text)
+                        ttsSpeak(ttsText, TextToSpeech.QUEUE_FLUSH)
                     } else {
                         //insert
-                        val ttsText = s!!.subSequence(start, start + count).toString().let {
-                            ttsReplaceDict[it] ?: it
+                        val text = s!!.subSequence(start, start + count).toString()
+                        val find = ttsReplaceDict.keys.find { x -> text.endsWith(x) }
+                        if (find != null) {
+                            // 标顶
+                            val seg1 = text.removeSuffix(find)
+                            val seg2 = ttsReplaceDict[find]!!
+                            if (seg1.isNotEmpty()) ttsSpeak(seg1)
+                            ttsSpeak(seg2)
+                        } else {
+                            ttsSpeak(text)
                         }
-                        ttsSpeak(ttsText)
                     }
                 }
             }
@@ -318,9 +324,11 @@ WHERE "date" IS ?"""
                             condition.await()
                         }
                     }
+
                     State.STOPPED -> {
                         break
                     }
+
                     State.RUNNING -> {}
                 }
 
@@ -372,12 +380,22 @@ WHERE "date" IS ?"""
             Pair("]", "右方括号"),
             Pair("“", "上引号"),
             Pair("”", "下引号"),
-            Pair("‘", "上引号"),
-            Pair("’", "下引号"),
+            Pair("‘", "上单引号"),
+            Pair("’", "下单引号"),
             Pair(" ", "空格"),
             Pair("、", "顿号"),
             Pair("…", "省略号"),
             Pair("……", "省略号"),
+            Pair("《", "左书名号"),
+            Pair("》", "右书名号"),
+            Pair("——", "破折号"),
+            Pair("、", "顿号"),
+            Pair("；", "分号"),
+            Pair("：", "冒号"),
+            Pair("（", "左括号"),
+            Pair("）", "右括号"),
+            Pair("！", "叹号"),
+            Pair("？", "问号"),
         )
     }
 
