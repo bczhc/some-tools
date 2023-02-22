@@ -797,5 +797,6 @@
     <string name="char_ucd_char_name_et_hint">字符名称</string>
     <string name="char_ucd_name_lookup_hint_tv_result">查询到%1$d个结果，显示%2$d个</string>
     <string name="char_ucd_name_lookup_hint_tv_querying">查询中……</string>
+    <string name="text_editor_label">文本编辑</string>
     <!-- end -->
 </resources>

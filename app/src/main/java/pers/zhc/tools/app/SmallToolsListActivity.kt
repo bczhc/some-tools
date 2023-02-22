@@ -15,6 +15,7 @@ import pers.zhc.tools.test.toast.ToastTest
 import pers.zhc.tools.test.typetest.TypeTest
 import pers.zhc.tools.charsplit.CharSplitActivity
 import pers.zhc.tools.databinding.ToolsActivityMainBinding
+import pers.zhc.tools.texteditor.MainActivity
 
 /**
  * @author bczhc
@@ -39,6 +40,7 @@ class SmallToolsListActivity : BaseActivity() {
             ActivityItem(R.string.chars_splitter_label, CharSplitActivity::class.java),
             ActivityItem(R.string.char_ucd_lookup_activity_label, CharLookupActivity::class.java),
             ActivityItem(R.string.char_stat_label, CharStatActivity::class.java),
+            ActivityItem(R.string.text_editor_label, MainActivity::class.java)
         )
 
         recyclerView.adapter = AppMenuAdapter(this, activities)
