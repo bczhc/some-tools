@@ -1,5 +1,6 @@
 package pers.zhc.tools.fdb
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -15,14 +16,12 @@ import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Gravity
-import android.view.KeyEvent
-import android.view.View
+import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.*
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.StringRes
@@ -40,6 +39,7 @@ import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.colorpicker.*
+import pers.zhc.tools.databinding.FdbPathImportWindowBinding
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
@@ -56,6 +56,7 @@ import kotlin.math.pow
  * @author bczhc
  */
 class FdbWindow(activity: FdbMainActivity) {
+    @Suppress("PrivatePropertyName")
     private val TAG = javaClass.name
     private val context = activity as Context
     private val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -66,6 +67,14 @@ class FdbWindow(activity: FdbMainActivity) {
 
     private val paintView = PaintView(context)
     private val paintViewLP = WindowManager.LayoutParams()
+
+    private val pathImportWindow by lazy {
+        FdbPathImportWindowBinding.inflate(LayoutInflater.from(context)).root
+    }
+    private val pathImportWindowLP = WindowManager.LayoutParams()
+    private val pathImportWindowBindings by lazy {
+        FdbPathImportWindowBinding.bind(pathImportWindow)
+    }
 
     private var operationMode = OperationMode.OPERATING
     private var brushMode = BrushMode.DRAWING
@@ -86,6 +95,10 @@ class FdbWindow(activity: FdbMainActivity) {
     // TODO: 7/29/21 rewrite position updater
     private val panelDimension = ViewDimension()
     private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
+
+    private val pathImportWindowDimension = ViewDimension()
+    private val pathImportWindowPositionUpdater =
+        FloatingViewOnTouchListener(pathImportWindowLP, wm, pathImportWindow, 0, 0, pathImportWindowDimension)
 
     private val pathSaver = PathSaver(pathFiles.tmpPathFile.path)
 
@@ -267,6 +280,14 @@ class FdbWindow(activity: FdbMainActivity) {
             }
         }
 
+        pathImportWindowLP.apply {
+            flags = FLAG_NOT_FOCUSABLE
+            type = floatingWindowType
+            format = RGBA_8888
+            width = WRAP_CONTENT
+            height = WRAP_CONTENT
+        }
+
         colorPickers.apply {
             brush = HSVAColorPickerRL(context, Color.RED)
             panel = HSVAColorPickerRL(context, Color.WHITE)
@@ -298,6 +319,7 @@ class FdbWindow(activity: FdbMainActivity) {
 
             setOnScreenDimensionChangedListener { width, height ->
                 positionUpdater.updateParentDimension(width, height)
+                pathImportWindowPositionUpdater.updateParentDimension(width, height)
             }
             post {
                 // add the default layer
@@ -342,6 +364,7 @@ class FdbWindow(activity: FdbMainActivity) {
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
+        pathImportWindowPositionUpdater.updateParentDimension(screenWidth, screenHeight)
 
         receivers.main = FdbBroadcastReceiver(this)
         val filter = IntentFilter()
@@ -352,6 +375,16 @@ class FdbWindow(activity: FdbMainActivity) {
             addAction(FdbBroadcastReceiver.ACTION_ON_SCREEN_ORIENTATION_CHANGED)
         }
         context.applicationContext.registerReceiver(receivers.main, filter)
+
+        FdbPathImportWindowBinding.bind(pathImportWindow).apply {
+            pauseButton.setOnClickListener {
+                ToastUtils.show(context, "Pause")
+            }
+            @Suppress("ClickableViewAccessibility")
+            dragIcon.setOnTouchListener { v, event ->
+                pathImportWindowPositionUpdater.onTouch(v, event, true)
+            }
+        }
     }
 
     private fun updateBrushModeText() {
@@ -864,15 +897,7 @@ class FdbWindow(activity: FdbMainActivity) {
         createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
             dialogs.moreMenu.dismiss()
 
-            val progressView = View.inflate(context, R.layout.progress_bar, null)
-
-            progressView.progress_bar_title!!.text =
-                context.getString(R.string.fdb_importing_path_progress_title)
-            val progressBar = progressView.progress_bar!!
-            val progressTV = progressView.progress_tv!!
-            val progressDialog = createDialog(progressView, width = MATCH_PARENT)
-            progressDialog.setCanceledOnTouchOutside(false)
-            progressDialog.show()
+            wm.addView(pathImportWindow, pathImportWindowLP)
 
             val file = File(path)
             val pathVersion = PathVersion.getPathVersion(file)
@@ -889,15 +914,19 @@ class FdbWindow(activity: FdbMainActivity) {
                         tryDo.tryDo { _, notifier ->
                             progress!!
                             context.runOnUiThread {
-                                progressBar.setProgressCompat((progress * 100F).toInt(), true)
-                                progressTV.text =
-                                    context.getString(R.string.percentage, progress * 100F)
+                                pathImportWindowBindings.progressCircular.setProgressCompat(
+                                    (progress * 100F).toInt(),
+                                    true
+                                )
                                 notifier.finish()
                             }
                         }
                     }, 0 /* TODO */, pathVersion)
                 } catch (e: Exception) {
                     ToastUtils.showError(context, R.string.fdb_import_failed, e)
+                    context.runOnUiThread {
+                        wm.removeView(pathImportWindow)
+                    }
                     return@Thread
                 }
 
@@ -905,7 +934,8 @@ class FdbWindow(activity: FdbMainActivity) {
 
                 Common.runOnUiThread(context) {
                     // done action
-                    progressDialog.dismiss()
+                    pathImportWindowBindings.progressCircular.setProgressCompat(100, true)
+                    wm.removeView(pathImportWindow)
                     ToastUtils.show(
                         context,
                         context.getString(R.string.fdb_importing_path_succeeded_toast)
