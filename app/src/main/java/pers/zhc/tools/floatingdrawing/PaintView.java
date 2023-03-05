@@ -68,6 +68,8 @@ public class PaintView extends BaseView {
     private ArrayList<PathBean> undoListRef, redoListRef;
     private GestureResolver gestureResolver;
     private boolean dontDrawWhileImporting = false;
+    private boolean importingPath = false;
+    private volatile boolean pathImportPaused = false;
     private boolean lockStrokeEnabled = false;
     /**
      * locked absolute drawing stroke width
@@ -474,8 +476,10 @@ public class PaintView extends BaseView {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        gestureResolver.onTouch(event);
-        onTouchAction(event.getAction(), event.getX(), event.getY());
+        if (!importingPath) {
+            gestureResolver.onTouch(event);
+            onTouchAction(event.getAction(), event.getX(), event.getY());
+        }
         return true;
     }
 
@@ -496,12 +500,13 @@ public class PaintView extends BaseView {
                 }
 
                 if (!dontDrawWhileImporting) {
-                    if (mPath != null) {//显示实时正在绘制的path轨迹
+                    Path catchedPath = mPath;
+                    if (catchedPath != null) {//显示实时正在绘制的path轨迹
                         canvas.setMatrix(canvasTransformer.getMatrix());
                         if (eraserMode) {
-                            canvas.drawPath(mPath, eraserPaint);
+                            canvas.drawPath(catchedPath, eraserPaint);
                         } else {
-                            canvas.drawPath(mPath, mPaint);
+                            canvas.drawPath(catchedPath, mPaint);
                         }
                     }
                 }
@@ -592,7 +597,9 @@ public class PaintView extends BaseView {
     }
 
     public void importPathFile(File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
-        dontDrawWhileImporting = speedDelayMillis == 0;
+        importingPath = true;
+
+//        dontDrawWhileImporting = speedDelayMillis == 0;
         if (progressCallback != null) {
             progressCallback.accept(0F);
         }
@@ -641,6 +648,7 @@ public class PaintView extends BaseView {
                 throw new RuntimeException("Unknown path version");
         }
 
+        importingPath = false;
         dontDrawWhileImporting = false;
         redrawBitmap();
         postInvalidate();
@@ -886,7 +894,7 @@ public class PaintView extends BaseView {
 
         int recordNum = PathSaver.getPathCount(db);
 
-        dontDrawWhileImporting = speedDelayMillis == 0;
+//        dontDrawWhileImporting = speedDelayMillis == 0;
 
         final List<String> tables = SQLite3UtilsKt.getTables(db);
         for (String table : tables) {
@@ -1194,6 +1202,9 @@ public class PaintView extends BaseView {
 
         int c = 0;
         while (cursor.step()) {
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused);
+
             int mark = cursor.getInt(0);
 
             switch (mark) {
@@ -1415,6 +1426,14 @@ public class PaintView extends BaseView {
 
     public float getZoomedStrokeWidthInUse() {
         return getScale() * getStrokeWidthInUse();
+    }
+
+    public boolean isPathImportPaused() {
+        return pathImportPaused;
+    }
+
+    public void setPathImportPaused(boolean pathImportPaused) {
+        this.pathImportPaused = pathImportPaused;
     }
 
     /**

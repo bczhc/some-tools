@@ -1,6 +1,5 @@
 package pers.zhc.tools.fdb
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -21,7 +20,6 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowManager.LayoutParams.*
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.StringRes
@@ -377,8 +375,23 @@ class FdbWindow(activity: FdbMainActivity) {
         context.applicationContext.registerReceiver(receivers.main, filter)
 
         FdbPathImportWindowBinding.bind(pathImportWindow).apply {
+            var pathImportState = PathImportState.IMPORTING
+
             pauseButton.setOnClickListener {
-                ToastUtils.show(context, "Pause")
+                when(pathImportState) {
+                    PathImportState.PAUSED -> {
+                        pauseButton.setText(R.string.path_import_pause_button)
+                        pathImportState = PathImportState.IMPORTING
+                        paintView.isPathImportPaused = false
+                        ToastUtils.show(context, R.string.path_import_resume_button)
+                    }
+                    PathImportState.IMPORTING -> {
+                        pauseButton.setText(R.string.path_import_resume_button)
+                        pathImportState = PathImportState.PAUSED
+                        paintView.isPathImportPaused = true
+                        ToastUtils.show(context, R.string.path_import_pause_button)
+                    }
+                }
             }
             @Suppress("ClickableViewAccessibility")
             dragIcon.setOnTouchListener { v, event ->
@@ -1354,6 +1367,11 @@ class FdbWindow(activity: FdbMainActivity) {
             getSelectedStatisticsIntData(db, 0x20),
             getSelectedStatisticsIntData(db, 0x30)
         )
+    }
+
+    enum class PathImportState {
+        PAUSED,
+        IMPORTING,
     }
 
     companion object {
