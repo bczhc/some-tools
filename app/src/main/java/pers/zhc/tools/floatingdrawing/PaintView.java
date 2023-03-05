@@ -6,11 +6,9 @@ import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.*;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -20,7 +18,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
-import pers.zhc.jni.sqlite.Schema;
 import pers.zhc.jni.sqlite.Statement;
 import pers.zhc.tools.BaseView;
 import pers.zhc.tools.R;
@@ -31,7 +28,6 @@ import pers.zhc.util.Assertion;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -666,6 +662,9 @@ public class PaintView extends BaseView {
         byte[] bytes_4 = new byte[4];
         read = 0L;
         while (is.read(bytes) != -1) {
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused);
+
             try {
                 // noinspection BusyWait
                 Thread.sleep(speedDelayMillis);
@@ -734,6 +733,9 @@ public class PaintView extends BaseView {
         x = -1;
         y = -1;
         while (is.read(bytes) != -1) {
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused);
+
             try {
                 // noinspection BusyWait
                 Thread.sleep(speedDelayMillis);
@@ -803,6 +805,9 @@ public class PaintView extends BaseView {
         while ((bufferRead = is.read(buffer)) != -1) {
             int a = bufferRead / 9;
             for (int i = 0; i < a; i++) {
+                // noinspection StatementWithEmptyBody
+                while (pathImportPaused);
+
                 try {
                     // noinspection BusyWait
                     Thread.sleep(speedDelayMillis);
@@ -910,6 +915,9 @@ public class PaintView extends BaseView {
         Cursor cursor = statement.getCursor();
         int c = 0;
         while (cursor.step()) {
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused);
+
             int mark = cursor.getInt(0);
 
             switch (mark) {
@@ -1028,7 +1036,7 @@ public class PaintView extends BaseView {
                 onImportLayerAddedListener.onAdded(new LayerInfo(layerInfo.getId(), layerInfo.getName(), layerInfo.getVisible()));
             }
 
-            importLayerPath(
+            importLayerPath3_1(
                     db,
                     originalLayerId,
                     defaultTransformationScale,
@@ -1105,7 +1113,7 @@ public class PaintView extends BaseView {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void importLayerPath(
+    private void importLayerPath3_1(
             SQLite3 db,
             long layerId,
             float defaultTransformationScale,
@@ -1121,6 +1129,9 @@ public class PaintView extends BaseView {
 
         int c = 0;
         while (cursor.step()) {
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused);
+
             int mark = cursor.getInt(0);
 
             switch (mark) {
