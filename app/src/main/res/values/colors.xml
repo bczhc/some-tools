@@ -31,4 +31,11 @@
     <color name="colorOnSecondary">#003578</color>
     <color name="colorSurfaceVariant">#E9F0FF</color>
     <color name="colorSecondaryContainer">#F19DFA</color>
+
+    <color name="white_alpha50">#80FFFFFF</color>
+    <color name="gray_200">#EFEFEF</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_500">#9E9E9E</color>
+    <color name="gray_600">#757575</color>
+    <color name="gray_alpha10">#1A212121</color>
 </resources>

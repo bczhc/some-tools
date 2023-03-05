@@ -269,6 +269,7 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
     implementation("io.ktor:ktor-client-cio-jvm:2.2.2")
     implementation(kotlin("reflect"))
+    implementation("com.github.thellmund.Android-Week-View:core:5.3.2")
 }
 
 task("saveNdkPath") {

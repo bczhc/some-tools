@@ -92,6 +92,9 @@
     <string name="media_play_button">播放</string>
     <string name="media_pause_button">暂停</string>
     <string name="moving_files_progress_dialog">正在移动</string>
+    <string name="network_fetching">正在获取……</string>
+    <string name="invalid_response_toast">无效数据</string>
+    <string name="action_today_label">今天</string>
     <!-- end -->
 
     <!-- old -->
@@ -798,5 +801,15 @@
     <string name="char_ucd_name_lookup_hint_tv_result">查询到%1$d个结果，显示%2$d个</string>
     <string name="char_ucd_name_lookup_hint_tv_querying">查询中……</string>
     <string name="text_editor_label">文本编辑</string>
+    <!-- end -->
+
+    <!-- CourseTable -->
+    <string name="course_table_label">课程表</string>
+    <string name="course_table_course_name_tv">课程名称：%1$s</string>
+    <string name="course_table_course_location_tv">上课地点：%1$s</string>
+    <string name="course_table_course_teacher_tv">教师：%1$s</string>
+    <string name="course_table_course_time_tv">时间：%1$s</string>
+    <string name="course_table_course_date_tv">日期：%1$s</string>
+    <string name="course_table_data_not_latest_toast">数据非最新：%1$s</string>
     <!-- end -->
 </resources>

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="pers.zhc.myapplication.MainActivity">
+    <item
+            android:id="@+id/today"
+            android:title="@string/action_today_label"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_event"
+    />
+</menu>

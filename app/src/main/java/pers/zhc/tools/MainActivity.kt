@@ -22,6 +22,7 @@ import pers.zhc.tools.app.AppMenuAdapter
 import pers.zhc.tools.app.SmallToolsListActivity
 import pers.zhc.tools.app.TestListActivity
 import pers.zhc.tools.bus.BusQueryMainActivity
+import pers.zhc.tools.coursetable.CourseTableMainActivity
 import pers.zhc.tools.databinding.GitLogViewBinding
 import pers.zhc.tools.databinding.GithubActionDownloadViewBinding
 import pers.zhc.tools.databinding.ToolsActivityMainBinding
@@ -73,6 +74,7 @@ class MainActivity : BaseActivity() {
             ActivityItem(R.string.email_label, EmailMainActivity::class.java),
             ActivityItem(R.string.fourier_series_label, FourierSeriesActivity::class.java),
             ActivityItem(R.string.task_notes_label, TaskNotesMainActivity::class.java),
+            ActivityItem(R.string.course_table_label, CourseTableMainActivity::class.java)
         )
     }
 
