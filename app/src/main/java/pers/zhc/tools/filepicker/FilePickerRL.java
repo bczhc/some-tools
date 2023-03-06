@@ -249,6 +249,10 @@ public class FilePickerRL extends RelativeLayout {
                                 File[] listFiles1 = getFileList(currentFile);
                                 fillViews(listFiles1);
                             }
+
+                            if (filenameET != null && filenameET.getVisibility() == View.VISIBLE) {
+                                filenameET.setText(currentFile.getName());
+                            }
                         });
                         ctx.runOnUiThread(() -> ll.addView(textViews[finalI]));
                     }
