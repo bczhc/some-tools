@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -13,8 +14,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputLayout;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
+import pers.zhc.tools.databinding.FilePickerRlActivityBinding;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
@@ -55,13 +58,14 @@ public class FilePickerRL extends RelativeLayout {
     private File currentPath;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
-    private EditText filterET;
+    private TextInputLayout filterTIL;
     private @DrawableRes
     int unselectedDrawable;
     private CheckBox regexCB;
     private @Nullable
     final EditText filenameET;
     private RelativeLayout rootView;
+    private FilePickerRlActivityBinding bindings;
 
     // Shitcode!!!
     public FilePickerRL(Context context, int type, @Nullable File initialPath
@@ -92,16 +96,18 @@ public class FilePickerRL extends RelativeLayout {
 
     private void init(String initFileName) {
         this.unselectedDrawable = this.type == TYPE_PICK_FILE ? cannotPick : canPickUnchecked;
-        rootView = ((RelativeLayout) View.inflate(ctx, R.layout.file_picker_rl_activity, null).getRootView());
+        bindings = FilePickerRlActivityBinding.inflate(LayoutInflater.from(ctx), null, false);
+        rootView = bindings.rootRl;
         this.addView(rootView);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.currentPath = initialPath == null ? new File(Common.getExternalStoragePath(ctx)) : initialPath;
-        regexCB = findViewById(R.id.regex_cb);
+        regexCB = bindings.regexCb;
         regexCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
             File[] fileList = getFileList(FilePickerRL.this.currentPath);
             fillViews(fileList);
         });
-        filterET = findViewById(R.id.filter_et);
+        filterTIL = bindings.filterTil;
+        EditText filterET = filterTIL.getEditText();
         filterET.setText(initFileName);
         filterET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -120,13 +126,13 @@ public class FilePickerRL extends RelativeLayout {
                 fillViews(fileList);
             }
         });
-        Button cancel = findViewById(R.id.cancel);
-        Button ok = findViewById(R.id.pick);
-        cancel.setOnClickListener(v -> {
+        Button cancelBtn = bindings.cancel;
+        Button okBtn = findViewById(R.id.pick);
+        cancelBtn.setOnClickListener(v -> {
             result = null;
             cancelAction.cancel(this);
         });
-        ok.setOnClickListener(v -> {
+        okBtn.setOnClickListener(v -> {
             if (filenameET.getVisibility() != GONE && filenameET.getText().toString().isEmpty()) {
                 return;
             }
@@ -152,7 +158,7 @@ public class FilePickerRL extends RelativeLayout {
                         File f = new File(etText);
                         if (f.isFile() && type == 1) {
                             result = f.getAbsolutePath();
-                            ok.performClick();
+                            okBtn.performClick();
                         } else {
                             result = null;
                             File[] listFiles = getFileList(f);
@@ -178,7 +184,7 @@ public class FilePickerRL extends RelativeLayout {
     private void fillViews(File[] listFilesP) {
         final File[][] listFiles = {listFilesP};
         Thread thread = new Thread(() -> {
-            listFiles[0] = filter(listFiles[0], filterET.getText().toString());
+            listFiles[0] = filter(listFiles[0], Objects.requireNonNull(filterTIL.getEditText()).getText().toString());
             justPicked[0] = -1;
             ctx.runOnUiThread(ll::removeAllViews);
             String currentPathString;
@@ -339,11 +345,11 @@ public class FilePickerRL extends RelativeLayout {
         if (useRegExp) {
             try {
                 pattern = Pattern.compile(filterStr);
-                ctx.runOnUiThread(() -> filterET.setBackgroundResource(R.drawable.edittext_right));
+                ctx.runOnUiThread(() -> filterTIL.setError(null));
             } catch (PatternSyntaxException ignored) {
-                ctx.runOnUiThread(() -> filterET.setBackgroundResource(R.drawable.edittext_wrong));
+                ctx.runOnUiThread(() -> filterTIL.setError(ctx.getString(R.string.regex_bad_pattern)));
             }
-        } else ctx.runOnUiThread(() -> filterET.setBackgroundResource(R.drawable.edittext_right));
+        } else ctx.runOnUiThread(() -> filterTIL.setError(null));
         List<File> fileList = new LinkedList<>();
         for (File file : files) {
             if (filterStr.isEmpty()) {

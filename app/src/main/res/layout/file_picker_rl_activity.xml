@@ -14,11 +14,20 @@
                     android:focusableInTouchMode="true"
                     android:focusable="true"
     >
-        <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:id="@+id/filter_et" tools:ignore="Autofill,LabelFor,TextFields"
-                  android:hint="@string/filter"
-                  android:layout_toStartOf="@id/regex_cb"
-        />
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:endIconMode="clear_text"
+                android:layout_toStartOf="@id/regex_cb"
+                android:hint="@string/filter"
+                app:errorEnabled="true"
+                android:id="@+id/filter_til"
+        >
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+            />
+        </com.google.android.material.textfield.TextInputLayout>
         <CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:text="@string/regex"
                   android:id="@+id/regex_cb"
