@@ -26,6 +26,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import kotlinx.android.synthetic.main.fdb_eraser_opacity_adjusting_view.view.*
 import kotlinx.android.synthetic.main.fdb_panel_settings_view.view.*
@@ -37,6 +38,7 @@ import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.colorpicker.*
+import pers.zhc.tools.databinding.FdbPathImportPromptDialogBinding
 import pers.zhc.tools.databinding.FdbPathImportWindowBinding
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
@@ -378,13 +380,14 @@ class FdbWindow(activity: FdbMainActivity) {
             var pathImportState = PathImportState.IMPORTING
 
             pauseButton.setOnClickListener {
-                when(pathImportState) {
+                when (pathImportState) {
                     PathImportState.PAUSED -> {
                         pauseButton.setText(R.string.path_import_pause_button)
                         pathImportState = PathImportState.IMPORTING
                         paintView.isPathImportPaused = false
                         ToastUtils.show(context, R.string.path_import_resume_button)
                     }
+
                     PathImportState.IMPORTING -> {
                         pauseButton.setText(R.string.path_import_resume_button)
                         pathImportState = PathImportState.PAUSED
@@ -907,12 +910,9 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     fun showImportPathDialog(dir: File) {
-        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
-            dialogs.moreMenu.dismiss()
-
+        val performImporting = {file: File, showDrawing: Boolean->
             wm.addView(pathImportWindow, pathImportWindowLP)
 
-            val file = File(path)
             val pathVersion = PathVersion.getPathVersion(file)
 
             val tryDo = AsyncTryDo()
@@ -934,7 +934,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                 notifier.finish()
                             }
                         }
-                    }, 0 /* TODO */, pathVersion)
+                    }, 0 /* TODO */, pathVersion, showDrawing)
                 } catch (e: Exception) {
                     ToastUtils.showError(context, R.string.fdb_import_failed, e)
                     context.runOnUiThread {
@@ -967,7 +967,7 @@ class FdbWindow(activity: FdbMainActivity) {
                     when (pathVersion) {
                         PathVersion.VERSION_3_0, PathVersion.VERSION_3_1, PathVersion.VERSION_4_0 -> {
                             var extraInfo: ExtraInfo? = null
-                            SQLite3::class.withNew(path) {
+                            SQLite3::class.withNew(file.path) {
                                 extraInfo = ExtraInfo.getExtraInfo(it)
                             }
                             extraInfo ?: return@runOnUiThread
@@ -984,7 +984,22 @@ class FdbWindow(activity: FdbMainActivity) {
                 }
 
             }.start()
+        }
 
+        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
+            dialogs.moreMenu.dismiss()
+
+            val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
+            MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.import_)
+                .setNegativeAction()
+                .setPositiveAction { _, _ ->
+                    performImporting(File(path), bindings.showDrawingSwitch.isChecked)
+                }
+                .setView(bindings.root)
+                .create().apply {
+                    DialogUtils.setDialogAttr(this, width = MATCH_PARENT, overlayWindow = true)
+                }.show()
         }.show()
     }
 

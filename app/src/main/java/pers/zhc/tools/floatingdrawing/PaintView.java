@@ -592,8 +592,11 @@ public class PaintView extends BaseView {
         invalidate();
     }
 
-    public void importPathFile(File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
+    public void importPathFile(File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis,
+                               PathVersion pathVersion, boolean showDrawing) {
         importingPath = true;
+
+        dontDrawWhileImporting = !showDrawing;
 
 //        dontDrawWhileImporting = speedDelayMillis == 0;
         if (progressCallback != null) {
@@ -663,7 +666,7 @@ public class PaintView extends BaseView {
         read = 0L;
         while (is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused);
+            while (pathImportPaused) ;
 
             try {
                 // noinspection BusyWait
@@ -734,7 +737,7 @@ public class PaintView extends BaseView {
         y = -1;
         while (is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused);
+            while (pathImportPaused) ;
 
             try {
                 // noinspection BusyWait
@@ -806,7 +809,7 @@ public class PaintView extends BaseView {
             int a = bufferRead / 9;
             for (int i = 0; i < a; i++) {
                 // noinspection StatementWithEmptyBody
-                while (pathImportPaused);
+                while (pathImportPaused) ;
 
                 try {
                     // noinspection BusyWait
@@ -916,7 +919,7 @@ public class PaintView extends BaseView {
         int c = 0;
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused);
+            while (pathImportPaused) ;
 
             int mark = cursor.getInt(0);
 
@@ -1130,7 +1133,7 @@ public class PaintView extends BaseView {
         int c = 0;
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused);
+            while (pathImportPaused) ;
 
             int mark = cursor.getInt(0);
 
@@ -1214,7 +1217,7 @@ public class PaintView extends BaseView {
         int c = 0;
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused);
+            while (pathImportPaused) ;
 
             int mark = cursor.getInt(0);
 

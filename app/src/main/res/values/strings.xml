@@ -797,5 +797,6 @@
     <string name="char_split_codepoint_label">码点</string>
     <string name="task_notes_add_record_shortcut_label">记录任务</string>
     <string name="fdb_path_import_floating_window_title">路径导入</string>
+    <string name="fdb_path_import_show_drawing_switch">显示过程</string>
     <!-- end -->
 </resources>
