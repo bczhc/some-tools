@@ -29,7 +29,7 @@ abstract class AdapterWithClickListener<T : RecyclerView.ViewHolder?> : Recycler
 
     abstract fun onCreateViewHolder(parent: ViewGroup): T
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T & Any {
         val holder = onCreateViewHolder(parent)!!
         val view = holder.itemView
         if (onItemClickListener != null) {
