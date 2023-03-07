@@ -687,6 +687,7 @@ public class PaintView extends BaseView {
         while (is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused) ;
+            spinSleep(drawingInterval);
 
             read += 26L;
             switch (bytes[25]) {
@@ -752,6 +753,7 @@ public class PaintView extends BaseView {
         while (is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused) ;
+            spinSleep(drawingInterval);
 
             lastP1 = p1;
             p1 = JNI.FloatingBoard.byteArrayToInt(bytes, 0);
@@ -818,6 +820,7 @@ public class PaintView extends BaseView {
             for (int i = 0; i < a; i++) {
                 // noinspection StatementWithEmptyBody
                 while (pathImportPaused) ;
+                spinSleep(drawingInterval);
 
                 switch (buffer[i * 9]) {
                     case (byte) 0xA1:
@@ -922,6 +925,7 @@ public class PaintView extends BaseView {
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused) ;
+            spinSleep(drawingInterval);
 
             int mark = cursor.getInt(0);
 
@@ -1129,6 +1133,7 @@ public class PaintView extends BaseView {
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused) ;
+            spinSleep(drawingInterval);
 
             int mark = cursor.getInt(0);
 
