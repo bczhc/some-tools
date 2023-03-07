@@ -63,7 +63,7 @@ public class PaintView extends BaseView {
      */
     private ArrayList<PathBean> undoListRef, redoListRef;
     private GestureResolver gestureResolver;
-    private boolean showDrawing = false;
+    private boolean showDrawing = true;
     private boolean importingPath = false;
     private volatile boolean pathImportPaused = false;
     private boolean lockStrokeEnabled = false;
