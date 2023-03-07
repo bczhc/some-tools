@@ -539,6 +539,7 @@ class FdbWindow(activity: FdbMainActivity) {
     private fun stopFDB() {
         wm.removeView(panelSV)
         wm.removeView(paintView)
+        wm.runCatching { removeView(pathImportWindow) }
     }
 
     private enum class OperationMode {
