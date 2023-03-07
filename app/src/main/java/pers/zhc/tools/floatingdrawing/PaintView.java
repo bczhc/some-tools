@@ -370,10 +370,19 @@ public class PaintView extends BaseView {
      */
     public void clearAll() {
         clearPaint();
-        mLastY = 0f;
         //清空 撤销 ，恢复 操作列表
         redoListRef.clear();
         undoListRef.clear();
+    }
+
+    public void clearAllLayers() {
+        for (Layer layer : layerArray) {
+            Canvas canvas = new Canvas(layer.bitmap);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            layer.redoList.clear();
+            layer.undoList.clear();
+        }
+        postInvalidate();
     }
 
     /**

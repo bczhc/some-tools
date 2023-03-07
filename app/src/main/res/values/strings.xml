@@ -811,5 +811,6 @@
     <string name="course_table_course_time_tv">时间：%1$s</string>
     <string name="course_table_course_date_tv">日期：%1$s</string>
     <string name="course_table_data_not_latest_toast">数据非最新：%1$s</string>
+    <string name="fdb_whether_to_clear_all_layer_dialog">是否清除所有图层</string>
     <!-- end -->
 </resources>

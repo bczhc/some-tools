@@ -1,10 +1,10 @@
 package pers.zhc.tools.fdb
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -13,6 +13,9 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
+import pers.zhc.tools.utils.runOnUiThread
+import pers.zhc.tools.utils.schedule
+import java.util.Timer
 
 /**
  * @author bczhc
@@ -22,7 +25,8 @@ class PanelRL : RelativeLayout {
     private lateinit var mPanelLL: LinearLayout
     private lateinit var btnStrings: Array<String>
     private lateinit var mImageView: ImageView
-    private var onButtonTouchedListener: ListenerFunction? = null
+    var onButtonClickedListener: ListenerFunction? = null
+    var onButtonLongClickedListener: ListenerFunction? = null
     private var panelColor = 0
     private var panelTextColor = 0
 
@@ -52,27 +56,55 @@ class PanelRL : RelativeLayout {
             mPanelLL.addView(textView)
 
             val getOnTouchListener = {
+                val clickOffsetTolerance = 1F
+                val longPressTimeout = ViewConfiguration.getLongPressTimeout().toLong()
                 var prevRawX = 0F
                 var prevRawY = 0F
+                var longClickTimer: Timer? = null
+                var longClickDone = false
+
+                val getMode = { v: View ->
+                    if (v === mImageView) {
+                        MODE_IMAGE_ICON
+                    } else {
+                        MODE_PANEL
+                    }
+                }
 
                 ({ v: View, ev: MotionEvent ->
                     when (ev.action) {
                         MotionEvent.ACTION_DOWN -> {
+                            longClickDone = false
                             prevRawX = ev.rawX
                             prevRawY = ev.rawY
-                        }
-                        MotionEvent.ACTION_UP -> {
-                            if (ev.rawX - prevRawX <= 1F && ev.rawY - prevRawY <= 1F) {
-                                // click
-                                onButtonTouched(
-                                    if (v === mImageView) {
-                                        MODE_IMAGE_ICON
-                                    } else {
-                                        MODE_PANEL
-                                    }, index
-                                )
+                            if (longClickTimer == null) {
+                                longClickTimer = Timer().also {
+                                    it.schedule({
+                                        if (ev.rawX - prevRawX <= clickOffsetTolerance
+                                            && ev.rawY - prevRawY <= clickOffsetTolerance
+                                        ) {
+                                            longClickTimer = null
+                                            longClickDone = true
+                                            context.runOnUiThread {
+                                                onButtonLongClicked(getMode(v), index)
+                                            }
+                                        }
+                                    }, longPressTimeout)
+                                }
                             }
                         }
+
+                        MotionEvent.ACTION_UP -> {
+                            longClickTimer?.cancel()
+                            longClickTimer = null
+                            if (!longClickDone && ev.rawX - prevRawX <= clickOffsetTolerance
+                                && ev.rawY - prevRawY <= clickOffsetTolerance
+                            ) {
+                                // click
+                                onButtonClicked(getMode(v), index)
+                            }
+                        }
+
                         else -> {
                         }
                     }
@@ -90,12 +122,12 @@ class PanelRL : RelativeLayout {
     }
 
 
-    private fun onButtonTouched(mode: Int, buttonIndex: Int) {
-        onButtonTouchedListener?.invoke(mode, buttonIndex)
+    private fun onButtonClicked(mode: Int, buttonIndex: Int) {
+        onButtonClickedListener?.invoke(mode, buttonIndex)
     }
 
-    fun setOnButtonClickedListener(listener: ListenerFunction?) {
-        this.onButtonTouchedListener = listener
+    private fun onButtonLongClicked(mode: Int, buttonIndex: Int) {
+        onButtonLongClickedListener?.invoke(mode, buttonIndex)
     }
 
     fun changeMode(mode: Int) {
@@ -104,6 +136,7 @@ class PanelRL : RelativeLayout {
             MODE_IMAGE_ICON -> {
                 this.addView(mImageView)
             }
+
             MODE_PANEL -> {
                 this.addView(mPanelLL)
             }

@@ -145,7 +145,7 @@ class FdbWindow(activity: FdbMainActivity) {
         }
 
         panelRL.apply {
-            setOnButtonClickedListener { mode, buttonIndex ->
+            onButtonClickedListener = { mode, buttonIndex ->
                 when (mode) {
                     PanelRL.MODE_IMAGE_ICON -> {
                         panelRL.changeMode(PanelRL.MODE_PANEL)
@@ -255,6 +255,15 @@ class FdbWindow(activity: FdbMainActivity) {
 
                     else -> {
                     }
+                }
+            }
+
+            onButtonLongClickedListener = { mode, index ->
+                if (mode == PanelRL.MODE_PANEL && index == 7) {
+                    // long click "clear": clear all layers
+                    createConfirmationDialog({ _, _ ->
+                        paintView.clearAllLayers()
+                    }, R.string.fdb_whether_to_clear_all_layer_dialog).show()
                 }
             }
 
