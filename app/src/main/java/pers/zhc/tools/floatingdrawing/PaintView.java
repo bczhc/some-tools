@@ -30,6 +30,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import static pers.zhc.tools.utils.NullSafeHelper.getNonNull;
 
@@ -373,6 +374,8 @@ public class PaintView extends BaseView {
         //清空 撤销 ，恢复 操作列表
         redoListRef.clear();
         undoListRef.clear();
+        layerPathSaverRef.clearTempTable();
+        layerPathSaverRef.clearLayerTable();
     }
 
     public void clearAllLayers() {
@@ -381,6 +384,9 @@ public class PaintView extends BaseView {
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             layer.redoList.clear();
             layer.undoList.clear();
+            LayerPathSaver layerPathSaver = Objects.requireNonNull(pathSaver.getLayerPathSaver(layer.getId()));
+            layerPathSaver.clearTempTable();
+            layerPathSaver.clearLayerTable();
         }
         postInvalidate();
     }

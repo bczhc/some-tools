@@ -12,6 +12,7 @@ public class LayerPathSaver {
     private final Statement tmpStatement;
     private final Statement pathStatement;
     private final Statement clearTempStatement;
+    private final Statement clearPathTableStatement;
     private final String layerId;
     private final SQLite3 mainDatabase;
     private final String pathTableName;
@@ -36,6 +37,7 @@ public class LayerPathSaver {
         pathStatement = mainDatabase.compileStatement("INSERT INTO " + pathTableName + "(mark, info, x, y) VALUES (?, ?, ?, ?)");
         // noinspection SqlWithoutWhere
         clearTempStatement = mainDatabase.compileStatement("DELETE FROM " + tempTableName);
+        clearPathTableStatement = mainDatabase.compileStatement("DELETE FROM " + pathTableName);
         transferToPathTableStatement = mainDatabase.compileStatement("INSERT INTO " + pathTableName + " SELECT mark, info, x, y FROM " + tempTableName);
     }
 
@@ -115,6 +117,11 @@ public class LayerPathSaver {
     public void clearTempTable() {
         clearTempStatement.reset();
         clearTempStatement.step();
+    }
+
+    public void clearLayerTable() {
+        clearPathTableStatement.reset();
+        clearPathTableStatement.step();
     }
 
     public String getLayerId() {
