@@ -977,8 +977,12 @@ class FdbWindow(activity: FdbMainActivity) {
                 .setNegativeAction()
                 .setPositiveAction { _, _ ->
                     val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
-                    paintView.drawingInterval = interval
                     paintView.isShowDrawing = bindings.showDrawingCb.isChecked
+                    paintView.drawingInterval = if (paintView.isShowDrawing) {
+                        interval
+                    } else {
+                        0
+                    }
                     wm.addView(pathImportWindow, pathImportWindowLP)
                     setUpPathImportWindow()
                     performImporting(File(path))
