@@ -608,8 +608,12 @@
     <string name="fdb_export_image_redrawing_phase_title">正在重绘：图层 %1$s</string>
     <string name="fdb_export_image_compressing_phase_title">正在压缩……</string>
     <string name="fdb_open_cache_path_file_button">打开缓存路径文件</string>
-    <string name="path_import_pause_button">暂停</string>
-    <string name="path_import_resume_button">继续</string>
+    <string name="fdb_path_import_pause_button">暂停</string>
+    <string name="fdb_path_import_resume_button">继续</string>
+    <string name="fdb_path_import_floating_window_title">路径导入</string>
+    <string name="fdb_path_import_show_drawing_switch">显示过程</string>
+    <string name="fdb_path_import_speed_tv">绘制间隔：%1$dµs</string>
+    <string name="fdb_default_drawing_interval_et_hint">默认绘制延时（µs）</string>
     <!-- module end -->
 
     <!-- module: words -->
@@ -796,7 +800,5 @@
     <string name="char_split_as_grapheme_button">以字素</string>
     <string name="char_split_codepoint_label">码点</string>
     <string name="task_notes_add_record_shortcut_label">记录任务</string>
-    <string name="fdb_path_import_floating_window_title">路径导入</string>
-    <string name="fdb_path_import_show_drawing_switch">显示过程</string>
     <!-- end -->
 </resources>

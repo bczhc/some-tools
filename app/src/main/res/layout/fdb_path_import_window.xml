@@ -32,10 +32,40 @@
                 android:indeterminate="false"
                 android:layout_gravity="center_horizontal"
         />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  tools:text="@string/fdb_path_import_speed_tv"
+                  android:id="@+id/speed_tv"
+        />
+        <com.google.android.material.button.MaterialButtonToggleGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:id="@+id/pause_minus_button_group"
+        >
+            <com.google.android.material.button.MaterialButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    tools:ignore="HardcodedText"
+                    android:layout_weight="1"
+                    android:id="@+id/minus_btn"
+            />
+            <com.google.android.material.button.MaterialButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="+"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                    tools:ignore="HardcodedText"
+                    android:layout_weight="1"
+                    android:id="@+id/add_btn"
+            />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/path_import_pause_button"
+                android:text="@string/fdb_path_import_pause_button"
                 android:id="@+id/pause_button"
                 android:layout_gravity="center_horizontal"
         />

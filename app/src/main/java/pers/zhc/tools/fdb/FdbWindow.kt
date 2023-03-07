@@ -375,32 +375,6 @@ class FdbWindow(activity: FdbMainActivity) {
             addAction(FdbBroadcastReceiver.ACTION_ON_SCREEN_ORIENTATION_CHANGED)
         }
         context.applicationContext.registerReceiver(receivers.main, filter)
-
-        FdbPathImportWindowBinding.bind(pathImportWindow).apply {
-            var pathImportState = PathImportState.IMPORTING
-
-            pauseButton.setOnClickListener {
-                when (pathImportState) {
-                    PathImportState.PAUSED -> {
-                        pauseButton.setText(R.string.path_import_pause_button)
-                        pathImportState = PathImportState.IMPORTING
-                        paintView.isPathImportPaused = false
-                        ToastUtils.show(context, R.string.path_import_resume_button)
-                    }
-
-                    PathImportState.IMPORTING -> {
-                        pauseButton.setText(R.string.path_import_resume_button)
-                        pathImportState = PathImportState.PAUSED
-                        paintView.isPathImportPaused = true
-                        ToastUtils.show(context, R.string.path_import_pause_button)
-                    }
-                }
-            }
-            @Suppress("ClickableViewAccessibility")
-            dragIcon.setOnTouchListener { v, event ->
-                pathImportWindowPositionUpdater.onTouch(v, event, true)
-            }
-        }
     }
 
     private fun updateBrushModeText() {
@@ -910,9 +884,7 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     fun showImportPathDialog(dir: File) {
-        val performImporting = {file: File, showDrawing: Boolean->
-            wm.addView(pathImportWindow, pathImportWindowLP)
-
+        val performImporting = { file: File ->
             val pathVersion = PathVersion.getPathVersion(file)
 
             val tryDo = AsyncTryDo()
@@ -934,7 +906,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                 notifier.finish()
                             }
                         }
-                    }, 0 /* TODO */, pathVersion, showDrawing)
+                    }, pathVersion)
                 } catch (e: Exception) {
                     ToastUtils.showError(context, R.string.fdb_import_failed, e)
                     context.runOnUiThread {
@@ -990,11 +962,24 @@ class FdbWindow(activity: FdbMainActivity) {
             dialogs.moreMenu.dismiss()
 
             val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
+            bindings.showDrawingSwitch.setOnCheckedChangeListener { _, isChecked ->
+                bindings.fdbDefaultDrawingIntervalTil.visibility = if (isChecked) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+            }
+
             MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.import_)
                 .setNegativeAction()
                 .setPositiveAction { _, _ ->
-                    performImporting(File(path), bindings.showDrawingSwitch.isChecked)
+                    val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
+                    paintView.drawingInterval = interval
+                    paintView.isShowDrawing = bindings.showDrawingSwitch.isChecked
+                    wm.addView(pathImportWindow, pathImportWindowLP)
+                    setUpPathImportWindow()
+                    performImporting(File(path))
                 }
                 .setView(bindings.root)
                 .create().apply {
@@ -1393,6 +1378,59 @@ class FdbWindow(activity: FdbMainActivity) {
         private val externalPath = object {
             lateinit var path: File
             lateinit var image: File
+        }
+    }
+
+    private fun setUpPathImportWindow() {
+        pathImportWindowBindings.apply {
+            var pathImportState = PathImportState.IMPORTING
+
+            pauseButton.setOnClickListener {
+                when (pathImportState) {
+                    PathImportState.PAUSED -> {
+                        pauseButton.setText(R.string.fdb_path_import_pause_button)
+                        pathImportState = PathImportState.IMPORTING
+                        paintView.isPathImportPaused = false
+                        ToastUtils.show(context, R.string.fdb_path_import_resume_button)
+                    }
+
+                    PathImportState.IMPORTING -> {
+                        pauseButton.setText(R.string.fdb_path_import_resume_button)
+                        pathImportState = PathImportState.PAUSED
+                        paintView.isPathImportPaused = true
+                        ToastUtils.show(context, R.string.fdb_path_import_pause_button)
+                    }
+                }
+            }
+            @Suppress("ClickableViewAccessibility")
+            dragIcon.setOnTouchListener { v, event ->
+                pathImportWindowPositionUpdater.onTouch(v, event, true)
+            }
+
+            // in nanoseconds
+            var drawingInterval = paintView.drawingInterval
+            val updateDrawingInterval = {
+                paintView.drawingInterval = drawingInterval
+                speedTv.text = context.getString(R.string.fdb_path_import_speed_tv, drawingInterval)
+            }.also { it() }
+
+            val drawingIntervalStep = 100
+            minusBtn.setOnClickListener {
+                if (drawingInterval >= drawingIntervalStep) {
+                    drawingInterval -= drawingIntervalStep
+                }
+                updateDrawingInterval()
+            }
+
+            addBtn.setOnClickListener {
+                drawingInterval += drawingIntervalStep
+                updateDrawingInterval()
+            }
+
+            if (!paintView.isShowDrawing) {
+                speedTv.visibility = View.GONE
+                pauseMinusButtonGroup.visibility = View.GONE
+            }
         }
     }
 }

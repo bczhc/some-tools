@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
-    <com.google.android.material.materialswitch.MaterialSwitch
+    <androidx.appcompat.widget.SwitchCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/fdb_path_import_show_drawing_switch"
             android:id="@+id/show_drawing_switch"
     />
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            style="?textInputOutlinedStyle"
+            android:hint="@string/fdb_default_drawing_interval_et_hint"
+            android:id="@+id/fdb_default_drawing_interval_til"
+            android:visibility="gone"
+    >
+        <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/transparent"
+                android:hint="@string/fdb_default_drawing_interval_et_hint"
+                android:inputType="number"
+                android:text="2000"
+                tools:ignore="HardcodedText"/>
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
