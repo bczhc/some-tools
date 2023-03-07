@@ -913,7 +913,7 @@ class FdbWindow(activity: FdbMainActivity) {
                 } catch (e: Exception) {
                     ToastUtils.showError(context, R.string.fdb_import_failed, e)
                     context.runOnUiThread {
-                        wm.removeView(pathImportWindow)
+                        wm.runCatching { removeView(pathImportWindow) }
                     }
                     return@Thread
                 }
@@ -923,7 +923,7 @@ class FdbWindow(activity: FdbMainActivity) {
                 Common.runOnUiThread(context) {
                     // done action
                     pathImportWindowBindings.progressCircular.setProgressCompat(100, true)
-                    wm.removeView(pathImportWindow)
+                    wm.runCatching { removeView(pathImportWindow) }
                     ToastUtils.show(
                         context,
                         context.getString(R.string.fdb_importing_path_succeeded_toast)
