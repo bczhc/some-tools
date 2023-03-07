@@ -1434,7 +1434,10 @@ class FdbWindow(activity: FdbMainActivity) {
                 updateDrawingInterval()
             }
 
-            if (!paintView.isShowDrawing) {
+            if (paintView.isShowDrawing) {
+                speedTv.visibility = View.VISIBLE
+                pauseMinusButtonGroup.visibility = View.VISIBLE
+            } else {
                 speedTv.visibility = View.GONE
                 pauseMinusButtonGroup.visibility = View.GONE
             }
