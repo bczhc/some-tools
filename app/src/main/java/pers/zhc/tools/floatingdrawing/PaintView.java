@@ -64,7 +64,9 @@ public class PaintView extends BaseView {
      */
     private ArrayList<PathBean> undoListRef, redoListRef;
     private GestureResolver gestureResolver;
-    private boolean dontDrawWhileImporting = false;
+    private boolean showDrawing = true;
+    private boolean importingPath = false;
+    private volatile boolean pathImportPaused = false;
     private boolean lockStrokeEnabled = false;
     /**
      * locked absolute drawing stroke width
@@ -93,6 +95,11 @@ public class PaintView extends BaseView {
 
     private float strokeHardness = 100F;
     private float eraserHardness = 100F;
+
+    /**
+     * in microseconds
+     */
+    private int drawingInterval = 0;
 
     @Nullable
     private OnImportLayerAddedListener onImportLayerAddedListener = null;
@@ -331,7 +338,7 @@ public class PaintView extends BaseView {
             PathBean lastPb = undoListRef.remove(undoListRef.size() - 1);//将最后一个移除
             redoListRef.add(lastPb);//加入 恢复操作
             //遍历，将Path重新绘制到 headCanvas
-            if (!dontDrawWhileImporting) {
+            if (showDrawing) {
                 for (PathBean pb : undoListRef) {
                     mCanvas.drawPath(pb.path, pb.paint);
                 }
@@ -352,7 +359,7 @@ public class PaintView extends BaseView {
             PathBean pathBean = redoListRef.remove(redoListRef.size() - 1);
             mCanvas.drawPath(pathBean.path, pathBean.paint);
             undoListRef.add(pathBean);
-            if (!dontDrawWhileImporting) {
+            if (showDrawing) {
                 postInvalidate();
             }
         }
@@ -371,6 +378,7 @@ public class PaintView extends BaseView {
      */
     public void clearAll() {
         clearPaint();
+        mLastY = 0f;
         //清空 撤销 ，恢复 操作列表
         redoListRef.clear();
         undoListRef.clear();
@@ -485,14 +493,16 @@ public class PaintView extends BaseView {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        gestureResolver.onTouch(event);
-        onTouchAction(event.getAction(), event.getX(), event.getY());
+        if (!importingPath) {
+            gestureResolver.onTouch(event);
+            onTouchAction(event.getAction(), event.getX(), event.getY());
+        }
         return true;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (dontDrawWhileImporting) {
+        if (!showDrawing) {
             return;
         }
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -506,13 +516,14 @@ public class PaintView extends BaseView {
                     }
                 }
 
-                if (!dontDrawWhileImporting) {
-                    if (mPath != null) {//显示实时正在绘制的path轨迹
+                if (showDrawing) {
+                    Path catchedPath = mPath;
+                    if (catchedPath != null) {//显示实时正在绘制的path轨迹
                         canvas.setMatrix(canvasTransformer.getMatrix());
                         if (eraserMode) {
-                            canvas.drawPath(mPath, eraserPaint);
+                            canvas.drawPath(catchedPath, eraserPaint);
                         } else {
-                            canvas.drawPath(mPath, mPaint);
+                            canvas.drawPath(catchedPath, mPaint);
                         }
                     }
                 }
@@ -602,8 +613,10 @@ public class PaintView extends BaseView {
         invalidate();
     }
 
-    public void importPathFile(File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis, PathVersion pathVersion) {
-        dontDrawWhileImporting = speedDelayMillis == 0;
+    public void importPathFile(File f, @Nullable Consumer<Float> progressCallback,
+                               PathVersion pathVersion) {
+        importingPath = true;
+
         if (progressCallback != null) {
             progressCallback.accept(0F);
         }
@@ -612,7 +625,7 @@ public class PaintView extends BaseView {
             case VERSION_1_0:
                 ToastUtils.show(ctx, R.string.import_path_1_0);
                 try {
-                    importPathVer1_0(f, progressCallback, speedDelayMillis);
+                    importPathVer1_0(f, progressCallback);
                 } catch (IOException e) {
                     e.printStackTrace();
                     ToastUtils.showException(ctx, e);
@@ -621,7 +634,7 @@ public class PaintView extends BaseView {
             case VERSION_2_0:
                 ToastUtils.show(ctx, R.string.import_old_2_0);
                 try {
-                    importPathVer2_0(f, progressCallback, speedDelayMillis);
+                    importPathVer2_0(f, progressCallback);
                 } catch (IOException e) {
                     e.printStackTrace();
                     ToastUtils.showException(ctx, e);
@@ -630,7 +643,7 @@ public class PaintView extends BaseView {
             case VERSION_2_1:
                 ToastUtils.show(ctx, R.string.import_2_1);
                 try {
-                    importPathVer2_1(f, progressCallback, speedDelayMillis);
+                    importPathVer2_1(f, progressCallback);
                 } catch (IOException e) {
                     e.printStackTrace();
                     ToastUtils.showException(ctx, e);
@@ -638,26 +651,29 @@ public class PaintView extends BaseView {
                 break;
             case VERSION_3_0:
                 ToastUtils.show(ctx, R.string.fdb_import_path_version_3_0_toast);
-                importPathVer3_0(f.getPath(), progressCallback, speedDelayMillis);
+                importPathVer3_0(f.getPath(), progressCallback);
                 break;
             case VERSION_3_1:
                 ToastUtils.show(ctx, R.string.fdb_import_path_version_3_1_toast);
-                importPathVer3_1(f.getPath(), progressCallback, speedDelayMillis);
+                importPathVer3_1(f.getPath(), progressCallback);
                 break;
             case VERSION_4_0:
                 ToastUtils.show(ctx, R.string.fdb_import_path_version_4_0_toast);
-                importPathVer4_0(f.getPath(), progressCallback, speedDelayMillis);
+                importPathVer4_0(f.getPath(), progressCallback);
                 break;
             default:
                 throw new RuntimeException("Unknown path version");
         }
 
-        dontDrawWhileImporting = false;
+        importingPath = false;
+        // even if the path is imported without `showDrawing`, this also needs to be
+        // true for displaying the imported result when redrawing
+        showDrawing = true;
         redrawBitmap();
         postInvalidate();
     }
 
-    public void importPathVer1_0(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
+    public void importPathVer1_0(@NotNull File f, @Nullable Consumer<Float> progressCallback) throws IOException {
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -669,12 +685,9 @@ public class PaintView extends BaseView {
         byte[] bytes_4 = new byte[4];
         read = 0L;
         while (is.read(bytes) != -1) {
-            try {
-                // noinspection BusyWait
-                Thread.sleep(speedDelayMillis);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused) ;
+
             read += 26L;
             switch (bytes[25]) {
                 case 1:
@@ -722,7 +735,7 @@ public class PaintView extends BaseView {
         is.close();
     }
 
-    public void importPathVer2_0(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
+    public void importPathVer2_0(@NotNull File f, @Nullable Consumer<Float> progressCallback) throws IOException {
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -737,12 +750,9 @@ public class PaintView extends BaseView {
         x = -1;
         y = -1;
         while (is.read(bytes) != -1) {
-            try {
-                // noinspection BusyWait
-                Thread.sleep(speedDelayMillis);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused) ;
+
             lastP1 = p1;
             p1 = JNI.FloatingBoard.byteArrayToInt(bytes, 0);
             switch (p1) {
@@ -789,7 +799,7 @@ public class PaintView extends BaseView {
         is.close();
     }
 
-    public void importPathVer2_1(@NotNull File f, @Nullable Consumer<Float> progressCallback, int speedDelayMillis) throws IOException {
+    public void importPathVer2_1(@NotNull File f, @Nullable Consumer<Float> progressCallback) throws IOException {
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -806,12 +816,9 @@ public class PaintView extends BaseView {
         while ((bufferRead = is.read(buffer)) != -1) {
             int a = bufferRead / 9;
             for (int i = 0; i < a; i++) {
-                try {
-                    // noinspection BusyWait
-                    Thread.sleep(speedDelayMillis);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                // noinspection StatementWithEmptyBody
+                while (pathImportPaused) ;
+
                 switch (buffer[i * 9]) {
                     case (byte) 0xA1:
                     case (byte) 0xA2:
@@ -872,7 +879,7 @@ public class PaintView extends BaseView {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void importPathVer3_0(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
+    private void importPathVer3_0(@NotNull String path, Consumer<Float> progressCallback) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
@@ -897,7 +904,7 @@ public class PaintView extends BaseView {
 
         int recordNum = PathSaver.getPathCount(db);
 
-        dontDrawWhileImporting = speedDelayMillis == 0;
+//        dontDrawWhileImporting = speedDelayMillis == 0;
 
         final List<String> tables = SQLite3UtilsKt.getTables(db);
         for (String table : tables) {
@@ -913,6 +920,9 @@ public class PaintView extends BaseView {
         Cursor cursor = statement.getCursor();
         int c = 0;
         while (cursor.step()) {
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused) ;
+
             int mark = cursor.getInt(0);
 
             switch (mark) {
@@ -964,14 +974,6 @@ public class PaintView extends BaseView {
 
             ++c;
             progressCallback.accept((float) c / (float) recordNum);
-            if (!dontDrawWhileImporting) {
-                try {
-                    //noinspection BusyWait
-                    Thread.sleep(speedDelayMillis);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
         setLockingStrokesFromExtraInfos(extraInfo);
@@ -988,7 +990,7 @@ public class PaintView extends BaseView {
         updateStrokeWidthIfLocked();
     }
 
-    private void importPathVer3_1(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
+    private void importPathVer3_1(@NotNull String path, Consumer<Float> progressCallback) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
@@ -1033,13 +1035,12 @@ public class PaintView extends BaseView {
                 onImportLayerAddedListener.onAdded(newLayerInfo);
             }
 
-            importLayerPath3_0(
+            importLayerPath3_1(
                     db,
                     layerInfo.getId(),
                     defaultTransformationScale,
                     transformationValue,
-                    progressCallback,
-                    speedDelayMillis
+                    progressCallback
             );
         }
 
@@ -1050,7 +1051,7 @@ public class PaintView extends BaseView {
         postInvalidate();
     }
 
-    private void importPathVer4_0(@NotNull String path, Consumer<Float> progressCallback, int speedDelayMillis) {
+    private void importPathVer4_0(@NotNull String path, Consumer<Float> progressCallback) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
@@ -1099,8 +1100,7 @@ public class PaintView extends BaseView {
                     layerInfo.getId(),
                     defaultTransformationScale,
                     transformationValue,
-                    progressCallback,
-                    speedDelayMillis
+                    progressCallback
             );
         }
 
@@ -1112,13 +1112,12 @@ public class PaintView extends BaseView {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void importLayerPath3_0(
+    private void importLayerPath3_1(
             SQLite3 db,
             String layerId,
             float defaultTransformationScale,
             float[] transformationValue,
-            Consumer<Float> progressCallback,
-            int speedDelayMillis
+            Consumer<Float> progressCallback
     ) {
         final String pathTable = "path_layer_" + layerId;
         final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
@@ -1128,6 +1127,9 @@ public class PaintView extends BaseView {
 
         int c = 0;
         while (cursor.step()) {
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused) ;
+
             int mark = cursor.getInt(0);
 
             switch (mark) {
@@ -1179,14 +1181,6 @@ public class PaintView extends BaseView {
 
             ++c;
             progressCallback.accept((float) c / (float) rowCount);
-            if (!dontDrawWhileImporting) {
-                try {
-                    //noinspection BusyWait
-                    Thread.sleep(speedDelayMillis);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
         statement.release();
@@ -1198,8 +1192,7 @@ public class PaintView extends BaseView {
             String layerId,
             float defaultTransformationScale,
             float[] transformationValue,
-            Consumer<Float> progressCallback,
-            int speedDelayMillis
+            Consumer<Float> progressCallback
     ) {
         final String pathTable = "path_layer_" + layerId;
         final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
@@ -1209,6 +1202,10 @@ public class PaintView extends BaseView {
 
         int c = 0;
         while (cursor.step()) {
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused) ;
+            spinSleep(drawingInterval);
+
             int mark = cursor.getInt(0);
 
             switch (mark) {
@@ -1282,14 +1279,6 @@ public class PaintView extends BaseView {
 
             ++c;
             progressCallback.accept((float) c / (float) rowCount);
-            if (!dontDrawWhileImporting) {
-                try {
-                    //noinspection BusyWait
-                    Thread.sleep(speedDelayMillis);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
         statement.release();
@@ -1333,7 +1322,7 @@ public class PaintView extends BaseView {
             case MotionEvent.ACTION_UP:
                 if (mPath != null) {
                     layerPathSaverRef.onTouchUp(x, y, eraserMode);
-                    if (!dontDrawWhileImporting) {
+                    if (showDrawing) {
                         mCanvas.drawPath(mPath, mPaintRef);//将路径绘制在mBitmap上
                     }
                     Path path = new Path(mPath);//复制出一份mPath
@@ -1430,6 +1419,22 @@ public class PaintView extends BaseView {
 
     public float getZoomedStrokeWidthInUse() {
         return getScale() * getStrokeWidthInUse();
+    }
+
+    public boolean isPathImportPaused() {
+        return pathImportPaused;
+    }
+
+    public void setPathImportPaused(boolean pathImportPaused) {
+        this.pathImportPaused = pathImportPaused;
+    }
+
+    public int getDrawingInterval() {
+        return drawingInterval;
+    }
+
+    public void setDrawingInterval(int drawingInterval) {
+        this.drawingInterval = drawingInterval;
     }
 
     /**
@@ -1750,5 +1755,20 @@ public class PaintView extends BaseView {
     public enum ImageExportProgressType {
         REDRAWING,
         COMPRESSING
+    }
+
+    private void spinSleep(int microsecond) {
+        if (microsecond == 0) return;
+        long start = System.nanoTime();
+        // noinspection StatementWithEmptyBody
+        while (System.nanoTime() - start < (long) microsecond * 1000) ;
+    }
+
+    public boolean isShowDrawing() {
+        return showDrawing;
+    }
+
+    public void setShowDrawing(boolean showDrawing) {
+        this.showDrawing = showDrawing;
     }
 }

@@ -26,22 +26,18 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.slider.Slider
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.colorpicker.*
-import pers.zhc.tools.databinding.FdbEraserOpacityAdjustingViewBinding
-import pers.zhc.tools.databinding.FdbPanelSettingsViewBinding
-import pers.zhc.tools.databinding.FdbStokeSettingsViewBinding
-import pers.zhc.tools.databinding.FdbTransformationSettingsViewBinding
-import pers.zhc.tools.databinding.ProgressBarBinding
+import pers.zhc.tools.databinding.*
 import pers.zhc.tools.filepicker.FilePickerRL
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
 import pers.zhc.tools.floatingdrawing.PaintView
 import pers.zhc.tools.utils.*
-import pers.zhc.tools.utils.UUID
 import pers.zhc.tools.views.HSVAColorPickerRL
 import java.io.File
 import java.io.IOException
@@ -53,6 +49,7 @@ import kotlin.math.pow
  * @author bczhc
  */
 class FdbWindow(activity: FdbMainActivity) {
+    @Suppress("PrivatePropertyName")
     private val TAG = javaClass.name
     private val context = activity as Context
     private val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -63,6 +60,14 @@ class FdbWindow(activity: FdbMainActivity) {
 
     private val paintView = PaintView(context)
     private val paintViewLP = WindowManager.LayoutParams()
+
+    private val pathImportWindow by lazy {
+        FdbPathImportWindowBinding.inflate(LayoutInflater.from(context)).root
+    }
+    private val pathImportWindowLP = WindowManager.LayoutParams()
+    private val pathImportWindowBindings by lazy {
+        FdbPathImportWindowBinding.bind(pathImportWindow)
+    }
 
     private var operationMode = OperationMode.OPERATING
     private var brushMode = BrushMode.DRAWING
@@ -83,6 +88,10 @@ class FdbWindow(activity: FdbMainActivity) {
     // TODO: 7/29/21 rewrite position updater
     private val panelDimension = ViewDimension()
     private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
+
+    private val pathImportWindowDimension = ViewDimension()
+    private val pathImportWindowPositionUpdater =
+        FloatingViewOnTouchListener(pathImportWindowLP, wm, pathImportWindow, 0, 0, pathImportWindowDimension)
 
     private val pathSaver = PathSaver(pathFiles.tmpPathFile.path)
 
@@ -273,6 +282,14 @@ class FdbWindow(activity: FdbMainActivity) {
             }
         }
 
+        pathImportWindowLP.apply {
+            flags = FLAG_NOT_FOCUSABLE
+            type = floatingWindowType
+            format = RGBA_8888
+            width = WRAP_CONTENT
+            height = WRAP_CONTENT
+        }
+
         colorPickers.apply {
             brush = HSVAColorPickerRL(context, Color.RED)
             panel = HSVAColorPickerRL(context, Color.WHITE)
@@ -304,6 +321,7 @@ class FdbWindow(activity: FdbMainActivity) {
 
             setOnScreenDimensionChangedListener { width, height ->
                 positionUpdater.updateParentDimension(width, height)
+                pathImportWindowPositionUpdater.updateParentDimension(width, height)
             }
             post {
                 // add the default layer
@@ -348,6 +366,7 @@ class FdbWindow(activity: FdbMainActivity) {
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
+        pathImportWindowPositionUpdater.updateParentDimension(screenWidth, screenHeight)
 
         receivers.main = FdbBroadcastReceiver(this)
         val filter = IntentFilter()
@@ -522,6 +541,7 @@ class FdbWindow(activity: FdbMainActivity) {
     private fun stopFDB() {
         wm.removeView(panelSV)
         wm.removeView(paintView)
+        wm.runCatching { removeView(pathImportWindow) }
     }
 
     private enum class OperationMode {
@@ -867,19 +887,7 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     fun showImportPathDialog(dir: File) {
-        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
-            dialogs.moreMenu.dismiss()
-
-            val bindings = ProgressBarBinding.inflate(LayoutInflater.from(context))
-
-            bindings.progressBarTitle.text = context.getString(R.string.fdb_importing_path_progress_title)
-            val progressBar = bindings.progressBar
-            val progressTV = bindings.progressTv
-            val progressDialog = createDialog(bindings.root, width = MATCH_PARENT)
-            progressDialog.setCanceledOnTouchOutside(false)
-            progressDialog.show()
-
-            val file = File(path)
+        val performImporting = { file: File ->
             val pathVersion = PathVersion.getPathVersion(file)
 
             val tryDo = AsyncTryDo()
@@ -894,15 +902,19 @@ class FdbWindow(activity: FdbMainActivity) {
                         tryDo.tryDo { _, notifier ->
                             progress!!
                             context.runOnUiThread {
-                                progressBar.setProgressCompat((progress * 100F).toInt(), true)
-                                progressTV.text =
-                                    context.getString(R.string.percentage, progress * 100F)
+                                pathImportWindowBindings.progressCircular.setProgressCompat(
+                                    (progress * 100F).toInt(),
+                                    true
+                                )
                                 notifier.finish()
                             }
                         }
-                    }, 0 /* TODO */, pathVersion)
+                    }, pathVersion)
                 } catch (e: Exception) {
                     ToastUtils.showError(context, R.string.fdb_import_failed, e)
+                    context.runOnUiThread {
+                        wm.removeView(pathImportWindow)
+                    }
                     return@Thread
                 }
 
@@ -910,7 +922,8 @@ class FdbWindow(activity: FdbMainActivity) {
 
                 Common.runOnUiThread(context) {
                     // done action
-                    progressDialog.dismiss()
+                    pathImportWindowBindings.progressCircular.setProgressCompat(100, true)
+                    wm.removeView(pathImportWindow)
                     ToastUtils.show(
                         context,
                         context.getString(R.string.fdb_importing_path_succeeded_toast)
@@ -929,7 +942,7 @@ class FdbWindow(activity: FdbMainActivity) {
                     when (pathVersion) {
                         PathVersion.VERSION_3_0, PathVersion.VERSION_3_1, PathVersion.VERSION_4_0 -> {
                             var extraInfo: ExtraInfo? = null
-                            SQLite3::class.withNew(path) {
+                            SQLite3::class.withNew(file.path) {
                                 extraInfo = ExtraInfo.getExtraInfo(it)
                             }
                             extraInfo ?: return@runOnUiThread
@@ -946,7 +959,40 @@ class FdbWindow(activity: FdbMainActivity) {
                 }
 
             }.start()
+        }
 
+        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
+            dialogs.moreMenu.dismiss()
+
+            val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
+            bindings.showDrawingCb.setOnCheckedChangeListener { _, isChecked ->
+                bindings.fdbDefaultDrawingIntervalTil.visibility = if (isChecked) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+            }
+            bindings.pathFileTv.text = context.getString(R.string.fdb_path_import_prompt_dialog_filepath_tv, path)
+
+            MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.import_)
+                .setNegativeAction()
+                .setPositiveAction { _, _ ->
+                    val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
+                    paintView.isShowDrawing = bindings.showDrawingCb.isChecked
+                    paintView.drawingInterval = if (paintView.isShowDrawing) {
+                        interval
+                    } else {
+                        0
+                    }
+                    wm.addView(pathImportWindow, pathImportWindowLP)
+                    setUpPathImportWindow()
+                    performImporting(File(path))
+                }
+                .setView(bindings.root)
+                .create().apply {
+                    DialogUtils.setDialogAttr(this, width = MATCH_PARENT, overlayWindow = true)
+                }.show()
         }.show()
     }
 
@@ -1330,10 +1376,68 @@ class FdbWindow(activity: FdbMainActivity) {
         )
     }
 
+    enum class PathImportState {
+        PAUSED,
+        IMPORTING,
+    }
+
     companion object {
         private val externalPath = object {
             lateinit var path: File
             lateinit var image: File
+        }
+    }
+
+    private fun setUpPathImportWindow() {
+        pathImportWindowBindings.apply {
+            var pathImportState = PathImportState.IMPORTING
+
+            pauseButton.setOnClickListener {
+                when (pathImportState) {
+                    PathImportState.PAUSED -> {
+                        pauseButton.setText(R.string.fdb_path_import_pause_button)
+                        pathImportState = PathImportState.IMPORTING
+                        paintView.isPathImportPaused = false
+                        ToastUtils.show(context, R.string.fdb_path_import_resume_button)
+                    }
+
+                    PathImportState.IMPORTING -> {
+                        pauseButton.setText(R.string.fdb_path_import_resume_button)
+                        pathImportState = PathImportState.PAUSED
+                        paintView.isPathImportPaused = true
+                        ToastUtils.show(context, R.string.fdb_path_import_pause_button)
+                    }
+                }
+            }
+            @Suppress("ClickableViewAccessibility")
+            dragIcon.setOnTouchListener { v, event ->
+                pathImportWindowPositionUpdater.onTouch(v, event, true)
+            }
+
+            // in nanoseconds
+            var drawingInterval = paintView.drawingInterval
+            val updateDrawingInterval = {
+                paintView.drawingInterval = drawingInterval
+                speedTv.text = context.getString(R.string.fdb_path_import_speed_tv, drawingInterval)
+            }.also { it() }
+
+            val drawingIntervalStep = 100
+            minusBtn.setOnClickListener {
+                if (drawingInterval >= drawingIntervalStep) {
+                    drawingInterval -= drawingIntervalStep
+                }
+                updateDrawingInterval()
+            }
+
+            addBtn.setOnClickListener {
+                drawingInterval += drawingIntervalStep
+                updateDrawingInterval()
+            }
+
+            if (!paintView.isShowDrawing) {
+                speedTv.visibility = View.GONE
+                pauseMinusButtonGroup.visibility = View.GONE
+            }
         }
     }
 }
