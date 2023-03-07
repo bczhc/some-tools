@@ -3,12 +3,18 @@
               xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
-    <androidx.appcompat.widget.SwitchCompat
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="@string/fdb_path_import_prompt_dialog_filepath_tv"
+              android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+              android:layout_margin="10dp"
+              android:id="@+id/path_file_tv"
+    />
+    <com.google.android.material.checkbox.MaterialCheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/fdb_path_import_show_drawing_switch"
-            android:id="@+id/show_drawing_switch"
+            android:text="@string/fdb_path_import_show_drawing_checkbox"
+            android:id="@+id/show_drawing_cb"
     />
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="wrap_content"

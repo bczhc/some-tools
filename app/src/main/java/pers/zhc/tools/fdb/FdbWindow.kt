@@ -963,13 +963,14 @@ class FdbWindow(activity: FdbMainActivity) {
             dialogs.moreMenu.dismiss()
 
             val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
-            bindings.showDrawingSwitch.setOnCheckedChangeListener { _, isChecked ->
+            bindings.showDrawingCb.setOnCheckedChangeListener { _, isChecked ->
                 bindings.fdbDefaultDrawingIntervalTil.visibility = if (isChecked) {
                     View.VISIBLE
                 } else {
                     View.GONE
                 }
             }
+            bindings.pathFileTv.text = context.getString(R.string.fdb_path_import_prompt_dialog_filepath_tv, path)
 
             MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.import_)
@@ -977,7 +978,7 @@ class FdbWindow(activity: FdbMainActivity) {
                 .setPositiveAction { _, _ ->
                     val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
                     paintView.drawingInterval = interval
-                    paintView.isShowDrawing = bindings.showDrawingSwitch.isChecked
+                    paintView.isShowDrawing = bindings.showDrawingCb.isChecked
                     wm.addView(pathImportWindow, pathImportWindowLP)
                     setUpPathImportWindow()
                     performImporting(File(path))
