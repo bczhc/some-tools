@@ -348,8 +348,14 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         return DialogUtils.createConfirmationAlertDialog(
             context,
             { _, _ ->
+                val ignoreCase = bindings.ignoreCaseCb.isChecked
 
-                val regex = regexView.regex ?: return@createConfirmationAlertDialog
+                val regex = (regexView.regex ?: return@createConfirmationAlertDialog).let {
+                    if (ignoreCase) {
+                        Regex(it.pattern, RegexOption.IGNORE_CASE)
+                    } else it
+                }
+
                 searchRegex = regex
 
                 val progressDialog = ProgressDialog(context).also {
