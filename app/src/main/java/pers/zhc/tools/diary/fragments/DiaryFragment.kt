@@ -33,6 +33,7 @@ import pers.zhc.tools.utils.*
 import pers.zhc.util.Assertion
 import java.io.File
 import java.util.*
+import java.util.regex.Pattern
 
 /**
  * @author bczhc
@@ -121,8 +122,11 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
             override fun onQueryTextChange(query: String): Boolean {
                 if (query.isEmpty()) {
                     refreshList()
+                    searchRegex = null
                     return true
                 }
+
+                searchRegex = Regex(Pattern.quote(query), RegexOption.IGNORE_CASE)
 
                 refreshItemDataList(
                     """
