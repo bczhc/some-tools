@@ -2,7 +2,7 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/view_stroke"
         android:paddingVertical="2.5dp"
@@ -12,21 +12,25 @@
               android:id="@+id/name_tv"
               tools:text="Layer Name"
               style="@style/TextAppearance.Material3.TitleLarge"
+              android:layout_alignParentStart="true"
+              android:layout_toStartOf="@id/icons_ll"
     />
-    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                 android:src="@android:drawable/ic_menu_edit"
-                 android:layout_toEndOf="@id/name_tv"
-                 android:id="@+id/edit_button"
-                 tools:ignore="ContentDescription"
-                 android:layout_centerVertical="true"
-                 android:background="?selectableItemBackground"
-    />
-    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                 android:src="@drawable/ic_visibility"
-                 android:layout_toEndOf="@id/edit_button"
-                 android:id="@+id/visibility_btn"
-                 tools:ignore="ContentDescription"
-                 android:layout_centerVertical="true"
-                 android:background="?selectableItemBackground"
-    />
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:id="@+id/icons_ll"
+                  android:layout_alignParentEnd="true"
+    >
+        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     android:src="@android:drawable/ic_menu_edit"
+                     android:id="@+id/edit_button"
+                     tools:ignore="ContentDescription"
+                     android:background="?selectableItemBackground"
+        />
+        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     android:src="@drawable/ic_visibility"
+                     android:id="@+id/visibility_btn"
+                     tools:ignore="ContentDescription"
+                     android:background="?selectableItemBackground"
+        />
+    </LinearLayout>
 </RelativeLayout>

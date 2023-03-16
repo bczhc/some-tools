@@ -16,7 +16,7 @@
                android:background="@color/grey"
     />
     <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="100dp"
             android:id="@+id/recycler_view"
             android:layout_below="@id/drag_icon"
