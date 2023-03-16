@@ -874,7 +874,10 @@ class FdbWindow(activity: FdbMainActivity) {
 
                     5 -> {
                         // manage layers
-                        wm.addView(layerManagerView, layerManagerViewLP)
+                        // toggle
+                        if (wm.runCatching { wm.removeView(layerManagerView) }.isFailure) {
+                            wm.addView(layerManagerView, layerManagerViewLP)
+                        }
                         dismissDialog()
                     }
 
