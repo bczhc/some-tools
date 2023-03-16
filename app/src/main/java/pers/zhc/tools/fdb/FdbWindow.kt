@@ -353,7 +353,9 @@ class FdbWindow(activity: FdbMainActivity) {
             }
 
             setOnImportLayerAddedListener {
-                layerManagerView.add1Layer(it)
+                context.awaitRunOnUiThread {
+                    layerManagerView.add1Layer(it)
+                }
             }
         }
 
