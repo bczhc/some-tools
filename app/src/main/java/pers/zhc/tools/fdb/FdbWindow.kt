@@ -791,6 +791,8 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun createMoreOptionDialog(): Dialog {
+        var dismissDialog = { unreachable<Unit>() }
+
         val onClickActions: ((index: Int) -> View.OnClickListener) = { index ->
             View.OnClickListener {
                 when (index) {
@@ -866,6 +868,7 @@ class FdbWindow(activity: FdbMainActivity) {
                     5 -> {
                         // manage layers
                         wm.addView(layerManagerView, layerManagerViewLP)
+                        dismissDialog()
                     }
 
                     6 -> {
@@ -903,7 +906,9 @@ class FdbWindow(activity: FdbMainActivity) {
 
             ll.addView(button)
         }
-        return createDialog(inflate)
+        val dialog = createDialog(inflate)
+        dismissDialog = { dialog.dismiss() }
+        return dialog
     }
 
     fun showImportPathDialog(dir: File) {
@@ -1456,6 +1461,15 @@ class FdbWindow(activity: FdbMainActivity) {
         val bindings = FdbLayerManagerViewBinding.bind(layerManagerView.getView())
         bindings.dragIcon.setOnTouchListener { v, event ->
             layerManagerViewPositionUpdater.onTouch(v, event, false)
+        }
+        val updateLayerStates = {
+            paintView.updateLayerState(layerManagerView.getLayerState())
+        }
+        layerManagerView.apply {
+            onNameChangedListener = { updateLayerStates() }
+            onVisibilityChangedListener = { updateLayerStates() }
+            onCheckedListener = { updateLayerStates() }
+            onLayerOrderChangedListener = updateLayerStates
         }
     }
 }

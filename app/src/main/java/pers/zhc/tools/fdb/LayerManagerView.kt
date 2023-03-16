@@ -27,6 +27,10 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     private var listAdapter: MyAdapter
     private var recyclerView: RecyclerView
     private val listItems = ArrayList<LayerInfo>()
+    var onVisibilityChangedListener: ((LayerInfo) -> Unit)? = null
+    var onNameChangedListener: ((LayerInfo) -> Unit)? = null
+    var onCheckedListener: ((LayerInfo) -> Unit)? = null
+    var onLayerOrderChangedListener: (() -> Unit)? = null
 
     init {
         val inflate = View.inflate(context, R.layout.fdb_layer_manager_view, null)
@@ -93,8 +97,10 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             }
 
             holder.itemView.setOnClickListener {
-                checkedId = items[holder.layoutPosition].id
+                val checkedLayerInfo = items[holder.layoutPosition]
+                checkedId = checkedLayerInfo.id
                 notifyDataSetChanged()
+                outer.onCheckedListener?.invoke(checkedLayerInfo)
             }
 
             val updateVisibilityIcon = {
@@ -111,6 +117,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
                 // toggle visibility
                 layerInfo.visible = !layerInfo.visible
                 updateVisibilityIcon()
+                outer.onVisibilityChangedListener?.invoke(layerInfo)
             }
 
             holder.editIV.setOnClickListener {
@@ -125,6 +132,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
                         val newName = et.text.toString()
                         layerInfo.name = newName
                         notifyItemChanged(position)
+                        outer.onNameChangedListener?.invoke(layerInfo)
                     },
                     editText = editText
                 ).apply {
@@ -171,6 +179,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             val toIndex = target.layoutPosition
             Collections.swap(listAdapter.items, fromIndex, toIndex)
             listAdapter.notifyItemMoved(fromIndex, toIndex)
+            listAdapter.outer.onLayerOrderChangedListener?.invoke()
             return true
         }
 
@@ -178,6 +187,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             val index = viewHolder.layoutPosition
             val removed = listAdapter.items.removeAt(index)
             listAdapter.notifyItemRemoved(index)
+            listAdapter.outer.onLayerOrderChangedListener?.invoke()
 
             showDeletedSnackbar(index, removed)
         }
@@ -187,6 +197,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
                 setAction(R.string.undo) {
                     listAdapter.items.add(index, removed)
                     listAdapter.notifyItemInserted(index)
+                    listAdapter.outer.onLayerOrderChangedListener?.invoke()
                 }
             }
             snackBar.show()
