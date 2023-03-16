@@ -1,5 +1,6 @@
 package pers.zhc.tools.fdb
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -69,6 +70,10 @@ class FdbWindow(activity: FdbMainActivity) {
         FdbPathImportWindowBinding.bind(pathImportWindow)
     }
 
+    // TODO: refactor: combine floating windows
+    private lateinit var layerManagerView: LayerManagerView
+    private val layerManagerViewLP = WindowManager.LayoutParams()
+
     private var operationMode = OperationMode.OPERATING
     private var brushMode = BrushMode.DRAWING
 
@@ -92,6 +97,10 @@ class FdbWindow(activity: FdbMainActivity) {
     private val pathImportWindowDimension = ViewDimension()
     private val pathImportWindowPositionUpdater =
         FloatingViewOnTouchListener(pathImportWindowLP, wm, pathImportWindow, 0, 0, pathImportWindowDimension)
+    private val layerManagerViewDimension = ViewDimension()
+    private val layerManagerViewPositionUpdater by lazy {
+        FloatingViewOnTouchListener(layerManagerViewLP, wm, layerManagerView, 0, 0, layerManagerViewDimension)
+    }
 
     private val pathSaver = PathSaver(pathFiles.tmpPathFile.path)
 
@@ -100,8 +109,6 @@ class FdbWindow(activity: FdbMainActivity) {
         var colorPickerCheckpoint: ScreenColorPickerCheckpointReceiver? = null
         var colorPickerResult: ScreenColorPickerResultReceiver? = null
     }
-
-    private lateinit var layerManagerView: LayerManagerView
 
     private var hasStartedScreenColorPicker = false
 
@@ -292,6 +299,14 @@ class FdbWindow(activity: FdbMainActivity) {
             height = WRAP_CONTENT
         }
 
+        layerManagerViewLP.apply {
+            flags = FLAG_NOT_FOCUSABLE
+            type = floatingWindowType
+            format = RGBA_8888
+            width = WRAP_CONTENT
+            height = WRAP_CONTENT
+        }
+
         colorPickers.apply {
             brush = HSVAColorPickerRL(context, Color.RED)
             panel = HSVAColorPickerRL(context, Color.WHITE)
@@ -320,6 +335,7 @@ class FdbWindow(activity: FdbMainActivity) {
             layerManagerView = LayerManagerView(context) { layerInfo ->
                 paintView.add1Layer(layerInfo)
             }
+            setUpLayerManagerWindow()
 
             setOnScreenDimensionChangedListener { width, height ->
                 positionUpdater.updateParentDimension(width, height)
@@ -349,7 +365,6 @@ class FdbWindow(activity: FdbMainActivity) {
             moreMenu = createMoreOptionDialog()
             eraserOpacity = createEraserOpacityDialog()
             transformationSettings = createTransformationSettingsDialog()
-            layerManager = createLayerManagerDialog()
         }
 
         val externalStorage = Common.getExternalStoragePath(context)
@@ -369,6 +384,7 @@ class FdbWindow(activity: FdbMainActivity) {
         val screenHeight = displayMetrics.heightPixels
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
         pathImportWindowPositionUpdater.updateParentDimension(screenWidth, screenHeight)
+        layerManagerViewPositionUpdater.updateParentDimension(screenWidth, screenHeight)
 
         receivers.main = FdbBroadcastReceiver(this)
         val filter = IntentFilter()
@@ -379,6 +395,8 @@ class FdbWindow(activity: FdbMainActivity) {
             addAction(FdbBroadcastReceiver.ACTION_ON_SCREEN_ORIENTATION_CHANGED)
         }
         context.applicationContext.registerReceiver(receivers.main, filter)
+
+        setUpLayerManagerWindow()
     }
 
     private fun updateBrushModeText() {
@@ -544,6 +562,7 @@ class FdbWindow(activity: FdbMainActivity) {
         wm.removeView(panelSV)
         wm.removeView(paintView)
         wm.runCatching { removeView(pathImportWindow) }
+        wm.runCatching { removeView(layerManagerView) }
     }
 
     private enum class OperationMode {
@@ -592,7 +611,6 @@ class FdbWindow(activity: FdbMainActivity) {
         lateinit var moreMenu: Dialog
         lateinit var eraserOpacity: Dialog
         lateinit var transformationSettings: Dialog
-        lateinit var layerManager: Dialog
     }
 
     private fun createConfirmationDialog(
@@ -847,7 +865,7 @@ class FdbWindow(activity: FdbMainActivity) {
 
                     5 -> {
                         // manage layers
-                        dialogs.layerManager.show()
+                        wm.addView(layerManagerView, layerManagerViewLP)
                     }
 
                     6 -> {
@@ -1296,19 +1314,6 @@ class FdbWindow(activity: FdbMainActivity) {
         return createDialog(bindings.root)
     }
 
-    private fun createLayerManagerDialog(): Dialog {
-        val dialog = createDialog(layerManagerView).also {
-            DialogUtils.setDialogAttr(it, width = MATCH_PARENT, height = MATCH_PARENT, overlayWindow = true)
-        }
-
-        dialog.setOnDismissListener {
-            val layerState = layerManagerView.getLayerState()
-            layerState.checkedId!!
-            paintView.updateLayerState(layerState)
-        }
-        return dialog
-    }
-
     private fun getSelectedStatisticsIntData(db: SQLite3, mark: Int): Int {
         var r = 0
         val statement = db.compileStatement(
@@ -1443,6 +1448,14 @@ class FdbWindow(activity: FdbMainActivity) {
                 speedTv.visibility = View.GONE
                 pauseMinusButtonGroup.visibility = View.GONE
             }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setUpLayerManagerWindow() {
+        val bindings = FdbLayerManagerViewBinding.bind(layerManagerView.getView())
+        bindings.dragIcon.setOnTouchListener { v, event ->
+            layerManagerViewPositionUpdater.onTouch(v, event, false)
         }
     }
 }

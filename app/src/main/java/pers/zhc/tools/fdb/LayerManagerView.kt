@@ -15,6 +15,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.databinding.FdbLayerItemViewBinding
 import pers.zhc.tools.databinding.FdbLayerManagerViewBinding
 import pers.zhc.tools.utils.DialogUtils
+import pers.zhc.tools.utils.androidAssert
 import java.util.*
 
 /**
@@ -223,6 +224,11 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         onLayerAddedCallback(defaultLayerInfo)
 
         listAdapter.notifyDataSetChanged()
+    }
+
+    fun getView(): View {
+        androidAssert(childCount == 1)
+        return getChildAt(0)!!
     }
 }
 

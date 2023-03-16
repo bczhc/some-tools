@@ -2,22 +2,32 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         xmlns:tools="http://schemas.android.com/tools"
 >
+    <ImageView android:layout_width="0dp"
+               android:layout_height="30dp"
+               android:layout_alignStart="@id/recycler_view"
+               android:layout_alignEnd="@id/recycler_view"
+               android:src="@drawable/drag_icon"
+               android:id="@+id/drag_icon"
+               tools:ignore="ContentDescription"
+               android:background="@color/grey"
+    />
     <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
             android:id="@+id/recycler_view"
+            android:layout_below="@id/drag_icon"
             tools:listitem="@layout/fdb_layer_item_view"
-            android:layout_above="@id/create"
     />
     <com.google.android.material.button.MaterialButton
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/create_new"
             android:id="@+id/create"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@id/recycler_view"
+            android:layout_centerHorizontal="true"
     />
 </RelativeLayout>
