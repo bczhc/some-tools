@@ -238,7 +238,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                 // clear
                                 createConfirmationDialog({ _, _ ->
                                     paintView.clearAll()
-                                }, R.string.fdb_clear_confirmation_dialog).show()
+                                }, titleRes = R.string.fdb_clear_confirmation_dialog).show()
                             }
 
                             8 -> {
@@ -260,7 +260,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                 // exit
                                 createConfirmationDialog({ _, _ ->
                                     exit()
-                                }, R.string.fdb_exit_confirmation_dialog).show()
+                                }, titleRes = R.string.fdb_exit_confirmation_dialog).show()
                             }
 
                             else -> {
@@ -281,7 +281,7 @@ class FdbWindow(activity: FdbMainActivity) {
                         paintView.clearAllLayers()
                         layerManagerView.restoreDefault()
                         paintView.updateLayerState(layerManagerView.getLayerState())
-                    }, R.string.fdb_whether_to_clear_all_layer_dialog).show()
+                    }, titleRes = R.string.fdb_whether_to_clear_all_layer_dialog).show()
                 }
             }
 
@@ -615,9 +615,16 @@ class FdbWindow(activity: FdbMainActivity) {
 
     private fun createConfirmationDialog(
         positiveAction: DialogInterface.OnClickListener,
+        negativeAction: DialogInterface.OnClickListener? = null,
         @StringRes titleRes: Int
     ): AlertDialog {
-        return DialogUtil.createConfirmationAlertDialog(context, positiveAction, titleRes, true)
+        return DialogUtils.createConfirmationAlertDialog(
+            context,
+            positiveAction = positiveAction,
+            negativeAction = negativeAction ?: DialogInterface.OnClickListener { _, _ -> },
+            titleRes = titleRes,
+            applicationOverlay = true
+        )
     }
 
     private fun createDialog(
@@ -876,7 +883,7 @@ class FdbWindow(activity: FdbMainActivity) {
                         createConfirmationDialog({ _, _ ->
                             hideFDB()
                             dialogs.moreMenu.dismiss()
-                        }, R.string.fdb_hide_fdb_confirmation_dialog).show()
+                        }, titleRes = R.string.fdb_hide_fdb_confirmation_dialog).show()
                     }
 
                     7 -> {
@@ -1470,6 +1477,17 @@ class FdbWindow(activity: FdbMainActivity) {
             onVisibilityChangedListener = { updateLayerStates() }
             onCheckedListener = { updateLayerStates() }
             onLayerOrderChangedListener = updateLayerStates
+            onDeleteNotifier = { notifier ->
+                createConfirmationDialog({ _, _ ->
+                    notifier.delete()
+                }, { _, _ ->
+                    notifier.revert()
+                }, titleRes = R.string.whether_to_delete).also {
+                    it.setOnCancelListener {
+                        notifier.revert()
+                    }
+                }.show()
+            }
         }
     }
 }

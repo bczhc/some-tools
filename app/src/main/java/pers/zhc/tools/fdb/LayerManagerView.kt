@@ -9,7 +9,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.FdbLayerItemViewBinding
@@ -31,6 +30,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     var onNameChangedListener: ((LayerInfo) -> Unit)? = null
     var onCheckedListener: ((LayerInfo) -> Unit)? = null
     var onLayerOrderChangedListener: (() -> Unit)? = null
+    var onDeleteNotifier: ((OnDeleteNotifier) -> Unit)? = null
 
     init {
         val inflate = View.inflate(context, R.layout.fdb_layer_manager_view, null)
@@ -187,20 +187,22 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             val index = viewHolder.layoutPosition
             val removed = listAdapter.items.removeAt(index)
             listAdapter.notifyItemRemoved(index)
-            listAdapter.outer.onLayerOrderChangedListener?.invoke()
 
-            showDeletedSnackbar(index, removed)
-        }
-
-        private fun showDeletedSnackbar(index: Int, removed: LayerInfo) {
-            val snackBar = Snackbar.make(listAdapter.outer, R.string.deleted_message, Snackbar.LENGTH_LONG).apply {
-                setAction(R.string.undo) {
-                    listAdapter.items.add(index, removed)
-                    listAdapter.notifyItemInserted(index)
-                    listAdapter.outer.onLayerOrderChangedListener?.invoke()
-                }
+            val onDeleteNotifier = listAdapter.outer.onDeleteNotifier
+            if (onDeleteNotifier == null) {
+                listAdapter.outer.onLayerOrderChangedListener?.invoke()
+            } else {
+                onDeleteNotifier(
+                    OnDeleteNotifier(
+                        delete = {
+                            listAdapter.outer.onLayerOrderChangedListener?.invoke()
+                        },
+                        revert = {
+                            listAdapter.items.add(index, removed)
+                            listAdapter.notifyItemInserted(index)
+                        })
+                )
             }
-            snackBar.show()
         }
     }
 
@@ -241,6 +243,11 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
         androidAssert(childCount == 1)
         return getChildAt(0)!!
     }
+
+    class OnDeleteNotifier(
+        val delete: () -> Unit,
+        val revert: () -> Unit,
+    )
 }
 
 typealias OnLayerAddedCallback = (layerInfo: LayerInfo) -> Unit
