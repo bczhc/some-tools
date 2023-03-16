@@ -1,9 +1,11 @@
 package pers.zhc.tools.fdb;
 
+import android.content.Context;
 import android.graphics.*;
 import kotlin.text.Regex;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import pers.zhc.tools.R;
 import pers.zhc.tools.floatingdrawing.PaintView;
 import pers.zhc.tools.utils.RegexUtilsKt;
 import pers.zhc.tools.utils.UUID;
@@ -69,5 +71,10 @@ public class Layer {
 
     public static String getTableLayerId(String table) {
         return RegexUtilsKt.capture(table, new Regex("^path_layer_(.*)$")).get(0).get(1);
+    }
+
+    public static @NotNull LayerInfo defaultLayerInfo(@NotNull Context context) {
+        String randomId = Layer.randomId();
+        return new LayerInfo(randomId, context.getString(R.string.fdb_layer_default_name), true);
     }
 }

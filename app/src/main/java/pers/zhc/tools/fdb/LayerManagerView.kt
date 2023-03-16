@@ -213,6 +213,17 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
     fun getLayersInfo(): ArrayList<LayerInfo> {
         return listItems
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun restoreDefault() {
+        val defaultLayerInfo = Layer.defaultLayerInfo(context)
+        listItems.clear()
+        listItems.add(defaultLayerInfo)
+        setChecked(defaultLayerInfo.id)
+        onLayerAddedCallback(defaultLayerInfo)
+
+        listAdapter.notifyDataSetChanged()
+    }
 }
 
 typealias OnLayerAddedCallback = (layerInfo: LayerInfo) -> Unit

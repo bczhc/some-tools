@@ -101,7 +101,7 @@ class FdbWindow(activity: FdbMainActivity) {
         var colorPickerResult: ScreenColorPickerResultReceiver? = null
     }
 
-    private var layerManagerView: LayerManagerView
+    private lateinit var layerManagerView: LayerManagerView
 
     private var hasStartedScreenColorPicker = false
 
@@ -272,6 +272,8 @@ class FdbWindow(activity: FdbMainActivity) {
                     // long click "clear": clear all layers
                     createConfirmationDialog({ _, _ ->
                         paintView.clearAllLayers()
+                        layerManagerView.restoreDefault()
+                        paintView.updateLayerState(layerManagerView.getLayerState())
                     }, R.string.fdb_whether_to_clear_all_layer_dialog).show()
                 }
             }
@@ -325,8 +327,8 @@ class FdbWindow(activity: FdbMainActivity) {
             }
             post {
                 // add the default layer
-                val id = Layer.randomId()
-                val defaultLayerInfo = LayerInfo(id, context.getString(R.string.fdb_layer_default_name), true)
+                val defaultLayerInfo = Layer.defaultLayerInfo(context)
+                val id = defaultLayerInfo.id
 
                 paintView.add1Layer(defaultLayerInfo)
                 paintView.switchLayer(id)
