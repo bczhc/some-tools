@@ -53,7 +53,7 @@ class WordsMainActivity : BaseActivity() {
 
         val recyclerView = bindings.recyclerView
         val fastScroller = bindings.fastScroller
-        val fastScrollerThumb = bindings.fastScrollerThumb
+        val fastScrollerThumb = bindings.scrollerThumb
 
         updateItems()
         listAdapter = MyAdapter(this, itemList)
