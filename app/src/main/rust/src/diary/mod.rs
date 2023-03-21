@@ -16,8 +16,8 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Diary_computeFileIdentif
     path: JString,
 ) -> jstring {
     let path = env.get_string(&path).unwrap();
-    // TODO: handle filenames with non-UTF8-encoded bytes which
-    // is totally valid in some filesystems
+    // TODO: handle non-UTF8-encoded filenames but
+    //  are totally valid in some filesystems
     let result = compute_identifier(path.to_str().unwrap());
     match result {
         Ok(hash) => {
