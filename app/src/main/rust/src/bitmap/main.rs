@@ -5,8 +5,8 @@ use jni::JNIEnv;
 
 use crate::bitmap::error::Result;
 
-fn compress_to_png(env: JNIEnv, bitmap: jobject, dest_path: JString) -> Result<()> {
-    let dest_path = env.get_string(dest_path)?;
+fn compress_to_png(env: &mut JNIEnv, bitmap: jobject, dest_path: JString) -> Result<()> {
+    let dest_path = env.get_string(&dest_path)?;
     let dest_path = dest_path.to_str()?;
 
     let bitmap =
@@ -35,12 +35,12 @@ fn compress_to_png(env: JNIEnv, bitmap: jobject, dest_path: JString) -> Result<(
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Bitmap_compressToPng(
-    env: JNIEnv,
+    mut env: JNIEnv,
     _class: JClass,
     bitmap: jobject,
     dest_path: JString,
 ) {
-    let result = compress_to_png(env, bitmap, dest_path);
+    let result = compress_to_png(&mut env, bitmap, dest_path);
     if let Err(e) = result {
         env.throw(format!("Error: {:?}", e)).unwrap();
     }

@@ -1,13 +1,3 @@
-use crate::jni_helper::{jni_log, GetString};
-use crate::transfer::errors::*;
-use bczhc_lib::time::get_current_time_millis;
-use bczhc_lib::{rw_read, rw_write};
-use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
-use jni::objects::{GlobalRef, JString, JValue};
-use jni::sys::{jfloat, jint, jlong, jobject};
-use jni::{JNIEnv, JavaVM};
-use num_traits::FromPrimitive;
-use once_cell::sync::Lazy;
 use std::fs::{create_dir, create_dir_all, File};
 use std::io;
 use std::io::{BufReader, BufWriter, Cursor, Read, Write};
@@ -15,17 +5,29 @@ use std::net::{SocketAddrV4, TcpListener, TcpStream};
 use std::path::{Path, PathBuf};
 use std::sync::RwLock;
 use std::thread::spawn;
+
+use bczhc_lib::time::get_current_time_millis;
+use bczhc_lib::{rw_read, rw_write};
+use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
+use jni::objects::{GlobalRef, JObject, JString, JValue};
+use jni::sys::{jfloat, jint, jlong};
+use jni::{JNIEnv, JavaVM};
+use num_traits::FromPrimitive;
+use once_cell::sync::Lazy;
 use tar::Archive;
+
+use crate::jni_helper::{jni_log, GetString};
+use crate::transfer::errors::*;
 
 static JVM: Lazy<RwLock<Option<JavaVM>>> = Lazy::new(|| RwLock::new(None));
 static RECEIVE_DONE_CALLBACK: Lazy<RwLock<Option<GlobalRef>>> = Lazy::new(|| RwLock::new(None));
 static SAVING_PATH: Lazy<RwLock<Option<String>>> = Lazy::new(|| RwLock::new(None));
 
 pub fn async_start_server(
-    env: JNIEnv,
+    env: &mut JNIEnv,
     port: jint,
     saving_path: JString,
-    callback: jobject,
+    callback: JObject,
 ) -> Result<jlong> {
     let port = u16::try_from(port).map_err(|_| Error::IllegalArgument)?;
     let b = Box::new(TcpListener::bind(SocketAddrV4::new(
@@ -58,12 +60,12 @@ fn accept_loop(listener: TcpListener) -> Result<()> {
         spawn(move || {
             let jvm_guard = rw_read!(JVM);
             let jvm = jvm_guard.as_ref().unwrap();
-            let env_guard = jvm.attach_current_thread().unwrap();
+            let mut env_guard = jvm.attach_current_thread().unwrap();
 
-            jni_log(*env_guard, &format!("{}", accept.1)).unwrap();
+            jni_log(&mut env_guard, &format!("{}", accept.1)).unwrap();
 
             let receiving_result = handle_connection(stream);
-            jni_log(*env_guard, &format!("{:?}", receiving_result)).unwrap();
+            jni_log(&mut env_guard, &format!("{:?}", receiving_result)).unwrap();
 
             let callback = rw_read!(RECEIVE_DONE_CALLBACK);
             let callback = callback.as_ref().unwrap();
@@ -71,8 +73,8 @@ fn accept_loop(listener: TcpListener) -> Result<()> {
                 Ok(result) => {
                     let location_jstring = env_guard.new_string(&result.location).unwrap();
 
-                    jni_log(*env_guard, "call").unwrap();
-                    env_guard
+                    jni_log(&mut env_guard, "call").unwrap();
+                    (*env_guard)
                         .call_method(
                             callback,
                             "onReceiveResult",
@@ -81,20 +83,19 @@ fn accept_loop(listener: TcpListener) -> Result<()> {
                                 JValue::Int(result.mark as jint),
                                 JValue::Long(result.time as jlong),
                                 JValue::Long(result.size as jlong),
-                                JValue::Object(location_jstring.into()),
+                                JValue::Object(&location_jstring),
                             ],
                         )
                         .unwrap();
                 }
                 Err(err) => {
-                    env_guard
+                    let err_string = (*env_guard).new_string(&format!("{:?}", err)).unwrap();
+                    (*env_guard)
                         .call_method(
                             callback,
                             "onError",
                             "(Ljava/lang/String;)V",
-                            &[JValue::Object(
-                                env_guard.new_string(&format!("{:?}", err)).unwrap().into(),
-                            )],
+                            &[JValue::Object(&err_string)],
                         )
                         .unwrap();
                 }
@@ -105,7 +106,7 @@ fn accept_loop(listener: TcpListener) -> Result<()> {
 
 fn handle_connection(mut stream: TcpStream) -> Result<ReceivingResult> {
     let guard = rw_read!(JVM);
-    let env_guard = guard.as_ref().unwrap().attach_current_thread()?;
+    let mut env_guard = guard.as_ref().unwrap().attach_current_thread()?;
 
     let mut header_bytes = [0_u8; 8];
     stream.read_exact(&mut header_bytes)?;
@@ -132,36 +133,36 @@ fn handle_connection(mut stream: TcpStream) -> Result<ReceivingResult> {
 
             let file_name = std::str::from_utf8(&file_name_bytes)?;
 
-            jni_log(*env_guard, &format!("file name: {}", file_name))?;
+            jni_log(&mut env_guard, &format!("file name: {}", file_name))?;
 
             let mut file_path = PathBuf::from(&dir);
             create_dir(&file_path)?;
-            jni_log(*env_guard, &format!("file path: {:?}", file_path))?;
-            jni_log(*env_guard, "3")?;
+            jni_log(&mut env_guard, &format!("file path: {:?}", file_path))?;
+            jni_log(&mut env_guard, "3")?;
             file_path.push(file_name);
 
-            jni_log(*env_guard, "2")?;
+            jni_log(&mut env_guard, "2")?;
             let file = File::create(&file_path)?;
             let mut writer = BufWriter::new(file);
 
-            jni_log(*env_guard, "4")?;
+            jni_log(&mut env_guard, "4")?;
             let mut size = 0_u64;
             let mut buf = [0_u8; 1024];
-            jni_log(*env_guard, "1")?;
+            jni_log(&mut env_guard, "1")?;
             loop {
                 let n = stream.read(&mut buf)?;
                 if n == 0 {
-                    jni_log(*env_guard, "eof")?;
+                    jni_log(&mut env_guard, "eof")?;
                     break;
                 }
                 writer.write_all(&buf[..n])?;
-                jni_log(*env_guard, &format!("write: {:?}", &buf[..n]))?;
+                jni_log(&mut env_guard, &format!("write: {:?}", &buf[..n]))?;
                 size += n as u64;
             }
 
             // let size = io::copy(&mut stream, &mut writer)?;
 
-            jni_log(*env_guard, "copy done")?;
+            jni_log(&mut env_guard, "copy done")?;
 
             (
                 size,
@@ -299,15 +300,15 @@ where
 }
 
 pub fn send(
-    env: JNIEnv,
+    env: &mut JNIEnv,
     socket_addr: JString,
     mark: jint,
     path: JString,
-    callback: jobject,
+    callback: JObject,
 ) -> Result<()> {
-    let s = env.get_string(socket_addr)?;
+    let s = env.get_string(&socket_addr)?;
     let socket_addr = s.to_str()?;
-    let s = env.get_string(path)?;
+    let s = env.get_string(&path)?;
     let path = s.to_str()?;
 
     let mark: Mark = FromPrimitive::from_i32(mark).ok_or(Error::InvalidMark)?;
@@ -350,7 +351,7 @@ pub fn send(
                 }
                 writer.write_all(&buffer[..read_size])?;
                 env.call_method(
-                    callback,
+                    &callback,
                     "fileProgress",
                     "(F)V",
                     &[JValue::Float((sum as f64 / file_size as f64) as jfloat)],
@@ -374,7 +375,7 @@ pub fn send(
             let entries = walkdir::WalkDir::new(path)
                 .into_iter()
                 .map(|x| {
-                    jni_log(env, &format!("{:?}", x)).unwrap();
+                    // jni_log(env, &format!("{:?}", x)).unwrap();
                     x.unwrap()
                 })
                 .filter(|x| x.path().is_file());
@@ -397,10 +398,10 @@ pub fn send(
                 let log_line_jstring = env.new_string(path_str)?;
                 jni_log(env, "6")?;
                 env.call_method(
-                    callback,
+                    &callback,
                     "tarProgress",
                     "(Ljava/lang/String;)V",
-                    &[JValue::Object(log_line_jstring.into())],
+                    &[JValue::Object(&log_line_jstring)],
                 )?;
                 jni_log(env, "7")?;
                 jni_log(env, "\n")?;

@@ -22,7 +22,7 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Ip_ipObjToString(
 ) -> jstring {
     let ip_addr = unsafe { &*(addr as *mut IpAddr) };
     let string = format!("{}", ip_addr);
-    env.new_string(string).unwrap().into_inner()
+    env.new_string(string).unwrap().into_raw()
 }
 
 #[no_mangle]
@@ -53,5 +53,5 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Ip_getLocalIpInfo(
         info.push('\n');
     }
     let j_string = env.new_string(info).unwrap();
-    j_string.into_inner()
+    j_string.into_raw()
 }

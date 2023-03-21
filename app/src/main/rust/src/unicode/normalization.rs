@@ -3,8 +3,8 @@ use jni::sys::{jobject, jstring};
 use jni::JNIEnv;
 use unicode_normalization::UnicodeNormalization;
 
-fn transform(env: JNIEnv, s: JString, f: fn(&str) -> String) -> jobject {
-    let str = env.get_string(s).unwrap();
+fn transform(mut env: JNIEnv, s: JString, f: fn(&str) -> String) -> jobject {
+    let str = env.get_string(&s).unwrap();
     let str = match str.to_str() {
         Ok(s) => s,
         Err(e) => {
@@ -12,7 +12,7 @@ fn transform(env: JNIEnv, s: JString, f: fn(&str) -> String) -> jobject {
             ""
         }
     };
-    env.new_string(f(str)).unwrap().into_inner()
+    env.new_string(f(str)).unwrap().into_raw()
 }
 
 #[allow(non_snake_case)]

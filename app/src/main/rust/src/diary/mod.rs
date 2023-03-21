@@ -11,22 +11,22 @@ use sha1::digest::Digest;
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Diary_computeFileIdentifier(
-    env: JNIEnv,
+    mut env: JNIEnv,
     _: JClass,
     path: JString,
 ) -> jstring {
-    let path = env.get_string(path).unwrap();
+    let path = env.get_string(&path).unwrap();
     // TODO: handle filenames with non-UTF8-encoded bytes which
     // is totally valid in some filesystems
     let result = compute_identifier(path.to_str().unwrap());
     match result {
         Ok(hash) => {
             let hex_string = hex::encode(hash);
-            env.new_string(hex_string).unwrap().into_inner()
+            env.new_string(hex_string).unwrap().into_raw()
         }
         Err(e) => {
             env.throw(format!("{:?}", e)).unwrap();
-            env.new_string("").unwrap().into_inner()
+            env.new_string("").unwrap().into_raw()
         }
     }
 }

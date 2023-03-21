@@ -1,6 +1,6 @@
-use jni::objects::{JClass, JString};
+use jni::objects::{JClass, JObjectArray, JString};
 use jni::strings::JavaStr;
-use jni::sys::{jobjectArray, jsize};
+use jni::sys::jsize;
 use jni::JNIEnv;
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
@@ -11,19 +11,19 @@ use crate::jni_helper::CheckOrThrow;
 #[no_mangle]
 #[allow(non_snake_case, clippy::too_many_arguments)]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Email_send(
-    env: JNIEnv,
+    mut env: JNIEnv,
     _class: JClass,
     smtp_server: JString,
     username: JString,
     password: JString,
     from: JString,
-    to: jobjectArray,
-    cc: jobjectArray,
+    to: JObjectArray,
+    cc: JObjectArray,
     subject: JString,
     body: JString,
 ) {
     let result = run(
-        env,
+        &mut env,
         smtp_server,
         username,
         password,
@@ -33,18 +33,18 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Email_send(
         subject,
         body,
     );
-    result.check_or_throw(env).unwrap();
+    result.check_or_throw(&mut env).unwrap();
 }
 
 #[allow(clippy::too_many_arguments)]
 fn run(
-    env: JNIEnv,
+    env: &mut JNIEnv,
     smtp_server: JString,
     username: JString,
     password: JString,
     from: JString,
-    to: jobjectArray,
-    cc: jobjectArray,
+    to: JObjectArray,
+    cc: JObjectArray,
     subject: JString,
     body: JString,
 ) -> Result<()> {
@@ -80,12 +80,13 @@ fn run(
     Ok(())
 }
 
-fn get_java_string_array(env: JNIEnv, arr: jobjectArray) -> Result<Vec<String>> {
-    let length = env.get_array_length(arr)? as usize;
+fn get_java_string_array(env: &mut JNIEnv, arr: JObjectArray) -> Result<Vec<String>> {
+    let length = env.get_array_length(&arr)? as usize;
     let mut vec = Vec::with_capacity(length);
     for i in 0..length {
-        let object = env.get_object_array_element(arr, i as jsize)?;
-        let java_str = env.get_string(object.into())?;
+        let object = env.get_object_array_element(&arr, i as jsize)?;
+        let string_obj = JString::from(object);
+        let java_str = env.get_string(&string_obj)?;
 
         let s = java_str.to_string()?;
         vec.push(s);
@@ -99,7 +100,7 @@ trait ToString {
     fn to_string(&self) -> ToJavaStringResult;
 }
 
-impl ToString for JavaStr<'_, '_> {
+impl ToString for JavaStr<'_, '_, '_> {
     fn to_string(&self) -> ToJavaStringResult {
         let str = self.to_str()?;
         Ok(String::from(str))
@@ -107,12 +108,12 @@ impl ToString for JavaStr<'_, '_> {
 }
 
 trait GetString {
-    fn get_and_to_string(&self, java_string: JString) -> ToJavaStringResult;
+    fn get_and_to_string(&mut self, java_string: JString) -> ToJavaStringResult;
 }
 
 impl GetString for JNIEnv<'_> {
-    fn get_and_to_string(&self, java_string: JString) -> ToJavaStringResult {
-        let java_str = self.get_string(java_string)?;
+    fn get_and_to_string(&mut self, java_string: JString) -> ToJavaStringResult {
+        let java_str = self.get_string(&java_string)?;
         java_str.to_string()
     }
 }

@@ -10,7 +10,7 @@ use crate::jni_helper::{GetString, GetStringError};
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_newIterator(
-    env: JNIEnv,
+    mut env: JNIEnv,
     _class: JClass,
     text: JString,
 ) -> jlong {
@@ -47,7 +47,7 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Grapheme_ne
     addr: jlong,
 ) -> jstring {
     let grapheme = unsafe { &mut *(addr as *mut Graphemes) }.next();
-    env.new_string(grapheme).unwrap().into_inner()
+    env.new_string(grapheme).unwrap().into_raw()
 }
 
 #[no_mangle]

@@ -12,5 +12,5 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024ByteSize_toHumanReadable
 ) -> jstring {
     let string = bytesize::ByteSize(size as u64).to_string_as(si_unit != 0);
     let string = env.new_string(string).unwrap();
-    string.into_inner()
+    string.into_raw()
 }

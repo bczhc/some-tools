@@ -11,7 +11,7 @@ use crate::jni_helper::GetString;
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_newIterator(
-    env: JNIEnv,
+    mut env: JNIEnv,
     _class: JClass,
     s: JString,
 ) -> jlong {
@@ -68,11 +68,11 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_r
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_codepointLength(
-    env: JNIEnv,
+    mut env: JNIEnv,
     _class: JClass,
     s: JString,
 ) -> i32 {
-    let s = String::from(env.get_string(s).unwrap().to_str().unwrap());
+    let s = String::from(env.get_string(&s).unwrap().to_str().unwrap());
     let mut len = 0_usize;
     for _ in s.chars() {
         len += 1;
@@ -108,7 +108,7 @@ impl<'a> StringWithIter<'a> {
 #[no_mangle]
 #[allow(non_snake_case)]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_codepoint2str(
-    env: JNIEnv,
+    mut env: JNIEnv,
     _class: JClass,
     codepoint: i32,
 ) -> jstring {
@@ -118,6 +118,6 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_c
             env.throw("invalid codepoint").unwrap();
             null::<_jobject>() as jstring
         }
-        Some(c) => env.new_string(c.to_string()).unwrap().into_inner(),
+        Some(c) => env.new_string(c.to_string()).unwrap().into_raw(),
     }
 }

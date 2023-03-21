@@ -14,7 +14,7 @@ pub enum GetStringError {
 }
 
 pub trait GetString {
-    fn get_string_owned(&self, str: JString) -> Result<String, GetStringError>;
+    fn get_string_owned(&mut self, str: JString) -> Result<String, GetStringError>;
 }
 
 pub trait JavaStrExt {
@@ -22,14 +22,14 @@ pub trait JavaStrExt {
 }
 
 impl<'a> GetString for JNIEnv<'a> {
-    fn get_string_owned(&self, js: JString) -> Result<String, GetStringError> {
-        let java_str = self.get_string(js)?;
+    fn get_string_owned(&mut self, js: JString) -> Result<String, GetStringError> {
+        let java_str = self.get_string(&js)?;
         Ok(String::from(java_str.to_str()?))
     }
 }
 
-impl<'a, 'b> JavaStrExt for JavaStr<'a, 'b> {
-    fn to_str_or_throw(&self, env: JNIEnv) -> jni::errors::Result<&str> {
+impl<'a, 'b, 'c> JavaStrExt for JavaStr<'a, 'b, 'c> {
+    fn to_str_or_throw(&self, mut env: JNIEnv) -> jni::errors::Result<&str> {
         match self.to_str() {
             Ok(s) => Ok(s),
             Err(e) => {

@@ -1,24 +1,23 @@
 use bczhc_lib::complex::integral;
 use bczhc_lib::complex::integral::Integrate;
-
 use bczhc_lib::epicycle::Epicycle;
 use bczhc_lib::fourier_series::{compute_iter, euclid, EvaluatePath, LinearPath, TimePath};
-use jni::objects::{JClass, JValue};
-use jni::sys::{jfloat, jobject, jobjectArray};
+use jni::objects::{JClass, JObject, JObjectArray, JValue};
+use jni::sys::jfloat;
 use jni::JNIEnv;
 use num_complex::Complex;
 use num_traits::{AsPrimitive, Float, FromPrimitive, NumAssign};
 
-type Point<T> = euclid::Point2D<T, ()>;
-
 use crate::fourier_series::{FloatType, Integrator, PathEvaluator};
+
+type Point<T> = euclid::Point2D<T, ()>;
 
 #[no_mangle]
 #[allow(non_snake_case, clippy::too_many_arguments)]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     env: JNIEnv,
     _class: JClass,
-    points: jobjectArray,
+    points: JObjectArray,
     integral_segments: i32,
     period: f64,
     epicycle_num: i32,
@@ -26,7 +25,7 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
     path_evaluator_enum: i32,
     integrator_enum: i32,
     float_type_enum: i32,
-    callback: jobject,
+    callback: JObject,
 ) {
     let path_evaluator_enum = PathEvaluator::from_i32(path_evaluator_enum).unwrap();
     let integrator_enum = Integrator::from_i32(integrator_enum).unwrap();
@@ -60,15 +59,15 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024FourierSeries_compute(
 
 #[allow(clippy::too_many_arguments)]
 fn compute_with_float_type<F>(
-    env: JNIEnv,
-    points: jobjectArray,
+    mut env: JNIEnv,
+    points: JObjectArray,
     integral_segments: i32,
     period: F,
     epicycle_num: i32,
     thread_num: i32,
     path_evaluator_enum: PathEvaluator,
     integrator_enum: Integrator,
-    callback: jobject,
+    callback: JObject,
 ) where
     F: bczhc_lib::fourier_series::FloatNum + NumAssign + Send + Sync + 'static,
     jfloat: AsPrimitive<F>,
@@ -78,11 +77,11 @@ fn compute_with_float_type<F>(
 {
     let mut points_vec: Vec<Point<F>> = Vec::new();
 
-    let points_length = env.get_array_length(points).unwrap();
+    let points_length = env.get_array_length(&points).unwrap();
     for i in 0..points_length {
-        let object = env.get_object_array_element(points, i).unwrap();
-        let x = env.get_field(object, "x", "F").unwrap().f().unwrap();
-        let y = env.get_field(object, "y", "F").unwrap().f().unwrap();
+        let object = env.get_object_array_element(&points, i).unwrap();
+        let x = env.get_field(&object, "x", "F").unwrap().f().unwrap();
+        let y = env.get_field(&object, "y", "F").unwrap().f().unwrap();
         points_vec.push(Point::new(x.as_(), y.as_()))
     }
 
@@ -147,7 +146,7 @@ where
     u32: AsPrimitive<F>,
 {
     env: JNIEnv<'a>,
-    callback: jobject,
+    callback: JObject<'a>,
     epicycle_count: u32,
     period: F,
     thread_num: usize,
@@ -162,7 +161,7 @@ where
     i32: AsPrimitive<F>,
     u32: AsPrimitive<F>,
 {
-    fn compute<I>(self)
+    fn compute<I>(mut self)
     where
         I: Integrate + Send,
     {
@@ -186,14 +185,14 @@ where
         });
 
         for e in epicycles {
-            callback_call(self.env, self.callback, e).unwrap();
+            callback_call(&mut self.env, &self.callback, e).unwrap();
         }
     }
 }
 
 fn callback_call<F>(
-    env: JNIEnv,
-    callback: jobject,
+    env: &mut JNIEnv,
+    callback: &JObject,
     epicycle: Epicycle<F>,
 ) -> jni::errors::Result<()>
 where
