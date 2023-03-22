@@ -14,15 +14,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import kotlin.Unit;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.Info;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ToastUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -102,35 +101,23 @@ public class CrashReportActivity extends BaseActivity {
         return info;
     }
 
-    private void upload(String filename, String information) {
-        byte[] bytes = new byte[0];
-        byte[] contentBytes = new byte[0];
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            bytes = filename.getBytes(StandardCharsets.UTF_8);
-            contentBytes = information.getBytes(StandardCharsets.UTF_8);
-        } else {
-            try {
-                //noinspection CharsetObjectCanBeUsed
-                bytes = filename.getBytes("UTF-8");
-                //noinspection CharsetObjectCanBeUsed
-                contentBytes = information.getBytes("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
+    private void upload(@SuppressWarnings("unused") String filename, String information) {
         uploadStateTextView.setTextColor(Color.BLUE);
         uploadStateTextView.setText(R.string.uploading);
-        byte[] finalContentBytes = contentBytes;
-        byte[] finalBytes = bytes;
-        new Thread(() -> {
-            final String crashUploadSite = Info.serverRootURL + "/tools_app/crash_report.zhc";
-//                MultipartUploader.formUpload(crashUploadSite, finalBytes, finalContentBytes);
-            // TODO: 6/13/21 crash file upload
-            runOnUiThread(() -> {
-                uploadStateTextView.setTextColor(ContextCompat.getColor(this, R.color.done_green));
-                uploadStateTextView.setText(R.string.upload_done);
-            });
-        }).start();
+
+        CrashReportUploader.INSTANCE.upload(this, information, () -> {
+            uploadStateTextView.setTextColor(ContextCompat.getColor(this, R.color.done_green));
+            uploadStateTextView.setText(R.string.upload_done);
+            return Unit.INSTANCE;
+        }, message -> {
+            uploadStateTextView.setTextColor(ContextCompat.getColor(this, R.color.red));
+            if (message == null) {
+                uploadStateTextView.setText(getString(R.string.upload_failed_server_error_toast));
+            } else {
+                uploadStateTextView.setText(getString(R.string.upload_failed_toast, message));
+            }
+            return Unit.INSTANCE;
+        });
     }
 
     @Override

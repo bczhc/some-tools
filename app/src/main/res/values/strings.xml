@@ -821,4 +821,9 @@
     <string name="fdb_whether_to_clear_all_layer_dialog">是否清除所有图层</string>
     <string name="fdb_path_import_prompt_dialog_filepath_tv">路径文件：%1$s</string>
     <!-- end -->
+
+    <!-- CrashReport -->
+    <string name="upload_failed_toast">上传失败：%1$s</string>
+    <string name="upload_failed_server_error_toast">上传失败：服务器错误</string>
+    <!-- end -->
 </resources>
