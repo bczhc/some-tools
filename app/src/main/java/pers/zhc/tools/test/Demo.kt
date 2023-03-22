@@ -7,6 +7,7 @@ import io.ktor.client.statement.*
 import kotlinx.coroutines.runBlocking
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.jni.JNI
+import pers.zhc.tools.jni.JNI.BZip3
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.thread
 
@@ -17,20 +18,10 @@ class Demo : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val body = thread {
-            runBlocking {
-                HttpClient().request("https://httpbin.org/ip").bodyAsText()
-            }
-        }.join()
-        ToastUtils.show(this, body)
+        val data = "hello, world".toByteArray()
+        val bytes = BZip3.compress(data, 1048576)
+        val string = String(BZip3.decompress(bytes))
 
-        /*JavaDemo.Enum.A.ordinal
-
-        for (enum in arrayOf(JavaDemo.Enum.A, JavaDemo.Enum.B)) {
-            when (enum) {
-                JavaDemo.Enum.A -> TODO()
-                JavaDemo.Enum.B -> TODO()
-            }
-        }*/
+        ToastUtils.show(this, string)
     }
 }

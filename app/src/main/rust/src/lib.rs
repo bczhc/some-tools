@@ -4,6 +4,7 @@ extern crate core;
 
 pub mod bitmap;
 pub mod byte_size;
+pub mod bzip3;
 pub mod char;
 pub mod char_stat;
 pub mod char_ucd;

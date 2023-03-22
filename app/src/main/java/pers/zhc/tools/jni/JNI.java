@@ -423,4 +423,12 @@ public class JNI {
             public static native String codepoint2str(int codepoint);
         }
     }
+
+    public static class BZip3 {
+        public static native byte[] compress(byte[] data, long blockSize);
+
+        public static native byte[] decompress(byte[] data);
+
+        public static native String version();
+    }
 }
