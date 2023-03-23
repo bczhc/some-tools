@@ -17,7 +17,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.Info
+import pers.zhc.tools.MyApplication
 import pers.zhc.tools.MyApplication.Companion.GSON
+import pers.zhc.tools.MyApplication.Companion.HTTP_CLIENT_DEFAULT
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.CourseTableCourseDetailDialogBinding
 import pers.zhc.tools.databinding.CourseTableMainBinding
@@ -122,7 +124,7 @@ class CourseTableMainActivity : BaseActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             val response = runCatching {
-                HttpClient().get("$serverRootURL/ccit-info").bodyAsText()
+                HTTP_CLIENT_DEFAULT.get("$serverRootURL/ccit-info").bodyAsText()
             }
             withContext(Dispatchers.Main) {
                 if (response.isSuccess) {

@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pers.zhc.tools.Info
 import pers.zhc.tools.MyApplication
+import pers.zhc.tools.MyApplication.Companion.HTTP_CLIENT_DEFAULT
 import pers.zhc.tools.jni.JNI.BZip3
 import pers.zhc.tools.utils.ByteSize
 import pers.zhc.tools.utils.fromJsonOrNull
@@ -22,7 +23,7 @@ object CrashReportUploader {
 
     suspend fun request(data: ByteArray): Response? {
         return withContext(Dispatchers.IO) {
-            val httpResponse = HttpClient()
+            val httpResponse = HTTP_CLIENT_DEFAULT
                 .post(Info.serverRootURL + "/app/some-tools/crash-report") {
                     setBody(ByteArrayContent(data))
                 }
