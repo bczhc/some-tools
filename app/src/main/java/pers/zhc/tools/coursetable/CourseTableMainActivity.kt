@@ -46,20 +46,20 @@ class CourseTableMainActivity : BaseActivity() {
                 return@showDialogAndFetch
             }
 
-            val fetchTimeDate = Date(response.data.fetchTime * 1000)
+            val fetchTimeDate = Date(response.data.fetchedTime)
             if (!fetchTimeDate.isToday()) {
                 val fetchTimeString = fetchTimeDate.format("yyyy-MM-dd")
                 ToastUtils.show(this, getString(R.string.course_table_data_not_latest_toast, fetchTimeString))
                 return@showDialogAndFetch
             }
 
-            val jsonArray = GSON.fromJsonOrNull(response.data.courseTable, JsonArray::class.java)
-            if (jsonArray == null) {
+            val courseData = response.data.courseTable
+            if (courseData.isEmpty) {
                 fallInvalidData()
                 return@showDialogAndFetch
             }
 
-            showCourseTable(jsonArray)
+            showCourseTable(courseData)
         }
     }
 
@@ -183,8 +183,8 @@ class CourseTableMainActivity : BaseActivity() {
     }
 
     data class Data(
-        val courseTable: String,
-        val fetchTime: Long,
+        val courseTable: JsonArray,
+        val fetchedTime: Long,
     )
 
     data class Response(
