@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.lifecycleScope
 import com.alamkanak.weekview.WeekView
 import com.alamkanak.weekview.WeekViewEntity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -11,7 +12,9 @@ import com.google.gson.JsonArray
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.Info
 import pers.zhc.tools.MyApplication.Companion.GSON
@@ -93,7 +96,7 @@ class CourseTableMainActivity : BaseActivity() {
 
         currentFirstDay = getThisWeekFirstDay()
 
-        val navigateDay = {delta: Int->
+        val navigateDay = { delta: Int ->
             currentFirstDay.add(Calendar.DAY_OF_YEAR, delta)
             weekView.scrollToDate(currentFirstDay)
         }
@@ -117,19 +120,17 @@ class CourseTableMainActivity : BaseActivity() {
 
         val serverRootURL = Info.serverRootURL
 
-        thread {
-            runBlocking {
-                try {
-                    val body = HttpClient().get("$serverRootURL/ccit-info").bodyAsText()
-                    runOnUiThread {
-                        onFetched(body)
-                    }
-                } catch (e: Exception) {
-                    ToastUtils.showException(this@CourseTableMainActivity, e)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val response = runCatching {
+                HttpClient().get("$serverRootURL/ccit-info").bodyAsText()
+            }
+            withContext(Dispatchers.Main) {
+                if (response.isSuccess) {
+                    onFetched(response.getOrNull()!!)
+                } else {
+                    ToastUtils.showException(this@CourseTableMainActivity, response.exceptionOrNull()!!)
                 }
-                runOnUiThread {
-                    progressDialog.dismiss()
-                }
+                progressDialog.dismiss()
             }
         }
     }

@@ -42,7 +42,7 @@ public class ToastUtils {
         e.printStackTrace();
     }
 
-    public static void showException(Context ctx, @NotNull Exception e) {
+    public static void showException(Context ctx, @NotNull Throwable e) {
         show(ctx, e.toString());
         e.printStackTrace();
     }
