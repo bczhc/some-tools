@@ -9,8 +9,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.ktor.http.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
@@ -19,9 +24,8 @@ import pers.zhc.tools.databinding.MagicFileListItemBinding
 import pers.zhc.tools.databinding.MagicProgressDialogBinding
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.DialogUtil
-import pers.zhc.tools.utils.Download
+import pers.zhc.tools.utils.DownloadUtils
 import java.io.File
-import java.net.URL
 
 /**
  * @author bczhc
@@ -43,11 +47,7 @@ class FileListActivity : BaseActivity() {
         if (/*!magicDatabase.exists()*/ true/* every time download and overwrite (workaround) */) {
 
             DialogUtil.createConfirmationAlertDialog(this, { _, _ ->
-
-                runOnUiThread {
-                    downloadAndLoad()
-                }
-
+                downloadAndLoad()
             }, { _, _ -> finish() }, R.string.magic_missing_database_dialog).apply {
                 setCanceledOnTouchOutside(false)
                 setCancelable(false)
@@ -59,11 +59,13 @@ class FileListActivity : BaseActivity() {
     }
 
     private fun downloadAndLoad() {
-        Download.startDownloadWithDialog(
-            this, URL(Common.getStaticResourceUrlString("magic.mgc")),
-            File(filesDir, "magic.mgc")
-        ) {
-            runOnUiThread {
+        lifecycleScope.launch {
+            DownloadUtils.startDownloadWithDialog(
+                this@FileListActivity, Url(Common.getStaticResourceUrlString("magic.mgc")),
+                File(filesDir, "magic.mgc")
+            )
+
+            withContext(Dispatchers.Main) {
                 load()
             }
         }
@@ -315,6 +317,7 @@ class FileListActivity : BaseActivity() {
                     current,
                     total
                 )
+
                 MyAdapter.ProgressType.SORT -> context.getString(R.string.magic_progress_sorting)
                 MyAdapter.ProgressType.DONE -> context.getString(R.string.magic_progress_done)
             }

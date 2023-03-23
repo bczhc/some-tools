@@ -13,7 +13,12 @@ import pers.zhc.tools.R
  * @author bczhc
  */
 class ProgressView : RelativeLayout {
-    private var isIndeterminateMode = false
+    var isIndeterminateMode = false
+        set(value) {
+            field = value
+            this.removeAllViews()
+            init()
+        }
     private val determinateProgressBar = DeterminateProgressBar()
     private val indeterminateProgressBar = IndeterminateProgressBar()
 
@@ -77,8 +82,6 @@ class ProgressView : RelativeLayout {
 
     fun setIsIndeterminateMode(indeterminateMode: Boolean) {
         this.isIndeterminateMode = indeterminateMode
-        this.removeAllViews()
-        init()
     }
 
     class DeterminateProgressBar {
