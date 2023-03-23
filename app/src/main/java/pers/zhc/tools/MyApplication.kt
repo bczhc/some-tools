@@ -8,19 +8,19 @@ import android.os.Build
 import android.os.PowerManager.WakeLock
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.Gson
+import io.ktor.client.*
+import io.ktor.client.plugins.*
 import org.json.JSONObject
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
-import pers.zhc.tools.charucd.CharLookupActivity
 import pers.zhc.tools.crashhandler.CrashHandler
-import pers.zhc.tools.diary.DiaryDatabase
 import pers.zhc.tools.email.ContactActivity
 import pers.zhc.tools.email.Database
-import pers.zhc.tools.wubi.DictionaryDatabase
-import pers.zhc.tools.wubi.WubiInverseDictManager
 import pers.zhc.tools.words.WordsMainActivity
+import pers.zhc.tools.wubi.DictionaryDatabase
 import pers.zhc.tools.wubi.SingleCharCodesChecker
+import pers.zhc.tools.wubi.WubiInverseDictManager
 import java.io.File
 
 /**
@@ -85,6 +85,13 @@ class MyApplication : Application() {
 
         // the default global Gson
         val GSON = Gson()
+
+        val HTTP_CLIENT_DEFAULT = HttpClient()
+        val HTTP_CLIENT_DOWNLOAD = HttpClient {
+            install(HttpTimeout) {
+                requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
+            }
+        }
 
         @JvmField
         var wakeLock: WakeLock? = null
