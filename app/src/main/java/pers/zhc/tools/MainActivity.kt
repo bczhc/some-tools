@@ -12,11 +12,19 @@ import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonSyntaxException
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import pers.zhc.tools.MyApplication.Companion.HTTP_CLIENT_DEFAULT
 import pers.zhc.tools.app.ActivityItem
 import pers.zhc.tools.app.AppMenuAdapter
 import pers.zhc.tools.app.SmallToolsListActivity
@@ -40,7 +48,6 @@ import pers.zhc.tools.utils.*
 import pers.zhc.tools.words.WordsMainActivity
 import pers.zhc.tools.wubi.WubiInputMethodActivity
 import java.io.File
-import java.net.URL
 import java.nio.charset.StandardCharsets
 import kotlin.system.exitProcess
 
@@ -170,11 +177,12 @@ class MainActivity : BaseActivity() {
             updateDir.requireMkdirs()
             val localFile = File(updateDir, "some-tools.apk")
 
-            val url =
-                URL("${Info.staticResourceRootURL}/apks/some-tools/${item.commitHash}/${apk.name}")
-            Download.startDownloadWithDialog(context, url, localFile) {
-                // TODO: check file integrity
-                Common.installApk(context, localFile)
+            lifecycleScope.launch {
+                val url = Url("${Info.staticResourceRootURL}/apks/some-tools/${item.commitHash}/${apk.name}")
+                DownloadUtils.startDownloadWithDialog(context, url, localFile)
+                withContext(Dispatchers.Default) {
+                    Common.installApk(context, localFile)
+                }
             }
         }
 
@@ -263,28 +271,26 @@ class MainActivity : BaseActivity() {
             height = ViewGroup.LayoutParams.WRAP_CONTENT
         )
         progressDialog.show()
-        asyncFetchInfo {
-            Common.runOnUiThread(context) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val info = fetchInfo()
+            withContext(Dispatchers.Main) {
                 progressDialog.dismiss()
-                if (it == null) {
+                if (info == null) {
                     ToastUtils.show(context, R.string.getting_information_failed)
-                    return@runOnUiThread
+                    return@withContext
                 }
-                showDownloadList(it)
+                showDownloadList(info)
             }
         }
     }
 
-    private fun asyncFetchInfo(f: (read: String?) -> Unit) {
-        val url = URL(Info.staticResourceRootURL + "/apks/some-tools/files.json")
-        Thread {
-            val read = url.readText()
-            try {
-                f(read)
-            } catch (e: Exception) {
-                f(null)
-            }
-        }.start()
+    private suspend fun fetchInfo(): String? {
+        val url = Url(Info.staticResourceRootURL + "/apks/some-tools/files.json")
+        runCatching {
+            HTTP_CLIENT_DEFAULT.get(url)
+                .bodyAsText()
+        }.onSuccess { return it }
+        return null
     }
 
     override fun onBackPressed() {
