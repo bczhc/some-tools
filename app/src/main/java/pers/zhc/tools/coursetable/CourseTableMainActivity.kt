@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.Info
-import pers.zhc.tools.MyApplication
 import pers.zhc.tools.MyApplication.Companion.GSON
 import pers.zhc.tools.MyApplication.Companion.HTTP_CLIENT_DEFAULT
 import pers.zhc.tools.R
@@ -110,6 +109,10 @@ class CourseTableMainActivity : BaseActivity() {
         }
 
         weekView.scrollToDate(getThisWeekFirstDay())
+
+        updateDateRangeTV(getThisWeekFirstDay(), getThisWeekFirstDay().also {
+            it.add(Calendar.DAY_OF_YEAR, 6)
+        })
     }
 
     private fun showDialogAndFetch(onFetched: (body: String) -> Unit) {
@@ -155,6 +158,17 @@ class CourseTableMainActivity : BaseActivity() {
             put(11, pair(19, 30))
             put(12, pair(20, 10))
         }
+    }
+
+    private fun buildDateRangeText(startDate: Calendar, endDate: Calendar): String {
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formattedFirstDay = dateFormatter.format(startDate.time)
+        val formattedLastDay = dateFormatter.format(endDate.time)
+        return "$formattedFirstDay 至 $formattedLastDay"
+    }
+
+    private fun updateDateRangeTV(firstVisibleDate: Calendar, lastVisibleDate: Calendar) {
+        bindings.dateRangeTextView.text = buildDateRangeText(firstVisibleDate, lastVisibleDate)
     }
 
     private fun parseCourseTime(dateString: String, courseNo: String): Pair<Calendar, Calendar> {
@@ -225,6 +239,9 @@ class CourseTableMainActivity : BaseActivity() {
                 currentFirstDay = getThisWeekFirstDay().also {
                     bindings.weekView.scrollToDate(it)
                 }
+                updateDateRangeTV(getThisWeekFirstDay(), getThisWeekFirstDay().also {
+                    it.add(Calendar.DAY_OF_YEAR, 6)
+                })
             }
 
             else -> unreachable()
@@ -245,16 +262,9 @@ class CourseTableMainActivity : BaseActivity() {
                 .build()
         }
 
-        private fun buildDateRangeText(startDate: Calendar, endDate: Calendar): String {
-            val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val formattedFirstDay = dateFormatter.format(startDate.time)
-            val formattedLastDay = dateFormatter.format(endDate.time)
-            return "$formattedFirstDay 至 $formattedLastDay"
-        }
-
         override fun onRangeChanged(firstVisibleDate: Calendar, lastVisibleDate: Calendar) {
             super.onRangeChanged(firstVisibleDate, lastVisibleDate)
-            bindings.dateRangeTextView.text = buildDateRangeText(firstVisibleDate, lastVisibleDate)
+            updateDateRangeTV(firstVisibleDate, lastVisibleDate)
         }
 
         override fun onEventClick(data: Event) {
