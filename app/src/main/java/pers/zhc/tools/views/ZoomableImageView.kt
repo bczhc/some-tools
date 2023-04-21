@@ -17,7 +17,7 @@ class ZoomableImageView : View {
     private var srcBitmap: Bitmap? = null
     private var mBitmap: Bitmap? = null
     private lateinit var mCanvas: Canvas
-    private lateinit var canvasTransformer: CanvasTransformer
+    private var canvasTransformer: CanvasTransformer? = null
 
     constructor(context: Context?) : this(context, null)
 
@@ -30,7 +30,7 @@ class ZoomableImageView : View {
     private fun init() {
         mGestureResolver = GestureResolver(object : GestureResolver.GestureInterface {
             override fun onTwoPointsScroll(distanceX: Float, distanceY: Float, event: MotionEvent?) {
-                canvasTransformer.absTranslate(distanceX, distanceY)
+                canvasTransformer!!.absTranslate(distanceX, distanceY)
             }
 
             override fun onTwoPointsZoom(
@@ -44,7 +44,7 @@ class ZoomableImageView : View {
                 dScale: Float,
                 event: MotionEvent?
             ) {
-                canvasTransformer.absScale(dScale, midPointX, midPointY)
+                canvasTransformer!!.absScale(dScale, midPointX, midPointY)
             }
 
             override fun onTwoPointsRotate(
@@ -56,7 +56,7 @@ class ZoomableImageView : View {
                 midY: Float
             ) {
                 if (isRotatable) {
-                    canvasTransformer.absRotate(degrees, midX, midY)
+                    canvasTransformer!!.absRotate(degrees, midX, midY)
                 }
             }
 
@@ -87,13 +87,29 @@ class ZoomableImageView : View {
         return true
     }
 
+    private fun initBitmap() {
+        mBitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+        mCanvas = Canvas(mBitmap!!)
+        val oldMatrix = canvasTransformer?.newMatrix
+        canvasTransformer = CanvasTransformer(mCanvas).apply {
+            // keep the old transformation
+            // TODO: but the desired goal is to keep the center point of the screen "pinned".
+            //  That's to say, after the screen rotates, the image center point acts like a pivot.
+            matrix = oldMatrix
+        }
+        srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, null) }
+    }
+
     override fun onDraw(canvas: Canvas?) {
         if (mBitmap == null) {
             // init
-            mBitmap = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
-            mCanvas = Canvas(mBitmap!!)
-            canvasTransformer = CanvasTransformer(mCanvas)
-            srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, null) }
+            initBitmap()
+        }
+        mBitmap?.let {
+            if (it.width != measuredWidth || it.height != measuredHeight) {
+                // WH mismatched; recreate the bitmap
+                initBitmap()
+            }
         }
 
         canvas!!.drawBitmap(mBitmap!!, 0F, 0F, null)
