@@ -45,6 +45,8 @@ hex = "0.4.3"
 unicode-segmentation = "1.10.0"
 unicode-normalization = "0.1.22"
 bzip3 = { version = "0.2.3", features = ["bundled"] }
+encoding_rs = "0.8.32"
+anyhow = "1.0.70"
 
 [profile.release]
 panic = "abort"

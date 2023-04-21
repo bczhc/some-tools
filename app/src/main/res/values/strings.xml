@@ -96,6 +96,7 @@
     <string name="invalid_response_toast">无效数据</string>
     <string name="action_today_label">今天</string>
     <string name="ignore_case">忽略大小写</string>
+    <string name="text_encoding_menu">编码</string>
     <!-- end -->
 
     <!-- old -->

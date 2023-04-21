@@ -431,4 +431,24 @@ public class JNI {
 
         public static native String version();
     }
+
+    public static class Encoding {
+        public enum EncodingVariant {
+            UTF_8(0),
+            UTF_16LE(1),
+            UTF_16BE(2),
+            UTF_32LE(3),
+            UTF_32BE(4),
+            GBK(5),
+            GB18030(6);
+
+            public final int nCode;
+
+            EncodingVariant(int nCode) {
+                this.nCode = nCode;
+            }
+        }
+
+        public static native String readFile(String path, EncodingVariant encoding);
+    }
 }

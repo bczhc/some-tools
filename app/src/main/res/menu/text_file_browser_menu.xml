@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:title="@string/text_encoding_menu">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:title="UTF-8"
+                      tools:ignore="HardcodedText"
+                      android:checked="true"
+                      android:id="@+id/utf8"
+                />
+                <item android:title="UTF-16LE"
+                      android:id="@+id/utf16le"
+                      tools:ignore="HardcodedText"/>
+                <item android:title="UTF-16BE"
+                      android:id="@+id/utf16be"
+                      tools:ignore="HardcodedText"/>
+                <item android:title="UTF-32LE"
+                      android:id="@+id/utf32le"
+                      tools:ignore="HardcodedText"/>
+                <item android:title="UTF-32BE"
+                      android:id="@+id/utf32be"
+                      tools:ignore="HardcodedText"/>
+                <item android:title="GBK"
+                      android:id="@+id/gbk"
+                      tools:ignore="HardcodedText"/>
+                <item android:title="GB18030"
+                      android:id="@+id/gb18030"
+                      tools:ignore="HardcodedText"/>
+            </group>
+        </menu>
+    </item>
+</menu>
