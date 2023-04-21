@@ -70,6 +70,7 @@ class ZoomableImageView : View {
             }
 
             override fun onOnePointScroll(distanceX: Float, distanceY: Float, event: MotionEvent?) {
+                canvasTransformer!!.absTranslate(distanceX, distanceY)
             }
         })
     }

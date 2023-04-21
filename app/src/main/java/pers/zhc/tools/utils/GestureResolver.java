@@ -108,6 +108,10 @@ public class GestureResolver {
             }
             this.lastOnePointX = x;
             this.lastOnePointY = y;
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                lastOnePointX = -1;
+                lastOnePointY = -1;
+            }
         } else {
             lastOnePointX = -1;
             lastOnePointY = -1;
