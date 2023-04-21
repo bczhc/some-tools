@@ -6,12 +6,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import androidx.core.widget.doAfterTextChanged
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.TextEditorMainBinding
 import pers.zhc.tools.jni.JNI.Encoding
 import pers.zhc.tools.jni.JNI.Encoding.EncodingVariant
-import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.nullMap
 import java.io.File
@@ -110,15 +110,17 @@ class MainActivity : BaseActivity() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (isModified && file != null) {
-            DialogUtils.createConfirmationAlertDialog(
-                this,
-                positiveAction = { _, _ ->
+            MaterialAlertDialogBuilder(this)
+                .setPositiveButton(R.string.yes) { _, _ ->
                     save()
                     ToastUtils.show(this, R.string.save_success_toast)
                     super.onBackPressed()
-                },
-                titleRes = R.string.whether_to_save
-            ).show()
+                }
+                .setNegativeButton(R.string.no) { _, _ ->
+                    super.onBackPressed()
+                }
+                .setTitle(R.string.whether_to_save)
+                .show()
         } else super.onBackPressed()
     }
 }
