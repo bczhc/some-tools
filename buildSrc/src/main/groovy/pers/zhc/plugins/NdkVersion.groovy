@@ -51,7 +51,7 @@ class NdkVersion {
 
         def sortedVersionStrings = Version.sortVersionStrings(versionStrings as String[])
         if (sortedVersionStrings.length >= 1) {
-            return sortedVersionStrings[0]
+            return sortedVersionStrings.last()
         }
         return null
     }

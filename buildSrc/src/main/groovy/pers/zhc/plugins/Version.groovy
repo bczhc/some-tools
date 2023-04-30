@@ -66,7 +66,7 @@ class Version {
         return versions.sort { o1, o2 ->
             def version1 = o1 as Version
             def version2 = o2 as Version
-            return version1.compare(version2)
+            return version1.compare(version2).intValue
         }
     }
 }
