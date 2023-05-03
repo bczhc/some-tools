@@ -7,18 +7,18 @@ import pers.zhc.plugins.FileUtils.requireCreate
 import pers.zhc.plugins.NdkVersion
 import pers.zhc.plugins.RegexUtils
 import pers.zhc.plugins.SdkPath
-import pers.zhc.tools.plugin.ndk.AndroidAbi
-import pers.zhc.tools.plugin.ndk.cpp.CppBuildPlugin
-import pers.zhc.tools.plugin.ndk.cpp.CppBuildPlugin.CppBuildPluginExtension
-import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin
-import pers.zhc.tools.plugin.ndk.rust.RustBuildPlugin.RustBuildPluginExtension
+import pers.zhc.gradle.plugins.ndk.AndroidAbi
+import pers.zhc.gradle.plugins.ndk.cpp.CppBuildPlugin
+import pers.zhc.gradle.plugins.ndk.cpp.CppBuildPlugin.CppBuildPluginExtension
+import pers.zhc.gradle.plugins.ndk.rust.RustBuildPlugin
+import pers.zhc.gradle.plugins.ndk.rust.RustBuildPlugin.RustBuildPluginExtension
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.util.*
 import kotlin.collections.HashMap
 import pers.zhc.plugins.`BuildUtils2$`.`MODULE$` as BuildUtils2
-import pers.zhc.tools.plugin.util.`FileUtils$`.`MODULE$` as FileUtils
+import pers.zhc.gradle.plugins.util.`FileUtils$`.`MODULE$` as FileUtils
 
 plugins {
     id("com.android.application")
