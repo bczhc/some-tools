@@ -141,6 +141,9 @@ class CourseTableMainActivity : BaseActivity() {
     }
 
     private val courseTimeMap by lazy {
+        // TODO: auto detect or change this by a switch
+        val useSummerTime = true
+
         buildMap {
             val pair = { h: Int, m: Int ->
                 Pair(h, m)
@@ -149,14 +152,26 @@ class CourseTableMainActivity : BaseActivity() {
             put(2, pair(9, 10))
             put(3, pair(10, 10))
             put(4, pair(11, 0))
-            put(5, pair(13, 20))
-            put(6, pair(14, 10))
-            put(7, pair(15, 10))
-            put(8, pair(16, 0))
+            if (useSummerTime) {
+                put(5, pair(13, 20 + 30))
+                put(6, pair(14, 10 + 30))
+                put(7, pair(15, 10 + 30))
+                put(8, pair(16, 0 + 30))
+            } else {
+                put(5, pair(13, 20))
+                put(6, pair(14, 10))
+                put(7, pair(15, 10))
+                put(8, pair(16, 0))
+            }
             put(9, pair(18, 0))
             put(10, pair(18, 40))
             put(11, pair(19, 30))
-            put(12, pair(20, 10))
+            if (useSummerTime) {
+                put(12, pair(20, 30))
+            } else {
+                put(12, pair(20, 10))
+            }
+            Unit
         }
     }
 
