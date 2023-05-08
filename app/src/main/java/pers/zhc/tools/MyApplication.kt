@@ -17,6 +17,7 @@ import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESO
 import pers.zhc.tools.crashhandler.CrashHandler
 import pers.zhc.tools.email.ContactActivity
 import pers.zhc.tools.email.Database
+import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.words.WordsMainActivity
 import pers.zhc.tools.wubi.DictionaryDatabase
 import pers.zhc.tools.wubi.SingleCharCodesChecker
@@ -116,9 +117,7 @@ class MyApplication : Application() {
         var NOTIFICATION_CHANNEL_ID_UNIVERSAL = "c1"
 
         init {
-            System.loadLibrary("Main")
-            System.loadLibrary("jni-lib")
-            System.loadLibrary("rust_jni")
+            JNI.initialize()
         }
     }
 }

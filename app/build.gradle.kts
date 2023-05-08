@@ -89,6 +89,9 @@ val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
         )
     }
 }
+val ndkBuildType = properties["ndk.buildType"] as String? ?: run {
+    throw GradleException("Please define ndk.buildType in config.properties")
+}
 
 android {
     namespace = "pers.zhc.tools"
@@ -197,7 +200,7 @@ ndkTargets.forEach {
 configure<RustBuildPluginExtension> {
     ndkDir.set(android.ndkDirectory.path)
     targets.set(ndkTargetsForConfigs)
-    buildType.set("release")
+    buildType.set(ndkBuildType)
     srcDir.set(File(appProject.projectDir, "src/main/rust").path)
     outputDir.set(jniOutputDir.path)
     extraEnv.set(rustBuildExtraEnv)
@@ -316,7 +319,7 @@ configure<CppBuildPluginExtension> {
     srcDir.set("$projectDir/src/main/cpp")
     ndkDir.set(android.ndkDirectory.path)
     targets.set(ndkTargetsForConfigs)
-    buildType.set("release")
+    buildType.set(ndkBuildType)
     outputDir.set(jniOutputDir.path)
     cmakeBinDir.set(tools.cmakeBinDir.path)
     cmakeDefs.set(cmakeDefsMap)

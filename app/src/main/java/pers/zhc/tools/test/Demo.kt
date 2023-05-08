@@ -23,5 +23,6 @@ class Demo : BaseActivity() {
         val string = String(BZip3.decompress(bytes))
 
         ToastUtils.show(this, string)
+        JNI.JniDemo.call2()
     }
 }

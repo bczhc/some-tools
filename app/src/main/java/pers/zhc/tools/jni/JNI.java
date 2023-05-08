@@ -11,6 +11,22 @@ import pers.zhc.tools.stcflash.JNIInterface;
  * @author bczhc
  */
 public class JNI {
+    private static boolean initFlag = false;
+
+    private static native void initJni();
+
+    public static synchronized void initialize() {
+        if (!initFlag) {
+            System.loadLibrary("Main");
+            System.loadLibrary("jni-lib");
+            System.loadLibrary("rust_jni");
+            initJni();
+            initFlag = true;
+        } else {
+            throw new RuntimeException("Already initialized");
+        }
+    }
+
     public static class Codecs {
 
         /**
@@ -119,7 +135,11 @@ public class JNI {
     }
 
     public static class JniDemo {
-        public static native int call();
+        // C++
+        public static native void call();
+
+        // RUst
+        public static native void call2();
     }
 
     public static class StcFlash {
