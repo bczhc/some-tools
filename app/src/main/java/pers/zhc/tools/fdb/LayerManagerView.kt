@@ -65,6 +65,7 @@ class LayerManagerView(context: Context, private val onLayerAddedCallback: OnLay
             listAdapter.notifyDataSetChanged()
 
             onLayerAddedCallback(layerInfo)
+            onCheckedListener?.invoke(layerInfo)
         }).also { DialogUtils.setDialogAttr(it, overlayWindow = true) }.show()
     }
 
