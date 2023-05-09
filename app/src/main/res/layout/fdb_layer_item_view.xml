@@ -8,26 +8,29 @@
         android:paddingVertical="2.5dp"
         android:paddingHorizontal="5dp"
 >
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
               android:id="@+id/name_tv"
               tools:text="Layer Name"
               style="@style/TextAppearance.Material3.TitleLarge"
-              android:layout_toStartOf="@id/edit_button"
+              android:layout_alignParentStart="true"
+              android:layout_toStartOf="@id/icons_ll"
     />
-    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                 android:src="@android:drawable/ic_menu_edit"
-                 android:layout_toStartOf="@id/visibility_btn"
-                 android:id="@+id/edit_button"
-                 tools:ignore="ContentDescription"
-                 android:layout_centerVertical="true"
-                 android:background="?selectableItemBackground"
-    />
-    <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                 android:src="@drawable/ic_visibility"
-                 android:layout_alignParentEnd="true"
-                 android:id="@+id/visibility_btn"
-                 tools:ignore="ContentDescription"
-                 android:layout_centerVertical="true"
-                 android:background="?selectableItemBackground"
-    />
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:id="@+id/icons_ll"
+                  android:layout_alignParentEnd="true"
+    >
+        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     android:src="@android:drawable/ic_menu_edit"
+                     android:id="@+id/edit_button"
+                     tools:ignore="ContentDescription"
+                     android:background="?selectableItemBackground"
+        />
+        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                     android:src="@drawable/ic_visibility"
+                     android:id="@+id/visibility_btn"
+                     tools:ignore="ContentDescription"
+                     android:background="?selectableItemBackground"
+        />
+    </LinearLayout>
 </RelativeLayout>

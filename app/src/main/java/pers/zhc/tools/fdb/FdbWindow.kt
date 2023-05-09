@@ -1,5 +1,6 @@
 package pers.zhc.tools.fdb
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -69,6 +70,10 @@ class FdbWindow(activity: FdbMainActivity) {
         FdbPathImportWindowBinding.bind(pathImportWindow)
     }
 
+    // TODO: refactor: combine floating windows
+    private lateinit var layerManagerView: LayerManagerView
+    private val layerManagerViewLP = WindowManager.LayoutParams()
+
     private var operationMode = OperationMode.OPERATING
     private var brushMode = BrushMode.DRAWING
 
@@ -92,6 +97,10 @@ class FdbWindow(activity: FdbMainActivity) {
     private val pathImportWindowDimension = ViewDimension()
     private val pathImportWindowPositionUpdater =
         FloatingViewOnTouchListener(pathImportWindowLP, wm, pathImportWindow, 0, 0, pathImportWindowDimension)
+    private val layerManagerViewDimension = ViewDimension()
+    private val layerManagerViewPositionUpdater by lazy {
+        FloatingViewOnTouchListener(layerManagerViewLP, wm, layerManagerView, 0, 0, layerManagerViewDimension)
+    }
 
     private val pathSaver = PathSaver(pathFiles.tmpPathFile.path)
 
@@ -100,8 +109,6 @@ class FdbWindow(activity: FdbMainActivity) {
         var colorPickerCheckpoint: ScreenColorPickerCheckpointReceiver? = null
         var colorPickerResult: ScreenColorPickerResultReceiver? = null
     }
-
-    private lateinit var layerManagerView: LayerManagerView
 
     private var hasStartedScreenColorPicker = false
 
@@ -231,7 +238,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                 // clear
                                 createConfirmationDialog({ _, _ ->
                                     paintView.clearAll()
-                                }, R.string.fdb_clear_confirmation_dialog).show()
+                                }, titleRes = R.string.fdb_clear_confirmation_dialog).show()
                             }
 
                             8 -> {
@@ -253,7 +260,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                 // exit
                                 createConfirmationDialog({ _, _ ->
                                     exit()
-                                }, R.string.fdb_exit_confirmation_dialog).show()
+                                }, titleRes = R.string.fdb_exit_confirmation_dialog).show()
                             }
 
                             else -> {
@@ -274,7 +281,7 @@ class FdbWindow(activity: FdbMainActivity) {
                         paintView.clearAllLayers()
                         layerManagerView.restoreDefault()
                         paintView.updateLayerState(layerManagerView.getLayerState())
-                    }, R.string.fdb_whether_to_clear_all_layer_dialog).show()
+                    }, titleRes = R.string.fdb_whether_to_clear_all_layer_dialog).show()
                 }
             }
 
@@ -285,6 +292,14 @@ class FdbWindow(activity: FdbMainActivity) {
         }
 
         pathImportWindowLP.apply {
+            flags = FLAG_NOT_FOCUSABLE
+            type = floatingWindowType
+            format = RGBA_8888
+            width = WRAP_CONTENT
+            height = WRAP_CONTENT
+        }
+
+        layerManagerViewLP.apply {
             flags = FLAG_NOT_FOCUSABLE
             type = floatingWindowType
             format = RGBA_8888
@@ -320,6 +335,7 @@ class FdbWindow(activity: FdbMainActivity) {
             layerManagerView = LayerManagerView(context) { layerInfo ->
                 paintView.add1Layer(layerInfo)
             }
+            setUpLayerManagerWindow()
 
             setOnScreenDimensionChangedListener { width, height ->
                 positionUpdater.updateParentDimension(width, height)
@@ -337,7 +353,9 @@ class FdbWindow(activity: FdbMainActivity) {
             }
 
             setOnImportLayerAddedListener {
-                layerManagerView.add1Layer(it)
+                context.awaitRunOnUiThread {
+                    layerManagerView.add1Layer(it)
+                }
             }
         }
 
@@ -349,7 +367,6 @@ class FdbWindow(activity: FdbMainActivity) {
             moreMenu = createMoreOptionDialog()
             eraserOpacity = createEraserOpacityDialog()
             transformationSettings = createTransformationSettingsDialog()
-            layerManager = createLayerManagerDialog()
         }
 
         val externalStorage = Common.getExternalStoragePath(context)
@@ -369,6 +386,7 @@ class FdbWindow(activity: FdbMainActivity) {
         val screenHeight = displayMetrics.heightPixels
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
         pathImportWindowPositionUpdater.updateParentDimension(screenWidth, screenHeight)
+        layerManagerViewPositionUpdater.updateParentDimension(screenWidth, screenHeight)
 
         receivers.main = FdbBroadcastReceiver(this)
         val filter = IntentFilter()
@@ -379,6 +397,8 @@ class FdbWindow(activity: FdbMainActivity) {
             addAction(FdbBroadcastReceiver.ACTION_ON_SCREEN_ORIENTATION_CHANGED)
         }
         context.applicationContext.registerReceiver(receivers.main, filter)
+
+        setUpLayerManagerWindow()
     }
 
     private fun updateBrushModeText() {
@@ -544,6 +564,7 @@ class FdbWindow(activity: FdbMainActivity) {
         wm.removeView(panelSV)
         wm.removeView(paintView)
         wm.runCatching { removeView(pathImportWindow) }
+        wm.runCatching { removeView(layerManagerView) }
     }
 
     private enum class OperationMode {
@@ -592,14 +613,20 @@ class FdbWindow(activity: FdbMainActivity) {
         lateinit var moreMenu: Dialog
         lateinit var eraserOpacity: Dialog
         lateinit var transformationSettings: Dialog
-        lateinit var layerManager: Dialog
     }
 
     private fun createConfirmationDialog(
         positiveAction: DialogInterface.OnClickListener,
+        negativeAction: DialogInterface.OnClickListener? = null,
         @StringRes titleRes: Int
     ): AlertDialog {
-        return DialogUtil.createConfirmationAlertDialog(context, positiveAction, titleRes, true)
+        return DialogUtils.createConfirmationAlertDialog(
+            context,
+            positiveAction = positiveAction,
+            negativeAction = negativeAction ?: DialogInterface.OnClickListener { _, _ -> },
+            titleRes = titleRes,
+            applicationOverlay = true
+        )
     }
 
     private fun createDialog(
@@ -773,6 +800,8 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun createMoreOptionDialog(): Dialog {
+        var dismissDialog = { unreachable<Unit>() }
+
         val onClickActions: ((index: Int) -> View.OnClickListener) = { index ->
             View.OnClickListener {
                 when (index) {
@@ -847,7 +876,11 @@ class FdbWindow(activity: FdbMainActivity) {
 
                     5 -> {
                         // manage layers
-                        dialogs.layerManager.show()
+                        // toggle
+                        if (wm.runCatching { wm.removeView(layerManagerView) }.isFailure) {
+                            wm.addView(layerManagerView, layerManagerViewLP)
+                        }
+                        dismissDialog()
                     }
 
                     6 -> {
@@ -855,7 +888,7 @@ class FdbWindow(activity: FdbMainActivity) {
                         createConfirmationDialog({ _, _ ->
                             hideFDB()
                             dialogs.moreMenu.dismiss()
-                        }, R.string.fdb_hide_fdb_confirmation_dialog).show()
+                        }, titleRes = R.string.fdb_hide_fdb_confirmation_dialog).show()
                     }
 
                     7 -> {
@@ -885,7 +918,9 @@ class FdbWindow(activity: FdbMainActivity) {
 
             ll.addView(button)
         }
-        return createDialog(inflate)
+        val dialog = createDialog(inflate)
+        dismissDialog = { dialog.dismiss() }
+        return dialog
     }
 
     fun showImportPathDialog(dir: File) {
@@ -1296,19 +1331,6 @@ class FdbWindow(activity: FdbMainActivity) {
         return createDialog(bindings.root)
     }
 
-    private fun createLayerManagerDialog(): Dialog {
-        val dialog = createDialog(layerManagerView).also {
-            DialogUtils.setDialogAttr(it, width = MATCH_PARENT, height = MATCH_PARENT, overlayWindow = true)
-        }
-
-        dialog.setOnDismissListener {
-            val layerState = layerManagerView.getLayerState()
-            layerState.checkedId!!
-            paintView.updateLayerState(layerState)
-        }
-        return dialog
-    }
-
     private fun getSelectedStatisticsIntData(db: SQLite3, mark: Int): Int {
         var r = 0
         val statement = db.compileStatement(
@@ -1442,6 +1464,34 @@ class FdbWindow(activity: FdbMainActivity) {
             } else {
                 speedTv.visibility = View.GONE
                 pauseMinusButtonGroup.visibility = View.GONE
+            }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setUpLayerManagerWindow() {
+        val bindings = FdbLayerManagerViewBinding.bind(layerManagerView.getView())
+        bindings.dragIcon.setOnTouchListener { v, event ->
+            layerManagerViewPositionUpdater.onTouch(v, event, false)
+        }
+        val updateLayerStates = {
+            paintView.updateLayerState(layerManagerView.getLayerState())
+        }
+        layerManagerView.apply {
+            onNameChangedListener = { updateLayerStates() }
+            onVisibilityChangedListener = { updateLayerStates() }
+            onCheckedListener = { updateLayerStates() }
+            onLayerOrderChangedListener = updateLayerStates
+            onDeleteNotifier = { notifier ->
+                createConfirmationDialog({ _, _ ->
+                    notifier.delete()
+                }, { _, _ ->
+                    notifier.revert()
+                }, titleRes = R.string.whether_to_delete).also {
+                    it.setOnCancelListener {
+                        notifier.revert()
+                    }
+                }.show()
             }
         }
     }
