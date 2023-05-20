@@ -9,7 +9,7 @@ WORKDIR /
 
 RUN apt update && \
     export DEBIAN_FRONTEND=noninteractive && \
-    apt install openjdk-17-jdk groovy git wget unzip make curl gcc ruby xz-utils -y
+    apt install openjdk-17-jdk groovy git wget unzip make curl gcc ruby xz-utils gcc-multilib -y
 
 RUN git clone https://github.com/openssl/openssl --depth 1 && \
     cd openssl && \
