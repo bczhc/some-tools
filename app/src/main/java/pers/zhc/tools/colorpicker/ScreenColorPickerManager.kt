@@ -59,15 +59,15 @@ class ScreenColorPickerManager(
             format = PixelFormat.RGBA_8888
         }
 
-        val metrics = DisplayUtil.getMetrics(context)
+        val screenSize = DisplayUtil.getScreenSize(context)
         screenColorPickerView.measure(0, 0)
         screenColorPickerViewDimension.width = 0
         screenColorPickerViewDimension.height = 0
-        screenColorPickerViewPositionUpdater.updateParentDimension(metrics.widthPixels, metrics.heightPixels)
+        screenColorPickerViewPositionUpdater.updateParentDimension(screenSize.x, screenSize.y)
 
-        screenColorPickerView.setOnScreenSizeChangedListener { width, height ->
-            val newMetrics = DisplayUtil.getMetrics(context)
-            screenColorPickerViewPositionUpdater.updateParentDimension(newMetrics.widthPixels, newMetrics.heightPixels)
+        screenColorPickerView.setOnScreenSizeChangedListener { _, _ ->
+            val newSize = DisplayUtil.getScreenSize(context)
+            screenColorPickerViewPositionUpdater.updateParentDimension(newSize.x, newSize.y)
         }
 
         screenshotReader = ProjectionScreenshotReader(context, mediaProjection)

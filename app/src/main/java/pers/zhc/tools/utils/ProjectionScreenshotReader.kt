@@ -8,7 +8,7 @@ import android.media.Image
 import android.media.ImageReader
 import android.media.projection.MediaProjection
 
-class ProjectionScreenshotReader(context: Context, private val mediaProjection: MediaProjection) {
+class ProjectionScreenshotReader(context: Context, mediaProjection: MediaProjection) {
     private var imageReader: ImageReader
     private var virtualDisplay: VirtualDisplay?
 
@@ -18,7 +18,7 @@ class ProjectionScreenshotReader(context: Context, private val mediaProjection: 
             "VirtualDisplay",
             imageReader.width,
             imageReader.height,
-            DisplayUtil.getMetrics(context).densityDpi,
+            DisplayUtil.getDensityDpi(context),
             DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
             imageReader.surface,
             null,

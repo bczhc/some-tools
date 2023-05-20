@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.EditText;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,17 +43,24 @@ public class DisplayUtil {
         return rectangle.top;
     }
 
-    public static @NotNull DisplayMetrics getMetrics(@NotNull Context context) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        final WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(metrics);
-        return metrics;
+    public static int getDensityDpi(@NotNull Context context) {
+        return context.getResources().getConfiguration().densityDpi;
     }
 
     public static @NotNull Point getScreenSize(@NotNull Context context) {
         Point point = new Point();
+
         final WindowManager windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getRealSize(point);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // TODO: lacks tests; don't know work or not
+            WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+            Rect bounds = windowMetrics.getBounds();
+            point.x = bounds.width();
+            point.y = bounds.height();
+        } else {
+            // noinspection deprecation
+            windowManager.getDefaultDisplay().getRealSize(point);
+        }
         return point;
     }
 

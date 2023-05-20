@@ -14,7 +14,6 @@ import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -380,10 +379,9 @@ class FdbWindow(activity: FdbMainActivity) {
         }
         // TODO: 7/11/21 handle storage permission request
 
-        val displayMetrics = DisplayMetrics()
-        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-        val screenWidth = displayMetrics.widthPixels
-        val screenHeight = displayMetrics.heightPixels
+        val screenSize = DisplayUtil.getScreenSize(activity)
+        val screenWidth = screenSize.x
+        val screenHeight = screenSize.y
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
         pathImportWindowPositionUpdater.updateParentDimension(screenWidth, screenHeight)
         layerManagerViewPositionUpdater.updateParentDimension(screenWidth, screenHeight)
@@ -1332,21 +1330,7 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private fun getSelectedStatisticsIntData(db: SQLite3, mark: Int): Int {
-        var r = 0
-        val statement = db.compileStatement(
-            """
-                    SELECT COUNT(*)
-                    FROM path
-                    WHERE mark is ?
-                    """.trimIndent()
-        )
-        statement.reset()
-        statement.bind(1, mark)
-        val cursor = statement.cursor
-        cursor.step()
-        r = cursor.getInt(0)
-        statement.release()
-        return r
+        return db.getRowCount("SELECT COUNT() FROM path WHERE mark is ?", arrayOf(mark))
     }
 
     @Suppress("FunctionName")

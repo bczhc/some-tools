@@ -1124,7 +1124,7 @@ public class PaintView extends BaseView {
             Consumer<Float> progressCallback
     ) {
         final String pathTable = "path_layer_" + layerId;
-        final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
+        final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable, null);
 
         final Statement statement = db.compileStatement("SELECT mark, p1, p2 FROM " + pathTable);
         final Cursor cursor = statement.getCursor();
@@ -1200,7 +1200,7 @@ public class PaintView extends BaseView {
             Consumer<Float> progressCallback
     ) {
         final String pathTable = "path_layer_" + layerId;
-        final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable);
+        final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable, null);
 
         final Statement statement = db.compileStatement("SELECT mark, info, x, y FROM " + pathTable);
         final Cursor cursor = statement.getCursor();

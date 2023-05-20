@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.ImageFormat
 import android.graphics.PixelFormat
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
@@ -66,7 +65,7 @@ class MediaUtils {
                 "VirtualDisplay",
                 ir.width,
                 ir.height,
-                DisplayUtil.getMetrics(context).densityDpi,
+                DisplayUtil.getDensityDpi(context),
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 ir.surface,
                 null,

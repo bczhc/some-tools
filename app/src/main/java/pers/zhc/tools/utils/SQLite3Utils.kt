@@ -77,13 +77,8 @@ fun <T> SQLite3.queryRows(
 /**
  * [cmd] example: SELECT COUNT() FROM tbl_name
  */
-fun SQLite3.getRowCount(@Language("SQLite") cmd: String): Int {
-    val statement = this.compileStatement(cmd)
-    val cursor = statement.cursor
-    Assertion.doAssertion(cursor.step())
-    val count = cursor.getInt(0)
-    statement.release()
-    return count
+fun SQLite3.getRowCount(@Language("SQLite") cmd: String, binds: Array<Any>? = null): Int {
+    return this.queryOne(cmd, binds) { it.getInt(0) }!!
 }
 
 fun Statement.stepBind(binds: Array<Any>) {
