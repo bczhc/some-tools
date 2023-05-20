@@ -12,7 +12,7 @@ RUN apt update && \
     apt install openjdk-17-jdk groovy git wget unzip make curl gcc ruby xz-utils -y && \
     # Rust bindgen will not find `stddef.h`. Installing `clang` package solves this.
     # See https://github.com/rust-lang/rust-bindgen/issues/242
-    apt install clang && \
+    apt install -y clang && \
     # Rust bindgen will report 'bits/libc-header-start.h' not found. These
     # two issues relate to this:
     # - https://github.com/rust-rocksdb/rust-rocksdb/issues/550
@@ -22,7 +22,7 @@ RUN apt update && \
     # The intended solution is to let `bindgen` look for the "sysroot"
     # in NDK, as the two issues above suggest. But `gcc-multilib` way
     # also works (at least so far); I just do as this.
-    apt install gcc-multilib
+    apt install -y gcc-multilib
 
 RUN git clone https://github.com/openssl/openssl --depth 1 && \
     cd openssl && \
