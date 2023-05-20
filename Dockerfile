@@ -35,8 +35,12 @@ RUN git submodule update --init --recursive
 RUN echo 'sdk.dir=/sdk' > local.properties && \
     echo "ndk.dir=/sdk/ndk/$ndk_version" >> local.properties && \
     echo 'opensslLib.dir=/openssl' >> config.properties && \
-    echo 'ndk.target=' >> config.properties && \
-    echo 'ndk.buildType' >> config.properties
+    # dummy values below, for passing the gradle build script check
+    echo 'ndk.target=x86-29' >> config.properties && \
+    echo 'ndk.buildType=debug' >> config.properties
+
+# Gradle build script check
+RUN ./gradlew
 
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
