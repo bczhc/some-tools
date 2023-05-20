@@ -60,10 +60,10 @@ RUN . ~/.cargo/env && \
     for a in armeabi-v7a-21 arm64-v8a-29 x86-29 x86_64-29; do \
       # reconfigure
       sed -ri "s/^(ndk\.target)=.*/\1=$a/" config.properties && \
-      sed -ri 's/^(ndk\.buildType)=/\1=debug/' config.properties && \
+      sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \
       ./gradlew asD && \
       cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$a.apk && \
-      sed -ri 's/^(ndk\.buildType)=/\1=release/' config.properties && \
+      sed -ri 's/^(ndk\.buildType)=.*/\1=release/' config.properties && \
       ./gradlew asR && \
       cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
     done
@@ -71,10 +71,10 @@ RUN . ~/.cargo/env && \
 # build universal-Android-ABI App
 RUN . ~/.cargo/env && \
     sed -ri 's/^(ndk\.target)=.*/\1=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29/' config.properties && \
-    sed -ri 's/^(ndk\.buildType)=/\1=debug/' config.properties && \
+    sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \
     ./gradlew asD && \
     cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
-    sed -ri 's/^(ndk\.buildType)=/\1=release/' config.properties && \
+    sed -ri 's/^(ndk\.buildType)=.*/\1=release/' config.properties && \
     ./gradlew asR && \
     cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk
 
