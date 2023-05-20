@@ -2,6 +2,9 @@ FROM ubuntu
 
 COPY / /some-tools/
 
+ARG ndk_version=25.1.8937393
+ARG cmake_version=3.18.1
+
 WORKDIR /
 
 RUN apt update && \
@@ -16,20 +19,26 @@ RUN git clone https://github.com/openssl/openssl --depth 1 && \
     git checkout openssl-3.0.1
 
 WORKDIR /
+# Set up SDK
 RUN mkdir sdk && \
     wget 'https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip' -O tools.zip && \
     unzip tools.zip && \
     yes | ./cmdline-tools/bin/sdkmanager --licenses --sdk_root=./sdk && \
-    ./cmdline-tools/bin/sdkmanager --sdk_root=./sdk --install 'ndk;25.1.8937393' && \
-    ./cmdline-tools/bin/sdkmanager --sdk_root=./sdk --install 'cmake;3.18.1'
+    ./cmdline-tools/bin/sdkmanager --sdk_root=./sdk --install "ndk;$ndk_version" && \
+    ./cmdline-tools/bin/sdkmanager --sdk_root=./sdk --install "cmake;$cmake_version"
 
 WORKDIR /some-tools
+# Clone submodules
 RUN git submodule update --init --recursive
-RUN (echo 'sdk.dir=/sdk'; echo 'ndk.dir=/sdk/ndk/25.1.8937393') > local.properties && \
-    echo 'opensslLib.dir=/openssl' > config.properties && \
-    echo 'ndk.target=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29' >> config.properties
 
-# install Rust
+# Set up basic `config.properties`
+RUN echo 'sdk.dir=/sdk' > local.properties && \
+    echo "ndk.dir=/sdk/ndk/$ndk_version" >> local.properties && \
+    echo 'opensslLib.dir=/openssl' >> config.properties && \
+    echo 'ndk.target=' >> config.properties && \
+    echo 'ndk.buildType' >> config.properties
+
+# Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     chmod +x install && \
     ./install -y && \
@@ -38,30 +47,32 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     rustc --version && \
     ./tools/configure-rust
 
-# test clean
+# Test `cleanAll` task
 RUN . ~/.cargo/env && ./gradlew cleanAll
 
-# build openssl of all Android ABI
+# Build OpenSSL for all Android targets
 RUN ./tools/build-openssl /openssl
 
-# build single-Android-ABI App
+# Build single-Android-ABI Apps
 RUN . ~/.cargo/env && \
     mkdir /apks && mkdir /apks/debug && mkdir /apks/release && \
     for a in armeabi-v7a-21 arm64-v8a-29 x86-29 x86_64-29; do \
       # reconfigure
-      echo 'opensslLib.dir=/openssl' > config.properties && \
-      echo "ndk.target=$a" >> config.properties && \
+      sed -ri "s/^(ndk\.target)=.*/\1=$a/" config.properties && \
+      sed -ri 's/^(ndk\.buildType)=/\1=debug/' config.properties && \
       ./gradlew asD && \
-      cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/$a.apk && \
+      cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$a.apk && \
+      sed -ri 's/^(ndk\.buildType)=/\1=release/' config.properties && \
       ./gradlew asR && \
-      cp app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
+      cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
     done
 
 # build universal-Android-ABI App
 RUN . ~/.cargo/env && \
-    echo 'opensslLib.dir=/openssl' > config.properties && \
-    echo 'ndk.target=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29' >> config.properties && \
+    sed -ri 's/^(ndk\.target)=.*/\1=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29/' config.properties && \
+    sed -ri 's/^(ndk\.buildType)=/\1=debug/' config.properties && \
     ./gradlew asD && \
     cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
+    sed -ri 's/^(ndk\.buildType)=/\1=release/' config.properties && \
     ./gradlew asR && \
     cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk
