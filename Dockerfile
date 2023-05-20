@@ -47,9 +47,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     rustc --version && \
     ./tools/configure-rust
 
-# Test `cleanAll` task
-RUN . ~/.cargo/env && ./gradlew cleanAll
-
 # Build OpenSSL for all Android targets
 RUN ./tools/build-openssl /openssl
 
@@ -76,3 +73,6 @@ RUN . ~/.cargo/env && \
     sed -ri 's/^(ndk\.buildType)=/\1=release/' config.properties && \
     ./gradlew asR && \
     cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk
+
+# Test `cleanAll` task
+RUN . ~/.cargo/env && ./gradlew cleanAll
