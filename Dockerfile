@@ -4,12 +4,26 @@ COPY / /some-tools/
 
 ARG ndk_version=25.1.8937393
 ARG cmake_version=3.18.1
+ARG full_targets='armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29'
 
 WORKDIR /
 
 RUN apt update && \
     export DEBIAN_FRONTEND=noninteractive && \
-    apt install openjdk-17-jdk groovy git wget unzip make curl gcc ruby xz-utils -y
+    apt install openjdk-17-jdk groovy git wget unzip make curl gcc ruby xz-utils -y && \
+    # Rust bindgen will not find `stddef.h`. Installing `clang` package solves this.
+    # See https://github.com/rust-lang/rust-bindgen/issues/242
+    apt install -y clang && \
+    # Rust bindgen will report 'bits/libc-header-start.h' not found. These
+    # two issues relate to this:
+    # - https://github.com/rust-rocksdb/rust-rocksdb/issues/550
+    # - https://github.com/rust-lang/rust-bindgen/issues/1229
+    # Installing `gcc-multilib` package can let host have that header,
+    # and Rust bindgen during cross-compilation seems to be looking it up.
+    # The intended solution is to let `bindgen` look for the "sysroot"
+    # in NDK, as the two issues above suggest. But `gcc-multilib` way
+    # also works (at least so far); I just do as this.
+    apt install -y gcc-multilib
 
 RUN git clone https://github.com/openssl/openssl --depth 1 && \
     cd openssl && \
@@ -35,8 +49,15 @@ RUN git submodule update --init --recursive
 RUN echo 'sdk.dir=/sdk' > local.properties && \
     echo "ndk.dir=/sdk/ndk/$ndk_version" >> local.properties && \
     echo 'opensslLib.dir=/openssl' >> config.properties && \
-    echo 'ndk.target=' >> config.properties && \
-    echo 'ndk.buildType' >> config.properties
+    # first specify all android targets for OpenSSL build, as './tools/build-openssl' script will read this
+    echo "ndk.target=$full_targets" >> config.properties && \
+    echo 'ndk.buildType=debug' >> config.properties
+
+# Gradle build script check
+RUN ./gradlew
+
+# Build OpenSSL for all Android targets
+RUN ./tools/build-openssl /openssl
 
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
@@ -47,30 +68,27 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     rustc --version && \
     ./tools/configure-rust
 
-# Build OpenSSL for all Android targets
-RUN ./tools/build-openssl /openssl
-
 # Build single-Android-ABI Apps
 RUN . ~/.cargo/env && \
     mkdir /apks && mkdir /apks/debug && mkdir /apks/release && \
-    for a in armeabi-v7a-21 arm64-v8a-29 x86-29 x86_64-29; do \
+    for a in $full_targets; do \
       # reconfigure
       sed -ri "s/^(ndk\.target)=.*/\1=$a/" config.properties && \
-      sed -ri 's/^(ndk\.buildType)=/\1=debug/' config.properties && \
+      sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \
       ./gradlew asD && \
       cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$a.apk && \
-      sed -ri 's/^(ndk\.buildType)=/\1=release/' config.properties && \
+      sed -ri 's/^(ndk\.buildType)=.*/\1=release/' config.properties && \
       ./gradlew asR && \
       cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
     done
 
-# build universal-Android-ABI App
+# Build universal-Android-ABI App
 RUN . ~/.cargo/env && \
-    sed -ri 's/^(ndk\.target)=.*/\1=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29/' config.properties && \
-    sed -ri 's/^(ndk\.buildType)=/\1=debug/' config.properties && \
+    sed -ri "s/^(ndk\.target)=.*/\1=$full_targets/" config.properties && \
+    sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \
     ./gradlew asD && \
     cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
-    sed -ri 's/^(ndk\.buildType)=/\1=release/' config.properties && \
+    sed -ri 's/^(ndk\.buildType)=.*/\1=release/' config.properties && \
     ./gradlew asR && \
     cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk
 
