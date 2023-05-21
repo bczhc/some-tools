@@ -238,6 +238,26 @@ val ndkDir = android.ndkDirectory
 val tools = Tools(ndkDir, sdkDir)
 val cmakeVersion = tools.cMakeVersion as String
 
+val cmakeDefsMap = HashMap<String, Map<String, String>>()
+ndkTargets.forEach {
+    val abi = it["abi"] as TargetAbi
+    val opensslPath = getOpensslPath(opensslDir, abi)
+    cmakeDefsMap[abi.toString()] = mapOf(
+        Pair("OPENSSL_INCLUDE_DIR", opensslPath.include.path),
+        Pair("OPENSSL_LIBS_DIR", opensslPath.lib.path)
+    )
+}
+
+configure<CppBuildPluginExtension> {
+    srcDir.set("$projectDir/src/main/cpp")
+    ndkDir.set(android.ndkDirectory.path)
+    targets.set(ndkTargetsForConfigs)
+    buildType.set(ndkBuildType)
+    outputDir.set(jniOutputDir.path)
+    cmakeBinDir.set(tools.cmakeBinDir.path)
+    cmakeDefs.set(cmakeDefsMap)
+}
+
 println(
     """Build environment info:
     |SDK path: ${android.sdkDirectory.path}
@@ -247,6 +267,7 @@ println(
     |NDK targets: $ndkTargets
     |Rust build extra env: $rustBuildExtraEnv
     |Rust build target env: $rustBuildTargetEnv
+    |CMake -D variables: $cmakeDefsMap
 """.trimMargin()
 )
 
@@ -303,26 +324,6 @@ fun requireDelete(file: File) {
             throw IOException("Failed to delete ${file.path}")
         }
     }
-}
-
-val cmakeDefsMap = HashMap<String, Map<String, String>>()
-ndkTargets.forEach {
-    val abi = it["abi"] as TargetAbi
-    val opensslPath = getOpensslPath(opensslDir, abi)
-    cmakeDefsMap[abi.toString()] = mapOf(
-        Pair("OPENSSL_INCLUDE_DIR", opensslPath.include.path),
-        Pair("OPENSSL_LIBS_DIR", opensslPath.lib.path)
-    )
-}
-
-configure<CppBuildPluginExtension> {
-    srcDir.set("$projectDir/src/main/cpp")
-    ndkDir.set(android.ndkDirectory.path)
-    targets.set(ndkTargetsForConfigs)
-    buildType.set(ndkBuildType)
-    outputDir.set(jniOutputDir.path)
-    cmakeBinDir.set(tools.cmakeBinDir.path)
-    cmakeDefs.set(cmakeDefsMap)
 }
 
 val compileCppTask: Task = project.tasks.getByName("compileCpp")
