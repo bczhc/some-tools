@@ -4,6 +4,7 @@ COPY / /some-tools/
 
 ARG ndk_version=25.1.8937393
 ARG cmake_version=3.18.1
+ARG full_targets='armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29'
 
 WORKDIR /
 
@@ -48,12 +49,15 @@ RUN git submodule update --init --recursive
 RUN echo 'sdk.dir=/sdk' > local.properties && \
     echo "ndk.dir=/sdk/ndk/$ndk_version" >> local.properties && \
     echo 'opensslLib.dir=/openssl' >> config.properties && \
-    # dummy values below, for passing the gradle build script check
-    echo 'ndk.target=x86-29' >> config.properties && \
+    # first specify all android targets for OpenSSL build, as './tools/build-openssl' script will read this
+    echo "ndk.target=$full_targets" >> config.properties && \
     echo 'ndk.buildType=debug' >> config.properties
 
 # Gradle build script check
 RUN ./gradlew
+
+# Build OpenSSL for all Android targets
+RUN ./tools/build-openssl /openssl
 
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
@@ -63,9 +67,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     rustup default nightly-2022-11-21 && \
     rustc --version && \
     ./tools/configure-rust
-
-# Build OpenSSL for all Android targets
-RUN ./tools/build-openssl /openssl
 
 # Build single-Android-ABI Apps
 RUN . ~/.cargo/env && \
@@ -81,7 +82,7 @@ RUN . ~/.cargo/env && \
       cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
     done
 
-# build universal-Android-ABI App
+# Build universal-Android-ABI App
 RUN . ~/.cargo/env && \
     sed -ri 's/^(ndk\.target)=.*/\1=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29/' config.properties && \
     sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \

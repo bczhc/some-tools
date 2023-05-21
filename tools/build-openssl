@@ -21,6 +21,7 @@ end
 argv = ARGV
 if argv.length != 1
   puts "Usage: #{File.basename $0} <openssl-project-dir>"
+  puts "Build targets are defined by `ndk.target` in 'config.properties'."
   exit 1
 end
 $openssl_dir = argv[0]
