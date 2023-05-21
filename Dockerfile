@@ -71,7 +71,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
 # Build single-Android-ABI Apps
 RUN . ~/.cargo/env && \
     mkdir /apks && mkdir /apks/debug && mkdir /apks/release && \
-    for a in armeabi-v7a-21 arm64-v8a-29 x86-29 x86_64-29; do \
+    for a in $full_targets; do \
       # reconfigure
       sed -ri "s/^(ndk\.target)=.*/\1=$a/" config.properties && \
       sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \
@@ -84,7 +84,7 @@ RUN . ~/.cargo/env && \
 
 # Build universal-Android-ABI App
 RUN . ~/.cargo/env && \
-    sed -ri 's/^(ndk\.target)=.*/\1=armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29/' config.properties && \
+    sed -ri "s/^(ndk\.target)=.*/\1=$full_targets/" config.properties && \
     sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \
     ./gradlew asD && \
     cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
