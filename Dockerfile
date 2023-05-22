@@ -71,7 +71,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
 # Build single-Android-ABI Apps
 RUN . ~/.cargo/env && \
     mkdir /apks && mkdir /apks/debug && mkdir /apks/release && \
-    for a in $full_targets; do \
+    for a in $(echo $full_targets | sed "s/,/ /g"); do \
       # reconfigure
       sed -ri "s/^(ndk\.target)=.*/\1=$a/" config.properties && \
       sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \
