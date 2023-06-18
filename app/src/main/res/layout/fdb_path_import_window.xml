@@ -4,6 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/white_alpha50"
 >
     <ImageView android:layout_width="0dp"
                android:layout_height="30dp"
