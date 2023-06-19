@@ -41,6 +41,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:minWidth="116dp"
                 android:orientation="horizontal"
                 android:id="@+id/pause_minus_button_group"
         >
