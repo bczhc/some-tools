@@ -15,24 +15,34 @@
                tools:ignore="ContentDescription"
                android:background="@color/grey"
     />
-    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
                   android:orientation="vertical"
                   android:id="@+id/main_ll"
                   android:layout_below="@id/drag_icon"
     >
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        >
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
                   android:text="@string/fdb_path_import_floating_window_title"
-                  android:layout_gravity="center_horizontal"
                   android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
         />
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progress_circular"
-                tools:progress="50"
-                android:indeterminate="false"
-                android:layout_gravity="center_horizontal"
-        />
+            android:id="@+id/progress_circular"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:indeterminate="false"
+            android:paddingTop="3dp"
+            android:paddingBottom="2dp"
+            android:paddingLeft="-10dp"
+            android:paddingRight="-15dp"
+            tools:progress="50" />
+    </LinearLayout>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   tools:text="@string/fdb_path_import_speed_tv"
                   android:id="@+id/speed_tv"
