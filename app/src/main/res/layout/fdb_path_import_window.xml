@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white_alpha50"
->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white_alpha50">
     <ImageView android:layout_width="0dp"
                android:layout_height="30dp"
                android:layout_alignStart="@id/main_ll"
@@ -33,26 +32,30 @@
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress_circular"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
+            android:layout_width="20dp"
+            android:layout_height="19dp"
+            android:layout_gravity="center"
             android:indeterminate="false"
-            android:paddingTop="3dp"
-            android:paddingBottom="2dp"
-            android:paddingLeft="-10dp"
-            android:paddingRight="-15dp"
+            app:trackColor="#FFE7E7E7"
+            app:indicatorSize="20dp"
+            app:trackThickness="2dp"
             tools:progress="50" />
     </LinearLayout>
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:minWidth="130dp"
+        >
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   tools:text="@string/fdb_path_import_speed_tv"
                   android:id="@+id/speed_tv"
+            android:layout_gravity="center"
         />
         <com.google.android.material.button.MaterialButtonToggleGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
-                android:minWidth="116dp"
                 android:orientation="horizontal"
                 android:id="@+id/pause_minus_button_group"
         >
@@ -79,6 +82,7 @@
                     android:minWidth="0dp"
             />
         </com.google.android.material.button.MaterialButtonToggleGroup>
+    </LinearLayout>
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
