@@ -36,7 +36,7 @@
             android:layout_height="19dp"
             android:layout_gravity="center"
             android:indeterminate="false"
-            app:trackColor="#FFE7E7E7"
+            app:trackColor="@color/grey"
             app:indicatorSize="20dp"
             app:trackThickness="2dp"
             tools:progress="50" />
