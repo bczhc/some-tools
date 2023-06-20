@@ -153,7 +153,7 @@ class MainActivity : BaseActivity() {
     private fun showGitLogDialog() {
         val commitLogSplit = BuildConfig.commitLogEncodedSplit
         val base64Encoded = commitLogSplit.joinToString(separator = "")
-        val gitLog = JNI.Lzma.decompress(Base64.decode(base64Encoded, Base64.DEFAULT)).toString(StandardCharsets.UTF_8)
+        val gitLog = Base64.decode(base64Encoded, Base64.DEFAULT).decompressBzip2().toString(Charsets.UTF_8)
 
         val bindings = GitLogViewBinding.inflate(layoutInflater)
         bindings.tv.text = gitLog

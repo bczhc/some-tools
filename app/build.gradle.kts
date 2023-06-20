@@ -2,6 +2,9 @@
 @file:SuppressLint("JcenterRepositoryObsolete")
 
 import android.annotation.SuppressLint
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE
+import org.apache.commons.io.output.ByteArrayOutputStream
 import pers.zhc.plugins.BuildUtils.*
 import pers.zhc.plugins.FileUtils.requireCreate
 import pers.zhc.plugins.NdkVersion
@@ -121,7 +124,7 @@ android {
             })
         }
 
-        val compressedGitLog = BuildUtils2.lzmaCompress(commitLogResult.toByteArray(StandardCharsets.UTF_8))
+        val compressedGitLog = bzip2Compress(commitLogResult.toByteArray(Charsets.UTF_8))
 
         buildConfigField(
             "String[]", "commitLogEncodedSplit", BuildUtils2.longStringToStringArray(
@@ -303,6 +306,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio-jvm:2.2.2")
     implementation(kotlin("reflect"))
     implementation("com.github.thellmund.Android-Week-View:core:5.3.2")
+    implementation("org.apache.commons:commons-compress:1.23.0")
 }
 
 task("saveNdkPath") {
@@ -346,8 +350,16 @@ val compileJniTask = task("compileJni") {
     dependsOn(compileCppTask)
 
     if (!disableRust) {
-         dependsOn(compileRustTask!!)
+        dependsOn(compileRustTask!!)
     }
 }
 
 appProject.tasks.getByName("preBuild").dependsOn(compileJniTask)
+
+fun bzip2Compress(data: ByteArray): ByteArray {
+    val compressed = ByteArrayOutputStream()
+    val compressor = BZip2CompressorOutputStream(compressed, MAX_BLOCKSIZE)
+    compressor.write(data)
+    compressor.close()
+    return compressed.toByteArray()
+}

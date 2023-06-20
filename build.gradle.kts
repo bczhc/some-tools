@@ -9,6 +9,7 @@ apply {
 buildscript {
     dependencies {
         classpath("com.github.bczhc:android-native-build-plugin:c546ada670")
+        classpath("org.apache.commons:commons-compress:1.23.0")
     }
 }
 

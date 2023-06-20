@@ -3,6 +3,7 @@
  */
 package pers.zhc.tools.utils
 
+import org.apache.commons.io.output.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -74,5 +75,11 @@ fun File.requireMkdirs() {
             throw MkdirException()
         }
     }
+}
+
+fun InputStream.readAll(): ByteArray {
+    val output = ByteArrayOutputStream()
+    this.copyTo(output)
+    return output.toByteArray()
 }
 
