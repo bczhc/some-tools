@@ -97,6 +97,14 @@ Note: This installation method is recommended, since it has a good Rust toolchai
 
 Run `./tools/configure-rust`. Here `rustup` is required.
 
+### Extra `config.properties` configurations
+
+- `build.disable-rust=true`
+
+  Note: This will
+cause all functions related to JNI written in
+Rust unusable, and the app will crash when using them.
+
 ### Build Project
 
 Run `./gradlew :app:assembleDebug` or `./gradlew asD` for debug build.

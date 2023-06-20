@@ -3,6 +3,7 @@ package pers.zhc.tools.jni;
 
 import androidx.annotation.Size;
 import org.jetbrains.annotations.NotNull;
+import pers.zhc.tools.BuildConfig;
 import pers.zhc.tools.fourierseries.InputPoint;
 import pers.zhc.tools.pi.JNICallback;
 import pers.zhc.tools.stcflash.JNIInterface;
@@ -13,14 +14,16 @@ import pers.zhc.tools.stcflash.JNIInterface;
 public class JNI {
     private static boolean initFlag = false;
 
-    private static native void initJni();
+    private static native void setUpRustPanicHook();
 
     public static synchronized void initialize() {
         if (!initFlag) {
             System.loadLibrary("Main");
             System.loadLibrary("jni-lib");
-            System.loadLibrary("rust_jni");
-            initJni();
+            if (!BuildConfig.rustDisabled) {
+                System.loadLibrary("rust_jni");
+                setUpRustPanicHook();
+            }
             initFlag = true;
         } else {
             throw new RuntimeException("Already initialized");

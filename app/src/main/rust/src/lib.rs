@@ -14,7 +14,7 @@ pub static JAVA_VM: Lazy<Mutex<Option<JavaVM>>> = Lazy::new(|| Mutex::new(None))
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "system" fn Java_pers_zhc_tools_jni_JNI_initJni(env: JNIEnv, _: JClass) {
+pub extern "system" fn Java_pers_zhc_tools_jni_JNI_setUpRustPanicHook(env: JNIEnv, _: JClass) {
     JAVA_VM.lock().unwrap().replace(env.get_java_vm().unwrap());
     panic::set_hook(Box::new(|i| {
         let result: anyhow::Result<()> = try {

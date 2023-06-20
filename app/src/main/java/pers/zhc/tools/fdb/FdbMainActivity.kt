@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.RequiresApi
 import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.BuildConfig
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.FdbMainActivityBinding
 import pers.zhc.tools.jni.JNI.ByteSize
@@ -57,8 +58,13 @@ class FdbMainActivity : BaseActivity() {
         }
 
         val updateClearCacheButtonText = {
+            val sizeString = if (!BuildConfig.rustDisabled) {
+                ByteSize.toHumanReadable(getCacheSize(), true)
+            } else {
+                getCacheSize().toString()
+            }
             clearCacheButton.text =
-                getString(R.string.fdb_clear_cache_button, ByteSize.toHumanReadable(getCacheSize(), true))
+                getString(R.string.fdb_clear_cache_button, sizeString)
         }
         updateClearCacheButtonText()
         clearCacheButton.setOnClickListener {

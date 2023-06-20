@@ -61,6 +61,7 @@ val properties = openPropertiesFile(configPropertiesFile)!!
 val propNdkTarget = properties.getProperty("ndk.target") ?: run {
     throw GradleException("Please define \"ndk.target\" in $configPropertiesFile.path\n$ndkFormatHintMsg")
 }
+val disableRust = properties.getProperty("build.disable-rust") == "true"
 
 val ndkTargets = propNdkTarget.split(',').map { it.trim() }.map {
     if (!it.matches(Regex("^.*-[0-9]+\$"))) {
@@ -128,6 +129,7 @@ android {
                 100
             )
         )
+        buildConfigField("boolean", "rustDisabled", disableRust.toString())
     }
     buildTypes {
         val types = asMap
@@ -178,33 +180,35 @@ val jniOutputDir = File(appProject.projectDir, "jniLibs").also { it.mkdirs() }
 val opensslDir = getOpensslDir(configPropertiesFile)!!
 
 val rustBuildExtraEnv = HashMap<String, String>()
-ndkTargets.forEach {
-    val env = (getRustOpensslBuildEnv(AndroidAbi.from(it["abi"].toString()).toRustTarget()) as Map<*, *>).map { e ->
-        Pair(e.key.toString(), e.value.toString())
-    }.toMap()
-    val opensslPath = getOpensslPath(opensslDir, it["abi"] as TargetAbi)
-    rustBuildExtraEnv[env["libDir"].toString()] = opensslPath.lib!!.path
-    rustBuildExtraEnv[env["includeDir"].toString()] = opensslPath.include!!.path
-}
-
 val rustBuildTargetEnv = HashMap<String, Map<String, String>>()
-ndkTargets.forEach {
-    val abi = it["abi"].toString()
-    rustBuildTargetEnv[abi] = HashMap<String, String>().apply {
-        this["SQLITE3_INCLUDE_DIR"] =
-            "$projectDir/app/src/main/cpp/third_party/jni-lib/third_party/my-cpp-lib/third_party/sqlite3-single-c"
-        this["SQLITE3_LIB_DIR"] = File(jniOutputDir, abi).path
+if (!disableRust) {
+    ndkTargets.forEach {
+        val env = (getRustOpensslBuildEnv(AndroidAbi.from(it["abi"].toString()).toRustTarget()) as Map<*, *>).map { e ->
+            Pair(e.key.toString(), e.value.toString())
+        }.toMap()
+        val opensslPath = getOpensslPath(opensslDir, it["abi"] as TargetAbi)
+        rustBuildExtraEnv[env["libDir"].toString()] = opensslPath.lib!!.path
+        rustBuildExtraEnv[env["includeDir"].toString()] = opensslPath.include!!.path
     }
-}
 
-configure<RustBuildPluginExtension> {
-    ndkDir.set(android.ndkDirectory.path)
-    targets.set(ndkTargetsForConfigs)
-    buildType.set(ndkBuildType)
-    srcDir.set(File(appProject.projectDir, "src/main/rust").path)
-    outputDir.set(jniOutputDir.path)
-    extraEnv.set(rustBuildExtraEnv)
-    targetEnv.set(rustBuildTargetEnv)
+    ndkTargets.forEach {
+        val abi = it["abi"].toString()
+        rustBuildTargetEnv[abi] = HashMap<String, String>().apply {
+            this["SQLITE3_INCLUDE_DIR"] =
+                "$projectDir/app/src/main/cpp/third_party/jni-lib/third_party/my-cpp-lib/third_party/sqlite3-single-c"
+            this["SQLITE3_LIB_DIR"] = File(jniOutputDir, abi).path
+        }
+    }
+
+    configure<RustBuildPluginExtension> {
+        ndkDir.set(android.ndkDirectory.path)
+        targets.set(ndkTargetsForConfigs)
+        buildType.set(ndkBuildType)
+        srcDir.set(File(appProject.projectDir, "src/main/rust").path)
+        outputDir.set(jniOutputDir.path)
+        extraEnv.set(rustBuildExtraEnv)
+        targetEnv.set(rustBuildTargetEnv)
+    }
 }
 
 
@@ -229,9 +233,10 @@ val copyOpensslLibsTask = project.task("copyOpensslLibs") {
     }
 }
 
-
-val compileRustTask: Task = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME())
-compileRustTask.dependsOn(copyOpensslLibsTask)
+var compileRustTask: Task? = null
+if (!disableRust) {
+    compileRustTask = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME())
+}
 
 val sdkDir = android.sdkDirectory
 val ndkDir = android.ndkDirectory
@@ -258,18 +263,22 @@ configure<CppBuildPluginExtension> {
     cmakeDefs.set(cmakeDefsMap)
 }
 
-println(
-    """Build environment info:
+var message = """Build environment info:
+    |use Rust: ${!disableRust}
     |SDK path: ${android.sdkDirectory.path}
     |NDK path: ${android.ndkDirectory.path}
     |NDK version: $detectedNdkVersion
     |CMake version: $cmakeVersion
     |NDK targets: $ndkTargets
-    |Rust build extra env: $rustBuildExtraEnv
-    |Rust build target env: $rustBuildTargetEnv
     |CMake -D variables: $cmakeDefsMap
+""".trimMargin() + "\n"
+
+if (!disableRust) {
+    message += """Rust build extra env: $rustBuildExtraEnv
+    |Rust build target env: $rustBuildTargetEnv
 """.trimMargin()
-)
+}
+println(message)
 
 
 dependencies {
@@ -304,7 +313,11 @@ task("saveNdkPath") {
 }
 
 val cleanAllTask = rootProject.task("cleanAll") {
-    dependsOn("clean", ":app:cleanRust", ":app:cleanCpp")
+    if (disableRust) {
+        dependsOn("clean", ":app:cleanCpp")
+    } else {
+        dependsOn("clean", ":app:cleanRust", ":app:cleanCpp")
+    }
 }
 cleanAllTask.doLast {
     listOf(
@@ -329,8 +342,12 @@ fun requireDelete(file: File) {
 val compileCppTask: Task = project.tasks.getByName("compileCpp")
 
 val compileJniTask = task("compileJni") {
+    compileCppTask.dependsOn(copyOpensslLibsTask)
     dependsOn(compileCppTask)
-    dependsOn(compileRustTask)
+
+    if (!disableRust) {
+         dependsOn(compileRustTask!!)
+    }
 }
 
 appProject.tasks.getByName("preBuild").dependsOn(compileJniTask)
