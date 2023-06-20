@@ -339,6 +339,7 @@ class FdbWindow(activity: FdbMainActivity) {
             setOnScreenDimensionChangedListener { width, height ->
                 positionUpdater.updateParentDimension(width, height)
                 pathImportWindowPositionUpdater.updateParentDimension(width, height)
+                layerManagerViewPositionUpdater.updateParentDimension(width, height)
             }
             post {
                 // add the default layer
