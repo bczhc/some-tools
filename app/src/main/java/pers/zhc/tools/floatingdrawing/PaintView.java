@@ -9,13 +9,16 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
@@ -44,6 +47,7 @@ public class PaintView extends BaseView {
     private int width = -1;
     private final Context ctx;
     boolean eraserMode = false;
+    public boolean isImportingTerminated = false;
     private Paint mPaint;
     private Path mPath;
     private Paint eraserPaint;
@@ -684,9 +688,9 @@ public class PaintView extends BaseView {
         bytes = new byte[26];
         byte[] bytes_4 = new byte[4];
         read = 0L;
-        while (is.read(bytes) != -1) {
+        while (is.read(bytes) != -1&&!isImportingTerminated) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused) ;
+            while (pathImportPaused&& !isImportingTerminated) ;
             spinSleep(drawingInterval);
 
             read += 26L;
@@ -750,9 +754,9 @@ public class PaintView extends BaseView {
         int lastP1, p1 = -1;
         x = -1;
         y = -1;
-        while (is.read(bytes) != -1) {
+        while (is.read(bytes) != -1&&!isImportingTerminated) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused) ;
+            while (pathImportPaused&& !isImportingTerminated) ;
             spinSleep(drawingInterval);
 
             lastP1 = p1;
@@ -815,11 +819,11 @@ public class PaintView extends BaseView {
         byte[] buffer = new byte[bufferSize];
         int bufferRead;
         read = 0L;
-        while ((bufferRead = is.read(buffer)) != -1) {
+        while ((bufferRead = is.read(buffer)) != -1&&!isImportingTerminated) {
             int a = bufferRead / 9;
             for (int i = 0; i < a; i++) {
                 // noinspection StatementWithEmptyBody
-                while (pathImportPaused) ;
+                while (pathImportPaused&& !isImportingTerminated) ;
                 spinSleep(drawingInterval);
 
                 switch (buffer[i * 9]) {
@@ -924,7 +928,7 @@ public class PaintView extends BaseView {
         int c = 0;
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused) ;
+            while (pathImportPaused&& !isImportingTerminated) ;
             spinSleep(drawingInterval);
 
             int mark = cursor.getInt(0);
@@ -1130,9 +1134,9 @@ public class PaintView extends BaseView {
         final Cursor cursor = statement.getCursor();
 
         int c = 0;
-        while (cursor.step()) {
+        while (cursor.step()&&!isImportingTerminated) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused) ;
+            while (pathImportPaused&& !isImportingTerminated) ;
             spinSleep(drawingInterval);
 
             int mark = cursor.getInt(0);
@@ -1206,9 +1210,9 @@ public class PaintView extends BaseView {
         final Cursor cursor = statement.getCursor();
 
         int c = 0;
-        while (cursor.step()) {
+        while (cursor.step()&&!isImportingTerminated) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused) ;
+            while (pathImportPaused&& !isImportingTerminated) ;
             spinSleep(drawingInterval);
 
             int mark = cursor.getInt(0);
@@ -1574,7 +1578,8 @@ public class PaintView extends BaseView {
         redoListRef = layerRef.redoList;
         bitmapRef = layerRef.bitmap;
         layerPathSaverRef = pathSaver.getLayerPathSaver(layerRef.getId());
-        if (layerPathSaverRef == null) throw new RuntimeException("Not found specific LayerPathSaver in PathSaver");
+        if (layerPathSaverRef == null)
+            throw new RuntimeException("Not found specific LayerPathSaver in PathSaver");
 
         mCanvas.setBitmap(bitmapRef);
         canvasTransformer.refresh();
