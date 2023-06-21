@@ -18,7 +18,7 @@ end
 release_dir = argv[0]
 stored_dir = argv[1]
 commit_hash = argv[2]
-commit_msg = Base64.decode64 argv[3]
+commit_msg = Base64.decode64(argv[3]).force_encoding('UTF-8')
 
 class Apk
   attr_accessor :abi, :sha1, :name
