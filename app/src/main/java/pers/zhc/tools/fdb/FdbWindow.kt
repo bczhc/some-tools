@@ -881,7 +881,7 @@ class FdbWindow(activity: FdbMainActivity) {
                         ) { _, picker, path ->
                             dialogs.moreMenu.dismiss()
 
-                            exportPath(path, picker.filenameET!!.text.toString())
+                            exportPath(path, picker.filenameET!!.text.toString()+".path")
                         }.show()
                     }
 
