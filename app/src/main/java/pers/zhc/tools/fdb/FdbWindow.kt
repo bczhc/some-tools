@@ -401,6 +401,20 @@ class FdbWindow(activity: FdbMainActivity) {
         context.applicationContext.registerReceiver(receivers.main, filter)
 
         setUpLayerManagerWindow()
+
+        val asyncTryDo = AsyncTryDo()
+        paintView.setOnColorChangedCallback {
+            if (!paintView.isShowDrawing) return@setOnColorChangedCallback
+            asyncTryDo.tryDo { _, notifier ->
+                context.runOnUiThread {
+                    colorPickers.brush.color = it
+                    if (followBrushColor) {
+                        updatePanelColor(it)
+                    }
+                    notifier.finish()
+                }
+            }
+        }
     }
 
     private fun updateBrushModeText() {

@@ -7,14 +7,16 @@ class SpinLatch {
     @Volatile
     private var stop = false
     fun await() {
-        while (true) {
-            if (stop) {
-                break
-            }
-        }
+        @Suppress("ControlFlowWithEmptyBody")
+        while (!stop);
     }
 
     fun suspend() {
+        stop = false
+    }
+
+    /* alias for `suspend` */
+    fun prepare() {
         stop = false
     }
 
