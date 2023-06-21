@@ -242,7 +242,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
                 Color.colorToHSV(parsed, hsv);
                 alpha = Color.alpha(parsed);
                 updateCurrentX();
-                invalidateAllViews();
+                invalidateAllViews(true);
             } catch (Exception e) {
                 e.printStackTrace();
                 ToastUtils.showError(context, R.string.please_enter_correct_value_toast, e);
@@ -283,10 +283,10 @@ public class HSVAColorPickerRL extends RelativeLayout {
         ad.show();
     }
 
-    private void invalidateAllViews() {
+    private void invalidateAllViews(boolean fromUser) {
         final int color = Color.HSVToColor(alpha, hsv);
         if (onColorPickedInterface != null) {
-            onColorPickedInterface.onColorPicked(hsv, alpha, color);
+            onColorPickedInterface.onColorPicked(hsv, alpha, color, fromUser);
         }
         oppositeColorPaint.setColor(ColorUtils.invertColor(color));
         for (View view : hsvaViews) {
@@ -311,14 +311,14 @@ public class HSVAColorPickerRL extends RelativeLayout {
         Color.colorToHSV(color, hsv);
         alpha = Color.alpha(color);
         updateCurrentX();
-        invalidateAllViews();
+        invalidateAllViews(false);
     }
 
     public void setColor(float[] hsv, int alpha) {
         System.arraycopy(hsv, 0, this.hsv, 0, 3);
         this.alpha = alpha;
         updateCurrentX();
-        invalidateAllViews();
+        invalidateAllViews(false);
     }
 
     public ArrayList<SavedColor> getSavedColors() {
@@ -382,7 +382,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
             final float x = event.getX();
             hsv[0] = limitValue(x * 360F / ((float) hW), 0, 360);
             currentXPos[0] = limitValue(x, 0, hW);
-            invalidateAllViews();
+            invalidateAllViews(true);
             return true;
         }
     }
@@ -423,7 +423,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
             final float x = event.getX();
             hsv[1] = limitValue(x / ((float) sW), 0, 1F);
             currentXPos[1] = limitValue(x, 0, sW);
-            invalidateAllViews();
+            invalidateAllViews(true);
             return true;
         }
     }
@@ -464,7 +464,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
             final float x = event.getX();
             hsv[2] = limitValue(x / ((float) vW), 0, 1);
             currentXPos[2] = limitValue(x, 0, vW);
-            invalidateAllViews();
+            invalidateAllViews(true);
             return true;
         }
     }
@@ -505,7 +505,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
             final float x = event.getX();
             alpha = limitValue(((int) (x * 255)) / aW, 0, 255);
             currentXPos[3] = limitValue(x, 0, aW);
-            invalidateAllViews();
+            invalidateAllViews(true);
             return true;
         }
     }

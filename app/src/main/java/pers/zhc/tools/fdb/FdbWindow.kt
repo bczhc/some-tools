@@ -311,15 +311,18 @@ class FdbWindow(activity: FdbMainActivity) {
             panel = HSVAColorPickerRL(context, Color.WHITE)
             panelText = HSVAColorPickerRL(context, Color.parseColor("#808080"))
 
-            brush.setOnColorPickedInterface { _, _, color ->
+            brush.setOnColorPickedInterface { _, _, color, fromUser ->
+                if (!fromUser) return@setOnColorPickedInterface
                 updateBrushColor(color)
             }
 
-            panel.setOnColorPickedInterface { _, _, color ->
+            panel.setOnColorPickedInterface { _, _, color, fromUser ->
+                if (!fromUser) return@setOnColorPickedInterface
                 updatePanelColor(color)
             }
 
-            panelText.setOnColorPickedInterface { _, _, color ->
+            panelText.setOnColorPickedInterface { _, _, color, fromUser ->
+                if (!fromUser) return@setOnColorPickedInterface
                 updatePanelTextColor(color)
             }
         }

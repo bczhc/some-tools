@@ -19,6 +19,7 @@ public interface OnColorPickedInterface {
     void onColorPicked(
             float[] hsv,
             @IntRange(from = 0, to = 255) int alpha,
-            int color
+            int color,
+            boolean fromUser
     );
 }
