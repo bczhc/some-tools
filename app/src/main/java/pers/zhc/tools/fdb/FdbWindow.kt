@@ -52,8 +52,7 @@ class FdbWindow(activity: FdbMainActivity) {
     @Suppress("PrivatePropertyName")
     private val TAG = javaClass.name
     private val context = activity as Context
-    private val wm =
-        context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
     private val panelRL = PanelRL(context)
     private val panelSV = ScrollView(context)
@@ -92,29 +91,14 @@ class FdbWindow(activity: FdbMainActivity) {
 
     // TODO: 7/29/21 rewrite position updater
     private val panelDimension = ViewDimension()
-    private val positionUpdater =
-        FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
+    private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
 
     private val pathImportWindowDimension = ViewDimension()
     private val pathImportWindowPositionUpdater =
-        FloatingViewOnTouchListener(
-            pathImportWindowLP,
-            wm,
-            pathImportWindow,
-            0,
-            0,
-            pathImportWindowDimension
-        )
+        FloatingViewOnTouchListener(pathImportWindowLP, wm, pathImportWindow, 0, 0, pathImportWindowDimension)
     private val layerManagerViewDimension = ViewDimension()
     private val layerManagerViewPositionUpdater by lazy {
-        FloatingViewOnTouchListener(
-            layerManagerViewLP,
-            wm,
-            layerManagerView,
-            0,
-            0,
-            layerManagerViewDimension
-        )
+        FloatingViewOnTouchListener(layerManagerViewLP, wm, layerManagerView, 0, 0, layerManagerViewDimension)
     }
 
     private val pathSaver = PathSaver(pathFiles.tmpPathFile.path)
@@ -126,6 +110,7 @@ class FdbWindow(activity: FdbMainActivity) {
     }
 
     private var hasStartedScreenColorPicker = false
+
     var onExitListener: OnExitListener? = null
     private lateinit var updateEraserOpacitySlider: (Float) -> Unit
 
@@ -207,8 +192,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                             .xor(FLAG_NOT_FOCUSABLE)
                                         wm.updateViewLayout(paintView, paintViewLP)
 
-                                        tv.text =
-                                            context.getString(R.string.fdb_panel_operating_mode)
+                                        tv.text = context.getString(R.string.fdb_panel_operating_mode)
                                         operationMode = OperationMode.OPERATING
                                     }
                                 }
@@ -493,8 +477,7 @@ class FdbWindow(activity: FdbMainActivity) {
                 setColor(paintView.drawingColor)
             }
 
-            widthSlider.value =
-                (ln(width.toDouble() * paintView.scale) / ln(base)).toFloat().coerceIn(0F, 100F)
+            widthSlider.value = (ln(width.toDouble() * paintView.scale) / ln(base)).toFloat().coerceIn(0F, 100F)
             infoTV.text = context.getString(
                 R.string.fdb_stroke_width_info,
                 width,
@@ -679,10 +662,7 @@ class FdbWindow(activity: FdbMainActivity) {
         }
     }
 
-    private fun createPromptDialog(
-        @StringRes titleRes: Int,
-        callback: PromptDialogCallback
-    ): AlertDialog {
+    private fun createPromptDialog(@StringRes titleRes: Int, callback: PromptDialogCallback): AlertDialog {
         val dialog = DialogUtils.createPromptDialog(context, titleRes, callback)
         DialogUtils.setDialogAttr(dialog, isTransparent = false, overlayWindow = true)
         return dialog
@@ -693,8 +673,7 @@ class FdbWindow(activity: FdbMainActivity) {
         editText: EditText,
         callback: PromptDialogCallback
     ): AlertDialog {
-        val dialog =
-            DialogUtils.createPromptDialog(context, titleRes, callback, editText = editText)
+        val dialog = DialogUtils.createPromptDialog(context, titleRes, callback, editText = editText)
         DialogUtils.setDialogAttr(dialog, isTransparent = false, overlayWindow = true)
         return dialog
     }
@@ -797,8 +776,7 @@ class FdbWindow(activity: FdbMainActivity) {
             setCancelable(false)
             setCanceledOnTouchOutside(false)
         }.also { it.show() }
-        val progressView =
-            progressDialog.getProgressView().also { it.setIsIndeterminateMode(false) }
+        val progressView = progressDialog.getProgressView().also { it.setIsIndeterminateMode(false) }
 
         val tryDo = AsyncTryDo()
         val handler = Handler(Looper.getMainLooper())
@@ -1040,8 +1018,7 @@ class FdbWindow(activity: FdbMainActivity) {
         createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
             dialogs.moreMenu.dismiss()
 
-            val bindings =
-                FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
+            val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
             bindings.showDrawingCb.setOnCheckedChangeListener { _, isChecked ->
                 bindings.fdbDefaultDrawingIntervalTil.visibility = if (isChecked) {
                     View.VISIBLE
@@ -1049,15 +1026,13 @@ class FdbWindow(activity: FdbMainActivity) {
                     View.GONE
                 }
             }
-            bindings.pathFileTv.text =
-                context.getString(R.string.fdb_path_import_prompt_dialog_filepath_tv, path)
+            bindings.pathFileTv.text = context.getString(R.string.fdb_path_import_prompt_dialog_filepath_tv, path)
 
             MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.import_)
                 .setNegativeAction()
                 .setPositiveAction { _, _ ->
-                    val interval =
-                        bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
+                    val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
                     paintView.isShowDrawing = bindings.showDrawingCb.isChecked
                     paintView.drawingInterval = if (paintView.isShowDrawing) {
                         interval
@@ -1151,11 +1126,7 @@ class FdbWindow(activity: FdbMainActivity) {
                                 }
 
                                 PathProcessor.ProgressPhase.DONE -> {
-                                    setProgress(
-                                        layerIndex + 1,
-                                        100F,
-                                        PathProcessor.ProgressPhase.PHASE2
-                                    )
+                                    setProgress(layerIndex + 1, 100F, PathProcessor.ProgressPhase.PHASE2)
                                 }
                             }
                             notifier.finish()
