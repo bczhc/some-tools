@@ -1456,7 +1456,7 @@ class FdbWindow(activity: FdbMainActivity) {
                 }
             }
             stopButton.setOnClickListener {
-                        paintView.isImportingTerminated = true
+                paintView.isImportingTerminated = true
             }
             @Suppress("ClickableViewAccessibility")
             dragIcon.setOnTouchListener { v, event ->
