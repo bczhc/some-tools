@@ -674,6 +674,8 @@ public class PaintView extends BaseView {
     }
 
     public void importPathVer1_0(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
+        pathImportPaused = false;
+        isImportingTerminated = false;
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -737,6 +739,8 @@ public class PaintView extends BaseView {
     }
 
     public void importPathVer2_0(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
+        pathImportPaused = false;
+        isImportingTerminated = false;
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -802,6 +806,8 @@ public class PaintView extends BaseView {
     }
 
     public void importPathVer2_1(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
+        pathImportPaused = false;
+        isImportingTerminated = false;
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -883,6 +889,8 @@ public class PaintView extends BaseView {
 
     @SuppressWarnings("DuplicatedCode")
     private void importPathVer3_0(@NotNull String path, PathImportCallback progressCallback) {
+        pathImportPaused = false;
+        isImportingTerminated = false;
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
@@ -995,6 +1003,8 @@ public class PaintView extends BaseView {
     }
 
     private void importPathVer3_1(@NotNull String path, PathImportCallback progressCallback) {
+        pathImportPaused = false;
+        isImportingTerminated = false;
         final SQLite3 db = SQLite3.open(path);
         int layerNumber = 0;
         if (db.checkIfCorrupt()) {
@@ -1059,6 +1069,8 @@ public class PaintView extends BaseView {
     }
 
     private void importPathVer4_0(@NotNull String path, PathImportCallback progressCallback) {
+        pathImportPaused = false;
+        isImportingTerminated = false;
         final SQLite3 db = SQLite3.open(path);
         int layerNumber = 0;
         if (db.checkIfCorrupt()) {

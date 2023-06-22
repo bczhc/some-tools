@@ -92,13 +92,33 @@
                     android:minWidth="0dp"
             />
         </com.google.android.material.button.MaterialButtonToggleGroup>
-    </LinearLayout>
-        <Button
+        <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/fdb_path_import_pause_button"
-                android:id="@+id/pause_button"
-                android:layout_gravity="center_horizontal"
-        />
+                android:layout_gravity="center"
+            >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fdb_path_import_pause_button"
+            android:id="@+id/pause_button"
+            android:layout_gravity="center_horizontal"
+            android:minWidth="0dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_marginEnd="4dp"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel_btn"
+            android:id="@+id/stop_button"
+            android:layout_gravity="center_horizontal"
+            android:minWidth="0dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            />
+        </LinearLayout>
+    </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

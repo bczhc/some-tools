@@ -950,6 +950,7 @@ class FdbWindow(activity: FdbMainActivity) {
                 val stopwatch = Stopwatch.start()
 
                 try {
+                    pathImportWindowBindings.pauseButton.setText(R.string.fdb_path_import_pause_button)
                     paintView.importPathFile(file, { progress, layerName, layerNumber, layerCount ->
                         // progress callback
                         tryDo.tryDo { _, notifier ->
@@ -1453,6 +1454,9 @@ class FdbWindow(activity: FdbMainActivity) {
                         ToastUtils.show(context, R.string.fdb_path_import_pause_button)
                     }
                 }
+            }
+            stopButton.setOnClickListener {
+                        paintView.isImportingTerminated = true
             }
             @Suppress("ClickableViewAccessibility")
             dragIcon.setOnTouchListener { v, event ->
