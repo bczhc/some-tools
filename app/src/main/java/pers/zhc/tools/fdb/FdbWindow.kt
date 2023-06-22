@@ -1256,30 +1256,29 @@ class FdbWindow(activity: FdbMainActivity) {
         }
 
         receivers.colorPickerCheckpoint =
-            receivers.colorPickerCheckpoint
-                ?: ScreenColorPickerCheckpointReceiver { requestId, action ->
-                    when (action) {
-                        ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED,
-                        ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED -> {
+            receivers.colorPickerCheckpoint ?: ScreenColorPickerCheckpointReceiver { requestId, action ->
+                when (action) {
+                    ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED,
+                    ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED -> {
 //                        startFDB()
-                        }
-
-                        ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED -> {
-                            requestId!!
-                            if (requestId == fdbId.toString()) {
-                                sendStartPickerViewRequest()
-                            }
-                        }
-
-                        else -> {}
                     }
-                }.also {
-                    context.applicationContext.registerReceiver(it, IntentFilter().apply {
-                        addAction(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED)
-                        addAction(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED)
-                        addAction(ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED)
-                    })
+
+                    ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED -> {
+                        requestId!!
+                        if (requestId == fdbId.toString()) {
+                            sendStartPickerViewRequest()
+                        }
+                    }
+
+                    else -> {}
                 }
+            }.also {
+                context.applicationContext.registerReceiver(it, IntentFilter().apply {
+                    addAction(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED)
+                    addAction(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED)
+                    addAction(ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED)
+                })
+            }
 
 
         if (ScreenColorPickerDemoActivity.serviceRunning) {
