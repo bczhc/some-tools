@@ -9,11 +9,11 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.util.Consumer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.jni.sqlite.Cursor;
@@ -614,12 +614,12 @@ public class PaintView extends BaseView {
         invalidate();
     }
 
-    public void importPathFile(File f, @Nullable Consumer<Float> progressCallback,
+    public void importPathFile(File f, @Nullable PathImportCallback progressCallback,
                                PathVersion pathVersion) {
         importingPath = true;
 
         if (progressCallback != null) {
-            progressCallback.accept(0F);
+            progressCallback.progress(0F, null,0,0);
         }
 
         switch (pathVersion) {
@@ -674,7 +674,7 @@ public class PaintView extends BaseView {
         postInvalidate();
     }
 
-    public void importPathVer1_0(@NotNull File f, @Nullable Consumer<Float> progressCallback) throws IOException {
+    public void importPathVer1_0(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -728,7 +728,7 @@ public class PaintView extends BaseView {
                     setDrawingStrokeWidth(strokeWidth);
                     onTouchAction(motionAction, x, y);
                     if (progressCallback != null) {
-                        progressCallback.accept((float) read / (float) length);
+                        progressCallback.progress((float) read / (float) length, null,0,0);
                     }
                     break;
             }
@@ -737,7 +737,7 @@ public class PaintView extends BaseView {
         is.close();
     }
 
-    public void importPathVer2_0(@NotNull File f, @Nullable Consumer<Float> progressCallback) throws IOException {
+    public void importPathVer2_0(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -795,14 +795,14 @@ public class PaintView extends BaseView {
             }
             read += 12;
             if (progressCallback != null) {
-                progressCallback.accept((float) read / ((float) length));
+                progressCallback.progress((float) read / ((float) length), null,0,0);
             }
         }
 
         is.close();
     }
 
-    public void importPathVer2_1(@NotNull File f, @Nullable Consumer<Float> progressCallback) throws IOException {
+    public void importPathVer2_1(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -858,7 +858,7 @@ public class PaintView extends BaseView {
                 }
                 read += 9L;
                 if (progressCallback != null) {
-                    progressCallback.accept((float) read / (float) length);
+                    progressCallback.progress((float) read / (float) length, null,0,0);
                 }
             }
         }
@@ -883,7 +883,7 @@ public class PaintView extends BaseView {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void importPathVer3_0(@NotNull String path, Consumer<Float> progressCallback) {
+    private void importPathVer3_0(@NotNull String path, PathImportCallback progressCallback) {
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
@@ -978,7 +978,7 @@ public class PaintView extends BaseView {
             }
 
             ++c;
-            progressCallback.accept((float) c / (float) recordNum);
+            progressCallback.progress((float) c / (float) recordNum, null,0,0);
         }
 
         setLockingStrokesFromExtraInfos(extraInfo);
@@ -995,8 +995,9 @@ public class PaintView extends BaseView {
         updateStrokeWidthIfLocked();
     }
 
-    private void importPathVer3_1(@NotNull String path, Consumer<Float> progressCallback) {
+    private void importPathVer3_1(@NotNull String path, PathImportCallback progressCallback) {
         final SQLite3 db = SQLite3.open(path);
+        int layerNumber=0;
         if (db.checkIfCorrupt()) {
             db.close();
             throw new SQLiteDatabaseCorruptException();
@@ -1039,13 +1040,15 @@ public class PaintView extends BaseView {
             if (onImportLayerAddedListener != null) {
                 onImportLayerAddedListener.onAdded(newLayerInfo);
             }
-
+            ++layerNumber;
             importLayerPath3_1(
                     db,
-                    layerInfo.getId(),
+                    layerInfo,
                     defaultTransformationScale,
                     transformationValue,
-                    progressCallback
+                    progressCallback,
+                    layerNumber,
+                    layersInfo.size()
             );
         }
 
@@ -1056,8 +1059,9 @@ public class PaintView extends BaseView {
         postInvalidate();
     }
 
-    private void importPathVer4_0(@NotNull String path, Consumer<Float> progressCallback) {
+    private void importPathVer4_0(@NotNull String path, PathImportCallback progressCallback) {
         final SQLite3 db = SQLite3.open(path);
+        int layerNumber=0;
         if (db.checkIfCorrupt()) {
             db.close();
             throw new SQLiteDatabaseCorruptException();
@@ -1099,13 +1103,15 @@ public class PaintView extends BaseView {
             if (onImportLayerAddedListener != null) {
                 onImportLayerAddedListener.onAdded(newLayerInfo);
             }
-
+            ++layerNumber;
             importLayerPath4_0(
                     db,
-                    layerInfo.getId(),
+                    layerInfo,
                     defaultTransformationScale,
                     transformationValue,
-                    progressCallback
+                    progressCallback,
+                    layerNumber,
+                    layersInfo.size()
             );
         }
 
@@ -1119,11 +1125,15 @@ public class PaintView extends BaseView {
     @SuppressWarnings("DuplicatedCode")
     private void importLayerPath3_1(
             SQLite3 db,
-            String layerId,
+            LayerInfo layerInfo,
             float defaultTransformationScale,
             float[] transformationValue,
-            Consumer<Float> progressCallback
+            PathImportCallback progressCallback,
+            int layerNumber,
+            int layerCount
     ) {
+        final String layerId = layerInfo.getId();
+
         final String pathTable = "path_layer_" + layerId;
         final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable, null);
 
@@ -1186,7 +1196,7 @@ public class PaintView extends BaseView {
             }
 
             ++c;
-            progressCallback.accept((float) c / (float) rowCount);
+            progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
         }
 
         statement.release();
@@ -1195,11 +1205,15 @@ public class PaintView extends BaseView {
     @SuppressWarnings("DuplicatedCode")
     private void importLayerPath4_0(
             SQLite3 db,
-            String layerId,
+            LayerInfo layerInfo,
             float defaultTransformationScale,
             float[] transformationValue,
-            Consumer<Float> progressCallback
+            PathImportCallback progressCallback,
+            int layerNumber,
+            int layerCount
     ) {
+        final String layerId = layerInfo.getId();
+
         final String pathTable = "path_layer_" + layerId;
         final int rowCount = SQLite3UtilsKt.getRowCount(db, "SELECT COUNT() FROM " + pathTable, null);
 
@@ -1284,7 +1298,7 @@ public class PaintView extends BaseView {
             }
 
             ++c;
-            progressCallback.accept((float) c / (float) rowCount);
+            progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
         }
 
         statement.release();
@@ -1776,5 +1790,9 @@ public class PaintView extends BaseView {
 
     public void setShowDrawing(boolean showDrawing) {
         this.showDrawing = showDrawing;
+    }
+
+    public interface PathImportCallback {
+        void progress(float progress, @Nullable String layerName, int layerNumber, int layerCount);
     }
 }

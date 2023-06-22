@@ -950,15 +950,25 @@ class FdbWindow(activity: FdbMainActivity) {
                 val stopwatch = Stopwatch.start()
 
                 try {
-                    paintView.importPathFile(file, { progress ->
+                    paintView.importPathFile(file, { progress, layerName, layerNumber, layerCount->
                         // progress callback
                         tryDo.tryDo { _, notifier ->
-                            progress!!
                             context.runOnUiThread {
                                 pathImportWindowBindings.progressCircular.setProgressCompat(
                                     (progress * 100F).toInt(),
                                     true
                                 )
+                                if (layerName != null) {
+                                    pathImportWindowBindings.layerName.visibility = View.VISIBLE
+                                    pathImportWindowBindings.layerProgress.visibility = View.VISIBLE
+                                    pathImportWindowBindings.layerName.text =
+                                        context.getString(R.string.fdb_importing_path_layer_name, layerName)
+                                    pathImportWindowBindings.layerProgress.text =
+                                        context.getString(R.string.fdb_importing_path_layer_progress, layerNumber, layerCount)
+                                } else {
+                                    pathImportWindowBindings.layerName.visibility = View.GONE
+                                    pathImportWindowBindings.layerProgress.visibility = View.GONE
+                                }
                                 notifier.finish()
                             }
                         }
@@ -982,7 +992,10 @@ class FdbWindow(activity: FdbMainActivity) {
                     } else {
                         ToastUtils.show(context, R.string.fdb_importing_canceled)
                     }
-
+                    pathImportWindowBindings.layerName.visibility = View.GONE
+                    pathImportWindowBindings.layerProgress.visibility = View.GONE
+                    pathImportWindowBindings.layerName.text =""
+                    pathImportWindowBindings.layerProgress.text =""
                     colorPickers.brush.color = paintView.drawingColor
                     brushMode = if (paintView.isEraserMode) {
                         BrushMode.ERASING
