@@ -141,16 +141,19 @@ class WubiInverseDictDatabase(path: String) {
                 // the method; if not, just add the new character, no need for the method's result
                 return null
             }
+
             2 -> {
                 // take: xx-- xx--
                 val queries = queryChars(codepoints) ?: return null
                 return "${queries[0].substring(0, 2)}${queries[1].substring(0, 2)}"
             }
+
             3 -> {
                 // take: x--- x--- xx--
                 val queries = queryChars(codepoints) ?: return null
                 return "${queries[0][0]}${queries[1][0]}${queries[2].substring(0, 2)}"
             }
+
             else -> {
                 if (codepoints.size >= 4) {
                     // multi-character words

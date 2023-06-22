@@ -14,8 +14,7 @@ import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.androidAssert
 import pers.zhc.tools.utils.unreachable
 import java.io.File
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 
 class AudioPlayerActivity : BaseActivity() {
     private var stopProgressUpdater: (() -> Unit)? = null

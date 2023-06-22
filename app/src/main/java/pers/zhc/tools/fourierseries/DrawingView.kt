@@ -52,9 +52,11 @@ class DrawingView : BaseView {
                 path!!.moveTo(x, y)
                 points.clear()
             }
+
             MotionEvent.ACTION_MOVE -> {
                 path!!.lineTo(x, y)
             }
+
             MotionEvent.ACTION_UP -> {
                 path!!.close()
             }
@@ -84,12 +86,15 @@ class DrawingView : BaseView {
             MeasureSpec.EXACTLY -> {
                 size
             }
+
             MeasureSpec.AT_MOST -> {
                 size
             }
+
             MeasureSpec.UNSPECIFIED -> {
                 throw RuntimeException("Please specify the size of the view")
             }
+
             else -> {
                 0
             }

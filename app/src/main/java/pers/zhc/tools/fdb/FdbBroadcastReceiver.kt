@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import pers.zhc.tools.BaseBroadcastReceiver
-import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
-import pers.zhc.tools.utils.ToastUtils
 
 /**
  * @author bczhc
@@ -26,6 +24,7 @@ class FdbBroadcastReceiver(private val fdbWindow: FdbWindow) : BaseBroadcastRece
 
                 onScreenOrientationChangedListener?.invoke(orientation)
             }
+
             ACTION_FDB_SHOW -> {
                 val fdbId = getFdbIdExtra(intent)
                 if (fdbWindow.fdbId != fdbId) {
@@ -36,6 +35,7 @@ class FdbBroadcastReceiver(private val fdbWindow: FdbWindow) : BaseBroadcastRece
                 val nm = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 nm.cancel(fdbId.hashCode())
             }
+
             ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED, ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED -> {
                 val fdbId = getFdbIdExtra(intent)
                 if (fdbWindow.fdbId != fdbId) {
@@ -58,8 +58,10 @@ class FdbBroadcastReceiver(private val fdbWindow: FdbWindow) : BaseBroadcastRece
         const val EXTRA_ORIENTATION = "orientation"
 
         const val ACTION_FDB_SHOW = "pers.zhc.tools.ACTION_FDB_SHOW"
-        const val ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED = "pers.zhc.tools.ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED"
-        const val ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED = "pers.zhc.tools.ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED"
+        const val ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED =
+            "pers.zhc.tools.ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED"
+        const val ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED =
+            "pers.zhc.tools.ACTION_ON_CAPTURE_SCREEN_PERMISSION_DENIED"
 
         /**
          * Long intent extra

@@ -4,7 +4,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import org.jetbrains.annotations.NotNull;
-import pers.zhc.tools.utils.GestureResolver;
 import pers.zhc.tools.views.HSVAColorPickerRL;
 
 public class FloatingViewOnTouchListener implements View.OnTouchListener {

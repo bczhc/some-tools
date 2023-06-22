@@ -41,7 +41,6 @@ public class RoundColorView extends View {
     }
 
     /**
-     *
      * @param diameter in px
      */
     public void setDiameter(float diameter) {

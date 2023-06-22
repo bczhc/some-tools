@@ -1,15 +1,10 @@
 package pers.zhc.tools.test
 
 import android.os.Bundle
-import io.ktor.client.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import kotlinx.coroutines.runBlocking
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.jni.JNI.BZip3
 import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.utils.thread
 
 /**
  * @author bczhc

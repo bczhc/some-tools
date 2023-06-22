@@ -7,7 +7,7 @@ import android.view.ViewGroup
 /**
  * @author bczhc
  */
-abstract class BaseViewGroup: ViewGroup {
+abstract class BaseViewGroup : ViewGroup {
     @Suppress("PropertyName")
     protected val TAG = this::class.java
 

@@ -2,7 +2,6 @@ package pers.zhc.tools.test.signals
 
 import android.os.Bundle
 import pers.zhc.tools.BaseActivity
-import pers.zhc.tools.R
 import pers.zhc.tools.databinding.SignalTestActivityBinding
 import pers.zhc.tools.utils.RecyclerViewUtils
 import pers.zhc.tools.utils.setLinearLayoutManager

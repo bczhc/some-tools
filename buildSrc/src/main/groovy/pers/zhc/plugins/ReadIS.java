@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 public class ReadIS {
-    private InputStream is;
+    private final InputStream is;
     private String charsetName = null;
     private Charset charset = null;
 

@@ -1,13 +1,10 @@
 package pers.zhc.tools.utils
 
 import android.content.Context
-import io.ktor.client.*
-import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import pers.zhc.tools.MyApplication
 import pers.zhc.tools.MyApplication.Companion.HTTP_CLIENT_DOWNLOAD
 import pers.zhc.tools.R
 import java.io.File

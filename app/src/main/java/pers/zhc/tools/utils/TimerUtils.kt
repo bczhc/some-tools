@@ -1,7 +1,6 @@
 package pers.zhc.tools.utils
 
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 
 fun Timer.scheduleNow(task: () -> Unit) {
     this.schedule(task, 0)

@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
@@ -37,6 +36,7 @@ class AccountSettingsActivity : BaseActivity() {
             R.id.add_account -> {
                 buildAddAccountDialog().show()
             }
+
             else -> {
             }
         }

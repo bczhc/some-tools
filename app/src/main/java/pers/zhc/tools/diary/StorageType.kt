@@ -2,7 +2,6 @@ package pers.zhc.tools.diary
 
 import androidx.annotation.StringRes
 import pers.zhc.tools.R
-import java.util.NoSuchElementException
 
 enum class StorageType(val enumInt: Int, @StringRes val textResInt: Int) {
     RAW(0, R.string.raw),

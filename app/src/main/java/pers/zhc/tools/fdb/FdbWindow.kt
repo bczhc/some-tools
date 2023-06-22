@@ -950,7 +950,7 @@ class FdbWindow(activity: FdbMainActivity) {
                 val stopwatch = Stopwatch.start()
 
                 try {
-                    paintView.importPathFile(file, { progress, layerName, layerNumber, layerCount->
+                    paintView.importPathFile(file, { progress, layerName, layerNumber, layerCount ->
                         // progress callback
                         tryDo.tryDo { _, notifier ->
                             context.runOnUiThread {
@@ -964,7 +964,11 @@ class FdbWindow(activity: FdbMainActivity) {
                                     pathImportWindowBindings.layerName.text =
                                         context.getString(R.string.fdb_importing_path_layer_name, layerName)
                                     pathImportWindowBindings.layerProgress.text =
-                                        context.getString(R.string.fdb_importing_path_layer_progress, layerNumber, layerCount)
+                                        context.getString(
+                                            R.string.fdb_importing_path_layer_progress,
+                                            layerNumber,
+                                            layerCount
+                                        )
                                 } else {
                                     pathImportWindowBindings.layerName.visibility = View.GONE
                                     pathImportWindowBindings.layerProgress.visibility = View.GONE
@@ -994,8 +998,8 @@ class FdbWindow(activity: FdbMainActivity) {
                     }
                     pathImportWindowBindings.layerName.visibility = View.GONE
                     pathImportWindowBindings.layerProgress.visibility = View.GONE
-                    pathImportWindowBindings.layerName.text =""
-                    pathImportWindowBindings.layerProgress.text =""
+                    pathImportWindowBindings.layerName.text = ""
+                    pathImportWindowBindings.layerProgress.text = ""
                     colorPickers.brush.color = paintView.drawingColor
                     brushMode = if (paintView.isEraserMode) {
                         BrushMode.ERASING

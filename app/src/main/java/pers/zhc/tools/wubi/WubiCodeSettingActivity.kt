@@ -200,9 +200,11 @@ class WubiCodeSettingActivity : BaseActivity() {
             R.id.import_ -> {
                 importAction()
             }
+
             R.id.export -> {
                 exportAction()
             }
+
             else -> {}
         }
         return true

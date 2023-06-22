@@ -39,6 +39,7 @@ class NoteTakingActivity : NoteBaseActivity() {
             Type.CREATE -> {
                 R.string.note_add_record_btn
             }
+
             Type.UPDATE -> {
                 R.string.note_modify_record_btn
             }
@@ -52,6 +53,7 @@ class NoteTakingActivity : NoteBaseActivity() {
                     modified = false
                 }
             }
+
             Type.UPDATE -> {
                 androidAssert(intent.hasExtra(EXTRA_TIMESTAMP))
                 timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, -1)
@@ -107,6 +109,7 @@ class NoteTakingActivity : NoteBaseActivity() {
                         Type.CREATE -> {
                             createNewNote()
                         }
+
                         Type.UPDATE -> {
                             updateNote()
                         }

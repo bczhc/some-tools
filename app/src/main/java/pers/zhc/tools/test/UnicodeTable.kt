@@ -63,6 +63,7 @@ class UnicodeTable : BaseActivity() {
             R.id.seek -> {
                 showSeekDialog()
             }
+
             else -> {
             }
         }

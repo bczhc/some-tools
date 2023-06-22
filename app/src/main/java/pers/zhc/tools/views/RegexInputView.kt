@@ -30,8 +30,8 @@ class RegexInputView : WrapLayout {
     private fun init() {
         val inflate = View.inflate(context, R.layout.regex_input_view, null)
             .findViewById<SmartHintEditText>(R.id.regex_et)!!.apply {
-            this.setBaseLayoutSizeMW()
-        }
+                this.setBaseLayoutSizeMW()
+            }
         this.setView(inflate)
         shet = inflate
 

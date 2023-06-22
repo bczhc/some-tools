@@ -140,9 +140,11 @@ class BusLineDetailActivity : BaseActivity() {
                     1 -> {
                         DIRECTION_1
                     }
+
                     2 -> {
                         DIRECTION_2
                     }
+
                     else -> {
                         throw IllegalArgumentException("Invalid id")
                     }
@@ -176,9 +178,11 @@ class BusLineDetailActivity : BaseActivity() {
                 busLineDetailLL.removeAllStations()
                 asyncSetPageOnUiThread()
             }
+
             R.id.add_pinned_shortcut -> {
                 createPinnedShortcutAction()
             }
+
             else -> {
             }
         }
@@ -227,9 +231,11 @@ class BusLineDetailActivity : BaseActivity() {
                 result.has("startTime1") -> {
                     result["startTime1"] as String
                 }
+
                 result.has("startTime") -> {
                     result["startTime"] as String
                 }
+
                 else -> {
                     return null
                 }
@@ -239,9 +245,11 @@ class BusLineDetailActivity : BaseActivity() {
                 result.has("endTime1") -> {
                     result["startTime1"] as String
                 }
+
                 result.has("endTime") -> {
                     result["endTime"] as String
                 }
+
                 else -> {
                     return null
                 }
@@ -292,6 +300,7 @@ class BusLineDetailActivity : BaseActivity() {
                 Direction.DIRECTION_1 -> {
                     result["shangxing"] as JSONArray
                 }
+
                 Direction.DIRECTION_2 -> {
                     result["xiaxing"] as JSONArray
                 }

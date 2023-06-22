@@ -42,6 +42,7 @@ class TransferSendActivity : BaseActivity() {
                     // file path
                     child.editText.setText(path)
                 }
+
                 is EditText -> {
                     // text
                     child.setText(File(path).readText())
@@ -105,10 +106,12 @@ class TransferSendActivity : BaseActivity() {
                     // file
                     launchers.filePicker.launch(FilePicker.PICK_FILE)
                 }
+
                 1 -> {
                     // folder
                     launchers.filePicker.launch(FilePicker.PICK_FOLDER)
                 }
+
                 2 -> {
                     // text
                     launchers.filePicker.launch(FilePicker.PICK_FILE)
@@ -166,6 +169,7 @@ class TransferSendActivity : BaseActivity() {
                 }
                 Pair(progressDialog, callback)
             }
+
             Mark.TEXT -> {
                 val progressDialog = ProgressDialog(this)
                 val progressView = progressDialog.getProgressView()
@@ -175,6 +179,7 @@ class TransferSendActivity : BaseActivity() {
                 val callback = object : ReceiveProgressCallback() {}
                 Pair(progressDialog, callback)
             }
+
             Mark.TAR -> {
                 val dialog = Dialog(this)
                 val bindings = TransferTarProgressViewBinding.inflate(layoutInflater)

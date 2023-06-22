@@ -124,12 +124,15 @@ class ZoomableImageView : View {
             MeasureSpec.AT_MOST -> {
                 size.coerceAtMost(512)
             }
+
             MeasureSpec.EXACTLY -> {
                 size
             }
+
             MeasureSpec.UNSPECIFIED -> {
                 512
             }
+
             else -> 0
         }
     }

@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import pers.zhc.tools.BaseBroadcastReceiver
 
-class ScreenColorPickerCheckpointReceiver(private val callback: (requestId: String?, action: String) -> Unit) : BaseBroadcastReceiver() {
+class ScreenColorPickerCheckpointReceiver(private val callback: (requestId: String?, action: String) -> Unit) :
+    BaseBroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         intent!!
         callback(intent.getStringExtra(EXTRA_REQUEST_ID), intent.action!!)

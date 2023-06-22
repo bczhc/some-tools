@@ -357,10 +357,12 @@ class NotesActivity : NoteBaseActivity() {
             R.id.create -> {
                 launchers.create.launch(Unit)
             }
+
             R.id.import_ -> {
                 actionMode?.finish()
                 launchers.import.launch(FilePicker.PICK_FILE)
             }
+
             R.id.export -> {
                 actionMode?.finish()
                 launchers.export.launch(FilePicker.PICK_FOLDER)

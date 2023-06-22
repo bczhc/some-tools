@@ -99,6 +99,7 @@ class ScreenColorPickerManager(
                         }
                     }.start()
                 }
+
                 MotionEvent.ACTION_MOVE -> {
                     val rawX = event.rawX
                     val rawY = event.rawY
@@ -117,9 +118,11 @@ class ScreenColorPickerManager(
                         Common.showException(e, context)
                     }
                 }
+
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     screenColorPickerView.getColor()?.let { onColorPicked(it) }
                 }
+
                 else -> {
                 }
             }

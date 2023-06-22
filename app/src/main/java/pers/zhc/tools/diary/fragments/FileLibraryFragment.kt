@@ -46,7 +46,7 @@ class FileLibraryFragment(
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val bindings = DiaryFileLibraryFragmentBinding.inflate(inflater, container, false)
         recyclerView = bindings.recyclerView
 
@@ -224,6 +224,7 @@ class FileLibraryFragment(
                 StorageType.TEXT -> {
                     diaryDatabase.deleteTextAttachment(identifier)
                 }
+
                 else -> {
                     // file
                     diaryDatabase.deleteAttachmentFile(identifier)

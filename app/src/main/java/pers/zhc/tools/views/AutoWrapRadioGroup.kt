@@ -60,9 +60,11 @@ class AutoWrapRadioGroup : RadioGroup {
             MeasureSpec.AT_MOST -> {
                 TODO()
             }
+
             MeasureSpec.EXACTLY -> {
                 measuredWidth = widthMeasureSize
             }
+
             MeasureSpec.UNSPECIFIED -> {
                 TODO()
             }
@@ -72,9 +74,11 @@ class AutoWrapRadioGroup : RadioGroup {
             MeasureSpec.AT_MOST -> {
                 TODO()
             }
+
             MeasureSpec.EXACTLY -> {
                 measuredHeight = heightMeasureSize
             }
+
             MeasureSpec.UNSPECIFIED -> {
                 TODO()
             }

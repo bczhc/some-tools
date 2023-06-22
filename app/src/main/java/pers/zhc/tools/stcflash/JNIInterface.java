@@ -1,11 +1,8 @@
 package pers.zhc.tools.stcflash;
 
 import com.hoho.android.usbserial.driver.UsbSerialPort;
-import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import java.io.IOException;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * The properties in the class are all the values defined in {@link UsbSerialPort}

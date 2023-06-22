@@ -1,16 +1,13 @@
 package pers.zhc.tools.test;
 
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.floatingdrawing.PaintView;
-import pers.zhc.tools.utils.DisplayUtil;
 
 /**
  * @author bczhc

@@ -5,7 +5,8 @@ import android.content.Intent
 import pers.zhc.tools.BaseBroadcastReceiver
 import pers.zhc.tools.utils.androidAssert
 
-class ScreenColorPickerResultReceiver(private val callback: (requestId: String, color: Int) -> Unit): BaseBroadcastReceiver() {
+class ScreenColorPickerResultReceiver(private val callback: (requestId: String, color: Int) -> Unit) :
+    BaseBroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         intent!!
         androidAssert(intent.hasExtra(EXTRA_PICKED_COLOR))

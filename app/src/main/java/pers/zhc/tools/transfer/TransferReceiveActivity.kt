@@ -4,7 +4,9 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.net.toUri
@@ -68,6 +70,7 @@ class TransferReceiveActivity : BaseActivity() {
                             putExtra(TextFileBrowser.EXTRA_PATH, path)
                         })
                     }
+
                     Mark.TAR -> openPath(path)
                 }
             }
@@ -128,6 +131,7 @@ class TransferReceiveActivity : BaseActivity() {
             R.id.qr_code -> {
                 showQrCode()
             }
+
             else -> {
                 return false
             }
@@ -180,6 +184,7 @@ class TransferReceiveActivity : BaseActivity() {
                         context.getString(result.mark.getTypeStringRes())
                     )
                 }
+
                 is ReceivingResult.Companion.Failure -> {
                     val timeStr = Date(result.time).toString()
                     itemView.setFailure(

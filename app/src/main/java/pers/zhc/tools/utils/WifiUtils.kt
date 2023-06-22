@@ -7,7 +7,7 @@ class WifiUtils {
     companion object {
         @Suppress("DEPRECATION")
         fun getWifiIpString(context: Context): String {
-            val wm = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager;
+            val wm = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val ipAddress = wm.connectionInfo.ipAddress
             return String.format(
                 "%d.%d.%d.%d",

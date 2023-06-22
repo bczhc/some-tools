@@ -6,14 +6,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-
 import androidx.annotation.Nullable;
-
-import java.util.Objects;
-
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.ToastUtils;
+
+import java.util.Objects;
 
 public class Clip extends BaseActivity {
     @Override

@@ -38,7 +38,6 @@ import pers.zhc.tools.diary.DiaryMainActivity
 import pers.zhc.tools.email.EmailMainActivity
 import pers.zhc.tools.fdb.FdbMainActivity
 import pers.zhc.tools.fourierseries.FourierSeriesActivity
-import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.magic.FileListActivity
 import pers.zhc.tools.note.NotesActivity
 import pers.zhc.tools.stcflash.FlashMainActivity
@@ -48,7 +47,6 @@ import pers.zhc.tools.utils.*
 import pers.zhc.tools.words.WordsMainActivity
 import pers.zhc.tools.wubi.WubiInputMethodActivity
 import java.io.File
-import java.nio.charset.StandardCharsets
 import kotlin.system.exitProcess
 
 /**

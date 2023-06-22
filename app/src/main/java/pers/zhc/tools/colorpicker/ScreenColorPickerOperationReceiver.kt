@@ -15,9 +15,11 @@ class ScreenColorPickerOperationReceiver(private val service: ScreenColorPickerS
             ACTION_START -> {
                 service.start(requestId)
             }
+
             ACTION_STOP -> {
                 service.stop(requestId)
             }
+
             else -> {}
         }
     }

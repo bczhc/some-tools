@@ -5,7 +5,7 @@ enum class Mark(val enumInt: Int) {
 
     companion object {
         fun fromEnumInt(enumInt: Int): Mark? {
-            return values().firstOrNull() { it.enumInt == enumInt }
+            return values().firstOrNull { it.enumInt == enumInt }
         }
     }
 }

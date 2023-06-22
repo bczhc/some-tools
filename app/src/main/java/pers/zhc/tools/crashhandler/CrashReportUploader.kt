@@ -2,7 +2,6 @@ package pers.zhc.tools.crashhandler
 
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.JsonObject
-import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.content.*
@@ -30,12 +29,13 @@ object CrashReportUploader {
 
             var response: Response? = null
             if (httpResponse.status == HttpStatusCode.OK) {
-                response = MyApplication.GSON.fromJsonOrNull(httpResponse.bodyAsText(), JsonObject::class.java).nullMap {
-                    Response(
-                        (it.get("status") ?: return@nullMap null).asInt,
-                        (it.get("message") ?: return@nullMap null).asString
-                    )
-                }
+                response =
+                    MyApplication.GSON.fromJsonOrNull(httpResponse.bodyAsText(), JsonObject::class.java).nullMap {
+                        Response(
+                            (it.get("status") ?: return@nullMap null).asInt,
+                            (it.get("message") ?: return@nullMap null).asString
+                        )
+                    }
             }
             response
         }

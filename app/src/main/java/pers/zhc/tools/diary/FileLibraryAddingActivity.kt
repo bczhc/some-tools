@@ -45,7 +45,8 @@ class FileLibraryAddingActivity : DiaryBaseActivity() {
         val editTextAttachment =
             registerForActivityResult(DiaryFileLibraryEditTextActivity.TextEditContract()) { result ->
                 this@FileLibraryAddingActivity.text = result
-                topDynamicLL.findViewById<TextView>(R.id.length_tv)?.text = getString(R.string.diary_file_library_edit_text_length_tv, text?.length)
+                topDynamicLL.findViewById<TextView>(R.id.length_tv)?.text =
+                    getString(R.string.diary_file_library_edit_text_length_tv, text?.length)
             }
     }
 

@@ -1,15 +1,14 @@
 package pers.zhc.plugins
 
+import org.apache.commons.io.FileUtils as ApacheFileUtils
 import org.gradle.api.GradleException
 import pers.zhc.util.Assertion
 
 import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
-import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import org.apache.commons.io.FileUtils as ApacheFileUtils
 
 /**
  * @author bczhc
@@ -33,7 +32,7 @@ class BuildUtils {
 
     static gVersion() {
         def utcTimezone = TimeZone.getTimeZone(ZoneOffset.UTC)
-        def getUtcDateFormatter = {String pattern->
+        def getUtcDateFormatter = { String pattern ->
             def formatter = new SimpleDateFormat(pattern)
             formatter.timeZone = utcTimezone
             formatter

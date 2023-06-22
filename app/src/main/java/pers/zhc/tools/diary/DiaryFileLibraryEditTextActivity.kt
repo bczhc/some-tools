@@ -54,7 +54,7 @@ class DiaryFileLibraryEditTextActivity : BaseActivity() {
      *
      * output: result text
      */
-    class TextEditContract: ActivityResultContract<String?, String>() {
+    class TextEditContract : ActivityResultContract<String?, String>() {
         override fun createIntent(context: Context, input: String?): Intent {
             return Intent(context, DiaryFileLibraryEditTextActivity::class.java).apply {
                 input?.let { putExtra(EXTRA_INITIAL_TEXT, it) }

@@ -9,7 +9,6 @@ import com.alamkanak.weekview.WeekView
 import com.alamkanak.weekview.WeekViewEntity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.JsonArray
-import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.Dispatchers

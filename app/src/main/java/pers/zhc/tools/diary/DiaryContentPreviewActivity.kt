@@ -34,7 +34,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
     private var dateInt: Int = -1
 
     private val launchers = object {
-        val edit = registerForActivityResult(DiaryTakingActivity.ActivityContract()) {result->
+        val edit = registerForActivityResult(DiaryTakingActivity.ActivityContract()) { result ->
             val content = fetchContent(result.dateInt)
             contentTV.text = content
         }
@@ -157,7 +157,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         }
     }
 
-    class ActivityContract: ActivityResultContract<ActivityContract.Input, IntDate>() {
+    class ActivityContract : ActivityResultContract<ActivityContract.Input, IntDate>() {
         class Input(
             val dateInt: Int,
             val highlightPattern: Regex?

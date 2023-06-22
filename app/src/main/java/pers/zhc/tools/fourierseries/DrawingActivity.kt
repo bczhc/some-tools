@@ -7,7 +7,7 @@ import java.util.*
 /**
  * @author bczhc
  */
-class DrawingActivity: BaseActivity() {
+class DrawingActivity : BaseActivity() {
     private lateinit var drawingView: DrawingView
 
     override fun onCreate(savedInstanceState: Bundle?) {

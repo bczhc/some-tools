@@ -53,12 +53,15 @@ class TopNodeView : View {
             MeasureSpec.EXACTLY -> {
                 size
             }
+
             MeasureSpec.AT_MOST -> {
                 defaultSize.coerceAtMost(size)
             }
+
             MeasureSpec.UNSPECIFIED -> {
                 defaultSize
             }
+
             else -> {
                 0
             }

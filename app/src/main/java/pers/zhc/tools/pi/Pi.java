@@ -7,17 +7,15 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.R;
 import pers.zhc.tools.jni.JNI;
-import pers.zhc.tools.views.ScrollEditText;
 import pers.zhc.tools.utils.ToastUtils;
+import pers.zhc.tools.views.ScrollEditText;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Pi extends BaseActivity {
     private boolean isGenerating = false;

@@ -6,14 +6,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
+import pers.zhc.tools.BaseActivity;
+import pers.zhc.tools.R;
 
 import java.util.Arrays;
 import java.util.Objects;
-
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.R;
 
 public class SensorTest extends BaseActivity {
     @Override

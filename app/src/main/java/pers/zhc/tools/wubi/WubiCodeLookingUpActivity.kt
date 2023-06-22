@@ -71,6 +71,7 @@ class WubiCodeLookingUpActivity : BaseActivity() {
             R.id.update -> {
                 showUpdateInverseDict()
             }
+
             else -> {}
         }
         return true

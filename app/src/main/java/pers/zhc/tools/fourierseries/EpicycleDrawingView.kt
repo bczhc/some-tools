@@ -177,12 +177,15 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
             MeasureSpec.EXACTLY -> {
                 size
             }
+
             MeasureSpec.UNSPECIFIED -> {
                 throw RuntimeException("Please specify the size")
             }
+
             MeasureSpec.AT_MOST -> {
                 size
             }
+
             else -> {
                 0
             }

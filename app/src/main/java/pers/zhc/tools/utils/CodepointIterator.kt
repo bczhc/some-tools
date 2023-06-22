@@ -5,7 +5,7 @@ import pers.zhc.tools.jni.JNI
 /**
  * @author bczhc
  */
-class CodepointIterator(s: String): Iterator<Int> {
+class CodepointIterator(s: String) : Iterator<Int> {
     private val addr = JNI.Unicode.Codepoint.newIterator(s)
 
     override fun hasNext(): Boolean {

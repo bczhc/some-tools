@@ -2,7 +2,6 @@ package pers.zhc.tools.utils
 
 import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.*
-import pers.zhc.util.Assertion
 import kotlin.reflect.KClass
 
 /**

@@ -7,7 +7,7 @@ import pers.zhc.tools.utils.getLongExtraOrNull
 
 class OnRecordAddedReceiver(
     private val callback: (creationTime: Long) -> Unit
-): BaseBroadcastReceiver() {
+) : BaseBroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         callback(intent!!.getLongExtraOrNull(EXTRA_CREATION_TIME)!!)
     }

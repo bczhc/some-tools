@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 
-class FilePickerActivityContract(private val type: FilePickerType, private val showFilenameET: Boolean): ActivityResultContract<Unit, FilePickerActivityContract.Result?>() {
+class FilePickerActivityContract(private val type: FilePickerType, private val showFilenameET: Boolean) :
+    ActivityResultContract<Unit, FilePickerActivityContract.Result?>() {
     enum class FilePickerType(val enumInt: Int) {
         PICK_FILE(FilePicker.PICK_FILE),
         PICK_FOLDER(FilePicker.PICK_FOLDER);

@@ -35,19 +35,19 @@ fun InputStream.writeTo(out: OutputStream) {
     }
 }
 
-class MkdirException: RuntimeException {
+class MkdirException : RuntimeException {
     constructor() : super()
     constructor(message: String?) : super(message)
     constructor(cause: Throwable?) : super(cause)
 }
 
-class DeleteException: RuntimeException {
+class DeleteException : RuntimeException {
     constructor() : super()
     constructor(message: String?) : super(message)
     constructor(cause: Throwable?) : super(cause)
 }
 
-class IORuntimeException: RuntimeException {
+class IORuntimeException : RuntimeException {
     constructor() : super()
     constructor(message: String?) : super(message)
     constructor(cause: Throwable?) : super(cause)

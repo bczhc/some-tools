@@ -1,8 +1,7 @@
 package pers.zhc.tools.tasknotes
 
 import java.io.Serializable
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 
 class Time : Serializable {
     var minuteOfDay = 0

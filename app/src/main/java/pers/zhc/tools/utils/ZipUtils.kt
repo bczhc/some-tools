@@ -1,10 +1,8 @@
 package pers.zhc.tools.utils
 
 import pers.zhc.util.Assertion
-import pers.zhc.util.IOUtils
 import java.io.File
 import java.util.zip.ZipFile
-import java.util.zip.ZipInputStream
 
 /**
  * @author bczhc

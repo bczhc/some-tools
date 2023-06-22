@@ -1,11 +1,8 @@
 package pers.zhc.tools.test;
 
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
-
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.utils.ToastUtils;
 
 /**
  * @author bczhc

@@ -52,7 +52,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
     private OnColorPickedInterface onColorPickedInterface = null;
     private int width = -1;
     private RecyclerView savedColorRV;
-    private List<SavedColor> savedColors = new ArrayList<>();
+    private final List<SavedColor> savedColors = new ArrayList<>();
     private SavedColorAdapter savedColorAdapter;
 
     /**

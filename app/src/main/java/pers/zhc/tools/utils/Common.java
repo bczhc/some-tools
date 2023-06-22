@@ -18,8 +18,6 @@ import pers.zhc.tools.Info;
 import pers.zhc.tools.R;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Objects;
 
 /**
@@ -75,7 +73,7 @@ public class Common {
     public static File getInternalDatabaseDir(@NotNull Context ctx) {
         final File dir = new File(ctx.getFilesDir().getPath() + File.separatorChar + "db");
         if (!dir.exists()) {
-            Log.d(TAG, dir.mkdirs() + "");
+            Log.d(TAG, String.valueOf(dir.mkdirs()));
         }
         return dir;
     }

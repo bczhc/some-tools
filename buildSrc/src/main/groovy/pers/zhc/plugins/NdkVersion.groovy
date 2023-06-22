@@ -1,6 +1,6 @@
 package pers.zhc.plugins
 
-import org.gradle.api.GradleException
+
 import org.gradle.api.Project
 
 import java.util.regex.Pattern

@@ -40,12 +40,15 @@ class EmailMainActivity : BaseActivity() {
             R.id.configure_account -> {
                 startActivity(Intent(this, AccountSettingsActivity::class.java))
             }
+
             R.id.compose -> {
                 startActivity(Intent(this, EmailComposingActivity::class.java))
             }
+
             R.id.contact -> {
                 startActivity(Intent(this, ContactActivity::class.java))
             }
+
             else -> {
             }
         }

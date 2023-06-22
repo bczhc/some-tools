@@ -1,8 +1,6 @@
 package pers.zhc.tools;
 
-import android.app.ActivityManager;
 import android.app.Service;
-import android.content.Context;
 
 /**
  * @author bczhc

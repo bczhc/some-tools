@@ -20,7 +20,7 @@ import pers.zhc.tools.utils.ToastUtils
  * Each request needs a [ScreenColorPickerOperationReceiver.EXTRA_REQUEST_ID], and this allows multiple
  * color picker view
  */
-class ScreenColorPickerActivity: BaseActivity() {
+class ScreenColorPickerActivity : BaseActivity() {
     private var requestId: String? = null
 
     private val permissionRequestLauncher = registerForActivityResult(CapturePermissionContract()) {
@@ -33,6 +33,7 @@ class ScreenColorPickerActivity: BaseActivity() {
                 onPermissionGranted(it.data!!)
                 finish()
             }
+
             RESULT_CANCELED -> {
                 ToastUtils.show(this, R.string.capture_permission_denied)
                 val intent = Intent(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED).apply {

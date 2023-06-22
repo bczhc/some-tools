@@ -9,7 +9,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.databinding.CharStatFragmentBinding
 import pers.zhc.tools.jni.JNI
 
-class CharStatFragment(private val text: String): BaseFragment() {
+class CharStatFragment(private val text: String) : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val bindings = CharStatFragmentBinding.inflate(inflater, container, false)
 

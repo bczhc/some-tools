@@ -2,21 +2,15 @@ package pers.zhc.plugins
 
 import pers.zhc.util.IOUtils
 
-import java.io.{
-  ByteArrayInputStream,
-  ByteArrayOutputStream,
-  File,
-  InputStream,
-  OutputStream
-}
+import java.io._
+import java.nio.charset.StandardCharsets
 import java.util
 import java.util.regex.Pattern
-import java.nio.charset.StandardCharsets
 import scala.language.implicitConversions
 
 /** @author
-  *   bczhc
-  */
+ * bczhc
+ */
 object BuildUtils2 {
   def checkGitVersion(): String = {
     val runtime = Runtime.getRuntime
@@ -78,7 +72,9 @@ object BuildUtils2 {
   }
 
   implicit def whateverToRunnable[F](f: => F): Runnable = new Runnable() {
-    def run(): Unit = { f }
+    def run(): Unit = {
+      f
+    }
   }
 
   def lzmaCompress(input: InputStream, output: OutputStream): Unit = {

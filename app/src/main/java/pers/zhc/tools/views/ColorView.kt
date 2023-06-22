@@ -8,7 +8,7 @@ import pers.zhc.tools.BaseView
 /**
  * @author bczhc
  */
-class ColorView: BaseView {
+class ColorView : BaseView {
     private var color: Int = 0
 
     constructor(context: Context?) : this(context, null)

@@ -7,7 +7,7 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.CharStatActivityBinding
 
-class CharStatActivity: BaseActivity() {
+class CharStatActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bindings = CharStatActivityBinding.inflate(layoutInflater)

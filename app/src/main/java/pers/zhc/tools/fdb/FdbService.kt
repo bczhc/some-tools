@@ -10,7 +10,7 @@ import pers.zhc.tools.fdb.FdbBroadcastReceiver.Companion.EXTRA_ORIENTATION
 /**
  * @author bczhc
  */
-class FdbService: BaseService() {
+class FdbService : BaseService() {
     private var lastOrientation: Int? = null
 
     override fun onBind(intent: Intent?): IBinder? {

@@ -17,24 +17,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
-
 import kotlin.Unit;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import pers.zhc.tools.R;
 import pers.zhc.tools.utils.*;
 import pers.zhc.tools.views.SmartHintEditText;
@@ -493,12 +487,10 @@ public class WubiIME extends InputMethodService {
             final String[] query = inverseDictDatabase.query(word);
 
             boolean existInDict = false;
-            if (query.length != 0) {
-                for (String s : query) {
-                    if (s.equals(code)) {
-                        existInDict = true;
-                        break;
-                    }
+            for (String s : query) {
+                if (s.equals(code)) {
+                    existInDict = true;
+                    break;
                 }
             }
             if (existInDict) {

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TestView extends View {
     private int w, h;
-    private Paint mPaint;
+    private final Paint mPaint;
 
     public TestView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);

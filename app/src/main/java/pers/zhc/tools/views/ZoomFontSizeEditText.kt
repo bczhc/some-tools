@@ -9,12 +9,10 @@ import androidx.appcompat.widget.AppCompatEditText
 /**
  * @author bczhc
  */
-class ZoomFontSizeEditText: AppCompatEditText {
+class ZoomFontSizeEditText : AppCompatEditText {
     constructor(context: Context) : this(context, null)
 
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-
-    }
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {

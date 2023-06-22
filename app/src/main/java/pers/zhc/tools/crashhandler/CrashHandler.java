@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
-import pers.zhc.tools.BaseActivity;
 import pers.zhc.tools.utils.Common;
 
 import java.io.File;

@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class SerialPool(private var port: UsbSerialPort?) {
     private val dataQueue: Queue<Byte>
     private val thread: Thread
+
     @Volatile
     private var run: Boolean = false
 
@@ -52,7 +53,7 @@ class SerialPool(private var port: UsbSerialPort?) {
         }
     }
 
-    fun read(size:Int, timeout: Int): ByteArray {
+    fun read(size: Int, timeout: Int): ByteArray {
         val b = ByteArray(size)
         val start = System.currentTimeMillis()
         val haveRead: Int

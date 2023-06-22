@@ -32,6 +32,7 @@ public abstract class RefCountHolder<T> {
 
     /**
      * Return if the `refCount` is 0; if abandoned, this holder should be re-created
+     *
      * @return if is abandoned
      */
     public boolean isAbandoned() {

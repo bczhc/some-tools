@@ -275,7 +275,7 @@ public class FilePickerRL extends RelativeLayout {
         textViews[i] = new TextViewWithExtra(ctx);
         textViews[i].setBackgroundResource(R.drawable.view_stroke);
         textViews[i].setTextSize(25);
-        ctx.runOnUiThread(() -> textViews[i].setText(listFiles[i].isFile() ? listFiles[i].getName() : (listFiles[i].getName())));
+        ctx.runOnUiThread(() -> textViews[i].setText(listFiles[i].getName()));
         textViews[i].setLayoutParams(lp);
         switch (type) {
             case TYPE_PICK_FILE:

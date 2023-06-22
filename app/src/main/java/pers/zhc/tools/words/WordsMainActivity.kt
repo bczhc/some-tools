@@ -75,6 +75,7 @@ class WordsMainActivity : BaseActivity() {
 
                         }, R.string.words_delete_confirmation_dialog).show()
                     }
+
                     else -> {
                         return@setOnMenuItemClickListener false
                     }
@@ -100,8 +101,8 @@ class WordsMainActivity : BaseActivity() {
                 indicatorCenterY: Int,
                 itemPosition: Int
             ) {
-               recyclerView.stopScroll()
-               recyclerView.scrollToPosition(itemPosition)
+                recyclerView.stopScroll()
+                recyclerView.scrollToPosition(itemPosition)
             }
         }
         fastScrollerThumb.setupWithFastScroller(fastScroller)
@@ -162,12 +163,15 @@ class WordsMainActivity : BaseActivity() {
             R.id.import_ -> {
                 importAction()
             }
+
             R.id.export -> {
                 exportAction()
             }
+
             R.id.create_shortcut -> {
                 createShortcutAction()
             }
+
             else -> {
             }
         }

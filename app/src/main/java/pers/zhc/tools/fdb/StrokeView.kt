@@ -1,7 +1,10 @@
 package pers.zhc.tools.fdb
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.BlurMaskFilter
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
 import pers.zhc.tools.BaseView
@@ -65,10 +68,10 @@ class StrokeView : BaseView {
     }
 
     var strokeHardness: Float = 100F
-    set(value) {
-        setBlurRadius(PaintView.toBlurRadius(mPaint.strokeWidth, value))
-        field = value
-    }
+        set(value) {
+            setBlurRadius(PaintView.toBlurRadius(mPaint.strokeWidth, value))
+            field = value
+        }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val diameter = ceil((blurRadius * 2F + mPaint.strokeWidth).toDouble()).toInt()

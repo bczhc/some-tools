@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -619,7 +618,7 @@ public class PaintView extends BaseView {
         importingPath = true;
 
         if (progressCallback != null) {
-            progressCallback.progress(0F, null,0,0);
+            progressCallback.progress(0F, null, 0, 0);
         }
 
         switch (pathVersion) {
@@ -728,7 +727,7 @@ public class PaintView extends BaseView {
                     setDrawingStrokeWidth(strokeWidth);
                     onTouchAction(motionAction, x, y);
                     if (progressCallback != null) {
-                        progressCallback.progress((float) read / (float) length, null,0,0);
+                        progressCallback.progress((float) read / (float) length, null, 0, 0);
                     }
                     break;
             }
@@ -795,7 +794,7 @@ public class PaintView extends BaseView {
             }
             read += 12;
             if (progressCallback != null) {
-                progressCallback.progress((float) read / ((float) length), null,0,0);
+                progressCallback.progress((float) read / ((float) length), null, 0, 0);
             }
         }
 
@@ -858,7 +857,7 @@ public class PaintView extends BaseView {
                 }
                 read += 9L;
                 if (progressCallback != null) {
-                    progressCallback.progress((float) read / (float) length, null,0,0);
+                    progressCallback.progress((float) read / (float) length, null, 0, 0);
                 }
             }
         }
@@ -978,7 +977,7 @@ public class PaintView extends BaseView {
             }
 
             ++c;
-            progressCallback.progress((float) c / (float) recordNum, null,0,0);
+            progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
         }
 
         setLockingStrokesFromExtraInfos(extraInfo);
@@ -997,7 +996,7 @@ public class PaintView extends BaseView {
 
     private void importPathVer3_1(@NotNull String path, PathImportCallback progressCallback) {
         final SQLite3 db = SQLite3.open(path);
-        int layerNumber=0;
+        int layerNumber = 0;
         if (db.checkIfCorrupt()) {
             db.close();
             throw new SQLiteDatabaseCorruptException();
@@ -1061,7 +1060,7 @@ public class PaintView extends BaseView {
 
     private void importPathVer4_0(@NotNull String path, PathImportCallback progressCallback) {
         final SQLite3 db = SQLite3.open(path);
-        int layerNumber=0;
+        int layerNumber = 0;
         if (db.checkIfCorrupt()) {
             db.close();
             throw new SQLiteDatabaseCorruptException();

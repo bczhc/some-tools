@@ -15,7 +15,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
 import pers.zhc.tools.utils.runOnUiThread
 import pers.zhc.tools.utils.schedule
-import java.util.Timer
+import java.util.*
 
 /**
  * @author bczhc

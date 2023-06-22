@@ -4,17 +4,17 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.charsplit.CharSplitActivity
 import pers.zhc.tools.charstat.CharStatActivity
 import pers.zhc.tools.charucd.CharLookupActivity
 import pers.zhc.tools.clipboard.Clip
+import pers.zhc.tools.databinding.ToolsActivityMainBinding
 import pers.zhc.tools.pi.Pi
 import pers.zhc.tools.test.RegExpTest
 import pers.zhc.tools.test.SysInfo
 import pers.zhc.tools.test.UnicodeTable
 import pers.zhc.tools.test.toast.ToastTest
 import pers.zhc.tools.test.typetest.TypeTest
-import pers.zhc.tools.charsplit.CharSplitActivity
-import pers.zhc.tools.databinding.ToolsActivityMainBinding
 import pers.zhc.tools.texteditor.MainActivity
 
 /**
