@@ -620,7 +620,8 @@
     <string name="fdb_path_import_floating_window_title">路径导入</string>
     <string name="fdb_path_import_show_drawing_checkbox">显示过程</string>
     <string name="fdb_path_import_speed_tv">绘制间隔：%1$dµs</string>
-    <string name="fdb_default_drawing_interval_et_hint">默认绘制延时（µs）</string>
+    <string name="fdb_default_drawing_interval_et_hint">默认绘制间隔（µs）</string>
+    <string name="fdb_change_drawing_speed">修改绘制间隔</string>
     <!-- module end -->
 
     <!-- module: words -->

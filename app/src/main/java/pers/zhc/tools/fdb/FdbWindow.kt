@@ -1483,6 +1483,22 @@ class FdbWindow(activity: FdbMainActivity) {
                 updateDrawingInterval()
             }
 
+            speedTv.setOnClickListener{
+                    createPromptDialog(R.string.fdb_change_drawing_speed) { _, et ->
+                        try {
+                            drawingInterval = et.text.toString().toInt()
+                        if(drawingInterval < 0){
+                            drawingInterval = 0
+                            speedTv.text="0"
+                        }
+                        } catch (e: Exception){
+                            ToastUtils.show(context, R.string.please_enter_correct_value_toast)
+                            return@createPromptDialog
+                        }
+                        updateDrawingInterval()
+                    }.show()
+            }
+
             if (paintView.isShowDrawing) {
                 speedTv.visibility = View.VISIBLE
                 pauseMinusButtonGroup.visibility = View.VISIBLE
