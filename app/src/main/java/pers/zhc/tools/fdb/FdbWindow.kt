@@ -1250,6 +1250,7 @@ class FdbWindow(activity: FdbMainActivity) {
                 if (requestId == fdbId.toString()) {
                     // result belongs to this FDB
                     colorPickers.brush.color = color
+                    paintView.drawingColor = color
                     ToastUtils.show(context, ColorUtils.getHexString(color, false))
                 }
             }.also {
