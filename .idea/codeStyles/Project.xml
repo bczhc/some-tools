@@ -5,6 +5,7 @@
       <option name="LAYOUT_SETTINGS">
         <value>
           <option name="INSERT_BLANK_LINE_BEFORE_TAG" value="false" />
+          <option name="INSERT_LINE_BREAK_AFTER_LAST_ATTRIBUTE" value="true" />
         </value>
       </option>
     </AndroidXmlCodeStyleSettings>
@@ -38,7 +39,6 @@
     <XML>
       <option name="XML_KEEP_LINE_BREAKS" value="false" />
       <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="true" />
-      <option name="XML_ALIGN_ATTRIBUTES" value="true" />
     </XML>
     <codeStyleSettings language="SCSS">
       <indentOptions>
