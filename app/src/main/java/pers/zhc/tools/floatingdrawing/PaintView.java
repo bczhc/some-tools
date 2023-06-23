@@ -9,12 +9,15 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
 import pers.zhc.jni.sqlite.Cursor;
 import pers.zhc.jni.sqlite.SQLite3;
 import pers.zhc.jni.sqlite.Statement;
@@ -686,18 +689,22 @@ public class PaintView extends BaseView {
         bytes = new byte[26];
         byte[] bytes_4 = new byte[4];
         read = 0L;
-        while (is.read(bytes) != -1 && !isImportingTerminated) {
+        while (is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated) ;
-            spinSleep(drawingInterval);
+            if (!isImportingTerminated) {
+                spinSleep(drawingInterval);
+            }
 
             read += 26L;
             switch (bytes[25]) {
                 case 1:
+                    if (isImportingTerminated) break;
                     undo();
                     System.out.println("undo!");
                     break;
                 case 2:
+                    if (isImportingTerminated) break;
                     redo();
                     System.out.println("redo!");
                     break;
@@ -714,6 +721,10 @@ public class PaintView extends BaseView {
                     int motionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
                     System.arraycopy(bytes, 20, bytes_4, 0, 4);
                     float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                    if (isImportingTerminated) {
+                        onTouchAction(MotionEvent.ACTION_UP, x, y);
+                        break;
+                    }
                     if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
                         motionAction = randomGen(0, 2);
                     }
@@ -754,11 +765,17 @@ public class PaintView extends BaseView {
         int lastP1, p1 = -1;
         x = -1;
         y = -1;
-        while (is.read(bytes) != -1 && !isImportingTerminated) {
+        while (is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated) ;
-            spinSleep(drawingInterval);
-
+            if (isImportingTerminated) {
+                if (x != -1 && y != -1) {
+                    onTouchAction(MotionEvent.ACTION_UP, x, y);
+                }
+                break;
+            } else {
+                spinSleep(drawingInterval);
+            }
             lastP1 = p1;
             p1 = JNI.FloatingBoard.byteArrayToInt(bytes, 0);
             switch (p1) {
@@ -821,13 +838,19 @@ public class PaintView extends BaseView {
         byte[] buffer = new byte[bufferSize];
         int bufferRead;
         read = 0L;
-        while ((bufferRead = is.read(buffer)) != -1 && !isImportingTerminated) {
+        while ((bufferRead = is.read(buffer)) != -1) {
             int a = bufferRead / 9;
             for (int i = 0; i < a; i++) {
                 // noinspection StatementWithEmptyBody
                 while (pathImportPaused && !isImportingTerminated) ;
-                spinSleep(drawingInterval);
-
+                if (isImportingTerminated) {
+                    x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
+                    y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
+                    onTouchAction(MotionEvent.ACTION_UP, x, y);
+                    break;
+                } else {
+                    spinSleep(drawingInterval);
+                }
                 switch (buffer[i * 9]) {
                     case (byte) 0xA1:
                     case (byte) 0xA2:
@@ -933,8 +956,17 @@ public class PaintView extends BaseView {
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated) ;
-            spinSleep(drawingInterval);
-
+            if (isImportingTerminated) {
+                transformedOnTouchAction(
+                        MotionEvent.ACTION_UP,
+                        cursor.getFloat(1),
+                        cursor.getFloat(2),
+                        transformationValue
+                );
+                break;
+            } else {
+                spinSleep(drawingInterval);
+            }
             int mark = cursor.getInt(0);
 
             switch (mark) {
@@ -1152,11 +1184,20 @@ public class PaintView extends BaseView {
         final Cursor cursor = statement.getCursor();
 
         int c = 0;
-        while (cursor.step() && !isImportingTerminated) {
+        while (cursor.step()) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated) ;
-            spinSleep(drawingInterval);
-
+            if (isImportingTerminated) {
+                transformedOnTouchAction(
+                        MotionEvent.ACTION_UP,
+                        cursor.getFloat(1),
+                        cursor.getFloat(2),
+                        transformationValue
+                );
+                break;
+            } else {
+                spinSleep(drawingInterval);
+            }
             int mark = cursor.getInt(0);
 
             switch (mark) {
@@ -1232,11 +1273,20 @@ public class PaintView extends BaseView {
         final Cursor cursor = statement.getCursor();
 
         int c = 0;
-        while (cursor.step() && !isImportingTerminated) {
+        while (cursor.step()) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated) ;
-            spinSleep(drawingInterval);
-
+            if (isImportingTerminated) {
+                transformedOnTouchAction(
+                        MotionEvent.ACTION_UP,
+                        cursor.getFloat(2),
+                        cursor.getFloat(3),
+                        transformationValue
+                );
+                break;
+            } else {
+                spinSleep(drawingInterval);
+            }
             int mark = cursor.getInt(0);
 
             switch (mark) {
@@ -1600,7 +1650,8 @@ public class PaintView extends BaseView {
         redoListRef = layerRef.redoList;
         bitmapRef = layerRef.bitmap;
         layerPathSaverRef = pathSaver.getLayerPathSaver(layerRef.getId());
-        if (layerPathSaverRef == null) throw new RuntimeException("Not found specific LayerPathSaver in PathSaver");
+        if (layerPathSaverRef == null)
+            throw new RuntimeException("Not found specific LayerPathSaver in PathSaver");
 
         mCanvas.setBitmap(bitmapRef);
         canvasTransformer.refresh();
@@ -1792,7 +1843,7 @@ public class PaintView extends BaseView {
         if (microsecond == 0) return;
         long start = System.nanoTime();
         // noinspection StatementWithEmptyBody
-        while (System.nanoTime() - start < (long) microsecond * 1000) ;
+        while (System.nanoTime() - start < (long) microsecond * 1000 && !isImportingTerminated) ;
     }
 
     public boolean isShowDrawing() {
