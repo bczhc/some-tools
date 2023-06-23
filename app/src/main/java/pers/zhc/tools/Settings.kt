@@ -6,17 +6,39 @@ import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
 import pers.zhc.tools.databinding.MainActivityBinding
+import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.utils.ToastUtils
 
 /**
  * @author bczhc
  */
 class Settings : BaseActivity() {
+    private val dataTransfer = object {
+        val importFileLauncher = registerForActivityResult(
+            FilePickerActivityContract(FilePickerActivityContract.FilePickerType.PICK_FILE, false)
+        ) {
+            it ?: return@registerForActivityResult
+        }
+
+        val exportFileLauncher = registerForActivityResult(
+            FilePickerActivityContract(FilePickerActivityContract.FilePickerType.PICK_FOLDER, true)
+        ) {
+            it ?: return@registerForActivityResult
+            it.filename ?: return@registerForActivityResult
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bindings = MainActivityBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
+        bindings.setUpUrlSettings()
+        bindings.setUpDataTransferSettings()
+    }
+
+    private fun MainActivityBinding.setUpUrlSettings() {
+        val bindings = this
         val serverET = bindings.serverEt
         val resourceET = bindings.resourceEt
         val githubET = bindings.githubRawUrlEt
@@ -41,8 +63,18 @@ class Settings : BaseActivity() {
             Info.staticResourceRootURL = newResourceURL
             Info.githubRawRootURL = newGithubRawURL
 
-            ToastUtils.show(this, R.string.saved)
+            ToastUtils.show(this@Settings, R.string.saved)
             finish()
+        }
+    }
+
+    private fun MainActivityBinding.setUpDataTransferSettings() {
+        importBtn.setOnClickListener {
+            dataTransfer.importFileLauncher.launch(Unit)
+        }
+
+        exportBtn.setOnClickListener {
+            dataTransfer.exportFileLauncher.launch(Unit)
         }
     }
 }

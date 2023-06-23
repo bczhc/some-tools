@@ -829,5 +829,6 @@
     <!-- CrashReport -->
     <string name="upload_failed_toast">上传失败：%1$s</string>
     <string name="upload_failed_server_error_toast">上传失败：服务器错误</string>
+    <string name="app_internal_data_transfer_title">内部数据转移</string>
     <!-- end -->
 </resources>
