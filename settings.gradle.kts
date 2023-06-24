@@ -11,13 +11,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        @Suppress("DEPRECATION")
-        jcenter {
-            content {
-                // https://github.com/reddit/IndicatorFastScroll/issues/45
-                includeGroup("com.reddit")
-            }
-        }
         maven { setUrl("https://jitpack.io") }
     }
 }

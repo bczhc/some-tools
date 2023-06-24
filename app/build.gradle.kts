@@ -301,7 +301,7 @@ dependencies {
         isTransitive = false
     }
     implementation("com.google.zxing:core:3.5.1")
-    implementation("com.reddit:indicator-fast-scroll:1.4.0")
+    implementation("com.github.reddit:IndicatorFastScroll:1.4.0")
     implementation("com.quiph.ui:recyclerviewfastscroller:1.0.0")
     implementation("commons-io:commons-io:2.11.0")
     implementation("io.ktor:ktor-client-cio-jvm:2.2.2")
