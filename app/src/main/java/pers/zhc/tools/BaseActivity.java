@@ -36,15 +36,18 @@ public class BaseActivity extends AppCompatActivity {
         new PermissionRequester(() -> {
         }).requestPermission(this, Manifest.permission.INTERNET, RequestCode.REQUEST_PERMISSION_INTERNET);
 
-        ExternalDex.Companion.asyncFetch(this, runner -> {
-            try {
-                runner.run(this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            ExternalDex.Companion.asyncFetch(this, runner -> {
+                try {
+                    runner.run(this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-            return Unit.INSTANCE;
-        });
+                return Unit.INSTANCE;
+            });
+        } catch (Exception ignored) {
+        }
 
         getDelegate().setHandleNativeActionModesEnabled(false);
     }
