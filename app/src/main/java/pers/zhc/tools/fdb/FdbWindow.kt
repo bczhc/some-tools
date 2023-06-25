@@ -939,6 +939,14 @@ class FdbWindow(private val context: Context) {
     }
 
     fun showImportPathDialog(dir: File) {
+        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
+            dialogs.moreMenu.dismiss()
+            importPath(path)
+        }.show()
+    }
+
+    public  fun importPath(path: String){
+
         val performImporting = { file: File ->
             val pathVersion = PathVersion.getPathVersion(file)
 
@@ -1032,9 +1040,6 @@ class FdbWindow(private val context: Context) {
             }.start()
         }
 
-        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
-            dialogs.moreMenu.dismiss()
-
             val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
             bindings.showDrawingCb.setOnCheckedChangeListener { _, isChecked ->
                 bindings.fdbDefaultDrawingIntervalTil.visibility = if (isChecked) {
@@ -1064,7 +1069,6 @@ class FdbWindow(private val context: Context) {
                 .create().apply {
                     DialogUtils.setDialogAttr(this, width = MATCH_PARENT, overlayWindow = true)
                 }.show()
-        }.show()
     }
 
     private fun showPathStatDialog() {
