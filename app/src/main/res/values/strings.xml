@@ -578,7 +578,7 @@
     <string name="fdb_importing_path_progress_title">正在导入</string>
     <string name="fdb_importing_path_layer_name">导入图层“%1$s”…</string>
     <string name="fdb_importing_path_layer_progress">%1$d\/%2$d</string>
-    <string name="fdb_stroke_width_prompt_dialog">输入笔刷大小（px)</string>
+    <string name="fdb_stroke_width_prompt_dialog">输入笔刷大小（px）</string>
     <string name="fdb_hide_fdb_notification_title">画板</string>
     <string name="fdb_fdb_window_lost_toast">画板丢失了……</string>
     <string name="fdb_hide_fdb_notification_text">点击以恢复画板\n%1$s</string>
