@@ -48,10 +48,9 @@ import kotlin.math.pow
 /**
  * @author bczhc
  */
-class FdbWindow(activity: FdbMainActivity) {
+class FdbWindow(private val context: Context) {
     @Suppress("PrivatePropertyName")
     private val TAG = javaClass.name
-    private val context = activity as Context
     private val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
     private val panelRL = PanelRL(context)
@@ -383,7 +382,7 @@ class FdbWindow(activity: FdbMainActivity) {
         }
         // TODO: 7/11/21 handle storage permission request
 
-        val screenSize = DisplayUtil.getScreenSize(activity)
+        val screenSize = DisplayUtil.getScreenSize(context)
         val screenWidth = screenSize.x
         val screenHeight = screenSize.y
         positionUpdater.updateParentDimension(screenWidth, screenHeight)
