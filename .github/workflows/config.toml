@@ -1,0 +1,7 @@
+[ndk]
+openssl_dir = "/openssl"
+build_type = "debug"
+
+[ndk.rust]
+disabled = false
+keep_debug_symbols = true

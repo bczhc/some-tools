@@ -45,19 +45,20 @@ WORKDIR /some-tools
 # Clone submodules
 RUN git submodule update --init --recursive
 
-# Set up basic `config.properties`
+# Set up `local.properties`
 RUN echo 'sdk.dir=/sdk' > local.properties && \
-    echo "ndk.dir=/sdk/ndk/$ndk_version" >> local.properties && \
-    echo 'opensslLib.dir=/openssl' >> config.properties && \
-    # first specify all android targets for OpenSSL build, as './tools/build-openssl' script will read this
-    echo "ndk.target=$full_targets" >> config.properties && \
-    echo 'ndk.buildType=debug' >> config.properties
+    echo "ndk.dir=/sdk/ndk/$ndk_version" >> local.properties
+
+# Set up basic `config.toml`
+RUN cp -v .github/workflows/config.toml . && \
+    echo 'ndk.build_type = "debug"' >> config.toml && \
+    echo 'ndk.build_targets = []' >> config.toml
 
 # Gradle build script check
 RUN ./gradlew
 
 # Build OpenSSL for all Android targets
-RUN ./tools/build-openssl /openssl
+RUN ./tools/build-openssl /openssl # FIXME
 
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
@@ -73,22 +74,24 @@ RUN . ~/.cargo/env && \
     mkdir /apks && mkdir /apks/debug && mkdir /apks/release && \
     for a in $(echo $full_targets | sed "s/,/ /g"); do \
       # reconfigure
-      sed -ri "s/^(ndk\.target)=.*/\1=$a/" config.properties && \
-      sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \
+      target_string="[$a]" && \
+      sed -ri "s/^(ndk\.build_targets)=.*/\1=$target_string/" config.properties && \
+      sed -ri 's/^(ndk\.build_type)=.*/\1=debug/' config.properties && \
       ./gradlew asD && \
       cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$a.apk && \
-      sed -ri 's/^(ndk\.buildType)=.*/\1=release/' config.properties && \
+      sed -ri 's/^(ndk\.build_type)=.*/\1=release/' config.properties && \
       ./gradlew asR && \
       cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
     done
 
 # Build universal-Android-ABI App
 RUN . ~/.cargo/env && \
-    sed -ri "s/^(ndk\.target)=.*/\1=$full_targets/" config.properties && \
-    sed -ri 's/^(ndk\.buildType)=.*/\1=debug/' config.properties && \
+    targets_string="$(ruby -e "require 'json'; puts STDIN.read.chomp.split(',').to_json")" && \
+    sed -ri "s/^(ndk\.build_targets)=.*/\1=$targets_string/" config.properties && \
+    sed -ri 's/^(ndk\.build_type)=.*/\1=debug/' config.properties && \
     ./gradlew asD && \
     cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
-    sed -ri 's/^(ndk\.buildType)=.*/\1=release/' config.properties && \
+    sed -ri 's/^(ndk\.build_type)=.*/\1=release/' config.properties && \
     ./gradlew asR && \
     cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk
 

@@ -1,5 +1,8 @@
 #!/bin/env ruby
 
+# TODO: pass targets in script arguments
+# FIXME: `local.properties` now is not used
+
 require 'etc'
 require 'fileutils'
 

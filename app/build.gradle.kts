@@ -1,6 +1,9 @@
 @file:Suppress("UnstableApiUsage")
 @file:SuppressLint("JcenterRepositoryObsolete")
 
+// TODO: The output APK can pack all native libraries under app/jniLibs
+//  even though they're not present in `ndk.build_targets`
+
 import android.annotation.SuppressLint
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE
