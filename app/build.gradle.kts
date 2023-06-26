@@ -5,23 +5,25 @@ import android.annotation.SuppressLint
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE
 import org.apache.commons.io.output.ByteArrayOutputStream
-import pers.zhc.plugins.BuildUtils.*
-import pers.zhc.plugins.FileUtils.requireCreate
-import pers.zhc.plugins.NdkVersion
-import pers.zhc.plugins.RegexUtils
-import pers.zhc.plugins.SdkPath
+import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
+import org.tomlj.Toml
+import org.tomlj.TomlArray
+import org.tomlj.TomlParseResult
 import pers.zhc.gradle.plugins.ndk.AndroidAbi
 import pers.zhc.gradle.plugins.ndk.cpp.CppBuildPlugin
 import pers.zhc.gradle.plugins.ndk.cpp.CppBuildPlugin.CppBuildPluginExtension
 import pers.zhc.gradle.plugins.ndk.rust.RustBuildPlugin
 import pers.zhc.gradle.plugins.ndk.rust.RustBuildPlugin.RustBuildPluginExtension
+import pers.zhc.plugins.BuildUtils.*
+import pers.zhc.plugins.FileUtils.requireCreate
+import pers.zhc.plugins.NdkVersion
+import pers.zhc.plugins.RegexUtils
+import pers.zhc.plugins.SdkPath
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.nio.charset.StandardCharsets
 import java.util.*
-import kotlin.collections.HashMap
-import pers.zhc.plugins.`BuildUtils2$`.`MODULE$` as BuildUtils2
 import pers.zhc.gradle.plugins.util.`FileUtils$`.`MODULE$` as FileUtils
+import pers.zhc.plugins.`BuildUtils2$`.`MODULE$` as BuildUtils2
 
 plugins {
     id("com.android.application")
@@ -53,32 +55,16 @@ val commitLogResult = try {
     "Unknown"
 }
 
-val configPropertiesFile = File(rootDir, "config.properties")
-requireCreate(configPropertiesFile)
+val buildConfigs = parseConfigTomlFile()
 
-val ndkFormatHintMsg = """Format: <ABI-name>-<native-API-version>
-Example:
-ndk.target=arm64-v8a-29,x86_64-29"""
+val disableRust = buildConfigs.rustDisabled
+val rustKeepDebugSymbols = buildConfigs.rustKeepDebugSymbols
 
-val properties = openPropertiesFile(configPropertiesFile)!!
-val propNdkTarget = properties.getProperty("ndk.target") ?: run {
-    throw GradleException("Please define \"ndk.target\" in $configPropertiesFile.path\n$ndkFormatHintMsg")
-}
-val disableRust = properties.getProperty("build.disable-rust") == "true"
-val rustKeepDebugSymbols = properties.getProperty("ndk.keepDebugSymbols") == "true"
+val ndkTargets = buildConfigs.buildTargets
 
-val ndkTargets = propNdkTarget.split(',').map { it.trim() }.map {
-    if (!it.matches(Regex("^.*-[0-9]+\$"))) {
-        throw GradleException("Wrong NDK target format: $it\n$ndkFormatHintMsg")
-    }
-    val captured = RegexUtils.capture(it, "^(.*)-([0-9]+)\$")
-    mapOf(
-        Pair("abi", TargetAbi.from(captured[0][1])!!), Pair("api", captured[0][2].toInt())
-    )
-}
 val ndkTargetsForConfigs = ndkTargets.map {
     mapOf(
-        Pair("abi", it["abi"].toString()), Pair("api", it["api"])
+        Pair("abi", it.abi), Pair("api", it.api)
     )
 }
 
@@ -94,9 +80,7 @@ val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
         )
     }
 }
-val ndkBuildType = properties["ndk.buildType"] as String? ?: run {
-    throw GradleException("Please define ndk.buildType in config.properties")
-}
+val ndkBuildType = buildConfigs.buildType.toString()
 
 android {
     namespace = "pers.zhc.tools"
@@ -120,9 +104,7 @@ android {
         versionName = verInfo[1].toString()
 
         ndk {
-            abiFilters.addAll(ndkTargets.map {
-                it["abi"].toString()
-            })
+            abiFilters.addAll(ndkTargets.map { it.abi })
         }
 
         val compressedGitLog = bzip2Compress(commitLogResult.toByteArray(Charsets.UTF_8))
@@ -187,22 +169,22 @@ android {
 val appProject = project
 val jniOutputDir = File(appProject.projectDir, "jniLibs").also { it.mkdirs() }
 
-val opensslDir = getOpensslDir(configPropertiesFile)!!
+val opensslDir = buildConfigs.opensslDir
 
 val rustBuildExtraEnv = HashMap<String, String>()
 val rustBuildTargetEnv = HashMap<String, Map<String, String>>()
 if (!disableRust) {
     ndkTargets.forEach {
-        val env = (getRustOpensslBuildEnv(AndroidAbi.from(it["abi"].toString()).toRustTarget()) as Map<*, *>).map { e ->
+        val env = (getRustOpensslBuildEnv(AndroidAbi.from(it.abi).toRustTarget()) as Map<*, *>).map { e ->
             Pair(e.key.toString(), e.value.toString())
         }.toMap()
-        val opensslPath = getOpensslPath(opensslDir, it["abi"] as TargetAbi)
+        val opensslPath = getOpensslPath(opensslDir, TargetAbi.from(it.abi)!!)
         rustBuildExtraEnv[env["libDir"].toString()] = opensslPath.lib!!.path
         rustBuildExtraEnv[env["includeDir"].toString()] = opensslPath.include!!.path
     }
 
     ndkTargets.forEach {
-        val abi = it["abi"].toString()
+        val abi = it.abi
         rustBuildTargetEnv[abi] = HashMap<String, String>().apply {
             this["SQLITE3_INCLUDE_DIR"] =
                 "$projectDir/app/src/main/cpp/third_party/jni-lib/third_party/my-cpp-lib/third_party/sqlite3-single-c"
@@ -225,7 +207,7 @@ if (!disableRust) {
 val copyOpensslLibsTask = project.task("copyOpensslLibs") {
     doLast {
         ndkTargets.forEach {
-            val abi = it["abi"] as TargetAbi
+            val abi = TargetAbi.from(it.abi)
             val opensslPath = getOpensslPath(opensslDir, abi)
             listOf(
                 "libssl.so", "libcrypto.so"
@@ -255,7 +237,7 @@ val cmakeVersion = tools.cMakeVersion as String
 
 val cmakeDefsMap = HashMap<String, Map<String, String>>()
 ndkTargets.forEach {
-    val abi = it["abi"] as TargetAbi
+    val abi = TargetAbi.from(it.abi)
     val opensslPath = getOpensslPath(opensslDir, abi)
     cmakeDefsMap[abi.toString()] = mapOf(
         Pair("OPENSSL_INCLUDE_DIR", opensslPath.include.path),
@@ -275,6 +257,7 @@ configure<CppBuildPluginExtension> {
 
 var message = """Build environment info:
     |use Rust: ${!disableRust}
+    |NDK build type: ${buildConfigs.buildType}
     |SDK path: ${android.sdkDirectory.path}
     |NDK path: ${android.ndkDirectory.path}
     |NDK version: $detectedNdkVersion
@@ -369,4 +352,102 @@ fun bzip2Compress(data: ByteArray): ByteArray {
     compressor.write(data)
     compressor.close()
     return compressed.toByteArray()
+}
+
+fun parseConfigTomlFile(): BuildConfigs {
+    val configTomlFile = File(rootDir, "config.toml")
+
+    if (!configTomlFile.exists()) {
+        requireCreate(configTomlFile)
+    }
+
+    val configToml = Toml.parse(configTomlFile.reader())!!
+
+    configToml.errors().forEach {
+        throw GradleException("`config.toml` parsing error: $it")
+    }
+
+    return BuildConfigs(
+        opensslDir = File(configToml.requireString("ndk.openssl_dir")),
+        buildTargets = configToml.requireArray("ndk.build_targets").map {
+            BuildTarget.parse(it)
+        },
+        buildType = BuildType.from(configToml.getString("ndk.build_type") ?: run {
+            println("`ndk.build_type` not specified; use default \"debug\"")
+            "debug"
+        }),
+        rustDisabled = configToml.getBoolean("ndk.rust.disabled") ?: true,
+        rustKeepDebugSymbols = configToml.getBoolean("ndk.rust.keep_debug_symbols") ?: false
+    )
+}
+
+data class BuildConfigs(
+    val opensslDir: File,
+    val buildTargets: List<BuildTarget>,
+    val buildType: BuildType,
+    val rustDisabled: Boolean,
+    val rustKeepDebugSymbols: Boolean,
+)
+
+enum class BuildType {
+    DEBUG,
+    RELEASE;
+
+    override fun toString(): String {
+        return this.name.toLowerCaseAsciiOnly()
+    }
+
+    companion object {
+        fun from(s: String): BuildType {
+            return when (s.toLowerCaseAsciiOnly()) {
+                "debug" -> DEBUG
+                "release" -> RELEASE
+                else -> {
+                    throw GradleException("Unknown build type: $s")
+                }
+            }
+        }
+    }
+}
+
+fun TomlArray.toStringList(): List<String> {
+    return (0 until this.size()).map {
+        this.getString(it)!!
+    }
+}
+
+fun TomlParseResult.requireString(key: String): String {
+    return this.getString(key) ?: throw GradleException("$key is required in `config.toml`")
+}
+
+fun TomlParseResult.requireArray(key: String): List<String> {
+    return (this.getArray(key) ?: throw GradleException("$key is required in `config.toml`"))
+        .toStringList()
+}
+
+data class BuildTarget(
+    val abi: String,
+    val api: Int,
+) {
+    companion object {
+        private const val HELP_MSG = """Format: <ABI-name>-<Android-API-version>
+Example:
+build_targets = ["arm64-v8a-29", "x86_64-29"]"""
+
+        fun parse(s: String): BuildTarget {
+            if (!s.matches(Regex("^.*-[0-9]+\$"))) {
+                throw GradleException("Wrong NDK target format: $s\n$HELP_MSG")
+            }
+            val captured = RegexUtils.capture(s, "^(.*)-([0-9]+)\$")
+            val abi = captured[0][1]!!
+            // pre-check
+            if (TargetAbi.from(abi) == null) {
+                throw GradleException("Invalid ABI name: $abi")
+            }
+            return BuildTarget(
+                abi = abi,
+                api = captured[0][2].toInt()
+            )
+        }
+    }
 }

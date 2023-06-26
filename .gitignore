@@ -6,5 +6,5 @@
 /local.properties
 replay*.log
 /generate-native-headers
-/config.properties
+/config.toml
 /ndk-path
