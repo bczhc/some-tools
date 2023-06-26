@@ -474,4 +474,10 @@ public class JNI {
 
         public static native String readFile(String path, EncodingVariant encoding);
     }
+
+    public static class Compression {
+        public static native void createTarBz3(String dir, String output);
+        
+        public static native void extractTarBz3(String file, String outputDir);
+    }
 }

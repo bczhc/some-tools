@@ -188,9 +188,9 @@ dependencies = [
 
 [[package]]
 name = "bzip3"
-version = "0.2.3"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13eb5c4777ba321723b7e4560e1a298cbb7d25114aa5b32a057325094b8381d5"
+checksum = "58836978325c1252d9661d14e62f8a870fae9f5a0ff1feff88130e6cfb08b64b"
 dependencies = [
  "byteorder",
  "bytesize",
@@ -961,9 +961,9 @@ dependencies = [
 
 [[package]]
 name = "libbzip3-sys"
-version = "0.2.2"
+version = "0.3.1+1.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cedc436db760a52cf153bf1926f693b5bb73a03f3c15371c2d3bceded5951665"
+checksum = "1e16a15d7ca24a2df32c2b4558fca0f87efcb754281ebd26a48f60cb92da8af4"
 dependencies = [
  "bindgen",
  "cc",

@@ -119,3 +119,19 @@ fun MaterialAlertDialogBuilder.setNegativeAction(): MaterialAlertDialogBuilder {
 }
 
 typealias PromptDialogCallback = (dialog: DialogInterface, editText: EditText) -> Unit
+
+fun indeterminateProgressDialog(context: Context, title: String, task: (finish: () -> Unit) -> Unit) {
+    val dialog = ProgressDialog(context).also { it.show() }
+    dialog.getProgressView().apply {
+        isIndeterminateMode = true
+        setTitle(title)
+    }
+
+    val finishFunc = {
+        context.runOnUiThread {
+            dialog.dismiss()
+        }
+    }
+
+    task(finishFunc)
+}
