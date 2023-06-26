@@ -116,8 +116,7 @@ android {
         targetSdk = 33
 
         val verInfo = gVersion()!! as ArrayList<*>
-//        versionCode = verInfo[0] as Int
-        versionCode = 1000000000
+        versionCode = verInfo[0] as Int
         versionName = verInfo[1].toString()
 
         ndk {
