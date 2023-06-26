@@ -104,6 +104,9 @@ Run `./tools/configure-rust`. Here `rustup` is required.
   Note: This will
 cause all functions related to JNI written in
 Rust unusable, and the app will crash when using them.
+- `ndk.keepDebugSymbols=true`
+
+  Keep Rust library debug symbols
 
 ### Build Project
 

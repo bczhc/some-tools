@@ -65,6 +65,7 @@ val propNdkTarget = properties.getProperty("ndk.target") ?: run {
     throw GradleException("Please define \"ndk.target\" in $configPropertiesFile.path\n$ndkFormatHintMsg")
 }
 val disableRust = properties.getProperty("build.disable-rust") == "true"
+val rustKeepDebugSymbols = properties.getProperty("ndk.keepDebugSymbols") == "true"
 
 val ndkTargets = propNdkTarget.split(',').map { it.trim() }.map {
     if (!it.matches(Regex("^.*-[0-9]+\$"))) {
@@ -174,6 +175,12 @@ android {
 
     buildFeatures {
         viewBinding = true
+    }
+
+    packagingOptions {
+        if (rustKeepDebugSymbols) {
+            jniLibs.keepDebugSymbols += "**/librust_jni.so"
+        }
     }
 }
 
