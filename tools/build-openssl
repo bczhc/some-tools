@@ -1,8 +1,5 @@
 #!/bin/env ruby
 
-# TODO: pass targets in script arguments
-# FIXME: `local.properties` now is not used
-
 require 'etc'
 require 'fileutils'
 
@@ -22,9 +19,8 @@ define_method :system do |*args|
 end
 
 argv = ARGV
-if argv.length != 1
-  puts "Usage: #{File.basename $0} <openssl-project-dir>"
-  puts "Build targets are defined by `ndk.target` in 'config.properties'."
+if argv.length <= 1
+  puts "Usage: #{File.basename $0} <openssl-project-dir> <target>..."
   exit 1
 end
 $openssl_dir = argv[0]
@@ -54,16 +50,6 @@ def build(target, ndk_api)
   system env, "make -j#{PROCESSOR_NUM}"
 end
 
-def get_property(properties, key)
-  prefix = "#{key}="
-  lines = properties.lines
-  lines.each do |line|
-    index = line.index prefix
-    return line[(index + prefix.length)..] unless index == nil
-  end
-  nil
-end
-
 def clean
   # for the first build when Makefile hasn't been generated
   return unless File.exist? "#{$openssl_dir}/Makefile"
@@ -71,12 +57,10 @@ def clean
   system 'make clean'
 end
 
-properties = File.open("./config.properties").read
-ndk_target_property = get_property properties, 'ndk.target'
-fail if ndk_target_property == nil
+ndk_targets = argv.drop(1)
 
 output_libs_dir = "#{$openssl_dir}/libs"
-ndk_target_property.split(',').each do |it|
+ndk_targets.each do |it|
   clean
 
   captures = it.match(/^(.*)-(\d+)$/).captures

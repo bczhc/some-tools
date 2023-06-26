@@ -58,7 +58,7 @@ RUN cp -v .github/workflows/config.toml . && \
 RUN ./gradlew
 
 # Build OpenSSL for all Android targets
-RUN ./tools/build-openssl /openssl # FIXME
+RUN ./tools/build-openssl /openssl "$(echo $full_targets | sed "s/,/ /g")"
 
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
