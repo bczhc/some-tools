@@ -25,6 +25,9 @@ RUN apt update && \
     # also works (at least so far); I just do as this.
     apt install -y gcc-multilib
 
+# Ruby utilities
+RUN gem install toml
+
 RUN git clone https://github.com/openssl/openssl --depth 1 && \
     cd openssl && \
     git fetch --unshallow && \
@@ -50,9 +53,7 @@ RUN echo 'sdk.dir=/sdk' > local.properties && \
     echo "ndk.dir=/sdk/ndk/$ndk_version" >> local.properties
 
 # Set up basic `config.toml`
-RUN cp -v .github/workflows/config.toml . && \
-    echo 'ndk.build_type = "debug"' >> config.toml && \
-    echo 'ndk.build_targets = []' >> config.toml
+RUN cp -v .github/workflows/config.toml .
 
 # Gradle build script check
 RUN ./gradlew
@@ -72,14 +73,14 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
 # Build single-Android-ABI Apps
 RUN . ~/.cargo/env && \
     mkdir /apks && mkdir /apks/debug && mkdir /apks/release && \
-    for a in $(echo $full_targets | sed "s/,/ /g"); do \
+    for target in $(echo $full_targets | sed "s/,/ /g"); do \
       # reconfigure
-      target_string="[$a]" && \
-      sed -ri "s/^(ndk\.build_targets)=.*/\1=$target_string/" config.properties && \
-      sed -ri 's/^(ndk\.build_type)=.*/\1=debug/' config.properties && \
+      target_string="[$target]" && \
+      ./tools/toml-replace config.toml 'ndk.build_targets' "$target_string" && \
+      ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
       ./gradlew asD && \
-      cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$a.apk && \
-      sed -ri 's/^(ndk\.build_type)=.*/\1=release/' config.properties && \
+      cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$target.apk && \
+      ./tools/toml-replace config.toml 'ndk.build_type' '"release"' && \
       ./gradlew asR && \
       cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
     done
@@ -87,11 +88,11 @@ RUN . ~/.cargo/env && \
 # Build universal-Android-ABI App
 RUN . ~/.cargo/env && \
     targets_string="$(ruby -e "require 'json'; puts STDIN.read.chomp.split(',').to_json")" && \
-    sed -ri "s/^(ndk\.build_targets)=.*/\1=$targets_string/" config.properties && \
-    sed -ri 's/^(ndk\.build_type)=.*/\1=debug/' config.properties && \
+    ./tools/toml-replace config.toml 'ndk.build_targets' "$targets_string" && \
+    ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
     ./gradlew asD && \
     cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
-    sed -ri 's/^(ndk\.build_type)=.*/\1=release/' config.properties && \
+    ./tools/toml-replace config.toml 'ndk.build_type' '"release"' && \
     ./gradlew asR && \
     cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk
 
