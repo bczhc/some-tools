@@ -856,7 +856,7 @@ class FdbWindow(private val context: Context) {
 
                     2 -> {
                         // import path
-                        showImportPathDialog(externalPath.path)
+                        showImportPathFilePicker(externalPath.path)
                     }
 
                     3 -> {
@@ -938,15 +938,14 @@ class FdbWindow(private val context: Context) {
         return dialog
     }
 
-    fun showImportPathDialog(dir: File) {
+    fun showImportPathFilePicker(dir: File) {
         createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
             dialogs.moreMenu.dismiss()
-            importPath(path)
+            showImportPathDialog(path)
         }.show()
     }
 
-    fun importPath(path: String) {
-
+    fun showImportPathDialog(path: String) {
         val performImporting = { file: File ->
             val pathVersion = PathVersion.getPathVersion(file)
 
