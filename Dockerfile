@@ -75,7 +75,7 @@ RUN . ~/.cargo/env && \
     mkdir /apks && mkdir /apks/debug && mkdir /apks/release && \
     for target in $(echo $full_targets | sed "s/,/ /g"); do \
       # reconfigure
-      target_string="[$target]" && \
+      target_string="[\"$target\"]" && \
       ./tools/toml-replace config.toml 'ndk.build_targets' "$target_string" && \
       ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
       ./gradlew asD && \
