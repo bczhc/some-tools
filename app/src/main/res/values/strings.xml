@@ -19,7 +19,7 @@
     <string name="app_menu_little_tools">小工具</string>
     <string name="app_download_confirmation_dialog_title">是否确认下载</string>
     <string name="app_unsupported_abi">不支持的ABI</string>
-    <string name="app_internal_data_transfer_title">内部数据转移</string>
+    <string name="app_data_transfer_title">应用数据转移</string>
     <string name="settings_import_data_restart_dialog_msg">数据导入后需重启应用</string>
     <!-- app end -->
 

@@ -10,26 +10,23 @@ import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESO
 import pers.zhc.tools.databinding.MainActivityBinding
 import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.jni.JNI
-import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.utils.indeterminateProgressDialog
-import pers.zhc.tools.utils.setPositiveAction
-import pers.zhc.tools.utils.thread
+import pers.zhc.tools.utils.*
 import kotlin.io.path.Path
 import kotlin.io.path.pathString
 
 /**
  * @author bczhc
  */
-class Settings : BaseActivity() {
+class SettingsActivity : BaseActivity() {
     private val dataTransfer = object {
         val importFileLauncher = registerForActivityResult(
             FilePickerActivityContract(FilePickerActivityContract.FilePickerType.PICK_FILE, false)
         ) {
             it ?: return@registerForActivityResult
 
-            indeterminateProgressDialog(this@Settings, getString(R.string.extracting_archive_msg)) { finish ->
+            indeterminateProgressDialog(this@SettingsActivity, getString(R.string.extracting_archive_msg)) { finish ->
                 thread {
-                    val filesDir = filesDir
+                    val filesDir = externalFilesDir()
                     filesDir.deleteRecursively()
                     filesDir.mkdir()
 
@@ -37,7 +34,7 @@ class Settings : BaseActivity() {
 
                     finish()
                     runOnUiThread {
-                        MaterialAlertDialogBuilder(this@Settings)
+                        MaterialAlertDialogBuilder(this@SettingsActivity)
                             .setTitle(R.string.restart_title)
                             .setMessage(R.string.settings_import_data_restart_dialog_msg)
                             .setPositiveAction { _, _ ->
@@ -58,10 +55,10 @@ class Settings : BaseActivity() {
             it ?: return@registerForActivityResult
             it.filename ?: return@registerForActivityResult
 
-            indeterminateProgressDialog(this@Settings, getString(R.string.creating_archive_msg)) { finish ->
+            indeterminateProgressDialog(this@SettingsActivity, getString(R.string.creating_archive_msg)) { finish ->
                 thread {
                     val outputFile = Path(it.path, it.filename)
-                    JNI.Compression.createTarBz3(filesDir.path, outputFile.pathString)
+                    JNI.Compression.createTarBz3(externalFilesDir().path, outputFile.pathString)
                     finish()
                 }
             }
@@ -103,7 +100,7 @@ class Settings : BaseActivity() {
             Info.staticResourceRootURL = newResourceURL
             Info.githubRawRootURL = newGithubRawURL
 
-            ToastUtils.show(this@Settings, R.string.saved)
+            ToastUtils.show(this@SettingsActivity, R.string.saved)
             finish()
         }
     }
