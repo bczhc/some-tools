@@ -945,7 +945,7 @@ class FdbWindow(private val context: Context) {
         }.show()
     }
 
-    public  fun importPath(path: String){
+    fun importPath(path: String) {
 
         val performImporting = { file: File ->
             val pathVersion = PathVersion.getPathVersion(file)
@@ -1040,35 +1040,35 @@ class FdbWindow(private val context: Context) {
             }.start()
         }
 
-            val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
-            bindings.showDrawingCb.setOnCheckedChangeListener { _, isChecked ->
-                bindings.fdbDefaultDrawingIntervalTil.visibility = if (isChecked) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+        val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
+        bindings.showDrawingCb.setOnCheckedChangeListener { _, isChecked ->
+            bindings.fdbDefaultDrawingIntervalTil.visibility = if (isChecked) {
+                View.VISIBLE
+            } else {
+                View.GONE
             }
-            bindings.pathFileTv.text = context.getString(R.string.fdb_path_import_prompt_dialog_filepath_tv, path)
+        }
+        bindings.pathFileTv.text = context.getString(R.string.fdb_path_import_prompt_dialog_filepath_tv, path)
 
-            MaterialAlertDialogBuilder(context)
-                .setTitle(R.string.import_)
-                .setNegativeAction()
-                .setPositiveAction { _, _ ->
-                    val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
-                    paintView.isShowDrawing = bindings.showDrawingCb.isChecked
-                    paintView.drawingInterval = if (paintView.isShowDrawing) {
-                        interval
-                    } else {
-                        0
-                    }
-                    wm.addView(pathImportWindow, pathImportWindowLP)
-                    setUpPathImportWindow()
-                    performImporting(File(path))
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.import_)
+            .setNegativeAction()
+            .setPositiveAction { _, _ ->
+                val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
+                paintView.isShowDrawing = bindings.showDrawingCb.isChecked
+                paintView.drawingInterval = if (paintView.isShowDrawing) {
+                    interval
+                } else {
+                    0
                 }
-                .setView(bindings.root)
-                .create().apply {
-                    DialogUtils.setDialogAttr(this, width = MATCH_PARENT, overlayWindow = true)
-                }.show()
+                wm.addView(pathImportWindow, pathImportWindowLP)
+                setUpPathImportWindow()
+                performImporting(File(path))
+            }
+            .setView(bindings.root)
+            .create().apply {
+                DialogUtils.setDialogAttr(this, width = MATCH_PARENT, overlayWindow = true)
+            }.show()
     }
 
     private fun showPathStatDialog() {
@@ -1487,20 +1487,20 @@ class FdbWindow(private val context: Context) {
                 updateDrawingInterval()
             }
 
-            speedTv.setOnClickListener{
-                    createPromptDialog(R.string.fdb_change_drawing_speed) { _, et ->
-                        try {
-                            drawingInterval = et.text.toString().toInt()
-                        if(drawingInterval < 0){
+            speedTv.setOnClickListener {
+                createPromptDialog(R.string.fdb_change_drawing_speed) { _, et ->
+                    try {
+                        drawingInterval = et.text.toString().toInt()
+                        if (drawingInterval < 0) {
                             drawingInterval = 0
-                            speedTv.text="0"
+                            speedTv.text = "0"
                         }
-                        } catch (e: Exception){
-                            ToastUtils.show(context, R.string.please_enter_correct_value_toast)
-                            return@createPromptDialog
-                        }
-                        updateDrawingInterval()
-                    }.show()
+                    } catch (e: Exception) {
+                        ToastUtils.show(context, R.string.please_enter_correct_value_toast)
+                        return@createPromptDialog
+                    }
+                    updateDrawingInterval()
+                }.show()
             }
 
             if (paintView.isShowDrawing) {
