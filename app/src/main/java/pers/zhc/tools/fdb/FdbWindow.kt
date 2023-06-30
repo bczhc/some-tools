@@ -880,7 +880,10 @@ class FdbWindow(private val context: Context) {
                         ) { _, picker, path ->
                             dialogs.moreMenu.dismiss()
 
-                            exportPath(path, picker.filenameET!!.text.toString() + ".path")
+                            val destFile = File(path, picker.filenameET!!.text.toString().let {
+                                if (File(it).extension != "path") "$it.path" else it
+                            })
+                            exportPath(destFile)
                         }.show()
                     }
 
@@ -1105,7 +1108,7 @@ class FdbWindow(private val context: Context) {
         return dialog
     }
 
-    private fun exportPath(internalPath: String, filename: String) {
+    private fun exportPath(destFile: File) {
         // path "undo" optimization
         val bindings = ProgressBarBinding.inflate(LayoutInflater.from(context))
         val progressTitle = bindings.progressBarTitle
@@ -1127,7 +1130,6 @@ class FdbWindow(private val context: Context) {
 
         val tryDo = AsyncTryDo()
         val threadAction = {
-            val destFile = File(internalPath, filename)
             FileUtil.copy(pathFiles.tmpPathFile, destFile)
 
             val database = SQLite3.open(destFile.path)
@@ -1483,20 +1485,20 @@ class FdbWindow(private val context: Context) {
                 updateDrawingInterval()
             }
 
-            speedTv.setOnClickListener{
-                    createPromptDialog(R.string.fdb_change_drawing_speed) { _, et ->
-                        try {
-                            drawingInterval = et.text.toString().toInt()
-                        if(drawingInterval < 0){
+            speedTv.setOnClickListener {
+                createPromptDialog(R.string.fdb_change_drawing_speed) { _, et ->
+                    try {
+                        drawingInterval = et.text.toString().toInt()
+                        if (drawingInterval < 0) {
                             drawingInterval = 0
-                            speedTv.text="0"
+                            speedTv.text = "0"
                         }
-                        } catch (e: Exception){
-                            ToastUtils.show(context, R.string.please_enter_correct_value_toast)
-                            return@createPromptDialog
-                        }
-                        updateDrawingInterval()
-                    }.show()
+                    } catch (e: Exception) {
+                        ToastUtils.show(context, R.string.please_enter_correct_value_toast)
+                        return@createPromptDialog
+                    }
+                    updateDrawingInterval()
+                }.show()
             }
 
             if (paintView.isShowDrawing) {
