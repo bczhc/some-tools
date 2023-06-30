@@ -79,7 +79,7 @@ public class PaintView extends BaseView {
      * locked absolute eraser stroke width
      */
     private float lockedEraserStrokeWidth;
-    private OnColorChangedCallback onColorChangedCallback = null;
+    private OnPathImportColorChangedCallback onPathImportColorChangedCallback = null;
     private Bitmap transBitmap;
     private Matrix transCanvasTransformation;
 
@@ -123,8 +123,8 @@ public class PaintView extends BaseView {
         init();
     }
 
-    public void setOnColorChangedCallback(OnColorChangedCallback onColorChangedCallback) {
-        this.onColorChangedCallback = onColorChangedCallback;
+    public void setOnColorChangedCallback(OnPathImportColorChangedCallback onPathImportColorChangedCallback) {
+        this.onPathImportColorChangedCallback = onPathImportColorChangedCallback;
     }
 
     private void initBitmap(int width, int height, @NotNull Layer layer) {
@@ -322,9 +322,13 @@ public class PaintView extends BaseView {
      * 设置画笔颜色
      */
     public void setDrawingColor(@ColorInt int color) {
+        setDrawingColor(color, false);
+    }
+
+    public void setDrawingColor(@ColorInt int color, boolean fromPathImport) {
         mPaint.setColor(color);
-        if (this.onColorChangedCallback != null) {
-            onColorChangedCallback.change(color);
+        if (this.onPathImportColorChangedCallback != null && fromPathImport) {
+            onPathImportColorChangedCallback.change(color);
         }
     }
 
@@ -736,7 +740,7 @@ public class PaintView extends BaseView {
                     }
                     setEraserMode(bytes[24] == 1);
                     setEraserStrokeWidth(eraserStrokeWidth);
-                    setDrawingColor(color);
+                    setDrawingColor(color, true);
                     setDrawingStrokeWidth(strokeWidth);
                     onTouchAction(motionAction, x, y);
                     if (progressCallback != null) {
@@ -794,7 +798,7 @@ public class PaintView extends BaseView {
                         setEraserStrokeWidth(strokeWidth);
                     } else {
                         setDrawingStrokeWidth(strokeWidth);
-                        setDrawingColor(color);
+                        setDrawingColor(color, true);
                     }
                     break;
                 case 3:
@@ -971,7 +975,7 @@ public class PaintView extends BaseView {
 
             switch (mark) {
                 case 0x01:
-                    setDrawingColor(cursor.getInt(1));
+                    setDrawingColor(cursor.getInt(1), true);
                     setDrawingStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
                     setEraserMode(false);
                     break;
@@ -1202,7 +1206,7 @@ public class PaintView extends BaseView {
 
             switch (mark) {
                 case 0x01:
-                    setDrawingColor(cursor.getInt(1));
+                    setDrawingColor(cursor.getInt(1), true);
                     setDrawingStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
                     setEraserMode(false);
                     break;
@@ -1305,7 +1309,7 @@ public class PaintView extends BaseView {
                     int color = pers.zhc.jni.JNI.Struct.unpackInt(info, 0, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
                     float width = pers.zhc.jni.JNI.Struct.unpackFloat(info, 4, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
                     float blurRadius = pers.zhc.jni.JNI.Struct.unpackFloat(info, 8, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
-                    setDrawingColor(color);
+                    setDrawingColor(color, true);
 
                     final float drawingStrokeWidth = width * defaultTransformationScale / canvasScale;
                     setDrawingStrokeWidth(drawingStrokeWidth);

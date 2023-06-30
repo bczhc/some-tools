@@ -1,5 +1,5 @@
 package pers.zhc.tools.floatingdrawing;
 
-public interface OnColorChangedCallback {
+public interface OnPathImportColorChangedCallback {
     void change(int color);
 }
