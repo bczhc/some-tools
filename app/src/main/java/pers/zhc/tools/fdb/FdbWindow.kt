@@ -1021,7 +1021,11 @@ class FdbWindow(private val context: Context) {
                             }
                             extraInfo ?: return@runOnUiThread
 
-                            extraInfo!!.savedColors?.let { colorPickers.brush.setSavedColor(it) }
+                            extraInfo!!.savedColors?.let {
+                                val newSavedColors = ArrayList(colorPickers.brush.savedColors)
+                                newSavedColors.addAll(it)
+                                colorPickers.brush.setSavedColor(newSavedColors.distinct())
+                            }
                             extraInfo!!.defaultTransformation?.let {
                                 paintView.defaultTransformation = Matrix::class.fromValues(it)
                             }
