@@ -23,16 +23,27 @@ fun InputStream.readToString(charset: Charset = StandardCharsets.UTF_8): String 
     return String(readBytes, charset)
 }
 
-fun InputStream.writeTo(out: OutputStream) {
+fun InputStream.writeTo(out: OutputStream) = this.copyTo(out, Long.MAX_VALUE)
+
+/**
+ * Returns false if the limit is exceeded and the copy is interrupted
+ */
+fun InputStream.copyTo(out: OutputStream, limit: Long): Boolean {
     val buf = ByteArray(4096)
     var readLen: Int
+    var bytesCopied = 0L
 
     while (true) {
         readLen = this.read(buf)
         if (readLen == -1) break
         out.write(buf, 0, readLen)
         out.flush()
+        bytesCopied += readLen
+        if (bytesCopied > limit) {
+            return false
+        }
     }
+    return true
 }
 
 class MkdirException : RuntimeException {

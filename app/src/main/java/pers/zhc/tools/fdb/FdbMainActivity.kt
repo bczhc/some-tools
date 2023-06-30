@@ -18,6 +18,7 @@ import pers.zhc.tools.utils.requireMkdir
 import java.io.File
 import java.io.IOException
 
+
 /**
  * @author bczhc
  */
@@ -44,17 +45,7 @@ class FdbMainActivity : BaseActivity() {
         val openCacheDirButton = bindings.openCacheBtn
 
         startButton.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!checkDrawOverlayPermission()) {
-                    launcher.overlaySetting!!.launch(this.packageName)
-                    return@setOnClickListener
-                } else {
-                    ToastUtils.show(this, createFdbWindow().also {
-                        it.hardwareAcceleration = hardwareAccelerated
-                        it.startFDB()
-                    }.toString())
-                }
-            } else return@setOnClickListener
+            checkAndStartFdb()
         }
 
         val updateClearCacheButtonText = {
@@ -81,11 +72,48 @@ class FdbMainActivity : BaseActivity() {
             createFdbWindow().also {
                 it.hardwareAcceleration = hardwareAccelerated
                 it.startFDB()
-            }.showImportPathDialog(pathTmpDir)
+            }.showImportPathFilePicker(pathTmpDir)
         }
 
         val serviceIntent = Intent(this, FdbService::class.java)
         startService(serviceIntent)
+
+        // from file manager "open as"
+        if (intent?.action == Intent.ACTION_VIEW && intent?.data != null) {
+            val uri = intent.data!!
+            val inputStream = contentResolver.openInputStream(uri)
+            if (inputStream == null) {
+                ToastUtils.show(this, R.string.file_open_failed_toast)
+                finish()
+                return
+            }
+            val tmpPathFile = File(cacheDir, System.currentTimeMillis().toString())
+            tmpPathFile.outputStream().also {
+                val copySizeLimit = 100 * 1048576 /* 100 MiB */
+                inputStream.copyTo(it, copySizeLimit)
+                it.close()
+            }
+            inputStream.close()
+
+            checkAndStartFdb()?.showImportPathDialog(tmpPathFile.path)
+            finish()
+        }
+    }
+
+    private fun checkAndStartFdb(): FdbWindow? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return null
+
+        return if (!checkDrawOverlayPermission()) {
+            launcher.overlaySetting!!.launch(this.packageName)
+            null
+        } else {
+            val fdb = createFdbWindow().also {
+                it.hardwareAcceleration = hardwareAccelerated
+                it.startFDB()
+            }
+            ToastUtils.show(this, fdb.toString())
+            fdb
+        }
     }
 
     private fun createFdbWindow(): FdbWindow {

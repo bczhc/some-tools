@@ -856,7 +856,7 @@ class FdbWindow(private val context: Context) {
 
                     2 -> {
                         // import path
-                        showImportPathDialog(externalPath.path)
+                        showImportPathFilePicker(externalPath.path)
                     }
 
                     3 -> {
@@ -941,7 +941,14 @@ class FdbWindow(private val context: Context) {
         return dialog
     }
 
-    fun showImportPathDialog(dir: File) {
+    fun showImportPathFilePicker(dir: File) {
+        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
+            dialogs.moreMenu.dismiss()
+            showImportPathDialog(path)
+        }.show()
+    }
+
+    fun showImportPathDialog(path: String) {
         val performImporting = { file: File ->
             val pathVersion = PathVersion.getPathVersion(file)
 
@@ -1039,39 +1046,35 @@ class FdbWindow(private val context: Context) {
             }.start()
         }
 
-        createFilePickerDialog(FilePickerRL.TYPE_PICK_FILE, dir) { _, _, path ->
-            dialogs.moreMenu.dismiss()
-
-            val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
-            bindings.showDrawingCb.setOnCheckedChangeListener { _, isChecked ->
-                bindings.fdbDefaultDrawingIntervalTil.visibility = if (isChecked) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+        val bindings = FdbPathImportPromptDialogBinding.inflate(LayoutInflater.from(context), null, false)
+        bindings.showDrawingCb.setOnCheckedChangeListener { _, isChecked ->
+            bindings.fdbDefaultDrawingIntervalTil.visibility = if (isChecked) {
+                View.VISIBLE
+            } else {
+                View.GONE
             }
-            bindings.pathFileTv.text = context.getString(R.string.fdb_path_import_prompt_dialog_filepath_tv, path)
+        }
+        bindings.pathFileTv.text = context.getString(R.string.fdb_path_import_prompt_dialog_filepath_tv, path)
 
-            MaterialAlertDialogBuilder(context)
-                .setTitle(R.string.import_)
-                .setNegativeAction()
-                .setPositiveAction { _, _ ->
-                    val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
-                    paintView.isShowDrawing = bindings.showDrawingCb.isChecked
-                    paintView.drawingInterval = if (paintView.isShowDrawing) {
-                        interval
-                    } else {
-                        0
-                    }
-                    wm.addView(pathImportWindow, pathImportWindowLP)
-                    setUpPathImportWindow()
-                    performImporting(File(path))
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.import_)
+            .setNegativeAction()
+            .setPositiveAction { _, _ ->
+                val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
+                paintView.isShowDrawing = bindings.showDrawingCb.isChecked
+                paintView.drawingInterval = if (paintView.isShowDrawing) {
+                    interval
+                } else {
+                    0
                 }
-                .setView(bindings.root)
-                .create().apply {
-                    DialogUtils.setDialogAttr(this, width = MATCH_PARENT, overlayWindow = true)
-                }.show()
-        }.show()
+                wm.addView(pathImportWindow, pathImportWindowLP)
+                setUpPathImportWindow()
+                performImporting(File(path))
+            }
+            .setView(bindings.root)
+            .create().apply {
+                DialogUtils.setDialogAttr(this, width = MATCH_PARENT, overlayWindow = true)
+            }.show()
     }
 
     private fun showPathStatDialog() {
