@@ -155,6 +155,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         savedColorAdapter.setOnColorViewClickedListener(self -> {
             final SavedColor savedColor = self.getColor();
             setColor(savedColor.hsv, savedColor.alpha);
+            int color = Color.HSVToColor(savedColor.alpha, savedColor.hsv);
+            onColorPickedInterface.onColorPicked(savedColor.hsv, savedColor.alpha, color, true);
         });
         savedColorAdapter.setOnItemLongClickListener((view, position) -> {
             final PopupMenu popupMenu = PopupMenuUtil.createPopupMenu(context, view, R.menu.color_picker_saved_color_popup_menu);
