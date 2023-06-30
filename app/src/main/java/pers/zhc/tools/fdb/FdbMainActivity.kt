@@ -80,11 +80,22 @@ class FdbMainActivity : BaseActivity() {
 
         // from file manager "open as"
         if (intent?.action == Intent.ACTION_VIEW && intent?.data != null) {
-            val path = intent.data?.path
-            if (path != null) {
-                val pathFile = File(path)
-                checkAndStartFdb()?.showImportPathDialog(pathFile.path)
+            val uri = intent.data!!
+            val inputStream = contentResolver.openInputStream(uri)
+            if (inputStream == null) {
+                ToastUtils.show(this, R.string.file_open_failed_toast)
+                finish()
+                return
             }
+            val tmpPathFile = File(cacheDir, System.currentTimeMillis().toString())
+            tmpPathFile.outputStream().also {
+                val copySizeLimit = 100 * 1048576 /* 100 MiB */
+                inputStream.copyTo(it, copySizeLimit)
+                it.close()
+            }
+            inputStream.close()
+
+            checkAndStartFdb()?.showImportPathDialog(tmpPathFile.path)
             finish()
         }
     }
