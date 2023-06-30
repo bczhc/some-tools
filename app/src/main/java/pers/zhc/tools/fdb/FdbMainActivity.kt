@@ -78,7 +78,8 @@ class FdbMainActivity : BaseActivity() {
         val serviceIntent = Intent(this, FdbService::class.java)
         startService(serviceIntent)
 
-        if (intent?.action == Intent.ACTION_VIEW) {
+        // from file manager "open as"
+        if (intent?.action == Intent.ACTION_VIEW && intent?.data != null) {
             val path = intent.data?.path
             if (path != null) {
                 val pathFile = File(path)
