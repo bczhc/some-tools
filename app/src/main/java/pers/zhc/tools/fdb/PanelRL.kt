@@ -85,7 +85,7 @@ class PanelRL : RelativeLayout {
                                         ) {
                                             longClickTimer = null
                                             longClickDone = true
-                                            context.runOnUiThread {
+                                            runOnUiThread {
                                                 onButtonLongClicked(getMode(v), index)
                                             }
                                         }

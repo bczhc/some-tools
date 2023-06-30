@@ -117,7 +117,7 @@ public class Common {
         }
     }
 
-    public static void runOnUiThread(Context ctx, Runnable r) {
+    public static void runOnUiThread(Runnable r) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             r.run();
             return;

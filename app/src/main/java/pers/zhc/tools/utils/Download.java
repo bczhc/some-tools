@@ -94,7 +94,7 @@ public class Download {
                     download(url, os, progress -> {
 
                         tryDo.tryDo((self, notifier) -> {
-                            Common.runOnUiThread(ctx, () -> {
+                            Common.runOnUiThread(() -> {
                                 pi.setProgressCompat(((int) (progress * 100F)), true);
                                 progressTextView.setText(ctx.getString(R.string.progress_tv, progress * 100F));
                                 notifier.finish();

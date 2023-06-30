@@ -355,7 +355,7 @@ class FdbWindow(private val context: Context) {
             }
 
             setOnImportLayerAddedListener {
-                context.awaitRunOnUiThread {
+                awaitRunOnUiThread {
                     layerManagerView.add1Layer(it)
                 }
             }
@@ -405,7 +405,7 @@ class FdbWindow(private val context: Context) {
         paintView.setOnColorChangedCallback {
             if (!paintView.isShowDrawing) return@setOnColorChangedCallback
             asyncTryDo.tryDo { _, notifier ->
-                context.runOnUiThread {
+                runOnUiThread {
                     colorPickers.brush.color = it
                     if (followBrushColor) {
                         updatePanelColor(it)
@@ -953,7 +953,7 @@ class FdbWindow(private val context: Context) {
                     paintView.importPathFile(file, { progress, layerName, layerNumber, layerCount ->
                         // progress callback
                         tryDo.tryDo { _, notifier ->
-                            context.runOnUiThread {
+                            runOnUiThread {
                                 pathImportWindowBindings.progressCircular.setProgressCompat(
                                     (progress * 100F).toInt(),
                                     true
@@ -979,7 +979,7 @@ class FdbWindow(private val context: Context) {
                     }, pathVersion)
                 } catch (e: Exception) {
                     ToastUtils.showError(context, R.string.fdb_import_failed, e)
-                    context.runOnUiThread {
+                    runOnUiThread {
                         wm.runCatching { removeView(pathImportWindow) }
                     }
                     return@Thread
@@ -987,7 +987,7 @@ class FdbWindow(private val context: Context) {
 
                 Log.i(TAG, "importPathFile time elapsed: ${stopwatch.stop()} ms")
 
-                Common.runOnUiThread(context) {
+                Common.runOnUiThread {
                     // done action
                     pathImportWindowBindings.progressCircular.setProgressCompat(100, true)
                     wm.runCatching { removeView(pathImportWindow) }
@@ -1136,7 +1136,7 @@ class FdbWindow(private val context: Context) {
             pathLayerTables.forEachIndexed { layerIndex, table ->
                 PathProcessor.optimizePath(destFile, table) { progress, phase ->
                     tryDo.tryDo { _, notifier ->
-                        context.runOnUiThread {
+                        runOnUiThread {
                             when (phase) {
                                 PathProcessor.ProgressPhase.PHASE1, PathProcessor.ProgressPhase.PHASE2 -> {
                                     setProgress(layerIndex + 1, progress, phase)
@@ -1150,7 +1150,7 @@ class FdbWindow(private val context: Context) {
                         }
                     }
                     if (phase == PathProcessor.ProgressPhase.DONE && layerIndex == pathLayerTables.lastIndex) {
-                        context.runOnUiThread {
+                        runOnUiThread {
                             dialog.dismiss()
                         }
                     }
@@ -1162,7 +1162,7 @@ class FdbWindow(private val context: Context) {
                 threadAction()
                 ToastUtils.show(context, R.string.fdb_exporting_path_succeeded_toast)
             } catch (e: IOException) {
-                context.runOnUiThread {
+                runOnUiThread {
                     Common.showException(e, context)
                     dialog.dismiss()
                 }

@@ -149,7 +149,7 @@ WHERE instr(lower("date"), lower(?)) > 0
 
         val context = requireContext()
 
-        Common.runOnUiThread(context) {
+        Common.runOnUiThread {
             recyclerViewAdapter = ListAdapter(context, diaryItemDataList, this::makeTitle)
             recyclerView.setUpFastScroll(context)
             recyclerView.setLinearLayoutManager()
@@ -383,7 +383,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
                             }
                         }
                     }
-                    Common.runOnUiThread(context) {
+                    Common.runOnUiThread {
                         progressDialog.dismiss()
                         recyclerViewAdapter.notifyDataSetChanged()
                     }

@@ -1,23 +1,19 @@
 package pers.zhc.tools.utils
 
-import android.content.Context
+fun runOnUiThread(action: () -> Unit) = Common.runOnUiThread(action)
 
-fun Context.runOnUiThread(action: () -> Unit) {
-    Common.runOnUiThread(this, action)
-}
-
-fun Context.awaitRunOnUiThread(action: () -> Unit) {
+fun awaitRunOnUiThread(action: () -> Unit) {
     val latch = NotifyLatch()
-    this.runOnUiThread {
+    runOnUiThread {
         action()
         latch.unlatch()
     }
     latch.await()
 }
 
-fun Context.spinAwaitRunOnUiThread(action: () -> Unit) {
+fun spinAwaitRunOnUiThread(action: () -> Unit) {
     var done = false
-    this.runOnUiThread {
+    runOnUiThread {
         action()
         done = true
     }

@@ -92,7 +92,7 @@ class BusReminder(
         }
         if (nearestBusRunStationDiff == null) {
             // there's no nearest bus
-            Common.runOnUiThread(context) {
+            Common.runOnUiThread {
                 notifyNotification(
                     buildNotifyNoBusNotification(
                         busInfo.busLineName,
@@ -104,7 +104,7 @@ class BusReminder(
         }
 
         nearestBusRunStationIndex = myStationIndex - nearestBusRunStationDiff!!
-        Common.runOnUiThread(context) {
+        Common.runOnUiThread {
             notifyNotification(
                 buildHaveBusNotification(
                     busInfo.busLineName,

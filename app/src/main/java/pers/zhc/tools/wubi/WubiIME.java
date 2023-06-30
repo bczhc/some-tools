@@ -705,7 +705,7 @@ public class WubiIME extends InputMethodService {
                 return Unit.INSTANCE;
             });
 
-            Common.runOnUiThread(context, () -> {
+            Common.runOnUiThread(() -> {
                 progressDialog.dismiss();
                 showInverseDictLookupDialog(context, text, queried, false, windowToken);
             });

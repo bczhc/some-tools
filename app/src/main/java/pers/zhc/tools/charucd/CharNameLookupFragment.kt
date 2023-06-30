@@ -89,7 +89,7 @@ class CharNameLookupFragment : BaseFragment() {
                 thread {
                     val queried = queryResult()
                     val processed = processQueryResult(queried)
-                    context.runOnUiThread {
+                    runOnUiThread {
                         hintTV.text =
                             getString(R.string.char_ucd_name_lookup_hint_tv_result, queried.totalCount, LOOKUP_LIMIT)
                         listItems.clear()

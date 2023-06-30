@@ -90,7 +90,7 @@ class ScreenColorPickerManager(
                         // manually delay, workaround for that the screenshot contains the colorPickerView itself
                         Thread.sleep(100)
                         screenshotReader.requestScreenshot { bitmap ->
-                            Common.runOnUiThread(context) {
+                            Common.runOnUiThread {
                                 screenColorPickerView.getBitmap()?.recycle()
                                 screenColorPickerView.setBitmap(bitmap)
                                 screenColorPickerView.setIsTransparent(false)
