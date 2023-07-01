@@ -338,7 +338,7 @@ public class PaintView extends BaseView {
     public void undo() {
         Stopwatch stopwatch = new Stopwatch();
 
-        if (!undoListRef.isEmpty()) {
+        if (canUndo()) {
             layerPathSaverRef.undo();
 
             clearPaint();//清除之前绘制内容
@@ -360,7 +360,7 @@ public class PaintView extends BaseView {
      * 恢复操作
      */
     public void redo() {
-        if (!redoListRef.isEmpty()) {
+        if (canRedo()) {
             layerPathSaverRef.redo();
 
             PathBean pathBean = redoListRef.remove(redoListRef.size() - 1);
@@ -475,14 +475,14 @@ public class PaintView extends BaseView {
      * 是否可以撤销
      */
     public boolean canUndo() {
-        return undoListRef.isEmpty();
+        return !undoListRef.isEmpty();
     }
 
     /**
      * 是否可以恢复
      */
     public boolean canRedo() {
-        return redoListRef.isEmpty();
+        return !redoListRef.isEmpty();
     }
 
     /**
@@ -500,10 +500,10 @@ public class PaintView extends BaseView {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!importingPath) {
+        //if (!importingPath) {
             gestureResolver.onTouch(event);
             onTouchAction(event.getAction(), event.getX(), event.getY());
-        }
+        //}
         return true;
     }
 
