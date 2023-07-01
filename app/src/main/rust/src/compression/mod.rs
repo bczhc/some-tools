@@ -67,8 +67,8 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Compression_createTarZst
         let dir = Path::new(dir).canonicalize()?;
         let mut out_file = File::open_or_create(output)?;
 
-        let mut writer = zstd::Encoder::new(&mut out_file, level)?;
-        let mut archive = tar::Builder::new(&mut writer);
+        let mut encoder = zstd::Encoder::new(&mut out_file, level)?;
+        let mut archive = tar::Builder::new(&mut encoder);
 
         let entries = collect_files(&dir)?;
         for (i, entry) in entries.iter().enumerate() {
@@ -98,6 +98,9 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Compression_createTarZst
                 &path.escape(),
             )?;
         }
+        archive.finish()?;
+        drop(archive);
+        encoder.finish()?;
     };
     result.check_or_throw(&mut env).unwrap();
 }
