@@ -476,8 +476,12 @@ public class JNI {
     }
 
     public static class Compression {
-        public static native void createTarBz3(String dir, String output);
-        
-        public static native void extractTarBz3(String file, String outputDir);
+        public static native void createTarZst(String dir, String output, int level, ProgressCallback callback);
+
+        public static native void extractTarZst(String file, String outputDir, ProgressCallback callback);
+
+        public interface ProgressCallback {
+            void callback(int n, int total, String name);
+        }
     }
 }

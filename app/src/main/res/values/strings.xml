@@ -101,6 +101,8 @@
     <string name="text_encoding_menu">编码</string>
     <string name="creating_archive_msg">正在创建归档</string>
     <string name="restart_title">重启</string>
+    <string name="importing_dialog_title">正在导入</string>
+    <string name="exporting_dialog_title">正在导出</string>
     <!-- end -->
 
     <!-- old -->

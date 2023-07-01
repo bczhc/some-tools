@@ -121,7 +121,10 @@ fun MaterialAlertDialogBuilder.setNegativeAction(): MaterialAlertDialogBuilder {
 typealias PromptDialogCallback = (dialog: DialogInterface, editText: EditText) -> Unit
 
 fun indeterminateProgressDialog(context: Context, title: String, task: (finish: () -> Unit) -> Unit) {
-    val dialog = ProgressDialog(context).also { it.show() }
+    val dialog = ProgressDialog(context).apply {
+        setCanceledOnTouchOutside(false)
+        setCancelable(false)
+    }.also { it.show() }
     dialog.getProgressView().apply {
         isIndeterminateMode = true
         setTitle(title)
@@ -134,4 +137,35 @@ fun indeterminateProgressDialog(context: Context, title: String, task: (finish: 
     }
 
     task(finishFunc)
+}
+
+fun determinateProgressDialog(
+    context: Context,
+    title: String,
+    block: (updateText: (String) -> Unit, updateProgress: (Float) -> Unit, finish: () -> Unit) -> Unit
+) {
+    val progressDialog = ProgressDialog(context).apply {
+        setCanceledOnTouchOutside(false)
+        setCancelable(false)
+    }.also { it.show() }
+    val progressView = progressDialog.getProgressView()
+    progressView.setTitle(title)
+
+    block(
+        { t ->
+            context.runOnUiThread {
+                progressView.setText(t)
+            }
+        },
+        { p ->
+            context.runOnUiThread {
+                progressView.setProgress(p)
+            }
+        },
+        {
+            context.runOnUiThread {
+                progressDialog.dismiss()
+            }
+        }
+    )
 }

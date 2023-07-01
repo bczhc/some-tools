@@ -1,8 +1,11 @@
 package pers.zhc.tools.utils
 
+import pers.zhc.tools.MyApplication
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import kotlin.random.Random
+import kotlin.random.nextUInt
 
 /**
  * @author bczhc
@@ -32,4 +35,18 @@ class FileUtil {
             copy(src.path, dst.path)
         }
     }
+}
+
+fun tmpFile(): File {
+    val cacheDir = MyApplication.appContext.cacheDir!!
+    while (true) {
+        val f = File(cacheDir, Random.nextUInt().toString())
+        if (!f.exists()) {
+            return f
+        }
+    }
+}
+
+fun File.checkAddExtension(ext: String): File {
+    return if (this.extension != ext) File(this.path + ".$ext") else this
 }

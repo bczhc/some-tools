@@ -9,6 +9,7 @@ import pers.zhc.tools.views.ProgressView
 
 /**
  * @author bczhc
+ * TODO: flexible dialog type (circle, bar), lazy initialization
  */
 class ProgressDialog(context: Context) : Dialog(context) {
     private val progressView: ProgressView = ProgressView(context)

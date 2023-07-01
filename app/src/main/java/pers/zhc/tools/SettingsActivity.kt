@@ -11,8 +11,7 @@ import pers.zhc.tools.databinding.MainActivityBinding
 import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.*
-import kotlin.io.path.Path
-import kotlin.io.path.pathString
+import java.io.File
 
 /**
  * @author bczhc
@@ -24,14 +23,24 @@ class SettingsActivity : BaseActivity() {
         ) {
             it ?: return@registerForActivityResult
 
-            indeterminateProgressDialog(this@SettingsActivity, getString(R.string.extracting_archive_msg)) { finish ->
+            determinateProgressDialog(
+                this@SettingsActivity,
+                getString(R.string.importing_dialog_title)
+            ) { updateText, updateProgress, finish ->
                 thread {
+                    val cacheFile = tmpFile()
+                    File(it.path).copyTo(cacheFile, overwrite = true)
+
                     val filesDir = externalFilesDir()
                     filesDir.deleteRecursively()
                     filesDir.mkdir()
 
-                    JNI.Compression.extractTarBz3(it.path, filesDir.path)
+                    JNI.Compression.extractTarZst(cacheFile.path, filesDir.path) { n, total, name ->
+                        updateText(name)
+                        updateProgress(n.toFloat() / total.toFloat())
+                    }
 
+                    cacheFile.requireDelete()
                     finish()
                     runOnUiThread {
                         MaterialAlertDialogBuilder(this@SettingsActivity)
@@ -55,11 +64,23 @@ class SettingsActivity : BaseActivity() {
             it ?: return@registerForActivityResult
             it.filename ?: return@registerForActivityResult
 
-            indeterminateProgressDialog(this@SettingsActivity, getString(R.string.creating_archive_msg)) { finish ->
+            determinateProgressDialog(
+                this@SettingsActivity,
+                getString(R.string.exporting_dialog_title)
+            ) { updateText, updateProgress, finish ->
                 thread {
-                    val outputFile = Path(it.path, it.filename)
-                    JNI.Compression.createTarBz3(externalFilesDir().path, outputFile.pathString)
+                    val outputFile = File(it.path, it.filename).checkAddExtension("tzst")
+                    // prevent recursive archiving if `outputFile` is chosen at `externalFilesDir()`...
+                    val cacheFile = tmpFile()
+                    val level = if (BuildConfig.ndkReleaseBuild) 5 else 2
+                    JNI.Compression.createTarZst(externalFilesDir().path, cacheFile.path, level) { n, total, name ->
+                        updateProgress(n.toFloat() / total.toFloat())
+                        updateText(name)
+                    }
+                    cacheFile.copyTo(outputFile, overwrite = true)
+                    cacheFile.requireDelete()
                     finish()
+                    ToastUtils.show(this@SettingsActivity, R.string.exporting_succeeded)
                 }
             }
         }
