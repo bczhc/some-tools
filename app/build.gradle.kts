@@ -82,6 +82,8 @@ val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
 }
 val ndkBuildType = buildConfigs.ndkBuildType.toString()
 
+println("Version: ${generateVersion()}")
+
 android {
     namespace = "pers.zhc.tools"
     signingConfigs {
@@ -99,9 +101,8 @@ android {
         minSdk = 21
         targetSdk = 33
 
-        val verInfo = gVersion()!! as ArrayList<*>
-//        versionCode = verInfo[0] as Int
-        versionCode = Int.MAX_VALUE
+        val verInfo = generateVersion()!! as ArrayList<*>
+        versionCode = verInfo[0] as Int
         versionName = verInfo[1].toString()
 
         ndk {

@@ -5,7 +5,7 @@ import org.gradle.api.GradleException
 import pers.zhc.util.Assertion
 
 import java.nio.charset.StandardCharsets
-import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -30,22 +30,30 @@ class BuildUtils {
         return sb.toString()
     }
 
-    static gVersion() {
-        def utcTimezone = TimeZone.getTimeZone(ZoneOffset.UTC)
-        def getUtcDateFormatter = { String pattern ->
-            def formatter = new SimpleDateFormat(pattern)
-            formatter.timeZone = utcTimezone
-            formatter
+    static generateVersion() {
+        // minutes since UNIX_EPOCH
+        def versionCode = (System.currentTimeMillis() / 1_000_000) as int
+        def versionName = ""
+
+        def now = OffsetDateTime.now(ZoneOffset.UTC)
+        versionName += now.format("yyyyMMddHHmmss")
+
+        try {
+            def gitVersion = Runtime.getRuntime().exec("git rev-parse --short=6 HEAD").inputStream.readAllBytes()
+            gitVersion = new String(gitVersion, StandardCharsets.US_ASCII).strip()
+
+            def data = Runtime.getRuntime().exec("git status --porcelain").inputStream.readAllBytes()
+            if (data.length != 0) {
+                // dirty
+                gitVersion += "-dirty"
+            }
+            versionName += "-$gitVersion"
+        } catch (ignored) {
         }
 
-        def date = new Date()
-        def dateString = getUtcDateFormatter("yyyyMMdd").format(date)
-        def time = getUtcDateFormatter("HHmmss").format(date)
-        def which = 0
-        def verString = "1.0.0"
-        def emoji = ranEmoji()
-        return [Integer.parseInt(dateString + which),
-                "${verString}-${dateString}${time}-$emoji"]
+        versionName += "-${ranEmoji()}"
+
+        return [versionCode, versionName]
     }
 
     static ranEmoji() {
