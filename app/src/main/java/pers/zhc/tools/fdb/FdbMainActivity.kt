@@ -49,7 +49,7 @@ class FdbMainActivity : BaseActivity() {
         }
 
         val updateClearCacheButtonText = {
-            val sizeString = if (!BuildConfig.rustDisabled) {
+            val sizeString = if (BuildConfig.rustEnableJni) {
                 ByteSize.toHumanReadable(getCacheSize(), true)
             } else {
                 getCacheSize().toString()

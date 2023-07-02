@@ -20,7 +20,7 @@ public class JNI {
         if (!initFlag) {
             System.loadLibrary("Main");
             System.loadLibrary("jni-lib");
-            if (!BuildConfig.rustDisabled) {
+            if (BuildConfig.rustEnableJni) {
                 System.loadLibrary("rust_jni");
                 setUpRustPanicHook();
             }

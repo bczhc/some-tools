@@ -57,8 +57,8 @@ val commitLogResult = try {
 
 val buildConfigs = parseConfigTomlFile()
 
-val disableRust = buildConfigs.rustDisabled
-val rustKeepDebugSymbols = buildConfigs.rustKeepDebugSymbols
+val disableRustBuild = !buildConfigs.rust.enableBuild
+val rustKeepDebugSymbols = buildConfigs.rust.keepDebugSymbols
 
 val ndkTargets = buildConfigs.buildTargets
 
@@ -117,7 +117,8 @@ android {
                 100
             )
         )
-        buildConfigField("boolean", "rustDisabled", disableRust.toString())
+        buildConfigField("boolean", "rustEnableBuild", buildConfigs.rust.enableBuild.toString())
+        buildConfigField("boolean", "rustEnableJni", buildConfigs.rust.enableJni.toString())
         buildConfigField("boolean", "ndkReleaseBuild", (buildConfigs.ndkBuildType == BuildType.RELEASE).toString())
     }
     buildTypes {
@@ -176,7 +177,7 @@ val opensslDir = buildConfigs.opensslDir
 
 val rustBuildExtraEnv = HashMap<String, String>()
 val rustBuildTargetEnv = HashMap<String, Map<String, String>>()
-if (!disableRust) {
+if (!disableRustBuild) {
     ndkTargets.forEach {
         val env = (getRustOpensslBuildEnv(AndroidAbi.from(it.abi).toRustTarget()) as Map<*, *>).map { e ->
             Pair(e.key.toString(), e.value.toString())
@@ -229,7 +230,7 @@ val copyOpensslLibsTask = project.task("copyOpensslLibs") {
 }
 
 var compileRustTask: Task? = null
-if (!disableRust) {
+if (!disableRustBuild) {
     compileRustTask = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME())
 }
 
@@ -259,7 +260,7 @@ configure<CppBuildPluginExtension> {
 }
 
 var message = """Build environment info:
-    |use Rust: ${!disableRust}
+    |use Rust: ${buildConfigs.rust.enableJni && buildConfigs.rust.enableBuild}
     |NDK build type: ${buildConfigs.ndkBuildType}
     |SDK path: ${android.sdkDirectory.path}
     |NDK path: ${android.ndkDirectory.path}
@@ -269,7 +270,7 @@ var message = """Build environment info:
     |CMake -D variables: $cmakeDefsMap
 """.trimMargin() + "\n"
 
-if (!disableRust) {
+if (!disableRustBuild) {
     message += """Rust build extra env: $rustBuildExtraEnv
     |Rust build target env: $rustBuildTargetEnv
 """.trimMargin()
@@ -310,7 +311,7 @@ task("saveNdkPath") {
 }
 
 val cleanAllTask = rootProject.task("cleanAll") {
-    if (disableRust) {
+    if (disableRustBuild) {
         dependsOn("clean", ":app:cleanCpp")
     } else {
         dependsOn("clean", ":app:cleanRust", ":app:cleanCpp")
@@ -342,7 +343,7 @@ val compileJniTask = task("compileJni") {
     compileCppTask.dependsOn(copyOpensslLibsTask)
     dependsOn(compileCppTask)
 
-    if (!disableRust) {
+    if (!disableRustBuild) {
         dependsOn(compileRustTask!!)
     }
 }
@@ -379,8 +380,11 @@ fun parseConfigTomlFile(): BuildConfigs {
             println("`ndk.build_type` not specified; use default \"debug\"")
             "debug"
         }),
-        rustDisabled = configToml.getBoolean("ndk.rust.disabled") ?: true,
-        rustKeepDebugSymbols = configToml.getBoolean("ndk.rust.keep_debug_symbols") ?: false
+        rust = RustConfigs(
+            enableBuild = configToml.getBoolean("ndk.rust.enable_build") ?: true,
+            enableJni = configToml.getBoolean("ndk.rust.enable_jni") ?: true,
+            keepDebugSymbols = configToml.getBoolean("ndk.rust.keep_debug_symbols") ?: false,
+        ),
     )
 }
 
@@ -388,8 +392,13 @@ data class BuildConfigs(
     val opensslDir: File,
     val buildTargets: List<BuildTarget>,
     val ndkBuildType: BuildType,
-    val rustDisabled: Boolean,
-    val rustKeepDebugSymbols: Boolean,
+    val rust: RustConfigs,
+)
+
+data class RustConfigs(
+    val enableBuild: Boolean,
+    val enableJni: Boolean,
+    val keepDebugSymbols: Boolean,
 )
 
 enum class BuildType {
