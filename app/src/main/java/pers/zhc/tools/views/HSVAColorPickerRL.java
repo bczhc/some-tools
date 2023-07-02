@@ -219,6 +219,9 @@ public class HSVAColorPickerRL extends RelativeLayout {
     }
 
     private void saveColor(int color, String name) {
+        float[] hsv = new float[3];
+        int alpha = Color.alpha(color);
+        Color.colorToHSV(color, hsv);
         savedColors.add(new SavedColor(hsv, alpha, name));
         savedColorAdapter.notifyItemInserted(savedColors.size() - 1);
     }
@@ -258,6 +261,13 @@ public class HSVAColorPickerRL extends RelativeLayout {
 
             // 保存颜色
             final String input = editText.getText().toString();
+            int colorToSave;
+            try {
+                colorToSave = ColorUtils.parseColorHex(input);
+            } catch (Exception ignored) {
+                ToastUtils.show(context, R.string.please_enter_correct_value_toast);
+                return;
+            }
 
             final EditText namingET = new EditText(context);
             final AlertDialog namingDialog = DialogUtils.Companion.createPromptDialog(
@@ -265,14 +275,14 @@ public class HSVAColorPickerRL extends RelativeLayout {
                     R.string.color_naming,
                     (dialogInterface, editText12) -> {
 
-                        saveColor(getColor(), editText12.getText().toString());
+                        saveColor(colorToSave, editText12.getText().toString());
 
                         return Unit.INSTANCE;
                     },
                     (dialogInterface, editText1) -> Unit.INSTANCE,
                     namingET
             );
-            namingET.setText(ColorUtils.getHexString(getColor(), true));
+            namingET.setText(ColorUtils.getHexString(colorToSave, true));
             DialogUtil.setDialogAttr(namingDialog, null);
             DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(namingET, namingDialog);
             Selection.selectAll(namingET.getText());
