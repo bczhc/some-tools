@@ -1,5 +1,6 @@
 use std::fmt::Debug;
 
+use crate::jni_helper::jni_log;
 use jni::JNIEnv;
 
 pub trait CheckOrThrow {
@@ -13,7 +14,9 @@ where
     fn check_or_throw(&self, env: &mut JNIEnv) -> Result<(), jni::errors::Error> {
         if let Err(e) = self {
             let string = format!("{:?}", e);
-            env.throw(string.as_str())?;
+            let string = string.as_str();
+            jni_log(env, &format!("throw exception:\n{}", string))?;
+            env.throw(string)?;
         }
         Ok(())
     }

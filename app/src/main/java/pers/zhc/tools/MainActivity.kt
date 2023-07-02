@@ -91,7 +91,7 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.settings -> {
-                startActivity(Intent(this, Settings::class.java))
+                startActivity(Intent(this, SettingsActivity::class.java))
             }
 
             R.id.update -> {

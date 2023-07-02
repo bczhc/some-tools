@@ -80,7 +80,7 @@ val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
         )
     }
 }
-val ndkBuildType = buildConfigs.buildType.toString()
+val ndkBuildType = buildConfigs.ndkBuildType.toString()
 
 android {
     namespace = "pers.zhc.tools"
@@ -100,7 +100,8 @@ android {
         targetSdk = 33
 
         val verInfo = gVersion()!! as ArrayList<*>
-        versionCode = verInfo[0] as Int
+//        versionCode = verInfo[0] as Int
+        versionCode = Int.MAX_VALUE
         versionName = verInfo[1].toString()
 
         ndk {
@@ -116,6 +117,7 @@ android {
             )
         )
         buildConfigField("boolean", "rustDisabled", disableRust.toString())
+        buildConfigField("boolean", "ndkReleaseBuild", (buildConfigs.ndkBuildType == BuildType.RELEASE).toString())
     }
     buildTypes {
         val types = asMap
@@ -257,7 +259,7 @@ configure<CppBuildPluginExtension> {
 
 var message = """Build environment info:
     |use Rust: ${!disableRust}
-    |NDK build type: ${buildConfigs.buildType}
+    |NDK build type: ${buildConfigs.ndkBuildType}
     |SDK path: ${android.sdkDirectory.path}
     |NDK path: ${android.ndkDirectory.path}
     |NDK version: $detectedNdkVersion
@@ -372,7 +374,7 @@ fun parseConfigTomlFile(): BuildConfigs {
         buildTargets = configToml.requireArray("ndk.build_targets").map {
             BuildTarget.parse(it)
         },
-        buildType = BuildType.from(configToml.getString("ndk.build_type") ?: run {
+        ndkBuildType = BuildType.from(configToml.getString("ndk.build_type") ?: run {
             println("`ndk.build_type` not specified; use default \"debug\"")
             "debug"
         }),
@@ -384,7 +386,7 @@ fun parseConfigTomlFile(): BuildConfigs {
 data class BuildConfigs(
     val opensslDir: File,
     val buildTargets: List<BuildTarget>,
-    val buildType: BuildType,
+    val ndkBuildType: BuildType,
     val rustDisabled: Boolean,
     val rustKeepDebugSymbols: Boolean,
 )

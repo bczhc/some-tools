@@ -1,9 +1,10 @@
 #![feature(try_blocks)]
+#![feature(yeet_expr)]
 
 extern crate core;
 
-use std::panic;
 use std::sync::Mutex;
+use std::{env, panic};
 
 use crate::jni_helper::jni_log;
 use jni::objects::JClass;
@@ -15,6 +16,8 @@ pub static JAVA_VM: Lazy<Mutex<Option<JavaVM>>> = Lazy::new(|| Mutex::new(None))
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_setUpRustPanicHook(env: JNIEnv, _: JClass) {
+    env::set_var("RUST_BACKTRACE", "1");
+
     JAVA_VM.lock().unwrap().replace(env.get_java_vm().unwrap());
     panic::set_hook(Box::new(|i| {
         let result: anyhow::Result<()> = try {
@@ -29,12 +32,14 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_setUpRustPanicHook(env: JNIEn
     }));
 }
 
+pub mod app;
 pub mod bitmap;
 pub mod byte_size;
 pub mod bzip3;
 pub mod char;
 pub mod char_stat;
 pub mod char_ucd;
+pub mod compression;
 pub mod diary;
 pub mod email;
 pub mod encoding;

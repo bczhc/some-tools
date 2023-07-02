@@ -44,13 +44,14 @@ sha1 = "0.10.5"
 hex = "0.4.3"
 unicode-segmentation = "1.10.0"
 unicode-normalization = "0.1.22"
-bzip3 = { version = "0.2.3", features = ["bundled"] }
+bzip3 = { version = "0.8.0", features = ["bundled"] }
 encoding_rs = "0.8.32"
 anyhow = "1.0.70"
+zstd = "0.12.3+zstd.1.5.2"
 
 [profile.release]
 panic = "abort"
 strip = "symbols"
 
 [profile.dev]
-panic = "abort"
+panic = "unwind"

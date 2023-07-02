@@ -19,6 +19,8 @@
     <string name="app_menu_little_tools">小工具</string>
     <string name="app_download_confirmation_dialog_title">是否确认下载</string>
     <string name="app_unsupported_abi">不支持的ABI</string>
+    <string name="app_data_transfer_title">应用数据转移</string>
+    <string name="settings_import_data_restart_dialog_msg">数据导入后需重启应用</string>
     <!-- app end -->
 
     <!-- common -->
@@ -98,6 +100,11 @@
     <string name="ignore_case">忽略大小写</string>
     <string name="text_encoding_menu">编码</string>
     <string name="file_open_failed_toast">打开文件失败</string>
+    <string name="creating_archive_msg">正在创建归档</string>
+    <string name="restart_title">重启</string>
+    <string name="importing_dialog_title">正在导入</string>
+    <string name="exporting_dialog_title">正在导出</string>
+    <string name="extracting_archive_msg">解压中……</string>
     <!-- end -->
 
     <!-- old -->
@@ -830,6 +837,5 @@
     <!-- CrashReport -->
     <string name="upload_failed_toast">上传失败：%1$s</string>
     <string name="upload_failed_server_error_toast">上传失败：服务器错误</string>
-    <string name="app_internal_data_transfer_title">内部数据转移</string>
     <!-- end -->
 </resources>
