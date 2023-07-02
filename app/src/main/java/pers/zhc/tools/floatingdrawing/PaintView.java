@@ -500,10 +500,10 @@ public class PaintView extends BaseView {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //if (!importingPath) {
+        if (!importingPath) {
             gestureResolver.onTouch(event);
             onTouchAction(event.getAction(), event.getX(), event.getY());
-        //}
+        }
         return true;
     }
 
