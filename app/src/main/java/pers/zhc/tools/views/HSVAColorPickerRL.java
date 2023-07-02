@@ -323,15 +323,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         invalidateAllViews(false);
     }
 
-    public ArrayList<SavedColor> getSavedColors() {
-        ArrayList<SavedColor> list = new ArrayList<>();
-
-        final int childCount = savedColorRV.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            final ColorShowRL colorShowRL = (ColorShowRL) savedColorRV.getChildAt(i);
-            list.add(colorShowRL.getColor());
-        }
-        return list;
+    public List<SavedColor> getSavedColors() {
+        return savedColorAdapter.getData();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -616,6 +609,10 @@ public class HSVAColorPickerRL extends RelativeLayout {
 
         private interface OnItemLongClickListener {
             void onLongClick(View view, int position);
+        }
+
+        public List<SavedColor> getData() {
+            return data;
         }
     }
 }
