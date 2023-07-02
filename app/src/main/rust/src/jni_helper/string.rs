@@ -41,6 +41,9 @@ impl<'a, 'b, 'c> JavaStrExt for JavaStr<'a, 'b, 'c> {
 }
 
 #[macro_export]
+/// Get Java string
+/// 
+/// env, variable name, string object
 macro_rules! java_str_var {
     ($env:expr, $var:ident, $s:expr) => {
         let $var = $env.get_string(&$s)?;

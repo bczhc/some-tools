@@ -32,6 +32,7 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_setUpRustPanicHook(env: JNIEn
     }));
 }
 
+pub mod app;
 pub mod bitmap;
 pub mod byte_size;
 pub mod bzip3;

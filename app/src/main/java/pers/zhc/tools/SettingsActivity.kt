@@ -31,12 +31,21 @@ class SettingsActivity : BaseActivity() {
                     val cacheFile = tmpFile()
                     File(it.path).copyTo(cacheFile, overwrite = true)
 
-                    val filesDir = externalFilesDir()
-                    filesDir.deleteRecursively()
-                    filesDir.mkdir()
+                    val externalFilesDir = externalFilesDir().apply {
+                        deleteRecursively()
+                        mkdir()
+                    }
+                    val internalFilesDir = filesDir.apply {
+                        deleteRecursively()
+                        mkdir()
+                    }
 
-                    JNI.Compression.extractTarZst(cacheFile.path, filesDir.path) { n, total, name ->
-                        updateText(name)
+                    JNI.App.extractAppData(
+                        cacheFile.path,
+                        internalFilesDir.path,
+                        externalFilesDir.path
+                    ) { n, total, name ->
+                        updateText("$n/$total\n$name")
                         updateProgress(n.toFloat() / total.toFloat())
                     }
 
@@ -69,13 +78,18 @@ class SettingsActivity : BaseActivity() {
                 getString(R.string.exporting_dialog_title)
             ) { updateText, updateProgress, finish ->
                 thread {
-                    val outputFile = File(it.path, it.filename).checkAddExtension("tzst")
+                    val outputFile = File(it.path, it.filename).checkAddExtension("bak")
                     // prevent recursive archiving if `outputFile` is chosen at `externalFilesDir()`...
                     val cacheFile = tmpFile()
                     val level = if (BuildConfig.ndkReleaseBuild) 5 else 2
-                    JNI.Compression.createTarZst(externalFilesDir().path, cacheFile.path, level) { n, total, name ->
+                    JNI.App.archiveAppData(
+                        cacheFile.path,
+                        filesDir.path,
+                        externalFilesDir().path,
+                        level
+                    ) { n, total, name ->
+                        updateText("$n/$total\n$name")
                         updateProgress(n.toFloat() / total.toFloat())
-                        updateText(name)
                     }
                     cacheFile.copyTo(outputFile, overwrite = true)
                     cacheFile.requireDelete()

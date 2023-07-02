@@ -484,4 +484,20 @@ public class JNI {
             void callback(int n, int total, String name);
         }
     }
+
+    public static class App {
+        public static native void archiveAppData(
+                String output, String internalFilesDir, String externalFilesDir,
+                int compressionLevel, ProgressCallback callback
+        );
+
+        public static native void extractAppData(
+                String file, String internalFilesDir, String externalFilesDir,
+                ProgressCallback callback
+        );
+
+        public interface ProgressCallback {
+            void callback(int n, int total, String name);
+        }
+    }
 }
