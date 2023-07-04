@@ -16,6 +16,8 @@ Tools
 
 ## Build
 
+TODO: DOCUMENTATION OUTDATED
+
 ### Basic requirements
 
 - cURL
