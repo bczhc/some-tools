@@ -87,7 +87,7 @@ RUN . ~/.cargo/env && \
 
 # Build universal-Android-ABI App
 RUN . ~/.cargo/env && \
-    targets_string="$(ruby -e "require 'json'; puts STDIN.read.chomp.split(',').to_json")" && \
+    targets_string="$(echo "$full_targets" | ruby -e "require 'json'; puts STDIN.read.chomp.split(',').to_json")" && \
     ./tools/toml-replace config.toml 'ndk.build_targets' "$targets_string" && \
     ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
     ./gradlew asD && \
