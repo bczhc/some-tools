@@ -9,13 +9,20 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.RequiresApi
 import pers.zhc.tools.BuildConfig
 
+/**
+ * input: package
+ */
 @RequiresApi(Build.VERSION_CODES.R)
-class AllFilesAccessPermissionRequestContract : ActivityResultContract<Unit, Unit>() {
-    override fun createIntent(context: Context, input: Unit): Intent {
-        return Intent(
-            Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-            Uri.parse("package:${BuildConfig.APPLICATION_ID}")
-        )
+class AllFilesAccessPermissionRequestContract : ActivityResultContract<String?, Unit>() {
+    override fun createIntent(context: Context, input: String?): Intent {
+        return if (input != null) {
+            Intent(
+                Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                Uri.parse("package:${BuildConfig.APPLICATION_ID}")
+            )
+        } else {
+            Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+        }
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?) {

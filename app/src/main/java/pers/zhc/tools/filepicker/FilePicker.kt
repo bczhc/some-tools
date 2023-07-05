@@ -48,7 +48,7 @@ class FilePicker : BaseActivity() {
             if (Environment.isExternalStorageManager()) {
                 initializePicker()
             } else {
-                requestAllFilesAccessLauncher.launch(Unit)
+                requestAllFilesAccessLauncher.launch(null)
             }
         } else {
             // legacy storage permission
