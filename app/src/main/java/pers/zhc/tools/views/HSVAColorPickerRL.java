@@ -364,6 +364,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         protected void onDraw(Canvas canvas) {
             for (float i = 0; i < hW; i++) {
                 hPaint.setColor(ColorUtils.HSVAtoColor(alpha, i * 360 / (float) hW, hsv[1], hsv[2]));
+                hPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                hPaint.setStrokeWidth(2);
                 canvas.drawLine(i, 0, i, hH, hPaint);
             }
             canvas.drawRect(currentXPos[0] - lineExtrusion, 0, currentXPos[0] + lineExtrusion, hH, oppositeColorPaint);
@@ -417,6 +419,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         protected void onDraw(Canvas canvas) {
             for (float i = 0; i < sW; i++) {
                 sPaint.setColor(ColorUtils.HSVAtoColor(alpha, hsv[0], i / (float) sW, hsv[2]));
+                sPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                sPaint.setStrokeWidth(2);
                 canvas.drawLine(i, 0F, i, ((float) sH), sPaint);
             }
             canvas.drawRect(currentXPos[1] - lineExtrusion, 0F, currentXPos[1] + lineExtrusion, sH, oppositeColorPaint);
@@ -458,6 +462,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         protected void onDraw(Canvas canvas) {
             for (float i = 0; i < vW; i++) {
                 vPaint.setColor(ColorUtils.HSVAtoColor(alpha, hsv[0], hsv[1], i / (float) vW));
+                vPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                vPaint.setStrokeWidth(2);
                 canvas.drawLine(i, 0F, i, ((float) vH), vPaint);
             }
             canvas.drawRect(currentXPos[2] - lineExtrusion, 0F, currentXPos[2] + lineExtrusion, vH, oppositeColorPaint);
@@ -492,6 +498,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         protected void onDraw(Canvas canvas) {
             for (float i = 0; i < aW; i++) {
                 aPaint.setColor(Color.HSVToColor((int) (i * 255 / ((float) aW)), hsv));
+                aPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                aPaint.setStrokeWidth(2);
                 canvas.drawLine(i, 0F, i, ((float) aH), aPaint);
             }
             canvas.drawRect(currentXPos[3] - lineExtrusion, 0F, currentXPos[3] + lineExtrusion, aH, oppositeColorPaint);
