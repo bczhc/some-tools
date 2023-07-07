@@ -502,7 +502,6 @@
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:theme="@style/Theme.M3Application"
                 android:label="@string/fdb_label"
-                android:launchMode="singleTask"
                 android:taskAffinity="pers.zhc.tools.fdb"
                 android:exported="true">
             <intent-filter>
