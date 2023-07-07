@@ -31,14 +31,6 @@ class CrashReportActivity : BaseActivity() {
         setContentView(bindings.root)
         uploadStateTextView = bindings.state
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            ToastUtils.show(this, R.string.no_write_permission)
-        }
-
         val intent = intent
         val exception = intent.getStringExtra(EXTRA_EXCEPTION_TEXT)
         bindings.content.text = exception ?: ""
