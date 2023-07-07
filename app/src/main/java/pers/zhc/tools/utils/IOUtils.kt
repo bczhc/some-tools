@@ -3,13 +3,17 @@
  */
 package pers.zhc.tools.utils
 
+import io.ktor.utils.io.core.*
 import org.apache.commons.io.output.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
+import kotlin.io.use
+import kotlin.text.String
 
 fun File.readToString(charset: Charset = StandardCharsets.UTF_8): String {
     val bytes = ByteArray(this.length().toInt())
@@ -93,4 +97,3 @@ fun InputStream.readAll(): ByteArray {
     this.copyTo(output)
     return output.toByteArray()
 }
-

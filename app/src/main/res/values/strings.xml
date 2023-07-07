@@ -105,6 +105,7 @@
     <string name="importing_dialog_title">正在导入</string>
     <string name="exporting_dialog_title">正在导出</string>
     <string name="extracting_archive_msg">解压中……</string>
+    <string name="failed_to_save_file_toast">保存文件失败</string>
     <!-- end -->
 
     <!-- old -->

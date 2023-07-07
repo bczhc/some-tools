@@ -43,7 +43,6 @@ public class Common {
     @NotNull
     public static String getExternalStoragePath(Context ctx) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            //noinspection deprecation
             return Environment.getExternalStorageDirectory().toString();
         }
         return Objects.requireNonNull(ctx.getExternalFilesDir(null)).toString();
