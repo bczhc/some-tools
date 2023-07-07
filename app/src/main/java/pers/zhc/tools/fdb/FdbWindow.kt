@@ -1259,6 +1259,9 @@ class FdbWindow(private val context: Context) {
                     // result belongs to this FDB
                     colorPickers.brush.color = color
                     paintView.drawingColor = color
+                    if (followBrushColor) {
+                        updatePanelColor(color)
+                    }
                     ToastUtils.show(context, ColorUtils.getHexString(color, false))
                 }
             }.also {
