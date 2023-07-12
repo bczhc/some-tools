@@ -17,8 +17,8 @@ class CrashHandler private constructor(private val context: Context) : Thread.Un
     override fun uncaughtException(t: Thread, e: Throwable) {
         val stackTraceString = getExceptionStackTraceString(t, e)
         val currentTimeMillis = System.currentTimeMillis()
-        val dateString = Date(currentTimeMillis).format("yy-MM-dd-HH-mm-ss", Locale.ENGLISH)
-        val filename = "crash-$dateString-$currentTimeMillis.txt"
+        val dateString = Date(currentTimeMillis).format("yyyy-MM-dd_HH-mm-ss", Locale.ENGLISH)
+        val filename = "crash_${dateString}_$currentTimeMillis.txt"
 
         val intent = Intent(context, CrashReportActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
