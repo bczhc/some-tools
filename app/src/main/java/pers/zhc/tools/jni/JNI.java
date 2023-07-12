@@ -14,7 +14,7 @@ import pers.zhc.tools.stcflash.JNIInterface;
 public class JNI {
     private static boolean initFlag = false;
 
-    private static native void setUpRustPanicHook();
+    private static native void rustInitialize();
 
     public static synchronized void initialize() {
         if (!initFlag) {
@@ -22,7 +22,7 @@ public class JNI {
             System.loadLibrary("jni-lib");
             if (BuildConfig.rustEnableJni) {
                 System.loadLibrary("rust_jni");
-                setUpRustPanicHook();
+                rustInitialize();
             }
             initFlag = true;
         } else {
@@ -141,7 +141,7 @@ public class JNI {
         // C++
         public static native void call();
 
-        // RUst
+        // Rust
         public static native void call2();
     }
 

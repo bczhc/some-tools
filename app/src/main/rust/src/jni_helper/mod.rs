@@ -1,8 +1,7 @@
 pub use error::*;
-pub use log::jni_log;
-pub use log::log;
+pub use log::*;
 pub use string::*;
-pub use toast::toast;
+pub use toast::*;
 
 mod error;
 mod log;
