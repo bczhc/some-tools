@@ -3,9 +3,10 @@
 //! No buffer support.
 
 use std::fs::File;
-use std::io;
 use std::io::{Read, Write};
+use std::os::unix;
 use std::path::{Path, PathBuf};
+use std::{fs, io};
 
 use anyhow::anyhow;
 use bczhc_lib::io::OpenOrCreate;
@@ -13,6 +14,7 @@ use bczhc_lib::str::GenericOsStrExt;
 use jni::objects::{JClass, JObject, JString, JValue};
 use jni::sys::jint;
 use jni::JNIEnv;
+use tar::EntryType;
 
 use crate::java_str_var;
 use crate::jni_helper::CheckOrThrow;
@@ -166,10 +168,34 @@ where
     let mut archive = tar::Archive::new(&mut decoder);
     let entries = archive.entries()?;
     for e in entries {
-        let mut e = e?;
-        let _result = e.unpack_in(&out_dir)?;
-        let path = e.path()?;
-        progress_callback(path.as_ref());
+        let mut entry = e?;
+        // The `unpack_in` method, will change the file permission:
+        // `let _result = e.unpack_in(&out_dir)?;`
+        // https://github.com/alexcrichton/tar-rs/blob/master/src/entry.rs#L808
+        // regardless of calling `set_preserve_permissions(false)`.
+        // So now I have to manually write a simple implementation.
+        let path = entry.path()?;
+        let path = &out_dir.as_ref().to_path_buf().join(&path);
+        let entry_type = entry.header().entry_type();
+        match entry_type {
+            EntryType::Regular => {
+                let mut file = File::open_or_create(path)?;
+                io::copy(&mut entry, &mut file)?;
+            }
+            EntryType::Directory => {
+                fs::create_dir_all(path)?;
+            }
+            EntryType::Link => {
+                let link_target = entry.link_name()?.expect("No link target");
+                fs::hard_link(link_target, path)?;
+            }
+            EntryType::Symlink => {
+                let link_path = entry.link_name()?.expect("No link target");
+                unix::fs::symlink(link_path, path)?;
+            }
+            _ => unimplemented!(),
+        }
+        progress_callback(path);
     }
     Ok(())
 }
