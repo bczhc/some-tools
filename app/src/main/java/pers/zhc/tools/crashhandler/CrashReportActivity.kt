@@ -1,8 +1,6 @@
 package pers.zhc.tools.crashhandler
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -61,7 +59,8 @@ class CrashReportActivity : BaseActivity() {
         }
         try {
             CrashHandler.save2File(this, filename, content)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            e.printStackTrace()
             ToastUtils.show(this, R.string.failed_to_save_file_toast)
         }
 

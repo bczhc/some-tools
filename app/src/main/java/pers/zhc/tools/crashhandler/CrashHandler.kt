@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.format
-import pers.zhc.tools.utils.requireMkdir
+import pers.zhc.tools.utils.requireMkdirs
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -54,7 +54,7 @@ class CrashHandler private constructor(private val context: Context) : Thread.Un
         fun save2File(context: Context, filename: String, content: String) {
             val crashDir = File(Common.getAppMainExternalStoragePath(context) + File.separatorChar + "crash")
             if (!crashDir.exists()) {
-                runCatching { crashDir.requireMkdir() }
+                runCatching { crashDir.requireMkdirs() }
             }
             val file = File(crashDir, filename)
 
