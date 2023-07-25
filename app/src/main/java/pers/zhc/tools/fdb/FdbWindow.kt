@@ -265,12 +265,14 @@ class FdbWindow(private val context: Context) {
                             }
 
                             else -> {
+                                Log.i("fdb-test","错误的click")
                             }
                         }
                         paintView.flushPathSaver()
                     }
 
                     else -> {
+                        Log.i("fdb-test","错误的click")
                     }
                 }
             }
@@ -288,6 +290,7 @@ class FdbWindow(private val context: Context) {
 
             @Suppress("ClickableViewAccessibility")
             setOnTouchListener { _, event ->
+                Log.i("fdb-test","子视图响应触摸事件，传递给父视图")
                 return@setOnTouchListener positionUpdater.onTouch(panelLL, event, false)
             }
         }
