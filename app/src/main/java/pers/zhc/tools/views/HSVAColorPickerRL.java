@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Vibrator;
 import android.text.Selection;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -143,6 +144,8 @@ public class HSVAColorPickerRL extends RelativeLayout {
         colorView.setColor(Color.HSVToColor(alpha, hsv));
         colorView.setOnClickListener(v -> showSavingColorDialog());
         colorView.setOnLongClickListener(v -> {
+            Vibrator vibrator = (Vibrator)context.getSystemService(context.VIBRATOR_SERVICE);
+            vibrator.vibrate(55);
             saveColor(getColor(), ColorUtils.getHexString(getColor(), true));
             return true;
         });
