@@ -38,6 +38,7 @@ import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener
 import pers.zhc.tools.floatingdrawing.FloatingViewOnTouchListener.ViewDimension
 import pers.zhc.tools.floatingdrawing.PaintView
 import pers.zhc.tools.utils.*
+import pers.zhc.tools.views.CustomScrollView
 import pers.zhc.tools.views.HSVAColorPickerRL
 import java.io.File
 import java.io.IOException
@@ -54,7 +55,8 @@ class FdbWindow(private val context: Context) {
     private val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
     private val panelRL = PanelRL(context)
-    private val panelSV = ScrollView(context)
+    private val panelSV = CustomScrollView(context)
+    private val panelLL = LinearLayout(context)
     private val panelLP = WindowManager.LayoutParams()
 
     private val paintView = PaintView(context)
@@ -90,7 +92,7 @@ class FdbWindow(private val context: Context) {
 
     // TODO: 7/29/21 rewrite position updater
     private val panelDimension = ViewDimension()
-    private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelSV, 0, 0, panelDimension)
+    private val positionUpdater = FloatingViewOnTouchListener(panelLP, wm, panelLL, 0, 0, panelDimension)
 
     private val pathImportWindowDimension = ViewDimension()
     private val pathImportWindowPositionUpdater =
@@ -129,6 +131,7 @@ class FdbWindow(private val context: Context) {
         val ll = LinearLayout(context)
         ll.addView(panelRL)
         panelSV.addView(ll)
+        panelLL.addView(panelSV)
 
         if (!pathFiles.tmpPathDir.exists() && !pathFiles.tmpPathDir.mkdirs()) {
             ToastUtils.show(context, R.string.mkdir_failed)
@@ -285,7 +288,7 @@ class FdbWindow(private val context: Context) {
 
             @Suppress("ClickableViewAccessibility")
             setOnTouchListener { _, event ->
-                return@setOnTouchListener positionUpdater.onTouch(panelSV, event, false)
+                return@setOnTouchListener positionUpdater.onTouch(panelLL, event, false)
             }
         }
 
@@ -572,11 +575,11 @@ class FdbWindow(private val context: Context) {
 
     fun startFDB() {
         wm.addView(paintView, paintViewLP)
-        wm.addView(panelSV, panelLP)
+        wm.addView(panelLL, panelLP)
     }
 
     private fun stopFDB() {
-        wm.removeView(panelSV)
+        wm.removeView(panelLL)
         wm.removeView(paintView)
         wm.runCatching { removeView(pathImportWindow) }
         wm.runCatching { removeView(layerManagerView) }
@@ -1182,11 +1185,11 @@ class FdbWindow(private val context: Context) {
     private fun hideFDB() {
         showHideNotification()
 
-        wm.removeView(panelSV)
+        wm.removeView(panelLL)
     }
 
     fun restoreFDB() {
-        wm.addView(panelSV, panelLP)
+        wm.addView(panelLL, panelLP)
     }
 
     private fun showHideNotification() {
