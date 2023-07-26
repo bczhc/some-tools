@@ -19,7 +19,6 @@ class CustomScrollView(context: Context) : ScrollView(context) {
                 startY = ev.y
                 isIntercepted = false
                 hasIntercepted = false
-                Log.i("fdb-test", "down")
             }
             MotionEvent.ACTION_MOVE -> {
                 if (!hasIntercepted) {
@@ -33,14 +32,13 @@ class CustomScrollView(context: Context) : ScrollView(context) {
                     Log.i("fdb-test", "Angle: $angle")
                     if (angle > 25) {
                         isIntercepted = true
-                        Log.i("fdb-test", "move and Touch event intercepted")
+                        requestDisallowInterceptTouchEvent(true)
                         return false
                     }
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 hasIntercepted = false
-                Log.i("fdb-test", "up")
             }
         }
         return super.onInterceptTouchEvent(ev)
@@ -48,7 +46,7 @@ class CustomScrollView(context: Context) : ScrollView(context) {
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         if (isIntercepted) {
-            Log.i("fdb-test", "move and Touch event intercepted")
+            requestDisallowInterceptTouchEvent(true)
             return false
         }
         return super.onTouchEvent(ev)
