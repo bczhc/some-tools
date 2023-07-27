@@ -1479,6 +1479,9 @@ class FdbWindow(private val context: Context) {
                     }
                 }
             }
+            nextStep.setOnClickListener {
+                paintView.isPathImportingOneStep = true
+            }
             stopButton.setOnClickListener {
                 paintView.isImportingTerminated = true
             }

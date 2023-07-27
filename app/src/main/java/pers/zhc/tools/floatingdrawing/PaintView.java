@@ -70,6 +70,7 @@ public class PaintView extends BaseView {
     private boolean showDrawing = true;
     private boolean importingPath = false;
     private volatile boolean pathImportPaused = false;
+    private volatile boolean pathImportingOneStep = false;
     private boolean lockStrokeEnabled = false;
     /**
      * locked absolute drawing stroke width
@@ -682,6 +683,7 @@ public class PaintView extends BaseView {
 
     public void importPathVer1_0(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
         pathImportPaused = false;
+        pathImportingOneStep = false;
         isImportingTerminated = false;
         long length = f.length(), read;
         byte[] bytes;
@@ -755,6 +757,7 @@ public class PaintView extends BaseView {
 
     public void importPathVer2_0(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
         pathImportPaused = false;
+        pathImportingOneStep = false;
         isImportingTerminated = false;
         long length = f.length(), read;
         byte[] bytes;
@@ -828,6 +831,7 @@ public class PaintView extends BaseView {
 
     public void importPathVer2_1(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
         pathImportPaused = false;
+        pathImportingOneStep = false;
         isImportingTerminated = false;
         long length = f.length(), read;
         byte[] bytes;
@@ -917,6 +921,7 @@ public class PaintView extends BaseView {
     @SuppressWarnings("DuplicatedCode")
     private void importPathVer3_0(@NotNull String path, PathImportCallback progressCallback) {
         pathImportPaused = false;
+        pathImportingOneStep = false;
         isImportingTerminated = false;
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
@@ -1040,6 +1045,7 @@ public class PaintView extends BaseView {
 
     private void importPathVer3_1(@NotNull String path, PathImportCallback progressCallback) {
         pathImportPaused = false;
+        pathImportingOneStep = false;
         isImportingTerminated = false;
         final SQLite3 db = SQLite3.open(path);
         int layerNumber = 0;
@@ -1106,6 +1112,7 @@ public class PaintView extends BaseView {
 
     private void importPathVer4_0(@NotNull String path, PathImportCallback progressCallback) {
         pathImportPaused = false;
+        pathImportingOneStep = false;
         isImportingTerminated = false;
         final SQLite3 db = SQLite3.open(path);
         int layerNumber = 0;
@@ -1279,7 +1286,7 @@ public class PaintView extends BaseView {
         int c = 0;
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused && !isImportingTerminated) ;
+            while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) ;
             if (isImportingTerminated) {
                 transformedOnTouchAction(
                         MotionEvent.ACTION_UP,
@@ -1352,6 +1359,9 @@ public class PaintView extends BaseView {
                             cursor.getFloat(3),
                             transformationValue
                     );
+                    if(pathImportingOneStep) {
+                        pathImportingOneStep = false;
+                    }
                     break;
                 case 0x20:
                     undo();
@@ -1509,9 +1519,13 @@ public class PaintView extends BaseView {
     public boolean isPathImportPaused() {
         return pathImportPaused;
     }
+    public boolean isPathImportingOneStep() { return pathImportingOneStep; }
 
     public void setPathImportPaused(boolean pathImportPaused) {
         this.pathImportPaused = pathImportPaused;
+    }
+    public void setPathImportingOneStep(boolean pathImportingOneStep) {
+        this.pathImportingOneStep = pathImportingOneStep;
     }
 
     public int getDrawingInterval() {
