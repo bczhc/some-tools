@@ -43,6 +43,7 @@ import pers.zhc.tools.views.HSVAColorPickerRL
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -1455,13 +1456,16 @@ class FdbWindow(private val context: Context) {
     private fun setUpPathImportWindow() {
         pathImportWindowBindings.apply {
             var pathImportState = PathImportState.IMPORTING
-
+            delayMode.visibility = View.VISIBLE
+            stepMode.visibility = View.GONE
             pauseButton.setOnClickListener {
                 when (pathImportState) {
                     PathImportState.PAUSED -> {
                         pauseButton.setText(R.string.fdb_path_import_pause_button)
                         pathImportState = PathImportState.IMPORTING
                         paintView.isPathImportPaused = false
+                        delayMode.visibility = View.VISIBLE
+                        stepMode.visibility = View.GONE
                         ToastUtils.show(context, R.string.fdb_path_import_resume_button)
                     }
 
@@ -1469,6 +1473,8 @@ class FdbWindow(private val context: Context) {
                         pauseButton.setText(R.string.fdb_path_import_resume_button)
                         pathImportState = PathImportState.PAUSED
                         paintView.isPathImportPaused = true
+                        stepMode.visibility = View.VISIBLE
+                        delayMode.visibility = View.GONE
                         ToastUtils.show(context, R.string.fdb_path_import_pause_button)
                     }
                 }
@@ -1523,7 +1529,7 @@ class FdbWindow(private val context: Context) {
                                 }
                                 addCount++
                                 val interval =
-                                    450 / (1 + Math.exp(3 + (1.6 * addCount - 10))) + 50
+                                    450 / (1 + exp(3 + (1.6 * addCount - 10))) + 50
                                 addHandler.postDelayed(this, interval.toLong())
                             }
                         }
@@ -1558,7 +1564,7 @@ class FdbWindow(private val context: Context) {
                                 }
                                 minusCount++
                                 val interval =
-                                    450 / (1 + Math.exp(3 + (1.6 * minusCount - 10))) + 50
+                                    450 / (1 + exp(3 + (1.6 * minusCount - 10))) + 50
                                 minusHandler.postDelayed(this, interval.toLong())
                             }
                         }
