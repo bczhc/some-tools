@@ -126,13 +126,14 @@ public class DialogUtil {
         return createConfirmationAlertDialog(ctx, positiveAction, negativeAction, view, titleId, WRAP_CONTENT, WRAP_CONTENT, false);
     }
 
-    public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {
-        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        ad.setOnShowListener(dialog -> imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0));
-        ad.setOnDismissListener(dialog -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0));
-        editText.setFocusable(true);
-        editText.setFocusableInTouchMode(true);
-    }
+   public static void setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(@NotNull EditText editText, @NotNull Dialog ad) {
+       InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+       ad.setOnShowListener(dialog -> imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT));
+       ad.setOnDismissListener(dialog -> imm.hideSoftInputFromWindow(editText.getWindowToken(), 0));
+       editText.setFocusable(true);
+       editText.setFocusableInTouchMode(true);
+       editText.requestFocus();
+   }
 
     @NotNull
     public static AlertDialog createAlertDialogWithNeutralButton(Context ctx,
