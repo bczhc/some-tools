@@ -1482,6 +1482,12 @@ class FdbWindow(private val context: Context) {
             nextStep.setOnClickListener {
                 paintView.isPathImportingOneStep = true
             }
+            lastStep.setOnClickListener {
+                if(!paintView.isPathImportingOneStep) {
+                    ++paintView.pathImportingLastStepCount
+                    paintView.isPathRollback = true
+                }
+            }
             stopButton.setOnClickListener {
                 paintView.isImportingTerminated = true
             }

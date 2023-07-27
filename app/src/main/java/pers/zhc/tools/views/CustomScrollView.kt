@@ -29,7 +29,6 @@ class CustomScrollView(context: Context) : ScrollView(context) {
                     if(angle != 0.0) {
                         hasIntercepted = true
                     }
-                    Log.i("fdb-test", "Angle: $angle")
                     if (angle > 25) {
                         isIntercepted = true
                         requestDisallowInterceptTouchEvent(true)
