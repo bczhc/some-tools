@@ -20,7 +20,6 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowManager.LayoutParams.*
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -147,6 +146,7 @@ class FdbWindow(private val context: Context) {
         paintViewLP.apply {
             flags = FLAG_NOT_TOUCHABLE
                 .xor(FLAG_NOT_FOCUSABLE)
+                .xor(FLAG_LAYOUT_NO_LIMITS)
             type = floatingWindowType
             format = RGBA_8888
             width = MATCH_PARENT
@@ -183,6 +183,7 @@ class FdbWindow(private val context: Context) {
                                 when (operationMode) {
                                     OperationMode.OPERATING -> {
                                         paintViewLP.flags = FLAG_NOT_FOCUSABLE
+                                                         .xor(FLAG_LAYOUT_NO_LIMITS)
                                         wm.updateViewLayout(paintView, paintViewLP)
 
                                         tv.text = context.getString(R.string.fdb_panel_drawing_mode)
@@ -192,6 +193,7 @@ class FdbWindow(private val context: Context) {
                                     OperationMode.DRAWING -> {
                                         paintViewLP.flags = FLAG_NOT_TOUCHABLE
                                             .xor(FLAG_NOT_FOCUSABLE)
+                                            .xor(FLAG_LAYOUT_NO_LIMITS)
                                         wm.updateViewLayout(paintView, paintViewLP)
 
                                         tv.text = context.getString(R.string.fdb_panel_operating_mode)
