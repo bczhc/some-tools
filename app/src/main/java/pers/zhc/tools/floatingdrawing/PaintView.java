@@ -697,7 +697,7 @@ public class PaintView extends BaseView {
         read = 0L;
         while (is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused && !isImportingTerminated) ;
+            while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) ;
             if (!isImportingTerminated) {
                 spinSleep(drawingInterval);
             }
@@ -733,6 +733,9 @@ public class PaintView extends BaseView {
                     }
                     if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
                         motionAction = randomGen(0, 2);
+                    }
+                    if(motionAction == 1 && !pathImportingOneStep) {
+                        pathImportingOneStep = false;
                     }
                     if (strokeWidth <= 0) {
                         strokeWidth = randomGen(1, 800);
@@ -774,7 +777,7 @@ public class PaintView extends BaseView {
         y = -1;
         while (is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused && !isImportingTerminated) ;
+            while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) ;
             if (isImportingTerminated) {
                 if (x != -1 && y != -1) {
                     onTouchAction(MotionEvent.ACTION_UP, x, y);
@@ -807,6 +810,9 @@ public class PaintView extends BaseView {
                 case 3:
                     if (x != -1 && y != -1) {
                         onTouchAction(MotionEvent.ACTION_UP, x, y);
+                        if(pathImportingOneStep) {
+                            pathImportingOneStep = false;
+                        }
                     }
                     break;
                 case 0:
@@ -850,7 +856,7 @@ public class PaintView extends BaseView {
             int a = bufferRead / 9;
             for (int i = 0; i < a; i++) {
                 // noinspection StatementWithEmptyBody
-                while (pathImportPaused && !isImportingTerminated) ;
+                while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) ;
                 if (isImportingTerminated) {
                     x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
                     y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
@@ -882,6 +888,9 @@ public class PaintView extends BaseView {
                         x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
                         y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
                         onTouchAction(MotionEvent.ACTION_UP, x, y);
+                        if(pathImportingOneStep) {
+                            pathImportingOneStep = false;
+                        }
                         break;
                     case (byte) 0xC1:
                         undo();
@@ -964,7 +973,7 @@ public class PaintView extends BaseView {
         int c = 0;
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused && !isImportingTerminated) ;
+            while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) ;
             if (isImportingTerminated) {
                 transformedOnTouchAction(
                         MotionEvent.ACTION_UP,
@@ -1010,6 +1019,9 @@ public class PaintView extends BaseView {
                             cursor.getFloat(2),
                             transformationValue
                     );
+                    if(pathImportingOneStep) {
+                        pathImportingOneStep = false;
+                    }
                     break;
                 case 0x11:
                     setEraserMode(true);
@@ -1197,7 +1209,7 @@ public class PaintView extends BaseView {
         int c = 0;
         while (cursor.step()) {
             // noinspection StatementWithEmptyBody
-            while (pathImportPaused && !isImportingTerminated) ;
+            while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) ;
             if (isImportingTerminated) {
                 transformedOnTouchAction(
                         MotionEvent.ACTION_UP,
@@ -1243,6 +1255,9 @@ public class PaintView extends BaseView {
                             cursor.getFloat(2),
                             transformationValue
                     );
+                    if(pathImportingOneStep) {
+                        pathImportingOneStep = false;
+                    }
                     break;
                 case 0x11:
                     setEraserMode(true);
