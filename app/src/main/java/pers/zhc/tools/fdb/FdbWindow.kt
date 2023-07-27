@@ -14,6 +14,7 @@ import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.Vibrator
 import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -1498,6 +1499,83 @@ class FdbWindow(private val context: Context) {
             addBtn.setOnClickListener {
                 drawingInterval += drawingIntervalStep
                 updateDrawingInterval()
+            }
+
+            val addHandler = Handler(Looper.getMainLooper())
+            val minusHandler = Handler(Looper.getMainLooper())
+
+            var addCount = 1
+            var minusCount = 1
+
+            var addRunnable: Runnable? = null
+            var minusRunnable: Runnable? = null
+
+            addBtn.setOnTouchListener { v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        addRunnable = object : Runnable {
+                            override fun run() {
+                                drawingInterval += drawingIntervalStep
+                                updateDrawingInterval()
+                                if(addCount == 1){
+                                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                                    vibrator.vibrate(55)
+                                }
+                                addCount++
+                                val interval =
+                                    450 / (1 + Math.exp(3 + (1.6 * addCount - 10))) + 50
+                                addHandler.postDelayed(this, interval.toLong())
+                            }
+                        }
+                        addHandler.postDelayed(addRunnable as Runnable, 500)
+                    }
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        addRunnable?.let { addHandler.removeCallbacks(it) }
+                        addRunnable = null
+                        addCount = 1
+                        // 其他需要重置的变量
+
+                        if (event.action == MotionEvent.ACTION_UP && event.eventTime - event.downTime < ViewConfiguration.getTapTimeout()) {
+                            v.performClick()
+                        }
+                    }
+                }
+                true
+            }
+
+            minusBtn.setOnTouchListener { v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        minusRunnable = object : Runnable {
+                            override fun run() {
+                                if (drawingInterval >= drawingIntervalStep) {
+                                    drawingInterval -= drawingIntervalStep
+                                }
+                                updateDrawingInterval()
+                                if(minusCount == 1){
+                                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                                    vibrator.vibrate(55)
+                                }
+                                minusCount++
+                                val interval =
+                                    450 / (1 + Math.exp(3 + (1.6 * minusCount - 10))) + 50
+                                minusHandler.postDelayed(this, interval.toLong())
+                            }
+                        }
+                        minusHandler.postDelayed(minusRunnable as Runnable, 500)
+                    }
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        minusRunnable?.let { minusHandler.removeCallbacks(it) }
+                        minusRunnable = null
+                        minusCount = 1
+                        // 其他需要重置的变量
+
+                        if (event.action == MotionEvent.ACTION_UP && event.eventTime - event.downTime < ViewConfiguration.getTapTimeout()) {
+                            v.performClick()
+                        }
+                    }
+                }
+                true
             }
 
             speedTv.setOnClickListener {
