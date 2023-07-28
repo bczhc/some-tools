@@ -14,7 +14,6 @@ import android.graphics.PixelFormat.RGBA_8888
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.os.Vibrator
 import android.util.Log
 import android.view.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -1518,8 +1517,7 @@ class FdbWindow(private val context: Context) {
                                 drawingInterval += drawingIntervalStep
                                 updateDrawingInterval()
                                 if (addCount == 1) {
-                                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                                    vibrator.vibrate(55)
+                                    defaultVibrator().oneShotVibrate(55)
                                 }
                                 addCount++
                                 val interval =
@@ -1554,8 +1552,7 @@ class FdbWindow(private val context: Context) {
                                 }
                                 updateDrawingInterval()
                                 if (minusCount == 1) {
-                                    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                                    vibrator.vibrate(55)
+                                    defaultVibrator().oneShotVibrate(55)
                                 }
                                 minusCount++
                                 val interval =

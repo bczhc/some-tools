@@ -6,14 +6,14 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.defaultVibrator
+import pers.zhc.tools.utils.oneShotVibrate
 import java.util.*
 import kotlin.math.min
 
@@ -119,15 +119,7 @@ class BusReminder(
             ToastUtils.show(context, R.string.bus_approaching_toast_msg)
         }
         if (nearestBusRunStationDiff in 0..1) {
-            val vibrator = context.applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE).also {
-                    vibrator.vibrate(it)
-                }
-            } else {
-                @Suppress("DEPRECATION")
-                vibrator.vibrate(1000)
-            }
+            defaultVibrator().oneShotVibrate(1000)
         }
     }
 
