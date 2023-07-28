@@ -62,5 +62,5 @@ jobs:
       - name: Upload APKs
         uses: actions/upload-artifact@v2
         with:
-          name: app-debug
+          name: APKs
           path: apks
