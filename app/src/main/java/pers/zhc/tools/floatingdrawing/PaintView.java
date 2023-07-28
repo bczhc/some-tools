@@ -940,8 +940,8 @@ public class PaintView extends BaseView {
         read = 0L;
         while ((bufferRead = is.read(buffer)) != -1) {
             int a = bufferRead / 9;
-            int i= 0;
-            while ((pathImportingLastStepCount > 0 && !pathRollback) ||  i < a ) {
+            int i= -1;
+            while ((pathImportingLastStepCount > 0 && !pathRollback) ||  i < a - 1 ) {
                 if(!(pathImportingLastStepCount > 0 && !pathRollback)) {
                     ++i;
                 }
