@@ -81,7 +81,7 @@ RUN . ~/.cargo/env && \
       cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$target.apk && \
       ./tools/toml-replace config.toml 'ndk.build_type' '"release"' && \
       ./gradlew asR && \
-      cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
+      cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$target.apk; \
     done
 
 # Build universal-Android-ABI App
