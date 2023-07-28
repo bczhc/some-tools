@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.ScrollView
-import androidx.core.widget.NestedScrollView
 
 class CustomScrollView(context: Context) : ScrollView(context) {
     private var startX = 0f
@@ -20,13 +19,14 @@ class CustomScrollView(context: Context) : ScrollView(context) {
                 isIntercepted = false
                 hasIntercepted = false
             }
+
             MotionEvent.ACTION_MOVE -> {
                 if (!hasIntercepted) {
                     val deltaX = ev.x - startX
                     val deltaY = ev.y - startY
                     val angle = Math.toDegrees(Math.atan2(Math.abs(deltaX).toDouble(), Math.abs(deltaY).toDouble()))
 
-                    if(angle != 0.0) {
+                    if (angle != 0.0) {
                         hasIntercepted = true
                     }
                     Log.i("fdb-test", "Angle: $angle")
@@ -37,6 +37,7 @@ class CustomScrollView(context: Context) : ScrollView(context) {
                     }
                 }
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 hasIntercepted = false
             }

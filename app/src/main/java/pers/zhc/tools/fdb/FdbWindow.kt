@@ -184,7 +184,7 @@ class FdbWindow(private val context: Context) {
                                 when (operationMode) {
                                     OperationMode.OPERATING -> {
                                         paintViewLP.flags = FLAG_NOT_FOCUSABLE
-                                                         .xor(FLAG_LAYOUT_NO_LIMITS)
+                                            .xor(FLAG_LAYOUT_NO_LIMITS)
                                         wm.updateViewLayout(paintView, paintViewLP)
 
                                         tv.text = context.getString(R.string.fdb_panel_drawing_mode)
@@ -1517,7 +1517,7 @@ class FdbWindow(private val context: Context) {
                             override fun run() {
                                 drawingInterval += drawingIntervalStep
                                 updateDrawingInterval()
-                                if(addCount == 1){
+                                if (addCount == 1) {
                                     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                                     vibrator.vibrate(55)
                                 }
@@ -1529,6 +1529,7 @@ class FdbWindow(private val context: Context) {
                         }
                         addHandler.postDelayed(addRunnable as Runnable, 500)
                     }
+
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         addRunnable?.let { addHandler.removeCallbacks(it) }
                         addRunnable = null
@@ -1552,7 +1553,7 @@ class FdbWindow(private val context: Context) {
                                     drawingInterval -= drawingIntervalStep
                                 }
                                 updateDrawingInterval()
-                                if(minusCount == 1){
+                                if (minusCount == 1) {
                                     val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                                     vibrator.vibrate(55)
                                 }
@@ -1564,6 +1565,7 @@ class FdbWindow(private val context: Context) {
                         }
                         minusHandler.postDelayed(minusRunnable as Runnable, 500)
                     }
+
                     MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                         minusRunnable?.let { minusHandler.removeCallbacks(it) }
                         minusRunnable = null
