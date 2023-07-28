@@ -71,6 +71,7 @@ public class PaintView extends BaseView {
     private boolean importingPath = false;
     private volatile boolean pathImportPaused = false;
     private volatile boolean pathImportingOneStep = false;
+    private volatile boolean isPathImportingOneStepFinished = false;
     private volatile boolean pathRollback = false;
     public volatile int pathImportingLastStepCount = 0;
     private boolean lockStrokeEnabled = false;
@@ -690,6 +691,7 @@ public class PaintView extends BaseView {
         pathRollback = false;
         int originalDrawingInterval = drawingInterval;
         isImportingTerminated = false;
+        isPathImportingOneStepFinished = false;
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -703,13 +705,14 @@ public class PaintView extends BaseView {
         while ((pathImportingLastStepCount > 0 && !pathRollback) || is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
-                if(pathRollback && pathImportingLastStepCount == 1) {
+                if(pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
+                    originalDrawingInterval = drawingInterval;
                     drawingInterval = 0;
                     // 导入未完成步骤时加速
                     break;
-                    // 第一次点击“上一步”时（或“上一步”撤回的步骤导入完成后），可能这步还没有画完，所以让pathImportingOneStep为true，继续画完这一步
-                } else if (pathRollback && pathImportingLastStepCount > 1) {
+                    // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
+                } else if (pathRollback) {
                     undo();
                     if (progressCallback != null) {
                         progressCallback.progress((float) read / (float) length, null, 0, 0);
@@ -725,7 +728,6 @@ public class PaintView extends BaseView {
                 if(pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
                     pathImportingOneStep = false;
-                    continue;
                 }
             }
             if (!isImportingTerminated) {
@@ -765,7 +767,8 @@ public class PaintView extends BaseView {
                         if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
                             motionAction = randomGen(0, 2);
                         }
-                        if (motionAction == 1 && pathImportingOneStep) {
+                        if (motionAction == 1) {
+                            if(pathImportingOneStep) {
                                 pathImportingOneStep = false;
                                 // 完成导入一步，重置变量
                                 if (pathRollback) {
@@ -777,6 +780,11 @@ public class PaintView extends BaseView {
                                     drawingInterval = originalDrawingInterval;
                                     // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                                 }
+                                    isPathImportingOneStepFinished = true;
+                                }
+                        }
+                        if(motionAction == 0) {
+                            isPathImportingOneStepFinished = false;
                         }
                         if (strokeWidth <= 0) {
                             strokeWidth = randomGen(1, 800);
@@ -806,6 +814,7 @@ public class PaintView extends BaseView {
         pathImportingLastStepCount = 0;
         pathRollback = false;
         int originalDrawingInterval = drawingInterval;
+        isPathImportingOneStepFinished = false;
         isImportingTerminated = false;
         long length = f.length(), read;
         byte[] bytes;
@@ -823,13 +832,14 @@ public class PaintView extends BaseView {
         while ((pathImportingLastStepCount > 0 && !pathRollback) || is.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
-                if(pathRollback && pathImportingLastStepCount == 1) {
+                if(pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
+                    originalDrawingInterval = drawingInterval;
                     drawingInterval = 0;
                     // 导入未完成步骤时加速
                     break;
-                    // 第一次点击“上一步”时（或“上一步”撤回的步骤导入完成后），可能这步还没有画完，所以让pathImportingOneStep为true，继续画完这一步
-                } else if (pathRollback && pathImportingLastStepCount > 1) {
+                    // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
+                } else if (pathRollback) {
                     undo();
                     if (progressCallback != null) {
                         progressCallback.progress((float) read / (float) length, null, 0, 0);
@@ -845,7 +855,6 @@ public class PaintView extends BaseView {
                 if(pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
                     pathImportingOneStep = false;
-                    continue;
                 }
             }
             if (isImportingTerminated) {
@@ -896,12 +905,14 @@ public class PaintView extends BaseView {
                                 }
                             }
                         }
+                        isPathImportingOneStepFinished = true;
                         break;
                     case 0:
                         x = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
                         y = JNI.FloatingBoard.byteArrayToFloat(bytes, 8);
                         if (lastP1 == 1 || lastP1 == 2) {
                             onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                            isPathImportingOneStepFinished = false;
                         }
                         onTouchAction(MotionEvent.ACTION_MOVE, x, y);
                         break;
@@ -925,6 +936,7 @@ public class PaintView extends BaseView {
         pathRollback = false;
         int originalDrawingInterval = drawingInterval;
         isImportingTerminated = false;
+        isPathImportingOneStepFinished = false;
         long length = f.length(), read;
         byte[] bytes;
         float x, y, strokeWidth;
@@ -947,13 +959,14 @@ public class PaintView extends BaseView {
                 }
                 // noinspection StatementWithEmptyBody
                 while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
-                    if(pathRollback && pathImportingLastStepCount == 1) {
+                    if(pathRollback && !isPathImportingOneStepFinished) {
                         pathImportingOneStep = true;
+                        originalDrawingInterval = drawingInterval;
                         drawingInterval = 0;
                         // 导入未完成步骤时加速
                         break;
-                        // 第一次点击“上一步”时（或“上一步”撤回的步骤导入完成后），可能这步还没有画完，所以让pathImportingOneStep为true，继续画完这一步
-                    } else if (pathRollback && pathImportingLastStepCount > 1) {
+                        // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
+                    } else if (pathRollback) {
                         undo();
                         if (progressCallback != null) {
                             progressCallback.progress((float) read / (float) length, null, 0, 0);
@@ -969,7 +982,6 @@ public class PaintView extends BaseView {
                     if(pathImportingOneStep) {
                         // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
                         pathImportingOneStep = false;
-                        continue;
                     }
                 }
                 if (isImportingTerminated) {
@@ -995,6 +1007,7 @@ public class PaintView extends BaseView {
                             x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
                             y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
                             onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                            isPathImportingOneStepFinished = false;
                             break;
                         case (byte) 0xB3:
                             x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
@@ -1020,6 +1033,7 @@ public class PaintView extends BaseView {
                             }if (pathImportingOneStep) {
                                 pathImportingOneStep = false;
                             }
+                            isPathImportingOneStepFinished = true;
                             break;
                         case (byte) 0xC1:
                             undo();
@@ -1065,6 +1079,7 @@ public class PaintView extends BaseView {
         pathRollback = false;
         int originalDrawingInterval = drawingInterval;
         isImportingTerminated = false;
+        isPathImportingOneStepFinished = false;
         final SQLite3 db = SQLite3.open(path);
         if (db.checkIfCorrupt()) {
             db.close();
@@ -1105,15 +1120,16 @@ public class PaintView extends BaseView {
         Cursor cursor = statement.getCursor();
         int c = 0;
         while ((pathImportingLastStepCount > 0 && !pathRollback) || cursor.step()) {
+            originalDrawingInterval = drawingInterval;
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
-                if(pathRollback && pathImportingLastStepCount == 1) {
+                if(pathRollback && isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
                     drawingInterval = 0;
                     // 导入未完成步骤时加速
                     break;
-                    // 第一次点击“上一步”时（或“上一步”撤回的步骤导入完成后），可能这步还没有画完，所以让pathImportingOneStep为true，继续画完这一步
-                } else if (pathRollback && pathImportingLastStepCount > 1) {
+                    // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
+                } else if (pathRollback) {
                     undo();
                     --c;
                     progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
@@ -1128,7 +1144,6 @@ public class PaintView extends BaseView {
                 if(pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
                     pathImportingOneStep = false;
-                    continue;
                 }
             }
             if (isImportingTerminated) {
@@ -1160,6 +1175,7 @@ public class PaintView extends BaseView {
                                 cursor.getFloat(2),
                                 transformationValue
                         );
+                        isPathImportingOneStepFinished = false;
                         break;
                     case 0x03:
                     case 0x13:
@@ -1190,6 +1206,7 @@ public class PaintView extends BaseView {
                                 // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                             }
                         }
+                        isPathImportingOneStepFinished = true;
                         break;
                     case 0x11:
                         setEraserMode(true);
@@ -1229,6 +1246,7 @@ public class PaintView extends BaseView {
         pathImportingLastStepCount = 0;
         pathRollback = false;
         isImportingTerminated = false;
+        isPathImportingOneStepFinished = false;
         final SQLite3 db = SQLite3.open(path);
         int layerNumber = 0;
         if (db.checkIfCorrupt()) {
@@ -1298,6 +1316,7 @@ public class PaintView extends BaseView {
         pathImportingLastStepCount = 0;
         pathRollback = false;
         isImportingTerminated = false;
+        isPathImportingOneStepFinished = false;
         final SQLite3 db = SQLite3.open(path);
         int layerNumber = 0;
         if (db.checkIfCorrupt()) {
@@ -1382,13 +1401,14 @@ public class PaintView extends BaseView {
         while ((pathImportingLastStepCount > 0 && !pathRollback) || cursor.step()) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
-                if(pathRollback && pathImportingLastStepCount == 1) {
+                if(pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
+                    originalDrawingInterval = drawingInterval;
                     drawingInterval = 0;
                     // 导入未完成步骤时加速
                     break;
-                    // 第一次点击“上一步”时（或“上一步”撤回的步骤导入完成后），可能这步还没有画完，所以让pathImportingOneStep为true，继续画完这一步
-                } else if (pathRollback && pathImportingLastStepCount > 1) {
+                    // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
+                } else if (pathRollback) {
                     undo();
                     --c;
                     progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
@@ -1403,7 +1423,6 @@ public class PaintView extends BaseView {
                 if(pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
                     pathImportingOneStep = false;
-                    continue;
                 }
             }
             if (isImportingTerminated) {
@@ -1435,6 +1454,7 @@ public class PaintView extends BaseView {
                                 cursor.getFloat(2),
                                 transformationValue
                         );
+                        isPathImportingOneStepFinished = false;
                         break;
                     case 0x03:
                     case 0x13:
@@ -1465,6 +1485,7 @@ public class PaintView extends BaseView {
                                 // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                             }
                         }
+                        isPathImportingOneStepFinished = true;
                         break;
                     case 0x11:
                         setEraserMode(true);
@@ -1509,13 +1530,14 @@ public class PaintView extends BaseView {
         while ((pathImportingLastStepCount > 0 && !pathRollback) || cursor.step()) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
-                if(pathRollback && pathImportingLastStepCount == 1) {
+                if(pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
+                    originalDrawingInterval = drawingInterval;
                     drawingInterval = 0;
                     // 导入未完成步骤时加速
                     break;
-                    // 第一次点击“上一步”时（或“上一步”撤回的步骤导入完成后），可能这步还没有画完，所以让pathImportingOneStep为true，继续画完这一步
-                } else if (pathRollback && pathImportingLastStepCount > 1) {
+                    // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
+                } else if (pathRollback) {
                     undo();
                     --c;
                     progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
@@ -1579,6 +1601,7 @@ public class PaintView extends BaseView {
                                 cursor.getFloat(3),
                                 transformationValue
                         );
+                        isPathImportingOneStepFinished = false;
                         break;
                     case 0x11:
                         final byte[] info2 = cursor.getBlob(1);
@@ -1598,6 +1621,7 @@ public class PaintView extends BaseView {
                                 cursor.getFloat(3),
                                 transformationValue
                         );
+                        isPathImportingOneStepFinished = false;
                         break;
                     case 0x03:
                     case 0x13:
@@ -1619,6 +1643,7 @@ public class PaintView extends BaseView {
                                 // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                             }
                         }
+                        isPathImportingOneStepFinished = true;
                         break;
                     case 0x20:
                         undo();
