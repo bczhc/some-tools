@@ -1,9 +1,12 @@
 package pers.zhc.tools.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.ScrollView
+import kotlin.math.abs
+import kotlin.math.atan2
 
 class CustomScrollView(context: Context) : ScrollView(context) {
     private var startX = 0f
@@ -24,7 +27,7 @@ class CustomScrollView(context: Context) : ScrollView(context) {
                 if (!hasIntercepted) {
                     val deltaX = ev.x - startX
                     val deltaY = ev.y - startY
-                    val angle = Math.toDegrees(Math.atan2(Math.abs(deltaX).toDouble(), Math.abs(deltaY).toDouble()))
+                    val angle = Math.toDegrees(atan2(abs(deltaX).toDouble(), abs(deltaY).toDouble()))
 
                     if (angle != 0.0) {
                         hasIntercepted = true
@@ -45,6 +48,7 @@ class CustomScrollView(context: Context) : ScrollView(context) {
         return super.onInterceptTouchEvent(ev)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         if (isIntercepted) {
             requestDisallowInterceptTouchEvent(true)
