@@ -58,17 +58,16 @@ RUN cp -v .github/workflows/config.toml .
 # Gradle build script check
 RUN ./gradlew
 
-# Build OpenSSL for all Android targets
-RUN ./tools/build-openssl /openssl $(echo $full_targets | sed "s/,/ /g")
-
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     chmod +x install && \
-    ./install -y && \
+    ./install -y --default-toolchain nightly-2022-11-21 --profile minimal && \
     . ~/.cargo/env && \
-    rustup default nightly-2022-11-21 && \
     rustc --version && \
     ./tools/configure-rust
+
+# Build OpenSSL for all Android targets
+RUN ./tools/build-openssl /openssl $(echo $full_targets | sed "s/,/ /g")
 
 # Build single-Android-ABI Apps
 RUN . ~/.cargo/env && \
