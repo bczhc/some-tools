@@ -144,7 +144,7 @@ public class HSVAColorPickerRL extends RelativeLayout {
         colorView.setColor(Color.HSVToColor(alpha, hsv));
         colorView.setOnClickListener(v -> showSavingColorDialog());
         colorView.setOnLongClickListener(v -> {
-            Vibrator vibrator = (Vibrator)context.getSystemService(context.VIBRATOR_SERVICE);
+            Vibrator vibrator = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
             vibrator.vibrate(55);
             saveColor(getColor(), ColorUtils.getHexString(getColor(), true));
             return true;
