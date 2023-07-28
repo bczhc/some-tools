@@ -5,6 +5,7 @@ COPY / /some-tools/
 ARG ndk_version=25.1.8937393
 ARG cmake_version=3.18.1
 ARG full_targets='armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29'
+ARG build_universal=1
 
 WORKDIR /
 
@@ -81,19 +82,23 @@ RUN . ~/.cargo/env && \
       cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$target.apk && \
       ./tools/toml-replace config.toml 'ndk.build_type' '"release"' && \
       ./gradlew asR && \
-      cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$target.apk; \
+      cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$target.apk && \
+      # delete Rust artifacts for reducing the disk usage
+      rm -rf app/src/main/rust/target; \
     done
 
 # Build universal-Android-ABI App
-RUN . ~/.cargo/env && \
-    targets_string="$(echo "$full_targets" | ruby -e "require 'json'; puts STDIN.read.chomp.split(',').to_json")" && \
-    ./tools/toml-replace config.toml 'ndk.build_targets' "$targets_string" && \
-    ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
-    ./gradlew asD && \
-    cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
-    ./tools/toml-replace config.toml 'ndk.build_type' '"release"' && \
-    ./gradlew asR && \
-    cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk
+RUN if [ $build_universal -eq 1 ]; then \
+      . ~/.cargo/env && \
+      targets_string="$(echo "$full_targets" | ruby -e "require 'json'; puts STDIN.read.chomp.split(',').to_json")" && \
+      ./tools/toml-replace config.toml 'ndk.build_targets' "$targets_string" && \
+      ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
+      ./gradlew asD && \
+      cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
+      ./tools/toml-replace config.toml 'ndk.build_type' '"release"' && \
+      ./gradlew asR && \
+      cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk; \
+    fi
 
 # Test `cleanAll` task
 RUN . ~/.cargo/env && ./gradlew cleanAll
