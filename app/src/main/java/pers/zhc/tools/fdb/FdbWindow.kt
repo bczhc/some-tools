@@ -42,6 +42,7 @@ import pers.zhc.tools.views.HSVAColorPickerRL
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -1451,6 +1452,7 @@ class FdbWindow(private val context: Context) {
         }
     }
 
+    @Suppress("ClickableViewAccessibility")
     private fun setUpPathImportWindow() {
         pathImportWindowBindings.apply {
             var pathImportState = PathImportState.IMPORTING
@@ -1475,7 +1477,6 @@ class FdbWindow(private val context: Context) {
             stopButton.setOnClickListener {
                 paintView.isImportingTerminated = true
             }
-            @Suppress("ClickableViewAccessibility")
             dragIcon.setOnTouchListener { v, event ->
                 pathImportWindowPositionUpdater.onTouch(v, event, true)
             }
@@ -1500,80 +1501,64 @@ class FdbWindow(private val context: Context) {
                 updateDrawingInterval()
             }
 
-            val addHandler = Handler(Looper.getMainLooper())
-            val minusHandler = Handler(Looper.getMainLooper())
+            // when the touching time exceeds this value, `drawingInterval` will speed up its increasing/decreasing
+            val longClickDelay = 500L
+            val createButtonTouchHandler = {decrease: Boolean->
+                var count = 1
+                var runnable: Runnable? = null
+                val handler = Handler(Looper.getMainLooper());
 
-            var addCount = 1
-            var minusCount = 1
-
-            var addRunnable: Runnable? = null
-            var minusRunnable: Runnable? = null
-
-            addBtn.setOnTouchListener { v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        addRunnable = object : Runnable {
-                            override fun run() {
-                                drawingInterval += drawingIntervalStep
-                                updateDrawingInterval()
-                                if (addCount == 1) {
-                                    defaultVibrator().oneShotVibrate(55)
+                { v: View, event: MotionEvent ->
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            runnable = object : Runnable {
+                                override fun run() {
+                                    if (decrease) {
+                                        if (drawingInterval >= drawingIntervalStep) {
+                                            drawingInterval -= drawingIntervalStep
+                                        }
+                                    } else {
+                                        drawingInterval += drawingIntervalStep
+                                    }
+                                    updateDrawingInterval()
+                                    if (count == 1) {
+                                        defaultVibrator().oneShotVibrate(55)
+                                    }
+                                    ++count
+                                    val interval =
+                                        450 / (1 + exp(3 + (1.6 * count - 10))) + 50
+                                    handler.postDelayed(this, interval.toLong())
                                 }
-                                addCount++
-                                val interval =
-                                    450 / (1 + Math.exp(3 + (1.6 * addCount - 10))) + 50
-                                addHandler.postDelayed(this, interval.toLong())
+                            }
+                            handler.postDelayed(runnable!!, longClickDelay)
+                        }
+
+                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                            runnable?.let { handler.removeCallbacks(it) }
+                            runnable = null
+                            count = 1
+
+                            if (event.action == MotionEvent.ACTION_UP && event.eventTime - event.downTime < ViewConfiguration.getTapTimeout()) {
+                                v.performClick()
                             }
                         }
-                        addHandler.postDelayed(addRunnable as Runnable, 500)
                     }
-
-                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                        addRunnable?.let { addHandler.removeCallbacks(it) }
-                        addRunnable = null
-                        addCount = 1
-                        // 其他需要重置的变量
-
-                        if (event.action == MotionEvent.ACTION_UP && event.eventTime - event.downTime < ViewConfiguration.getTapTimeout()) {
-                            v.performClick()
-                        }
-                    }
+                    Unit
                 }
+            }
+
+            val buttonTouchHandler = object {
+                val add = createButtonTouchHandler(false)
+                val minus = createButtonTouchHandler(true)
+            }
+
+            addBtn.setOnTouchListener { v, event ->
+                buttonTouchHandler.add(v, event)
                 true
             }
 
             minusBtn.setOnTouchListener { v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        minusRunnable = object : Runnable {
-                            override fun run() {
-                                if (drawingInterval >= drawingIntervalStep) {
-                                    drawingInterval -= drawingIntervalStep
-                                }
-                                updateDrawingInterval()
-                                if (minusCount == 1) {
-                                    defaultVibrator().oneShotVibrate(55)
-                                }
-                                minusCount++
-                                val interval =
-                                    450 / (1 + Math.exp(3 + (1.6 * minusCount - 10))) + 50
-                                minusHandler.postDelayed(this, interval.toLong())
-                            }
-                        }
-                        minusHandler.postDelayed(minusRunnable as Runnable, 500)
-                    }
-
-                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                        minusRunnable?.let { minusHandler.removeCallbacks(it) }
-                        minusRunnable = null
-                        minusCount = 1
-                        // 其他需要重置的变量
-
-                        if (event.action == MotionEvent.ACTION_UP && event.eventTime - event.downTime < ViewConfiguration.getTapTimeout()) {
-                            v.performClick()
-                        }
-                    }
-                }
+                buttonTouchHandler.minus(v, event)
                 true
             }
 
