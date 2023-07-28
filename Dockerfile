@@ -5,6 +5,7 @@ COPY / /some-tools/
 ARG ndk_version=25.1.8937393
 ARG cmake_version=3.18.1
 ARG full_targets='armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29'
+ARG build_universal=1
 
 WORKDIR /
 
@@ -24,6 +25,9 @@ RUN apt update && \
     # in NDK, as the two issues above suggest. But `gcc-multilib` way
     # also works (at least so far); I just do as this.
     apt install -y gcc-multilib
+
+# Ruby utilities
+RUN gem install toml
 
 RUN git clone https://github.com/openssl/openssl --depth 1 && \
     cd openssl && \
@@ -50,50 +54,51 @@ RUN echo 'sdk.dir=/sdk' > local.properties && \
     echo "ndk.dir=/sdk/ndk/$ndk_version" >> local.properties
 
 # Set up basic `config.toml`
-RUN cp -v .github/workflows/config.toml . && \
-    echo 'ndk.build_type = "debug"' >> config.toml && \
-    echo 'ndk.build_targets = []' >> config.toml
+RUN cp -v .github/workflows/config.toml .
 
 # Gradle build script check
 RUN ./gradlew
 
-# Build OpenSSL for all Android targets
-RUN ./tools/build-openssl /openssl "$(echo $full_targets | sed "s/,/ /g")"
-
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     chmod +x install && \
-    ./install -y && \
+    ./install -y --default-toolchain nightly-2022-11-21 --profile minimal && \
     . ~/.cargo/env && \
-    rustup default nightly-2022-11-21 && \
     rustc --version && \
     ./tools/configure-rust
+
+# Build OpenSSL for all Android targets
+RUN ./tools/build-openssl /openssl $(echo $full_targets | sed "s/,/ /g")
 
 # Build single-Android-ABI Apps
 RUN . ~/.cargo/env && \
     mkdir /apks && mkdir /apks/debug && mkdir /apks/release && \
-    for a in $(echo $full_targets | sed "s/,/ /g"); do \
+    for target in $(echo $full_targets | sed "s/,/ /g"); do \
       # reconfigure
-      target_string="[$a]" && \
-      sed -ri "s/^(ndk\.build_targets)=.*/\1=$target_string/" config.properties && \
-      sed -ri 's/^(ndk\.build_type)=.*/\1=debug/' config.properties && \
+      target_string="[\"$target\"]" && \
+      ./tools/toml-replace config.toml 'ndk.build_targets' "$target_string" && \
+      ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
       ./gradlew asD && \
-      cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$a.apk && \
-      sed -ri 's/^(ndk\.build_type)=.*/\1=release/' config.properties && \
+      cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$target.apk && \
+      ./tools/toml-replace config.toml 'ndk.build_type' '"release"' && \
       ./gradlew asR && \
-      cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$a.apk; \
+      cp -v app/build/outputs/apk/release/app-release.apk /apks/release/$target.apk && \
+      # delete Rust artifacts for reducing the disk usage
+      rm -rf app/src/main/rust/target; \
     done
 
 # Build universal-Android-ABI App
-RUN . ~/.cargo/env && \
-    targets_string="$(ruby -e "require 'json'; puts STDIN.read.chomp.split(',').to_json")" && \
-    sed -ri "s/^(ndk\.build_targets)=.*/\1=$targets_string/" config.properties && \
-    sed -ri 's/^(ndk\.build_type)=.*/\1=debug/' config.properties && \
-    ./gradlew asD && \
-    cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
-    sed -ri 's/^(ndk\.build_type)=.*/\1=release/' config.properties && \
-    ./gradlew asR && \
-    cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk
+RUN if [ $build_universal -eq 1 ]; then \
+      . ~/.cargo/env && \
+      targets_string="$(echo "$full_targets" | ruby -e "require 'json'; puts STDIN.read.chomp.split(',').to_json")" && \
+      ./tools/toml-replace config.toml 'ndk.build_targets' "$targets_string" && \
+      ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
+      ./gradlew asD && \
+      cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
+      ./tools/toml-replace config.toml 'ndk.build_type' '"release"' && \
+      ./gradlew asR && \
+      cp app/build/outputs/apk/release/app-release.apk /apks/release/universal.apk; \
+    fi
 
 # Test `cleanAll` task
 RUN . ~/.cargo/env && ./gradlew cleanAll

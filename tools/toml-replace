@@ -1,0 +1,34 @@
+#!/bin/env ruby
+
+require 'toml'
+
+args = ARGV
+if args.empty?
+  puts 'Usage: Command <file> <dotted-key> <new-value>'
+  exit 1
+end
+
+file = args[0]
+key = args[1]
+new_value_toml = "x = #{args[2]}"
+new_value = TOML.load(new_value_toml)["x"]
+
+parser = TOML.load_file(file)
+keys = key.split('.')
+
+fail if keys.empty?
+
+x = parser
+last_key = keys.last
+keys.reverse.drop(1).reverse.each do |k|
+  x = x[k]
+end
+
+x[last_key] = new_value
+
+puts parser
+output = TOML::Generator.new(parser).body
+
+File.open(file, 'w') do |f|
+  f.write(output)
+end

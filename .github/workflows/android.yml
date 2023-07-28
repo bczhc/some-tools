@@ -31,7 +31,7 @@ jobs:
           ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
       - name: Build app
         run: |
-          docker build . -t some-tools-build
+          docker build . --build-arg build_universal=0 -t some-tools-build
           docker run --name some-tools some-tools-build
           docker cp some-tools:/apks .
       - name: Upload apk to GitLab
@@ -62,5 +62,5 @@ jobs:
       - name: Upload APKs
         uses: actions/upload-artifact@v2
         with:
-          name: app-debug
+          name: APKs
           path: apks
