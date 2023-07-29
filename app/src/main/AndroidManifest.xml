@@ -24,6 +24,7 @@
     <application
             android:name=".MyApplication"
             android:allowBackup="false"
+            tools:replace="android:extractNativeLibs"
             android:extractNativeLibs="true"
             android:hardwareAccelerated="true"
             android:icon="@drawable/ic_launcher_foreground"

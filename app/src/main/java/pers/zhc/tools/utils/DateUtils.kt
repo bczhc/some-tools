@@ -13,8 +13,15 @@ fun Date.isToday(): Boolean {
     return CalendarUtils.isToday(this)
 }
 
-fun Date.format(pattern: String, locale: Locale = Locale.getDefault()): String {
-    return SimpleDateFormat(pattern, locale).format(this)
+fun Date.format(pattern: String, locale: Locale = Locale.getDefault(), timeZone: TimeZone? = null): String {
+    val format = SimpleDateFormat(pattern, locale)
+    timeZone?.let { format.timeZone = timeZone }
+    return format.format(this)
+}
+
+fun Date.toUtcIso8601(): String {
+    val tz = TimeZone.getTimeZone("UTC")
+    return this.format("yyyy-MM-dd'T'HH:mm'Z'", timeZone = tz)
 }
 
 object CalendarUtils {

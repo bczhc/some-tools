@@ -2,6 +2,7 @@ package pers.zhc.tools.crashhandler
 
 import android.content.Context
 import android.content.Intent
+import pers.zhc.tools.MyApplication
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.format
 import pers.zhc.tools.utils.requireMkdirs
@@ -17,8 +18,8 @@ class CrashHandler private constructor(private val context: Context) : Thread.Un
     override fun uncaughtException(t: Thread, e: Throwable) {
         val stackTraceString = getExceptionStackTraceString(t, e)
         val currentTimeMillis = System.currentTimeMillis()
-        val dateString = Date(currentTimeMillis).format("yyyy-MM-dd_HH-mm-ss", Locale.ENGLISH)
-        val filename = "crash_${dateString}_$currentTimeMillis.txt"
+        val dateString = Date(currentTimeMillis).format("yyyyMMdd_HHmmss.SSS")
+        val filename = "crash_${dateString}.txt"
 
         val intent = Intent(context, CrashReportActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -52,7 +53,7 @@ class CrashHandler private constructor(private val context: Context) : Thread.Un
 
         @Throws(IOException::class)
         fun save2File(context: Context, filename: String, content: String) {
-            val crashDir = File(Common.getAppMainExternalStoragePath(context) + File.separatorChar + "crash")
+            val crashDir = MyApplication.crashLogDir
             if (!crashDir.exists()) {
                 runCatching { crashDir.requireMkdirs() }
             }
