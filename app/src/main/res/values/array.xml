@@ -91,6 +91,7 @@
         <item>JNI Throw</item>
         <item>Rust Panic</item>
         <item>Signals</item>
+        <item>Backtrace</item>
     </array>
     <!-- end -->
 </resources>

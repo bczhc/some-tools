@@ -2,6 +2,7 @@ package pers.zhc.tools.crashhandler
 
 import android.content.Context
 import android.content.Intent
+import pers.zhc.tools.MyApplication
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.format
 import pers.zhc.tools.utils.requireMkdirs
@@ -52,7 +53,7 @@ class CrashHandler private constructor(private val context: Context) : Thread.Un
 
         @Throws(IOException::class)
         fun save2File(context: Context, filename: String, content: String) {
-            val crashDir = File(Common.getAppMainExternalStoragePath(context) + File.separatorChar + "crash")
+            val crashDir = MyApplication.crashLogDir
             if (!crashDir.exists()) {
                 runCatching { crashDir.requireMkdirs() }
             }

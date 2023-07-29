@@ -18,6 +18,7 @@ import pers.zhc.tools.crashhandler.CrashHandler
 import pers.zhc.tools.email.ContactActivity
 import pers.zhc.tools.email.Database
 import pers.zhc.tools.jni.JNI
+import pers.zhc.tools.utils.Common
 import pers.zhc.tools.words.WordsMainActivity
 import pers.zhc.tools.wubi.DictionaryDatabase
 import pers.zhc.tools.wubi.SingleCharCodesChecker
@@ -34,7 +35,7 @@ class MyApplication : Application() {
     }
 
     private fun init() {
-        appContext = this
+        staticInit(this)
         CrashHandler.install(this)
         WordsMainActivity.init(this)
         Database.initPath(this)
@@ -46,6 +47,7 @@ class MyApplication : Application() {
         registerNotificationChannel()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         initAppInfoFile()
+        initJniFields()
     }
 
     private fun registerNotificationChannel() {
@@ -80,9 +82,14 @@ class MyApplication : Application() {
         }
     }
 
+    private fun initJniFields() {
+        JNI.rustSetUpStaticFields(arrayOf(crashLogDir.path))
+    }
+
     companion object {
         private lateinit var infoFile: File
         lateinit var appContext: Context
+        lateinit var crashLogDir: File
 
         // the default global Gson
         val GSON = Gson()
@@ -118,6 +125,11 @@ class MyApplication : Application() {
 
         init {
             JNI.initialize()
+        }
+
+        private fun staticInit(context: Context) {
+            appContext = context
+            crashLogDir = File(Common.getAppMainExternalStoragePath(context) + File.separatorChar + "crash")
         }
     }
 }

@@ -2,6 +2,7 @@ package pers.zhc.tools.test
 
 import android.content.Intent
 import android.os.Bundle
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.CrashTestActivityBinding
@@ -44,6 +45,13 @@ class CrashTest : BaseActivity() {
                 {
                     // Signals
                     startActivity(Intent(this, SignalTest::class.java))
+                },
+                {
+                    // Backtrace
+                    val backtrace = JNI.CrashTest.testBacktrace()
+                    MaterialAlertDialogBuilder(this)
+                        .setMessage(backtrace)
+                        .show()
                 }
             )[position]()
         }

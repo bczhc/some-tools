@@ -16,6 +16,8 @@ public class JNI {
 
     private static native void rustInitialize();
 
+    public static native void rustSetUpStaticFields(String[] strings);
+
     public static synchronized void initialize() {
         if (!initFlag) {
             System.loadLibrary("Main");
@@ -505,5 +507,7 @@ public class JNI {
         public static native void panic();
 
         public static native void throwException();
+
+        public static native String testBacktrace();
     }
 }
