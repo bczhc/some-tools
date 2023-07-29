@@ -15,6 +15,8 @@ import pers.zhc.tools.R
 import pers.zhc.tools.databinding.UncaughtExceptionReportActivityBinding
 import pers.zhc.tools.utils.ClipboardUtils
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.toUtcIso8601
+import java.util.*
 
 /**
  * @author bczhc
@@ -44,10 +46,15 @@ class CrashReportActivity : BaseActivity() {
 
         val filename = intent.getStringExtra(EXTRA_FILENAME)!!
         val deviceInfo = collectDeviceInfo()
-
-        val content = deviceInfo.entries.joinToString(separator = "\n") {
+        val timestamp = System.currentTimeMillis()
+        val infoLines = mutableListOf(
+            "Date: ${Date(timestamp).toUtcIso8601()}",
+            "Timestamp: $timestamp"
+        )
+        infoLines.addAll(deviceInfo.entries.map {
             "${it.key}: ${it.value}"
-        } + exception
+        })
+        val content = infoLines.joinToString("\n") + "\n\n" + exception
 
         bindings.uploadReportBtn.setOnClickListener {
             upload(content)
