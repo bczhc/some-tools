@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.colorpicker.ScreenColorPickerDemoActivity
+import pers.zhc.tools.crypto.BitcoinMainActivity
 import pers.zhc.tools.databinding.ToolsActivityMainBinding
 import pers.zhc.tools.test.*
 import pers.zhc.tools.test.malloctest.MAllocTest
@@ -31,6 +32,7 @@ class TestListActivity : BaseActivity() {
             ActivityItem(R.string.drawing_board_test, DrawingBoardTest::class.java),
             ActivityItem(R.string.signal_test_label, SignalTest::class.java),
             ActivityItem(R.string.screen_color_picker_label, ScreenColorPickerDemoActivity::class.java),
+            ActivityItem(R.string.crypto_bitcoin_label, BitcoinMainActivity::class.java),
         )
 
         recyclerView.adapter = AppMenuAdapter(this, list)
