@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                android:layout_height="match_parent">
-    <EditText android:layout_width="match_parent" android:layout_height="match_parent"
-              android:layout_above="@id/copy"
-              android:id="@+id/copy_et"
-              tools:ignore="Autofill,LabelFor,TextFields"
-              android:hint="@string/type_html_code"
-              android:gravity="top"
-    />
-    <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/copy"
-            android:textSize="25sp"
-            android:id="@+id/copy"
-            android:layout_margin="10dp"
-            android:layout_alignParentBottom="true"
-            android:background="#FFFFFFFF"
-    />
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/copy_et"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/copy"
+        android:gravity="top"
+        android:hint="@string/type_html_code"
+        tools:ignore="Autofill,LabelFor,TextFields"/>
+    <Button
+        android:id="@+id/copy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:background="#FFFFFFFF"
+        android:text="@string/copy"
+        android:textSize="25sp"/>
 </RelativeLayout>

@@ -1,64 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:orientation="vertical"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="top"
-		android:id="@+id/note_top_view">
-    </RelativeLayout>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/note_top_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"></RelativeLayout>
 
-	<ScrollView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_above="@id/ll_bottom"
-		android:layout_margin="10dp"
-		android:id="@+id/sv"
-        android:layout_below="@+id/note_top_view"/>
+    <ScrollView
+        android:id="@+id/sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_bottom"
+        android:layout_below="@+id/note_top_view"
+        android:layout_margin="10dp"/>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-		android:id="@+id/ll_bottom">
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
-		<Button
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:text="@string/record"
-			android:id="@+id/note_take"
-			tools:ignore="ButtonStyle"
-			android:layout_weight="1"/>
+        <Button
+            android:id="@+id/note_take"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/record"
+            tools:ignore="ButtonStyle"/>
 
-		<Button
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:text="@string/delete"
-			android:id="@+id/delete_btn"
-			tools:ignore="ButtonStyle"
-			android:layout_weight="1"/>
+        <Button
+            android:id="@+id/delete_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/delete"
+            tools:ignore="ButtonStyle"/>
 
-		<Button
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:id="@+id/export_btn"
-			android:text="@string/export"
-			tools:ignore="ButtonStyle"/>
+        <Button
+            android:id="@+id/export_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/export"
+            tools:ignore="ButtonStyle"/>
 
-		<Button
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:text="@string/import_"
-			android:layout_weight="1"
-			tools:ignore="ButtonStyle"
-			android:id="@+id/import_btn"/>
+        <Button
+            android:id="@+id/import_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/import_"
+            tools:ignore="ButtonStyle"/>
 
-	</LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>
 

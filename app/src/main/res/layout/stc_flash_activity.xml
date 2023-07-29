@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:padding="5dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <com.google.android.material.materialswitch.MaterialSwitch
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/connect_switch"
-            android:text="@string/connect"
-    />
+        android:id="@+id/connect_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/connect"/>
 
     <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.M3Application.TextInputLayout.FilledBox"
-    >
+        style="@style/Widget.M3Application.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/hex_file_path_et"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hex_file_path"
-                android:inputType="text"
-                tools:ignore="Autofill"/>
+            android:id="@+id/hex_file_path_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hex_file_path"
+            android:inputType="text"
+            tools:ignore="Autofill"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/pick_file"
-            android:id="@+id/pick_file_btn"
-    />
+    <Button
+        android:id="@+id/pick_file_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/pick_file"/>
 
     <Button
-            android:id="@+id/burn_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/burn"/>
+        android:id="@+id/burn_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/burn"/>
 
     <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <TextView
-                android:id="@+id/callback_et"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"/>
+            android:id="@+id/callback_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
     </ScrollView>
 </LinearLayout>

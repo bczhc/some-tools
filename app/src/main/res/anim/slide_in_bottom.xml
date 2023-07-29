@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-     android:duration="500"
->
+     android:duration="500">
     <translate
-            android:fromYDelta="100%"
-            android:toYDelta="0"/>
+        android:fromYDelta="100%"
+        android:toYDelta="0"/>
     <alpha
-            android:fromAlpha="0"
-            android:toAlpha="1"/>
+        android:fromAlpha="0"
+        android:toAlpha="1"/>
 
     <scale
-            android:pivotX="50%"
-            android:pivotY="50%"
-            android:fromXScale=".6"
-            android:toXScale="1"
-            android:fromYScale=".8"
-            android:toYScale="1"
-    />
+        android:fromXScale=".6"
+        android:fromYScale=".8"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="1"
+        android:toYScale="1"/>
 </set>

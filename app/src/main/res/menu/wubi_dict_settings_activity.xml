@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/import_"
-          app:showAsAction="never"
-          android:title="@string/menu_import"
-    />
-    <item android:id="@+id/export"
-          app:showAsAction="never"
-          android:title="@string/menu_export"
-    />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/import_"
+        android:title="@string/menu_import"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/export"
+        android:title="@string/menu_export"
+        app:showAsAction="never"/>
 </menu>

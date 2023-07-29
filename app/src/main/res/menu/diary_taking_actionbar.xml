@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/record_time"
-            app:showAsAction="never"
-            android:title="@string/record_time"
-    />
+        android:id="@+id/record_time"
+        android:title="@string/record_time"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/attachment"
-            app:showAsAction="never"
-            android:title="@string/attachment"
-    />
+        android:id="@+id/attachment"
+        android:title="@string/attachment"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/find"
-            app:showAsAction="never"
-            android:title="@string/diary_find_menu"
-    />
+        android:id="@+id/find"
+        android:title="@string/diary_find_menu"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/statistics"
-            app:showAsAction="never"
-            android:title="@string/diary_menu_statistics"
-    />
+        android:id="@+id/statistics"
+        android:title="@string/diary_menu_statistics"
+        app:showAsAction="never"/>
 </menu>

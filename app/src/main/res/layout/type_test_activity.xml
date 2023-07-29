@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:gravity="center"
-              android:textSize="25sp"
-              android:id="@+id/speed_tv"
-    />
-    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
-                                         android:layout_below="@id/speed_tv"
-                                         app:gravity="top"
-                                         android:fillViewport="true"
-                                         android:id="@+id/type_et"
-    />
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/speed_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25sp"/>
+    <pers.zhc.tools.views.ScrollEditText
+        android:id="@+id/type_et"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/speed_tv"
+        android:fillViewport="true"
+        app:gravity="top"/>
 </RelativeLayout>

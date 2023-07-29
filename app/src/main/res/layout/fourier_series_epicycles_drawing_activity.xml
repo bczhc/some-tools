@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <pers.zhc.tools.views.WrapLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/container"
-    />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            style="@style/Widget.M3Application.Button.OutlinedButton"
-            android:text="@string/option_btn"
-            android:layout_gravity="end"
-            android:id="@+id/option_btn"
-    />
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <Button
+        android:id="@+id/option_btn"
+        style="@style/Widget.M3Application.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/option_btn"/>
 </FrameLayout>

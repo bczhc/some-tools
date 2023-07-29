@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="match_parent"
-                                         android:layout_above="@id/toast"
-                                         android:id="@+id/toast_et"
-                                         android:layout_margin="10dp"
-                                         app:gravity="top"
-                                         android:fillViewport="true"
-    />
-    <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/toast"
-            android:textAllCaps="false"
-            android:textSize="25sp"
-            android:id="@+id/toast"
-            android:layout_marginTop="-10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentBottom="true"
-            android:background="#FFFFFFFF"
-    />
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <pers.zhc.tools.views.ScrollEditText
+        android:id="@+id/toast_et"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/toast"
+        android:layout_margin="10dp"
+        android:fillViewport="true"
+        app:gravity="top"/>
+    <Button
+        android:id="@+id/toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="-10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#FFFFFFFF"
+        android:text="@string/toast"
+        android:textAllCaps="false"
+        android:textSize="25sp"/>
 </RelativeLayout>

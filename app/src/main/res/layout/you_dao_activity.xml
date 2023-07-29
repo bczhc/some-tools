@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <Spinner android:layout_width="match_parent" android:layout_height="wrap_content"
-             android:id="@+id/type"/>
-    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="0dp"
-                                         app:hint="@string/to_translate_content"
-                                         app:gravity="top"
-                                         android:id="@+id/content"
-                                         android:layout_weight="1"
-                                         android:fillViewport="true"
-    />
-    <pers.zhc.tools.views.ScrollEditText android:layout_width="match_parent" android:layout_height="0dp"
-                                         app:gravity="top"
-                                         android:id="@+id/out"
-                                         android:layout_weight="1"
-                                         app:hint="@string/result"
-                                         app:focusable="false"
-                                         android:fillViewport="true"
-    />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <Spinner
+        android:id="@+id/type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <pers.zhc.tools.views.ScrollEditText
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        app:gravity="top"
+        app:hint="@string/to_translate_content"/>
+    <pers.zhc.tools.views.ScrollEditText
+        android:id="@+id/out"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        app:focusable="false"
+        app:gravity="top"
+        app:hint="@string/result"/>
 </LinearLayout>

@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="20dp"
->
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/course_table_course_name_tv"
-              android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-              android:id="@+id/name_tv"
-    />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/course_table_course_location_tv"
-              android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-              android:id="@+id/location_tv"
-    />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/course_table_course_teacher_tv"
-              android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-              android:id="@+id/teacher_tv"
-    />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/course_table_course_date_tv"
-              android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-              android:id="@+id/date_tv"
-    />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/course_table_course_time_tv"
-              android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-              android:id="@+id/time_tv"
-    />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/course_table_course_name_tv"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+    <TextView
+        android:id="@+id/location_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/course_table_course_location_tv"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+    <TextView
+        android:id="@+id/teacher_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/course_table_course_teacher_tv"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+    <TextView
+        android:id="@+id/date_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/course_table_course_date_tv"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+    <TextView
+        android:id="@+id/time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/course_table_course_time_tv"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 </LinearLayout>

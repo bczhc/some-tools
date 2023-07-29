@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/root_ll"
->
-    <ProgressBar android:layout_width="wrap_content" android:layout_height="wrap_content"
-                 android:indeterminate="true"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:layout_gravity="center_vertical"
-              tools:text="info"
-              android:textSize="20sp"
-              android:id="@+id/title"
-    />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_ll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"/>
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textSize="20sp"
+        tools:text="info"/>
 </LinearLayout>

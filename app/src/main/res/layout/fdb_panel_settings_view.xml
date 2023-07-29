@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:id="@+id/ll"
-              android:padding="5dp"
->
-    <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/fdb_panel_settings_panel_color_tv"
-            android:id="@+id/panel_color"
-    />
-    <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="@string/fdb_panel_settings_panel_text_color_tv"
-            android:id="@+id/text_color"
-    />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp">
+    <Button
+        android:id="@+id/panel_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fdb_panel_settings_panel_color_tv"/>
+    <Button
+        android:id="@+id/text_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fdb_panel_settings_panel_text_color_tv"/>
     <com.google.android.material.materialswitch.MaterialSwitch
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/fdb_panel_settings_follow_brush_color_switch"
-            android:id="@+id/follow_painting_color"
-    />
+        android:id="@+id/follow_painting_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fdb_panel_settings_follow_brush_color_switch"/>
     <com.google.android.material.materialswitch.MaterialSwitch
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/fdb_panel_settings_invert_text_color_switch"
-            android:id="@+id/invert_text_color"
-    />
+        android:id="@+id/invert_text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fdb_panel_settings_invert_text_color_switch"/>
 </LinearLayout>

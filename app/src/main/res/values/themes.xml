@@ -11,8 +11,7 @@
         <item name="colorOnSecondary">@color/black</item>
     </style>
 
-    <style name="Theme.Application.Dark" parent="Theme.Application">
-    </style>
+    <style name="Theme.Application.Dark" parent="Theme.Application"/>
 
     <style name="Theme.Application.NoActionBar" parent="Theme.Application">
         <item name="windowActionBar">false</item>
@@ -20,26 +19,19 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="Theme.Application.Dark.NoActionBar" parent="Theme.Application.NoActionBar">
-    </style>
+    <style name="Theme.Application.Dark.NoActionBar" parent="Theme.Application.NoActionBar"/>
 
-    <style name="Widget.Application.Button" parent="Widget.MaterialComponents.Button">
-    </style>
+    <style name="Widget.Application.Button" parent="Widget.MaterialComponents.Button"/>
 
-    <style name="Widget.Application.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
-    </style>
+    <style name="Widget.Application.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton"/>
 
-    <style name="Widget.Application.TextInputLayout.FilledBox"
-           parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+    <style name="Widget.Application.TextInputLayout.FilledBox" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="boxBackgroundColor">@color/white</item>
     </style>
 
-    <style name="Widget.Application.TextInputLayout.OutlinedBox"
-           parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-    </style>
+    <style name="Widget.Application.TextInputLayout.OutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox"/>
 
-    <style name="Theme.Application.Toolbar.Primary" parent="Widget.MaterialComponents.Toolbar.Primary">
-    </style>
+    <style name="Theme.Application.Toolbar.Primary" parent="Widget.MaterialComponents.Toolbar.Primary"/>
 
     <style name="Widget.Application.TextView.Light" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/white</item>
@@ -64,23 +56,17 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="Theme.M3Application.Dark.NoActionBar" parent="Theme.M3Application.NoActionBar">
-    </style>
+    <style name="Theme.M3Application.Dark.NoActionBar" parent="Theme.M3Application.NoActionBar"/>
 
-    <style name="Widget.M3Application.Button" parent="Widget.Material3.Button">
-    </style>
+    <style name="Widget.M3Application.Button" parent="Widget.Material3.Button"/>
 
-    <style name="Widget.M3Application.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
-    </style>
+    <style name="Widget.M3Application.Button.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton"/>
 
-    <style name="Widget.M3Application.TextInputLayout.FilledBox"
-           parent="Widget.Material3.TextInputLayout.FilledBox">
+    <style name="Widget.M3Application.TextInputLayout.FilledBox" parent="Widget.Material3.TextInputLayout.FilledBox">
         <item name="boxBackgroundColor">@color/white</item>
     </style>
 
-    <style name="Widget.M3Application.TextInputLayout.OutlinedBox"
-           parent="Widget.Material3.TextInputLayout.OutlinedBox">
-    </style>
+    <style name="Widget.M3Application.TextInputLayout.OutlinedBox" parent="Widget.Material3.TextInputLayout.OutlinedBox"/>
 
     <style name="Widget.M3Application.TextView.Light" parent="Widget.Material3.CheckedTextView">
         <item name="android:textColor">@color/white</item>

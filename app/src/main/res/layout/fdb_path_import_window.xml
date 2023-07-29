@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white_alpha50">
+    <ImageView
+        android:id="@+id/drag_icon"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@id/main_ll"
+        android:layout_alignEnd="@id/main_ll"
+        android:background="@color/grey"
+        android:src="@drawable/drag_icon"
+        tools:ignore="ContentDescription"/>
+    <LinearLayout
+        android:id="@+id/main_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/drag_icon"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/white_alpha50">
-    <ImageView android:id="@+id/drag_icon"
-               android:layout_width="0dp"
-               android:layout_height="30dp"
-               android:layout_alignStart="@id/main_ll"
-               android:layout_alignEnd="@id/main_ll"
-               android:background="@color/grey"
-               android:src="@drawable/drag_icon"
-               tools:ignore="ContentDescription"
-    />
-    <LinearLayout android:id="@+id/main_ll"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_below="@id/drag_icon"
-                  android:orientation="vertical"
-    >
-        <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="center_horizontal"
-        >
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/fdb_path_import_floating_window_title"
-                      android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            />
+                android:text="@string/fdb_path_import_floating_window_title"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/progress_circular"
@@ -41,34 +42,36 @@
                 app:trackThickness="2dp"
                 tools:progress="50"/>
         </LinearLayout>
-        <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:minWidth="130dp"
-                      android:orientation="vertical"
-        >
-            <TextView android:id="@+id/layer_name" android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="center"
-                      android:visibility="gone"
-            />
-            <TextView android:id="@+id/layer_progress" android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="center"
-                      android:visibility="gone"
-            />
-            <TextView android:id="@+id/speed_tv" android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_gravity="center"
-                      tools:text="@string/fdb_path_import_speed_tv"
-            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="130dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/layer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/layer_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/speed_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:text="@string/fdb_path_import_speed_tv"/>
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/pause_minus_button_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
-                android:orientation="horizontal"
-            >
+                android:orientation="horizontal">
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/minus_btn"
                     android:layout_width="0dp"
@@ -78,8 +81,7 @@
                     android:minWidth="0dp"
                     android:text="-"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                    tools:ignore="HardcodedText"
-                />
+                    tools:ignore="HardcodedText"/>
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/add_btn"
                     android:layout_width="0dp"
@@ -89,15 +91,13 @@
                     android:minWidth="0dp"
                     android:text="+"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                    tools:ignore="HardcodedText"
-                />
+                    tools:ignore="HardcodedText"/>
             </com.google.android.material.button.MaterialButtonToggleGroup>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal"
-            >
+                android:orientation="horizontal">
                 <Button
                     android:id="@+id/pause_button"
                     android:layout_width="wrap_content"
@@ -107,8 +107,7 @@
                     android:minWidth="0dp"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
-                    android:text="@string/fdb_path_import_pause_button"
-                />
+                    android:text="@string/fdb_path_import_pause_button"/>
                 <Button
                     android:id="@+id/stop_button"
                     android:layout_width="wrap_content"
@@ -117,8 +116,7 @@
                     android:minWidth="0dp"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
-                    android:text="@string/cancel_btn"
-                />
+                    android:text="@string/cancel_btn"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

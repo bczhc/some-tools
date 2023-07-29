@@ -1,60 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:padding="10dp"
->
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:id="@+id/rl0"
-                    android:orientation="horizontal"
-    >
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+    <RelativeLayout
+        android:id="@+id/rl0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <pers.zhc.tools.views.SmartHintEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/transfer_destination_address_et"
-                android:id="@+id/destination_address_et"
-                android:layout_toStartOf="@id/qr_code_btn"
-        />
-        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:id="@+id/qr_code_btn"
-                android:layout_alignParentEnd="true"
-                android:text="@string/qr_code"
-        />
+            android:id="@+id/destination_address_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/qr_code_btn"
+            app:hint="@string/transfer_destination_address_et"/>
+        <Button
+            android:id="@+id/qr_code_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/qr_code"/>
     </RelativeLayout>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  android:layout_below="@id/rl0"
-                  android:id="@+id/ll"
-    >
-        <Spinner android:layout_width="0dp" android:layout_height="match_parent"
-                 android:id="@+id/type_spinner"
-                 tools:listitem="@android:layout/simple_dropdown_item_1line"
-                 android:gravity="center_vertical"
-                 android:layout_weight="1"
-                 android:layout_marginEnd="2.5dp"
-        />
-        <Button android:layout_width="0dp" android:layout_height="match_parent"
-                android:text="@string/pick_file_btn"
-                android:id="@+id/pick_file_btn"
-                android:layout_weight="1"
-                android:layout_marginStart="2.5dp"
-        />
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl0"
+        android:orientation="horizontal">
+        <Spinner
+            android:id="@+id/type_spinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="2.5dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            tools:listitem="@android:layout/simple_dropdown_item_1line"/>
+        <Button
+            android:id="@+id/pick_file_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="2.5dp"
+            android:layout_weight="1"
+            android:text="@string/pick_file_btn"/>
     </LinearLayout>
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
-                android:layout_below="@id/ll"
-                android:layout_above="@id/send_btn"
-    >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/send_btn"
+        android:layout_below="@id/ll">
         <pers.zhc.tools.views.WrapLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/container_layout"
-        />
+            android:id="@+id/container_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </ScrollView>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/transfer_send_button"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/send_btn"
-    />
+    <Button
+        android:id="@+id/send_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/transfer_send_button"/>
 </RelativeLayout>

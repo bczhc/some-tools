@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:padding="10dp"
-              android:orientation="vertical"
->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
     <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hint="@string/email_smtp_server_et_hint"
-            android:id="@+id/smtp_server_et"
-    />
+        android:id="@+id/smtp_server_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hint="@string/email_smtp_server_et_hint"/>
     <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hint="@string/username"
-            android:id="@+id/username_et"
-    />
+        android:id="@+id/username_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hint="@string/username"/>
     <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hint="@string/password"
-            android:id="@+id/password_et"
-    />
+        android:id="@+id/password_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hint="@string/password"/>
     <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hint="@string/email_from_account_et_hint"
-            android:id="@+id/from_et"
-    />
+        android:id="@+id/from_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hint="@string/email_from_account_et_hint"/>
 </LinearLayout>

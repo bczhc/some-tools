@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     <pers.zhc.tools.views.RegexInputView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/regex_input"
-    />
+        android:id="@+id/regex_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <com.google.android.material.checkbox.MaterialCheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ignore_case"
-            android:id="@+id/ignore_case_cb"
-    />
+        android:id="@+id/ignore_case_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ignore_case"/>
 </LinearLayout>

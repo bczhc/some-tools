@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:title="@string/settings"
-          app:showAsAction="never"
-          android:id="@+id/settings"
-    />
-    <item android:title="@string/app_menu_update"
-          app:showAsAction="never"
-          android:id="@+id/update"
-    />
-    <item android:title="@string/app_menu_git_log"
-          app:showAsAction="never"
-          android:id="@+id/git_log"
-    />
-    <item android:title="@string/app_menu_switch_themes"
-          app:showAsAction="never"
-          android:id="@+id/switch_themes"
-    />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/update"
+        android:title="@string/app_menu_update"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/git_log"
+        android:title="@string/app_menu_git_log"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/switch_themes"
+        android:title="@string/app_menu_switch_themes"
+        app:showAsAction="never"/>
     <item android:title="@string/app_menu_wake_lock">
         <menu>
-            <item android:title="@string/app_menu_wake_lock_acquire"
-                  android:id="@+id/wake_lock_acquire"
-            />
-            <item android:title="@string/app_menu_wake_lock_release"
-                  android:id="@+id/wake_lock_release"
-            />
+            <item
+                android:id="@+id/wake_lock_acquire"
+                android:title="@string/app_menu_wake_lock_acquire"/>
+            <item
+                android:id="@+id/wake_lock_release"
+                android:title="@string/app_menu_wake_lock_release"/>
         </menu>
     </item>
     <item
-            android:title="@string/exit_menu"
-            android:id="@+id/exit"
-    />
+        android:id="@+id/exit"
+        android:title="@string/exit_menu"/>
 </menu>

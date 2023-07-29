@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/codepoint_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
->
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/char_stat_codepoint_count_tv"
-              android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-              android:id="@+id/codepoint_tv"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/char_stat_grapheme_cluster_count_tv"
-              android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-              android:id="@+id/grapheme_tv"
-    />
+        android:text="@string/char_stat_codepoint_count_tv"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+    <TextView
+        android:id="@+id/grapheme_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/char_stat_grapheme_cluster_count_tv"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
 </LinearLayout>

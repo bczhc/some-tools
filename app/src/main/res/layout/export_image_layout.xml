@@ -1,34 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:id="@+id/root"
->
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/filename_is"
-              android:textSize="20sp"
-    />
-    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/file_name" tools:ignore="Autofill,LabelFor,TextFields"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/image_size_px_is"
-              android:textSize="20sp"
-    />
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-        <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:id="@+id/width" tools:ignore="Autofill,LabelFor,TextFields"
-                  android:layout_margin="5dp"
-                  android:layout_toStartOf="@id/asterisk"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textSize="20sp"
-                  android:text="@string/asterisk"
-                  android:layout_centerHorizontal="true"
-                  android:id="@+id/asterisk"
-        />
-        <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:id="@+id/height" tools:ignore="Autofill,LabelFor,TextFields"
-                  android:layout_margin="5dp"
-                  android:layout_toEndOf="@id/asterisk"/>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filename_is"
+        android:textSize="20sp"/>
+    <EditText
+        android:id="@+id/file_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="Autofill,LabelFor,TextFields"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/image_size_px_is"
+        android:textSize="20sp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/width"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_toStartOf="@id/asterisk"
+            tools:ignore="Autofill,LabelFor,TextFields"/>
+        <TextView
+            android:id="@+id/asterisk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/asterisk"
+            android:textSize="20sp"/>
+        <EditText
+            android:id="@+id/height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@id/asterisk"
+            tools:ignore="Autofill,LabelFor,TextFields"/>
     </RelativeLayout>
 </LinearLayout>

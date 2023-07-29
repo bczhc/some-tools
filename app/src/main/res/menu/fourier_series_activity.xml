@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:title="@string/fourier_series_menu_export_epicycles_data"
-          android:id="@+id/export"
-          app:showAsAction="never"
-    />
-    <item android:title="@string/fourier_series_menu_import_epicycles_data"
-          android:id="@+id/import_"
-          app:showAsAction="never"
-    />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/export"
+        android:title="@string/fourier_series_menu_export_epicycles_data"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/import_"
+        android:title="@string/fourier_series_menu_import_epicycles_data"
+        app:showAsAction="never"/>
 </menu>

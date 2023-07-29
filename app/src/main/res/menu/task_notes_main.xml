@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:title="@string/task_notes_item_show_type_menu"
-            app:showAsAction="never"
-    >
+        android:title="@string/task_notes_item_show_type_menu"
+        app:showAsAction="never">
         <menu>
-            <group android:checkableBehavior="single"
-                   android:id="@+id/show_type"
-            >
-                <item android:title="@string/task_notes_item_show_today"
-                      android:id="@+id/show_today"
-                      android:checked="true"
-                />
-                <item android:title="@string/task_notes_item_show_all"
-                      android:id="@+id/show_all"
-                />
+            <group
+                android:id="@+id/show_type"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/show_today"
+                    android:checked="true"
+                    android:title="@string/task_notes_item_show_today"/>
+                <item
+                    android:id="@+id/show_all"
+                    android:title="@string/task_notes_item_show_all"/>
             </group>
         </menu>
     </item>
     <item
-            android:title="@string/create_shortcut"
-            android:id="@+id/create_shortcut"
-    />
+        android:id="@+id/create_shortcut"
+        android:title="@string/create_shortcut"/>
 </menu>

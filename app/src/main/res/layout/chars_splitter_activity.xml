@@ -1,50 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
->
-    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/input_et"
-              tools:ignore="Autofill,LabelFor,TextFields"/>
-    <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/input_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="Autofill,LabelFor,TextFields"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <com.google.android.material.button.MaterialButtonToggleGroup
-                android:layout_width="match_parent"
+            android:id="@+id/btg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/as_codepoint"
+                style="?materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal"
-                app:singleSelection="true"
-                app:selectionRequired="true"
-                android:id="@+id/btg"
-        >
+                android:text="@string/char_split_as_codepoint_button"/>
             <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/char_split_as_codepoint_button"
-                    android:id="@+id/as_codepoint"
-                    style="?materialButtonOutlinedStyle"
-            />
-            <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/char_split_as_grapheme_button"
-                    android:id="@+id/as_grapheme"
-                    style="?materialButtonOutlinedStyle"
-            />
+                android:id="@+id/as_grapheme"
+                style="?materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/char_split_as_grapheme_button"/>
         </com.google.android.material.button.MaterialButtonToggleGroup>
-        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-            <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="N"
-                    style="?materialButtonOutlinedStyle"
-                    android:layout_alignParentEnd="true"
-                    android:id="@+id/unicode_norm_btn"
-                    tools:ignore="HardcodedText"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/unicode_norm_btn"
+                style="?materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="N"
+                tools:ignore="HardcodedText"/>
         </RelativeLayout>
     </FrameLayout>
     <androidx.fragment.app.FragmentContainerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/container"
-    />
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

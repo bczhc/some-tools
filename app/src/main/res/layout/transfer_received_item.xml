@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:paddingVertical="2.5dp"
->
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/transfer_receiving_type_tv"
-              style="@style/TextAppearance.Material3.TitleMedium"
-              android:id="@+id/receiving_type_tv"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/transfer_receiving_time_tv"
-              style="@style/TextAppearance.Material3.TitleMedium"
-              android:id="@+id/receiving_time_tv"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/transfer_receiving_size_tv"
-              style="@style/TextAppearance.Material3.TitleMedium"
-              android:id="@+id/receiving_size_tv"
-    />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="2.5dp">
+    <TextView
+        android:id="@+id/receiving_type_tv"
+        style="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/transfer_receiving_type_tv"/>
+    <TextView
+        android:id="@+id/receiving_time_tv"
+        style="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/transfer_receiving_time_tv"/>
+    <TextView
+        android:id="@+id/receiving_size_tv"
+        style="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/transfer_receiving_size_tv"/>
 </LinearLayout>

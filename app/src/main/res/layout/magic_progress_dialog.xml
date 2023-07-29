@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" xmlns:tools="http://schemas.android.com/tools"
->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progress_bar"
-            android:layout_centerVertical="true"
-            android:indeterminate="true"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              tools:text="text"
-              android:layout_toEndOf="@id/progress_bar"
-              android:layout_centerVertical="true"
-              android:textSize="20sp"
-              android:id="@+id/msg_tv"
-    />
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"/>
+    <TextView
+        android:id="@+id/msg_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/progress_bar"
+        android:textSize="20sp"
+        tools:text="text"/>
 </RelativeLayout>

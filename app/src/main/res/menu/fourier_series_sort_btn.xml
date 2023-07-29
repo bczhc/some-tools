@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/radius_ascent"
-            android:title="@string/fourier_series_sort_epicycle_radius_ascent"
-    />
+        android:id="@+id/radius_ascent"
+        android:title="@string/fourier_series_sort_epicycle_radius_ascent"/>
     <item
-            android:id="@+id/radius_descent"
-            android:title="@string/fourier_series_sort_epicycle_radius_descent"
-    />
+        android:id="@+id/radius_descent"
+        android:title="@string/fourier_series_sort_epicycle_radius_descent"/>
     <item
-            android:id="@+id/speed_ascent"
-            android:title="@string/fourier_series_sort_epicycle_speed_ascent"
-    />
+        android:id="@+id/speed_ascent"
+        android:title="@string/fourier_series_sort_epicycle_speed_ascent"/>
     <item
-            android:id="@+id/speed_descent"
-            android:title="@string/fourier_series_sort_epicycle_speed_descent"
-    />
+        android:id="@+id/speed_descent"
+        android:title="@string/fourier_series_sort_epicycle_speed_descent"/>
     <item
-            android:id="@+id/shuffle"
-            android:title="@string/fourier_series_sort_shuffle"
-    />
+        android:id="@+id/shuffle"
+        android:title="@string/fourier_series_sort_shuffle"/>
 </menu>

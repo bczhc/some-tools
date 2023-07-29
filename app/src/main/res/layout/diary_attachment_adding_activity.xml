@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp"
->
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="vertical">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <com.google.android.material.textfield.TextInputLayout
-                android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/title_et"
                 android:layout_width="match_parent"
-        >
-            <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:textSize="20sp"
-                      android:hint="@string/title"
-                      android:id="@+id/title_et"
-                      android:inputType="text"
-                      android:maxLines="1"
-                      tools:ignore="Autofill"/>
+                android:layout_height="wrap_content"
+                android:hint="@string/title"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textSize="20sp"
+                tools:ignore="Autofill"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="@string/pick_file"
-                android:id="@+id/pick_file_btn"
-                android:layout_marginTop="5dp"
-        />
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:id="@+id/file_list_ll"
-                      android:orientation="vertical"
-        />
-        <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:hint="@string/description"
-                  android:id="@+id/description_et"
-                  android:inputType="textMultiLine"
-                  android:layout_marginTop="10dp"
-                  android:gravity="top"
-                  tools:ignore="Autofill"
-        />
-        <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="@string/create_attachment"
-                android:textSize="20sp"
-                android:id="@+id/create_attachment_btn"
-        />
+        <Button
+            android:id="@+id/pick_file_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/pick_file"
+            android:textSize="20sp"/>
+        <LinearLayout
+            android:id="@+id/file_list_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+        <EditText
+            android:id="@+id/description_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="top"
+            android:hint="@string/description"
+            android:inputType="textMultiLine"
+            tools:ignore="Autofill"/>
+        <Button
+            android:id="@+id/create_attachment_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_attachment"
+            android:textSize="20sp"/>
     </LinearLayout>
 </ScrollView>

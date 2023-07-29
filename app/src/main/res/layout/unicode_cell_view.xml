@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:paddingHorizontal="2dp"
->
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:textSize="40sp"
-              android:id="@+id/char_tv"
-              android:layout_centerHorizontal="true"
-              tools:text="好"
-    />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:layout_below="@id/char_tv"
-              android:layout_centerHorizontal="true"
-              android:id="@+id/codepoint_tv"
-              tools:text="U+FFFFF"
-    />
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="2dp">
+    <TextView
+        android:id="@+id/char_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="40sp"
+        tools:text="好"/>
+    <TextView
+        android:id="@+id/codepoint_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/char_tv"
+        android:layout_centerHorizontal="true"
+        tools:text="U+FFFFF"/>
 </RelativeLayout>

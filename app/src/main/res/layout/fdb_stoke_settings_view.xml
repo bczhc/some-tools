@@ -1,66 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:id="@+id/ll"
-              android:padding="5dp"
->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp">
 
-    <RadioGroup android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/rg">
-        <RadioButton android:layout_width="match_parent" android:layout_height="wrap_content"
-                     android:text="@string/drawing_paint_stroke_width"
-                     android:id="@+id/brush_radio"
-        />
-        <RadioButton android:layout_width="match_parent" android:layout_height="wrap_content"
-                     android:text="@string/eraser_paint_stroke_width"
-                     android:id="@+id/eraser_radio"
-        />
+    <RadioGroup
+        android:id="@+id/rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/brush_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/drawing_paint_stroke_width"/>
+        <RadioButton
+            android:id="@+id/eraser_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/eraser_paint_stroke_width"/>
     </RadioGroup>
-    <CheckBox android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/lock_stroke"
-              android:id="@+id/cb"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/fdb_stroke_width_info"
-              android:textSize="15sp"
-              android:id="@+id/tv"
-    />
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:id="@+id/width_layout">
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="@string/fdb_stroke_width_tv"
-        />
-        <com.google.android.material.slider.Slider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/slider"
-                app:labelBehavior="gone"
-                android:valueFrom="0"
-                android:valueTo="100"
-        />
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:id="@+id/hardness_layout"
-                  android:orientation="vertical">
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="@string/fdb_stroke_hardness_tv"
-        />
-        <com.google.android.material.slider.Slider
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:valueFrom="0"
-                android:valueTo="100"
-                android:id="@+id/hardness_slider"
-        />
-    </LinearLayout>
-    <pers.zhc.tools.fdb.StrokeView
+    <CheckBox
+        android:id="@+id/cb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lock_stroke"/>
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fdb_stroke_width_info"
+        android:textSize="15sp"/>
+    <LinearLayout
+        android:id="@+id/width_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/stroke_show"
-    />
+            android:text="@string/fdb_stroke_width_tv"/>
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="100"
+            app:labelBehavior="gone"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/hardness_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fdb_stroke_hardness_tv"/>
+        <com.google.android.material.slider.Slider
+            android:id="@+id/hardness_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:valueFrom="0"
+            android:valueTo="100"/>
+    </LinearLayout>
+    <pers.zhc.tools.fdb.StrokeView
+        android:id="@+id/stroke_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

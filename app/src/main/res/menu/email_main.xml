@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:title="@string/email_compose_button"
-          app:showAsAction="ifRoom"
-          android:id="@+id/compose"
-    />
-    <item android:title="@string/email_configure_account"
-          app:showAsAction="never"
-          android:id="@+id/configure_account"
-    />
-    <item android:title="@string/email_contact_label"
-          app:showAsAction="never"
-          android:id="@+id/contact"
-    />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/compose"
+        android:title="@string/email_compose_button"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/configure_account"
+        android:title="@string/email_configure_account"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/contact"
+        android:title="@string/email_contact_label"
+        app:showAsAction="never"/>
 </menu>

@@ -1,64 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <com.google.android.material.appbar.MaterialToolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="@string/diary"
-            app:menu="@menu/diary_taking_actionbar"
-            android:id="@+id/toolbar"
-    >
-        <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-        >
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/diary_taking_actionbar"
+        app:title="@string/diary">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
             <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/text_count_tv"
-                    tools:text="12345 chars"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@id/tts_switch"
-            />
+                android:id="@+id/text_count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/tts_switch"
+                tools:text="12345 chars"/>
             <com.google.android.material.materialswitch.MaterialSwitch
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tts_switch"
-                    android:text="@string/voice"
-                    android:textColor="@color/white"
-                    android:layout_alignParentEnd="true"
-            />
+                android:id="@+id/tts_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="@string/voice"
+                android:textColor="@color/white"/>
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:id="@+id/find_layout"
-                    android:visibility="gone"
-    >
+    <RelativeLayout
+        android:id="@+id/find_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
         <pers.zhc.tools.views.RegexInputView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/cancel_button"
-                android:id="@+id/find_et"
-        />
-        <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
-                     android:src="@drawable/ic_close"
-                     android:layout_alignParentRight="true"
-                     android:contentDescription="@string/cancel_btn"
-                     android:id="@+id/cancel_button"
-                     android:background="?selectableItemBackground"
-                     android:layout_centerVertical="true"
-        />
+            android:id="@+id/find_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/cancel_button"/>
+        <ImageButton
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/cancel_btn"
+            android:src="@drawable/ic_close"/>
     </RelativeLayout>
     <pers.zhc.tools.views.ScrollEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/et"
-            app:gravity="top"
-            app:hint="@string/content"
-            android:fillViewport="true"
-    />
+        android:id="@+id/et"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:gravity="top"
+        app:hint="@string/content"/>
 </LinearLayout>

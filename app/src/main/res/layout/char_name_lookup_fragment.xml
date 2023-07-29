@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
->
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
     <com.google.android.material.textfield.TextInputLayout
+        style="?textInputOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/char_name_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="?textInputOutlinedStyle"
-    >
-        <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/char_ucd_char_name_et_hint"
-                android:id="@+id/char_name_et"
-        />
+            android:hint="@string/char_ucd_char_name_et_hint"/>
     </com.google.android.material.textfield.TextInputLayout>
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/result_hint_tv"
-              tools:text="@string/char_ucd_name_lookup_hint_tv_result"
-              android:paddingHorizontal="2.5dp"
-    />
+    <TextView
+        android:id="@+id/result_hint_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="2.5dp"
+        tools:text="@string/char_ucd_name_lookup_hint_tv_result"/>
     <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/recycler_view"
-            tools:listitem="@layout/char_ucd_name_lookup_list_item"
-    />
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/char_ucd_name_lookup_list_item"/>
 </LinearLayout>

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:checkable="true"
-            app:showAsAction="ifRoom"
-            android:title="@string/select_all_btn"
-            app:actionViewClass="com.google.android.material.checkbox.MaterialCheckBox"
-            android:id="@+id/select_all"
-            />
+        android:id="@+id/select_all"
+        android:checkable="true"
+        android:title="@string/select_all_btn"
+        app:actionViewClass="com.google.android.material.checkbox.MaterialCheckBox"
+        app:showAsAction="ifRoom"/>
     <item
-            android:title="@string/delete_menu"
-            android:id="@+id/delete"
-            app:showAsAction="ifRoom"
-    />
+        android:id="@+id/delete"
+        android:title="@string/delete_menu"
+        app:showAsAction="ifRoom"/>
 </menu>

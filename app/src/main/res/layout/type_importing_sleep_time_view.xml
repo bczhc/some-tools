@@ -1,39 +1,39 @@
 <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
->
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/zero"
-            android:id="@+id/tv_left"
-    />
+        android:id="@+id/tv_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zero"/>
 
     <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="100"
-            android:id="@+id/type_importing_sleep_time"
-            android:layout_toRightOf="@id/tv_left"
-            android:layout_toLeftOf="@id/tv_right"
-            android:layout_toEndOf="@id/tv_left"
-            android:layout_toStartOf="@id/tv_right"/>
+        android:id="@+id/type_importing_sleep_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/tv_right"
+        android:layout_toLeftOf="@id/tv_right"
+        android:layout_toEndOf="@id/tv_left"
+        android:layout_toRightOf="@id/tv_left"
+        android:max="100"/>
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/_100_ms"
-            android:id="@+id/tv_right"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-    />
-    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:layout_below="@id/type_importing_sleep_time"
-              android:layout_alignBaseline="@id/type_importing_sleep_time"
-              android:gravity="center"
-              android:layout_centerHorizontal="true"
-              android:id="@+id/progress"
-              tools:ignore="Autofill,LabelFor,TextFields"/>
+        android:id="@+id/tv_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/_100_ms"/>
+    <EditText
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/type_importing_sleep_time"
+        android:layout_alignBaseline="@id/type_importing_sleep_time"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        tools:ignore="Autofill,LabelFor,TextFields"/>
 </RelativeLayout>

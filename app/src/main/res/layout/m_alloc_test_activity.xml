@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:textSize="20sp"
-              android:id="@+id/et" tools:ignore="Autofill,LabelFor,TextFields"/>
-    <Button android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/allocate"
-            android:id="@+id/alloc_btn"
-    />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        tools:ignore="Autofill,LabelFor,TextFields"/>
+    <Button
+        android:id="@+id/alloc_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/allocate"
+        android:textSize="20sp"/>
 </LinearLayout>

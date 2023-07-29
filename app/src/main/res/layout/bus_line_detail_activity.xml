@@ -1,64 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="10dp"
->
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:layout_alignParentStart="true"
-                      android:layout_toStartOf="@id/switch_bus_direction"
-        >
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/bus_start_station_tv"
-                      android:textSize="20sp"
-                      android:id="@+id/start_station_name_tv"
-            />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/bus_end_station_tv"
-                      android:textSize="20sp"
-                      android:id="@+id/end_station_name_tv"
-            />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/switch_bus_direction"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/start_station_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bus_start_station_tv"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/end_station_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bus_end_station_tv"
+                android:textSize="20sp"/>
         </LinearLayout>
-        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="@string/bus_line_toggle_direction_btn"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/switch_bus_direction"
-        />
+        <Button
+            android:id="@+id/switch_bus_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="@string/bus_line_toggle_direction_btn"/>
     </RelativeLayout>
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginVertical="5dp"
-    >
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="@string/bus_line_run_time_from_to_tv"
-                  android:textSize="15sp"
-                  android:layout_toStartOf="@id/bus_interval_tv"
-                  android:layout_alignParentStart="true"
-                  android:id="@+id/bus_run_time_tv"
-        />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="@string/bus_line_run_interval_minute"
-                  android:textSize="15sp"
-                  android:layout_alignParentEnd="true"
-                  android:id="@+id/bus_interval_tv"
-        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp">
+        <TextView
+            android:id="@+id/bus_run_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/bus_interval_tv"
+            android:text="@string/bus_line_run_time_from_to_tv"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/bus_interval_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/bus_line_run_interval_minute"
+            android:textSize="15sp"/>
     </RelativeLayout>
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:layout_marginTop="5dp"
-              android:text="@string/bus_line_bus_total_count_tv"
-              android:textSize="20sp"
-              android:id="@+id/bus_total_count_tv"
-    />
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
-        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
-                              android:fillViewport="true"
-        >
-            <pers.zhc.tools.bus.BusLineDetailLL android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                                android:id="@+id/bus_line_detail_ll"
-            />
+    <TextView
+        android:id="@+id/bus_total_count_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/bus_line_bus_total_count_tv"
+        android:textSize="20sp"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+            <pers.zhc.tools.bus.BusLineDetailLL
+                android:id="@+id/bus_line_detail_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </HorizontalScrollView>
     </ScrollView>
 </LinearLayout>

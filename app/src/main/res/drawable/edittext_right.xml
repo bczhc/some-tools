@@ -7,11 +7,11 @@
         android:right="-3dp"
         android:top="-3dp">
         <shape>
-            <solid android:color="@color/transparent" />
+            <solid android:color="@color/transparent"/>
             <stroke
-                android:color="@color/green"
-                android:width="2dp" />
-            <padding android:bottom="4dp" />
+                android:width="2dp"
+                android:color="@color/green"/>
+            <padding android:bottom="4dp"/>
 
         </shape>
     </item>

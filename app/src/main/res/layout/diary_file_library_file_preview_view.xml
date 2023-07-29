@@ -1,44 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/clickable_view_stroke"
+    android:orientation="vertical"
+    android:padding="5dp"
+    tools:ignore="InnerclassSeparator">
+    <TextView
+        android:id="@+id/filename_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:background="@drawable/clickable_view_stroke"
-        android:id="@+id/ll"
-        tools:ignore="InnerclassSeparator"
->
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/filename_tv"
-              android:textSize="20sp"
-              android:text="@string/filename_is"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/add_time_tv"
-              android:textSize="20sp"
-              android:text="@string/addition_time_is"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/storage_type_tv"
-              android:textSize="20sp"
-              android:text="@string/storage_type_is"
-    />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/diary_file_preview_description_is"
-              android:id="@+id/description"
-              android:textSize="20sp"
-    />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:id="@+id/description_tv"
-              android:textSize="20sp"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/diary_file_preview_content_is"
-              android:id="@+id/content"
-              android:textSize="20sp"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/content_tv"
-    />
+        android:text="@string/filename_is"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/add_time_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/addition_time_is"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/storage_type_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/storage_type_is"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/diary_file_preview_description_is"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/description_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/diary_file_preview_content_is"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/content_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

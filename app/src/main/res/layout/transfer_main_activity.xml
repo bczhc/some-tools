@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="10dp"
->
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/transfer_send_button"
-            android:id="@+id/send_btn"
-            android:layout_gravity="center_horizontal"
-    />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/transfer_receive_button"
-            android:id="@+id/receive_btn"
-            android:layout_gravity="center_horizontal"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/ip_tv"
-              android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-              android:gravity="center_horizontal"
-              android:text="@string/transfer_wifi_ip_tv"
-    />
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:id="@+id/ip_info_tv"
-                  android:textSize="15sp"
-        />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <Button
+        android:id="@+id/send_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/transfer_send_button"/>
+    <Button
+        android:id="@+id/receive_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/transfer_receive_button"/>
+    <TextView
+        android:id="@+id/ip_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/transfer_wifi_ip_tv"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/ip_info_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"/>
     </ScrollView>
 </LinearLayout>

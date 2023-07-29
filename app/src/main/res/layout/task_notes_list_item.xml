@@ -1,58 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
->
-    <RelativeLayout
-            android:paddingHorizontal="5dp"
-            android:paddingVertical="2.5dp"
+        android:background="?selectableItemBackground"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="2.5dp">
+        <ImageView
+            android:id="@+id/drag_icon"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/description_tv"
+            android:layout_alignBottom="@id/description_tv"
+            android:layout_centerVertical="true"
+            android:contentDescription="Drag"
+            android:src="@drawable/drag_icon"
+            tools:ignore="HardcodedText"/>
+        <TextView
+            android:id="@+id/description_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?selectableItemBackground"
-    >
-        <ImageView android:layout_width="40dp" android:layout_height="wrap_content"
-                   android:src="@drawable/drag_icon"
-                   android:id="@+id/drag_icon"
-                   android:layout_alignTop="@id/description_tv"
-                   android:layout_alignBottom="@id/description_tv"
-                   android:layout_centerVertical="true"
-                   android:contentDescription="Drag"
-                   tools:ignore="HardcodedText"
-        />
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:layout_toStartOf="@id/right_ll"
-                  android:layout_toEndOf="@id/drag_icon"
-                  tools:text="Task Description"
-                  android:gravity="center_vertical"
-                  android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                  android:id="@+id/description_tv"
-                  android:layout_centerVertical="true"
-        />
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:layout_alignParentEnd="true"
-                      android:id="@+id/right_ll"
-                      android:orientation="vertical"
-                      android:layout_centerVertical="true"
-        >
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                      tools:text="Start"
-                      android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                      android:gravity="center"
-                      android:id="@+id/task_mark_tv"
-            />
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                      tools:text="Time"
-                      android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                      android:gravity="center"
-                      android:id="@+id/time_tv"
-            />
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/right_ll"
+            android:layout_toEndOf="@id/drag_icon"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            tools:text="Task Description"/>
+        <LinearLayout
+            android:id="@+id/right_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/task_mark_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                tools:text="Start"/>
+            <TextView
+                android:id="@+id/time_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                tools:text="Time"/>
         </LinearLayout>
     </RelativeLayout>
     <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-    />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

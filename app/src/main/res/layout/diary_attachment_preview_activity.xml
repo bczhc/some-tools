@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/title_tv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
->
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="vertical"
-    >
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:text="@string/diary_attachment_preview_activity_title_is"
-                  android:textSize="20sp"
-                  android:id="@+id/title_tv"
-        />
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:text="@string/diary_attachment_preview_activity_description_is"
-                  android:textSize="20sp"
-                  android:id="@+id/description_tv"
-        />
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:id="@+id/file_list_ll"
-                      android:padding="5dp"
-        />
+            android:layout_height="wrap_content"
+            android:text="@string/diary_attachment_preview_activity_title_is"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/description_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/diary_attachment_preview_activity_description_is"
+            android:textSize="20sp"/>
+        <LinearLayout
+            android:id="@+id/file_list_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp"/>
     </LinearLayout>
 </ScrollView>

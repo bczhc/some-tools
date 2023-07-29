@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pers.zhc.tools.views.SmartHintEditText
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:hint="@string/file_path_hint"
-        android:id="@+id/file_path_et"
-/>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/file_path_et"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:hint="@string/file_path_hint"/>

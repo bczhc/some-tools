@@ -15,7 +15,7 @@
 <!-- The attributes in this XML file provide configuration information -->
 <!-- for the Search Manager. -->
 <input-method xmlns:android="http://schemas.android.com/apk/res/android"
-    android:isDefault="true"
-    android:settingsActivity="pers.zhc.tools.inputmethod.WubiInputMethodActivity">
+              android:isDefault="true"
+              android:settingsActivity="pers.zhc.tools.inputmethod.WubiInputMethodActivity">
 
 </input-method>

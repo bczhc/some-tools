@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <pers.zhc.tools.views.CharacterLookupInputView
+        android:id="@+id/lookup_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/char_ucd_lookup_button"/>
+    <Button
+        android:id="@+id/get_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/char_ucd_get_ucd_database_button"/>
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
-        android:orientation="vertical"
->
-    <pers.zhc.tools.views.CharacterLookupInputView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/lookup_view"
-    />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/char_ucd_lookup_button"
-            android:id="@+id/btn"
-    />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/char_ucd_get_ucd_database_button"
-            android:id="@+id/get_btn"
-    />
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/container"
-            android:background="@drawable/view_stroke"
-    />
+        android:background="@drawable/view_stroke"/>
 </LinearLayout>

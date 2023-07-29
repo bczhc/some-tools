@@ -1,163 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              xmlns:tools="http://schemas.android.com/tools"
->
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  android:layout_margin="10dp"
-    >
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/draw_btn"
-                android:text="@string/fourier_series_draw_btn"
-                android:layout_weight="1"
-                tools:ignore="ButtonStyle"/>
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/start_btn"
-                android:text="@string/fourier_series_start_btn"
-                android:layout_weight="1"
-                tools:ignore="ButtonStyle"/>
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/compute_btn"
-                android:text="@string/fourier_series_compute_btn"
-                android:layout_weight="1"
-                tools:ignore="ButtonStyle"/>
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:id="@+id/sort_btn"
-                android:text="@string/fourier_series_sort"
-                android:layout_weight="1"
-                tools:ignore="ButtonStyle"/>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/draw_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:text="@string/fourier_series_draw_btn"
+            tools:ignore="ButtonStyle"/>
+        <Button
+            android:id="@+id/start_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:text="@string/fourier_series_start_btn"
+            tools:ignore="ButtonStyle"/>
+        <Button
+            android:id="@+id/compute_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:text="@string/fourier_series_compute_btn"
+            tools:ignore="ButtonStyle"/>
+        <Button
+            android:id="@+id/sort_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:text="@string/fourier_series_sort"
+            tools:ignore="ButtonStyle"/>
     </LinearLayout>
-    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
-    >
-        <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:layout_margin="5dp"
-        >
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/fourier_series_integral_fragment_number_hint">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/integral_fragment_number"
+                    style="@style/Widget.Material3.TextInputEditText.FilledBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/fourier_series_integral_fragment_number_hint"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            >
-                <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/integral_fragment_number"
-                        android:hint="@string/fourier_series_integral_fragment_number_hint"
-                        android:textColorHint="@color/transparent"
-                        android:inputType="number"
-                        style="@style/Widget.Material3.TextInputEditText.FilledBox"
-                />
+                    android:inputType="number"
+                    android:textColorHint="@color/transparent"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/fourier_series_period_hint">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/period"
+                    style="@style/Widget.Material3.TextInputEditText.FilledBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/fourier_series_period_hint"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            >
-                <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/period"
-                        android:hint="@string/fourier_series_period_hint"
-                        android:textColorHint="@color/transparent"
-                        android:inputType="numberDecimal"
-                        style="@style/Widget.Material3.TextInputEditText.FilledBox"
-                />
+                    android:inputType="numberDecimal"
+                    android:textColorHint="@color/transparent"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/fourier_series_epicycle_number">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/epicycles_number"
+                    style="@style/Widget.Material3.TextInputEditText.FilledBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/fourier_series_epicycle_number"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            >
-                <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/epicycles_number"
-                        android:hint="@string/fourier_series_epicycle_number"
-                        android:textColorHint="@color/transparent"
-                        android:inputType="number"
-                        style="@style/Widget.Material3.TextInputEditText.FilledBox"
-                />
+                    android:inputType="number"
+                    android:textColorHint="@color/transparent"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/fourier_series_threads_number">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/thread_num"
+                    style="@style/Widget.Material3.TextInputEditText.FilledBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/fourier_series_threads_number"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
-            >
-                <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/thread_num"
-                        android:hint="@string/fourier_series_threads_number"
-                        android:textColorHint="@color/transparent"
-                        android:inputType="number"
-                        style="@style/Widget.Material3.TextInputEditText.FilledBox"
-                />
+                    android:inputType="number"
+                    android:textColorHint="@color/transparent"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/fourier_series_float_type_menu_hint">
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/float_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:hint="@string/fourier_series_float_type_menu_hint"
-            >
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:id="@+id/float_type"
-                        android:hint="@string/fourier_series_float_type_menu_hint"
-                        android:textColorHint="@color/transparent"
-                />
+                    android:inputType="none"
+                    android:textColorHint="@color/transparent"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/fourier_series_path_evaluator_menu_hint">
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/path_evaluator_menu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:hint="@string/fourier_series_path_evaluator_menu_hint"
-            >
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:id="@+id/path_evaluator_menu"
-                        android:hint="@string/fourier_series_path_evaluator_menu_hint"
-                        android:textColorHint="@color/transparent"
-                />
+                    android:inputType="none"
+                    android:textColorHint="@color/transparent"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/fourier_series_integrator_menu_hint">
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/integrator_menu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:hint="@string/fourier_series_integrator_menu_hint"
-            >
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:id="@+id/integrator_menu"
-                        android:hint="@string/fourier_series_integrator_menu_hint"
-                        android:textColorHint="@color/transparent"
-                />
+                    android:inputType="none"
+                    android:textColorHint="@color/transparent"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </HorizontalScrollView>
     <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/recycler_view"
-            tools:listitem="@layout/fourier_series_epicycle_item"
-            tools:itemCount="100"
-    />
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:itemCount="100"
+        tools:listitem="@layout/fourier_series_epicycle_item"/>
 </LinearLayout>

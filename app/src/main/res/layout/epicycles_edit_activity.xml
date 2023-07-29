@@ -1,152 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp"
->
-    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
-                          android:id="@+id/sc"
-    >
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-        >
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/left_parenthesis"
-                      android:textSize="30sp"
-            />
-            <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/c_re_tv"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+    <HorizontalScrollView
+        android:id="@+id/sc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/left_parenthesis"
+                android:textSize="30sp"/>
+            <EditText
+                android:id="@+id/c_re_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-                      tools:ignore="Autofill,LabelFor,TextFields"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/add_symbol"
-                      android:id="@+id/tv1"
-                      android:textSize="30sp"
-            />
-            <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/c_im_tv"
-                      tools:ignore="Autofill,LabelFor,TextFields"
-            />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/i"
-                      android:id="@+id/tv2"
-                      android:textSize="30sp"
+                tools:ignore="Autofill,LabelFor,TextFields"/>
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_symbol"
+                android:textSize="30sp"/>
+            <EditText
+                android:id="@+id/c_im_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="Autofill,LabelFor,TextFields"/>
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/i"
+                android:textSize="30sp"
 
-            />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/right_parenthesis"
-                      android:id="@+id/tv3" android:textSize="30sp"
-            />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/e"
-                      android:id="@+id/tv4" android:textSize="30sp"
+                />
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/right_parenthesis"
+                android:textSize="30sp"/>
+            <TextView
+                android:id="@+id/tv4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/e"
+                android:textSize="30sp"
 
-            />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/caret"
-                      android:id="@+id/tv5" android:textSize="30sp"
+                />
+            <TextView
+                android:id="@+id/tv5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/caret"
+                android:textSize="30sp"
 
-            />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/left_parenthesis"
-                      android:id="@+id/tv6" android:textSize="30sp"
+                />
+            <TextView
+                android:id="@+id/tv6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/left_parenthesis"
+                android:textSize="30sp"
 
-            />
-            <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/et_n"
-                      tools:ignore="Autofill,LabelFor,TextFields"
-            />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/i"
-                      android:id="@+id/tv7" android:textSize="30sp"
+                />
+            <EditText
+                android:id="@+id/et_n"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="Autofill,LabelFor,TextFields"/>
+            <TextView
+                android:id="@+id/tv7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/i"
+                android:textSize="30sp"
 
-            />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/t"
-                      android:id="@+id/tv8" android:textSize="30sp"
+                />
+            <TextView
+                android:id="@+id/tv8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/t"
+                android:textSize="30sp"
 
-            />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="@string/right_parenthesis"
-                      android:id="@+id/tv9" android:textSize="30sp"
+                />
+            <TextView
+                android:id="@+id/tv9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/right_parenthesis"
+                android:textSize="30sp"
 
-            />
+                />
         </LinearLayout>
     </HorizontalScrollView>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:layout_below="@id/sc"
-                  android:id="@id/ll"
-                  android:orientation="horizontal"
-    >
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:text="@string/add_symbol"
-                android:id="@+id/add_btn"
-                tools:ignore="ButtonStyle"
-                android:layout_weight="1"
-        />
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:text="@string/random"
-                android:id="@+id/random"
-                tools:ignore="ButtonStyle"
-                android:layout_weight="1"
-        />
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:text="@string/start"
-                android:id="@+id/start"
-                tools:ignore="ButtonStyle"
-                android:layout_weight="1"
-        />
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:text="@string/drawing_graph"
-                android:id="@+id/drawing_graph"
-                tools:ignore="ButtonStyle"
-                android:layout_weight="1"
-        />
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:text="@string/sort"
-                tools:ignore="ButtonStyle"
-                android:layout_weight="1"
-                android:id="@+id/sort"
-        />
+    <LinearLayout
+        android:id="@id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sc"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/add_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/add_symbol"
+            tools:ignore="ButtonStyle"/>
+        <Button
+            android:id="@+id/random"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/random"
+            tools:ignore="ButtonStyle"/>
+        <Button
+            android:id="@+id/start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/start"
+            tools:ignore="ButtonStyle"/>
+        <Button
+            android:id="@+id/drawing_graph"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/drawing_graph"
+            tools:ignore="ButtonStyle"/>
+        <Button
+            android:id="@+id/sort"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sort"
+            tools:ignore="ButtonStyle"/>
     </LinearLayout>
-    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-              tools:ignore="Autofill,LabelFor,TextFields"
-              android:inputType="number"
-              android:hint="@string/definite_n"
-              android:layout_below="@id/ll"
-              android:id="@+id/definite_n_et"
-    />
-    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-              tools:ignore="Autofill,LabelFor,TextFields"
-              android:inputType="numberDecimal"
-              android:hint="@string/period"
-              android:layout_toRightOf="@id/definite_n_et"
-              android:layout_below="@id/ll"
-              android:id="@+id/t_et"
-              android:layout_toEndOf="@id/definite_n_et"
-    />
-    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-              tools:ignore="Autofill,LabelFor,TextFields"
-              android:inputType="number"
-              android:hint="@string/epicycles_count"
-              android:layout_toRightOf="@id/t_et"
-              android:layout_below="@id/ll"
-              android:id="@+id/epicycles_count"
-              android:layout_toEndOf="@id/t_et"/>
-    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-              tools:ignore="Autofill,LabelFor,TextFields"
-              android:inputType="number"
-              android:hint="@string/thread_num"
-              android:layout_toRightOf="@id/epicycles_count"
-              android:layout_below="@id/ll"
-              android:id="@+id/thread_num"
-              android:layout_toEndOf="@id/epicycles_count"/>
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
-                android:layout_below="@id/definite_n_et"
-    >
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:orientation="vertical"
-                      android:id="@+id/sc_ll"
-        />
+    <EditText
+        android:id="@+id/definite_n_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll"
+        android:hint="@string/definite_n"
+        android:inputType="number"
+        tools:ignore="Autofill,LabelFor,TextFields"/>
+    <EditText
+        android:id="@+id/t_et"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll"
+        android:layout_toEndOf="@id/definite_n_et"
+        android:layout_toRightOf="@id/definite_n_et"
+        android:hint="@string/period"
+        android:inputType="numberDecimal"
+        tools:ignore="Autofill,LabelFor,TextFields"/>
+    <EditText
+        android:id="@+id/epicycles_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll"
+        android:layout_toEndOf="@id/t_et"
+        android:layout_toRightOf="@id/t_et"
+        android:hint="@string/epicycles_count"
+        android:inputType="number"
+        tools:ignore="Autofill,LabelFor,TextFields"/>
+    <EditText
+        android:id="@+id/thread_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll"
+        android:layout_toEndOf="@id/epicycles_count"
+        android:layout_toRightOf="@id/epicycles_count"
+        android:hint="@string/thread_num"
+        android:inputType="number"
+        tools:ignore="Autofill,LabelFor,TextFields"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/definite_n_et">
+        <LinearLayout
+            android:id="@+id/sc_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
     </ScrollView>
 </RelativeLayout>

@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/write_diary"
-            android:title="@string/write_diary"
-            app:showAsAction="ifRoom"/>
+        android:id="@+id/write_diary"
+        android:title="@string/write_diary"
+        app:showAsAction="ifRoom"/>
     <item
-            android:id="@+id/create"
-            android:title="@string/create"
-            app:showAsAction="never"/>
+        android:id="@+id/create"
+        android:title="@string/create"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/password"
-            android:title="@string/password"
-            app:showAsAction="never"/>
+        android:id="@+id/password"
+        android:title="@string/password"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/import_"
-            android:title="@string/import_"
-            app:showAsAction="never"/>
+        android:id="@+id/import_"
+        android:title="@string/import_"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/export"
-            android:title="@string/export"
-            app:showAsAction="never"/>
+        android:id="@+id/export"
+        android:title="@string/export"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/statistics"
-            android:title="@string/diary_menu_statistics"
-            app:showAsAction="never"/>
+        android:id="@+id/statistics"
+        android:title="@string/diary_menu_statistics"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/advanced_search"
-            app:showAsAction="never"
-            android:title="@string/diary_advanced_search_menu"
-    />
+        android:id="@+id/advanced_search"
+        android:title="@string/diary_advanced_search_menu"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/random"
-            app:showAsAction="never"
-            android:title="@string/diary_menu_random"
-    />
+        android:id="@+id/random"
+        android:title="@string/diary_menu_random"
+        app:showAsAction="never"/>
 </menu>

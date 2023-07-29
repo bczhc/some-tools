@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?selectableItemBackground"
-                xmlns:tools="http://schemas.android.com/tools"
->
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/date_tv"
-              android:textColor="@color/diary_item_date_head"
-              android:textSize="30sp"
-              android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-              tools:text="Title"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/content_tv"
-              android:layout_below="@id/date_tv"
-              android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-              tools:text="Content"
-    />
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/date_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textColor="@color/diary_item_date_head"
+        android:textSize="30sp"
+        tools:text="Title"/>
+    <TextView
+        android:id="@+id/content_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/date_tv"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        tools:text="Content"/>
 </RelativeLayout>

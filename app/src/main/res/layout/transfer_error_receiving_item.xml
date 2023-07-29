@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        style="@style/TextAppearance.Material3.TitleMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        xmlns:tools="http://schemas.android.com/tools"
->
+        android:text="@string/transfer_receiving_failed_title"
+        android:textColor="@color/dark_red"/>
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/transfer_receiving_failed_title"
-            android:textColor="@color/dark_red"
-            style="@style/TextAppearance.Material3.TitleMedium"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/time_is_"
-              style="@style/TextAppearance.Material3.TitleMedium"
-              android:id="@+id/error_time_tv"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/transfer_error_message_title"
-              android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/err_msg_tv"
-              tools:text="Error message"
-    />
+        android:id="@+id/error_time_tv"
+        style="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/time_is_"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/transfer_error_message_title"
+        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"/>
+    <TextView
+        android:id="@+id/err_msg_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Error message"/>
 </LinearLayout>

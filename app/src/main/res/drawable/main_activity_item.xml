@@ -3,7 +3,9 @@
     <item android:drawable="?selectableItemBackground"/>
     <item>
         <shape>
-            <stroke android:color="@color/grey" android:width="2dp"/>
+            <stroke
+                android:width="2dp"
+                android:color="@color/grey"/>
         </shape>
     </item>
 </layer-list>

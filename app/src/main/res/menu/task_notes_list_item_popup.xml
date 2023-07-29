@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:title="@string/delete_menu"
-            android:id="@+id/delete"
-    />
+        android:id="@+id/delete"
+        android:title="@string/delete_menu"/>
     <item
-            android:title="@string/task_notes_modify_menu"
-            android:id="@+id/modify"
-    />
+        android:id="@+id/modify"
+        android:title="@string/task_notes_modify_menu"/>
     <item
-            android:title="@string/task_notes_recreate_menu"
-            android:id="@+id/recreate"
-    />
+        android:id="@+id/recreate"
+        android:title="@string/task_notes_recreate_menu"/>
 </menu>

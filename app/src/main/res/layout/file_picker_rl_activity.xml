@@ -1,72 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:id="@+id/root_rl">
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:id="@+id/textView"
-    />
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_below="@id/textView"
-                    android:id="@+id/rl2"
-                    android:focusableInTouchMode="true"
-                    android:focusable="true"
-    >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_rl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:id="@+id/rl2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
         <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:endIconMode="clear_text"
-                android:layout_toStartOf="@id/regex_cb"
-                android:hint="@string/filter"
-                app:errorEnabled="true"
-                android:id="@+id/filter_til"
-        >
-            <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-            />
-        </com.google.android.material.textfield.TextInputLayout>
-        <CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="@string/regex"
-                  android:id="@+id/regex_cb"
-                  android:layout_alignParentEnd="true"
-        />
-    </RelativeLayout>
-    <pers.zhc.tools.views.SmartHintEditText
+            android:id="@+id/filter_til"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.M3Application.TextInputLayout.FilledBox"
-            app:hint="@string/filename_hint"
-            android:layout_below="@id/rl2"
-            android:id="@+id/filename_et"
-    />
-    <ScrollView android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/scrollView2"
-                android:layout_below="@id/filename_et"
-                android:layout_above="@id/ll_bottom"
-    >
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:id="@+id/ll"
-                      android:orientation="vertical"
-        />
+            android:layout_toStartOf="@id/regex_cb"
+            android:hint="@string/filter"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <CheckBox
+            android:id="@+id/regex_cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@string/regex"/>
+    </RelativeLayout>
+    <pers.zhc.tools.views.SmartHintEditText
+        android:id="@+id/filename_et"
+        style="@style/Widget.M3Application.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl2"
+        app:hint="@string/filename_hint"/>
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_bottom"
+        android:layout_below="@id/filename_et">
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
     </ScrollView>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:layout_gravity="bottom"
-                  android:id="@+id/ll_bottom"
-                  android:layout_alignParentBottom="true"
-    >
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/cancel"
-                android:text="@string/cancel"
-                tools:ignore="ButtonStyle"/>
-        <Button android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/pick"
-                android:text="@string/confirm"
-                tools:ignore="ButtonStyle"/>
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom">
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            tools:ignore="ButtonStyle"/>
+        <Button
+            android:id="@+id/pick"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/confirm"
+            tools:ignore="ButtonStyle"/>
     </LinearLayout>
 </RelativeLayout>

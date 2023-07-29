@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/ordinal_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        xmlns:tools="http://schemas.android.com/tools"
->
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:id="@+id/ordinal_tv"
-              android:textSize="20sp"
-              tools:text="1. "
-    />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:textSize="20sp"
-              android:id="@+id/wubi_word_tv"
-              android:layout_toEndOf="@id/ordinal_tv"
-              tools:text="abc"
-    />
+        android:textSize="20sp"
+        tools:text="1. "/>
+    <TextView
+        android:id="@+id/wubi_word_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/ordinal_tv"
+        android:textSize="20sp"
+        tools:text="abc"/>
 </RelativeLayout>

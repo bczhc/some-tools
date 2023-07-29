@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:id="@+id/progress_circular"
-        />
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:layout_toEndOf="@id/progress_circular"
-                  android:layout_alignParentEnd="true"
-                  android:text="@string/transfer_tar_sending_progress_msg"
-                  android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                  android:layout_alignEnd="@id/progress_circular"
-                  android:id="@+id/sending_tv"
-                  android:gravity="center_vertical"
-        />
+            android:id="@+id/progress_circular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+        <TextView
+            android:id="@+id/sending_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/progress_circular"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/progress_circular"
+            android:gravity="center_vertical"
+            android:text="@string/transfer_tar_sending_progress_msg"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"/>
     </RelativeLayout>
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
-                android:id="@+id/scrollView"
-    >
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:textSize="15sp"
-                  android:id="@+id/tar_files_tv"
-        />
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tar_files_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"/>
     </ScrollView>
 
 </LinearLayout>

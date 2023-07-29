@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="10dp"
->
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/uptime_is_"
-              android:textSize="20sp"
-              android:id="@+id/uptime_tv"
-    />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:text="@string/processes_count_is_"
-              android:id="@+id/processes_tv"
-              android:textSize="20sp"
-    />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <TextView
+        android:id="@+id/uptime_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/uptime_is_"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/processes_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/processes_count_is_"
+        android:textSize="20sp"/>
 </LinearLayout>

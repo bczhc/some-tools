@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="horizontal"
->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/unicode_table_seek_codepoint_et_hint"
-            android:id="@+id/codepoint_et"
-            android:layout_weight="1"
-    />
+        android:id="@+id/codepoint_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:hint="@string/unicode_table_seek_codepoint_et_hint"/>
     <pers.zhc.tools.views.SmartHintEditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:hint="@string/unicode_table_seek_char_et_hint"
-            android:id="@+id/char_et"
-            android:layout_weight="1"
-    />
+        android:id="@+id/char_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:hint="@string/unicode_table_seek_char_et_hint"/>
 </LinearLayout>

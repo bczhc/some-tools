@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/edit"
-            android:title="@string/edit"
-            app:showAsAction="ifRoom"
-    />
+        android:id="@+id/edit"
+        android:title="@string/edit"
+        app:showAsAction="ifRoom"/>
     <item
-            android:id="@+id/attachment"
-            android:title="@string/attachment"
-            app:showAsAction="never"
-    />
+        android:id="@+id/attachment"
+        android:title="@string/attachment"
+        app:showAsAction="never"/>
     <item
-            android:id="@+id/statistics"
-            app:showAsAction="never"
-            android:title="@string/diary_menu_statistics"
-    />
+        android:id="@+id/statistics"
+        android:title="@string/diary_menu_statistics"
+        app:showAsAction="never"/>
 </menu>

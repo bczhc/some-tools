@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                xmlns:tools="http://schemas.android.com/tools"
->
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              tools:text="是"
-              android:textSize="40sp"
-              android:id="@+id/char_tv"
-              android:gravity="center_vertical"
-              android:layout_alignEnd="@id/right_ll"
-    />
-    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:layout_alignParentEnd="true"
-                  android:orientation="vertical"
-                  android:layout_alignTop="@id/char_tv"
-                  android:layout_alignBottom="@id/char_tv"
-                  android:id="@+id/right_ll"
-    >
-        <TextView android:layout_width="wrap_content" android:layout_height="0dp"
-                  tools:text="实际输入：aaa"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:textSize="15sp"
-                  android:id="@+id/input_code_tv"
-        />
-        <TextView android:layout_width="wrap_content" android:layout_height="0dp"
-                  tools:text="最短简码：a"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:textSize="15sp"
-                  android:id="@+id/shortest_code_tv"
-        />
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/char_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/right_ll"
+        android:gravity="center_vertical"
+        android:textSize="40sp"
+        tools:text="是"/>
+    <LinearLayout
+        android:id="@+id/right_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/char_tv"
+        android:layout_alignBottom="@id/char_tv"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/input_code_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="15sp"
+            tools:text="实际输入：aaa"/>
+        <TextView
+            android:id="@+id/shortest_code_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="15sp"
+            tools:text="最短简码：a"/>
     </LinearLayout>
 </RelativeLayout>

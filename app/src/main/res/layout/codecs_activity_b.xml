@@ -1,35 +1,54 @@
-<LinearLayout xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
-                  android:layout_weight="1" tools:ignore="UselessLeaf">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:ignore="UselessLeaf">
 
     </LinearLayout>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
-                  android:layout_weight="3">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                      android:orientation="horizontal"
-                      tools:ignore="DisableBaselineAlignment,UselessParent">
-            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
-                          android:layout_weight="1"
-                          tools:ignore="UselessLeaf">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:ignore="DisableBaselineAlignment,UselessParent">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:ignore="UselessLeaf">
 
             </LinearLayout>
-            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
-                          android:layout_weight="5">
-                <Spinner android:layout_width="match_parent" android:layout_height="match_parent"
-                         android:id="@+id/dT"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5">
+                <Spinner
+                    android:id="@+id/dT"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
             </LinearLayout>
-            <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
-                          android:layout_weight="1"
-                          tools:ignore="UselessLeaf">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:ignore="UselessLeaf">
 
             </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
-                  android:layout_weight="1" tools:ignore="UselessLeaf">
-    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:ignore="UselessLeaf"></LinearLayout>
 </LinearLayout>
