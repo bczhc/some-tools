@@ -153,20 +153,20 @@ class FdbWindow(private val context: Context) {
             width = DisplayUtil.getScreenSize(context).x
             height = DisplayUtil.getScreenSize(context).y
         }
-// 监听屏幕方向改变事件
+        // 监听屏幕方向改变事件
         val orientationListener = object : OrientationEventListener(context) {
-            private var previouWidth = 0
-            private var previouHeight = 0
+            private var previousWidth = 0
+            private var previousHeight = 0
             override fun onOrientationChanged(orientation: Int) {
-                var width = DisplayUtil.getScreenSize(context).x
-                var height = DisplayUtil.getScreenSize(context).y
-                if (width != previouWidth && height != previouHeight) {
+                val width = DisplayUtil.getScreenSize(context).x
+                val height = DisplayUtil.getScreenSize(context).y
+                if (width != previousWidth && height != previousHeight) {
                     paintViewLP.width = width
                     paintViewLP.height = height
                     // 当屏幕方向改变时，重新设置 paintViewRL 的宽高
                     wm.updateViewLayout(paintView, paintViewLP)
-                    previouWidth = width
-                    previouHeight = height
+                    previousWidth = width
+                    previousHeight = height
                 }
             }
         }
@@ -1523,7 +1523,7 @@ class FdbWindow(private val context: Context) {
 
             // when the touching time exceeds this value, `drawingInterval` will speed up its increasing/decreasing
             val longClickDelay = 500L
-            val createButtonTouchHandler = {decrease: Boolean->
+            val createButtonTouchHandler = { decrease: Boolean ->
                 var count = 1
                 var runnable: Runnable? = null
                 val handler = Handler(Looper.getMainLooper());
