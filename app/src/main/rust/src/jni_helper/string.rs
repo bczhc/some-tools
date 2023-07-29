@@ -42,11 +42,19 @@ impl<'a, 'b, 'c> JavaStrExt for JavaStr<'a, 'b, 'c> {
 
 #[macro_export]
 /// Get Java string
-/// 
+///
 /// env, variable name, string object
 macro_rules! java_str_var {
     ($env:expr, $var:ident, $s:expr) => {
         let $var = $env.get_string(&$s)?;
         let $var = $var.to_str()?;
+    };
+}
+
+#[macro_export]
+/// Rust string to `jstring`
+macro_rules! new_java_string {
+    ($env:expr, $s:expr) => {
+        $env.new_string($s)?.into_raw()
     };
 }

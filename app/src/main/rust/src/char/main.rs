@@ -4,10 +4,10 @@ use jni::objects::{JByteArray, JClass, JShortArray};
 use jni::sys::jint;
 use jni::JNIEnv;
 
-use crate::jni_helper::UnwrapOrThrow;
+use crate::jni_helper::ExpectOrThrow;
 
 fn get_char(env: &mut JNIEnv, codepoint: u32) -> char {
-    char::from_u32(codepoint).unwrap_or_throw(env, "Invalid codepoint")
+    char::from_u32(codepoint).expect_or_throw(env, "Invalid codepoint")
 }
 
 #[no_mangle]

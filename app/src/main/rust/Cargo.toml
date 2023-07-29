@@ -48,6 +48,8 @@ bzip3 = { version = "0.8.0", features = ["bundled"] }
 encoding_rs = "0.8.32"
 anyhow = "1.0.70"
 zstd = "0.12.3+zstd.1.5.2"
+bitcoin = "0.30.0"
+rand = "0.8.5"
 
 [profile.release]
 panic = "abort"
