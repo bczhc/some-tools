@@ -150,9 +150,28 @@ class FdbWindow(private val context: Context) {
                 .xor(FLAG_LAYOUT_NO_LIMITS)
             type = floatingWindowType
             format = RGBA_8888
-            width = MATCH_PARENT
-            height = MATCH_PARENT
+            width = DisplayUtil.getScreenSize(context).x
+            height = DisplayUtil.getScreenSize(context).y
         }
+// 监听屏幕方向改变事件
+        val orientationListener = object : OrientationEventListener(context) {
+            private var previouWidth = 0
+            private var previouHeight = 0
+            override fun onOrientationChanged(orientation: Int) {
+                var width = DisplayUtil.getScreenSize(context).x
+                var height = DisplayUtil.getScreenSize(context).y
+                if (width != previouWidth && height != previouHeight) {
+                    paintViewLP.width = width
+                    paintViewLP.height = height
+                    // 当屏幕方向改变时，重新设置 paintViewRL 的宽高
+                    wm.updateViewLayout(paintView, paintViewLP)
+                    previouWidth = width
+                    previouHeight = height
+                }
+            }
+        }
+        // 启动屏幕方向改变监听器
+        orientationListener.enable()
 
         panelLP.apply {
             flags = FLAG_NOT_FOCUSABLE
@@ -263,6 +282,7 @@ class FdbWindow(private val context: Context) {
                             11 -> {
                                 // exit
                                 createConfirmationDialog({ _, _ ->
+                                    orientationListener.disable()
                                     exit()
                                 }, titleRes = R.string.fdb_exit_confirmation_dialog).show()
                             }
