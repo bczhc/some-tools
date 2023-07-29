@@ -32,6 +32,7 @@ fn set_up_panic_hook() {
 #[no_mangle]
 pub extern "system" fn Java_pers_zhc_tools_jni_JNI_rustInitialize(env: JNIEnv, _: JClass) {
     JAVA_VM.lock().unwrap().replace(env.get_java_vm().unwrap());
+    set_up_panic_hook()
 }
 
 pub mod app;
