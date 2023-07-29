@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
-import android.util.Base64
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -25,13 +24,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pers.zhc.tools.MyApplication.Companion.HTTP_CLIENT_DEFAULT
-import pers.zhc.tools.app.ActivityItem
-import pers.zhc.tools.app.AppMenuAdapter
-import pers.zhc.tools.app.SmallToolsListActivity
-import pers.zhc.tools.app.TestListActivity
+import pers.zhc.tools.app.*
 import pers.zhc.tools.bus.BusQueryMainActivity
 import pers.zhc.tools.coursetable.CourseTableMainActivity
-import pers.zhc.tools.databinding.GitLogViewBinding
 import pers.zhc.tools.databinding.GithubActionDownloadViewBinding
 import pers.zhc.tools.databinding.ToolsActivityMainBinding
 import pers.zhc.tools.diary.DiaryMainActivity
@@ -98,8 +93,8 @@ class MainActivity : BaseActivity() {
                 updateAction()
             }
 
-            R.id.git_log -> {
-                showGitLogDialog()
+            R.id.about -> {
+                startActivity(Intent(this, AboutActivity::class.java))
             }
 
             R.id.switch_themes -> {
@@ -146,19 +141,6 @@ class MainActivity : BaseActivity() {
         }
         MyApplication.wakeLock!!.release()
         ToastUtils.show(this, R.string.wake_lock_release_success)
-    }
-
-    private fun showGitLogDialog() {
-        val commitLogSplit = BuildConfig.commitLogEncodedSplit
-        val base64Encoded = commitLogSplit.joinToString(separator = "")
-        val gitLog = Base64.decode(base64Encoded, Base64.DEFAULT).decompressBzip2().toString(Charsets.UTF_8)
-
-        val bindings = GitLogViewBinding.inflate(layoutInflater)
-        bindings.tv.text = gitLog
-
-        Dialog(this).apply {
-            setContentView(bindings.root)
-        }.show()
     }
 
     private fun updateAction() {
@@ -291,15 +273,10 @@ class MainActivity : BaseActivity() {
         return null
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        overridePendingTransition(0, R.anim.fade_out)
-    }
-
     private class GithubActionDownloadListAdapter(private val context: Context, private val data: ArrayList<Commit>) :
         AdapterWithClickListener<GithubActionDownloadListAdapter.MyViewHolder>() {
         class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val commitInfoTV = view.findViewById<TextView>(R.id.commit_info_tv)
+            val commitInfoTV = view.findViewById<TextView>(R.id.commit_info_tv)!!
         }
 
         override fun onCreateViewHolder(parent: ViewGroup): MyViewHolder {

@@ -21,6 +21,8 @@
     <string name="app_unsupported_abi">不支持的ABI</string>
     <string name="app_data_transfer_title">应用数据转移</string>
     <string name="settings_import_data_restart_dialog_msg">数据导入后需重启应用</string>
+    <string name="app_about_label">关于</string>
+    <string name="app_about_menu">@string/app_about_label</string>
     <!-- app end -->
 
     <!-- common -->

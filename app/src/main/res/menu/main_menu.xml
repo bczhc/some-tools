@@ -10,8 +10,8 @@
         android:title="@string/app_menu_update"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/git_log"
-        android:title="@string/app_menu_git_log"
+        android:id="@+id/about"
+        android:title="@string/app_about_menu"
         app:showAsAction="never"/>
     <item
         android:id="@+id/switch_themes"
