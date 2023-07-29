@@ -500,4 +500,19 @@ public class JNI {
             void callback(int n, int total, String name);
         }
     }
+
+    public static class Bitcoin {
+        /**
+         * Generate a private key
+         *
+         * @return in WIF format
+         */
+        public static native String generateKey();
+
+        /**
+         * Derive address from a private key
+         * @return in P2WPKH format
+         */
+        public static native String privateKeyToAddress(String key);
+    }
 }

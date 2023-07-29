@@ -13,6 +13,8 @@
       <w>stddef</w>
       <w>trime</w>
       <w>unclickable</w>
+      <w>wpkh</w>
+      <w>p2wpkh</w>
     </words>
   </dictionary>
 </component>
