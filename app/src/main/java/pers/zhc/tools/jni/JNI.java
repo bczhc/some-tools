@@ -500,4 +500,10 @@ public class JNI {
             void callback(int n, int total, String name);
         }
     }
+
+    public static class CrashTest {
+        public static native void panic();
+
+        public static native void throwException();
+    }
 }

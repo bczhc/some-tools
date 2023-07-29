@@ -84,4 +84,13 @@
         <item>文本</item>
     </array>
     <!-- module end -->
+
+    <!-- module: CrashTest -->
+    <array name="crash_test_menu">
+        <item>RuntimeException</item>
+        <item>JNI Throw</item>
+        <item>Rust Panic</item>
+        <item>Signals</item>
+    </array>
+    <!-- end -->
 </resources>

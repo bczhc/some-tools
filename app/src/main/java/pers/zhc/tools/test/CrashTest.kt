@@ -1,16 +1,51 @@
-package pers.zhc.tools.test;
+package pers.zhc.tools.test
 
-import android.os.Bundle;
-import androidx.annotation.Nullable;
-import pers.zhc.tools.BaseActivity;
+import android.content.Intent
+import android.os.Bundle
+import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.R
+import pers.zhc.tools.databinding.CrashTestActivityBinding
+import pers.zhc.tools.jni.JNI
+import pers.zhc.tools.test.signals.SignalTest
+import pers.zhc.tools.utils.RecyclerViewUtils
+import pers.zhc.tools.utils.setLinearLayoutManager
 
 /**
  * @author bczhc
  */
-public class CrashTest extends BaseActivity {
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        throw new RuntimeException("Crash test");
+class CrashTest : BaseActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val bindings = CrashTestActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
+
+        val recyclerView = bindings.recyclerView
+
+        val menu = resources.getStringArray(R.array.crash_test_menu)
+        val listAdapter = RecyclerViewUtils.buildSimpleItem1ListAdapter(this, menu.toList(), true)
+        recyclerView.apply {
+            adapter = listAdapter
+            setLinearLayoutManager()
+        }
+        listAdapter.setOnItemClickListener { position, _ ->
+            listOf(
+                {
+                    // RuntimeException
+                    throw RuntimeException("Boom!")
+                },
+                {
+                    // JNI Throw
+                    JNI.CrashTest.throwException()
+                },
+                {
+                    // Rust Panic
+                    JNI.CrashTest.panic()
+                },
+                {
+                    // Signals
+                    startActivity(Intent(this, SignalTest::class.java))
+                }
+            )[position]()
+        }
     }
 }

@@ -43,6 +43,7 @@ pub mod char;
 pub mod char_stat;
 pub mod char_ucd;
 pub mod compression;
+pub mod crash;
 pub mod diary;
 pub mod email;
 pub mod encoding;
