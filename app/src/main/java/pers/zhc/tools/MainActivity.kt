@@ -169,8 +169,14 @@ class MainActivity : BaseActivity() {
         val onItemClicked = { item: Commit, upperDialog: Dialog ->
             // check abi
             val supportedAbis = Build.SUPPORTED_ABIS
-            val foundAbi = item.apks.map { it.abi }.find {
-                supportedAbis.contains(it)
+            val apkAbis = item.apks.map { it.abi }
+            val foundAbi = if (apkAbis.contains("arm64-v8a")) {
+                // prefer 64-bit
+                "arm64-v8a"
+            } else {
+                apkAbis.find {
+                    supportedAbis.contains(it)
+                }
             }
             if (foundAbi == null) {
                 ToastUtils.show(context, R.string.app_unsupported_abi)
@@ -183,7 +189,7 @@ class MainActivity : BaseActivity() {
                     }
                     .setNeutralButton("ABI") { _, _ ->
 
-                        val abis = item.apks.map { it.abi }.toTypedArray()
+                        val abis = apkAbis.toTypedArray()
                         val abiIndex = abis.indexOfFirst { it == foundAbi }
                         MaterialAlertDialogBuilder(context)
                             .setTitle("ABI")
