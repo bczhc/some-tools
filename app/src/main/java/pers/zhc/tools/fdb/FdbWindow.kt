@@ -1076,11 +1076,17 @@ class FdbWindow(private val context: Context) {
                 val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
                 paintView.isShowDrawing = bindings.showDrawingCb.isChecked
                 paintView.isPathImportPaused = bindings.pauseAtFirstCb.isChecked
-                if(bindings.pauseAtFirstCb.isChecked) {
+                if (bindings.pauseAtFirstCb.isChecked) {
                     pathImportWindowBindings.pauseButton.setText(R.string.fdb_path_import_resume_button)
                     pathImportState = PathImportState.PAUSED
                     pathImportWindowBindings.stepMode.visibility = View.VISIBLE
                     pathImportWindowBindings.delayMode.visibility = View.GONE
+                } else {
+                    pathImportWindowBindings.pauseButton.setText(R.string.fdb_path_import_pause_button)
+                    pathImportState = PathImportState.IMPORTING
+                    paintView.isPathImportPaused = false
+                    pathImportWindowBindings.delayMode.visibility = View.VISIBLE
+                    pathImportWindowBindings.stepMode.visibility = View.GONE
                 }
                 paintView.drawingInterval = if (paintView.isShowDrawing) {
                     interval
