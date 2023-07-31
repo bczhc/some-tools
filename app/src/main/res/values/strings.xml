@@ -628,6 +628,7 @@
     <string name="fdb_path_import_resume_button">继续</string>
     <string name="fdb_path_import_floating_window_title">路径导入</string>
     <string name="fdb_path_import_show_drawing_checkbox">显示过程</string>
+    <string name="fdb_import_pause_at_first_checkbox">进入后暂停</string>
     <string name="fdb_path_import_speed_tv">绘制间隔：%1$dµs</string>
     <string name="fdb_path_import_step_mode">步进导入</string>
     <string name="fdb_path_import_last_step">上一步</string>

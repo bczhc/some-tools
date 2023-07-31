@@ -721,7 +721,6 @@ public class PaintView extends BaseView {
     }
 
     public void importPathVer1_0(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
-        pathImportPaused = false;
         pathImportingOneStep = false;
         pathImportingLastStepCount = 0;
         pathRollback = false;
@@ -876,7 +875,6 @@ public class PaintView extends BaseView {
     }
 
     public void importPathVer2_0(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
-        pathImportPaused = false;
         pathImportingOneStep = false;
         pathImportingLastStepCount = 0;
         pathRollback = false;
@@ -1028,7 +1026,6 @@ public class PaintView extends BaseView {
     }
 
     public void importPathVer2_1(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
-        pathImportPaused = false;
         pathImportingOneStep = false;
         pathImportingLastStepCount = 0;
         pathRollback = false;
@@ -1190,7 +1187,6 @@ public class PaintView extends BaseView {
 
     @SuppressWarnings("DuplicatedCode")
     private void importPathVer3_0(@NotNull String path, PathImportCallback progressCallback) {
-        pathImportPaused = false;
         pathImportingOneStep = false;
         pathImportingLastStepCount = 0;
         pathRollback = false;
@@ -1392,7 +1388,6 @@ public class PaintView extends BaseView {
     }
 
     private void importPathVer3_1(@NotNull String path, PathImportCallback progressCallback) {
-        pathImportPaused = false;
         pathImportingOneStep = false;
         pathImportingLastStepCount = 0;
         pathRollback = false;
@@ -1463,7 +1458,6 @@ public class PaintView extends BaseView {
     }
 
     private void importPathVer4_0(@NotNull String path, PathImportCallback progressCallback) {
-        pathImportPaused = false;
         pathImportingOneStep = false;
         pathImportingLastStepCount = 0;
         pathRollback = false;

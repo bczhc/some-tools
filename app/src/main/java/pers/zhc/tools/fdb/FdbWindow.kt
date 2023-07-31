@@ -955,6 +955,7 @@ class FdbWindow(private val context: Context) {
         }.show()
     }
 
+    var pathImportState = PathImportState.IMPORTING
     fun showImportPathDialog(path: String) {
         val performImporting = { file: File ->
             val pathVersion = PathVersion.getPathVersion(file)
@@ -1060,6 +1061,11 @@ class FdbWindow(private val context: Context) {
             } else {
                 View.GONE
             }
+            bindings.pauseAtFirstCb.visibility = if (isChecked) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         }
         bindings.pathFileTv.text = context.getString(R.string.fdb_path_import_prompt_dialog_filepath_tv, path)
 
@@ -1069,6 +1075,13 @@ class FdbWindow(private val context: Context) {
             .setPositiveAction { _, _ ->
                 val interval = bindings.fdbDefaultDrawingIntervalTil.editText!!.text.toString().toInt()
                 paintView.isShowDrawing = bindings.showDrawingCb.isChecked
+                paintView.isPathImportPaused = bindings.pauseAtFirstCb.isChecked
+                if(bindings.pauseAtFirstCb.isChecked) {
+                    pathImportWindowBindings.pauseButton.setText(R.string.fdb_path_import_resume_button)
+                    pathImportState = PathImportState.PAUSED
+                    pathImportWindowBindings.stepMode.visibility = View.VISIBLE
+                    pathImportWindowBindings.delayMode.visibility = View.GONE
+                }
                 paintView.drawingInterval = if (paintView.isShowDrawing) {
                     interval
                 } else {
@@ -1455,9 +1468,6 @@ class FdbWindow(private val context: Context) {
 
     private fun setUpPathImportWindow() {
         pathImportWindowBindings.apply {
-            var pathImportState = PathImportState.IMPORTING
-            delayMode.visibility = View.VISIBLE
-            stepMode.visibility = View.GONE
             pauseButton.setOnClickListener {
                 when (pathImportState) {
                     PathImportState.PAUSED -> {
