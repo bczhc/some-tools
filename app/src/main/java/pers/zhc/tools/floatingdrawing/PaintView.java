@@ -30,6 +30,7 @@ import pers.zhc.util.Assertion;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -65,8 +66,7 @@ public class PaintView extends BaseView {
     /**
      * 模拟栈，来保存 Path
      */
-    private ArrayList<PathBean> undoListRef, redoListRef;
-    private ArrayList<PathBean> lastStepListRef = new ArrayList<>(), nextStepListRef = new ArrayList<>();
+    private ArrayList<PathBeanItem> undoListRef, redoListRef;
     private GestureResolver gestureResolver;
     private boolean showDrawing = true;
     private boolean importingPath = false;
@@ -338,43 +338,76 @@ public class PaintView extends BaseView {
         }
     }
 
+    public PathBeanItem deleteLastPathBeanItem(ArrayList<PathBeanItem> list, boolean isImportingMode) {
+        int indexToRemove = -1;
+        for (int i = list.size() - 1; i >= 0; i--) {
+            PathBeanItem item = list.get(i);
+            if (item.isImportingMode() == isImportingMode) {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+// 删除最后一个符合 isImportingMode 的 PathBeanItem
+        PathBeanItem lastPathBeanItemOfIsImportingMode = list.get(indexToRemove);
+        list.remove(indexToRemove);
+        return lastPathBeanItemOfIsImportingMode;
+
+    }
+
+    public int getCountOfPathBeanItemsWithImportingMode(ArrayList<PathBeanItem> list, boolean importingMode) {
+        int count = 0;
+        for (PathBeanItem item : list) {
+            if (item.isImportingMode() == importingMode) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void removeAllPathBeanItems(ArrayList<PathBeanItem> list, boolean importingMode) {
+        Iterator<PathBeanItem> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            PathBeanItem item = iterator.next();
+            if (item.isImportingMode() == importingMode) {
+                iterator.remove();
+            }
+        }
+    }
+
+
     /**
      * 撤销操作
      */
     public void undo(boolean isImportingMode) {
         Stopwatch stopwatch = new Stopwatch();
 
-        if (canUndo() || (isImportingMode && !lastStepListRef.isEmpty())) {
+        if (canUndo() || (isImportingMode && getCountOfPathBeanItemsWithImportingMode(undoListRef, true) > 0)) {
             layerPathSaverRef.undo();
 
             clearPaint();//清除之前绘制内容
-            PathBean lastPb;
-            if (isImportingMode && !lastStepListRef.isEmpty()) {
-                lastPb = lastStepListRef.remove(lastStepListRef.size() - 1);//将最后一个移除
-            } else {
-                lastPb = undoListRef.remove(undoListRef.size() - 1);//将最后一个移除
-            }
+            PathBeanItem lastPbi;
             if (isImportingMode) {
-                nextStepListRef.add(lastPb);
+                if (getCountOfPathBeanItemsWithImportingMode(undoListRef, true) > 0) {
+                    lastPbi = deleteLastPathBeanItem(undoListRef, true);//将最后一个移除
+                } else {
+                    lastPbi = deleteLastPathBeanItem(undoListRef, false);//将最后一个移除
+                    lastPbi.setImportingMode(true);
+                }
             } else {
-                redoListRef.add(lastPb);//加入 恢复操作
+                lastPbi = deleteLastPathBeanItem(undoListRef, false);//将最后一个移除
             }
-            Log.i("fdb-test", "undo: lastStepListRef:" + lastStepListRef.size() + "  nextStepListRef:" + nextStepListRef.size());
+            redoListRef.add(lastPbi);//加入 恢复操作
             //遍历，将Path重新绘制到 headCanvas
             if (showDrawing) {
-                for (PathBean pb : undoListRef) {
-                    mCanvas.drawPath(pb.path, pb.paint);
-                }
-                if (isImportingMode) {
-                    for (PathBean pb : lastStepListRef) {
-                        mCanvas.drawPath(pb.path, pb.paint);
-                    }
+                for (PathBeanItem pbi : undoListRef) {
+                    mCanvas.drawPath(pbi.getBody().path, pbi.getBody().paint);
                 }
                 postInvalidate();
             }
         }
 
-        // Log.i(TAG, "undo() time elapsed: " + stopwatch.stop() + " ms");
+        Log.i(TAG, "undo() time elapsed: " + stopwatch.stop() + " ms");
     }
 
     public void undo() {
@@ -386,21 +419,19 @@ public class PaintView extends BaseView {
      * 恢复操作
      */
     public void redo(boolean isImportingMode) {
-        if (canRedo() || (isImportingMode && !nextStepListRef.isEmpty())) {
+        if (canRedo() || (isImportingMode && getCountOfPathBeanItemsWithImportingMode(redoListRef, true) > 0)) {
             layerPathSaverRef.redo();
-            PathBean pathBean;
-            if (isImportingMode && !nextStepListRef.isEmpty()) {
-                pathBean = nextStepListRef.remove(nextStepListRef.size() - 1);
+            PathBeanItem pathBeanItem;
+            if (isImportingMode && getCountOfPathBeanItemsWithImportingMode(redoListRef, true) > 0) {
+                pathBeanItem = deleteLastPathBeanItem(redoListRef, true);
+                pathBeanItem.setImportingMode(false);
+                removeAllPathBeanItems(redoListRef, false);
+                // 点击下一步时清空恢复列表
             } else {
-                pathBean = redoListRef.remove(redoListRef.size() - 1);
+                pathBeanItem = deleteLastPathBeanItem(redoListRef, false);
             }
-            mCanvas.drawPath(pathBean.path, pathBean.paint);
-            if (isImportingMode) {
-                lastStepListRef.add(pathBean);
-            } else {
-                undoListRef.add(pathBean);
-            }
-            Log.i("fdb-test", "redo: lastStepListRef:" + lastStepListRef.size() + "  nextStepListRef:" + nextStepListRef.size());
+            mCanvas.drawPath(pathBeanItem.getBody().path, pathBeanItem.getBody().paint);
+            undoListRef.add(pathBeanItem);
             if (showDrawing) {
                 postInvalidate();
             }
@@ -423,6 +454,7 @@ public class PaintView extends BaseView {
     /**
      * 清空，包括撤销和恢复操作列表
      */
+    /********************************************************************/
     public void clearAll() {
         clearPaint();
         mLastY = 0f;
@@ -458,17 +490,17 @@ public class PaintView extends BaseView {
         return eraserMode;
     }
 
-    private Bitmap drawPathsToBitmap(@NotNull List<PathBean> pathBeans, @Nullable Matrix matrix, int width, int height, FloatCallback progressCallback) {
+    private Bitmap drawPathsToBitmap(@NotNull List<PathBeanItem> pathBeanItems, @Nullable Matrix matrix, int width, int height, FloatCallback progressCallback) {
         final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(bitmap);
         canvas.setMatrix(matrix);
 
-        final int size = pathBeans.size();
+        final int size = pathBeanItems.size();
 
         float count = 0F;
-        for (PathBean pathBean : pathBeans) {
-            canvas.drawPath(pathBean.path, pathBean.paint);
+        for (PathBeanItem pathBeanItem : pathBeanItems) {
+            canvas.drawPath(pathBeanItem.getBody().path, pathBeanItem.getBody().paint);
 
             progressCallback.call(count / (float) size);
 
@@ -491,7 +523,7 @@ public class PaintView extends BaseView {
         for (int i = layerArray.size() - 1; i >= 0; i--) {
             final Layer layer = layerArray.get(i);
             if (!layer.isVisible()) continue;
-            final ArrayList<PathBean> undoList = layer.undoList;
+            final ArrayList<PathBeanItem> undoList = layer.undoList;
 
 
             final Bitmap bitmap = drawPathsToBitmap(undoList, matrix, width, height, p -> {
@@ -515,14 +547,14 @@ public class PaintView extends BaseView {
      * 是否可以撤销
      */
     public boolean canUndo() {
-        return !undoListRef.isEmpty();
+        return getCountOfPathBeanItemsWithImportingMode(undoListRef, false) != 0;
     }
 
     /**
      * 是否可以恢复
      */
     public boolean canRedo() {
-        return !redoListRef.isEmpty();
+        return getCountOfPathBeanItemsWithImportingMode(redoListRef, false) != 0;
     }
 
     /**
@@ -754,7 +786,7 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo();
+                    undo(true);
                     if (progressCallback != null) {
                         progressCallback.progress((float) read / (float) length, null, 0, 0);
                     }
@@ -765,7 +797,7 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo();
+                redo(true);
                 --pathImportingLastStepCount;
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
@@ -827,7 +859,7 @@ public class PaintView extends BaseView {
                                 pathImportingOneStep = false;
                                 // 完成导入一步，重置变量
                                 if (pathRollback) {
-                                    undo();
+                                    undo(true);
                                     Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                     if (progressCallback != null) {
                                         progressCallback.progress((float) read / (float) length, null, 0, 0);
@@ -911,7 +943,7 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo();
+                    undo(true);
                     if (progressCallback != null) {
                         progressCallback.progress((float) read / (float) length, null, 0, 0);
                     }
@@ -922,7 +954,7 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo();
+                redo(true);
                 --pathImportingLastStepCount;
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
@@ -980,7 +1012,7 @@ public class PaintView extends BaseView {
                                 pathImportingOneStep = false;
                                 // 完成导入一步，重置变量
                                 if (pathRollback) {
-                                    undo();
+                                    undo(true);
                                     Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                     if (progressCallback != null) {
                                         progressCallback.progress((float) read / (float) length, null, 0, 0);
@@ -1061,7 +1093,7 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo();
+                    undo(true);
                     pathRollback = false;
                     // 否则直接撤回
                 }
@@ -1069,7 +1101,7 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo();
+                redo(true);
                 Log.i("fdb-test", "导入专用恢复，lastStepCount:" + pathImportingLastStepCount + "此后-1，变成" + (pathImportingLastStepCount - 1));
                 --pathImportingLastStepCount;
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
@@ -1130,7 +1162,7 @@ public class PaintView extends BaseView {
                             pathImportingOneStep = false;
                             // 完成导入一步，重置变量
                             if (pathRollback) {
-                                undo();
+                                undo(true);
                                 Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                 pathRollback = false;
                                 drawingInterval = originalDrawingInterval;
@@ -1248,7 +1280,7 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo();
+                    undo(true);
                     --c;
                     progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
                     pathRollback = false;
@@ -1258,7 +1290,7 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo();
+                redo(true);
                 --pathImportingLastStepCount;
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
@@ -1334,7 +1366,7 @@ public class PaintView extends BaseView {
                             pathImportingOneStep = false;
                             // 完成导入一步，重置变量
                             if (pathRollback) {
-                                undo();
+                                undo(true);
                                 --c;
                                 Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                 progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
@@ -1560,7 +1592,7 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo();
+                    undo(true);
                     --c;
                     progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
                     pathRollback = false;
@@ -1570,7 +1602,7 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo();
+                redo(true);
                 Log.i("fdb-test", "下一步，恢复产生的撤回");
                 --pathImportingLastStepCount;
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
@@ -1647,7 +1679,7 @@ public class PaintView extends BaseView {
                             pathImportingOneStep = false;
                             // 完成导入一步，重置变量
                             if (pathRollback) {
-                                undo();
+                                undo(true);
                                 Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                 --c;
                                 progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
@@ -1723,7 +1755,7 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo();
+                    undo(true);
                     --c;
                     progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
                     pathRollback = false;
@@ -1733,7 +1765,7 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo();
+                redo(true);
                 --pathImportingLastStepCount;
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
@@ -1837,7 +1869,7 @@ public class PaintView extends BaseView {
                             pathImportingOneStep = false;
                             // 完成导入一步，重置变量
                             if (pathRollback) {
-                                undo();
+                                undo(true);
                                 --c;
                                 Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                 progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
@@ -1919,7 +1951,7 @@ public class PaintView extends BaseView {
                     Paint paint = new Paint(mPaintRef);
                     PathBean pb = new PathBean(path, paint);
                     // for undoing
-                    undoListRef.add(pb);
+                    undoListRef.add(new PathBeanItem(pb));
                     redoListRef.clear();
                     mPath.reset();
                     mPath = null;
@@ -2056,6 +2088,36 @@ public class PaintView extends BaseView {
         }
     }
 
+    public class PathBeanItem {
+        public PathBean body;
+        public boolean isImportingMode;
+
+        public PathBeanItem(PathBean body) {
+            this(body, false);
+        }
+
+        public PathBeanItem(PathBean body, boolean isImportingMode) {
+            this.body = body;
+            this.isImportingMode = isImportingMode;
+        }
+
+        public PathBean getBody() {
+            return body;
+        }
+
+        public void setBody(PathBean newBody) {
+            body = newBody;
+        }
+
+        public boolean isImportingMode() {
+            return isImportingMode;
+        }
+
+        public void setImportingMode(boolean newIsImportingMode) {
+            isImportingMode = newIsImportingMode;
+        }
+    }
+
     /**
      * Set the path saver so that the drawing data will be stored
      *
@@ -2173,8 +2235,6 @@ public class PaintView extends BaseView {
     private void updateLayerRefs() {
         undoListRef = layerRef.undoList;
         redoListRef = layerRef.redoList;
-        lastStepListRef = new ArrayList<>();
-        nextStepListRef = new ArrayList<>();
         bitmapRef = layerRef.bitmap;
         layerPathSaverRef = pathSaver.getLayerPathSaver(layerRef.getId());
         if (layerPathSaverRef == null)

@@ -17,8 +17,8 @@ import java.util.ArrayList;
  */
 public class Layer {
     private LayerInfo layerInfo;
-    public ArrayList<PaintView.PathBean> undoList = new ArrayList<>();
-    public ArrayList<PaintView.PathBean> redoList = new ArrayList<>();
+    public ArrayList<PaintView.PathBeanItem> undoList = new ArrayList<>();
+    public ArrayList<PaintView.PathBeanItem> redoList = new ArrayList<>();
     public Bitmap bitmap;
 
     public Layer(int width, int height, LayerInfo layerInfo) {
@@ -35,8 +35,8 @@ public class Layer {
         // clear the bitmap
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         canvas.setMatrix(matrix);
-        for (PaintView.PathBean pathBean : undoList) {
-            canvas.drawPath(pathBean.path, pathBean.paint);
+        for (PaintView.PathBeanItem pathBeanItem : undoList) {
+            canvas.drawPath(pathBeanItem.getBody().path, pathBeanItem.getBody().paint);
         }
     }
 
