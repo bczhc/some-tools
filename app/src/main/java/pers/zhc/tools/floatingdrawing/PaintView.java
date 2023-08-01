@@ -689,11 +689,12 @@ public class PaintView extends BaseView {
         int color;
 
         FileInputStream is = new FileInputStream(f);
+        BufferedInputStream reader = new BufferedInputStream(is);
 
         bytes = new byte[26];
         byte[] bytes_4 = new byte[4];
         read = 0L;
-        while (is.read(bytes) != -1) {
+        while (reader.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated) ;
             if (!isImportingTerminated) {
@@ -750,6 +751,7 @@ public class PaintView extends BaseView {
             }
         }
 
+        reader.close();
         is.close();
     }
 
@@ -762,14 +764,15 @@ public class PaintView extends BaseView {
         int color;
 
         FileInputStream is = new FileInputStream(f);
+        BufferedInputStream reader = new BufferedInputStream(is);
 
-        Assertion.doAssertion(is.skip(12) == 12);
+        Assertion.doAssertion(reader.skip(12) == 12);
         bytes = new byte[12];
         read = 0L;
         int lastP1, p1 = -1;
         x = -1;
         y = -1;
-        while (is.read(bytes) != -1) {
+        while (reader.read(bytes) != -1) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated) ;
             if (isImportingTerminated) {
@@ -823,78 +826,77 @@ public class PaintView extends BaseView {
             }
         }
 
+        reader.close();
         is.close();
     }
 
     public void importPathVer2_1(@NotNull File f, @Nullable PathImportCallback progressCallback) throws IOException {
         pathImportPaused = false;
         isImportingTerminated = false;
-        long length = f.length(), read;
-        byte[] bytes;
-        float x, y, strokeWidth;
-        int color;
 
         FileInputStream is = new FileInputStream(f);
+        BufferedInputStream reader = new BufferedInputStream(is);
 
-        // 512 * 9
-        int bufferSize = 2304;
+        // skip the header
         Assertion.doAssertion(is.skip(12) == 12);
-        byte[] buffer = new byte[bufferSize];
-        int bufferRead;
-        read = 0L;
-        while ((bufferRead = is.read(buffer)) != -1) {
-            int a = bufferRead / 9;
-            for (int i = 0; i < a; i++) {
-                // noinspection StatementWithEmptyBody
-                while (pathImportPaused && !isImportingTerminated) ;
-                if (isImportingTerminated) {
-                    x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                    y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
+
+        long totalReadSize = 0L;
+        int readSize;
+        long length = f.length();
+        float x, y, strokeWidth;
+        int color;
+        byte[] buffer = new byte[9];
+        while ((readSize = reader.read(buffer)) != -1 && readSize == 9) {
+            // noinspection StatementWithEmptyBody
+            while (pathImportPaused && !isImportingTerminated) ;
+            if (isImportingTerminated) {
+                x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
+                y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5);
+                onTouchAction(MotionEvent.ACTION_UP, x, y);
+                break;
+            } else {
+                spinSleep(drawingInterval);
+            }
+            switch (buffer[0]) {
+                case (byte) 0xA1:
+                case (byte) 0xA2:
+                    strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
+                    color = JNI.FloatingBoard.byteArrayToInt(buffer, 5);
+                    setEraserMode(buffer[0] == (byte) 0xA2);
+                    mPaintRef.setColor(color);
+                    mPaintRef.setStrokeWidth(strokeWidth);
+                    break;
+                case (byte) 0xB1:
+                    x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
+                    y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5);
+                    onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                    break;
+                case (byte) 0xB3:
+                    x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
+                    y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 );
+                    onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                    break;
+                case (byte) 0xB2:
+                    x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
+                    y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5);
                     onTouchAction(MotionEvent.ACTION_UP, x, y);
                     break;
-                } else {
-                    spinSleep(drawingInterval);
-                }
-                switch (buffer[i * 9]) {
-                    case (byte) 0xA1:
-                    case (byte) 0xA2:
-                        strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                        color = JNI.FloatingBoard.byteArrayToInt(buffer, 5 + i * 9);
-                        setEraserMode(buffer[i * 9] == (byte) 0xA2);
-                        mPaintRef.setColor(color);
-                        mPaintRef.setStrokeWidth(strokeWidth);
-                        break;
-                    case (byte) 0xB1:
-                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
-                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
-                        break;
-                    case (byte) 0xB3:
-                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
-                        onTouchAction(MotionEvent.ACTION_MOVE, x, y);
-                        break;
-                    case (byte) 0xB2:
-                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1 + i * 9);
-                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5 + i * 9);
-                        onTouchAction(MotionEvent.ACTION_UP, x, y);
-                        break;
-                    case (byte) 0xC1:
-                        undo();
-                        break;
-                    case (byte) 0xC2:
-                        redo();
-                        break;
-                    default:
-                        break;
-                }
-                read += 9L;
-                if (progressCallback != null) {
-                    progressCallback.progress((float) read / (float) length, null, 0, 0);
-                }
+                case (byte) 0xC1:
+                    undo();
+                    break;
+                case (byte) 0xC2:
+                    redo();
+                    break;
+                default:
+                    break;
+            }
+            totalReadSize += buffer.length;
+            if (progressCallback != null) {
+                progressCallback.progress((float) totalReadSize / (float) length, null, 0, 0);
             }
         }
 
+        reader.close();
         is.close();
     }
 
