@@ -66,7 +66,7 @@ public class PaintView extends BaseView {
     /**
      * 模拟栈，来保存 Path
      */
-    private ArrayList<PathBeanItem> undoListRef, redoListRef;
+    public ArrayList<PathBeanItem> undoListRef, redoListRef;
     private GestureResolver gestureResolver;
     private boolean showDrawing = true;
     private boolean importingPath = false;
@@ -379,7 +379,7 @@ public class PaintView extends BaseView {
     /**
      * 撤销操作
      */
-    public void undo(boolean isImportingMode) {
+    public boolean undo(boolean isImportingMode) {
         Stopwatch stopwatch = new Stopwatch();
 
         if (canUndo() || (isImportingMode && getCountOfPathBeanItemsWithImportingMode(undoListRef, true) > 0)) {
@@ -405,24 +405,26 @@ public class PaintView extends BaseView {
                 }
                 postInvalidate();
             }
+            return true;
+        } else {
+            return false;
         }
 
-        Log.i(TAG, "undo() time elapsed: " + stopwatch.stop() + " ms");
     }
 
-    public void undo() {
-        undo(false);
+    public boolean undo() {
         Log.i("fdb-test", "undo");
+        return undo(false);
     }
 
     /**
      * 恢复操作
      */
-    public void redo(boolean isImportingMode) {
+    public boolean redo(boolean isImportingMode) {
         if (canRedo() || (isImportingMode && getCountOfPathBeanItemsWithImportingMode(redoListRef, true) > 0)) {
             layerPathSaverRef.redo();
             PathBeanItem pathBeanItem;
-            if (isImportingMode && getCountOfPathBeanItemsWithImportingMode(redoListRef, true) > 0) {
+            if (isImportingMode) {
                 pathBeanItem = deleteLastPathBeanItem(redoListRef, true);
                 pathBeanItem.setImportingMode(false);
                 removeAllPathBeanItems(redoListRef, false);
@@ -435,12 +437,15 @@ public class PaintView extends BaseView {
             if (showDrawing) {
                 postInvalidate();
             }
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public void redo() {
-        redo(false);
+    public boolean redo() {
         Log.i("fdb-test", "redo");
+        return redo(false);
     }
 
     public int getEraserAlpha() {
@@ -454,7 +459,6 @@ public class PaintView extends BaseView {
     /**
      * 清空，包括撤销和恢复操作列表
      */
-    /********************************************************************/
     public void clearAll() {
         clearPaint();
         mLastY = 0f;
@@ -786,7 +790,9 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo(true);
+                    if (undo(true)) {
+                        ++pathImportingLastStepCount;
+                    }
                     if (progressCallback != null) {
                         progressCallback.progress((float) read / (float) length, null, 0, 0);
                     }
@@ -797,8 +803,9 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo(true);
-                --pathImportingLastStepCount;
+                if (redo(true)) {
+                    --pathImportingLastStepCount;
+                }
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
@@ -807,8 +814,7 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                        ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         is.read(bytes);
                         hasImportReleased = false;
@@ -859,7 +865,9 @@ public class PaintView extends BaseView {
                                 pathImportingOneStep = false;
                                 // 完成导入一步，重置变量
                                 if (pathRollback) {
-                                    undo(true);
+                                    if (undo(true)) {
+                                        ++pathImportingLastStepCount;
+                                    }
                                     Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                     if (progressCallback != null) {
                                         progressCallback.progress((float) read / (float) length, null, 0, 0);
@@ -899,8 +907,7 @@ public class PaintView extends BaseView {
                 Log.i("fdb-test", "已放行过导入");
             }
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
         }
 
         is.close();
@@ -943,7 +950,9 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo(true);
+                    if (undo(true)) {
+                        ++pathImportingLastStepCount;
+                    }
                     if (progressCallback != null) {
                         progressCallback.progress((float) read / (float) length, null, 0, 0);
                     }
@@ -954,8 +963,9 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo(true);
-                --pathImportingLastStepCount;
+                if (redo(true)) {
+                    --pathImportingLastStepCount;
+                }
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
@@ -964,8 +974,7 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                        ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         is.read(bytes);
                         hasImportReleased = false;
@@ -1012,7 +1021,10 @@ public class PaintView extends BaseView {
                                 pathImportingOneStep = false;
                                 // 完成导入一步，重置变量
                                 if (pathRollback) {
-                                    undo(true);
+                                    if (undo(true)) {
+                                        ++pathImportingLastStepCount;
+                                    }
+                                    ;
                                     Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                     if (progressCallback != null) {
                                         progressCallback.progress((float) read / (float) length, null, 0, 0);
@@ -1050,8 +1062,7 @@ public class PaintView extends BaseView {
                 progressCallback.progress((float) read / ((float) length), null, 0, 0);
             }
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
         }
 
         is.close();
@@ -1093,7 +1104,9 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo(true);
+                    if (undo(true)) {
+                        ++pathImportingLastStepCount;
+                    }
                     pathRollback = false;
                     // 否则直接撤回
                 }
@@ -1101,9 +1114,10 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo(true);
+                if (redo(true)) {
+                    --pathImportingLastStepCount;
+                }
                 Log.i("fdb-test", "导入专用恢复，lastStepCount:" + pathImportingLastStepCount + "此后-1，变成" + (pathImportingLastStepCount - 1));
-                --pathImportingLastStepCount;
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
@@ -1112,8 +1126,7 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                        ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         readSize = reader.read(buffer);
                         hasImportReleased = false;
@@ -1162,7 +1175,9 @@ public class PaintView extends BaseView {
                             pathImportingOneStep = false;
                             // 完成导入一步，重置变量
                             if (pathRollback) {
-                                undo(true);
+                                if (undo(true)) {
+                                    ++pathImportingLastStepCount;
+                                }
                                 Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                 pathRollback = false;
                                 drawingInterval = originalDrawingInterval;
@@ -1194,8 +1209,7 @@ public class PaintView extends BaseView {
                 progressCallback.progress((float) totalReadSize / (float) length, null, 0, 0);
             }
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
         }
 
         reader.close();
@@ -1280,7 +1294,9 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo(true);
+                    if (undo(true)) {
+                        ++pathImportingLastStepCount;
+                    }
                     --c;
                     progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
                     pathRollback = false;
@@ -1290,8 +1306,9 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo(true);
-                --pathImportingLastStepCount;
+                if (redo(true)) {
+                    --pathImportingLastStepCount;
+                }
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
@@ -1301,8 +1318,7 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                        ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         cursor.step();
                         hasImportReleased = false;
@@ -1366,7 +1382,9 @@ public class PaintView extends BaseView {
                             pathImportingOneStep = false;
                             // 完成导入一步，重置变量
                             if (pathRollback) {
-                                undo(true);
+                                if (undo(true)) {
+                                    ++pathImportingLastStepCount;
+                                }
                                 --c;
                                 Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                 progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
@@ -1401,8 +1419,7 @@ public class PaintView extends BaseView {
             ++c;
             progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
         }
 
         setLockingStrokesFromExtraInfos(extraInfo);
@@ -1592,7 +1609,9 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo(true);
+                    if (undo(true)) {
+                        ++pathImportingLastStepCount;
+                    }
                     --c;
                     progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
                     pathRollback = false;
@@ -1602,9 +1621,10 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo(true);
+                if (redo(true)) {
+                    --pathImportingLastStepCount;
+                }
                 Log.i("fdb-test", "下一步，恢复产生的撤回");
-                --pathImportingLastStepCount;
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
@@ -1614,8 +1634,7 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                        ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         cursor.step();
                         hasImportReleased = false;
@@ -1679,7 +1698,9 @@ public class PaintView extends BaseView {
                             pathImportingOneStep = false;
                             // 完成导入一步，重置变量
                             if (pathRollback) {
-                                undo(true);
+                                if (undo(true)) {
+                                    ++pathImportingLastStepCount;
+                                }
                                 Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                 --c;
                                 progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
@@ -1714,8 +1735,7 @@ public class PaintView extends BaseView {
             ++c;
             progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
         }
 
         statement.release();
@@ -1755,7 +1775,9 @@ public class PaintView extends BaseView {
                     break;
                     // 一步没有画完时，让pathImportingOneStep为true，继续画完这一步
                 } else if (pathRollback) {
-                    undo(true);
+                    if (undo(true)) {
+                        ++pathImportingLastStepCount;
+                    }
                     --c;
                     progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
                     pathRollback = false;
@@ -1765,8 +1787,9 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "pathImportingLastStepCount" + pathImportingLastStepCount);
             if (pathImportingLastStepCount > 0 && !pathRollback) {
                 // 当正常导入或点击“下一步”时，需要把因点击“上一步”而产生的撤回恢复
-                redo(true);
-                --pathImportingLastStepCount;
+                if (redo(true)) {
+                    --pathImportingLastStepCount;
+                }
                 Log.i("fdb-test", "恢复上一步的撤回，pathImportingLastStepCount：" + pathImportingLastStepCount);
                 if (pathImportingOneStep) {
                     // 点击“下一步”的处理，恢复完成后意味着这一步已经结束，需要重置pathImportingOneStep
@@ -1776,8 +1799,7 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                        ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         cursor.step();
                         hasImportReleased = false;
@@ -1869,7 +1891,9 @@ public class PaintView extends BaseView {
                             pathImportingOneStep = false;
                             // 完成导入一步，重置变量
                             if (pathRollback) {
-                                undo(true);
+                                if (undo(true)) {
+                                    ++pathImportingLastStepCount;
+                                }
                                 --c;
                                 Log.i("fdb-test", "导入完未完成的那一步之后撤回");
                                 progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
@@ -1899,8 +1923,7 @@ public class PaintView extends BaseView {
             ++c;
             progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback))
-                ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
         }
 
         statement.release();

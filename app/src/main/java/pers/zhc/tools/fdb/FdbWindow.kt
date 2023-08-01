@@ -1500,14 +1500,11 @@ class FdbWindow(private val context: Context) {
                 Log.i("fdb-test", "下一步")
             }
             lastStep.setOnClickListener {
-                if (!paintView.isPathImportingOneStep) {
-                    ++paintView.pathImportingLastStepCount
                     paintView.isPathRollback = true
                     if (paintView.pathImportingLastStepCount > 0 && !paintView.isPathImportingOneStepFinished) {
                         paintView.pathRollBackAndFinishOneStep = true;
                     }
                     Log.i("fdb-test", "上一步，laststepcount：" + paintView.pathImportingLastStepCount)
-                }
             }
             stopButton.setOnClickListener {
                 paintView.isImportingTerminated = true
