@@ -780,6 +780,12 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
                 if (pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
                     originalDrawingInterval = drawingInterval;
@@ -813,7 +819,14 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        // 防止jni崩溃。。不知道为什么会这样
+                    }
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         is.read(bytes);
                         hasImportReleased = false;
@@ -906,7 +919,14 @@ public class PaintView extends BaseView {
                 Log.i("fdb-test", "已放行过导入");
             }
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
+            };
         }
 
         is.close();
@@ -940,6 +960,12 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
                 if (pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
                     originalDrawingInterval = drawingInterval;
@@ -973,7 +999,14 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        // 防止jni崩溃。。不知道为什么会这样
+                    }
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         is.read(bytes);
                         hasImportReleased = false;
@@ -1061,7 +1094,14 @@ public class PaintView extends BaseView {
                 progressCallback.progress((float) read / ((float) length), null, 0, 0);
             }
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
+            }
         }
 
         is.close();
@@ -1094,6 +1134,12 @@ public class PaintView extends BaseView {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
                 // 暂停自旋
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
                 if (pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
                     originalDrawingInterval = drawingInterval;
@@ -1125,7 +1171,14 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        // 防止jni崩溃。。不知道为什么会这样
+                    }
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         readSize = reader.read(buffer);
                         hasImportReleased = false;
@@ -1208,7 +1261,14 @@ public class PaintView extends BaseView {
                 progressCallback.progress((float) totalReadSize / (float) length, null, 0, 0);
             }
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
+            }
         }
 
         reader.close();
@@ -1284,6 +1344,12 @@ public class PaintView extends BaseView {
             Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
                 if (pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
                     originalDrawingInterval = drawingInterval;
@@ -1317,7 +1383,14 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        // 防止jni崩溃。。不知道为什么会这样
+                    }
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         cursor.step();
                         hasImportReleased = false;
@@ -1418,7 +1491,14 @@ public class PaintView extends BaseView {
             ++c;
             progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
+            }
         }
 
         setLockingStrokesFromExtraInfos(extraInfo);
@@ -1598,6 +1678,12 @@ public class PaintView extends BaseView {
         while ((pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || cursor.step()) {
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
                 Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
                 if (pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
@@ -1633,7 +1719,14 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        // 防止jni崩溃。。不知道为什么会这样
+                    }
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         cursor.step();
                         hasImportReleased = false;
@@ -1734,7 +1827,14 @@ public class PaintView extends BaseView {
             ++c;
             progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
+            }
         }
 
         statement.release();
@@ -1765,6 +1865,12 @@ public class PaintView extends BaseView {
             // noinspection StatementWithEmptyBody
             Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
                 if (pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
                     originalDrawingInterval = drawingInterval;
@@ -1798,7 +1904,14 @@ public class PaintView extends BaseView {
                     if (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
                         Log.i("fdb-test", "导入一步恢复撤回步骤后的暂停中断");
                     }
-                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+                    while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        // 防止jni崩溃。。不知道为什么会这样
+                    }
                     if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
                         cursor.step();
                         hasImportReleased = false;
@@ -1922,7 +2035,14 @@ public class PaintView extends BaseView {
             ++c;
             progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
             Log.i("fdb-test", "导入放行终止后的暂停中断");
-            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) ;
+            while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 防止jni崩溃。。不知道为什么会这样
+            }
         }
 
         statement.release();
