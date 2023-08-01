@@ -66,7 +66,7 @@ public class PaintView extends BaseView {
     /**
      * 模拟栈，来保存 Path
      */
-    public ArrayList<PathBeanItem> undoListRef, redoListRef;
+    private ArrayList<PathBeanItem> undoListRef, redoListRef;
     private GestureResolver gestureResolver;
     private boolean showDrawing = true;
     private boolean importingPath = false;
@@ -380,7 +380,6 @@ public class PaintView extends BaseView {
      * 撤销操作
      */
     public boolean undo(boolean isImportingMode) {
-        Stopwatch stopwatch = new Stopwatch();
 
         if (canUndo() || (isImportingMode && getCountOfPathBeanItemsWithImportingMode(undoListRef, true) > 0)) {
             layerPathSaverRef.undo();
