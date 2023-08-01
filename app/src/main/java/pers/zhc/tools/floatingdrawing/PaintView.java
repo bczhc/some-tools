@@ -774,10 +774,12 @@ public class PaintView extends BaseView {
         byte[] bytes_4 = new byte[4];
         read = 0L;
 
-        boolean hasImportReleased = false;
+        boolean stepImportMark = false; // 已经因为两个up判断，指针移动过了，直接短路导入指针移动逻辑
+        int lastMotionAction = -1;
         // 完成现有对步进导入的处理
-        while ((pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || is.read(bytes) != -1) {
-            Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
+        while (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || is.read(bytes) != -1) {
+            Log.i("fdb-test", "短路导入判断:" + (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep)));
+            stepImportMark = false;
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
                 try {
@@ -827,12 +829,6 @@ public class PaintView extends BaseView {
                         }
                         // 防止jni崩溃。。不知道为什么会这样
                     }
-                    if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
-                        is.read(bytes);
-                        hasImportReleased = false;
-                        Log.i("fdb-test", "原导入短路，完成全部临时撤回列表恢复后,指针后移一位");
-                        // 原导入短路，完成全部临时撤回列表恢复后，指针后移一位
-                    }
                 }
             }
             if (!isImportingTerminated) {
@@ -841,82 +837,87 @@ public class PaintView extends BaseView {
             if (pathImportingLastStepCount == 0 || (pathRollback && pathImportingOneStep)) {
                 // 仅在无因点击“上一步”而撤回的步骤或第一次点击“上一步”（或“上一步”撤回的步骤导入完成后）把剩余未完成的一步导入完 时，进行正常的导入操作
                 read += 26L;
-                switch (bytes[25]) {
-                    case 1:
-                        if (isImportingTerminated) break;
-                        undo();
-                        System.out.println("undo!");
-                        break;
-                    case 2:
-                        if (isImportingTerminated) break;
-                        redo();
-                        System.out.println("redo!");
-                        break;
-                    default:
-                        System.arraycopy(bytes, 0, bytes_4, 0, 4);
-                        x = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                        System.arraycopy(bytes, 4, bytes_4, 0, 4);
-                        y = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                        System.arraycopy(bytes, 8, bytes_4, 0, 4);
-                        color = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
-                        System.arraycopy(bytes, 12, bytes_4, 0, 4);
-                        strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                        System.arraycopy(bytes, 16, bytes_4, 0, 4);
-                        int motionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
-                        System.arraycopy(bytes, 20, bytes_4, 0, 4);
-                        float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
-                        if (isImportingTerminated) {
-                            onTouchAction(MotionEvent.ACTION_UP, x, y);
+                if (lastMotionAction == 1 && JNI.FloatingBoard.byteArrayToInt(bytes_4, 0) == 1) {
+                    is.read(bytes);
+                    stepImportMark = true;
+                    Log.i("feb-test", "两个up，指针后移");
+                } else {
+                    switch (bytes[25]) {
+                        case 1:
+                            if (isImportingTerminated) break;
+                            undo();
+                            System.out.println("undo!");
                             break;
-                        }
-                        if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
-                            motionAction = randomGen(0, 2);
-                        }
-                        if (motionAction == 1) {
-                            if (pathImportingOneStep) {
-                                pathImportingOneStep = false;
-                                // 完成导入一步，重置变量
-                                if (pathRollback) {
-                                    if (undo(true)) {
-                                        ++pathImportingLastStepCount;
-                                    }
-                                    Log.i("fdb-test", "导入完未完成的那一步之后撤回");
-                                    if (progressCallback != null) {
-                                        progressCallback.progress((float) read / (float) length, null, 0, 0);
-                                    }
-                                    pathRollback = false;
-                                    drawingInterval = originalDrawingInterval;
-                                    pathRollBackAndFinishOneStep = false;
-                                    // 这是“上一步”的处理，导入完未完成的那一步之后撤回
-                                }
-                                isPathImportingOneStepFinished = true;
+                        case 2:
+                            if (isImportingTerminated) break;
+                            redo();
+                            System.out.println("redo!");
+                            break;
+                        default:
+                            System.arraycopy(bytes, 0, bytes_4, 0, 4);
+                            x = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                            System.arraycopy(bytes, 4, bytes_4, 0, 4);
+                            y = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                            System.arraycopy(bytes, 8, bytes_4, 0, 4);
+                            color = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
+                            System.arraycopy(bytes, 12, bytes_4, 0, 4);
+                            strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                            System.arraycopy(bytes, 16, bytes_4, 0, 4);
+                            int motionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
+                            System.arraycopy(bytes, 20, bytes_4, 0, 4);
+                            float eraserStrokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes_4, 0);
+                            if (isImportingTerminated) {
+                                onTouchAction(MotionEvent.ACTION_UP, x, y);
+                                break;
                             }
-                        }
-                        if (motionAction == 0) {
-                            isPathImportingOneStepFinished = false;
-                        }
-                        if (strokeWidth <= 0) {
-                            strokeWidth = randomGen(1, 800);
-                        }
-                        if (eraserStrokeWidth <= 0) {
-                            eraserStrokeWidth = randomGen(1, 800);
-                        }
-                        setEraserMode(bytes[24] == 1);
-                        setEraserStrokeWidth(eraserStrokeWidth);
-                        setDrawingColor(color, true);
-                        setDrawingStrokeWidth(strokeWidth);
-                        onTouchAction(motionAction, x, y);
-                        if (progressCallback != null) {
-                            progressCallback.progress((float) read / (float) length, null, 0, 0);
-                        }
-                        break;
+                            if (motionAction != 0 && motionAction != 1 && motionAction != 2) {
+                                motionAction = randomGen(0, 2);
+                            }
+                            if (motionAction == 1) {
+                                if (pathImportingOneStep) {
+                                    pathImportingOneStep = false;
+                                    // 完成导入一步，重置变量
+                                    if (pathRollback) {
+                                        if (undo(true)) {
+                                            ++pathImportingLastStepCount;
+                                        }
+                                        Log.i("fdb-test", "导入完未完成的那一步之后撤回");
+                                        if (progressCallback != null) {
+                                            progressCallback.progress((float) read / (float) length, null, 0, 0);
+                                        }
+                                        pathRollback = false;
+                                        drawingInterval = originalDrawingInterval;
+                                        pathRollBackAndFinishOneStep = false;
+                                        // 这是“上一步”的处理，导入完未完成的那一步之后撤回
+                                    }
+                                    isPathImportingOneStepFinished = true;
+                                }
+                            }
+                            if (motionAction == 0) {
+                                isPathImportingOneStepFinished = false;
+                            }
+                            if (strokeWidth <= 0) {
+                                strokeWidth = randomGen(1, 800);
+                            }
+                            if (eraserStrokeWidth <= 0) {
+                                eraserStrokeWidth = randomGen(1, 800);
+                            }
+                            setEraserMode(bytes[24] == 1);
+                            setEraserStrokeWidth(eraserStrokeWidth);
+                            setDrawingColor(color, true);
+                            setDrawingStrokeWidth(strokeWidth);
+                            onTouchAction(motionAction, x, y);
+                            if (progressCallback != null) {
+                                progressCallback.progress((float) read / (float) length, null, 0, 0);
+                            }
+                            break;
+                    }
+                    if (bytes[25] == 1 || bytes[25] == 2) {
+                        lastMotionAction = -1;
+                    } else {
+                        lastMotionAction = JNI.FloatingBoard.byteArrayToInt(bytes_4, 0);
+                    }
                 }
-            }
-            // 已经执行过is.read(bytes)了
-            Log.i("fdb-test", "hasImportReleased：" + hasImportReleased);
-            if (!hasImportReleased && !(pathImportingLastStepCount > 0 && !pathRollback) && pathImportPaused) {
-                hasImportReleased = true;
-                Log.i("fdb-test", "已放行过导入");
             }
             Log.i("fdb-test", "导入放行终止后的暂停中断");
             while (pathImportPaused && !isImportingTerminated && !(pathImportingOneStep || pathRollback)) {
@@ -926,7 +927,7 @@ public class PaintView extends BaseView {
                     e.printStackTrace();
                 }
                 // 防止jni崩溃。。不知道为什么会这样
-            };
+            }
         }
 
         is.close();
@@ -954,10 +955,12 @@ public class PaintView extends BaseView {
         x = -1;
         y = -1;
 
-        boolean hasImportReleased = false;
+        boolean stepImportMark = false; // 已经因为两个up判断，指针移动过了，直接短路导入指针移动逻辑
+        int lastActionMark = -1;
         // 完成现有对步进导入的处理
-        while ((pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || is.read(bytes) != -1) {
-            Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
+        while (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || is.read(bytes) != -1) {
+            Log.i("fdb-test", "短路导入判断:" + (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep)));
+            stepImportMark = false;
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
                 try {
@@ -1007,12 +1010,6 @@ public class PaintView extends BaseView {
                         }
                         // 防止jni崩溃。。不知道为什么会这样
                     }
-                    if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
-                        is.read(bytes);
-                        hasImportReleased = false;
-                        Log.i("fdb-test", "原导入短路，完成全部临时撤回列表恢复后,指针后移一位");
-                        // 原导入短路，完成全部临时撤回列表恢复后，指针后移一位
-                    }
                 }
             }
             if (isImportingTerminated) {
@@ -1027,66 +1024,66 @@ public class PaintView extends BaseView {
                 // 仅在无因点击“上一步”而撤回的步骤或第一次点击“上一步”（或“上一步”撤回的步骤导入完成后）把剩余未完成的一步导入完 时，进行正常的导入操作
                 lastP1 = p1;
                 p1 = JNI.FloatingBoard.byteArrayToInt(bytes, 0);
-                switch (p1) {
-                    case 4:
-                        undo();
-                        break;
-                    case 5:
-                        redo();
-                        break;
-                    case 1:
-                    case 2:
-                        strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
-                        color = JNI.FloatingBoard.byteArrayToInt(bytes, 8);
-                        setEraserMode(p1 == 2);
-                        if (eraserMode) {
-                            setEraserStrokeWidth(strokeWidth);
-                        } else {
-                            setDrawingStrokeWidth(strokeWidth);
-                            setDrawingColor(color, true);
-                        }
-                        break;
-                    case 3:
-                        if (x != -1 && y != -1) {
-                            onTouchAction(MotionEvent.ACTION_UP, x, y);
-                            if (pathImportingOneStep) {
-                                pathImportingOneStep = false;
-                                // 完成导入一步，重置变量
-                                if (pathRollback) {
-                                    if (undo(true)) {
-                                        ++pathImportingLastStepCount;
-                                    }
-                                    ;
-                                    Log.i("fdb-test", "导入完未完成的那一步之后撤回");
-                                    if (progressCallback != null) {
-                                        progressCallback.progress((float) read / (float) length, null, 0, 0);
-                                    }
-                                    pathRollback = false;
-                                    drawingInterval = originalDrawingInterval;
-                                    pathRollBackAndFinishOneStep = false;
-                                    // 这是“上一步”的处理，导入完未完成的那一步之后撤回
-                                }
+                if (lastActionMark == 3 && x != -1 && y != -1 && p1 == 3) {
+                    is.read(bytes);
+                    stepImportMark = true;
+                    Log.i("fdb-test", "两个up，指针后移");
+                } else {
+                    switch (p1) {
+                        case 4:
+                            undo();
+                            break;
+                        case 5:
+                            redo();
+                            break;
+                        case 1:
+                        case 2:
+                            strokeWidth = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
+                            color = JNI.FloatingBoard.byteArrayToInt(bytes, 8);
+                            setEraserMode(p1 == 2);
+                            if (eraserMode) {
+                                setEraserStrokeWidth(strokeWidth);
+                            } else {
+                                setDrawingStrokeWidth(strokeWidth);
+                                setDrawingColor(color, true);
                             }
-                        }
-                        isPathImportingOneStepFinished = true;
-                        break;
-                    case 0:
-                        x = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
-                        y = JNI.FloatingBoard.byteArrayToFloat(bytes, 8);
-                        if (lastP1 == 1 || lastP1 == 2) {
-                            onTouchAction(MotionEvent.ACTION_DOWN, x, y);
-                            isPathImportingOneStepFinished = false;
-                        }
-                        onTouchAction(MotionEvent.ACTION_MOVE, x, y);
-                        break;
-                    default:
-                        break;
-                }
-                // 已经执行过is.read(bytes)了
-                Log.i("fdb-test", "hasImportReleased：" + hasImportReleased);
-                if (!hasImportReleased && !(pathImportingLastStepCount > 0 && !pathRollback) && pathImportPaused) {
-                    hasImportReleased = true;
-                    Log.i("fdb-test", "已放行过导入");
+                            break;
+                        case 3:
+                            if (x != -1 && y != -1) {
+                                onTouchAction(MotionEvent.ACTION_UP, x, y);
+                                if (pathImportingOneStep) {
+                                    pathImportingOneStep = false;
+                                    // 完成导入一步，重置变量
+                                    if (pathRollback) {
+                                        if (undo(true)) {
+                                            ++pathImportingLastStepCount;
+                                        }
+                                        Log.i("fdb-test", "导入完未完成的那一步之后撤回");
+                                        if (progressCallback != null) {
+                                            progressCallback.progress((float) read / (float) length, null, 0, 0);
+                                        }
+                                        pathRollback = false;
+                                        drawingInterval = originalDrawingInterval;
+                                        pathRollBackAndFinishOneStep = false;
+                                        // 这是“上一步”的处理，导入完未完成的那一步之后撤回
+                                    }
+                                }
+                                isPathImportingOneStepFinished = true;
+                            }
+                            break;
+                        case 0:
+                            x = JNI.FloatingBoard.byteArrayToFloat(bytes, 4);
+                            y = JNI.FloatingBoard.byteArrayToFloat(bytes, 8);
+                            if (lastP1 == 1 || lastP1 == 2) {
+                                onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                                isPathImportingOneStepFinished = false;
+                            }
+                            onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                            break;
+                        default:
+                            break;
+                    }
+                    lastActionMark = p1;
                 }
             }
             read += 12;
@@ -1122,15 +1119,16 @@ public class PaintView extends BaseView {
         // skip the header
         Assertion.doAssertion(is.skip(12) == 12);
         long totalReadSize = 0L;
-        int readSize;
         long length = f.length();
         float x, y, strokeWidth;
         int color;
         byte[] buffer = new byte[9];
-        boolean hasImportReleased = false;
+        boolean stepImportMark = false; // 已经因为两个up判断，指针移动过了，直接短路导入指针移动逻辑
+        int lastActionMark = -1;
         // 完成现有对步进导入的处理
-        while ((pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || ((readSize = reader.read(buffer)) != -1 && readSize == 9)) {
-            Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
+        while (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || reader.read(buffer) == 9) {
+            Log.i("fdb-test", "短路导入判断:" + (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep)));
+            stepImportMark = false;
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
                 // 暂停自旋
@@ -1179,12 +1177,6 @@ public class PaintView extends BaseView {
                         }
                         // 防止jni崩溃。。不知道为什么会这样
                     }
-                    if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
-                        readSize = reader.read(buffer);
-                        hasImportReleased = false;
-                        Log.i("fdb-test", "原导入短路，完成全部临时撤回列表恢复后,指针后移一位");
-                        // 原导入短路，完成全部临时撤回列表恢复后，指针后移一位
-                    }
                 }
             }
             if (isImportingTerminated) {
@@ -1197,64 +1189,65 @@ public class PaintView extends BaseView {
             }
             if (pathImportingLastStepCount == 0 || (pathRollback && pathImportingOneStep)) {
                 // 仅在无因点击“上一步”而撤回的步骤或第一次点击“上一步”（或“上一步”撤回的步骤导入完成后）把剩余未完成的一步导入完 时，进行正常的导入操作
-                switch (buffer[0]) {
-                    case (byte) 0xA1:
-                    case (byte) 0xA2:
-                        strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
-                        color = JNI.FloatingBoard.byteArrayToInt(buffer, 5);
-                        setEraserMode(buffer[0] == (byte) 0xA2);
-                        mPaintRef.setColor(color);
-                        mPaintRef.setStrokeWidth(strokeWidth);
-                        break;
-                    case (byte) 0xB1:
-                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
-                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5);
-                        onTouchAction(MotionEvent.ACTION_DOWN, x, y);
-                        isPathImportingOneStepFinished = false;
-                        Log.i("fdb-test", "down");
-                        break;
-                    case (byte) 0xB3:
-                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
-                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5);
-                        onTouchAction(MotionEvent.ACTION_MOVE, x, y);
-                        Log.i("fdb-test", "move");
-                        break;
-                    case (byte) 0xB2:
-                        x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
-                        y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5);
-                        onTouchAction(MotionEvent.ACTION_UP, x, y);
-                        if (pathImportingOneStep) {
-                            pathImportingOneStep = false;
-                            // 完成导入一步，重置变量
-                            if (pathRollback) {
-                                if (undo(true)) {
-                                    ++pathImportingLastStepCount;
+                if (lastActionMark == 0xB2 && buffer[0] == 0xB2) {
+                    reader.read(buffer);
+                    stepImportMark = true;
+                    Log.i("fdb-test", "两个up，指针后移");
+                } else {
+                    switch (buffer[0]) {
+                        case (byte) 0xA1:
+                        case (byte) 0xA2:
+                            strokeWidth = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
+                            color = JNI.FloatingBoard.byteArrayToInt(buffer, 5);
+                            setEraserMode(buffer[0] == (byte) 0xA2);
+                            mPaintRef.setColor(color);
+                            mPaintRef.setStrokeWidth(strokeWidth);
+                            break;
+                        case (byte) 0xB1:
+                            x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
+                            y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5);
+                            onTouchAction(MotionEvent.ACTION_DOWN, x, y);
+                            isPathImportingOneStepFinished = false;
+                            Log.i("fdb-test", "down");
+                            break;
+                        case (byte) 0xB3:
+                            x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
+                            y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5);
+                            onTouchAction(MotionEvent.ACTION_MOVE, x, y);
+                            Log.i("fdb-test", "move");
+                            break;
+                        case (byte) 0xB2:
+                            x = JNI.FloatingBoard.byteArrayToFloat(buffer, 1);
+                            y = JNI.FloatingBoard.byteArrayToFloat(buffer, 5);
+                            onTouchAction(MotionEvent.ACTION_UP, x, y);
+                            if (pathImportingOneStep) {
+                                pathImportingOneStep = false;
+                                // 完成导入一步，重置变量
+                                if (pathRollback) {
+                                    if (undo(true)) {
+                                        ++pathImportingLastStepCount;
+                                    }
+                                    Log.i("fdb-test", "导入完未完成的那一步之后撤回");
+                                    pathRollback = false;
+                                    drawingInterval = originalDrawingInterval;
+                                    pathRollBackAndFinishOneStep = false;
+                                    // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                                 }
-                                Log.i("fdb-test", "导入完未完成的那一步之后撤回");
-                                pathRollback = false;
-                                drawingInterval = originalDrawingInterval;
-                                pathRollBackAndFinishOneStep = false;
-                                // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                             }
-                        }
-                        isPathImportingOneStepFinished = true;
-                        Log.i("fdb-test", "up后，一步导入结束");
-                        break;
-                    case (byte) 0xC1:
-                        undo();
-                        break;
-                    case (byte) 0xC2:
-                        redo();
-                        break;
-                    default:
-                        break;
+                            isPathImportingOneStepFinished = true;
+                            Log.i("fdb-test", "up后，一步导入结束");
+                            break;
+                        case (byte) 0xC1:
+                            undo();
+                            break;
+                        case (byte) 0xC2:
+                            redo();
+                            break;
+                        default:
+                            break;
+                    }
+                    lastActionMark = buffer[0];
                 }
-            }
-            // 已经执行过readSize = reader.read(buffer)了
-            Log.i("fdb-test", "hasImportReleased：" + hasImportReleased);
-            if (!hasImportReleased && !(pathImportingLastStepCount > 0 && !pathRollback) && pathImportPaused) {
-                hasImportReleased = true;
-                Log.i("fdb-test", "已放行过导入");
             }
             totalReadSize += buffer.length;
             if (progressCallback != null) {
@@ -1337,11 +1330,13 @@ public class PaintView extends BaseView {
         Statement statement = db.compileStatement("SELECT mark, p1, p2\n" +
                 "FROM path");
 
-        boolean hasImportReleased = false;
+        boolean stepImportMark = false; // 已经因为两个up判断，指针移动过了，直接短路导入指针移动逻辑
+        int lastActionMark = -1;
         Cursor cursor = statement.getCursor();
         int c = 0;
-        while ((pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || cursor.step()) {
-            Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
+        while (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || cursor.step()) {
+            Log.i("fdb-test", "短路导入判断:" + (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep)));
+            stepImportMark = false;
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
                 try {
@@ -1391,12 +1386,6 @@ public class PaintView extends BaseView {
                         }
                         // 防止jni崩溃。。不知道为什么会这样
                     }
-                    if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
-                        cursor.step();
-                        hasImportReleased = false;
-                        Log.i("fdb-test", "原导入短路，完成全部临时撤回列表恢复后,指针后移一位");
-                        // 原导入短路，完成全部临时撤回列表恢复后，指针后移一位
-                    }
                 }
             }
             if (isImportingTerminated) {
@@ -1413,79 +1402,79 @@ public class PaintView extends BaseView {
             if (pathImportingLastStepCount == 0 || (pathRollback && pathImportingOneStep)) {
                 // 仅在无因点击“上一步”而撤回的步骤或第一次点击“上一步”（或“上一步”撤回的步骤导入完成后）把剩余未完成的一步导入完 时，进行正常的导入操作
                 int mark = cursor.getInt(0);
-
-                switch (mark) {
-                    case 0x01:
-                        setDrawingColor(cursor.getInt(1), true);
-                        setDrawingStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
-                        setEraserMode(false);
-                        break;
-                    case 0x02:
-                    case 0x12:
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_DOWN,
-                                cursor.getFloat(1),
-                                cursor.getFloat(2),
-                                transformationValue
-                        );
-                        isPathImportingOneStepFinished = false;
-                        Log.i("fdb-test", "down");
-                        break;
-                    case 0x03:
-                    case 0x13:
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_MOVE,
-                                cursor.getFloat(1),
-                                cursor.getFloat(2),
-                                transformationValue
-                        );
-                        Log.i("fdb-test", "move");
-                        break;
-                    case 0x04:
-                    case 0x14:
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_UP,
-                                cursor.getFloat(1),
-                                cursor.getFloat(2),
-                                transformationValue
-                        );
-                        Log.i("fdb-test", "up");
-                        if (pathImportingOneStep) {
-                            pathImportingOneStep = false;
-                            // 完成导入一步，重置变量
-                            if (pathRollback) {
-                                if (undo(true)) {
-                                    ++pathImportingLastStepCount;
+                if ((lastActionMark == 0x04 || lastActionMark == 0x14) && (mark == 0x04 || mark == 0x14)) {
+                    cursor.step();
+                    stepImportMark = true;
+                    Log.i("fdb-test", "两个up，指针后移");
+                } else {
+                    switch (mark) {
+                        case 0x01:
+                            setDrawingColor(cursor.getInt(1), true);
+                            setDrawingStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
+                            setEraserMode(false);
+                            break;
+                        case 0x02:
+                        case 0x12:
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_DOWN,
+                                    cursor.getFloat(1),
+                                    cursor.getFloat(2),
+                                    transformationValue
+                            );
+                            isPathImportingOneStepFinished = false;
+                            Log.i("fdb-test", "down");
+                            break;
+                        case 0x03:
+                        case 0x13:
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_MOVE,
+                                    cursor.getFloat(1),
+                                    cursor.getFloat(2),
+                                    transformationValue
+                            );
+                            Log.i("fdb-test", "move");
+                            break;
+                        case 0x04:
+                        case 0x14:
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_UP,
+                                    cursor.getFloat(1),
+                                    cursor.getFloat(2),
+                                    transformationValue
+                            );
+                            Log.i("fdb-test", "up");
+                            if (pathImportingOneStep) {
+                                pathImportingOneStep = false;
+                                // 完成导入一步，重置变量
+                                if (pathRollback) {
+                                    if (undo(true)) {
+                                        ++pathImportingLastStepCount;
+                                    }
+                                    --c;
+                                    Log.i("fdb-test", "导入完未完成的那一步之后撤回");
+                                    progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
+                                    pathRollback = false;
+                                    drawingInterval = originalDrawingInterval;
+                                    pathRollBackAndFinishOneStep = false;
+                                    // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                                 }
-                                --c;
-                                Log.i("fdb-test", "导入完未完成的那一步之后撤回");
-                                progressCallback.progress((float) c / (float) recordNum, null, 0, 0);
-                                pathRollback = false;
-                                drawingInterval = originalDrawingInterval;
-                                pathRollBackAndFinishOneStep = false;
-                                // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                             }
-                        }
-                        isPathImportingOneStepFinished = true;
-                        break;
-                    case 0x11:
-                        setEraserMode(true);
-                        setEraserAlpha(cursor.getInt(1));
-                        setEraserStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
-                        break;
-                    case 0x20:
-                        undo();
-                        break;
-                    case 0x30:
-                        redo();
-                        break;
-                    default:
-                }
-                // 已经执行过cursor.step()了
-                Log.i("fdb-test", "hasImportReleased：" + hasImportReleased);
-                if (!hasImportReleased && !(pathImportingLastStepCount > 0 && !pathRollback) && pathImportPaused) {
-                    hasImportReleased = true;
-                    Log.i("fdb-test", "已放行过导入");
+                            isPathImportingOneStepFinished = true;
+                            break;
+                        case 0x11:
+                            setEraserMode(true);
+                            setEraserAlpha(cursor.getInt(1));
+                            setEraserStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
+                            break;
+                        case 0x20:
+                            undo();
+                            break;
+                        case 0x30:
+                            redo();
+                            break;
+                        default:
+                    }
+                    lastActionMark = mark;
                 }
             }
             ++c;
@@ -1673,9 +1662,12 @@ public class PaintView extends BaseView {
         final Cursor cursor = statement.getCursor();
         int originalDrawingInterval = drawingInterval;
         int c = 0;
-        boolean hasImportReleased = false;
+        int lastActionMark = -1;
+        boolean stepImportMark = false; // 已经因为两个up判断，指针移动过了，直接短路导入指针移动逻辑
         // 完成现有对步进导入的处理
-        while ((pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || cursor.step()) {
+        while (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || cursor.step()) {
+            Log.i("fdb-test", "短路导入判断:" + (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep)));
+            stepImportMark = false;
             // noinspection StatementWithEmptyBody
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
                 try {
@@ -1684,7 +1676,6 @@ public class PaintView extends BaseView {
                     e.printStackTrace();
                 }
                 // 防止jni崩溃。。不知道为什么会这样
-                Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
                 if (pathRollback && !isPathImportingOneStepFinished) {
                     pathImportingOneStep = true;
                     originalDrawingInterval = drawingInterval;
@@ -1727,12 +1718,6 @@ public class PaintView extends BaseView {
                         }
                         // 防止jni崩溃。。不知道为什么会这样
                     }
-                    if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
-                        cursor.step();
-                        hasImportReleased = false;
-                        Log.i("fdb-test", "原导入短路，完成全部临时撤回列表恢复后,指针后移一位");
-                        // 原导入短路，完成全部临时撤回列表恢复后，指针后移一位
-                    }
                 }
             }
             if (isImportingTerminated) {
@@ -1749,79 +1734,79 @@ public class PaintView extends BaseView {
             if (pathImportingLastStepCount == 0 || (pathRollback && pathImportingOneStep)) {
                 // 仅在无因点击“上一步”而撤回的步骤或第一次点击“上一步”（或“上一步”撤回的步骤导入完成后）把剩余未完成的一步导入完 时，进行正常的导入操作
                 int mark = cursor.getInt(0);
-
-                switch (mark) {
-                    case 0x01:
-                        setDrawingColor(cursor.getInt(1), true);
-                        setDrawingStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
-                        setEraserMode(false);
-                        break;
-                    case 0x02:
-                    case 0x12:
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_DOWN,
-                                cursor.getFloat(1),
-                                cursor.getFloat(2),
-                                transformationValue
-                        );
-                        isPathImportingOneStepFinished = false;
-                        Log.i("fdb-test", "down");
-                        break;
-                    case 0x03:
-                    case 0x13:
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_MOVE,
-                                cursor.getFloat(1),
-                                cursor.getFloat(2),
-                                transformationValue
-                        );
-                        Log.i("fdb-test", "move");
-                        break;
-                    case 0x04:
-                    case 0x14:
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_UP,
-                                cursor.getFloat(1),
-                                cursor.getFloat(2),
-                                transformationValue
-                        );
-                        Log.i("fdb-test", "up");
-                        if (pathImportingOneStep) {
-                            pathImportingOneStep = false;
-                            // 完成导入一步，重置变量
-                            if (pathRollback) {
-                                if (undo(true)) {
-                                    ++pathImportingLastStepCount;
+                if ((lastActionMark == 0x04 || lastActionMark == 0x14) && (mark == 0x04 || mark == 0x14)) {
+                    cursor.step();
+                    stepImportMark = true;
+                    Log.i("fdb-test", "两个up，指针后移");
+                } else {
+                    switch (mark) {
+                        case 0x01:
+                            setDrawingColor(cursor.getInt(1), true);
+                            setDrawingStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
+                            setEraserMode(false);
+                            break;
+                        case 0x02:
+                        case 0x12:
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_DOWN,
+                                    cursor.getFloat(1),
+                                    cursor.getFloat(2),
+                                    transformationValue
+                            );
+                            isPathImportingOneStepFinished = false;
+                            Log.i("fdb-test", "down");
+                            break;
+                        case 0x03:
+                        case 0x13:
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_MOVE,
+                                    cursor.getFloat(1),
+                                    cursor.getFloat(2),
+                                    transformationValue
+                            );
+                            Log.i("fdb-test", "move");
+                            break;
+                        case 0x04:
+                        case 0x14:
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_UP,
+                                    cursor.getFloat(1),
+                                    cursor.getFloat(2),
+                                    transformationValue
+                            );
+                            Log.i("fdb-test", "up");
+                            if (pathImportingOneStep) {
+                                pathImportingOneStep = false;
+                                // 完成导入一步，重置变量
+                                if (pathRollback) {
+                                    if (undo(true)) {
+                                        ++pathImportingLastStepCount;
+                                    }
+                                    Log.i("fdb-test", "导入完未完成的那一步之后撤回");
+                                    --c;
+                                    progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
+                                    pathRollback = false;
+                                    drawingInterval = originalDrawingInterval;
+                                    pathRollBackAndFinishOneStep = false;
+                                    // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                                 }
-                                Log.i("fdb-test", "导入完未完成的那一步之后撤回");
-                                --c;
-                                progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
-                                pathRollback = false;
-                                drawingInterval = originalDrawingInterval;
-                                pathRollBackAndFinishOneStep = false;
-                                // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                             }
-                        }
-                        isPathImportingOneStepFinished = true;
-                        break;
-                    case 0x11:
-                        setEraserMode(true);
-                        setEraserAlpha(cursor.getInt(1));
-                        setEraserStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
-                        break;
-                    case 0x20:
-                        undo();
-                        break;
-                    case 0x30:
-                        redo();
-                        break;
-                    default:
-                }
-                // 已经执行过cursor.step()了
-                Log.i("fdb-test", "hasImportReleased：" + hasImportReleased);
-                if (!hasImportReleased && !(pathImportingLastStepCount > 0 && !pathRollback) && pathImportPaused) {
-                    hasImportReleased = true;
-                    Log.i("fdb-test", "已放行过导入");
+                            isPathImportingOneStepFinished = true;
+                            break;
+                        case 0x11:
+                            setEraserMode(true);
+                            setEraserAlpha(cursor.getInt(1));
+                            setEraserStrokeWidth(cursor.getFloat(2) * defaultTransformationScale / canvasScale);
+                            break;
+                        case 0x20:
+                            undo();
+                            break;
+                        case 0x30:
+                            redo();
+                            break;
+                        default:
+                    }
+                    lastActionMark = mark;
                 }
             }
             ++c;
@@ -1859,11 +1844,13 @@ public class PaintView extends BaseView {
         final Cursor cursor = statement.getCursor();
         int originalDrawingInterval = drawingInterval;
         int c = 0;
-        boolean hasImportReleased = false;
+        int lastActionMark = -1;
+        boolean stepImportMark = false; // 已经因为两个up判断，指针移动过了，直接短路导入指针移动逻辑
         // 完成现有对步进导入的处理
-        while ((pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || cursor.step()) {
+        while (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep) || cursor.step()) {
             // noinspection StatementWithEmptyBody
-            Log.i("fdb-test", "短路导入判断:" + (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep));
+            stepImportMark = false;
+            Log.i("fdb-test", "短路导入判断:" + (stepImportMark || (pathImportingLastStepCount > 0 && !pathRollBackAndFinishOneStep)));
             while (pathImportPaused && !isImportingTerminated && !pathImportingOneStep) {
                 try {
                     Thread.sleep(1);
@@ -1912,12 +1899,6 @@ public class PaintView extends BaseView {
                         }
                         // 防止jni崩溃。。不知道为什么会这样
                     }
-                    if (pathImportingLastStepCount == 0 && !pathRollback && hasImportReleased) {
-                        cursor.step();
-                        hasImportReleased = false;
-                        Log.i("fdb-test", "原导入短路，完成全部临时撤回列表恢复后,指针后移一位");
-                        // 原导入短路，完成全部临时撤回列表恢复后，指针后移一位
-                    }
                 }
             }
             if (isImportingTerminated) {
@@ -1934,102 +1915,102 @@ public class PaintView extends BaseView {
             if (pathImportingLastStepCount == 0 || (pathRollback && pathImportingOneStep)) {
                 // 仅在无因点击“上一步”而撤回的步骤或第一次点击“上一步”（或“上一步”撤回的步骤导入完成后）把剩余未完成的一步导入完 时，进行正常的导入操作
                 int mark = cursor.getInt(0);
+                if ((lastActionMark == 0x13 || lastActionMark == 0x03) && (mark == 0x13 || mark == 0x03)) {
+                    cursor.step();
+                    stepImportMark = true;
+                    Log.i("fdb-test", "两个up，指针后移");
+                } else {
+                    switch (mark) {
+                        case 0x02:
+                        case 0x12:
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_MOVE,
+                                    cursor.getFloat(2),
+                                    cursor.getFloat(3),
+                                    transformationValue
+                            );
+                            Log.i("fdb-test", "move");
+                            break;
+                        case 0x01:
+                            // TODO: 8/16/21 optimize (byte array allocation, unpack value in machine byte order)
+                            final byte[] info = cursor.getBlob(1);
+                            int color = pers.zhc.jni.JNI.Struct.unpackInt(info, 0, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                            float width = pers.zhc.jni.JNI.Struct.unpackFloat(info, 4, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                            float blurRadius = pers.zhc.jni.JNI.Struct.unpackFloat(info, 8, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                            setDrawingColor(color, true);
 
-                switch (mark) {
-                    case 0x02:
-                    case 0x12:
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_MOVE,
-                                cursor.getFloat(2),
-                                cursor.getFloat(3),
-                                transformationValue
-                        );
-                        Log.i("fdb-test", "move");
-                        break;
-                    case 0x01:
-                        // TODO: 8/16/21 optimize (byte array allocation, unpack value in machine byte order)
-                        final byte[] info = cursor.getBlob(1);
-                        int color = pers.zhc.jni.JNI.Struct.unpackInt(info, 0, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
-                        float width = pers.zhc.jni.JNI.Struct.unpackFloat(info, 4, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
-                        float blurRadius = pers.zhc.jni.JNI.Struct.unpackFloat(info, 8, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
-                        setDrawingColor(color, true);
+                            final float drawingStrokeWidth = width * defaultTransformationScale / canvasScale;
+                            setDrawingStrokeWidth(drawingStrokeWidth);
 
-                        final float drawingStrokeWidth = width * defaultTransformationScale / canvasScale;
-                        setDrawingStrokeWidth(drawingStrokeWidth);
+                            setStrokeHardness(toStrokeHardness(drawingStrokeWidth, blurRadius * defaultTransformationScale / canvasScale));
 
-                        setStrokeHardness(toStrokeHardness(drawingStrokeWidth, blurRadius * defaultTransformationScale / canvasScale));
+                            setEraserMode(false);
 
-                        setEraserMode(false);
+                            Log.i("fdb-test", "down");
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_DOWN,
+                                    cursor.getFloat(2),
+                                    cursor.getFloat(3),
+                                    transformationValue
+                            );
+                            isPathImportingOneStepFinished = false;
+                            break;
+                        case 0x11:
+                            final byte[] info2 = cursor.getBlob(1);
+                            int color2 = pers.zhc.jni.JNI.Struct.unpackInt(info2, 0, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                            float width2 = pers.zhc.jni.JNI.Struct.unpackFloat(info2, 4, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                            float blurRadius2 = pers.zhc.jni.JNI.Struct.unpackFloat(info2, 8, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
 
-                        Log.i("fdb-test", "down");
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_DOWN,
-                                cursor.getFloat(2),
-                                cursor.getFloat(3),
-                                transformationValue
-                        );
-                        isPathImportingOneStepFinished = false;
-                        break;
-                    case 0x11:
-                        final byte[] info2 = cursor.getBlob(1);
-                        int color2 = pers.zhc.jni.JNI.Struct.unpackInt(info2, 0, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
-                        float width2 = pers.zhc.jni.JNI.Struct.unpackFloat(info2, 4, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
-                        float blurRadius2 = pers.zhc.jni.JNI.Struct.unpackFloat(info2, 8, pers.zhc.jni.JNI.Struct.MODE_LITTLE_ENDIAN);
+                            setEraserMode(true);
+                            setEraserAlpha(color2);
+                            float eraserStrokeWidth = width2 * defaultTransformationScale / canvasScale;
+                            setEraserStrokeWidth(eraserStrokeWidth);
+                            setEraserHardness(toStrokeHardness(eraserStrokeWidth, blurRadius2 * defaultTransformationScale / canvasScale));
 
-                        setEraserMode(true);
-                        setEraserAlpha(color2);
-                        float eraserStrokeWidth = width2 * defaultTransformationScale / canvasScale;
-                        setEraserStrokeWidth(eraserStrokeWidth);
-                        setEraserHardness(toStrokeHardness(eraserStrokeWidth, blurRadius2 * defaultTransformationScale / canvasScale));
-
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_DOWN,
-                                cursor.getFloat(2),
-                                cursor.getFloat(3),
-                                transformationValue
-                        );
-                        isPathImportingOneStepFinished = false;
-                        break;
-                    case 0x03:
-                    case 0x13:
-                        transformedOnTouchAction(
-                                MotionEvent.ACTION_UP,
-                                cursor.getFloat(2),
-                                cursor.getFloat(3),
-                                transformationValue
-                        );
-                        Log.i("fdb-test", "up");
-                        if (pathImportingOneStep) {
-                            pathImportingOneStep = false;
-                            // 完成导入一步，重置变量
-                            if (pathRollback) {
-                                if (undo(true)) {
-                                    ++pathImportingLastStepCount;
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_DOWN,
+                                    cursor.getFloat(2),
+                                    cursor.getFloat(3),
+                                    transformationValue
+                            );
+                            isPathImportingOneStepFinished = false;
+                            break;
+                        case 0x03:
+                        case 0x13:
+                            transformedOnTouchAction(
+                                    MotionEvent.ACTION_UP,
+                                    cursor.getFloat(2),
+                                    cursor.getFloat(3),
+                                    transformationValue
+                            );
+                            Log.i("fdb-test", "up");
+                            if (pathImportingOneStep) {
+                                pathImportingOneStep = false;
+                                // 完成导入一步，重置变量
+                                if (pathRollback) {
+                                    if (undo(true)) {
+                                        ++pathImportingLastStepCount;
+                                    }
+                                    --c;
+                                    Log.i("fdb-test", "导入完未完成的那一步之后撤回");
+                                    progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
+                                    pathRollback = false;
+                                    drawingInterval = originalDrawingInterval;
+                                    pathRollBackAndFinishOneStep = false;
+                                    // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                                 }
-                                --c;
-                                Log.i("fdb-test", "导入完未完成的那一步之后撤回");
-                                progressCallback.progress((float) c / (float) rowCount, layerInfo.getName(), layerNumber, layerCount);
-                                pathRollback = false;
-                                drawingInterval = originalDrawingInterval;
-                                pathRollBackAndFinishOneStep = false;
-                                // 这是“上一步”的处理，导入完未完成的那一步之后撤回
                             }
-                        }
-                        isPathImportingOneStepFinished = true;
-                        break;
-                    case 0x20:
-                        undo();
-                        break;
-                    case 0x30:
-                        redo();
-                        break;
-                    default:
-                }
-                // 已经执行过cursor.step()了
-                Log.i("fdb-test", "hasImportReleased：" + hasImportReleased);
-                if (!hasImportReleased && !(pathImportingLastStepCount > 0 && !pathRollback) && pathImportPaused) {
-                    hasImportReleased = true;
-                    Log.i("fdb-test", "已放行过导入");
+                            isPathImportingOneStepFinished = true;
+                            break;
+                        case 0x20:
+                            undo();
+                            break;
+                        case 0x30:
+                            redo();
+                            break;
+                        default:
+                    }
+                    lastActionMark = mark;
                 }
             }
             ++c;
