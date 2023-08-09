@@ -12,7 +12,7 @@
         android:layout_height="30dp"
         android:layout_alignStart="@id/recycler_view"
         android:layout_alignEnd="@id/recycler_view"
-        android:background="@color/grey"
+        android:background="@color/gray"
         android:src="@drawable/drag_icon"
         tools:ignore="ContentDescription"/>
     <androidx.recyclerview.widget.RecyclerView

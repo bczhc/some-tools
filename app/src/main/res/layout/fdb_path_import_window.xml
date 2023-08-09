@@ -12,7 +12,7 @@
         android:layout_height="30dp"
         android:layout_alignStart="@id/main_ll"
         android:layout_alignEnd="@id/main_ll"
-        android:background="@color/grey"
+        android:background="@color/gray"
         android:src="@drawable/drag_icon"
         tools:ignore="ContentDescription"/>
     <LinearLayout
@@ -38,7 +38,7 @@
                 android:layout_gravity="center"
                 android:indeterminate="false"
                 app:indicatorSize="20dp"
-                app:trackColor="@color/grey"
+                app:trackColor="@color/gray"
                 app:trackThickness="2dp"
                 tools:progress="50"/>
         </LinearLayout>
