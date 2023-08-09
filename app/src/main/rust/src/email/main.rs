@@ -2,6 +2,7 @@ use jni::objects::{JClass, JObjectArray, JString};
 use jni::strings::JavaStr;
 use jni::sys::jsize;
 use jni::JNIEnv;
+use lettre::message::header::ContentType;
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
 
@@ -70,7 +71,10 @@ fn run(
     for cc in cc {
         message_builder = message_builder.cc(cc.parse()?);
     }
-    let message = message_builder.subject(subject).body(body)?;
+    let message = message_builder
+        .subject(subject)
+        .header(ContentType::TEXT_PLAIN)
+        .body(body)?;
 
     let smtp_transport = SmtpTransport::relay(smtp_server.as_str())?
         .credentials(credentials)
