@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fdb_touch_pressure"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fdb_touch_pressure_tips"
+        android:textColor="@color/gray_600"/>
+    <CheckBox
+        android:id="@+id/touch_stroke_variable_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="@string/fdb_stroke_variable" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fdb_pen_pressure_coefficient" />
+            <com.google.android.material.slider.Slider
+                android:id="@+id/pressure_coefficient_sb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:valueFrom="0"
+                android:valueTo="10"
+                android:value="5"/>
+        </LinearLayout>
+    <CheckBox
+        android:id="@+id/touch_transparency_variable_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="@string/fdb_transparency_variable" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fdb_pen_pressure_coefficient" />
+        <com.google.android.material.slider.Slider
+            android:id="@+id/touch_transparency_pen_pressure_coefficient_sb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:valueFrom="0"
+            android:valueTo="10"
+            android:value="5"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fdb_hand_painted_plate_pressure"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_marginTop="25dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fdb_hand_painted_plate_pressure_tips"
+        android:textColor="@color/gray_600"/>
+    <CheckBox
+        android:id="@+id/hand_painted_plate_stroke_variable_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="@string/fdb_stroke_variable" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fdb_pen_pressure_coefficient" />
+            <com.google.android.material.slider.Slider
+                android:id="@+id/hand_painted_plate_stroke_pen_pressure_coefficient_sb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:valueFrom="0"
+                android:valueTo="10"
+                android:value="5"/>
+    </LinearLayout>
+    <CheckBox
+        android:id="@+id/hand_painted_plate_transparency_variable_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="@string/fdb_transparency_variable" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fdb_pen_pressure_coefficient" />
+        <com.google.android.material.slider.Slider
+            android:id="@+id/hand_painted_plate_transparency_pen_pressure_coefficient_sb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:valueFrom="0"
+            android:valueTo="10"
+            android:value="5"/>
+    </LinearLayout>
+</LinearLayout>

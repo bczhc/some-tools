@@ -633,6 +633,13 @@
     <string name="fdb_path_import_speed_tv">绘制间隔：%1$dµs</string>
     <string name="fdb_default_drawing_interval_et_hint">默认绘制间隔（µs）</string>
     <string name="fdb_change_drawing_speed">修改绘制间隔</string>
+    <string name="fdb_touch_pressure">触摸压感</string>
+    <string name="fdb_touch_pressure_tips">根据绘画速度改变笔刷粗细和透明度，速度快时笔画变细，透明度变高</string>
+    <string name="fdb_hand_painted_plate_pressure">数位板压感</string>
+    <string name="fdb_hand_painted_plate_pressure_tips">根据数位板压感改变笔刷粗细和透明度，压力大时笔画变粗，透明度变低</string>
+    <string name="fdb_stroke_variable">启用可变粗细</string>
+    <string name="fdb_transparency_variable">启用可变透明度</string>
+    <string name="fdb_pen_pressure_coefficient">笔压系数</string>
     <!-- module end -->
 
     <!-- module: words -->

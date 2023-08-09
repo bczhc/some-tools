@@ -395,6 +395,7 @@ class FdbWindow(private val context: Context) {
             moreMenu = createMoreOptionDialog()
             eraserOpacity = createEraserOpacityDialog()
             transformationSettings = createTransformationSettingsDialog()
+            pressureSensingSettings = createPressureSensingSettingsDialog()
         }
 
         val externalStorage = Common.getExternalStoragePath(context)
@@ -654,6 +655,7 @@ class FdbWindow(private val context: Context) {
         lateinit var moreMenu: Dialog
         lateinit var eraserOpacity: Dialog
         lateinit var transformationSettings: Dialog
+        lateinit var  pressureSensingSettings: Dialog
     }
 
     private fun createConfirmationDialog(
@@ -928,6 +930,11 @@ class FdbWindow(private val context: Context) {
                     }
 
                     6 -> {
+                        dialogs.pressureSensingSettings.show()
+
+                    }
+
+                    7 -> {
                         // hide drawing board
                         createConfirmationDialog({ _, _ ->
                             hideFDB()
@@ -935,12 +942,12 @@ class FdbWindow(private val context: Context) {
                         }, titleRes = R.string.fdb_hide_fdb_confirmation_dialog).show()
                     }
 
-                    7 -> {
+                    8 -> {
                         // drawing statistics
                         showPathStatDialog()
                     }
 
-                    8 -> {
+                    9 -> {
                         // transformation settings
                         dialogs.transformationSettings.show()
                     }
@@ -1402,6 +1409,11 @@ class FdbWindow(private val context: Context) {
             ToastUtils.show(context, R.string.reset_success_toast)
         }
 
+        return createDialog(bindings.root)
+    }
+
+    private fun createPressureSensingSettingsDialog(): Dialog {
+        val bindings = FdbPressureSensingSettingsViewBinding.inflate(LayoutInflater.from(context))
         return createDialog(bindings.root)
     }
 
