@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/fdb_pen_pressure_coefficient" />
             <com.google.android.material.slider.Slider
-                android:id="@+id/pressure_coefficient_sb"
+                android:id="@+id/touch_stroke_pen_pressure_coefficient_slider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:text="@string/fdb_pen_pressure_coefficient" />
         <com.google.android.material.slider.Slider
-            android:id="@+id/touch_transparency_pen_pressure_coefficient_sb"
+            android:id="@+id/touch_transparency_pen_pressure_coefficient_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/fdb_pen_pressure_coefficient" />
             <com.google.android.material.slider.Slider
-                android:id="@+id/hand_painted_plate_stroke_pen_pressure_coefficient_sb"
+                android:id="@+id/hand_painted_plate_stroke_pen_pressure_coefficient_slider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:text="@string/fdb_pen_pressure_coefficient" />
         <com.google.android.material.slider.Slider
-            android:id="@+id/hand_painted_plate_transparency_pen_pressure_coefficient_sb"
+            android:id="@+id/hand_painted_plate_transparency_pen_pressure_coefficient_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"

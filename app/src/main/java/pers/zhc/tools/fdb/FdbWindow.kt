@@ -655,7 +655,7 @@ class FdbWindow(private val context: Context) {
         lateinit var moreMenu: Dialog
         lateinit var eraserOpacity: Dialog
         lateinit var transformationSettings: Dialog
-        lateinit var  pressureSensingSettings: Dialog
+        lateinit var pressureSensingSettings: Dialog
     }
 
     private fun createConfirmationDialog(
@@ -1414,6 +1414,54 @@ class FdbWindow(private val context: Context) {
 
     private fun createPressureSensingSettingsDialog(): Dialog {
         val bindings = FdbPressureSensingSettingsViewBinding.inflate(LayoutInflater.from(context))
+        val touchStrokeVariableCB = bindings.touchStrokeVariableCb
+        val touchStrokePenPressureCoefficientSlider = bindings.touchStrokePenPressureCoefficientSlider
+        val touchTransparencyVariableCB = bindings.touchTransparencyVariableCb
+        val touchTransparencyPenPressureCoefficientSlider = bindings.touchTransparencyPenPressureCoefficientSlider
+        val handPaintedPlateStrokeVariableCB = bindings.handPaintedPlateStrokeVariableCb
+        val handPaintedPlateStrokePenPressureCoefficientSlider =
+            bindings.handPaintedPlateStrokePenPressureCoefficientSlider
+        val handPaintedPlateTransparencyVariableCB = bindings.handPaintedPlateTransparencyVariableCb
+        val handPaintedPlateTransparencyPenPressureCoefficientSlider =
+            bindings.handPaintedPlateTransparencyPenPressureCoefficientSlider
+        touchStrokeVariableCB.setOnCheckedChangeListener { _, isChecked ->
+            paintView.isTouchStrokeVariableEnabled = isChecked
+            paintView.touchStrokePenPressureCoefficient = touchStrokePenPressureCoefficientSlider.value
+        }
+        touchTransparencyVariableCB.setOnCheckedChangeListener { _, isChecked ->
+            paintView.isTouchTransparencyVariableEnabled = isChecked
+            paintView.touchTransparencyPenPressureCoefficient = touchTransparencyPenPressureCoefficientSlider.value
+        }
+        handPaintedPlateStrokeVariableCB.setOnCheckedChangeListener { _, isChecked ->
+            paintView.isHandPaintedPlateStrokeVariableEnabled = isChecked
+            paintView.handPaintedPlateStrokePenPressureCoefficient =
+                handPaintedPlateStrokePenPressureCoefficientSlider.value
+        }
+        handPaintedPlateTransparencyVariableCB.setOnCheckedChangeListener { _, isChecked ->
+            paintView.isHandPaintedPlateTransparencyVariableEnabled = isChecked
+            paintView.handPaintedPlateTransparencyPenPressureCoefficient =
+                handPaintedPlateTransparencyPenPressureCoefficientSlider.value
+        }
+        touchStrokePenPressureCoefficientSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                paintView.touchStrokePenPressureCoefficient = value
+            }
+        }
+        touchTransparencyPenPressureCoefficientSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                paintView.touchTransparencyPenPressureCoefficient = value
+            }
+        }
+        handPaintedPlateStrokePenPressureCoefficientSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                paintView.handPaintedPlateStrokePenPressureCoefficient = value
+            }
+        }
+        handPaintedPlateTransparencyPenPressureCoefficientSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                paintView.handPaintedPlateTransparencyPenPressureCoefficient = value
+            }
+        }
         return createDialog(bindings.root)
     }
 

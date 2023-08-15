@@ -93,7 +93,14 @@ public class PaintView extends BaseView {
     private boolean moveTransformationEnabled = true;
     private boolean zoomTransformationEnabled = true;
     private boolean rotateTransformationEnabled = false;
-
+    private boolean touchStrokeVariableEnabled = false;
+    private boolean touchTransparencyVariableEnabled = false;
+    private boolean handPaintedPlateStrokeVariableEnabled = false;
+    private boolean handPaintedPlateTransparencyVariableEnabled = false;
+    public float touchStrokePenPressureCoefficient = 0f;
+    public float touchTransparencyPenPressureCoefficient = 0f;
+    public float handPaintedPlateStrokePenPressureCoefficient = 0f;
+    public float handPaintedPlateTransparencyPenPressureCoefficient = 0f;
     private float canvasScale = 1F;
 
     private float strokeHardness = 100F;
@@ -524,13 +531,13 @@ public class PaintView extends BaseView {
                 }
 
                 if (showDrawing) {
-                    Path catchedPath = mPath;
-                    if (catchedPath != null) {//显示实时正在绘制的path轨迹
+                    Path cachedPath = mPath;
+                    if (cachedPath != null) {//显示实时正在绘制的path轨迹
                         canvas.setMatrix(canvasTransformer.getMatrix());
                         if (eraserMode) {
-                            canvas.drawPath(catchedPath, eraserPaint);
+                            canvas.drawPath(cachedPath, eraserPaint);
                         } else {
-                            canvas.drawPath(catchedPath, mPaint);
+                            canvas.drawPath(cachedPath, mPaint);
                         }
                     }
                 }
@@ -1622,6 +1629,41 @@ public class PaintView extends BaseView {
 
     public void resetDefaultTransformation() {
         defaultTransformation.set(new Matrix());
+    }
+
+    /**
+     * set paint variable state
+     */
+    public void setTouchStrokeVariableEnabled(Boolean isTouchStrokeVariableEnabled) {
+        this.touchStrokeVariableEnabled = isTouchStrokeVariableEnabled;
+    }
+
+    public boolean isTouchStrokeVariableEnabled() {
+        return touchStrokeVariableEnabled;
+    }
+
+    public void setTouchTransparencyVariableEnabled(Boolean isTouchTransparencyVariableEnabled) {
+        this.touchTransparencyVariableEnabled = isTouchTransparencyVariableEnabled;
+    }
+
+    public boolean isTouchTransparencyVariableEnabled() {
+        return touchTransparencyVariableEnabled;
+    }
+
+    public void setHandPaintedPlateStrokeVariableEnabled(Boolean isHandPaintedPlateStrokeVariableEnabled) {
+        this.handPaintedPlateStrokeVariableEnabled = isHandPaintedPlateStrokeVariableEnabled;
+    }
+
+    public boolean isHandPaintedPlateStrokeVariableEnabled() {
+        return handPaintedPlateStrokeVariableEnabled;
+    }
+
+    public void setHandPaintedPlateTransparencyVariableEnabled(Boolean isHandPaintedPlateTransparencyVariableEnabled) {
+        this.handPaintedPlateTransparencyVariableEnabled = isHandPaintedPlateTransparencyVariableEnabled;
+    }
+
+    public boolean isHandPaintedPlateTransparencyVariableEnabled() {
+        return handPaintedPlateTransparencyVariableEnabled;
     }
 
     int a = 1;
