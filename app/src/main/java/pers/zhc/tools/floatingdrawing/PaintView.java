@@ -312,6 +312,32 @@ public class PaintView extends BaseView {
         pathSaver = defaultTmpPathSaver;
     }
 
+    public float getDrawingStrokeWidth(MotionEvent event, float touchStrokePenPressureCoefficient, float handPaintedPlateStrokePenPressureCoefficient) {
+        float strokeWidth = 0;
+        final float originalStrokeWidth = this.mPaint.getStrokeWidth();
+        if (event.getToolType(0) == 1 && isTouchStrokeVariableEnabled()) {
+        } else if (event.getToolType(0) == 2 && isHandPaintedPlateStrokeVariableEnabled()) {
+            float pressure = event.getPressure();
+            strokeWidth = handPaintedPlateStrokePenPressureCoefficient * (pressure - 1) + originalStrokeWidth;
+            strokeWidth = strokeWidth < 0.01 * originalStrokeWidth ? (float) (0.01 * originalStrokeWidth) : strokeWidth;
+            Log.i("fdb-test", "pressure: " + event.getPressure());
+            Log.i("fdb-test", "strokeWidth: " + strokeWidth);
+        } else {
+            strokeWidth = originalStrokeWidth;
+        }
+        //Log.i("fdb-test", "strokeWidth: "+strokeWidth);
+        return strokeWidth;
+    }
+
+    public float getDrawingStrokeWidth(float touchStrokePenPressureCoefficient) {
+        if (isTouchStrokeVariableEnabled()) {
+            // 触摸速度的处理
+            return 0f;//通过编译
+        } else {
+            return this.mPaint.getStrokeWidth();
+        }
+    }
+
     public float getDrawingStrokeWidth() {
         return this.mPaint.getStrokeWidth();
     }
