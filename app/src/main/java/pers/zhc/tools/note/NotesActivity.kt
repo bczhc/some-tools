@@ -284,22 +284,8 @@ class NotesActivity : NoteBaseActivity() {
     }
 
     private fun export(dest: File) {
-        val export = {
-            FileUtil.copy(Database.databasePath, dest)
-            ToastUtils.show(this, R.string.exporting_succeeded)
-        }
-
-        if (dest.exists()) {
-            DialogUtils.createConfirmationAlertDialog(
-                this,
-                titleRes = R.string.export_dialog,
-                message = getString(R.string.note_filename_duplication_alert),
-                width = MATCH_PARENT,
-                positiveAction = { _, _ ->
-                    export()
-                }
-            ).show()
-        } else export()
+        FileUtil.copy(Database.databasePath, dest)
+        ToastUtils.show(this, R.string.exporting_succeeded)
     }
 
     private data class ListItem(
