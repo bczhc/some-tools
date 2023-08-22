@@ -65,7 +65,6 @@ public class FilePickerRL extends RelativeLayout {
     private @Nullable
     final EditText filenameET;
     private RelativeLayout rootView;
-    private FilePickerRlActivityBinding bindings;
 
     // Shitcode!!!
     public FilePickerRL(Context context, int type, @Nullable File initialPath
@@ -96,7 +95,7 @@ public class FilePickerRL extends RelativeLayout {
 
     private void init(String initFileName) {
         this.unselectedDrawable = this.type == TYPE_PICK_FILE ? cannotPick : canPickUnchecked;
-        bindings = FilePickerRlActivityBinding.inflate(LayoutInflater.from(ctx), null, false);
+        pers.zhc.tools.databinding.FilePickerRlActivityBinding bindings = FilePickerRlActivityBinding.inflate(LayoutInflater.from(ctx), null, false);
         rootView = bindings.rootRl;
         this.addView(rootView);
         this.lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -108,7 +107,7 @@ public class FilePickerRL extends RelativeLayout {
         });
         filterTIL = bindings.filterTil;
         EditText filterET = filterTIL.getEditText();
-        filterET.setText(initFileName);
+        Objects.requireNonNull(filterET).setText(initFileName);
         filterET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -127,16 +126,18 @@ public class FilePickerRL extends RelativeLayout {
             }
         });
         Button cancelBtn = bindings.cancel;
-        Button okBtn = findViewById(R.id.pick);
+        Button okBtn = bindings.pick;
         cancelBtn.setOnClickListener(v -> {
             result = null;
             cancelAction.cancel(this);
         });
         okBtn.setOnClickListener(v -> {
+            EditText filenameET = this.filenameET;
+            Objects.requireNonNull(filenameET);
             if (filenameET.getVisibility() != GONE && filenameET.getText().toString().isEmpty()) {
                 return;
             }
-            if (type == 2) {
+            if (type == TYPE_PICK_FOLDER) {
                 String dir;
                 dir = currentPath.getAbsolutePath();
                 result = dir;
@@ -156,7 +157,7 @@ public class FilePickerRL extends RelativeLayout {
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String etText = et.getText().toString();
                         File f = new File(etText);
-                        if (f.isFile() && type == 1) {
+                        if (f.isFile() && type == TYPE_PICK_FILE) {
                             result = f.getAbsolutePath();
                             okBtn.performClick();
                         } else {

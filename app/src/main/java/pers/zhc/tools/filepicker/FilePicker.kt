@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.view.WindowManager
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.RequiresApi
@@ -74,7 +75,7 @@ class FilePicker : BaseActivity() {
         val enableEditText = intent.getBooleanExtra(EXTRA_ENABLE_FILENAME, false)
         initialPath = initialPath ?: Common.getExternalStoragePath(this)
         filePickerRL =
-            FilePickerRL(this, intent.getIntExtra(EXTRA_OPTION, PICK_FILE), File(initialPath), { p: FilePickerRL? ->
+            FilePickerRL(this, intent.getIntExtra(EXTRA_OPTION, PICK_FILE), File(initialPath), { _ ->
                 finish()
                 overridePendingTransition(0, R.anim.fade_out)
             }, { picker: FilePickerRL, path: String? ->
@@ -86,10 +87,10 @@ class FilePicker : BaseActivity() {
                 overridePendingTransition(0, R.anim.fade_out)
             }, null, enableEditText)
         setContentView(filePickerRL)
-    }
 
-    override fun onBackPressed() {
-        filePickerRL!!.previous()
+        onBackPressedDispatcher.addCallback {
+            filePickerRL!!.previous()
+        }
     }
 
     private class Result @Contract(pure = true) constructor(val path: String?, filename: String?) {
@@ -101,8 +102,8 @@ class FilePicker : BaseActivity() {
     }
 
     companion object {
-        const val PICK_FILE = 1
-        const val PICK_FOLDER = 2
+        const val PICK_FILE = FilePickerRL.TYPE_PICK_FILE
+        const val PICK_FOLDER = FilePickerRL.TYPE_PICK_FOLDER
         const val RESULT_CODE = 0
         const val EXTRA_OPTION = "option"
         const val EXTRA_RESULT = "result"
@@ -139,9 +140,8 @@ class FilePicker : BaseActivity() {
 
                 override fun parseResult(resultCode: Int, intent: Intent?): Result? {
                     return if (intent == null) null else Result(
-                        intent.getStringExtra(EXTRA_RESULT), intent.getStringExtra(
-                            EXTRA_FILENAME_RESULT
-                        )
+                        intent.getStringExtra(EXTRA_RESULT),
+                        intent.getStringExtra(EXTRA_FILENAME_RESULT)
                     )
                 }
             }) { result: Result? -> callback(result?.path, result!!.filename) }

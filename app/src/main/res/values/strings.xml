@@ -108,6 +108,7 @@
     <string name="exporting_dialog_title">正在导出</string>
     <string name="extracting_archive_msg">解压中……</string>
     <string name="failed_to_save_file_toast">保存文件失败</string>
+    <string name="file_already_exists_dialog_message">当时目录下文件已存在，继续将覆盖</string>
     <!-- end -->
 
     <!-- old -->
@@ -326,7 +327,6 @@
     <string name="create_shortcut_failed">创建快捷方式失败</string>
     <string name="whether_to_save_unsaved_content">是否保存尚未保存内容</string>
     <string name="whether_to_import_notes">导入操作将会覆盖当前已有笔记，是否继续？</string>
-    <string name="filename_duplication">当前目录下已有同名文件，继续将覆盖</string>
     <string name="diary">日记</string>
     <string name="write_diary">写日记</string>
     <string name="test">测试</string>
