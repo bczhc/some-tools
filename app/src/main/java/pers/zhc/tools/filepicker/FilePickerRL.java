@@ -137,10 +137,16 @@ public class FilePickerRL extends RelativeLayout {
             if (filenameET.getVisibility() != GONE && filenameET.getText().toString().isEmpty()) {
                 return;
             }
+            if (type == TYPE_PICK_FOLDER && filenameET.getVisibility() != GONE
+                    && new File(currentPath, filenameET.getText().toString()).exists()) {
+                DialogUtil.createConfirmationAlertDialog(ctx, (dialog, which) -> {
+                    result = currentPath.getAbsolutePath();
+                    pickedResultAction.result(this, result);
+                }, R.string.file_already_exists_dialog_message).show();
+                return;
+            }
             if (type == TYPE_PICK_FOLDER) {
-                String dir;
-                dir = currentPath.getAbsolutePath();
-                result = dir;
+                result = currentPath.getAbsolutePath();
             }
             if (result != null)
                 pickedResultAction.result(this, result);
