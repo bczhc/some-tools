@@ -30,7 +30,7 @@ class FilePickerActivityContract(
 
     override fun parseResult(resultCode: Int, intent: Intent?): Result? {
         intent ?: return null
-        val path = intent.getStringExtra(FilePicker.EXTRA_RESULT)!!
+        val path = intent.getStringExtra(FilePicker.EXTRA_RESULT) ?: return null
         val filename = intent.getStringExtra(FilePicker.EXTRA_FILENAME_RESULT)
         return Result(path, filename)
     }

@@ -76,10 +76,17 @@ class FilePicker : BaseActivity() {
         initialPath = initialPath ?: Common.getExternalStoragePath(this)
         val initFilename = intent.getStringExtra(EXTRA_DEFAULT_FILENAME)
         filePickerRL =
-            FilePickerRL(this, intent.getIntExtra(EXTRA_OPTION, PICK_FILE), File(initialPath), { _ ->
+            FilePickerRL(this, intent.getIntExtra(EXTRA_OPTION, PICK_FILE), File(initialPath), { picker ->
+                // on cancellation
+                setResult(RESULT_CODE, Intent().apply {
+                    if (enableEditText) {
+                        putExtra(EXTRA_FILENAME_RESULT, picker.filenameText)
+                    }
+                })
                 finish()
                 overridePendingTransition(0, R.anim.fade_out)
             }, { picker: FilePickerRL, path: String? ->
+                // confirm
                 val r = Intent()
                 r.putExtra(EXTRA_RESULT, path)
                 if (enableEditText) r.putExtra(EXTRA_FILENAME_RESULT, picker.filenameText)
