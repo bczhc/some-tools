@@ -77,14 +77,16 @@ public class FilePickerRL extends RelativeLayout {
         this.cancelAction = cancelAction;
         this.pickedResultAction = pickedResultAction;
         initFileName = initFileName == null ? "" : initFileName;
-        init(initFileName);
+
+        init();
 
         final SmartHintEditText smartHintEditText = rootView.findViewById(R.id.filename_et);
         filenameET = smartHintEditText.getEditText();
+        filenameET.setText(initFileName);
         if (!enableFilenameET) {
             filenameET.setVisibility(GONE);
-            filenameET.requestLayout();
         }
+        filenameET.requestLayout();
     }
 
     public FilePickerRL(Context context, int type, @Nullable File initialPath
@@ -93,7 +95,7 @@ public class FilePickerRL extends RelativeLayout {
         this(context, type, initialPath, cancelAction, pickedResultAction, initFileName, false);
     }
 
-    private void init(String initFileName) {
+    private void init() {
         this.unselectedDrawable = this.type == TYPE_PICK_FILE ? cannotPick : canPickUnchecked;
         pers.zhc.tools.databinding.FilePickerRlActivityBinding bindings = FilePickerRlActivityBinding.inflate(LayoutInflater.from(ctx), null, false);
         rootView = bindings.rootRl;
@@ -107,7 +109,6 @@ public class FilePickerRL extends RelativeLayout {
         });
         filterTIL = bindings.filterTil;
         EditText filterET = filterTIL.getEditText();
-        Objects.requireNonNull(filterET).setText(initFileName);
         filterET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -78,7 +78,8 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
         val exportDiary = registerForActivityResult(
             FilePickerActivityContract(
                 FilePickerActivityContract.FilePickerType.PICK_FOLDER,
-                true
+                true,
+                defaultFilename = "diary.db"
             )
         ) { result ->
             result ?: return@registerForActivityResult

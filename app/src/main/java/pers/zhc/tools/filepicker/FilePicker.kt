@@ -74,6 +74,7 @@ class FilePicker : BaseActivity() {
         var initialPath = intent.getStringExtra("initialPath")
         val enableEditText = intent.getBooleanExtra(EXTRA_ENABLE_FILENAME, false)
         initialPath = initialPath ?: Common.getExternalStoragePath(this)
+        val initFilename = intent.getStringExtra(EXTRA_DEFAULT_FILENAME)
         filePickerRL =
             FilePickerRL(this, intent.getIntExtra(EXTRA_OPTION, PICK_FILE), File(initialPath), { _ ->
                 finish()
@@ -85,7 +86,7 @@ class FilePicker : BaseActivity() {
                 setResult(RESULT_CODE, r)
                 finish()
                 overridePendingTransition(0, R.anim.fade_out)
-            }, null, enableEditText)
+            }, initFilename, enableEditText)
         setContentView(filePickerRL)
 
         onBackPressedDispatcher.addCallback {
@@ -110,6 +111,11 @@ class FilePicker : BaseActivity() {
         const val EXTRA_ENABLE_FILENAME = "enableFilename"
         const val EXTRA_FILENAME_RESULT = "filenameResult"
 
+        /**
+         * string extra
+         */
+        const val EXTRA_DEFAULT_FILENAME = "defaultFilename"
+
         @Contract("_, _ -> new")
         fun getLauncher(activity: BaseActivity, callback: (path: String?) -> Unit): ActivityResultLauncher<Int> {
             return activity.registerForActivityResult(object : ActivityResultContract<Int, String?>() {
@@ -128,6 +134,7 @@ class FilePicker : BaseActivity() {
         @Contract("_, _ -> new")
         fun getLauncherWithFilename(
             activity: BaseActivity,
+            defaultFilename: String = "",
             callback: (path: String?, filename: String) -> Unit
         ): ActivityResultLauncher<Int> {
             return activity.registerForActivityResult(object : ActivityResultContract<Int, Result?>() {
@@ -135,6 +142,7 @@ class FilePicker : BaseActivity() {
                     val intent = Intent(activity, FilePicker::class.java)
                     intent.putExtra(EXTRA_OPTION, input)
                     intent.putExtra(EXTRA_ENABLE_FILENAME, true)
+                    intent.putExtra(EXTRA_DEFAULT_FILENAME, defaultFilename)
                     return intent
                 }
 
