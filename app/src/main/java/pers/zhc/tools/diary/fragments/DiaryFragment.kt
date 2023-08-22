@@ -78,11 +78,11 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
         val exportDiary = registerForActivityResult(
             FilePickerActivityContract(
                 FilePickerActivityContract.FilePickerType.PICK_FOLDER,
-                false
+                true
             )
         ) { result ->
             result ?: return@registerForActivityResult
-            exportDiary(File(result.path))
+            exportDiary(File(result.path, result.filename!!))
         }
         val openDiaryPreview = registerForActivityResult(DiaryContentPreviewActivity.ActivityContract()) { date ->
             // in DiaryContentPreviewActivity, use "edit" menu can edit the diary, so
@@ -190,7 +190,7 @@ WHERE instr(lower("date"), lower(?)) > 0
                 val dateString = dateET.text.toString()
                 val newDateInt = try {
                     dateString.toInt()
-                } catch (e: java.lang.Exception) {
+                } catch (e: Exception) {
                     ToastUtils.show(requireContext(), R.string.please_enter_correct_value_toast)
                     return@createConfirmationAlertDialog
                 }
@@ -514,13 +514,13 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         recyclerViewAdapter.notifyDataSetChanged()
     }
 
-    private fun exportDiary(dir: File) {
+    private fun exportDiary(dest: File) {
         val databaseFile = Common.getInternalDatabaseDir(context, "diary.db")
         Thread {
             try {
-                FileUtil.copy(databaseFile, File(dir, "diary.db"))
+                FileUtil.copy(databaseFile, dest)
                 ToastUtils.show(context, R.string.exporting_succeeded)
-            } catch (e: java.lang.Exception) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 ToastUtils.showError(context, R.string.copying_failed, e)
             }
