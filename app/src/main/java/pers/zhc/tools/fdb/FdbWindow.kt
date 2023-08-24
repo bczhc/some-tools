@@ -718,7 +718,9 @@ class FdbWindow(private val context: Context) {
         }, { picker, path ->
             dialog.dismiss()
             onPickResultCallback(dialog, picker, path)
-        }, null, enableFilenameET)
+        }, null, enableFilenameET).apply {
+            dialogOverlay = true
+        }
 
         dialog.apply {
             setContentView(filePickerRL)

@@ -65,6 +65,7 @@ public class FilePickerRL extends RelativeLayout {
     private @Nullable
     final EditText filenameET;
     private RelativeLayout rootView;
+    public boolean dialogOverlay = false;
 
     // Shitcode!!!
     public FilePickerRL(Context context, int type, @Nullable File initialPath
@@ -143,7 +144,7 @@ public class FilePickerRL extends RelativeLayout {
                 DialogUtil.createConfirmationAlertDialog(ctx, (dialog, which) -> {
                     result = currentPath.getAbsolutePath();
                     pickedResultAction.result(this, result);
-                }, R.string.file_already_exists_dialog_message).show();
+                }, R.string.file_already_exists_dialog_message, dialogOverlay).show();
                 return;
             }
             if (type == TYPE_PICK_FOLDER) {
@@ -177,7 +178,7 @@ public class FilePickerRL extends RelativeLayout {
                     .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     })
                     .setView(et).create();
-            DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, null);
+            DialogUtil.setDialogAttr(alertDialog, false, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, dialogOverlay);
             DialogUtil.setAlertDialogWithEditTextAndAutoShowSoftKeyBoard(et, alertDialog);
             alertDialog.show();
         });
