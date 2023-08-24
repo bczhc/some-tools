@@ -709,6 +709,7 @@ class FdbWindow(private val context: Context) {
         type: Int = FilePickerRL.TYPE_PICK_FILE,
         initialPath: File = externalPath.path,
         enableFilenameET: Boolean = false,
+        defaultFilename: String = "",
         onPickResultCallback: (dialog: Dialog, picker: FilePickerRL, path: String) -> Unit
     ): Dialog {
         val dialog = Dialog(context)
@@ -718,7 +719,7 @@ class FdbWindow(private val context: Context) {
         }, { picker, path ->
             dialog.dismiss()
             onPickResultCallback(dialog, picker, path)
-        }, null, enableFilenameET).apply {
+        }, defaultFilename, enableFilenameET).apply {
             dialogOverlay = true
         }
 
@@ -906,13 +907,12 @@ class FdbWindow(private val context: Context) {
                         createFilePickerDialog(
                             FilePickerRL.TYPE_PICK_FOLDER,
                             externalPath.path,
-                            true
+                            true,
+                            defaultFilename = ".path"
                         ) { _, picker, path ->
                             dialogs.moreMenu.dismiss()
 
-                            val destFile = File(path, picker.filenameET!!.text.toString().let {
-                                if (File(it).extension != "path") "$it.path" else it
-                            })
+                            val destFile = File(path, picker.filenameET!!.text.toString())
                             exportPath(destFile)
                         }.show()
                     }
