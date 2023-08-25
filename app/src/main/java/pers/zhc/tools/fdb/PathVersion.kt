@@ -11,24 +11,34 @@ import java.io.FileInputStream
  * @author bczhc
  */
 enum class PathVersion(val versionName: String) {
+    /**
+     * initial version; no magic number
+     * doc: 3e70c15:app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java:464
+     */
     VERSION_1_0("1.0"),
 
     VERSION_2_0("2.0"),
 
+    /**
+     * doc: b577df3:app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java:369
+     */
     VERSION_2_1("2.1"),
 
     /**
      * start using SQLite3 database
+     * doc: 3631bf8:app/src/main/java/pers/zhc/tools/floatingdrawing/PaintView.java:1181
      */
     VERSION_3_0("3.0"),
 
     /**
      * multi-layer path import
+     * doc: fda72ba:app/src/main/java/pers/zhc/tools/fdb/PathSaver.java:19
      */
     VERSION_3_1("3.1"),
 
     /**
      * use packed bytes as stroke info heads
+     * doc: 9e52afe:app/src/main/java/pers/zhc/tools/fdb/PathSaver.java:18
      */
     VERSION_4_0("4.0"),
 
