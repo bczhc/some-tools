@@ -854,4 +854,8 @@
     <string name="crypto_wallet_label">钱包</string>
     <string name="crypto_address">地址</string>
     <!-- end -->
+
+    <!-- Digest -->
+    <string name="digest_label">摘要计算</string>
+    <!-- end -->
 </resources>

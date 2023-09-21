@@ -108,6 +108,7 @@ pub mod compression;
 pub mod crash;
 pub mod crypto;
 pub mod diary;
+pub mod digest;
 pub mod email;
 pub mod encoding;
 pub mod fourier_series;

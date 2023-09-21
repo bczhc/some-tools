@@ -525,4 +525,8 @@ public class JNI {
 
         public static native String testBacktrace();
     }
+
+    public static class Digest {
+        public static native String sha256(byte[] data);
+    }
 }
