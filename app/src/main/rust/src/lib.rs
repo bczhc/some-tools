@@ -113,9 +113,11 @@ pub mod email;
 pub mod encoding;
 pub mod fourier_series;
 pub mod hello;
+#[cfg(not(disable_network_related))]
 pub mod ip;
 pub mod jni_helper;
 pub mod lzma;
 pub mod signals;
+#[cfg(not(disable_network_related))]
 pub mod transfer;
 pub mod unicode;

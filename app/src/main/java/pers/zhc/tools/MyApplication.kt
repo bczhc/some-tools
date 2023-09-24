@@ -123,13 +123,11 @@ class MyApplication : Application() {
 
         var NOTIFICATION_CHANNEL_ID_UNIVERSAL = "c1"
 
-        init {
-            JNI.initialize()
-        }
 
         private fun staticInit(context: Context) {
             appContext = context
             crashLogDir = File(Common.getAppMainExternalStoragePath(context) + File.separatorChar + "crash")
+            JNI.initialize()
         }
     }
 }

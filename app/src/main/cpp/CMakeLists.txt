@@ -3,6 +3,9 @@ project(jni)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--hash-style=both")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--hash-style=both")
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 add_subdirectory(third_party/libmagic)
 
@@ -48,8 +51,15 @@ add_subdirectory(third_party/jni-lib)
 
 include_directories(${OPENSSL_INCLUDE_DIR})
 
+if (NOT OPENSSL_CRYPTO_LINK_SONAME)
+    set(OPENSSL_CRYPTO_LINK_SONAME crypto)
+endif ()
+if (NOT OPENSSL_SSL_LINK_SONAME)
+    set(OPENSSL_SSL_LINK_SONAME ssl)
+endif ()
+
 target_link_libraries(myLib-android-dep myLib)
 target_link_directories(Main PUBLIC ${OPENSSL_LIBS_DIR})
-target_link_libraries(Main myLib myLib-android-dep jni-lib magic crypto)
+target_link_libraries(Main myLib myLib-android-dep jni-lib magic ${OPENSSL_CRYPTO_LINK_SONAME})
 
 #set_target_properties(Main myLib PROPERTIES LINK_FLAGS "-Wl,-rpath,./")

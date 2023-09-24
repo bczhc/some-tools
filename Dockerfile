@@ -4,7 +4,7 @@ COPY / /some-tools/
 
 ARG ndk_version=25.1.8937393
 ARG cmake_version=3.18.1
-ARG full_targets='armeabi-v7a-21,arm64-v8a-29,x86-29,x86_64-29'
+ARG full_targets='armeabi-v7a-21,arm64-v8a-21,x86-29,x86_64-29'
 ARG build_universal=1
 
 WORKDIR /

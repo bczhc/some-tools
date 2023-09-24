@@ -171,6 +171,7 @@ android {
     }
 }
 
+val opensslShlibVariant = "-bundled"
 
 val appProject = project
 val jniOutputDir = File(appProject.projectDir, "jniLibs").also { it.mkdirs() }
@@ -188,6 +189,7 @@ if (!disableRustBuild) {
         rustBuildExtraEnv[env["libDir"].toString()] = opensslPath.lib!!.path
         rustBuildExtraEnv[env["includeDir"].toString()] = opensslPath.include!!.path
     }
+    rustBuildExtraEnv["OPENSSL_LIBS"] = "ssl$opensslShlibVariant:crypto$opensslShlibVariant"
 
     ndkTargets.forEach {
         val abi = it.abi
@@ -216,7 +218,7 @@ val copyOpensslLibsTask = project.task("copyOpensslLibs") {
             val abi = TargetAbi.from(it.abi)
             val opensslPath = getOpensslPath(opensslDir, abi)
             listOf(
-                "libssl.so", "libcrypto.so"
+                "libssl$opensslShlibVariant.so", "libcrypto$opensslShlibVariant.so"
             ).map { libName ->
                 File(opensslPath.lib!!, libName)
             }.forEach { file ->
@@ -247,7 +249,9 @@ ndkTargets.forEach {
     val opensslPath = getOpensslPath(opensslDir, abi)
     cmakeDefsMap[abi.toString()] = mapOf(
         Pair("OPENSSL_INCLUDE_DIR", opensslPath.include.path),
-        Pair("OPENSSL_LIBS_DIR", opensslPath.lib.path)
+        Pair("OPENSSL_LIBS_DIR", opensslPath.lib.path),
+        Pair("OPENSSL_CRYPTO_LINK_SONAME", "crypto$opensslShlibVariant"),
+        Pair("OPENSSL_SSL_LINK_SONAME", "ssl$opensslShlibVariant"),
     )
 }
 
