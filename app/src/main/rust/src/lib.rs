@@ -1,5 +1,7 @@
 #![feature(try_blocks)]
 #![feature(yeet_expr)]
+#![allow(incomplete_features, const_evaluatable_unchecked)]
+#![feature(generic_const_exprs)]
 
 extern crate core;
 

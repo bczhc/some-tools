@@ -527,6 +527,6 @@ public class JNI {
     }
 
     public static class Digest {
-        public static native String sha256(byte[] data);
+        public static native byte[] sha256(byte[] data, int iterations);
     }
 }

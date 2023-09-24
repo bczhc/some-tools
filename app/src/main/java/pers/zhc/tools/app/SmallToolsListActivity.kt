@@ -41,7 +41,7 @@ class SmallToolsListActivity : BaseActivity() {
             ActivityItem(R.string.char_ucd_lookup_activity_label, CharLookupActivity::class.java),
             ActivityItem(R.string.char_stat_label, CharStatActivity::class.java),
             ActivityItem(R.string.text_editor_label, MainActivity::class.java),
-            ActivityItem(R.string.digest_label, pers.zhc.tools.digest.MainActivity::class.java)
+            ActivityItem(R.string.hash_tool_label, pers.zhc.tools.hashtools.MainActivity::class.java)
         )
 
         recyclerView.adapter = AppMenuAdapter(this, activities)

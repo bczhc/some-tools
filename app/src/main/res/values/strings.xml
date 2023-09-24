@@ -855,7 +855,7 @@
     <string name="crypto_address">地址</string>
     <!-- end -->
 
-    <!-- Digest -->
-    <string name="digest_label">摘要计算</string>
+    <!-- HashTools -->
+    <string name="hash_tool_label">哈希小工具</string>
     <!-- end -->
 </resources>
