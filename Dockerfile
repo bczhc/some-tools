@@ -32,9 +32,9 @@ RUN gem install toml
 RUN git clone https://github.com/openssl/openssl --depth 1 && \
     cd openssl && \
     git fetch --unshallow && \
-    git fetch origin openssl-3.0 && \
+    git fetch origin openssl-3.1 && \
     git fetch --all && \
-    git checkout openssl-3.0.1
+    git checkout openssl-3.1.3
 
 WORKDIR /
 # Set up SDK
