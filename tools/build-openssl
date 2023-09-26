@@ -3,6 +3,8 @@
 require 'etc'
 require 'fileutils'
 
+SHLIB_VARIANT = '-bundled'
+
 ANDROID_ABI2OPENSSL_MAP = {
   'armeabi-v7a' => 'android-arm',
   'arm64-v8a' => 'android-arm64',
@@ -70,7 +72,7 @@ ndk_targets.each do |it|
   puts "Build: #{ndk_abi}, #{ndk_api}"
   build ANDROID_ABI2OPENSSL_MAP[ndk_abi], ndk_api
 
-  %w[libcrypto.so libcrypto.a libssl.so libssl.a].each do |name|
+  %W[libcrypto#{SHLIB_VARIANT}.so libcrypto.a libssl#{SHLIB_VARIANT}.so libssl.a].each do |name|
     output_dir = "#{output_libs_dir}/#{ndk_abi}"
 
     FileUtils.mkdir_p output_dir unless Dir.exist? output_dir

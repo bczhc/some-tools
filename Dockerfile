@@ -68,7 +68,10 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     ./tools/configure-rust
 
 # Build OpenSSL for all Android targets
-RUN ./tools/build-openssl /openssl $(echo $full_targets | sed "s/,/ /g")
+# append `soname` with `-bundled`
+# see commit 723a76a9e505bc9e8a33c16d59ecbd8fbadc719e
+RUN cat openssl-bundled.patch | patch /openssl/Configurations/15-android.conf && \
+    ./tools/build-openssl /openssl $(echo $full_targets | sed "s/,/ /g")
 
 # Build single-Android-ABI Apps
 RUN . ~/.cargo/env && \

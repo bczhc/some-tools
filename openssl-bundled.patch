@@ -1,0 +1,32 @@
+--- old	2023-09-26 15:34:08.986666781 +0800
++++ Configurations/15-android.conf	2023-09-26 15:35:16.213333473 +0800
+@@ -225,12 +225,14 @@
+         bn_ops           => add("RC4_CHAR"),
+         asm_arch         => 'armv4',
+         perlasm_scheme   => "void",
++        shlib_variant => '-bundled'
+     },
+     "android-arm64" => {
+         inherit_from     => [ "android" ],
+         bn_ops           => add("RC4_CHAR"),
+         asm_arch         => 'aarch64',
+         perlasm_scheme   => "linux64",
++        shlib_variant => '-bundled'
+     },
+
+     "android-mips" => {
+@@ -262,12 +264,14 @@
+         asm_arch         => 'x86',
+         perlasm_scheme   => "android",
+         ex_libs          => add(threads("-latomic")),
++        shlib_variant => '-bundled'
+     },
+     "android-x86_64" => {
+         inherit_from     => [ "android" ],
+         bn_ops           => add("RC4_INT"),
+         asm_arch         => 'x86_64',
+         perlasm_scheme   => "elf",
++        shlib_variant => '-bundled'
+     },
+
+     ####################################################################
