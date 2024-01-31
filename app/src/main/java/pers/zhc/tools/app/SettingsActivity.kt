@@ -2,6 +2,7 @@ package pers.zhc.tools.app
 
 import android.os.Bundle
 import android.os.Process
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.json.JSONObject
@@ -9,6 +10,7 @@ import pers.zhc.tools.*
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
+import pers.zhc.tools.app.Settings.Companion.AppTheme
 import pers.zhc.tools.databinding.MainActivityBinding
 import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.jni.JNI
@@ -161,19 +163,28 @@ class SettingsActivity : BaseActivity() {
             else -> null
         }?.let { themeRg.check(it) }
         themeRg.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
+            val mode = when (checkedId) {
                 R.id.dark -> {
-                    setDefaultNightMode(MODE_NIGHT_YES)
+                    MODE_NIGHT_YES
                 }
 
                 R.id.light -> {
-                    setDefaultNightMode(MODE_NIGHT_NO)
+                    MODE_NIGHT_NO
                 }
 
                 R.id.follow_system -> {
-                    setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+                    MODE_NIGHT_FOLLOW_SYSTEM
                 }
+
+                else -> unreachable()
             }
+
+            val appTheme = AppTheme.fromNightModeOption(mode)
+            Settings.updateSettings {
+                it.theme = appTheme
+            }
+
+            setDefaultNightMode(mode)
         }
     }
 }

@@ -14,6 +14,8 @@ import org.json.JSONObject
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
+import pers.zhc.tools.app.Settings
+import pers.zhc.tools.app.Settings.Companion.AppTheme
 import pers.zhc.tools.crashhandler.CrashHandler
 import pers.zhc.tools.email.ContactActivity
 import pers.zhc.tools.email.Database
@@ -47,6 +49,9 @@ class MyApplication : Application() {
         registerNotificationChannel()
         initAppInfoFile()
         initJniFields()
+
+        val appTheme = Settings.readSettings().theme ?: AppTheme.FOLLOW_SYSTEM
+        AppCompatDelegate.setDefaultNightMode(appTheme.toNightModeOption())
     }
 
     private fun registerNotificationChannel() {
