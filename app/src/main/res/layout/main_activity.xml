@@ -1,96 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <com.google.android.material.card.MaterialCardView
-        style="?attr/materialCardViewFilledStyle"
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="5dp"
-        android:checkable="false"
-        android:clickable="false"
-        android:focusable="false"
-        android:padding="5dp">
-        <LinearLayout
+        android:orientation="vertical">
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewFilledStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="5dp"
+            android:checkable="false"
+            android:clickable="false"
+            android:focusable="false"
+            android:padding="5dp">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="URL"
-                android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
-                tools:ignore="HardcodedText"/>
-            <pers.zhc.tools.views.SmartHintEditText
-                android:id="@+id/server_et"
-                style="@style/Widget.M3Application.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/settings_server_root_url"/>
-            <pers.zhc.tools.views.SmartHintEditText
-                android:id="@+id/resource_et"
-                style="@style/Widget.M3Application.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/settings_static_resource_root_url"/>
-            <pers.zhc.tools.views.SmartHintEditText
-                android:id="@+id/github_raw_url_et"
-                style="@style/Widget.M3Application.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/settings_github_raw_root_url"/>
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/save"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-    <com.google.android.material.card.MaterialCardView
-        style="?attr/materialCardViewFilledStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="5dp"
-        android:checkable="false"
-        android:clickable="false"
-        android:focusable="false"
-        android:padding="5dp">
-        <LinearLayout
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="URL"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                    tools:ignore="HardcodedText"/>
+                <pers.zhc.tools.views.SmartHintEditText
+                    android:id="@+id/server_et"
+                    style="@style/Widget.M3Application.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/settings_server_root_url"/>
+                <pers.zhc.tools.views.SmartHintEditText
+                    android:id="@+id/resource_et"
+                    style="@style/Widget.M3Application.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/settings_static_resource_root_url"/>
+                <pers.zhc.tools.views.SmartHintEditText
+                    android:id="@+id/github_raw_url_et"
+                    style="@style/Widget.M3Application.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hint="@string/settings_github_raw_root_url"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/save"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewFilledStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="5dp"
+            android:checkable="false"
+            android:clickable="false"
+            android:focusable="false"
+            android:padding="5dp">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/app_data_transfer_title"
-                android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
-                tools:ignore="HardcodedText"/>
-            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/app_data_transfer_title"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                    tools:ignore="HardcodedText"/>
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/import_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:insetRight="0dp"
+                        android:text="@string/import_"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/export_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:insetLeft="0dp"
+                        android:text="@string/export"/>
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewFilledStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="5dp"
+            android:checkable="false"
+            android:clickable="false"
+            android:focusable="false"
+            android:padding="5dp">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/import_btn"
-                    android:layout_width="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:insetRight="0dp"
-                    android:text="@string/import_"/>
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/export_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:insetLeft="0dp"
-                    android:text="@string/export"/>
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-</LinearLayout>
+                    android:padding="5dp"
+                    android:text="@string/settings_theme_label"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                    tools:ignore="HardcodedText"/>
+                <RadioGroup
+                    android:id="@+id/theme_rg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/theme_light_label"/>
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/dark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/theme_dark_label"/>
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/follow_system"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/theme_follow_system_label"/>
+                </RadioGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+</ScrollView>

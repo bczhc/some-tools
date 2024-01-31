@@ -478,7 +478,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".SettingsActivity"
+                android:name=".app.SettingsActivity"
                 android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
                 android:label="@string/settings"
                 android:theme="@style/Theme.M3Application" android:exported="true">

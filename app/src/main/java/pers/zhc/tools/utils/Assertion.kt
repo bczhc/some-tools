@@ -11,3 +11,8 @@ fun <T> unreachable(): T {
 fun androidAssert(v: Boolean) {
     Assertion.doAssertion(v)
 }
+
+fun <T> illegalArgument(msg: String? = null): T {
+    msg?.let { throw IllegalArgumentException(it) }
+    throw IllegalArgumentException()
+}
