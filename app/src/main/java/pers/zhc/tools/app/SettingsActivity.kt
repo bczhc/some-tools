@@ -2,7 +2,6 @@ package pers.zhc.tools.app
 
 import android.os.Bundle
 import android.os.Process
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.json.JSONObject
