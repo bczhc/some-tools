@@ -13,10 +13,6 @@
         android:id="@+id/about"
         android:title="@string/app_about_menu"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/switch_themes"
-        android:title="@string/app_menu_switch_themes"
-        app:showAsAction="never"/>
     <item android:title="@string/app_menu_wake_lock">
         <menu>
             <item

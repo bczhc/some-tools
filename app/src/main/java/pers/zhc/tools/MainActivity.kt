@@ -97,14 +97,6 @@ class MainActivity : BaseActivity() {
                 startActivity(Intent(this, AboutActivity::class.java))
             }
 
-            R.id.switch_themes -> {
-                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                } else if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                }
-            }
-
             R.id.wake_lock_acquire -> {
                 acquireWakeLockAction()
             }
