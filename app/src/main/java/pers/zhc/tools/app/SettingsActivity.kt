@@ -1,10 +1,11 @@
-package pers.zhc.tools
+package pers.zhc.tools.app
 
 import android.os.Bundle
 import android.os.Process
 import androidx.appcompat.app.AppCompatDelegate.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.json.JSONObject
+import pers.zhc.tools.*
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
 import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
