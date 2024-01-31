@@ -45,7 +45,6 @@ class MyApplication : Application() {
         SingleCharCodesChecker.RecordDatabase.init(this)
 
         registerNotificationChannel()
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         initAppInfoFile()
         initJniFields()
     }
