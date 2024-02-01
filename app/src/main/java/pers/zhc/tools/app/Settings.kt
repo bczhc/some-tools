@@ -14,7 +14,7 @@ data class Settings(
     companion object {
         private const val JSON_FILENAME = "settings.json"
         val JSON_FILE by lazy {
-            File(MyApplication.appContext.dataDir, JSON_FILENAME)
+            File(MyApplication.appContext.filesDir , JSON_FILENAME)
         }
 
         data class AppServerUrl(
