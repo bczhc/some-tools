@@ -17,13 +17,16 @@ class NoteTakingActivity : NoteBaseActivity() {
     /**
      * After creating a new note, this will be [Type.UPDATE]
      */
-    private lateinit var type: Type
+    private lateinit var onSaveAction: OnSaveAction
     private lateinit var contentET: EditText
     private lateinit var titleET: EditText
     private var modified = false
 
     /**
-     * present when [type] is [Type.UPDATE], or after crating a new note
+     * The timestamp of the current note.
+     *
+     * If `Intent` [EXTRA_TYPE] is [Type.UPDATE], this will be set, or,
+     * after creating a new note, this will be set.
      */
     private var timestamp: Long? = null
 
@@ -37,35 +40,36 @@ class NoteTakingActivity : NoteBaseActivity() {
         val bottomButton = bindings.addRecord
 
         val intent = intent
-        type = intent.getSerializableExtra(EXTRA_TYPE)!! as Type
-        val buttonTextRes = when (type) {
+
+        @Suppress("DEPRECATION")
+        val type = intent.getSerializableExtra(EXTRA_TYPE)!! as Type
+        when (type) {
             Type.CREATE -> {
-                R.string.note_add_record_btn
+                onSaveAction = OnSaveAction.CREATE_NEW
+                bottomButton.setText(R.string.note_add_record_btn)
             }
 
             Type.UPDATE -> {
-                R.string.note_modify_record_btn
+                onSaveAction = OnSaveAction.UPDATE
+                bottomButton.setText(R.string.note_modify_record_btn)
+                androidAssert(intent.hasExtra(EXTRA_TIMESTAMP))
+                timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, -1)
+                val record = database.query(timestamp!!)!!
+                titleET.setText(record.title)
+                contentET.setText(record.content)
             }
-        }
-        bottomButton.setText(buttonTextRes)
-
-        if (type == Type.UPDATE) {
-            androidAssert(intent.hasExtra(EXTRA_TIMESTAMP))
-            timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, -1)
-            val record = database.query(timestamp!!)!!
-            titleET.setText(record.title)
-            contentET.setText(record.content)
         }
 
         bottomButton.setOnClickListener {
-            when (type) {
-                Type.CREATE -> {
+            when (onSaveAction) {
+                OnSaveAction.CREATE_NEW -> {
                     createNewNote()
                     modified = false
-                    this.type = Type.UPDATE
+                    onSaveAction = OnSaveAction.UPDATE
                     bottomButton.setText(R.string.note_modify_record_btn)
                 }
-                Type.UPDATE -> {
+
+                OnSaveAction.UPDATE -> {
                     updateNote()
                     modified = false
                 }
@@ -81,6 +85,10 @@ class NoteTakingActivity : NoteBaseActivity() {
 
     enum class Type : Serializable {
         CREATE, UPDATE
+    }
+
+    enum class OnSaveAction {
+        CREATE_NEW, UPDATE
     }
 
     /**
@@ -114,12 +122,12 @@ class NoteTakingActivity : NoteBaseActivity() {
             DialogUtils.createConfirmationAlertDialog(this, titleRes = R.string.note_modified_save_alert,
                 width = MATCH_PARENT,
                 positiveAction = { _, _ ->
-                    when (type) {
-                        Type.CREATE -> {
+                    when (onSaveAction) {
+                        OnSaveAction.CREATE_NEW -> {
                             createNewNote()
                         }
 
-                        Type.UPDATE -> {
+                        OnSaveAction.UPDATE -> {
                             updateNote()
                         }
                     }
@@ -137,7 +145,10 @@ class NoteTakingActivity : NoteBaseActivity() {
     companion object {
         /**
          * Serializable intent extra
-         * see [Type]
+         *
+         * Activity start type.
+         *
+         * See [Type]
          */
         const val EXTRA_TYPE = "type"
 
