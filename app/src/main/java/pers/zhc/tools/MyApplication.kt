@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.Gson
 import io.ktor.client.*
 import io.ktor.client.plugins.*
-import org.json.JSONObject
 import pers.zhc.tools.app.Settings
 import pers.zhc.tools.app.Settings.Companion.AppTheme
 import pers.zhc.tools.crashhandler.CrashHandler
@@ -67,7 +66,6 @@ class MyApplication : Application() {
     }
 
     companion object {
-        private lateinit var infoFile: File
         lateinit var appContext: Context
         lateinit var crashLogDir: File
 
@@ -83,10 +81,6 @@ class MyApplication : Application() {
 
         @JvmField
         var wakeLock: WakeLock? = null
-
-        fun writeInfoJSON(info: JSONObject) {
-            infoFile.writeText(info.toString(4))
-        }
 
         var NOTIFICATION_CHANNEL_ID_UNIVERSAL = "c1"
 
