@@ -11,9 +11,6 @@ import com.google.gson.Gson
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import org.json.JSONObject
-import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
-import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
-import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
 import pers.zhc.tools.app.Settings
 import pers.zhc.tools.app.Settings.Companion.AppTheme
 import pers.zhc.tools.crashhandler.CrashHandler
@@ -47,7 +44,6 @@ class MyApplication : Application() {
         SingleCharCodesChecker.RecordDatabase.init(this)
 
         registerNotificationChannel()
-        initAppInfoFile()
         initJniFields()
 
         val appTheme = Settings.readSettings().theme ?: AppTheme.FOLLOW_SYSTEM
@@ -63,26 +59,6 @@ class MyApplication : Application() {
             )
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
-        }
-    }
-
-    private fun initAppInfoFile() {
-        infoFile = File(filesDir, InfoJson.FILENAME)
-        if (!infoFile.exists()) {
-            infoFile.createNewFile()
-            infoFile.writeText(JSONObject().toString(4))
-        }
-        val read = infoFile.readText()
-        val jsonObject = JSONObject(read)
-
-        if (jsonObject.has(KEY_SERVER_ROOT_URL)) {
-            Info.serverRootURL = jsonObject.getString(KEY_SERVER_ROOT_URL)
-        }
-        if (jsonObject.has(KEY_STATIC_RESOURCE_ROOT_URL)) {
-            Info.staticResourceRootURL = jsonObject.getString(KEY_STATIC_RESOURCE_ROOT_URL)
-        }
-        if (jsonObject.has(KEY_GITHUB_RAW_ROOT_URL)) {
-            Info.githubRawRootURL = jsonObject.getString(KEY_GITHUB_RAW_ROOT_URL)
         }
     }
 
@@ -108,25 +84,11 @@ class MyApplication : Application() {
         @JvmField
         var wakeLock: WakeLock? = null
 
-        class InfoJson {
-            companion object {
-                const val FILENAME = "info.json"
-                const val KEY_SERVER_ROOT_URL = "serverRootURL"
-                const val KEY_STATIC_RESOURCE_ROOT_URL = "staticResourceRootURL"
-                const val KEY_GITHUB_RAW_ROOT_URL = "githubRawRootURL"
-            }
-        }
-
-        fun getInfoJSON() {
-            TODO("Not yet implemented")
-        }
-
         fun writeInfoJSON(info: JSONObject) {
             infoFile.writeText(info.toString(4))
         }
 
         var NOTIFICATION_CHANNEL_ID_UNIVERSAL = "c1"
-
 
         private fun staticInit(context: Context) {
             appContext = context

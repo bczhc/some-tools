@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.os.Process
 import androidx.appcompat.app.AppCompatDelegate.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import org.json.JSONObject
-import pers.zhc.tools.*
-import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_GITHUB_RAW_ROOT_URL
-import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_SERVER_ROOT_URL
-import pers.zhc.tools.MyApplication.Companion.InfoJson.Companion.KEY_STATIC_RESOURCE_ROOT_URL
+import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.BuildConfig
+import pers.zhc.tools.R
 import pers.zhc.tools.app.Settings.Companion.AppTheme
 import pers.zhc.tools.databinding.MainActivityBinding
 import pers.zhc.tools.filepicker.FilePickerActivityContract
@@ -120,27 +118,27 @@ class SettingsActivity : BaseActivity() {
         val githubET = bindings.githubRawUrlEt
         val saveBtn = bindings.save
 
-        serverET.editText.setText(Info.serverRootURL)
-        resourceET.editText.setText(Info.staticResourceRootURL)
-        githubET.editText.setText(Info.githubRawRootURL)
+        val settings = Settings.readSettings()
+        val appServerUrl = settings.serverUrl ?: Settings.Companion.AppServerUrl.default()
+
+        serverET.editText.setText(appServerUrl.serverRootUrl)
+        resourceET.editText.setText(appServerUrl.staticSourceRootUrl)
+        githubET.editText.setText(appServerUrl.githubRawRootUrl)
 
         saveBtn.setOnClickListener {
-            val jsonObject = JSONObject()
             val newServerURL = serverET.editText.text.toString()
             val newResourceURL = resourceET.editText.text.toString()
             val newGithubRawURL = githubET.editText.text.toString()
-            jsonObject.put(KEY_SERVER_ROOT_URL, newServerURL)
-            jsonObject.put(KEY_STATIC_RESOURCE_ROOT_URL, newResourceURL)
-            jsonObject.put(KEY_GITHUB_RAW_ROOT_URL, newGithubRawURL)
-            MyApplication.writeInfoJSON(jsonObject)
 
-
-            Info.serverRootURL = newServerURL
-            Info.staticResourceRootURL = newResourceURL
-            Info.githubRawRootURL = newGithubRawURL
+            Settings.updateSettings {
+                it.serverUrl = Settings.Companion.AppServerUrl(
+                    serverRootUrl = newServerURL,
+                    staticSourceRootUrl = newResourceURL,
+                    githubRawRootUrl = newGithubRawURL,
+                )
+            }
 
             ToastUtils.show(this@SettingsActivity, R.string.saved)
-            finish()
         }
     }
 

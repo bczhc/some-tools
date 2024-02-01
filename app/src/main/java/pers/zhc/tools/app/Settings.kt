@@ -1,6 +1,7 @@
 package pers.zhc.tools.app
 
 import androidx.appcompat.app.AppCompatDelegate
+import pers.zhc.tools.Info
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.MyApplication.Companion.GSON
 import pers.zhc.tools.utils.fromJsonOrNull
@@ -13,7 +14,7 @@ data class Settings(
 ) {
     companion object {
         private const val JSON_FILENAME = "settings.json"
-        val JSON_FILE by lazy {
+        private val JSON_FILE by lazy {
             File(MyApplication.appContext.filesDir , JSON_FILENAME)
         }
 
@@ -21,7 +22,17 @@ data class Settings(
             var serverRootUrl: String,
             var staticSourceRootUrl: String,
             var githubRawRootUrl: String,
-        )
+        ) {
+            companion object {
+                fun default(): AppServerUrl {
+                    return AppServerUrl(
+                        serverRootUrl = Info.serverRootURL,
+                        staticSourceRootUrl = Info.staticResourceRootURL,
+                        githubRawRootUrl = Info.githubRawRootURL
+                    )
+                }
+            }
+        }
 
         enum class AppTheme {
             LIGHT, DARK, FOLLOW_SYSTEM;
@@ -41,10 +52,17 @@ data class Settings(
                         else -> illegalArgument()
                     }
                 }
+
+                fun default(): AppTheme {
+                    return FOLLOW_SYSTEM
+                }
             }
         }
 
-        fun default() = Settings()
+        fun default() = Settings().apply {
+            serverUrl = AppServerUrl.default()
+            theme = AppTheme.default()
+        }
 
         fun readSettings(): Settings {
             if (!JSON_FILE.exists()) {
@@ -55,7 +73,7 @@ data class Settings(
                 ?: default()
         }
 
-        fun writeSettings(settings: Settings) {
+        private fun writeSettings(settings: Settings) {
             val json = GSON.toJson(settings)
             JSON_FILE.writeText(json)
         }
