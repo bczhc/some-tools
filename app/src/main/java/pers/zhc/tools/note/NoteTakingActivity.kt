@@ -115,7 +115,7 @@ class NoteTakingActivity : NoteBaseActivity() {
     override fun finish() {
         val setResultIntent = {
             setResult(0, Intent().apply {
-                putExtra(EXTRA_TIMESTAMP, timestamp!!)
+                putExtra(EXTRA_TIMESTAMP, timestamp)
             })
         }
         if (modified) {
