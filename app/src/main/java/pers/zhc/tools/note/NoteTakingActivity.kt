@@ -14,13 +14,16 @@ import pers.zhc.tools.utils.androidAssert
 import java.io.Serializable
 
 class NoteTakingActivity : NoteBaseActivity() {
+    /**
+     * After creating a new note, this will be [Type.UPDATE]
+     */
     private lateinit var type: Type
     private lateinit var contentET: EditText
     private lateinit var titleET: EditText
     private var modified = false
 
     /**
-     * present when [type] is [Type.UPDATE]
+     * present when [type] is [Type.UPDATE], or after crating a new note
      */
     private var timestamp: Long? = null
 
@@ -34,7 +37,7 @@ class NoteTakingActivity : NoteBaseActivity() {
         val bottomButton = bindings.addRecord
 
         val intent = intent
-        type = intent.getSerializableExtra(EXTRA_TYPE) as Type
+        type = intent.getSerializableExtra(EXTRA_TYPE)!! as Type
         val buttonTextRes = when (type) {
             Type.CREATE -> {
                 R.string.note_add_record_btn
@@ -46,27 +49,23 @@ class NoteTakingActivity : NoteBaseActivity() {
         }
         bottomButton.setText(buttonTextRes)
 
-        when (type) {
-            Type.CREATE -> {
-                bottomButton.setOnClickListener {
+        if (type == Type.UPDATE) {
+            androidAssert(intent.hasExtra(EXTRA_TIMESTAMP))
+            timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, -1)
+            val record = database.query(timestamp!!)!!
+            titleET.setText(record.title)
+            contentET.setText(record.content)
+        }
+
+        bottomButton.setOnClickListener {
+            when (type) {
+                Type.CREATE -> {
                     createNewNote()
                     modified = false
+                    this.type = Type.UPDATE
+                    bottomButton.setText(R.string.note_modify_record_btn)
                 }
-            }
-
-            Type.UPDATE -> {
-                androidAssert(intent.hasExtra(EXTRA_TIMESTAMP))
-                timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, -1)
-                val resultIntent = Intent().apply {
-                    putExtra(EXTRA_TIMESTAMP, timestamp)
-                }
-                setResult(0, resultIntent)
-
-                val record = database.query(timestamp!!)!!
-                titleET.setText(record.title)
-                contentET.setText(record.content)
-
-                bottomButton.setOnClickListener {
+                Type.UPDATE -> {
                     updateNote()
                     modified = false
                 }
@@ -84,9 +83,14 @@ class NoteTakingActivity : NoteBaseActivity() {
         CREATE, UPDATE
     }
 
+    /**
+     * Returns timestamp key of the just-create note
+     */
     private fun createNewNote() {
-        database.addRecord(title = titleET.text.toString(), content = contentET.text.toString())
+        val timestamp = System.currentTimeMillis()
+        database.addRecord(title = titleET.text.toString(), content = contentET.text.toString(), timestamp = timestamp)
         ToastUtils.show(this, R.string.note_record_adding_succeeded)
+        this.timestamp = timestamp
     }
 
     private fun updateNote() {
@@ -101,6 +105,11 @@ class NoteTakingActivity : NoteBaseActivity() {
     }
 
     override fun finish() {
+        val setResultIntent = {
+            setResult(0, Intent().apply {
+                putExtra(EXTRA_TIMESTAMP, timestamp!!)
+            })
+        }
         if (modified) {
             DialogUtils.createConfirmationAlertDialog(this, titleRes = R.string.note_modified_save_alert,
                 width = MATCH_PARENT,
@@ -114,11 +123,13 @@ class NoteTakingActivity : NoteBaseActivity() {
                             updateNote()
                         }
                     }
+                    setResultIntent()
                     super.finish()
                 },
                 negativeAction = { _, _ -> super.finish() }
             ).show()
         } else {
+            setResultIntent()
             super.finish()
         }
     }
