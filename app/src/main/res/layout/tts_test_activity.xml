@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <EditText
+
+    <pers.zhc.tools.views.ScrollEditText
         android:id="@+id/et"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:inputType="text"
-        tools:ignore="LabelFor"/>
-    <Button
-        android:id="@+id/btn"
+        android:layout_height="match_parent"
+        android:layout_above="@id/tts_ll_bottom"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="7dp"
+        android:fillViewport="true"
+        android:maxLength="4000"
+        app:gravity="top"
+        app:hint="@string/content" />
+    <LinearLayout
+        android:id="@+id/tts_ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/speak"/>
-</LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/speak"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+</RelativeLayout>
