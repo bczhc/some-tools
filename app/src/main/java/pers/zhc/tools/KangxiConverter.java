@@ -47,6 +47,7 @@ public class KangxiConverter {
 
     public static void markKangxiRadicalsEditText(EditText et) {
         String inputText = et.getText().toString();
+        if(!hasKangxiRadicals(inputText)) return;
         SpannableString spannableString = new SpannableString(inputText);
 
         String regex = "[" + kangxiRadicals + "]"; // 你的正则表达式
@@ -66,6 +67,7 @@ public class KangxiConverter {
 
     public static void markNormalHansEditText(EditText et) {
         String inputText = et.getText().toString();
+        if(!hasNormalKangXiChars(inputText)) return;
         SpannableString spannableString = new SpannableString(inputText);
 
         String regex = "[" + normalHans + "]"; // 你的正则表达式
