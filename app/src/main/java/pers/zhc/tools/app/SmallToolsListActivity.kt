@@ -9,6 +9,7 @@ import pers.zhc.tools.charstat.CharStatActivity
 import pers.zhc.tools.charucd.CharLookupActivity
 import pers.zhc.tools.clipboard.Clip
 import pers.zhc.tools.databinding.ToolsActivityMainBinding
+import pers.zhc.tools.kangxiConverter.kangxiConverterActivity
 import pers.zhc.tools.pi.Pi
 import pers.zhc.tools.test.RegExpTest
 import pers.zhc.tools.test.SysInfo
@@ -41,7 +42,8 @@ class SmallToolsListActivity : BaseActivity() {
             ActivityItem(R.string.char_ucd_lookup_activity_label, CharLookupActivity::class.java),
             ActivityItem(R.string.char_stat_label, CharStatActivity::class.java),
             ActivityItem(R.string.text_editor_label, MainActivity::class.java),
-            ActivityItem(R.string.hash_tool_label, pers.zhc.tools.hashtools.MainActivity::class.java)
+            ActivityItem(R.string.hash_tool_label, pers.zhc.tools.hashtools.MainActivity::class.java),
+            ActivityItem(R.string.kangxi_converter, pers.zhc.tools.kangxiConverter.kangxiConverterActivity::class.java)
         )
 
         recyclerView.adapter = AppMenuAdapter(this, activities)

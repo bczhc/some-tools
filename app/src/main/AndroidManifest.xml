@@ -945,5 +945,17 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".kangxiConverter.kangxiConverterActivity"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+            android:theme="@style/Theme.M3Application.NoActionBar"
+            android:label="@string/kangxi_converter"
+            android:taskAffinity="pers.zhc.tools.app.about"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
