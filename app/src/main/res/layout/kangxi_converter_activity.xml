@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:fillViewport="true"
         app:gravity="top"
-        app:hint="@string/input" />
+        app:hint="@string/input_et_hint" />
     <LinearLayout
         android:id="@+id/ll_middle"
         android:layout_width="match_parent"
@@ -25,18 +25,18 @@
         android:layout_marginRight="20dp"
         android:layout_centerVertical="true"
         android:orientation="horizontal">
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/kangxi_radicals_to_normal_hans"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/kangxi_radicals_to_normal_hans"
+            android:text="@string/kangxi_radicals_to_normal_hans_button"
             android:textSize="20sp"
             android:layout_weight="1"/>
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/normal_hans_to_kangxi_radicals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/normal_hans_to_kangxi_radicals"
+            android:text="@string/normal_hans_to_kangxi_radicals_button"
             android:textSize="20sp"
             android:layout_weight="1"
             />
@@ -52,5 +52,5 @@
         android:layout_marginBottom="7dp"
         android:fillViewport="true"
         app:gravity="top"
-        app:hint="@string/output" />
+        app:hint="@string/output_et_hint" />
 </RelativeLayout>

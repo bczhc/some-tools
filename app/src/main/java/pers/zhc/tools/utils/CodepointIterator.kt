@@ -29,3 +29,12 @@ class CodepointIterator(s: String) : Iterator<Int> {
         }
     }
 }
+
+fun String.codepointLength(): Int {
+    return CodepointIterator(this).asSequence().count()
+}
+
+fun String.codepointChars(): List<String> {
+    return CodepointIterator(this).asSequence()
+        .map { JNI.Unicode.Codepoint.codepoint2str(it) }.toList()
+}
