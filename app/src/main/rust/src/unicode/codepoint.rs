@@ -6,7 +6,7 @@ use jni::objects::{JClass, JString};
 use jni::sys::{_jobject, jboolean, jint, jlong, jstring};
 use jni::JNIEnv;
 
-use crate::jni_helper::GetString;
+use crate::jni_helper::{GetString, JavaStrExt};
 
 #[no_mangle]
 #[allow(non_snake_case)]
@@ -72,7 +72,8 @@ pub extern "system" fn Java_pers_zhc_tools_jni_JNI_00024Unicode_00024Codepoint_c
     _class: JClass,
     s: JString,
 ) -> i32 {
-    let s = String::from(env.get_string(&s).unwrap().to_str().unwrap());
+    let java_str = env.get_string(&s).unwrap();
+    let s = String::from(java_str.to_str_or_throw(&mut env).unwrap());
     let mut len = 0_usize;
     for _ in s.chars() {
         len += 1;

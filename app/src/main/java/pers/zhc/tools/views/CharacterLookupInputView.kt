@@ -46,22 +46,25 @@ class CharacterLookupInputView : WrapLayout {
         }
 
         codepointET.doAfterTextChanged {
-            if (doSetText) return@doAfterTextChanged
+            try {
+                if (doSetText) return@doAfterTextChanged
 
-            val codepointInput = codepointET.text.toString()
-            val codepoint = codepointInput.toIntOrNull(16).also {
-                if (it == null || it !in 1..0x10FFFF) {
-                    setText {
-                        charET.setText("")
+                val codepointInput = codepointET.text.toString()
+                val codepoint = codepointInput.toIntOrNull(16).also {
+                    if (it == null || it !in 1..0x10FFFF) {
+                        setText {
+                            charET.setText("")
+                        }
+                        return@doAfterTextChanged
                     }
-                    return@doAfterTextChanged
+                }!!
+                val s = String(intArrayOf(codepoint), 0, 1)
+                Assertion.doAssertion(JNI.Unicode.Codepoint.codepointLength(s) == 1)
+                setText {
+                    charET.setText(s)
                 }
-            }!!
-            val s = String(intArrayOf(codepoint), 0, 1)
-            Assertion.doAssertion(JNI.Unicode.Codepoint.codepointLength(s) == 1)
-
-            setText {
-                charET.setText(s)
+            } catch (_: Exception) {
+                setText { charET.setText("") }
             }
         }
         charET.doAfterTextChanged {

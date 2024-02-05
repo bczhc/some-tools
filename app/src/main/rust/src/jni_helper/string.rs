@@ -18,7 +18,7 @@ pub trait GetString {
 }
 
 pub trait JavaStrExt {
-    fn to_str_or_throw(&self, env: JNIEnv) -> jni::errors::Result<&str>;
+    fn to_str_or_throw(&self, env: &mut JNIEnv) -> jni::errors::Result<&str>;
 }
 
 impl<'a> GetString for JNIEnv<'a> {
@@ -29,7 +29,7 @@ impl<'a> GetString for JNIEnv<'a> {
 }
 
 impl<'a, 'b, 'c> JavaStrExt for JavaStr<'a, 'b, 'c> {
-    fn to_str_or_throw(&self, mut env: JNIEnv) -> jni::errors::Result<&str> {
+    fn to_str_or_throw(&self, env: &mut JNIEnv) -> jni::errors::Result<&str> {
         match self.to_str() {
             Ok(s) => Ok(s),
             Err(e) => {
