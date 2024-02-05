@@ -1,26 +1,28 @@
-package pers.zhc.tools.test;
+package pers.zhc.tools.test
 
-import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
-import android.widget.Button;
+import android.os.Bundle
+import android.speech.tts.TextToSpeech
+import android.view.View
+import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.databinding.TtsTestActivityBinding
+import pers.zhc.tools.kangxiconverter.KangxiConverter.kangxiRadicals2normal
+import pers.zhc.tools.kangxiconverter.KangxiConverterActivity
 
-import androidx.annotation.Nullable;
+class TTS : BaseActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val bindings = TtsTestActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.kangxiconverter.KangxiConverter;
-import pers.zhc.tools.R;
-import pers.zhc.tools.views.ScrollEditText;
-
-public class TTS extends BaseActivity {
-    private TextToSpeech tts;
-
-    @Override
-    protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.tts_test_activity);
-        tts = new TextToSpeech(this, null);
-        ScrollEditText et = findViewById(R.id.et);
-        Button button = findViewById(R.id.btn);
-        button.setOnClickListener(v -> tts.speak(KangxiConverter.INSTANCE.kangxiRadicals2normal(et.getText().toString()), TextToSpeech.QUEUE_ADD, null, String.valueOf(System.currentTimeMillis())));
+        val tts = TextToSpeech(this, null)
+        bindings.btn.setOnClickListener { _: View? ->
+            tts.speak(
+                kangxiRadicals2normal(bindings.et.text.toString()),
+                TextToSpeech.QUEUE_ADD,
+                null,
+                System.currentTimeMillis().toString()
+            )
+            KangxiConverterActivity.markKangxiRadicalsEditText(bindings.et.editText)
+        }
     }
 }

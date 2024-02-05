@@ -34,31 +34,33 @@ class KangxiConverterActivity : BaseActivity() {
         }
     }
 
-    private fun markKangxiRadicalsEditText(et: EditText) {
-        val inputText = et.text.toString()
-        val spannableString = SpannableString(inputText)
+    companion object {
+        fun markKangxiRadicalsEditText(et: EditText) {
+            val inputText = et.text.toString()
+            val spannableString = SpannableString(inputText)
 
-        for (pair in inputText.indexesOf(KangxiConverter.KANGXI_RADICALS.codepointChars())) {
-            val start = pair.first
-            val end = start + pair.second
-            val colorSpan = ForegroundColorSpan(Color.RED) // 高亮颜色
-            spannableString.setSpan(colorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            for (pair in inputText.indexesOf(KangxiConverter.KANGXI_RADICALS.codepointChars())) {
+                val start = pair.first
+                val end = start + pair.second
+                val colorSpan = ForegroundColorSpan(Color.RED) // 高亮颜色
+                spannableString.setSpan(colorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            et.setText(spannableString)
+            et.setSelection(inputText.length) // 将光标移至末尾
         }
-        et.setText(spannableString)
-        et.setSelection(inputText.length) // 将光标移至末尾
-    }
 
-    private fun markNormalHansEditText(et: EditText) {
-        val inputText = et.text.toString()
-        val spannableString = SpannableString(inputText)
+        fun markNormalHansEditText(et: EditText) {
+            val inputText = et.text.toString()
+            val spannableString = SpannableString(inputText)
 
-        for (pair in inputText.indexesOf(KangxiConverter.NORMAL_HANS.codepointChars())) {
-            val start = pair.first
-            val end = start + pair.second
-            val colorSpan = ForegroundColorSpan(Color.GREEN) // 高亮颜色
-            spannableString.setSpan(colorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            for (pair in inputText.indexesOf(KangxiConverter.NORMAL_HANS.codepointChars())) {
+                val start = pair.first
+                val end = start + pair.second
+                val colorSpan = ForegroundColorSpan(Color.GREEN) // 高亮颜色
+                spannableString.setSpan(colorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            et.setText(spannableString)
+            et.setSelection(inputText.length) // 将光标移至末尾
         }
-        et.setText(spannableString)
-        et.setSelection(inputText.length) // 将光标移至末尾
     }
 }
