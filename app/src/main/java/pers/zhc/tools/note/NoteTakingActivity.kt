@@ -11,6 +11,7 @@ import pers.zhc.tools.databinding.TakeNoteActivityBinding
 import pers.zhc.tools.utils.DialogUtils
 import pers.zhc.tools.utils.ToastUtils
 import pers.zhc.tools.utils.androidAssert
+import pers.zhc.tools.utils.getSerializableExtra
 import java.io.Serializable
 
 class NoteTakingActivity : NoteBaseActivity() {
@@ -41,8 +42,7 @@ class NoteTakingActivity : NoteBaseActivity() {
 
         val intent = intent
 
-        @Suppress("DEPRECATION")
-        val type = intent.getSerializableExtra(EXTRA_TYPE)!! as Type
+        val type = intent.getSerializableExtra(EXTRA_TYPE, Type::class)!!
         when (type) {
             Type.CREATE -> {
                 onSaveAction = OnSaveAction.CREATE_NEW

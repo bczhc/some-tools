@@ -18,10 +18,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContract
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryContentPreviewActivityBinding
-import pers.zhc.tools.utils.DialogUtils
-import pers.zhc.tools.utils.DisplayUtil
-import pers.zhc.tools.utils.IntDate
-import pers.zhc.tools.utils.getIntExtraOrNull
+import pers.zhc.tools.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -57,7 +54,7 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
         val content = fetchContent(dateInt)
 
         val tvText = if (intent.hasExtra(EXTRA_HIGHLIGHT_REGEX)) {
-            val highlightRegex = intent.getSerializableExtra(EXTRA_HIGHLIGHT_REGEX) as Regex
+            val highlightRegex = intent.getSerializableExtra(EXTRA_HIGHLIGHT_REGEX, Regex::class)!!
             val ranges = highlightRegex.findAll(content).map {
                 it.range
             }

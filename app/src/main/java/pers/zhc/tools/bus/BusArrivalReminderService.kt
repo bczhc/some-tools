@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import pers.zhc.tools.BaseService
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
+import pers.zhc.tools.utils.getSerializableExtra
 
 /**
  * @author bczhc
@@ -40,7 +41,7 @@ class BusArrivalReminderService : BaseService() {
         val runPathId = intent.getStringExtra(EXTRA_RUN_PATH_ID)!!
         val stationId = intent.getStringExtra(EXTRA_BUS_STATION_ID)!!
         val stationName = intent.getStringExtra(EXTRA_BUS_STATION_NAME)!!
-        val direction = intent.getSerializableExtra(EXTRA_DIRECTION)!! as BusLineDetailActivity.Direction
+        val direction = intent.getSerializableExtra(EXTRA_DIRECTION, BusLineDetailActivity.Direction::class)!!
 
         val busReminder = BusReminder(this, runPathId, stationId, stationName, direction, notificationId)
         busReminderList.append(notificationId, busReminder)
