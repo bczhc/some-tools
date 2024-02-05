@@ -1,42 +1,64 @@
 package pers.zhc.tools.kangxiconverter
 
+import android.graphics.Color
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.widget.EditText
 import pers.zhc.tools.BaseActivity
-import pers.zhc.tools.R
-import pers.zhc.tools.kangxiconverter.KangxiConverter.KangXi2Normal
-import pers.zhc.tools.kangxiconverter.KangxiConverter.markKangxiRadicalsEditText
-import pers.zhc.tools.kangxiconverter.KangxiConverter.markNormalHansEditText
-import pers.zhc.tools.kangxiconverter.KangxiConverter.normal2KangXi
-import pers.zhc.tools.views.ScrollEditText
+import pers.zhc.tools.databinding.KangxiConverterActivityBinding
+import pers.zhc.tools.utils.codepointChars
+import pers.zhc.tools.utils.indexesOf
 
 class KangxiConverterActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.kangxi_converter_activity)
-        val kangxiRadicals2NormalHansBtn = findViewById<Button>(R.id.kangxi_radicals_to_normal_hans)
-        val normalHans2KangxiRadicalsBtn = findViewById<Button>(R.id.normal_hans_to_kangxi_radicals)
-        val inputEt = findViewById<ScrollEditText>(R.id.input_et)
-        val outputEt = findViewById<ScrollEditText>(R.id.output_et)
-        kangxiRadicals2NormalHansBtn.setOnClickListener { v: View? ->
-            val input = inputEt.text.toString()
-            val output = KangXi2Normal(input)
+        val bindings = KangxiConverterActivityBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
+
+        val inputEt = bindings.inputEt
+        val outputEt = bindings.outputEt
+
+        bindings.kangxiRadicalsToNormalHans.setOnClickListener {
+            val output = KangxiConverter.kangxiRadicals2normal(inputEt.text.toString())
             outputEt.setText(output)
             markKangxiRadicalsEditText(inputEt.editText)
             markNormalHansEditText(outputEt.editText)
         }
-        normalHans2KangxiRadicalsBtn.setOnClickListener { v: View? ->
-            val input = inputEt.text.toString()
-            val output = normal2KangXi(input)
+        bindings.normalHansToKangxiRadicals.setOnClickListener {
+            val output = KangxiConverter.normal2KangxiRadicals(inputEt.text.toString())
             outputEt.setText(output)
             markNormalHansEditText(inputEt.editText)
             markKangxiRadicalsEditText(outputEt.editText)
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        overridePendingTransition(0, R.anim.slide_out_bottom)
+    private fun markKangxiRadicalsEditText(et: EditText) {
+        val inputText = et.text.toString()
+        val spannableString = SpannableString(inputText)
+
+        for (pair in inputText.indexesOf(KangxiConverter.KANGXI_RADICALS.codepointChars())) {
+            val start = pair.first
+            val end = start + pair.second
+            val colorSpan = ForegroundColorSpan(Color.RED) // 高亮颜色
+            spannableString.setSpan(colorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        et.setText(spannableString)
+        et.setSelection(inputText.length) // 将光标移至末尾
+    }
+
+    private fun markNormalHansEditText(et: EditText) {
+        val inputText = et.text.toString()
+        val spannableString = SpannableString(inputText)
+
+        for (pair in inputText.indexesOf(KangxiConverter.NORMAL_HANS.codepointChars())) {
+            val start = pair.first
+            val end = start + pair.second
+            val colorSpan = ForegroundColorSpan(Color.GREEN) // 高亮颜色
+            spannableString.setSpan(colorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        et.setText(spannableString)
+        et.setSelection(inputText.length) // 将光标移至末尾
     }
 }

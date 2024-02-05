@@ -949,7 +949,7 @@
             android:name=".kangxiconverter.KangxiConverterActivity"
             android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/Theme.M3Application.NoActionBar"
-            android:label="@string/kangxi_converter"
+            android:label="@string/kangxi_converter_label"
             android:taskAffinity="pers.zhc.tools.app.about"
             android:exported="true"
             >

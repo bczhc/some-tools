@@ -483,12 +483,13 @@
     <!-- module end -->
 
     <!-- module:kangxi_converter -->
-    <string name="kangxi_converter">康熙部首转换</string>
-    <string name="input">输入文本</string>
-    <string name="output">输出文本</string>
-    <string name="kangxi_radicals_to_normal_hans">康熙部首转汉字</string>
-    <string name="normal_hans_to_kangxi_radicals">汉字转康熙部首</string>
+    <string name="kangxi_converter_label">康熙部首转换</string>
+    <string name="input_et_hint">输入文本</string>
+    <string name="output_et_hint">输出文本</string>
+    <string name="kangxi_radicals_to_normal_hans_button">康熙部首转汉字</string>
+    <string name="normal_hans_to_kangxi_radicals_button">汉字转康熙部首</string>
     <!--module end -->
+
     <!-- module: diary -->
     <string name="diary_label">日记</string>
     <string name="diary_navigation_view_title">我的日记</string>
