@@ -124,6 +124,7 @@ class FilePicker : BaseActivity() {
         const val EXTRA_DEFAULT_FILENAME = "defaultFilename"
 
         @Contract("_, _ -> new")
+        @Deprecated("Use `FilePickerActivityContract` instead")
         fun getLauncher(activity: BaseActivity, callback: (path: String?) -> Unit): ActivityResultLauncher<Int> {
             return activity.registerForActivityResult(object : ActivityResultContract<Int, String?>() {
                 override fun createIntent(context: Context, input: Int): Intent {
@@ -133,7 +134,7 @@ class FilePicker : BaseActivity() {
                 }
 
                 override fun parseResult(resultCode: Int, intent: Intent?): String? {
-                    return if (intent == null) null else intent.getStringExtra(EXTRA_RESULT)!!
+                    return (intent ?: return null).getStringExtra(EXTRA_RESULT)
                 }
             }) { path: String? -> callback(path) }
         }
