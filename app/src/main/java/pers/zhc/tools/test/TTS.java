@@ -7,7 +7,7 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.KangxiConverter;
+import pers.zhc.tools.kangxiconverter.KangxiConverter;
 import pers.zhc.tools.R;
 import pers.zhc.tools.views.ScrollEditText;
 

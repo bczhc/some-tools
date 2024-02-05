@@ -1,4 +1,4 @@
-package pers.zhc.tools;
+package pers.zhc.tools.kangxiconverter;
 
 import android.graphics.Color;
 import android.text.Spannable;

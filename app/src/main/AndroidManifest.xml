@@ -946,7 +946,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".kangxiConverter.kangxiConverterActivity"
+            android:name=".kangxiconverter.kangxiConverterActivity"
             android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
             android:theme="@style/Theme.M3Application.NoActionBar"
             android:label="@string/kangxi_converter"

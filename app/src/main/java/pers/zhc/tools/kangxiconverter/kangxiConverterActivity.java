@@ -1,4 +1,4 @@
-package pers.zhc.tools.kangxiConverter;
+package pers.zhc.tools.kangxiconverter;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -6,7 +6,6 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 
 import pers.zhc.tools.BaseActivity;
-import pers.zhc.tools.KangxiConverter;
 import pers.zhc.tools.R;
 import pers.zhc.tools.views.ScrollEditText;
 
