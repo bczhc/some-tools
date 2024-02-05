@@ -320,7 +320,6 @@ class NotesActivity : NoteBaseActivity() {
             holder.itemLL.setBackgroundResource(
                 if (item.selected) {
                     R.drawable.clickable_view_selected
-
                 } else {
                     R.drawable.selectable_bg
                 }
