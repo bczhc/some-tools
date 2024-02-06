@@ -2,6 +2,7 @@
 #![feature(yeet_expr)]
 #![allow(incomplete_features, const_evaluatable_unchecked)]
 #![feature(generic_const_exprs)]
+#![feature(decl_macro)]
 
 extern crate core;
 

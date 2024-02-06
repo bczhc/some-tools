@@ -22,69 +22,40 @@ where
     }
 }
 
-const JNI_ERROR_OCCURRED_MSG: &str = "JNI failure occurred";
+pub const JNI_ERROR_OCCURRED_MSG: &str = "JNI error occurred";
 
-pub trait UnwrapOrThrow<T> {
-    fn unwrap_or_throw(self, env: &mut JNIEnv) -> T;
-}
-
-impl<T, E> UnwrapOrThrow<T> for Result<T, E>
-where
-    E: Debug,
-{
-    fn unwrap_or_throw(self, env: &mut JNIEnv) -> T {
-        match self {
-            Ok(r) => r,
-            Err(e) => {
-                let string = format!("{:?}", e);
-                let string = string.as_str();
-                jni_log(env, &format!("throw exception:\n{}", string))
-                    .expect(JNI_ERROR_OCCURRED_MSG);
-                env.throw(string).expect(JNI_ERROR_OCCURRED_MSG);
-                unreachable!()
-            }
+pub macro unwrap_or_throw_result($env:expr, $x:expr, $default:expr) {
+    match $x {
+        Ok(x) => x,
+        Err(e) => {
+            let string = format!("{:?}", e);
+            let string = string.as_str();
+            jni_log($env, &format!("throw exception:\n{}", string)).expect(JNI_ERROR_OCCURRED_MSG);
+            $env.throw(string).expect(JNI_ERROR_OCCURRED_MSG);
+            return $default;
         }
     }
 }
 
-impl<T> UnwrapOrThrow<T> for Option<T> {
-    fn unwrap_or_throw(self, env: &mut JNIEnv) -> T {
-        match self {
-            None => {
-                let msg = "unwrap on `None`";
-                jni_log(env, msg).expect(JNI_ERROR_OCCURRED_MSG);
-                env.throw(msg).expect(JNI_ERROR_OCCURRED_MSG);
-                unreachable!()
-            }
-            Some(r) => r,
+pub macro unwrap_or_throw_option($env:expr, $x:expr, $default:expr) {
+    match $x {
+        Some(x) => x,
+        None => {
+            let error_msg = "unwrap on `None`";
+            jni_log($env, error_msg).expect(JNI_ERROR_OCCURRED_MSG);
+            $env.throw(error_msg).expect(JNI_ERROR_OCCURRED_MSG);
+            return $default;
         }
     }
 }
 
-pub trait ExpectOrThrow<T> {
-    fn expect_or_throw(self, env: &mut JNIEnv, msg: &str) -> T;
-}
-
-impl<T> ExpectOrThrow<T> for Option<T> {
-    fn expect_or_throw(self, env: &mut JNIEnv, msg: &str) -> T {
-        match self {
-            None => {
-                env.throw(msg).expect(JNI_ERROR_OCCURRED_MSG);
-                unreachable!()
-            }
-            Some(a) => a,
+pub macro expect_or_throw_option($env:expr, $x:expr, $default:expr, $msg:expr) {
+    match $x {
+        None => {
+            jni_log($env, &format!("Expect msg: {}", $msg)).expect(JNI_ERROR_OCCURRED_MSG);
+            $env.throw($msg).expect(JNI_ERROR_OCCURRED_MSG);
+            return $default;
         }
-    }
-}
-
-impl<T, E> ExpectOrThrow<T> for Result<T, E> {
-    fn expect_or_throw(self, env: &mut JNIEnv, msg: &str) -> T {
-        match self {
-            Ok(r) => r,
-            Err(_) => {
-                env.throw(msg).expect(JNI_ERROR_OCCURRED_MSG);
-                unreachable!()
-            }
-        }
+        Some(x) => x,
     }
 }
