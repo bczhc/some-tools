@@ -33,25 +33,29 @@ class CharUcdActivity : BaseActivity() {
         setContentView(bindings.root)
 
         EncodingsTextViews(this).apply {
-            utf8.text = getUtf8String(codepoint)
-            utf16.text = getUtf16String(codepoint)
-            utf16le.text = getUtf16BytesString(codepoint, Struct.Endianness.LITTLE)
-            utf16be.text = getUtf16BytesString(codepoint, Struct.Endianness.BIG)
-            utf32.text = getUtf32String(codepoint)
-            utf32le.text = getUtf32BytesString(codepoint, Struct.Endianness.LITTLE)
-            utf32be.text = getUtf32BytesString(codepoint, Struct.Endianness.BIG)
+            runCatching {
+                utf8.text = getUtf8String(codepoint)
+                utf16.text = getUtf16String(codepoint)
+                utf16le.text = getUtf16BytesString(codepoint, Struct.Endianness.LITTLE)
+                utf16be.text = getUtf16BytesString(codepoint, Struct.Endianness.BIG)
+                utf32.text = getUtf32String(codepoint)
+                utf32le.text = getUtf32BytesString(codepoint, Struct.Endianness.LITTLE)
+                utf32be.text = getUtf32BytesString(codepoint, Struct.Endianness.BIG)
+            }
         }
 
-        val charString = JNI.Unicode.Codepoint.codepoint2str(codepoint)
+        runCatching {
+            val charString = JNI.Unicode.Codepoint.codepoint2str(codepoint)
+            bindings.charTv.text = charString
+            bindings.charTv.setOnLongClickListener {
+                ClipboardUtils.putWithToast(this, charString)
+                true
+            }
+        }
         val ucdTL = bindings.ucdPropTl
-        bindings.charTv.text = charString
         bindings.unicodeTv.text =
             getString(R.string.char_ucd_unicode_codepoint_tv, UnicodeTable.codepoint2unicodeStr(codepoint))
         bindings.decimalTv.text = getString(R.string.char_ucd_unicode_decimal_tv, codepoint)
-        bindings.charTv.setOnLongClickListener {
-            ClipboardUtils.putWithToast(this, charString)
-            true
-        }
 
         val ucdContentPlaceholder = bindings.ucdContentPlaceholder
         ucdContentPlaceholder.text = getString(
