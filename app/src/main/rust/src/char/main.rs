@@ -7,7 +7,7 @@ use jni::JNIEnv;
 use crate::jni_helper::ExpectOrThrow;
 
 fn get_char(env: &mut JNIEnv, codepoint: u32) -> char {
-    char::from_u32(codepoint).expect_or_throw(env, char::default(), "Invalid codepoint")
+    char::from_u32(codepoint).expect_or_throw(env, "Invalid codepoint")
 }
 
 #[no_mangle]

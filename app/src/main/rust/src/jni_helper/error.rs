@@ -25,14 +25,14 @@ where
 const JNI_ERROR_OCCURRED_MSG: &str = "JNI failure occurred";
 
 pub trait UnwrapOrThrow<T> {
-    fn unwrap_or_throw(self, env: &mut JNIEnv, default: T) -> T;
+    fn unwrap_or_throw(self, env: &mut JNIEnv) -> T;
 }
 
 impl<T, E> UnwrapOrThrow<T> for Result<T, E>
 where
     E: Debug,
 {
-    fn unwrap_or_throw(self, env: &mut JNIEnv, default: T) -> T {
+    fn unwrap_or_throw(self, env: &mut JNIEnv) -> T {
         match self {
             Ok(r) => r,
             Err(e) => {
@@ -41,20 +41,20 @@ where
                 jni_log(env, &format!("throw exception:\n{}", string))
                     .expect(JNI_ERROR_OCCURRED_MSG);
                 env.throw(string).expect(JNI_ERROR_OCCURRED_MSG);
-                default
+                unreachable!()
             }
         }
     }
 }
 
 impl<T> UnwrapOrThrow<T> for Option<T> {
-    fn unwrap_or_throw(self, env: &mut JNIEnv, default: T) -> T {
+    fn unwrap_or_throw(self, env: &mut JNIEnv) -> T {
         match self {
             None => {
                 let msg = "unwrap on `None`";
                 jni_log(env, msg).expect(JNI_ERROR_OCCURRED_MSG);
                 env.throw(msg).expect(JNI_ERROR_OCCURRED_MSG);
-                default
+                unreachable!()
             }
             Some(r) => r,
         }
@@ -62,15 +62,15 @@ impl<T> UnwrapOrThrow<T> for Option<T> {
 }
 
 pub trait ExpectOrThrow<T> {
-    fn expect_or_throw(self, env: &mut JNIEnv, default: T, msg: &str) -> T;
+    fn expect_or_throw(self, env: &mut JNIEnv, msg: &str) -> T;
 }
 
 impl<T> ExpectOrThrow<T> for Option<T> {
-    fn expect_or_throw(self, env: &mut JNIEnv, default: T, msg: &str) -> T {
+    fn expect_or_throw(self, env: &mut JNIEnv, msg: &str) -> T {
         match self {
             None => {
                 env.throw(msg).expect(JNI_ERROR_OCCURRED_MSG);
-                default
+                unreachable!()
             }
             Some(a) => a,
         }
@@ -78,12 +78,12 @@ impl<T> ExpectOrThrow<T> for Option<T> {
 }
 
 impl<T, E> ExpectOrThrow<T> for Result<T, E> {
-    fn expect_or_throw(self, env: &mut JNIEnv, default: T, msg: &str) -> T {
+    fn expect_or_throw(self, env: &mut JNIEnv, msg: &str) -> T {
         match self {
             Ok(r) => r,
             Err(_) => {
                 env.throw(msg).expect(JNI_ERROR_OCCURRED_MSG);
-                default
+                unreachable!()
             }
         }
     }

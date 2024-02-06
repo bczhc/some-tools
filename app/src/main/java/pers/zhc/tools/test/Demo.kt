@@ -13,8 +13,11 @@ class Demo : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val array = ByteArray(4)
-        JNI.Char.encodeUTF8(0xd800, array, 0)
-        println(array)
+        val data = "hello, world".toByteArray()
+        val bytes = BZip3.compress(data, 1048576)
+        val string = String(BZip3.decompress(bytes))
+
+        ToastUtils.show(this, string)
+        JNI.JniDemo.call2()
     }
 }
