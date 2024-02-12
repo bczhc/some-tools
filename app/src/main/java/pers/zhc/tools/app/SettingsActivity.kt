@@ -121,14 +121,14 @@ class SettingsActivity : BaseActivity() {
         val settings = Settings.readSettings()
         val appServerUrl = settings.serverUrl ?: Settings.Companion.AppServerUrl.default()
 
-        serverET.editText.setText(appServerUrl.serverRootUrl)
-        resourceET.editText.setText(appServerUrl.staticSourceRootUrl)
-        githubET.editText.setText(appServerUrl.githubRawRootUrl)
+        serverET.setText(appServerUrl.serverRootUrl)
+        resourceET.setText(appServerUrl.staticSourceRootUrl)
+        githubET.setText(appServerUrl.githubRawRootUrl)
 
         saveBtn.setOnClickListener {
-            val newServerURL = serverET.editText.text.toString()
-            val newResourceURL = resourceET.editText.text.toString()
-            val newGithubRawURL = githubET.editText.text.toString()
+            val newServerURL = serverET.text.toString()
+            val newResourceURL = resourceET.text.toString()
+            val newGithubRawURL = githubET.text.toString()
 
             Settings.updateSettings {
                 it.serverUrl = Settings.Companion.AppServerUrl(

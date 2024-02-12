@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -30,24 +29,36 @@
                     android:text="URL"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
                     tools:ignore="HardcodedText"/>
-                <pers.zhc.tools.views.SmartHintEditText
-                    android:id="@+id/server_et"
-                    style="@style/Widget.M3Application.TextInputLayout.FilledBox"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:hint="@string/settings_server_root_url"/>
-                <pers.zhc.tools.views.SmartHintEditText
-                    android:id="@+id/resource_et"
-                    style="@style/Widget.M3Application.TextInputLayout.FilledBox"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/server_et"
+                        style="?textInputOutlinedStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/settings_server_root_url"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:hint="@string/settings_static_resource_root_url"/>
-                <pers.zhc.tools.views.SmartHintEditText
-                    android:id="@+id/github_raw_url_et"
-                    style="@style/Widget.M3Application.TextInputLayout.FilledBox"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/resource_et"
+                        style="?textInputOutlinedStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/settings_static_resource_root_url"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:hint="@string/settings_github_raw_root_url"/>
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/github_raw_url_et"
+                        style="?textInputOutlinedStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/settings_github_raw_root_url"/>
+                </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/save"
                     android:layout_width="wrap_content"
