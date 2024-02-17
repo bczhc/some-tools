@@ -52,7 +52,7 @@ class NotesActivity : NoteBaseActivity() {
             listAdapter.notifyDataSetChanged()
         }
 
-        val modify = registerForActivityResult(object : ActivityResultContract<Long, Long>() {
+        val modify = registerForActivityResult(object : ActivityResultContract<Long, Long?>() {
             override fun createIntent(context: Context, input: Long): Intent {
                 return Intent(context, NoteTakingActivity::class.java).apply {
                     putExtra(NoteTakingActivity.EXTRA_TYPE, NoteTakingActivity.Type.UPDATE)
@@ -60,10 +60,11 @@ class NotesActivity : NoteBaseActivity() {
                 }
             }
 
-            override fun parseResult(resultCode: Int, intent: Intent?): Long {
-                return intent!!.getLongExtra(NoteTakingActivity.EXTRA_TIMESTAMP, 0)
+            override fun parseResult(resultCode: Int, intent: Intent?): Long? {
+                return (intent ?: return null).getLongExtra(NoteTakingActivity.EXTRA_TIMESTAMP, 0)
             }
         }) { timestamp ->
+            timestamp ?: return@registerForActivityResult
             val position = listItems.indexOfFirst {
                 it.data.time == timestamp
             }
