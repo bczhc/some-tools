@@ -24,3 +24,10 @@ fun String.indexesOf(needle: String): List<Pair<Int, Int>> {
 fun String.indexesOf(needles: List<String>): List<Pair<Int, Int>> {
     return needles.flatMap { this.indexesOf(it) }.distinct()
 }
+
+fun String.completeLeadingZeros(totalLength: Int): String {
+    val s = this
+    return if (s.length < totalLength) {
+        "${"0".repeat(totalLength - s.length)}$s"
+    } else s
+}

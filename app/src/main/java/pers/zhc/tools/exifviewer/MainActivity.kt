@@ -72,6 +72,7 @@ class MainActivity : BaseActivity() {
             return ViewHolder(bindings)
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val context = holder.tv.context
             val entry = entries[position]
@@ -80,14 +81,15 @@ class MainActivity : BaseActivity() {
 
             val bindings = ExifViewerDetailedInfoDialogBinding.inflate(LayoutInflater.from(context))
             bindings.apply {
-                tagTv.text = entry.tag
+                tagIdTv.text = "0x${entry.tagId.toString(16).completeLeadingZeros(4)}"
+                tagTv.text = entry.tagDisplay
                 tagDescTv.text = entry.tagDesc
                 valueDisplayTv.text = entry.valueDisplay
                 valueReadableTv.text = entry.valueReadable
                 valueInternalTv.text = entry.valueInternal
 
                 tagLl.setOnLongClickListener {
-                    ClipboardUtils.putWithToast(MyApplication.appContext, entry.tag)
+                    ClipboardUtils.putWithToast(MyApplication.appContext, entry.tagDisplay)
                     true
                 }
             }

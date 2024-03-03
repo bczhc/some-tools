@@ -9,7 +9,8 @@ use std::fs::File;
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ExifEntry {
-    pub tag: String,
+    pub tag_id: u16,
+    pub tag_display: String,
     pub tag_desc: String,
     pub value_display: String,
     pub value_readable: String,
@@ -29,7 +30,8 @@ pub fn Java_pers_zhc_tools_jni_JNI_00024Exif_getExifInfo(
         let mut entries = Vec::new();
         for x in exif.entries {
             let entry = ExifEntry {
-                tag: format!("{:?}", x.tag),
+                tag_display: format!("{:?}", x.tag),
+                tag_id: (x.tag as u32 & 0xffff_u32) as u16,
                 tag_desc: format!("{}", x.tag),
                 value_internal: format!("{:?}", x.value),
                 value_readable: format!("{}", x.value_more_readable),
