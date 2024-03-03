@@ -874,5 +874,6 @@
     <!-- Exif Viewer -->
     <string name="exif_read_button">读取</string>
     <string name="exif_label">Exif查看</string>
+    <string name="exif_detailed_info_dialog_title">详细信息</string>
     <!-- end -->
 </resources>

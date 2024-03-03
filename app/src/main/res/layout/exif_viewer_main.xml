@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -13,7 +14,8 @@
             android:id="@+id/tiet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/file_path"/>
+            android:hint="@string/file_path"
+            android:textIsSelectable="true"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -23,12 +25,9 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/exif_read_button"/>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/output"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </ScrollView>
+        android:layout_height="match_parent"
+        tools:listitem="@layout/exif_viewer_entry_item"/>
 </LinearLayout>
