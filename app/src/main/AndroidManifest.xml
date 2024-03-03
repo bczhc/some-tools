@@ -957,5 +957,18 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <!-- TODO: taskAffinity all messed up -->
+        <activity
+            android:name=".exifviewer.MainActivity"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+            android:theme="@style/Theme.M3Application.NoActionBar"
+            android:label="@string/exif_label"
+            android:taskAffinity="pers.zhc.tools.app.about"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

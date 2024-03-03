@@ -124,3 +124,5 @@ pub mod signals;
 #[cfg(not(disable_network_related))]
 pub mod transfer;
 pub mod unicode;
+
+pub mod exif;

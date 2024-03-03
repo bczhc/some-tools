@@ -42,7 +42,11 @@ class SmallToolsListActivity : BaseActivity() {
             ActivityItem(R.string.char_stat_label, CharStatActivity::class.java),
             ActivityItem(R.string.text_editor_label, MainActivity::class.java),
             ActivityItem(R.string.hash_tool_label, pers.zhc.tools.hashtools.MainActivity::class.java),
-            ActivityItem(R.string.kangxi_converter_label, pers.zhc.tools.kangxiconverter.KangxiConverterActivity::class.java)
+            ActivityItem(
+                R.string.kangxi_converter_label,
+                pers.zhc.tools.kangxiconverter.KangxiConverterActivity::class.java
+            ),
+            ActivityItem(R.string.exif_label, pers.zhc.tools.exifviewer.MainActivity::class.java)
         )
 
         recyclerView.adapter = AppMenuAdapter(this, activities)

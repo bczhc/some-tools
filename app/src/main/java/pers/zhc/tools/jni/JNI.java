@@ -529,4 +529,8 @@ public class JNI {
     public static class Digest {
         public static native byte[] sha256(byte[] data, int iterations);
     }
+
+    public static class Exif {
+        public static native String getExifInfo(String path);
+    }
 }
