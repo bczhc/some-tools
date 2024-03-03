@@ -7,94 +7,10 @@
     android:orientation="vertical"
     android:paddingHorizontal="5dp"
     tools:ignore="HardcodedText">
-    <LinearLayout
-        android:id="@+id/tag_id_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tag ID"
-            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"/>
-        <TextView
-            android:id="@+id/tag_id_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <LinearLayout
-        android:id="@+id/tag_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tag Display"
-            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"/>
-        <TextView
-            android:id="@+id/tag_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tag Description"
-        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"/>
-    <TextView
-        android:id="@+id/tag_desc_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Value Display"
-        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"/>
-    <TextView
-        android:id="@+id/value_display_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Value Internal"
-        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"/>
-    <TextView
-        android:id="@+id/value_internal_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Value Readable"
-        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"/>
-    <TextView
-        android:id="@+id/value_readable_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
 </LinearLayout>

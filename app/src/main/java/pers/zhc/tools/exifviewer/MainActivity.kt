@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.tools.BaseActivity
@@ -12,6 +14,7 @@ import pers.zhc.tools.MyApplication
 import pers.zhc.tools.MyApplication.Companion.GSON
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.ExifViewerDetailedInfoDialogBinding
+import pers.zhc.tools.databinding.ExifViewerDetailedInfoDialogImport1Binding
 import pers.zhc.tools.databinding.ExifViewerEntryItemBinding
 import pers.zhc.tools.databinding.ExifViewerMainBinding
 import pers.zhc.tools.jni.JNI
@@ -80,18 +83,33 @@ class MainActivity : BaseActivity() {
             holder.tv.text = text
 
             holder.tv.setOnClickListener {
-                val bindings = ExifViewerDetailedInfoDialogBinding.inflate(LayoutInflater.from(context))
-                bindings.apply {
-                    tagIdTv.text = "0x${entry.tagId.toString(16).completeLeadingZeros(4)}"
-                    tagTv.text = entry.tagDisplay
-                    tagDescTv.text = entry.tagDesc
-                    valueDisplayTv.text = entry.valueDisplay
-                    valueReadableTv.text = entry.valueReadable
-                    valueInternalTv.text = entry.valueInternal
+                val titles = arrayOf(
+                    "Tag ID",
+                    "Tag Display",
+                    "Tag Description",
+                    "Value Display",
+                    "Value Readable",
+                    "Value Internal",
+                )
+                val values = arrayOf(
+                    "0x${entry.tagId.toString(16).completeLeadingZeros(4)}",
+                    entry.tagDisplay,
+                    entry.tagDesc,
+                    entry.valueDisplay,
+                    entry.valueReadable,
+                    entry.valueInternal,
+                )
 
-                    tagLl.setOnLongClickListener {
-                        ClipboardUtils.putWithToast(MyApplication.appContext, entry.tagDisplay)
-                        true
+                val bindings = ExifViewerDetailedInfoDialogBinding.inflate(LayoutInflater.from(context))
+                bindings.root.children.forEachIndexed { index, v ->
+                    androidAssert(v is LinearLayout)
+                    ExifViewerDetailedInfoDialogImport1Binding.bind(v).apply {
+                        clickableLl.setOnLongClickListener {
+                            ClipboardUtils.putWithToast(MyApplication.appContext, values[index])
+                            true
+                        }
+                        titleTv.text = titles[index]
+                        contentTv.text = values[index]
                     }
                 }
 
