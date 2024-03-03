@@ -36,7 +36,6 @@ class MainActivity : BaseActivity() {
         bindings.recyclerView.apply {
             addDividerLines()
             setLinearLayoutManager()
-            setUpFastScroll(this@MainActivity)
             adapter = listAdapter
         }
 
