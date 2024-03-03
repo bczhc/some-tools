@@ -79,22 +79,22 @@ class MainActivity : BaseActivity() {
             val text = "${entry.tagDesc}: ${entry.valueReadable}"
             holder.tv.text = text
 
-            val bindings = ExifViewerDetailedInfoDialogBinding.inflate(LayoutInflater.from(context))
-            bindings.apply {
-                tagIdTv.text = "0x${entry.tagId.toString(16).completeLeadingZeros(4)}"
-                tagTv.text = entry.tagDisplay
-                tagDescTv.text = entry.tagDesc
-                valueDisplayTv.text = entry.valueDisplay
-                valueReadableTv.text = entry.valueReadable
-                valueInternalTv.text = entry.valueInternal
-
-                tagLl.setOnLongClickListener {
-                    ClipboardUtils.putWithToast(MyApplication.appContext, entry.tagDisplay)
-                    true
-                }
-            }
-
             holder.tv.setOnClickListener {
+                val bindings = ExifViewerDetailedInfoDialogBinding.inflate(LayoutInflater.from(context))
+                bindings.apply {
+                    tagIdTv.text = "0x${entry.tagId.toString(16).completeLeadingZeros(4)}"
+                    tagTv.text = entry.tagDisplay
+                    tagDescTv.text = entry.tagDesc
+                    valueDisplayTv.text = entry.valueDisplay
+                    valueReadableTv.text = entry.valueReadable
+                    valueInternalTv.text = entry.valueInternal
+
+                    tagLl.setOnLongClickListener {
+                        ClipboardUtils.putWithToast(MyApplication.appContext, entry.tagDisplay)
+                        true
+                    }
+                }
+
                 MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.exif_detailed_info_dialog_title)
                     .setView(bindings.root)
