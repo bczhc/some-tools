@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:paddingHorizontal="5dp"
     tools:ignore="HardcodedText">
-    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
-    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
-    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
-    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
-    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
-    <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/includes_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+        <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+        <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+        <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+        <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+        <include layout="@layout/exif_viewer_detailed_info_dialog_import1"/>
+    </LinearLayout>
+</ScrollView>

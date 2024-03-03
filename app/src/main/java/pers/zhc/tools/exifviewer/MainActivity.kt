@@ -87,21 +87,21 @@ class MainActivity : BaseActivity() {
                     "Tag ID",
                     "Tag Display",
                     "Tag Description",
-                    "Value Display",
                     "Value Readable",
+                    "Value Display",
                     "Value Internal",
                 )
                 val values = arrayOf(
                     "0x${entry.tagId.toString(16).completeLeadingZeros(4)}",
                     entry.tagDisplay,
                     entry.tagDesc,
-                    entry.valueDisplay,
                     entry.valueReadable,
+                    entry.valueDisplay,
                     entry.valueInternal,
                 )
 
                 val bindings = ExifViewerDetailedInfoDialogBinding.inflate(LayoutInflater.from(context))
-                bindings.root.children.forEachIndexed { index, v ->
+                bindings.includesParent.children.forEachIndexed { index, v ->
                     androidAssert(v is LinearLayout)
                     ExifViewerDetailedInfoDialogImport1Binding.bind(v).apply {
                         clickableLl.setOnLongClickListener {
