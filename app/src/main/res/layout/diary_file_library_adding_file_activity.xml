@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/type"
-            android:textColor="@color/highContrastTextColor"
+            android:textColor="?colorOnSurface"
             android:textSize="20sp"/>
         <Spinner
             android:id="@+id/spinner"

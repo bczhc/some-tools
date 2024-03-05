@@ -10,7 +10,7 @@
         android:id="@+id/code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/highContrastTextColor"
+        android:textColor="?colorOnSurface"
         tools:text="ggtt"/>
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/candidate_fl"

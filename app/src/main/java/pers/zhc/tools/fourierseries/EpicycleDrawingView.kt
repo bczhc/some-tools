@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
 import androidx.core.app.ActivityCompat
+import com.google.android.material.color.MaterialColors
 import pers.zhc.tools.BaseView
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.AsyncTryDo
@@ -40,7 +41,7 @@ class EpicycleDrawingView(context: Context, private val epicycles: Epicycles) : 
         }
         epicyclePaint.apply {
             strokeWidth = unitEpicycleStrokeWidth
-            color = ActivityCompat.getColor(context, R.color.highContrastMain)
+            color = MaterialColors.getColor(context, R.attr.colorOnSurface, "")
             style = Paint.Style.STROKE
         }
         pathPaint.apply {

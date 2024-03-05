@@ -9,6 +9,7 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
+import com.google.android.material.color.MaterialColors
 import pers.zhc.tools.BaseView
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.DisplayUtil
@@ -30,7 +31,7 @@ class DrawingView : BaseView {
         paint.apply {
             strokeWidth = DisplayUtil.dip2px(context, 1.0F).toFloat()
             style = Paint.Style.STROKE
-            color = ContextCompat.getColor(context, R.color.highContrastMain)
+            color = MaterialColors.getColor(this@DrawingView.context, R.attr.colorOnSurface, "")
         }
         axesPaint.apply {
             strokeWidth = 0.0F

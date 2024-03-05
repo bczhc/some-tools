@@ -11,7 +11,7 @@
             android:id="@+id/content_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/highContrastTextColor"
+            android:textColor="?colorOnSurface"
             android:textIsSelectable="true"/>
         <LinearLayout
             android:id="@+id/bottom_attachment_ll"

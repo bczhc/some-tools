@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="highContrastTextColor">@color/white</color>
-    <color name="highContrastMain">@color/highContrastTextColor</color>
-    <color name="highContrastBg">?colorSurface</color>
-
     <color name="colorPrimary">#16774D</color>
     <color name="colorOnPrimary">#F5FFFD</color>
     <color name="colorSecondary">#71B0FF</color>

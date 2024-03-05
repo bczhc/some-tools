@@ -18,9 +18,6 @@
     <color name="red">#FFFF0000</color>
     <color name="dark_red">#DD2C00</color>
     <color name="blue">#FF0000FF</color>
-    <color name="highContrastTextColor">?colorOnSurface</color>
-    <color name="highContrastMain">@color/highContrastTextColor</color>
-    <color name="highContrastBg">?colorSurface</color>
 
     <color name="diary_item_date_head">#1565C0</color>
 
