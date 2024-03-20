@@ -17,7 +17,6 @@ import pers.zhc.tools.databinding.ExifViewerDetailedInfoDialogImport1Binding
 import pers.zhc.tools.databinding.ExifViewerEntryItemBinding
 import pers.zhc.tools.databinding.ExifViewerMainBinding
 import pers.zhc.tools.jni.JNI
-import pers.zhc.tools.texteditor.ExifEntry
 import pers.zhc.tools.utils.*
 import java.io.File
 

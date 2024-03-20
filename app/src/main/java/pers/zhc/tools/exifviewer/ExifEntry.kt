@@ -1,4 +1,4 @@
-package pers.zhc.tools.texteditor
+package pers.zhc.tools.exifviewer
 
 data class ExifEntry(
     val tagId: UShort,
