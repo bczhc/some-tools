@@ -13,6 +13,7 @@ import pers.zhc.tools.R
 import pers.zhc.tools.databinding.FdbMainActivityBinding
 import pers.zhc.tools.jni.JNI.ByteSize
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.checkFromOpenAs
 import pers.zhc.tools.utils.requireDelete
 import pers.zhc.tools.utils.requireMkdir
 import java.io.File
@@ -79,9 +80,8 @@ class FdbMainActivity : BaseActivity() {
         startService(serviceIntent)
 
         // from file manager "open as"
-        if (intent?.action == Intent.ACTION_VIEW && intent?.data != null) {
-            val uri = intent.data!!
-            val inputStream = contentResolver.openInputStream(uri)
+        checkFromOpenAs()?.let { result ->
+            val inputStream = result.openInputStream()
             if (inputStream == null) {
                 ToastUtils.show(this, R.string.file_open_failed_toast)
                 finish()

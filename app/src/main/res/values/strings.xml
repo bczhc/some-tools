@@ -875,5 +875,8 @@
     <string name="exif_read_button">读取</string>
     <string name="exif_label">Exif查看</string>
     <string name="exif_detailed_info_dialog_title">详细信息</string>
+    <string name="file_title">文件</string>
+    <string name="file_path_please_use_open_as_hint">（请使用“打开为……”打开）</string>
+    <string name="exif_exif_data_title">Exif</string>
     <!-- end -->
 </resources>

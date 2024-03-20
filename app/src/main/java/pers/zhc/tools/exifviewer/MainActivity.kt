@@ -1,7 +1,6 @@
 package pers.zhc.tools.exifviewer
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,6 +19,7 @@ import pers.zhc.tools.databinding.ExifViewerMainBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.texteditor.ExifEntry
 import pers.zhc.tools.utils.*
+import java.io.File
 
 class MainActivity : BaseActivity() {
     private lateinit var bindings: ExifViewerMainBinding
@@ -40,24 +40,27 @@ class MainActivity : BaseActivity() {
         }
 
         // launched from the "Open as" dialog
-        if (intent.action == Intent.ACTION_VIEW) {
-            // TODO: workaround; should use content provider but not direct path
-            intent.data.nullMap { it.path }?.let { path ->
-                bindings.tiet.setText(path)
-                updateResult()
+        checkFromOpenAs()?.let { result ->
+            val stream = result.openInputStream()
+            if (stream == null) {
+                ToastUtils.show(this, R.string.file_open_failed_toast)
+                finish()
+                return
             }
-        }
-
-        bindings.readBtn.setOnClickListener {
-            updateResult()
+            bindings.filePathTv.text = result.uri.path
+            // TODO: can we consider directly pass the stream to JNI?
+            val tmpFile = tmpFile()
+            tmpFile.copyFrom(stream)
+            stream.close()
+            updateResult(tmpFile)
+            tmpFile.delete()
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun updateResult() {
+    private fun updateResult(file: File) {
         runCatching {
-            val path = bindings.tiet.text.toString()
-            val exifInfo = JNI.Exif.getExifInfo(path)
+            val exifInfo = JNI.Exif.getExifInfo(file.path)
             exifEntries.clear()
             exifEntries.addAll(GSON.fromJson(exifInfo, Array<ExifEntry>::class.java))
             listAdapter.notifyDataSetChanged()

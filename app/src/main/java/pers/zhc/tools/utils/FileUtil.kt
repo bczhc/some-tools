@@ -4,6 +4,7 @@ import pers.zhc.tools.MyApplication
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.InputStream
 import kotlin.random.Random
 import kotlin.random.nextUInt
 
@@ -49,4 +50,8 @@ fun tmpFile(): File {
 
 fun File.checkAddExtension(ext: String): File {
     return if (this.extension != ext) File(this.path + ".$ext") else this
+}
+
+fun File.copyFrom(stream: InputStream) {
+    stream.writeTo(this.outputStream())
 }
