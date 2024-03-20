@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import java.io.InputStream
+import java.io.OutputStream
 
 class OpenAsResult(
     private val context: Context,
@@ -12,6 +13,10 @@ class OpenAsResult(
 ) {
     fun openInputStream(): InputStream? {
         return context.contentResolver.openInputStream(uri)
+    }
+
+    fun openOutputStream(mode: String = "w"): OutputStream? {
+        return context.contentResolver.openOutputStream(uri, mode)
     }
 }
 

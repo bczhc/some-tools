@@ -1,10 +1,10 @@
 package pers.zhc.tools.texteditor
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import androidx.activity.addCallback
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.tools.BaseActivity
@@ -12,14 +12,14 @@ import pers.zhc.tools.R
 import pers.zhc.tools.databinding.TextEditorMainBinding
 import pers.zhc.tools.jni.JNI.Encoding
 import pers.zhc.tools.jni.JNI.Encoding.EncodingVariant
-import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.utils.nullMap
+import pers.zhc.tools.utils.*
 import java.io.File
 
 class MainActivity : BaseActivity() {
     private var isModified = false
     private lateinit var editText: EditText
-    private var file: File? = null
+    private var tmpFile: File? = null
+    private lateinit var openAsResult: OpenAsResult
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,20 +32,45 @@ class MainActivity : BaseActivity() {
         this.editText = editText.editText
 
         // activity is launched from "Open as" dialog
-        val initFilePath = if (intent.action == Intent.ACTION_VIEW) {
-            // TODO: workaround; should use content provider but not direct path
-            intent.data.nullMap { it.path }
-        } else null
-        this.file = initFilePath.nullMap { File(it) }
-
-        if (this.file == null) {
-            ToastUtils.show(this, "Null file")
+        val openAsResult = checkFromOpenAs()
+        if (openAsResult == null) {
+            ToastUtils.show(this, R.string.file_path_please_use_open_as_hint)
+            finish()
             return
         }
-        this.editText.setText(Encoding.readFile(file!!.path, EncodingVariant.UTF_8))
+        this.openAsResult = openAsResult
+
+        val inputStream = openAsResult.openInputStream()
+        if (inputStream == null) {
+            ToastUtils.show(this, R.string.file_open_failed_toast)
+            finish()
+            return
+        }
+
+        val tmpFile = tmpFile()
+        this.tmpFile = tmpFile
+        tmpFile.copyFrom(inputStream)
+
+        this.editText.setText(Encoding.readFile(tmpFile.path, EncodingVariant.UTF_8))
 
         this.editText.doAfterTextChanged {
             isModified = true
+        }
+
+        onBackPressedDispatcher.addCallback {
+            if (isModified) {
+                MaterialAlertDialogBuilder(this@MainActivity)
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        save()
+                        ToastUtils.show(this@MainActivity, R.string.save_success_toast)
+                        finish()
+                    }
+                    .setNegativeButton(R.string.no) { _, _ ->
+                        finish()
+                    }
+                    .setTitle(R.string.whether_to_save)
+                    .show()
+            } else finish()
         }
     }
 
@@ -56,7 +81,7 @@ class MainActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val update = { encoding: EncodingVariant ->
-            editText.setText(Encoding.readFile(file!!.path, encoding))
+            editText.setText(Encoding.readFile(tmpFile!!.path, encoding))
         }
         when (item.itemId) {
             R.id.utf8 -> {
@@ -103,24 +128,12 @@ class MainActivity : BaseActivity() {
 
     private fun save() {
         val text = editText.text.toString()
-        this.file!!.writeText(text)
-    }
-
-    @Suppress("DEPRECATION")
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (isModified && file != null) {
-            MaterialAlertDialogBuilder(this)
-                .setPositiveButton(R.string.yes) { _, _ ->
-                    save()
-                    ToastUtils.show(this, R.string.save_success_toast)
-                    super.onBackPressed()
-                }
-                .setNegativeButton(R.string.no) { _, _ ->
-                    super.onBackPressed()
-                }
-                .setTitle(R.string.whether_to_save)
-                .show()
-        } else super.onBackPressed()
+        val stream = this.openAsResult.openOutputStream("w")
+        if (stream == null) {
+            ToastUtils.show(this, R.string.saving_failed)
+            return
+        }
+        stream.writer().also { it.write(text) }.flush()
+        stream.close()
     }
 }
