@@ -492,7 +492,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         var msgResOnFinished = 0
         SQLite3::class.withNew(DiaryDatabase.internalDatabasePath.path) {
             if (it.checkIfCorrupt()) {
-                msgResOnFinished = R.string.corrupted_database_and_recreate_new_msg
+                msgResOnFinished = R.string.corrupt_database_and_recreate_new_msg
                 DiaryDatabase.internalDatabasePath.requireDelete()
             } else {
                 msgResOnFinished = R.string.importing_succeeded

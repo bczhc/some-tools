@@ -5,8 +5,9 @@ import pers.zhc.tools.MyApplication
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.rc.Ref
 import pers.zhc.tools.utils.rc.ReusableRcManager
+import java.io.File
 
-class Database(path: String) : BaseDatabase(path) {
+class Database(val path: String) : BaseDatabase(path) {
     init {
         db.exec(
             """CREATE TABLE IF NOT EXISTS doc
@@ -23,6 +24,10 @@ class Database(path: String) : BaseDatabase(path) {
         db.execBind("INSERT INTO doc (t, title, content) VALUES (?, ?, ?)", arrayOf(timestamp, title, content))
     }
 
+    fun addRecord(record: Record) {
+        addRecord(record.time, record.title, record.content)
+    }
+
     private fun mapRow(cursor: Cursor): Record {
         return Record(
             cursor.getLong(0),
@@ -31,13 +36,26 @@ class Database(path: String) : BaseDatabase(path) {
         )
     }
 
+    fun queryExec(callback: (row: Record) -> Unit) {
+        db.queryExec("SELECT t, title, content FROM doc ORDER BY t") { c ->
+            while (c.step()) {
+                val row = mapRow(c)
+                callback(row)
+            }
+        }
+    }
+
     fun queryAll(): ArrayList<Record> {
-        return db.queryRows("SELECT t, title, content FROM doc", mapRow = this::mapRow)
+        return db.queryRows("SELECT t, title, content FROM doc ORDER BY t", mapRow = this::mapRow)
+    }
+
+    fun recordCount(): Int {
+        return db.getRecordCount("doc")
     }
 
     fun query(timestamp: Long): Record? {
         var record: Record? = null
-        db.queryExec("SELECT t, title, content FROM doc WHERE t IS ?", arrayOf(timestamp)) {
+        db.queryExec("SELECT t, title, content FROM doc WHERE t IS ? ORDER BY t", arrayOf(timestamp)) {
             if (it.step()) {
                 record = mapRow(it)
             }
@@ -87,6 +105,33 @@ class Database(path: String) : BaseDatabase(path) {
 
         fun getRefCount(): Int {
             return sharedDbManager.getRefCount()
+        }
+
+        fun joinTwo(db1Path: File, db2Path: File, outPath: File) {
+            val db1 = Database(db1Path.path)
+            val db2 = Database(db2Path.path)
+            val out = Database(outPath.path)
+
+            out.db.beginTransaction()
+
+            if (out.recordCount() != 0) {
+                throw RuntimeException("An empty 'out' database is required")
+            }
+            val timestamps = HashSet<Long>()
+            val add = { row: Record ->
+                if (!timestamps.contains(row.time)) {
+                    timestamps.add(row.time)
+                    out.addRecord(row)
+                }
+            }
+
+            db1.queryExec { add(it) }
+            db2.queryExec { add(it) }
+
+            out.db.commit()
+            out.close()
+            db1.close()
+            db2.close()
         }
     }
 }

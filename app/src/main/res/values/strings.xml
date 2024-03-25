@@ -86,7 +86,8 @@
     <string name="deleted_message">已删除</string>
     <string name="import_dialog">导入</string>
     <string name="export_dialog">导出</string>
-    <string name="corrupted_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
+    <string name="corrupt_database_and_recreate_new_msg">数据库损坏，已重新创建新的数据库</string>
+    <string name="corrupt_imported_database_toast">导入的数据库已损坏</string>
     <string name="delete_menu">@string/delete_button</string>
     <string name="select_all_btn">全选</string>
     <string name="hardware_acceleration">硬件加速</string>
@@ -798,7 +799,7 @@
     <string name="note_modify_menu">修改</string>
     <string name="note_record_updating_succeeded">更新成功</string>
     <string name="note_import_ref_count_not_zero_msg">数据库还有%1$d个连接引用，不能关闭，导入终止。</string>
-    <string name="note_import_overwrite_alert">导入操作将会覆盖当前已有笔记，是否继续？</string>
+    <string name="note_import_overwrite_dialog_title">导入选项</string>
     <string name="note_filename_duplication_alert">当前目录下已有同名文件，继续将覆盖</string>
     <string name="note_no_notes_selected_msg">未选择笔记</string>
     <string name="note_selected_notes_count_msg">已选择%1$d项</string>
@@ -879,5 +880,8 @@
     <string name="file_title">文件</string>
     <string name="file_path_please_use_open_as_hint">（请使用“打开为……”打开）</string>
     <string name="exif_exif_data_title">Exif</string>
+    <string name="note_import_option_overwrite">覆盖</string>
+    <string name="note_import_option_incremental">增量</string>
+    <string name="note_incremental_import_succeeded">增量导入成功</string>
     <!-- end -->
 </resources>

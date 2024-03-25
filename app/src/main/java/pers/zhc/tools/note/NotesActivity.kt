@@ -1,5 +1,6 @@
 package pers.zhc.tools.note
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,9 +12,11 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.NodeOnImportDialogBinding
 import pers.zhc.tools.databinding.NoteItemBinding
 import pers.zhc.tools.databinding.NotesActivityBinding
 import pers.zhc.tools.filepicker.FilePicker
@@ -235,14 +238,33 @@ class NotesActivity : NoteBaseActivity() {
         listItems = ArrayList(database.queryAll().map { ListItem(it) })
     }
 
-    private fun import(path: File) {
-        DialogUtils.createConfirmationAlertDialog(
-            this,
-            titleRes = R.string.import_dialog,
-            message = getString(R.string.note_import_overwrite_alert),
-            width = MATCH_PARENT,
-            positiveAction = { _, _ ->
+    enum class ImportOption {
+        OVERWRITE,
+        INCREMENTAL,
+    }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun import(path: File) {
+        val bindings = NodeOnImportDialogBinding.inflate(layoutInflater)
+        bindings.overwrite.isChecked = true
+        var importOption = ImportOption.OVERWRITE
+
+        bindings.group.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                importOption = when (checkedId) {
+                    bindings.overwrite.id -> ImportOption.OVERWRITE
+                    bindings.incremental.id -> ImportOption.INCREMENTAL
+                    else -> unreachable()
+                }
+                println(importOption)
+            }
+        }
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.import_dialog)
+            .setTitle(R.string.note_import_overwrite_dialog_title)
+            .setView(bindings.root)
+            .setPositiveAction { _, _ ->
                 val refCount = Database.getRefCount()
                 // there are still other references (> 1); cannot import
                 if (refCount != 1) {
@@ -250,33 +272,56 @@ class NotesActivity : NoteBaseActivity() {
                         this,
                         getString(R.string.note_import_ref_count_not_zero_msg, refCount)
                     )
-                    return@createConfirmationAlertDialog
+                    return@setPositiveAction
                 }
+                val oldDbPath = databaseRef.get().path
                 // release the current database
                 databaseRef.release()
                 androidAssert(Database.getRefCount() == 0)
 
-                FileUtil.copy(path, Database.databasePath)
+                when (importOption) {
+                    ImportOption.OVERWRITE -> {
+                        FileUtil.copy(path, Database.databasePath)
 
-                var msgResOnFinished = 0
-                SQLite3::class.withNew(Database.databasePath.path) {
-                    if (it.checkIfCorrupt()) {
-                        msgResOnFinished = R.string.corrupted_database_and_recreate_new_msg
-                        Database.databasePath.requireDelete()
+                        var msgResOnFinished = 0
+                        SQLite3::class.withNew(Database.databasePath.path) {
+                            if (it.checkIfCorrupt()) {
+                                msgResOnFinished = R.string.corrupt_database_and_recreate_new_msg
+                                Database.databasePath.requireDelete()
+                            }
+                        }
+
+                        reopenDatabase()
+                        updateAllRecords()
+                        listAdapter.notifyDataSetChanged()
+
+                        if (msgResOnFinished == 0) {
+                            msgResOnFinished = R.string.importing_succeeded
+                        }
+                        ToastUtils.show(this, msgResOnFinished)
+                    }
+
+                    ImportOption.INCREMENTAL -> {
+                        val tmpOutDb = tmpFile()
+                        SQLite3.open(path.path).let {
+                            if (it.checkIfCorrupt()) {
+                                ToastUtils.show(this, R.string.corrupt_imported_database_toast)
+                                it.close()
+                                return@setPositiveAction
+                            }
+                        }
+
+                        Database.joinTwo(File(oldDbPath), path, tmpOutDb)
+                        FileUtil.copy(tmpOutDb, Database.databasePath)
+
+                        reopenDatabase()
+                        updateAllRecords()
+                        listAdapter.notifyDataSetChanged()
+                        ToastUtils.show(this, R.string.note_incremental_import_succeeded)
                     }
                 }
-
-                reopenDatabase()
-
-                updateAllRecords()
-                listAdapter.notifyDataSetChanged()
-
-                if (msgResOnFinished == 0) {
-                    msgResOnFinished = R.string.importing_succeeded
-                }
-                ToastUtils.show(this, msgResOnFinished)
-
-            }).show()
+            }
+            .show()
     }
 
     private fun export(dest: File) {
