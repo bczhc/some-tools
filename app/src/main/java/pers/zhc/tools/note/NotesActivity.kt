@@ -1,3 +1,5 @@
+@file:SuppressLint("NotifyDataSetChanged")
+
 package pers.zhc.tools.note
 
 import android.annotation.SuppressLint
@@ -19,7 +21,8 @@ import pers.zhc.tools.R
 import pers.zhc.tools.databinding.NodeOnImportDialogBinding
 import pers.zhc.tools.databinding.NoteItemBinding
 import pers.zhc.tools.databinding.NotesActivityBinding
-import pers.zhc.tools.filepicker.FilePicker
+import pers.zhc.tools.filepicker.FilePickerActivityContract
+import pers.zhc.tools.filepicker.FilePickerActivityContract.FilePickerType
 import pers.zhc.tools.utils.*
 import java.io.File
 import java.text.SimpleDateFormat
@@ -27,18 +30,27 @@ import java.util.*
 
 class NotesActivity : NoteBaseActivity() {
     private val launchers = object {
-        val import = FilePicker.getLauncher(this@NotesActivity) {
-            it ?: return@getLauncher
-
-            import(File(it))
+        val import = registerForActivityResult(
+            FilePickerActivityContract(
+                FilePickerType.PICK_FILE,
+                false
+            )
+        ) {
+            it ?: return@registerForActivityResult
+            import(File(it.path))
         }
 
-        val export = FilePicker.getLauncherWithFilename(this@NotesActivity) { path, filename ->
-            path ?: return@getLauncherWithFilename
-            if (filename.isEmpty()) return@getLauncherWithFilename
+        val export = registerForActivityResult(
+            FilePickerActivityContract(
+                FilePickerType.PICK_FOLDER,
+                true,
+                "notes.db"
+            )
+        ) {
+            it ?: return@registerForActivityResult
+            if (it.filename!!.isEmpty()) return@registerForActivityResult
 
-            val dest = File(path, filename)
-            export(dest)
+            export(File(it.path, it.filename))
         }
 
         val create = registerForActivityResult(object : ActivityResultContract<Unit, Unit>() {
@@ -243,7 +255,6 @@ class NotesActivity : NoteBaseActivity() {
         INCREMENTAL,
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun import(path: File) {
         val bindings = NodeOnImportDialogBinding.inflate(layoutInflater)
         bindings.overwrite.isChecked = true
@@ -386,12 +397,12 @@ class NotesActivity : NoteBaseActivity() {
 
             R.id.import_ -> {
                 actionMode?.finish()
-                launchers.import.launch(FilePicker.PICK_FILE)
+                launchers.import.launch(Unit)
             }
 
             R.id.export -> {
                 actionMode?.finish()
-                launchers.export.launch(FilePicker.PICK_FOLDER)
+                launchers.export.launch(Unit)
             }
         }
         return true
