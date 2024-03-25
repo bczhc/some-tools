@@ -861,6 +861,7 @@
     <string name="crypto_bitcoin_label">比特币</string>
     <string name="crypto_wallet_label">钱包</string>
     <string name="crypto_address">地址</string>
+    <string name="crypto_bitcoin_address_label">比特币钱包</string>
     <!-- end -->
 
     <!-- HashTools -->
