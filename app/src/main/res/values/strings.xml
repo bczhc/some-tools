@@ -876,7 +876,7 @@
     <!-- end -->
 
     <!-- HashTools -->
-    <string name="hash_tool_label">哈希小工具</string>
+    <string name="hash_tool_label">散列小工具</string>
     <!-- end -->
 
     <!-- Exif Viewer -->
