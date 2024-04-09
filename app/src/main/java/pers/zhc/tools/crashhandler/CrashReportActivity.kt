@@ -5,6 +5,9 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
@@ -23,11 +26,13 @@ import java.util.*
  */
 class CrashReportActivity : BaseActivity() {
     private lateinit var uploadStateTextView: TextView
+    private lateinit var uploadContent: String
+    private lateinit var bindings: UncaughtExceptionReportActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val bindings = UncaughtExceptionReportActivityBinding.inflate(layoutInflater)
+        bindings = UncaughtExceptionReportActivityBinding.inflate(layoutInflater)
         setContentView(bindings.root)
         uploadStateTextView = bindings.state
 
@@ -55,6 +60,7 @@ class CrashReportActivity : BaseActivity() {
             "${it.key}: ${it.value}"
         })
         val content = infoLines.joinToString("\n") + "\n\n" + exception
+        uploadContent = content
 
         bindings.uploadReportBtn.setOnClickListener {
             upload(content)
@@ -107,6 +113,24 @@ class CrashReportActivity : BaseActivity() {
                 uploadStateTextView.text = getString(R.string.upload_failed_toast, message)
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        MenuInflater(this).inflate(R.menu.crash_report_activity, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.show_device_info -> {
+                bindings.content.text = uploadContent
+            }
+
+            else -> {
+                return false
+            }
+        }
+        return true
     }
 
     companion object {

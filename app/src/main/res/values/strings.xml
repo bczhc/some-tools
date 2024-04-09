@@ -856,6 +856,7 @@
     <!-- CrashReport -->
     <string name="upload_failed_toast">上传失败：%1$s</string>
     <string name="upload_failed_server_error_toast">上传失败：服务器错误</string>
+    <string name="crash_report_show_device_info_menu">显示设备信息</string>
     <!-- end -->
 
     <!-- Crypto  -->
