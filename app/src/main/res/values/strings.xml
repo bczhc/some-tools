@@ -110,6 +110,8 @@
     <string name="extracting_archive_msg">解压中……</string>
     <string name="failed_to_save_file_toast">保存文件失败</string>
     <string name="file_already_exists_dialog_message">当时目录下文件已存在，继续将覆盖</string>
+    <string name="file_title">文件</string>
+    <string name="file_path_please_use_open_as_hint">（请使用“打开为……”打开）</string>
     <!-- end -->
 
     <!-- old -->
@@ -472,6 +474,10 @@
     <!-- app settings -->
     <string name="settings_server_root_url">服务器URL</string>
     <string name="settings_static_resource_root_url">静态资源根URL</string>
+    <string name="settings_theme_label">主题</string>
+    <string name="theme_light_label">亮色主题</string>
+    <string name="theme_dark_label">暗色主题</string>
+    <string name="theme_follow_system_label">跟随系统</string>
     <!-- end -->
 
     <!-- module: unicode_table -->
@@ -539,6 +545,8 @@
     <string name="diary_sort_random">@string/diary_menu_random</string>
     <string name="diary_sort_date">日期</string>
     <string name="diary_attachment_has_reference_alert_msg">存在附件引用，无法删除</string>
+    <string name="diary_pick_random_diary_button">随机一篇</string>
+    <string name="diary_no_diary_toast">没有日记</string>
     <!-- module end -->
 
     <!-- module: bus -->
@@ -649,6 +657,8 @@
     <string name="fdb_stroke_variable">启用可变粗细</string>
     <string name="fdb_transparency_variable">启用可变透明度</string>
     <string name="fdb_pen_pressure_coefficient">笔压系数</string>
+    <string name="fdb_whether_to_clear_all_layer_dialog">是否清除所有图层</string>
+    <string name="fdb_path_import_prompt_dialog_filepath_tv">路径文件：%1$s</string>
     <!-- module end -->
 
     <!-- module: words -->
@@ -742,6 +752,8 @@
     <string name="fourier_series_path_evaluator_menu_hint">路径求值器</string>
     <string name="fourier_series_integrator_menu_hint">数值积分器</string>
     <string name="fourier_series_float_type_menu_hint">浮点类型</string>
+    <string name="fourier_series_menu_export_epicycles_data">导出本轮数据</string>
+    <string name="fourier_series_menu_import_epicycles_data">导入本轮数据</string>
     <!-- end -->
 
     <!-- module: chars_splitter -->
@@ -781,6 +793,7 @@
     <string name="file_browser_label">文件浏览</string>
     <string name="text_browser_label">文本查看</string>
     <string name="audio_player_activity_label">音频播放</string>
+    <string name="audio_player_failed_to_play_audio_toast">无法播放音频</string>
     <!-- end -->
 
     <!-- HSVA color picker -->
@@ -805,6 +818,9 @@
     <string name="note_selected_notes_count_msg">已选择%1$d项</string>
     <string name="note_batch_deleted_notes_done_toast">已删除%1$d条笔记</string>
     <string name="note_modified_save_alert">是否保存</string>
+    <string name="note_import_option_overwrite">覆盖</string>
+    <string name="note_import_option_incremental">增量</string>
+    <string name="note_incremental_import_succeeded">增量导入成功</string>
     <!-- end -->
 
     <!-- task notes -->
@@ -816,14 +832,9 @@
     <string name="task_notes_change_time_button">修改时间</string>
     <string name="task_notes_modify_menu">修改</string>
     <string name="task_notes_add_task_record_notification_title">记录任务</string>
-    <string name="diary_pick_random_diary_button">随机一篇</string>
-    <string name="diary_no_diary_toast">没有日记</string>
     <string name="task_notes_item_show_type_menu">展示</string>
     <string name="task_notes_item_show_today">当天</string>
     <string name="task_notes_item_show_all">全部</string>
-    <string name="fourier_series_menu_export_epicycles_data">导出本轮数据</string>
-    <string name="fourier_series_menu_import_epicycles_data">导入本轮数据</string>
-    <string name="audio_player_failed_to_play_audio_toast">无法播放音频</string>
     <!-- end -->
 
     <!-- CharStat -->
@@ -849,8 +860,6 @@
     <string name="course_table_course_time_tv">时间：%1$s</string>
     <string name="course_table_course_date_tv">日期：%1$s</string>
     <string name="course_table_data_not_latest_toast">数据非最新：%1$s</string>
-    <string name="fdb_whether_to_clear_all_layer_dialog">是否清除所有图层</string>
-    <string name="fdb_path_import_prompt_dialog_filepath_tv">路径文件：%1$s</string>
     <!-- end -->
 
     <!-- CrashReport -->
@@ -868,21 +877,12 @@
 
     <!-- HashTools -->
     <string name="hash_tool_label">哈希小工具</string>
-    <string name="settings_theme_label">主题</string>
-    <string name="theme_light_label">亮色主题</string>
-    <string name="theme_dark_label">暗色主题</string>
-    <string name="theme_follow_system_label">跟随系统</string>
     <!-- end -->
 
     <!-- Exif Viewer -->
     <string name="exif_read_button">读取</string>
     <string name="exif_label">Exif查看</string>
     <string name="exif_detailed_info_dialog_title">详细信息</string>
-    <string name="file_title">文件</string>
-    <string name="file_path_please_use_open_as_hint">（请使用“打开为……”打开）</string>
     <string name="exif_exif_data_title">Exif</string>
-    <string name="note_import_option_overwrite">覆盖</string>
-    <string name="note_import_option_incremental">增量</string>
-    <string name="note_incremental_import_succeeded">增量导入成功</string>
     <!-- end -->
 </resources>
