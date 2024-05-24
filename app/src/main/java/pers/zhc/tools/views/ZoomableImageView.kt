@@ -101,7 +101,7 @@ class ZoomableImageView : View {
         srcBitmap?.let { mCanvas.drawBitmap(it, 0F, 0F, null) }
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         if (mBitmap == null) {
             // init
             initBitmap()
@@ -113,7 +113,7 @@ class ZoomableImageView : View {
             }
         }
 
-        canvas!!.drawBitmap(mBitmap!!, 0F, 0F, null)
+        canvas.drawBitmap(mBitmap!!, 0F, 0F, null)
     }
 
     private fun measure(measureSpec: Int): Int {

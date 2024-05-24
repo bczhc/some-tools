@@ -20,7 +20,7 @@ class ColorView : BaseView {
         invalidate()
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        canvas!!.drawColor(color)
+    override fun onDraw(canvas: Canvas) {
+        canvas.drawColor(color)
     }
 }

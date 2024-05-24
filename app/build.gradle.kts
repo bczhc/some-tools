@@ -162,11 +162,11 @@ android {
             keyPassword = "123456"
         }
     }
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         applicationId = "pers.zhc.tools"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
 
 
         versionCode = generatedVersion.code

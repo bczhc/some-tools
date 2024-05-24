@@ -75,9 +75,7 @@ class TopNodeView : View {
         setMeasuredDimension(measuredWidth, measuredHeight)
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        canvas!!
-
+    override fun onDraw(canvas: Canvas) {
         val measuredWidth = measuredWidth.toFloat()
         val measuredHeight = measuredHeight.toFloat()
 

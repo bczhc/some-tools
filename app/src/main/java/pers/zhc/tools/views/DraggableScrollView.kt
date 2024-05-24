@@ -44,8 +44,7 @@ class DraggableScrollView : ScrollView {
             mSliderPaint.color = sliderColor
         }
 
-        override fun onDraw(canvas: Canvas?) {
-            canvas!!
+        override fun onDraw(canvas: Canvas) {
             canvas.drawRect(0F, 0F, measuredWidth.toFloat(), measuredHeight.toFloat(), mBackgroundPaint)
         }
 
