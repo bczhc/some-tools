@@ -5,11 +5,9 @@ import android.annotation.SuppressLint
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream.MAX_BLOCKSIZE
 import org.apache.commons.io.output.ByteArrayOutputStream
-import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
 import org.tomlj.Toml
-import org.tomlj.TomlArray
-import org.tomlj.TomlParseResult
-import pers.zhc.gradle.plugins.ndk.AndroidAbi
+import pers.zhc.android.def.BuildType
+import pers.zhc.gradle.plugins.ndk.*
 import pers.zhc.gradle.plugins.ndk.cpp.CppBuildPlugin
 import pers.zhc.gradle.plugins.ndk.cpp.CppBuildPlugin.CppBuildPluginExtension
 import pers.zhc.gradle.plugins.ndk.rust.RustBuildPlugin
@@ -17,10 +15,10 @@ import pers.zhc.gradle.plugins.ndk.rust.RustBuildPlugin.RustBuildPluginExtension
 import pers.zhc.plugins.BuildUtils.*
 import pers.zhc.plugins.FileUtils.requireCreate
 import pers.zhc.plugins.NdkVersion
-import pers.zhc.plugins.RegexUtils
 import pers.zhc.plugins.SdkPath
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.nio.file.Paths
 import java.util.*
 import pers.zhc.gradle.plugins.util.`FileUtils$`.`MODULE$` as FileUtils
 import pers.zhc.plugins.`BuildUtils2$`.`MODULE$` as BuildUtils2
@@ -41,7 +39,7 @@ val commitLogResult = try {
 
     try {
         val log = BuildUtils2.getGitCommitLog(projectDir)!!
-        println("git log string size: ${log.toByteArray().size}")
+        println("Git log string size: ${log.toByteArray().size}")
         log.ifEmpty { "Unknown" }
     } catch (e: Exception) {
         throw GradleException("Execution failed", e)
@@ -56,17 +54,10 @@ val commitLogResult = try {
 }
 
 val buildConfigs = parseConfigTomlFile()
+val ndkTargets = buildConfigs.ndk.targets
 
 val disableRustBuild = !buildConfigs.rust.enableBuild
 val rustKeepDebugSymbols = buildConfigs.rust.keepDebugSymbols
-
-val ndkTargets = buildConfigs.buildTargets
-
-val ndkTargetsForConfigs = ndkTargets.map {
-    mapOf(
-        Pair("abi", it.abi), Pair("api", it.api)
-    )
-}
 
 val foundSdkDir = try {
     file(SdkPath.getSdkPath(project))
@@ -80,9 +71,85 @@ val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
         )
     }
 }
-val ndkBuildType = buildConfigs.ndkBuildType.toString()
+val foundNdkDir = Paths.get(foundSdkDir.path, "ndk", detectedNdkVersion)
 
-println("Version: ${generateVersion()}")
+data class GeneratedVersion(val code: Int, val name: String)
+val verInfo = generateVersion()!! as ArrayList<*>
+val generatedVersion = GeneratedVersion(verInfo[0] as Int, verInfo[1].toString())
+
+val opensslShlibVariant = "-bundled"
+
+val appProject = project
+val jniOutputDir = File(appProject.projectDir, "jniLibs").also { it.mkdirs() }
+
+val opensslDir = buildConfigs.opensslDir
+
+val rustBuildExtraEnv = HashMap<String, String>()
+val rustBuildTargetEnv = HashMap<String, Map<String, String>>()
+
+val copyOpensslLibsTask = project.task("copyOpensslLibs") {
+    doLast {
+        ndkTargets.forEach {
+            val abi = it.abi
+            val opensslPath = getOpensslPath(opensslDir, abi)
+            listOf(
+                "libssl$opensslShlibVariant.so", "libcrypto$opensslShlibVariant.so"
+            ).map { libName ->
+                File(opensslPath.lib!!, libName)
+            }.forEach { file ->
+                if (!file.exists()) {
+                    throw GradleException("Required OpenSSL library file not found: ${file.path}")
+                }
+
+                val outputDir = File(jniOutputDir, abi.toString()).also { d -> d.mkdirs() }
+                FileUtils.copyFile(file, File(outputDir, file.name))
+            }
+        }
+    }
+}
+
+var compileRustTask: Task? = null
+if (!disableRustBuild) {
+    compileRustTask = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME())
+}
+
+val sdkDir: File = foundSdkDir
+val ndkDir: File = foundNdkDir.toFile()
+val tools = Tools(ndkDir, sdkDir)
+val cmakeVersion = tools.cMakeVersion as String
+
+val cmakeDefsMap = HashMap<String, Map<String, String>>()
+ndkTargets.forEach {
+    val abi = it.abi
+    val opensslPath = getOpensslPath(opensslDir, abi)
+    cmakeDefsMap[abi.toString()] = mapOf(
+        Pair("OPENSSL_INCLUDE_DIR", opensslPath.include.path),
+        Pair("OPENSSL_LIBS_DIR", opensslPath.lib.path),
+        Pair("OPENSSL_CRYPTO_LINK_SONAME", "crypto$opensslShlibVariant"),
+        Pair("OPENSSL_SSL_LINK_SONAME", "ssl$opensslShlibVariant"),
+    )
+}
+
+var buildInfoMessage = """Version code: ${generatedVersion.code}
+    |Version name: ${generatedVersion.name}
+    |Rust build enabled: ${buildConfigs.rust.enableBuild}
+    |Rust JNI enabled: ${buildConfigs.rust.enableJni}
+    |NDK build type: ${buildConfigs.ndk.buildType}
+    |SDK path: $sdkDir
+    |NDK path: $ndkDir
+    |NDK version: $detectedNdkVersion
+    |CMake version: $cmakeVersion
+    |NDK targets: $ndkTargets
+    |CMake -D variables: $cmakeDefsMap
+""".trimMargin() + "\n"
+
+if (!disableRustBuild) {
+    buildInfoMessage += """Rust build extra env: $rustBuildExtraEnv
+    |Rust build target env: $rustBuildTargetEnv
+""".trimMargin()
+}
+println("=========== Build info ===========")
+println(buildInfoMessage)
 
 android {
     namespace = "pers.zhc.tools"
@@ -101,12 +168,12 @@ android {
         minSdk = 21
         targetSdk = 33
 
-        val verInfo = generateVersion()!! as ArrayList<*>
-        versionCode = verInfo[0] as Int
-        versionName = verInfo[1].toString()
+
+        versionCode = generatedVersion.code
+        versionName = generatedVersion.name
 
         ndk {
-            abiFilters.addAll(ndkTargets.map { it.abi })
+            abiFilters.addAll(buildConfigs.ndk.targets.map { it.abi.name })
         }
 
         val compressedGitLog = bzip2Compress(commitLogResult.toByteArray(Charsets.UTF_8))
@@ -119,7 +186,12 @@ android {
         )
         buildConfigField("boolean", "rustEnableBuild", buildConfigs.rust.enableBuild.toString())
         buildConfigField("boolean", "rustEnableJni", buildConfigs.rust.enableJni.toString())
-        buildConfigField("boolean", "ndkReleaseBuild", (buildConfigs.ndkBuildType == BuildType.RELEASE).toString())
+        buildConfigField("boolean", "ndkReleaseBuild", "${buildConfigs.ndk.buildType == BuildType.RELEASE}")
+        buildConfigField(
+            "String[]",
+            "buildInfoMessageEncoded",
+            BuildUtils2.longStringToStringArray(base64Encoder.encodeToString(buildInfoMessage.toByteArray()), 100)
+        )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -171,28 +243,19 @@ android {
     }
 }
 
-val opensslShlibVariant = "-bundled"
-
-val appProject = project
-val jniOutputDir = File(appProject.projectDir, "jniLibs").also { it.mkdirs() }
-
-val opensslDir = buildConfigs.opensslDir
-
-val rustBuildExtraEnv = HashMap<String, String>()
-val rustBuildTargetEnv = HashMap<String, Map<String, String>>()
 if (!disableRustBuild) {
     ndkTargets.forEach {
-        val env = (getRustOpensslBuildEnv(AndroidAbi.from(it.abi).toRustTarget()) as Map<*, *>).map { e ->
+        val env = (getRustOpensslBuildEnv(it.abi.toRustTriple()) as Map<*, *>).map { e ->
             Pair(e.key.toString(), e.value.toString())
         }.toMap()
-        val opensslPath = getOpensslPath(opensslDir, TargetAbi.from(it.abi)!!)
+        val opensslPath = getOpensslPath(opensslDir, it.abi)
         rustBuildExtraEnv[env["libDir"].toString()] = opensslPath.lib!!.path
         rustBuildExtraEnv[env["includeDir"].toString()] = opensslPath.include!!.path
     }
     rustBuildExtraEnv["OPENSSL_LIBS"] = "ssl$opensslShlibVariant:crypto$opensslShlibVariant"
 
     ndkTargets.forEach {
-        val abi = it.abi
+        val abi = it.abi.name
         rustBuildTargetEnv[abi] = HashMap<String, String>().apply {
             this["SQLITE3_INCLUDE_DIR"] =
                 "$projectDir/app/src/main/cpp/third_party/jni-lib/third_party/my-cpp-lib/third_party/sqlite3-single-c"
@@ -202,8 +265,8 @@ if (!disableRustBuild) {
 
     configure<RustBuildPluginExtension> {
         ndkDir.set(android.ndkDirectory.path)
-        targets.set(ndkTargetsForConfigs)
-        buildType.set(ndkBuildType)
+        targets.set(GradleExtensionConfigConverters.targetsToMap(ndkTargets))
+        buildType.set(buildConfigs.ndk.buildType.toString())
         srcDir.set(File(appProject.projectDir, "src/main/rust").path)
         outputDir.set(jniOutputDir.path)
         extraEnv.set(rustBuildExtraEnv)
@@ -211,77 +274,15 @@ if (!disableRustBuild) {
     }
 }
 
-
-val copyOpensslLibsTask = project.task("copyOpensslLibs") {
-    doLast {
-        ndkTargets.forEach {
-            val abi = TargetAbi.from(it.abi)
-            val opensslPath = getOpensslPath(opensslDir, abi)
-            listOf(
-                "libssl$opensslShlibVariant.so", "libcrypto$opensslShlibVariant.so"
-            ).map { libName ->
-                File(opensslPath.lib!!, libName)
-            }.forEach { file ->
-                if (!file.exists()) {
-                    throw GradleException("Required OpenSSL library file not found: ${file.path}")
-                }
-
-                val outputDir = File(jniOutputDir, abi.toString()).also { d -> d.mkdirs() }
-                FileUtils.copyFile(file, File(outputDir, file.name))
-            }
-        }
-    }
-}
-
-var compileRustTask: Task? = null
-if (!disableRustBuild) {
-    compileRustTask = appProject.tasks.getByName(RustBuildPlugin.TASK_NAME())
-}
-
-val sdkDir = android.sdkDirectory
-val ndkDir = android.ndkDirectory
-val tools = Tools(ndkDir, sdkDir)
-val cmakeVersion = tools.cMakeVersion as String
-
-val cmakeDefsMap = HashMap<String, Map<String, String>>()
-ndkTargets.forEach {
-    val abi = TargetAbi.from(it.abi)
-    val opensslPath = getOpensslPath(opensslDir, abi)
-    cmakeDefsMap[abi.toString()] = mapOf(
-        Pair("OPENSSL_INCLUDE_DIR", opensslPath.include.path),
-        Pair("OPENSSL_LIBS_DIR", opensslPath.lib.path),
-        Pair("OPENSSL_CRYPTO_LINK_SONAME", "crypto$opensslShlibVariant"),
-        Pair("OPENSSL_SSL_LINK_SONAME", "ssl$opensslShlibVariant"),
-    )
-}
-
 configure<CppBuildPluginExtension> {
     srcDir.set("$projectDir/src/main/cpp")
     ndkDir.set(android.ndkDirectory.path)
-    targets.set(ndkTargetsForConfigs)
-    buildType.set(ndkBuildType)
+    targets.set(GradleExtensionConfigConverters.targetsToMap(ndkTargets))
+    buildType.set(buildConfigs.ndk.buildType.name)
     outputDir.set(jniOutputDir.path)
     cmakeBinDir.set(tools.cmakeBinDir.path)
     cmakeDefs.set(cmakeDefsMap)
 }
-
-var message = """Build environment info:
-    |use Rust: ${buildConfigs.rust.enableJni && buildConfigs.rust.enableBuild}
-    |NDK build type: ${buildConfigs.ndkBuildType}
-    |SDK path: ${android.sdkDirectory.path}
-    |NDK path: ${android.ndkDirectory.path}
-    |NDK version: $detectedNdkVersion
-    |CMake version: $cmakeVersion
-    |NDK targets: $ndkTargets
-    |CMake -D variables: $cmakeDefsMap
-""".trimMargin() + "\n"
-
-if (!disableRustBuild) {
-    message += """Rust build extra env: $rustBuildExtraEnv
-    |Rust build target env: $rustBuildTargetEnv
-""".trimMargin()
-}
-println(message)
 
 
 dependencies {
@@ -374,6 +375,8 @@ fun parseConfigTomlFile(): BuildConfigs {
         requireCreate(configTomlFile)
     }
 
+    val parsed = ConfigParser.parse(configTomlFile)
+
     val configToml = Toml.parse(configTomlFile.reader())!!
 
     configToml.errors().forEach {
@@ -382,13 +385,7 @@ fun parseConfigTomlFile(): BuildConfigs {
 
     return BuildConfigs(
         opensslDir = File(configToml.requireString("ndk.openssl_dir")),
-        buildTargets = configToml.requireArray("ndk.build_targets").map {
-            BuildTarget.parse(it)
-        },
-        ndkBuildType = BuildType.from(configToml.getString("ndk.build_type") ?: run {
-            println("`ndk.build_type` not specified; use default \"debug\"")
-            "debug"
-        }),
+        ndk = parsed.ndk,
         rust = RustConfigs(
             enableBuild = configToml.getBoolean("ndk.rust.enable_build") ?: true,
             enableJni = configToml.getBoolean("ndk.rust.enable_jni") ?: true,
@@ -399,8 +396,7 @@ fun parseConfigTomlFile(): BuildConfigs {
 
 data class BuildConfigs(
     val opensslDir: File,
-    val buildTargets: List<BuildTarget>,
-    val ndkBuildType: BuildType,
+    val ndk: ConfigParser.NdkConfig,
     val rust: RustConfigs,
 )
 
@@ -409,66 +405,3 @@ data class RustConfigs(
     val enableJni: Boolean,
     val keepDebugSymbols: Boolean,
 )
-
-enum class BuildType {
-    DEBUG,
-    RELEASE;
-
-    override fun toString(): String {
-        return this.name.toLowerCaseAsciiOnly()
-    }
-
-    companion object {
-        fun from(s: String): BuildType {
-            return when (s.toLowerCaseAsciiOnly()) {
-                "debug" -> DEBUG
-                "release" -> RELEASE
-                else -> {
-                    throw GradleException("Unknown build type: $s")
-                }
-            }
-        }
-    }
-}
-
-fun TomlArray.toStringList(): List<String> {
-    return (0 until this.size()).map {
-        this.getString(it)!!
-    }
-}
-
-fun TomlParseResult.requireString(key: String): String {
-    return this.getString(key) ?: throw GradleException("$key is required in `config.toml`")
-}
-
-fun TomlParseResult.requireArray(key: String): List<String> {
-    return (this.getArray(key) ?: throw GradleException("$key is required in `config.toml`"))
-        .toStringList()
-}
-
-data class BuildTarget(
-    val abi: String,
-    val api: Int,
-) {
-    companion object {
-        private const val HELP_MSG = """Format: <ABI-name>-<Android-API-version>
-Example:
-build_targets = ["arm64-v8a-29", "x86_64-29"]"""
-
-        fun parse(s: String): BuildTarget {
-            if (!s.matches(Regex("^.*-[0-9]+\$"))) {
-                throw GradleException("Wrong NDK target format: $s\n$HELP_MSG")
-            }
-            val captured = RegexUtils.capture(s, "^(.*)-([0-9]+)\$")
-            val abi = captured[0][1]!!
-            // pre-check
-            if (TargetAbi.from(abi) == null) {
-                throw GradleException("Invalid ABI name: $abi")
-            }
-            return BuildTarget(
-                abi = abi,
-                api = captured[0][2].toInt()
-            )
-        }
-    }
-}

@@ -2,6 +2,7 @@ package pers.zhc.plugins
 
 import org.apache.commons.io.FileUtils as ApacheFileUtils
 import org.gradle.api.GradleException
+import pers.zhc.android.def.AndroidAbi
 import pers.zhc.util.Assertion
 
 import java.nio.charset.StandardCharsets
@@ -216,46 +217,6 @@ class BuildUtils {
         return opensslDir
     }
 
-    static class UnreachableError extends Error {}
-
-    static enum TargetAbi {
-        ARM_V7,
-        ARM_V8,
-        X86,
-        X86_64
-
-        @Override
-        String toString() {
-            switch (this) {
-                case ARM_V7:
-                    return "armeabi-v7a"
-                case ARM_V8:
-                    return "arm64-v8a"
-                case X86:
-                    return "x86"
-                case X86_64:
-                    return "x86_64"
-                default:
-                    throw new UnreachableError()
-            }
-        }
-
-        static TargetAbi from(String name) {
-            switch (name) {
-                case "armeabi-v7a":
-                    return ARM_V7
-                case "arm64-v8a":
-                    return ARM_V8
-                case "x86_64":
-                    return X86_64
-                case "x86":
-                    return X86
-                default:
-                    throw new GradleException("Unknown target ABI: $name")
-            }
-        }
-    }
-
     static class OpensslPath {
         File lib
         File include
@@ -271,7 +232,7 @@ class BuildUtils {
         return [includeDir: "${prefix}_OPENSSL_INCLUDE_DIR", libDir: "${prefix}_OPENSSL_LIB_DIR"]
     }
 
-    static OpensslPath getOpensslPath(File opensslDir, TargetAbi targetAbi) {
+    static OpensslPath getOpensslPath(File opensslDir, AndroidAbi targetAbi) {
         new OpensslPath(new File(new File(opensslDir, "libs"), targetAbi.toString()),
                 new File(opensslDir, "include"))
     }

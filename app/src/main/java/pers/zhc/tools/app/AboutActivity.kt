@@ -10,7 +10,7 @@ import pers.zhc.tools.databinding.AppAboutActivityBinding
 import pers.zhc.tools.databinding.GitLogViewBinding
 import pers.zhc.tools.utils.decompressBzip2
 
-class AboutActivity: BaseActivity() {
+class AboutActivity : BaseActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,20 +22,30 @@ class AboutActivity: BaseActivity() {
             showGitLogDialog()
         }
 
-        bindings.versionNameTv.text = "Version name: " + BuildConfig.VERSION_NAME
-        bindings.versionCodeTv.text = "Version code: " + BuildConfig.VERSION_CODE.toString()
+        bindings.infoTv.text = """Build type: ${BuildConfig.BUILD_TYPE}
+            |Debuggable: ${BuildConfig.DEBUG}
+            |Application ID: ${BuildConfig.APPLICATION_ID}
+            |
+        """.trimMargin() + decodeLongEncodedString(BuildConfig.buildInfoMessageEncoded)
     }
 
     private fun showGitLogDialog() {
-        val commitLogSplit = BuildConfig.commitLogEncodedSplit
-        val base64Encoded = commitLogSplit.joinToString(separator = "")
-        val gitLog = Base64.decode(base64Encoded, Base64.DEFAULT).decompressBzip2().toString(Charsets.UTF_8)
-
         val bindings = GitLogViewBinding.inflate(layoutInflater)
-        bindings.tv.text = gitLog
+        bindings.tv.text = decodeLongEncodedString(BuildConfig.commitLogEncodedSplit, true)
 
         Dialog(this).apply {
             setContentView(bindings.root)
         }.show()
+    }
+
+    private fun decodeLongEncodedString(encoded: Array<String>, bz2Compressed: Boolean = false): String {
+        return Base64.decode(encoded.joinToString(separator = ""), Base64.DEFAULT)
+            .let {
+                if (bz2Compressed) {
+                    it.decompressBzip2()
+                } else {
+                    it
+                }
+            }.toString(Charsets.UTF_8)
     }
 }

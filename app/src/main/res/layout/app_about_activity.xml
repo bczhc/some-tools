@@ -28,20 +28,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Build"
-                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                tools:ignore="HardcodedText"
-                tools:text="Version name: xx"/>
-            <TextView
-                android:id="@+id/version_name_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
-            <TextView
-                android:id="@+id/version_code_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"/>
+                android:id="@+id/info_tv"
+                tools:text="Version name: bla\nVersion code: bla\nBuild time: bla\n..."/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

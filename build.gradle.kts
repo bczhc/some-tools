@@ -8,9 +8,14 @@ apply {
 
 buildscript {
     dependencies {
-        classpath("com.github.bczhc:android-native-build-plugin:c546ada670")
+        classpath("com.github.bczhc:android-native-build-plugin:e95ac75536")
         classpath("org.apache.commons:commons-compress:1.23.0")
         classpath("org.tomlj:tomlj:1.1.0")
+        classpath("com.github.bczhc:android-native-build-plugin-config-parser:f4eee68fd2")
+        classpath("com.github.bczhc:android-target-defs:ac1ea2f9fc") {
+            @Suppress("DEPRECATION")
+            this.isForce = true
+        }
     }
 }
 
