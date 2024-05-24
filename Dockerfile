@@ -79,7 +79,7 @@ RUN . ~/.cargo/env && \
     for target in $(echo $full_targets | sed "s/,/ /g"); do \
       # reconfigure
       target_string="[\"$target\"]" && \
-      ./tools/toml-replace config.toml 'ndk.build_targets' "$target_string" && \
+      ./tools/toml-replace config.toml 'ndk.targets' "$target_string" && \
       ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
       ./gradlew asD && \
       cp -v app/build/outputs/apk/debug/app-debug.apk /apks/debug/$target.apk && \
@@ -94,7 +94,7 @@ RUN . ~/.cargo/env && \
 RUN if [ $build_universal -eq 1 ]; then \
       . ~/.cargo/env && \
       targets_string="$(echo "$full_targets" | ruby -e "require 'json'; puts STDIN.read.chomp.split(',').to_json")" && \
-      ./tools/toml-replace config.toml 'ndk.build_targets' "$targets_string" && \
+      ./tools/toml-replace config.toml 'ndk.targets' "$targets_string" && \
       ./tools/toml-replace config.toml 'ndk.build_type' '"debug"' && \
       ./gradlew asD && \
       cp app/build/outputs/apk/debug/app-debug.apk /apks/debug/universal.apk && \
