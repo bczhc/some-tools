@@ -67,6 +67,10 @@ public class FilePickerRL extends RelativeLayout {
     private RelativeLayout rootView;
     public boolean dialogOverlay = false;
 
+    private final boolean canBypassSaf = checkCanBypassSaf();
+
+    private static final String BYPASS_SAF_CHAR = new String(Character.toChars(0xE0080));
+
     // Shitcode!!!
     public FilePickerRL(Context context, int type, @Nullable File initialPath
             , OnCancelCallback cancelAction, OnPickedResultCallback pickedResultAction
@@ -165,6 +169,8 @@ public class FilePickerRL extends RelativeLayout {
                     .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         String etText = et.getText().toString();
                         File f = new File(etText);
+                        f = tryInsertingSafExploitChar(f);
+
                         if (f.isFile() && type == TYPE_PICK_FILE) {
                             result = f.getAbsolutePath();
                             okBtn.performClick();
@@ -221,6 +227,7 @@ public class FilePickerRL extends RelativeLayout {
                         extractM1(listFiles[0], lp, textViews, i);
                         textViews[i].setOnClickListener(v -> {
                             File currentFile = listFiles[0][finalI];
+                            currentFile = tryInsertingSafExploitChar(currentFile);
                             if (currentFile.isFile()) {
                                 if (textViews[finalI].picked) {
                                     textViews[finalI].setBackgroundResource(canPickUnchecked);
@@ -259,6 +266,7 @@ public class FilePickerRL extends RelativeLayout {
                         final int finalI = i;
                         textViews[i].setOnClickListener(v -> {
                             File currentFile = listFiles[0][finalI];
+                            currentFile = tryInsertingSafExploitChar(currentFile);
                             if (currentFile.isDirectory()) {
                                 this.currentPath = currentFile;
                                 File[] listFiles1 = getFileList(currentFile);
@@ -316,6 +324,7 @@ public class FilePickerRL extends RelativeLayout {
             File parentFile = this.currentPath.getParentFile();
             File[] listFiles = new File[0];
             if (parentFile != null) {
+                parentFile = tryInsertingSafExploitChar(parentFile);
                 listFiles = getFileList(parentFile);
             }
             fillViews(listFiles);
@@ -420,5 +429,25 @@ public class FilePickerRL extends RelativeLayout {
 
     public interface OnCancelCallback {
         void cancel(@NotNull FilePickerRL picker);
+    }
+
+    private boolean checkCanBypassSaf() {
+        return new File("/storage/emulated/0/Android/data" + BYPASS_SAF_CHAR).canRead();
+    }
+
+    private @NotNull File insertSafExploitChar(@NotNull File path) throws IOException {
+        String newPath = path.getCanonicalPath().replace("/storage/emulated/0/Android/", "/storage/emulated/0/Android" + BYPASS_SAF_CHAR + "/");
+        return new File(newPath);
+    }
+
+    private @NotNull File tryInsertingSafExploitChar(@NotNull File path) {
+        if (!canBypassSaf) return path;
+        try {
+            if (path.getCanonicalPath().contains("/storage/emulated/0/Android/")) {
+                path = insertSafExploitChar(path);
+            }
+        } catch (IOException ignored) {
+        }
+        return path;
     }
 }
