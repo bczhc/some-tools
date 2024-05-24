@@ -1,6 +1,6 @@
 [ndk]
 openssl_dir = "/openssl"
-build_targets = []
+targets = []
 build_type = "debug"
 
 [ndk.rust]
