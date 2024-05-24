@@ -2,6 +2,7 @@ package pers.zhc.tools.app
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.util.Base64
 import pers.zhc.tools.BaseActivity
@@ -25,6 +26,7 @@ class AboutActivity : BaseActivity() {
         bindings.infoTv.text = """Build type: ${BuildConfig.BUILD_TYPE}
             |Debuggable: ${BuildConfig.DEBUG}
             |Application ID: ${BuildConfig.APPLICATION_ID}
+            |Build SDK version: ${Build.VERSION.SDK_INT}
             |
         """.trimMargin() + decodeLongEncodedString(BuildConfig.buildInfoMessageEncoded)
     }
