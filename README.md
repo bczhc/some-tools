@@ -1,5 +1,6 @@
 Tools
-----------------
+======
+
 ![some-tools Shitcode](https://img.shields.io/static/v1?label=some-tools&message=Shitcode&color=7B5804)
 
 ![Android CI](https://github.com/bczhc/some-tools/workflows/Android%20CI/badge.svg)
@@ -16,57 +17,78 @@ Tools
 
 ## Build
 
-TODO: DOCUMENTATION OUTDATED
-
-### Basic requirements
+### Prerequisites
 
 - cURL
+
 - JDK (>=1.8)
+
 - Ruby
 
-### Set build targets
+  Gem `toml` is required. You can install it using:
 
-First we set a "target string" in the format `<ABI>-<API>`. The possible values of `ABI` are `armeabi-v7a`, `arm64-v8a`, `x86` and `x86_64`, and you can refer to [Android supported ABIs](https://developer.android.com/ndk/guides/abis#sa). The `API` value is an integer, you can refer to [Platform codenames, versions, API levels, and NDK releases](https://source.android.com/setup/start/build-numbers#platform-code-names-versions-api-levels-and-ndk-releases). Ensure that the NDK compiler for the specified target exists. Its path is: `$NDK_TOOLCHAIN_BIN_DIR/<target-triple><API>-clang[++]` (e.g. `$SDK_DIR/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang`).
-
-Now add a property with the key `ndk.target` in `config.properties` (create it if not existing), and its value is the "target string". If multiple build targets are required, join them together with commas.
-
-Examples:
-
-```properties
-ndk.target=arm64-v8a-29
-```
-
-or
-
-```properties
-ndk.target=armeabi-v7a-19,arm64-v8a-29,x86-29
-```
-
-### Configure SDK path
-
-Add property `sdk.dir=SDK_PATH` (replace `SDK_PATH` with your Android SDK path) to file `local.properties` at the project root (create it if doesn't exist).
-
-The NDK is expected to be detected automatically, or you can also specify it using `ndk.dir` property. Try running `./gradlew` to check, and it's expected to have these messages printed:
-
-```
-...
-Build environment info:
-SDK path: ...
-NDK path: ...
-NDK version: ...
-CMake version: ...
-NDK targets: [...]
-Rust build extra env: ...
-...
-```
-
-NDK dependencies requirements:
+  ```bash
+  gem install toml
+  ```
 
 - CMake (>=3.10.0)
 
-### Compile OpenSSL and set up the path
+### Set Up SDK and NDK Paths
 
-First clone OpenSSL from its GitHub repository: https://github.com/openssl/openssl, and checkout the tag `openssl-3.0.1`.
+Add property `sdk.dir=SDK_PATH` (replace `SDK_PATH` with your Android SDK path) to file `local.properties` at the project root (create if it doesn't exist).
+
+The NDK is expected to be detected automatically, or you can also specify it via `ndk.dir` or `ndk.version`.
+
+### Set Up NDK Custom Configurations
+
+In the project root, create a file: `config.toml`. Here is a sample configuration:
+
+```toml
+[ndk]
+#targets = ["armeabi-v7a-21", "arm64-v8a-29", "x86-29", "x86_64-29"]
+targets = ["arm64-v8a-21"]
+build_type = "release"
+openssl_dir = "/home/bczhc/bin/openssl"
+
+[ndk.rust]
+enable_build = true
+enable_jni = true
+keep_debug_symbols = false
+```
+
+The accepted properties are:
+
+- ndk.targets
+
+   A "target string" is in the format `<ABI>-<API>`. Possible values of `ABI` are `armeabi-v7a`, `arm64-v8a`, `x86` and `x86_64`, and you can refer to [Android supported ABIs](https://developer.android.com/ndk/guides/abis#sa). The `API` value is an integer, you can refer to [Platform codenames, versions, API levels, and NDK releases](https://source.android.com/setup/start/build-numbers#platform-code-names-versions-api-levels-and-ndk-releases). Multiple targets are separated by commas.
+
+- ndk.build_type
+
+   It can be `debug` or `release`; this will be applied to both C/C++ and Rust builds.
+
+- ndk.openssl_dir
+
+   OpenSSL path. See [below](#compile-openssl).
+
+- ndk.rust.enable_build
+
+   Add Rust build process to the project's Gradle task tree.
+
+- ndk.rust.enable_jni
+
+   Enable Rust functions in-app.
+
+   Disabling it will cause all functions related to JNI written in Rust unusable, and the app will crash on using them.
+
+   Enabling `ndk.rust.enable_jni` and disabling `ndk.rust.enable_build` is useful when Rust JNI libraries are present as pre-compiled, and the host machine lacks Rust toolchains.
+
+- ndk.rust.keep_debug_symbols
+
+   Keep Rust library debug symbols.
+
+### Compile OpenSSL
+
+First clone OpenSSL from its GitHub repository: https://github.com/openssl/openssl, and checkout tag `openssl-3.0.1`.
 
 These commands below should work:
 
@@ -79,11 +101,11 @@ git fetch --all
 git checkout openssl-3.0.1
 ```
 
-Then go back into this project and run `./tools/build-openssl <openssl-path>`  with a path to OpenSSL project root, and it will cross-compile OpenSSL libraries in the targets defined in `config.properties`.
+Then go back into this project and run `./tools/build-openssl <openssl-path>` with a path to OpenSSL's project root. This will cross-compile OpenSSL libraries in the targets defined in `config.toml`.
 
-After compilation, the compiled libraries are stored in `<openssl-dir>/libs/<Android-ABI>/`.
+The compiled libraries are stored in `<openssl-dir>/libs/<Android-ABI>/`.
 
-Now you need to set `opensslLib.dir=<openssl-dir>` property in `config.properties`.
+Don't forget to set `ndk.openssl_dir` to the OpenSSL project root in `config.toml`.
 
 ### Configure Rust
 
@@ -95,20 +117,11 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 Note: This installation method is recommended, since it has a good Rust toolchain manager `rustup`.
 
-#### Add Rust cross-compilation targets
+Then, to add Rust targets for Android, run:
 
-Run `./tools/configure-rust`. Here `rustup` is required.
-
-### Extra `config.properties` configurations
-
-- `build.disable-rust=true`
-
-  Note: This will
-cause all functions related to JNI written in
-Rust unusable, and the app will crash when using them.
-- `ndk.keepDebugSymbols=true`
-
-  Keep Rust library debug symbols
+```bash
+rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+```
 
 ### Build Project
 

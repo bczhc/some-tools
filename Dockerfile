@@ -65,7 +65,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install && \
     ./install -y --default-toolchain nightly-2023-04-01 --profile minimal && \
     . ~/.cargo/env && \
     rustc --version && \
-    ./tools/configure-rust
+    ./tools/rust-install-all-targets
 
 # Build OpenSSL for all Android targets
 # append `soname` with `-bundled`

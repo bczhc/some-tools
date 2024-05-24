@@ -1,7 +1,0 @@
-#!/bin/env ruby
-
-targets = %w[aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android]
-
-targets.each { |target|
-  system "rustup target add #{target}"
-}
