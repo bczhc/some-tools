@@ -6,7 +6,6 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import pers.zhc.tools.R
-import pers.zhc.tools.tasknotes.DialogShowActivity
 
 object ShortcutUtils {
     fun checkAndToastPinShortcutsSupported(context: Context) {

@@ -23,6 +23,8 @@
     <string name="settings_import_data_restart_dialog_msg">数据导入后需重启应用</string>
     <string name="app_about_label">关于</string>
     <string name="app_about_menu">@string/app_about_label</string>
+    <string name="app_list_toggle_app_shortcut">创建/删除应用快捷方式</string>
+    <string name="app_list_create_pinned_shortcut">创建固定快捷方式</string>
     <!-- app end -->
 
     <!-- common -->
