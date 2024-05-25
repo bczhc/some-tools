@@ -1,5 +1,6 @@
 package pers.zhc.tools.fdb
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -9,13 +10,11 @@ import android.view.MenuItem
 import androidx.annotation.RequiresApi
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.BuildConfig
+import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.FdbMainActivityBinding
 import pers.zhc.tools.jni.JNI.ByteSize
-import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.utils.checkFromOpenAs
-import pers.zhc.tools.utils.requireDelete
-import pers.zhc.tools.utils.requireMkdir
+import pers.zhc.tools.utils.*
 import java.io.File
 import java.io.IOException
 
@@ -70,7 +69,7 @@ class FdbMainActivity : BaseActivity() {
         }
 
         openCacheDirButton.setOnClickListener {
-            createFdbWindow().also {
+            createFdbWindow(this).also {
                 it.hardwareAcceleration = hardwareAccelerated
                 it.startFDB()
             }.showImportPathFilePicker(pathTmpDir)
@@ -107,27 +106,13 @@ class FdbMainActivity : BaseActivity() {
             launcher.overlaySetting!!.launch(this.packageName)
             null
         } else {
-            val fdb = createFdbWindow().also {
+            val fdb = createFdbWindow(this).also {
                 it.hardwareAcceleration = hardwareAccelerated
                 it.startFDB()
             }
             ToastUtils.show(this, fdb.toString())
             fdb
         }
-    }
-
-    private fun createFdbWindow(): FdbWindow {
-        return FdbWindow(this).apply {
-            fdbMap[this.fdbId] = this
-            onExitListener = {
-                fdbMap.remove(this.fdbId)
-            }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun checkDrawOverlayPermission(): Boolean {
-        return Settings.canDrawOverlays(this)
     }
 
     private fun getCacheFilesNotInUse(): List<File> {
@@ -155,11 +140,33 @@ class FdbMainActivity : BaseActivity() {
                 item.isChecked = !item.isChecked
                 hardwareAccelerated = item.isChecked
             }
+            R.id.create_shortcut -> {
+                ShortcutUtils.checkAndToastPinShortcutsSupported(this)
+                ShortcutUtils.createStartingActivityPinShortcut(
+                    this,
+                    StartingFdbActivity::class.java,
+                    getString(R.string.fdb_shortcut_start_fdb_label)
+                )
+            }
         }
         return true
     }
 
     companion object {
-        private val fdbMap = HashMap<Long, FdbWindow>()
+        val fdbMap = HashMap<Long, FdbWindow>()
+
+        fun createFdbWindow(context: Context): FdbWindow {
+            return FdbWindow(context).apply {
+                fdbMap[this.fdbId] = this
+                onExitListener = {
+                    fdbMap.remove(this.fdbId)
+                }
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        fun checkDrawOverlayPermission(): Boolean {
+            return Settings.canDrawOverlays(MyApplication.appContext)
+        }
     }
 }

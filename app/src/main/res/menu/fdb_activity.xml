@@ -7,4 +7,8 @@
         android:checked="false"
         android:title="@string/hardware_acceleration"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/create_shortcut"
+        android:title="@string/fdb_menu_create_shortcut"
+        app:showAsAction="never"/>
 </menu>

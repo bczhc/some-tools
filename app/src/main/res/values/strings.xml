@@ -659,6 +659,8 @@
     <string name="fdb_pen_pressure_coefficient">笔压系数</string>
     <string name="fdb_whether_to_clear_all_layer_dialog">是否清除所有图层</string>
     <string name="fdb_path_import_prompt_dialog_filepath_tv">路径文件：%1$s</string>
+    <string name="fdb_menu_create_shortcut">创建快捷方式</string>
+    <string name="fdb_shortcut_start_fdb_label">启动画板</string>
     <!-- module end -->
 
     <!-- module: words -->
