@@ -77,7 +77,7 @@ class TaskNotesMainActivity : BaseActivity() {
             listItems.add(record)
             listAdapter.notifyItemInserted(listItems.size - 1)
         }.also {
-            registerReceiver(it, IntentFilter().apply {
+            registerReceiverCompat(it, IntentFilter().apply {
                 addAction(OnRecordAddedReceiver.ACTION_RECORD_ADDED)
             })
         }

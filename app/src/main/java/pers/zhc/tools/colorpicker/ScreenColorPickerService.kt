@@ -13,6 +13,7 @@ import pers.zhc.tools.BaseService
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.androidAssert
+import pers.zhc.tools.utils.registerReceiverCompat
 
 class ScreenColorPickerService : BaseService() {
     private var mediaProjection: MediaProjection? = null
@@ -32,7 +33,7 @@ class ScreenColorPickerService : BaseService() {
         )
 
         receivers.colorPickerOperation = ScreenColorPickerOperationReceiver(this).also {
-            applicationContext.registerReceiver(it, IntentFilter().apply {
+            applicationContext.registerReceiverCompat(it, IntentFilter().apply {
                 addAction(ScreenColorPickerOperationReceiver.ACTION_START)
                 addAction(ScreenColorPickerOperationReceiver.ACTION_STOP)
             })

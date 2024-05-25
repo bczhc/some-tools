@@ -20,6 +20,7 @@ import pers.zhc.tools.filepicker.FilePicker
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.Common
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.registerReceiverCompat
 
 class FlashMainActivity : BaseActivity() {
     companion object {
@@ -87,7 +88,7 @@ class FlashMainActivity : BaseActivity() {
         permissionIntent =
             PendingIntent.getBroadcast(this, RequestCode.REQUEST_USB_PERMISSION, Intent(ACTION_USB_PERMISSION), 0)
         val filter = IntentFilter(ACTION_USB_PERMISSION)
-        registerReceiver(usbReceiver, filter)
+        registerReceiverCompat(usbReceiver, filter)
     }
 
     private fun requestUsbPermission() {

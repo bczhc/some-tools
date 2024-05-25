@@ -13,6 +13,7 @@ import pers.zhc.tools.BaseService
 import pers.zhc.tools.MyApplication
 import pers.zhc.tools.R
 import pers.zhc.tools.utils.getSerializableExtra
+import pers.zhc.tools.utils.registerReceiverCompat
 
 /**
  * @author bczhc
@@ -31,7 +32,7 @@ class BusArrivalReminderService : BaseService() {
         busReminderList = SparseArray()
         receiver = BusArrivalReminderNotificationReceiver()
         val filter = IntentFilter(BusArrivalReminderNotificationReceiver.ACTION_BUS_CANCEL_CLICK)
-        registerReceiver(receiver, filter)
+        registerReceiverCompat(receiver, filter)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

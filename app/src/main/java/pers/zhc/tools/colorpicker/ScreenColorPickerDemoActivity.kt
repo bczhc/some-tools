@@ -6,6 +6,7 @@ import android.os.Bundle
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.databinding.ColorPickerMainBinding
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.registerReceiverCompat
 
 class ScreenColorPickerDemoActivity : BaseActivity() {
     private lateinit var resultReceiver: ScreenColorPickerResultReceiver
@@ -30,7 +31,7 @@ class ScreenColorPickerDemoActivity : BaseActivity() {
             resultReceiver = ScreenColorPickerResultReceiver { requestId, color ->
                 ToastUtils.show(this, "$requestId $color")
             }.also {
-                registerReceiver(it, IntentFilter().apply {
+                registerReceiverCompat(it, IntentFilter().apply {
                     addAction(ScreenColorPickerResultReceiver.ACTION_ON_COLOR_PICKED)
                 })
             }

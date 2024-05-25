@@ -424,7 +424,7 @@ class FdbWindow(private val context: Context) {
             addAction(FdbBroadcastReceiver.ACTION_ON_CAPTURE_SCREEN_PERMISSION_GRANTED)
             addAction(FdbBroadcastReceiver.ACTION_ON_SCREEN_ORIENTATION_CHANGED)
         }
-        context.applicationContext.registerReceiver(receivers.main, filter)
+        context.applicationContext.registerReceiverCompat(receivers.main, filter)
 
         setUpLayerManagerWindow()
 
@@ -1300,7 +1300,7 @@ class FdbWindow(private val context: Context) {
                     ToastUtils.show(context, ColorUtils.getHexString(color, false))
                 }
             }.also {
-                context.applicationContext.registerReceiver(it, IntentFilter().apply {
+                context.applicationContext.registerReceiverCompat(it, IntentFilter().apply {
                     addAction(ScreenColorPickerResultReceiver.ACTION_ON_COLOR_PICKED)
                 })
             }
@@ -1325,7 +1325,7 @@ class FdbWindow(private val context: Context) {
                     else -> {}
                 }
             }.also {
-                context.applicationContext.registerReceiver(it, IntentFilter().apply {
+                context.applicationContext.registerReceiverCompat(it, IntentFilter().apply {
                     addAction(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_GRANTED)
                     addAction(ScreenColorPickerCheckpointReceiver.ACTION_PERMISSION_DENIED)
                     addAction(ScreenColorPickerCheckpointReceiver.ACTION_SERVICE_STARTED)
