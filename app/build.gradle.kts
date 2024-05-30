@@ -18,6 +18,7 @@ import pers.zhc.plugins.NdkVersion
 import pers.zhc.plugins.SdkPath
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.net.InetAddress
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
@@ -175,6 +176,11 @@ configure<CppBuildPluginExtension> {
 
 var buildInfoMessage = """Version code: ${generatedVersion.code}
     |Version name: ${generatedVersion.name}
+    |Build host: ${InetAddress.getLocalHost().hostName}
+    |Build OS name: ${System.getProperty("os.name")}
+    |Build OS version: ${System.getProperty("os.version")}
+    |Build OS architecture: ${System.getProperty("os.arch")}
+    |Build time: ${Date()}
     |Rust build enabled: ${buildConfigs.rust.enableBuild}
     |Rust JNI enabled: ${buildConfigs.rust.enableJni}
     |NDK build type: ${buildConfigs.ndk.buildType}
