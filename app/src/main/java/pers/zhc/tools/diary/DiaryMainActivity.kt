@@ -4,21 +4,15 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.appcompat.widget.Toolbar
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.tools.R
-import pers.zhc.tools.databinding.DiaryEnterPasswordDialogBinding
 import pers.zhc.tools.databinding.DiaryMainActivityBinding
 import pers.zhc.tools.diary.fragments.AttachmentFragment
 import pers.zhc.tools.diary.fragments.DiaryFragment
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.utils.ToastUtils
-import pers.zhc.tools.utils.setNegativeAction
-import pers.zhc.tools.utils.setPositiveAction
 
 /**
  * @author bczhc
@@ -29,17 +23,17 @@ class DiaryMainActivity : DiaryBaseActivity() {
     private lateinit var bindings: DiaryMainActivityBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        load()
     }
 
     private fun load() {
         bindings = DiaryMainActivityBinding.inflate(layoutInflater)
         setContentView(bindings.root)
+        invalidateOptionsMenu()
+        initDrawerLayout()
     }
 
     override fun onDatabaseValidated() {
-        invalidateOptionsMenu()
-        initDrawerLayout()
+        load()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

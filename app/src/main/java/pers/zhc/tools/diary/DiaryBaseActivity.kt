@@ -40,7 +40,7 @@ open class DiaryBaseActivity : BaseActivity() {
         }
 
         if (!validateDatabase(LocalConfig.readPassword())) {
-            showPasswordDialog()
+            showPasswordPromptDialog()
         } else {
             diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
             diaryDatabase = diaryDatabaseRef!!.get()
@@ -50,7 +50,7 @@ open class DiaryBaseActivity : BaseActivity() {
 
     open fun onDatabaseValidated() {}
 
-    private fun showPasswordDialog() {
+    private fun showPasswordPromptDialog() {
         // validate password of the database
         val dialogBindings = DiaryEnterPasswordDialogBinding.inflate(layoutInflater)
         val dialog = MaterialAlertDialogBuilder(this)
@@ -71,8 +71,10 @@ open class DiaryBaseActivity : BaseActivity() {
                     dialogBindings.progressBar.visibility = View.VISIBLE
                     thread {
                         if (validateDatabase(password)) {
-                            val config = LocalConfig.read()
-                            config.password = password
+                            val config = LocalConfig.read().apply {
+                                this.password = password
+                            }
+                            LocalConfig.write(config)
                             runOnUiThread {
                                 dialog.dismiss()
                             }

@@ -18,9 +18,8 @@ class DiaryDatabase(path: String) {
     private val updateDiaryContentStatement: Statement
 
     init {
-        @Language("TEXT")
-        val keyPragma = "PRAGMA key = '$DEFAULT_PASSPHRASE'"
-        database.exec(keyPragma)
+        val password = LocalConfig.readPassword()
+        database.key(password)
 
         @Language("SQLite") val statements =
             """PRAGMA foreign_keys = ON;
