@@ -26,7 +26,7 @@ data class LocalConfig(
         }
 
         fun readPassword(): String {
-            return read().password ?: DiaryDatabase.DEFAULT_PASSPHRASE
+            return (read().password ?: "").ifEmpty { DiaryDatabase.DEFAULT_PASSPHRASE }
         }
     }
 }

@@ -420,7 +420,14 @@ WHERE diary_attachment_file.identifier IS ?
         }
 
         /**
-         * Databases of Diary are always encrypted. This is the default dummy "placeholder" passphrase.
+         * SQLCipher won't encrypt the plaintext database if you call `sqlite3_key` or `sqlite3_rekey`.
+         * The only way to turn the plaintext database to an encrypted one is use `sqlcipher_export()`.
+         *
+         * So we won't bother so much, and it reduces troubles of converting between plaintext databases
+         * and encrypted databases. We just let it encrypted *by default*, with setting a dummy
+         * "placeholder" passphrase on the first initialization, via `sqlite3_key`.
+         *
+         * If further key change is required, just issue `sqlite3_rekey`.
          */
         const val DEFAULT_PASSPHRASE = "0"
     }

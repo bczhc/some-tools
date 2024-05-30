@@ -11,15 +11,13 @@ import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryEnterPasswordDialogBinding
 import pers.zhc.tools.jni.JNI
-import pers.zhc.tools.utils.DigestUtil
-import pers.zhc.tools.utils.IntDate
+import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.rc.Ref
-import pers.zhc.tools.utils.setNegativeAction
-import pers.zhc.tools.utils.setPositiveAction
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * @author bczhc
@@ -41,7 +39,7 @@ open class DiaryBaseActivity : BaseActivity() {
             setDisplayShowHomeEnabled(true)
         }
 
-        if (!validateDatabase()) {
+        if (!validateDatabase(LocalConfig.readPassword())) {
             showPasswordDialog()
         } else {
             diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
@@ -56,7 +54,9 @@ open class DiaryBaseActivity : BaseActivity() {
         // validate password of the database
         val dialogBindings = DiaryEnterPasswordDialogBinding.inflate(layoutInflater)
         val dialog = MaterialAlertDialogBuilder(this)
-            .setNegativeAction()
+            .setNegativeAction { d, _ ->
+                d.cancel()
+            }
             .setOnCancelListener {
                 finish()
             }
@@ -67,9 +67,22 @@ open class DiaryBaseActivity : BaseActivity() {
         dialog.setOnShowListener {
             (it as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
                 .setOnClickListener {
+                    val password = dialogBindings.passwordEt.text.toString().ifEmpty { DiaryDatabase.DEFAULT_PASSPHRASE }
                     dialogBindings.progressBar.visibility = View.VISIBLE
-                    val config = LocalConfig.read()
-                    config.password = dialogBindings.passwordEt.text.toString()
+                    thread {
+                        if (validateDatabase(password)) {
+                            val config = LocalConfig.read()
+                            config.password = password
+                            runOnUiThread {
+                                dialog.dismiss()
+                            }
+                        } else {
+                            runOnUiThread {
+                                ToastUtils.show(this, R.string.wrong_password_toast)
+                                dialogBindings.progressBar.visibility = View.INVISIBLE
+                            }
+                        }
+                    }
                 }
         }
         dialog.show()
@@ -80,11 +93,9 @@ open class DiaryBaseActivity : BaseActivity() {
         return config.password
     }
 
-    private fun validateDatabase(): Boolean {
-        val password = getSavedPassword() ?: DiaryDatabase.DEFAULT_PASSPHRASE
+    private fun validateDatabase(password: String): Boolean {
         val db = SQLite3.open(DiaryDatabase.internalDatabasePath.path)
-//        db.key(password)
-        db.exec("PRAGMA key = 'a'")
+        db.key(password)
         val isADatabase = !db.checkIfCorrupt()
         db.close()
         return isADatabase

@@ -33,8 +33,8 @@ JNIEXPORT jint JNICALL Java_pers_zhc_tools_jni_JNI_00024Codecs_qmcDecode
             .append(" -> ")
             .append(f2);
     sQ = sQString.getCString();
-    log(env, "", sQ);
-    log(env, "", "JNI————解码……");
+    jniLog(env, "", sQ);
+    jniLog(env, "", "JNI————解码……");
     int rC;
     const char *u1, *u2;
     u1 = String::toUpperCase(f1).getCString(), u2 = String::toUpperCase(f2).getCString();
