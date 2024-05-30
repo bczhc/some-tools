@@ -18,6 +18,7 @@ import pers.zhc.plugins.NdkVersion
 import pers.zhc.plugins.SdkPath
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import pers.zhc.gradle.plugins.util.`FileUtils$`.`MODULE$` as FileUtils
@@ -71,7 +72,7 @@ val detectedNdkVersion = NdkVersion.getLatestNdkVersion(foundSdkDir) ?: run {
         )
     }
 }
-val foundNdkDir = Paths.get(foundSdkDir.path, "ndk", detectedNdkVersion)
+val foundNdkDir: Path = Paths.get(foundSdkDir.path, "ndk", detectedNdkVersion)
 
 data class GeneratedVersion(val code: Int, val name: String)
 val verInfo = generateVersion()!! as ArrayList<*>
@@ -124,11 +125,52 @@ ndkTargets.forEach {
     val opensslPath = getOpensslPath(opensslDir, abi)
     cmakeDefsMap[abi.toString()] = mapOf(
         Pair("OPENSSL_INCLUDE_DIR", opensslPath.include.path),
-        Pair("OPENSSL_LddIBS_DIR", opensslPath.lib.path),
+        Pair("OPENSSL_LIBS_DIR", opensslPath.lib.path),
         Pair("OPENSSL_CRYPTO_LINK_SONAME", "crypto$opensslShlibVariant"),
         Pair("OPENSSL_SSL_LINK_SONAME", "ssl$opensslShlibVariant"),
         Pair("__ANDROID__", "1")
     )
+}
+
+if (!disableRustBuild) {
+    ndkTargets.forEach {
+        val env = (getRustOpensslBuildEnv(it.abi.toRustTriple()) as Map<*, *>).map { e ->
+            Pair(e.key.toString(), e.value.toString())
+        }.toMap()
+        val opensslPath = getOpensslPath(opensslDir, it.abi)
+        rustBuildExtraEnv[env["libDir"].toString()] = opensslPath.lib!!.path
+        rustBuildExtraEnv[env["includeDir"].toString()] = opensslPath.include!!.path
+    }
+    rustBuildExtraEnv["OPENSSL_LIBS"] = "ssl$opensslShlibVariant:crypto$opensslShlibVariant"
+
+    ndkTargets.forEach {
+        val abi = it.abi.name
+        rustBuildTargetEnv[abi] = HashMap<String, String>().apply {
+            this["SQLITE3_INCLUDE_DIR"] =
+                "$projectDir/app/src/main/cpp/third_party/jni-lib/third_party/my-cpp-lib/third_party/sqlite3-single-c"
+            this["SQLITE3_LIB_DIR"] = File(jniOutputDir, abi).path
+        }
+    }
+
+    configure<RustBuildPluginExtension> {
+        ndkDir.set(foundNdkDir.toString())
+        targets.set(GradleExtensionConfigConverters.targetsToMap(ndkTargets))
+        buildType.set(buildConfigs.ndk.buildType.toString())
+        srcDir.set(File(appProject.projectDir, "src/main/rust").path)
+        outputDir.set(jniOutputDir.path)
+        extraEnv.set(rustBuildExtraEnv)
+        targetEnv.set(rustBuildTargetEnv)
+    }
+}
+
+configure<CppBuildPluginExtension> {
+    srcDir.set("$projectDir/src/main/cpp")
+    ndkDir.set(foundNdkDir.toString())
+    targets.set(GradleExtensionConfigConverters.targetsToMap(ndkTargets))
+    buildType.set(buildConfigs.ndk.buildType.name)
+    outputDir.set(jniOutputDir.path)
+    cmakeBinDir.set(tools.cmakeBinDir.path)
+    cmakeDefs.set(cmakeDefsMap)
 }
 
 var buildInfoMessage = """Version code: ${generatedVersion.code}
@@ -243,48 +285,6 @@ android {
         }
     }
 }
-
-if (!disableRustBuild) {
-    ndkTargets.forEach {
-        val env = (getRustOpensslBuildEnv(it.abi.toRustTriple()) as Map<*, *>).map { e ->
-            Pair(e.key.toString(), e.value.toString())
-        }.toMap()
-        val opensslPath = getOpensslPath(opensslDir, it.abi)
-        rustBuildExtraEnv[env["libDir"].toString()] = opensslPath.lib!!.path
-        rustBuildExtraEnv[env["includeDir"].toString()] = opensslPath.include!!.path
-    }
-    rustBuildExtraEnv["OPENSSL_LIBS"] = "ssl$opensslShlibVariant:crypto$opensslShlibVariant"
-
-    ndkTargets.forEach {
-        val abi = it.abi.name
-        rustBuildTargetEnv[abi] = HashMap<String, String>().apply {
-            this["SQLITE3_INCLUDE_DIR"] =
-                "$projectDir/app/src/main/cpp/third_party/jni-lib/third_party/my-cpp-lib/third_party/sqlite3-single-c"
-            this["SQLITE3_LIB_DIR"] = File(jniOutputDir, abi).path
-        }
-    }
-
-    configure<RustBuildPluginExtension> {
-        ndkDir.set(android.ndkDirectory.path)
-        targets.set(GradleExtensionConfigConverters.targetsToMap(ndkTargets))
-        buildType.set(buildConfigs.ndk.buildType.toString())
-        srcDir.set(File(appProject.projectDir, "src/main/rust").path)
-        outputDir.set(jniOutputDir.path)
-        extraEnv.set(rustBuildExtraEnv)
-        targetEnv.set(rustBuildTargetEnv)
-    }
-}
-
-configure<CppBuildPluginExtension> {
-    srcDir.set("$projectDir/src/main/cpp")
-    ndkDir.set(android.ndkDirectory.path)
-    targets.set(GradleExtensionConfigConverters.targetsToMap(ndkTargets))
-    buildType.set(buildConfigs.ndk.buildType.name)
-    outputDir.set(jniOutputDir.path)
-    cmakeBinDir.set(tools.cmakeBinDir.path)
-    cmakeDefs.set(cmakeDefsMap)
-}
-
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
