@@ -893,5 +893,8 @@
     <string name="diary_password_change_succeeded">密码更改成功</string>
     <string name="enter_password_dialog_title">请输入密码</string>
     <string name="wrong_password_toast">密码不正确</string>
+    <string name="diary_enter_password_et_hint">输入密码</string>
+    <string name="diary_repeat_password_et_hint">再次输入</string>
+    <string name="password_not_same_error_msg">密码不一致</string>
     <!-- end -->
 </resources>

@@ -428,6 +428,6 @@ WHERE diary_attachment_file.identifier IS ?
          *
          * If further key change is required, just issue `sqlite3_rekey`.
          */
-        const val DEFAULT_PASSPHRASE = "0"
+        const val DEFAULT_PASSPHRASE = "diary"
     }
 }

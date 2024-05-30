@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -324,13 +325,30 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             .setView(bindings.root)
             .setNegativeAction()
             .setPositiveAction { _, _ ->
-                val newPassword = bindings.passwordEt.text.toString()
+                val newPassword = bindings.password1Et.text.toString().ifEmpty { DiaryDatabase.DEFAULT_PASSPHRASE }
                 diaryDatabase.rekey(newPassword)
                 ToastUtils.show(context, R.string.diary_password_change_succeeded)
+                LocalConfig.write(LocalConfig.read().apply {
+                    this.password = newPassword
+                })
             }
             .show()
 
         bindings.currentPasswordTv.text = LocalConfig.readPassword()
+        val checkPassword = {
+            val errorText = if (bindings.password1Et.text.toString() != bindings.password2Et.text.toString()) {
+                getString(R.string.password_not_same_error_msg)
+            } else {
+                null
+            }
+            bindings.til2.error = errorText
+        }
+        bindings.password1Et.doAfterTextChanged {
+            checkPassword()
+        }
+        bindings.password2Et.doAfterTextChanged {
+            checkPassword()
+        }
     }
 
     private fun showPickingRandomDiaryDialog() {
