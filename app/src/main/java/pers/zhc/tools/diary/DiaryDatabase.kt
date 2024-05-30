@@ -18,6 +18,10 @@ class DiaryDatabase(path: String) {
     private val updateDiaryContentStatement: Statement
 
     init {
+        @Language("TEXT")
+        val keyPragma = "PRAGMA key = '$DEFAULT_PASSPHRASE'"
+        database.exec(keyPragma)
+
         @Language("SQLite") val statements =
             """PRAGMA foreign_keys = ON;
 -- main diary content table
@@ -388,6 +392,10 @@ WHERE diary_attachment_file.identifier IS ?
         database.exec("PRAGMA foreign_keys=$state")
     }
 
+    fun rekey(newKey: String) {
+        database.rekey(newKey)
+    }
+
     companion object {
         val internalDatabasePath by lazy {
             Common.getInternalDatabaseDir(MyApplication.appContext, "diary.db")
@@ -410,5 +418,10 @@ WHERE diary_attachment_file.identifier IS ?
         fun getDatabaseRefCount(): Int {
             return databaseManager.getRefCount()
         }
+
+        /**
+         * Databases of Diary are always encrypted. This is the default dummy "placeholder" passphrase.
+         */
+        const val DEFAULT_PASSPHRASE = "0"
     }
 }

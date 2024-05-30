@@ -4,6 +4,9 @@ import pers.zhc.tools.MyApplication
 import pers.zhc.tools.utils.Common
 import java.io.File
 
+/**
+ * merge into [LocalConfig]
+  */
 data class LocalInfo(
     val attachmentStoragePath: String?,
 ) {

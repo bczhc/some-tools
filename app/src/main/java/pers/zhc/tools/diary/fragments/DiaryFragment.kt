@@ -19,14 +19,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.intellij.lang.annotations.Language
 import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
-import pers.zhc.tools.databinding.DiaryAdvencedSearchDialogBinding
-import pers.zhc.tools.databinding.DiaryItemViewBinding
-import pers.zhc.tools.databinding.DiaryMainDiaryFragmentBinding
-import pers.zhc.tools.databinding.DiaryPickingRandomDiaryDialogBinding
+import pers.zhc.tools.databinding.*
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.filepicker.FilePickerActivityContract
 import pers.zhc.tools.utils.*
@@ -309,8 +307,30 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             R.id.random -> {
                 showPickingRandomDiaryDialog()
             }
+
+            R.id.password -> {
+                changePasswordDialog()
+            }
         }
         return true
+    }
+
+    private fun changePasswordDialog() {
+        val context = requireContext()
+        val bindings = DiaryChangePasswordDialogBinding.inflate(LayoutInflater.from(context))
+
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.diary_change_password_dialog_title)
+            .setView(bindings.root)
+            .setNegativeAction()
+            .setPositiveAction { _, _ ->
+                val newPassword = bindings.passwordEt.text.toString()
+                diaryDatabase.rekey(newPassword)
+                ToastUtils.show(context, R.string.diary_password_change_succeeded)
+            }
+            .show()
+
+        bindings.currentPasswordTv.text = LocalConfig.readPassword()
     }
 
     private fun showPickingRandomDiaryDialog() {
@@ -484,7 +504,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         }
 
         val diaryActivity = requireActivity() as DiaryBaseActivity
-        diaryActivity.diaryDatabaseRef.release()
+        diaryActivity.diaryDatabaseRef!!.release()
         androidAssert(DiaryDatabase.getDatabaseRefCount() == 0)
 
         FileUtil.copy(file, DiaryDatabase.internalDatabasePath)
@@ -501,7 +521,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
 
         // substitute old references
         diaryActivity.diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
-        diaryActivity.diaryDatabase = diaryActivity.diaryDatabaseRef.get()
+        diaryActivity.diaryDatabase = diaryActivity.diaryDatabaseRef!!.get()
         diaryDatabase = diaryActivity.diaryDatabase
 
         ToastUtils.show(context, msgResOnFinished)

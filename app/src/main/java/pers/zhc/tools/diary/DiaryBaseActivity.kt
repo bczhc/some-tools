@@ -2,12 +2,20 @@ package pers.zhc.tools.diary
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.jni.JNI.Struct
+import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
+import pers.zhc.tools.R
+import pers.zhc.tools.databinding.DiaryEnterPasswordDialogBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.DigestUtil
 import pers.zhc.tools.utils.IntDate
 import pers.zhc.tools.utils.rc.Ref
+import pers.zhc.tools.utils.setNegativeAction
+import pers.zhc.tools.utils.setPositiveAction
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -17,7 +25,7 @@ import java.util.*
  * @author bczhc
  */
 open class DiaryBaseActivity : BaseActivity() {
-    lateinit var diaryDatabaseRef: Ref<DiaryDatabase>
+    var diaryDatabaseRef: Ref<DiaryDatabase>? = null
 
     /**
      * shortcut reference to [DiaryDatabase]
@@ -33,12 +41,57 @@ open class DiaryBaseActivity : BaseActivity() {
             setDisplayShowHomeEnabled(true)
         }
 
-        diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
-        diaryDatabase = diaryDatabaseRef.get()
+        if (!validateDatabase()) {
+            showPasswordDialog()
+        } else {
+            diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
+            diaryDatabase = diaryDatabaseRef!!.get()
+            onDatabaseValidated()
+        }
+    }
+
+    open fun onDatabaseValidated() {}
+
+    private fun showPasswordDialog() {
+        // validate password of the database
+        val dialogBindings = DiaryEnterPasswordDialogBinding.inflate(layoutInflater)
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setNegativeAction()
+            .setOnCancelListener {
+                finish()
+            }
+            .setPositiveAction()
+            .setView(dialogBindings.root)
+            .setTitle(R.string.enter_password_dialog_title)
+            .create()
+        dialog.setOnShowListener {
+            (it as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener {
+                    dialogBindings.progressBar.visibility = View.VISIBLE
+                    val config = LocalConfig.read()
+                    config.password = dialogBindings.passwordEt.text.toString()
+                }
+        }
+        dialog.show()
+    }
+
+    private fun getSavedPassword(): String? {
+        val config = LocalConfig.read()
+        return config.password
+    }
+
+    private fun validateDatabase(): Boolean {
+        val password = getSavedPassword() ?: DiaryDatabase.DEFAULT_PASSPHRASE
+        val db = SQLite3.open(DiaryDatabase.internalDatabasePath.path)
+//        db.key(password)
+        db.exec("PRAGMA key = 'a'")
+        val isADatabase = !db.checkIfCorrupt()
+        db.close()
+        return isADatabase
     }
 
     override fun finish() {
-        diaryDatabaseRef.release()
+        diaryDatabaseRef?.release()
         super.finish()
     }
 

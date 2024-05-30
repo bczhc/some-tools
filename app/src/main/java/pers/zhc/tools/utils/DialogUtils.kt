@@ -102,7 +102,7 @@ class DialogUtils {
     }
 }
 
-fun MaterialAlertDialogBuilder.setPositiveAction(action: ((dialog: DialogInterface, which: Int) -> Unit)?): MaterialAlertDialogBuilder {
+fun MaterialAlertDialogBuilder.setPositiveAction(action: ((dialog: DialogInterface, which: Int) -> Unit)? = null): MaterialAlertDialogBuilder {
     return this.setPositiveButton(R.string.confirm, action)
 }
 
@@ -110,12 +110,8 @@ fun MaterialAlertDialogBuilder.defaultNegativeButton(): MaterialAlertDialogBuild
     return this.setPositiveAction(null)
 }
 
-fun MaterialAlertDialogBuilder.setNegativeAction(action: ((dialog: DialogInterface, which: Int) -> Unit)?): MaterialAlertDialogBuilder {
+fun MaterialAlertDialogBuilder.setNegativeAction(action: ((dialog: DialogInterface, which: Int) -> Unit)? = null): MaterialAlertDialogBuilder {
     return this.setNegativeButton(R.string.cancel_btn, action)
-}
-
-fun MaterialAlertDialogBuilder.setNegativeAction(): MaterialAlertDialogBuilder {
-    return this.setNegativeAction(null)
 }
 
 typealias PromptDialogCallback = (dialog: DialogInterface, editText: EditText) -> Unit

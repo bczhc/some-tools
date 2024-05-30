@@ -888,5 +888,9 @@
     <string name="exif_label">Exif查看</string>
     <string name="exif_detailed_info_dialog_title">详细信息</string>
     <string name="exif_exif_data_title">Exif</string>
+    <string name="diary_change_password_dialog_title">更改密码</string>
+    <string name="dialog_current_password_title">当前密码：</string>
+    <string name="diary_password_change_succeeded">密码更改成功</string>
+    <string name="enter_password_dialog_title">请输入密码</string>
     <!-- end -->
 </resources>
