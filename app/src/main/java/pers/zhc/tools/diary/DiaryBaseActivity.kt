@@ -1,6 +1,8 @@
 package pers.zhc.tools.diary
 
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -39,8 +41,13 @@ open class DiaryBaseActivity : BaseActivity() {
             setDisplayShowHomeEnabled(true)
         }
 
-        if (!validateDatabase(LocalConfig.readPassword())) {
-            showPasswordPromptDialog()
+        if (!validateDatabase(DiaryDatabase.internalDatabasePath, LocalConfig.readPassword())) {
+            showPasswordPromptDialog(this, DiaryDatabase.internalDatabasePath, onSuccess = {
+                val config = LocalConfig.read().apply {
+                    password = it
+                }
+                LocalConfig.write(config)
+            })
         } else {
             diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
             diaryDatabase = diaryDatabaseRef!!.get()
@@ -49,59 +56,6 @@ open class DiaryBaseActivity : BaseActivity() {
     }
 
     open fun onDatabaseValidated() {}
-
-    private fun showPasswordPromptDialog() {
-        // validate password of the database
-        val dialogBindings = DiaryEnterPasswordDialogBinding.inflate(layoutInflater)
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setNegativeAction { d, _ ->
-                d.cancel()
-            }
-            .setOnCancelListener {
-                finish()
-            }
-            .setPositiveAction()
-            .setView(dialogBindings.root)
-            .setTitle(R.string.enter_password_dialog_title)
-            .create()
-        dialog.setOnShowListener {
-            (it as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
-                .setOnClickListener {
-                    val password = dialogBindings.passwordEt.text.toString().ifEmpty { DiaryDatabase.DEFAULT_PASSPHRASE }
-                    dialogBindings.progressBar.visibility = View.VISIBLE
-                    thread {
-                        if (validateDatabase(password)) {
-                            val config = LocalConfig.read().apply {
-                                this.password = password
-                            }
-                            LocalConfig.write(config)
-                            runOnUiThread {
-                                dialog.dismiss()
-                            }
-                        } else {
-                            runOnUiThread {
-                                ToastUtils.show(this, R.string.wrong_password_toast)
-                                dialogBindings.progressBar.visibility = View.INVISIBLE
-                            }
-                        }
-                    }
-                }
-        }
-        dialog.show()
-    }
-
-    private fun getSavedPassword(): String? {
-        val config = LocalConfig.read()
-        return config.password
-    }
-
-    private fun validateDatabase(password: String): Boolean {
-        val db = SQLite3.open(DiaryDatabase.internalDatabasePath.path)
-        db.key(password)
-        val isADatabase = !db.checkIfCorrupt()
-        db.close()
-        return isADatabase
-    }
 
     override fun finish() {
         diaryDatabaseRef?.release()
@@ -140,6 +94,57 @@ open class DiaryBaseActivity : BaseActivity() {
 
         fun computeIdentifier(s: String): String {
             return computeIdentifier(s.toByteArray(StandardCharsets.UTF_8))
+        }
+
+        private fun validateDatabase(database: File, password: String): Boolean {
+            val db = SQLite3.open(database.path)
+            db.key(password)
+            val isADatabase = !db.checkIfCorrupt()
+            db.close()
+            return isADatabase
+        }
+
+        fun showPasswordPromptDialog(
+            context: Context,
+            db: File,
+            onCancel: () -> Unit = {},
+            onSuccess: (password: String) -> Unit
+        ) {
+            // validate password of the database
+            val dialogBindings = DiaryEnterPasswordDialogBinding.inflate(LayoutInflater.from(context))
+            val dialog = MaterialAlertDialogBuilder(context)
+                .setNegativeAction { d, _ ->
+                    d.cancel()
+                }
+                .setOnCancelListener {
+                    onCancel()
+                }
+                .setPositiveAction()
+                .setView(dialogBindings.root)
+                .setTitle(R.string.enter_password_dialog_title)
+                .create()
+            dialog.setOnShowListener {
+                (it as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setOnClickListener {
+                        val password =
+                            dialogBindings.passwordEt.text.toString().ifEmpty { DiaryDatabase.DEFAULT_PASSPHRASE }
+                        dialogBindings.progressBar.visibility = View.VISIBLE
+                        thread {
+                            if (validateDatabase(db, password)) {
+                                runOnUiThread {
+                                    onSuccess(password)
+                                    dialog.dismiss()
+                                }
+                            } else {
+                                runOnUiThread {
+                                    ToastUtils.show(context, R.string.wrong_password_toast)
+                                    dialogBindings.progressBar.visibility = View.INVISIBLE
+                                }
+                            }
+                        }
+                    }
+            }
+            dialog.show()
         }
     }
 }

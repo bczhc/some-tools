@@ -25,6 +25,12 @@ data class LocalConfig(
             FILE_PATH.writeText(GSON.toJson(config))
         }
 
+        fun updatePassword(password: String) {
+            write(read().apply {
+                this.password = password
+            })
+        }
+
         fun readPassword(): String {
             return (read().password ?: "").ifEmpty { DiaryDatabase.DEFAULT_PASSPHRASE }
         }

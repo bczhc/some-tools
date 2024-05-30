@@ -521,30 +521,23 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             return
         }
 
-        val diaryActivity = requireActivity() as DiaryBaseActivity
-        diaryActivity.diaryDatabaseRef!!.release()
-        androidAssert(DiaryDatabase.getDatabaseRefCount() == 0)
+        DiaryBaseActivity.showPasswordPromptDialog(requireContext(), file, onSuccess = {
+            val diaryActivity = requireActivity() as DiaryBaseActivity
+            diaryActivity.diaryDatabaseRef!!.release()
+            androidAssert(DiaryDatabase.getDatabaseRefCount() == 0)
 
-        FileUtil.copy(file, DiaryDatabase.internalDatabasePath)
+            LocalConfig.updatePassword(it)
+            file.copyTo(DiaryDatabase.internalDatabasePath, true)
 
-        var msgResOnFinished = 0
-        SQLite3::class.withNew(DiaryDatabase.internalDatabasePath.path) {
-            if (it.checkIfCorrupt()) {
-                msgResOnFinished = R.string.corrupt_database_and_recreate_new_msg
-                DiaryDatabase.internalDatabasePath.requireDelete()
-            } else {
-                msgResOnFinished = R.string.importing_succeeded
-            }
-        }
+            // substitute old references
+            diaryActivity.diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
+            diaryActivity.diaryDatabase = diaryActivity.diaryDatabaseRef!!.get()
+            diaryDatabase = diaryActivity.diaryDatabase
 
-        // substitute old references
-        diaryActivity.diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
-        diaryActivity.diaryDatabase = diaryActivity.diaryDatabaseRef!!.get()
-        diaryDatabase = diaryActivity.diaryDatabase
+            ToastUtils.show(requireContext(), R.string.importing_succeeded)
 
-        ToastUtils.show(context, msgResOnFinished)
-
-        refreshList()
+            refreshList()
+        })
     }
 
     @SuppressLint("NotifyDataSetChanged")
