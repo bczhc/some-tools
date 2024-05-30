@@ -124,9 +124,10 @@ ndkTargets.forEach {
     val opensslPath = getOpensslPath(opensslDir, abi)
     cmakeDefsMap[abi.toString()] = mapOf(
         Pair("OPENSSL_INCLUDE_DIR", opensslPath.include.path),
-        Pair("OPENSSL_LIBS_DIR", opensslPath.lib.path),
+        Pair("OPENSSL_LddIBS_DIR", opensslPath.lib.path),
         Pair("OPENSSL_CRYPTO_LINK_SONAME", "crypto$opensslShlibVariant"),
         Pair("OPENSSL_SSL_LINK_SONAME", "ssl$opensslShlibVariant"),
+        Pair("__ANDROID__", "1")
     )
 }
 
