@@ -897,4 +897,13 @@
     <string name="diary_repeat_password_et_hint">再次输入</string>
     <string name="password_not_same_error_msg">密码不一致</string>
     <!-- end -->
+
+    <!-- Barcode -->
+    <string name="barcode_scan_label">条码扫描</string>
+    <string name="barcode_result_label">结果</string>
+    <string name="barcode_error_correction_level_label">纠错等级</string>
+    <string name="barcode_format_name_label">格式</string>
+    <string name="barcode_raw_data_label">原始数据</string>
+    <string name="barcode_no_data_toast">无数据</string>
+    <!-- end -->
 </resources>

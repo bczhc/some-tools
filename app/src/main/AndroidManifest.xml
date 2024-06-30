@@ -990,5 +990,31 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".barcode.BarcodeScanActivity"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+            android:theme="@style/Theme.M3Application"
+            android:label="@string/barcode_scan_label"
+            android:taskAffinity="pers.zhc.tools.app.barcode_scan"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".barcode.BarcodeResultActivity"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+            android:theme="@style/Theme.M3Application"
+            android:label="@string/barcode_result_label"
+            android:taskAffinity="pers.zhc.tools.app.barcode_result"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

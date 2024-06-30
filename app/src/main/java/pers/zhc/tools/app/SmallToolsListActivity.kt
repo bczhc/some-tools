@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
+import pers.zhc.tools.barcode.BarcodeScanActivity
 import pers.zhc.tools.charsplit.CharSplitActivity
 import pers.zhc.tools.charstat.CharStatActivity
 import pers.zhc.tools.charucd.CharLookupActivity
@@ -46,7 +47,8 @@ class SmallToolsListActivity : BaseActivity() {
                 R.string.kangxi_converter_label,
                 pers.zhc.tools.kangxiconverter.KangxiConverterActivity::class.java
             ),
-            ActivityItem(R.string.exif_label, pers.zhc.tools.exifviewer.MainActivity::class.java)
+            ActivityItem(R.string.exif_label, pers.zhc.tools.exifviewer.MainActivity::class.java),
+            ActivityItem(R.string.barcode_scan_label, BarcodeScanActivity::class.java),
         )
 
         recyclerView.adapter = AppMenuAdapter(this, activities)
