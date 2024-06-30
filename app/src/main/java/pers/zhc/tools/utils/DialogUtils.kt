@@ -107,7 +107,7 @@ fun MaterialAlertDialogBuilder.setPositiveAction(action: ((dialog: DialogInterfa
 }
 
 fun MaterialAlertDialogBuilder.defaultNegativeButton(): MaterialAlertDialogBuilder {
-    return this.setPositiveAction(null)
+    return this.setNegativeAction(null)
 }
 
 fun MaterialAlertDialogBuilder.setNegativeAction(action: ((dialog: DialogInterface, which: Int) -> Unit)? = null): MaterialAlertDialogBuilder {
