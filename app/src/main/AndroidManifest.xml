@@ -1016,5 +1016,17 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".udpbroadcast.MainActivity"
+            android:configChanges="screenSize|keyboard|navigation|orientation|keyboardHidden|layoutDirection|locale"
+            android:theme="@style/Theme.M3Application"
+            android:label="@string/udp_broadcast_label"
+            android:taskAffinity="pers.zhc.tools.app.udp_broadcast"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

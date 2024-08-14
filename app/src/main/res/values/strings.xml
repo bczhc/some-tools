@@ -905,5 +905,9 @@
     <string name="barcode_format_name_label">格式</string>
     <string name="barcode_raw_data_label">原始数据</string>
     <string name="barcode_no_data_toast">无数据</string>
+    <string name="udp_broadcast_port">端口</string>
+    <string name="udp_broadcast_listen">监听</string>
+    <string name="udp_broadcast_bind">绑定</string>
+    <string name="udp_broadcast_label">UDP广播</string>
     <!-- end -->
 </resources>

@@ -533,4 +533,8 @@ public class JNI {
     public static class Exif {
         public static native String getExifInfo(String path);
     }
+
+    public static class Utf8 {
+        public static native String fromBytesLossy(byte[] bytes);
+    }
 }

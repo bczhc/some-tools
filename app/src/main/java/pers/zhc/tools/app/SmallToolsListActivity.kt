@@ -49,6 +49,7 @@ class SmallToolsListActivity : BaseActivity() {
             ),
             ActivityItem(R.string.exif_label, pers.zhc.tools.exifviewer.MainActivity::class.java),
             ActivityItem(R.string.barcode_scan_label, BarcodeScanActivity::class.java),
+            ActivityItem(R.string.udp_broadcast_label, pers.zhc.tools.udpbroadcast.MainActivity::class.java)
         )
 
         recyclerView.adapter = AppMenuAdapter(this, activities)

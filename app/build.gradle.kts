@@ -316,6 +316,7 @@ dependencies {
     implementation("com.github.thellmund.Android-Week-View:core:5.3.2")
     //noinspection GradleDependency
     implementation("org.apache.commons:commons-compress:1.23.0")
+    implementation("io.ktor:ktor-network:2.3.12")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

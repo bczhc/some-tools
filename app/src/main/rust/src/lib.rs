@@ -126,3 +126,5 @@ pub mod transfer;
 pub mod unicode;
 
 pub mod exif;
+
+pub mod utf8;
