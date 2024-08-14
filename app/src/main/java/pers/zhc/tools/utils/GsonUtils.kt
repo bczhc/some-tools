@@ -14,3 +14,7 @@ fun <T> Gson.fromJsonOrNull(json: String, classOfT: Class<T>): T? {
         null
     }
 }
+
+inline fun <reified T> Gson.fromJsonOrNull(json: String): T? {
+    return this.fromJsonOrNull(json, T::class.java)
+}

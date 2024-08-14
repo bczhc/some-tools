@@ -70,7 +70,7 @@ class MyApplication : Application() {
         lateinit var crashLogDir: File
 
         // the default global Gson
-        val GSON = Gson()
+        val GSON by lazy { Gson() }
 
         val HTTP_CLIENT_DEFAULT = HttpClient()
         val HTTP_CLIENT_DOWNLOAD = HttpClient {
