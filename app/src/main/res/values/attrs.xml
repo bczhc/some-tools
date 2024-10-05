@@ -35,6 +35,7 @@
         <attr name="text"/>
         <attr name="textSize"/>
         <attr name="android:inputType"/>
+        <attr name="endIconMode"/>
     </declare-styleable>
     <declare-styleable name="RightDragView">
         <attr name="backgroundColor"/>

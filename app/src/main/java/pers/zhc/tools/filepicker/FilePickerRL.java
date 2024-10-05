@@ -87,8 +87,8 @@ public class FilePickerRL extends RelativeLayout {
 
         init();
 
-        final SmartHintEditText smartHintEditText = rootView.findViewById(R.id.filename_et);
-        filenameET = smartHintEditText.getEditText();
+        final TextInputLayout filenameTil = rootView.findViewById(R.id.filename_et);
+        filenameET = filenameTil.getEditText();
         filenameET.setText(initFileName);
         if (!enableFilenameET) {
             filenameET.setVisibility(GONE);

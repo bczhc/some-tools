@@ -66,6 +66,7 @@ class SmartHintEditText : WrapLayout {
             val hint = ta.getString(R.styleable.SmartHintEditText_hint)
             val text = ta.getText(R.styleable.SmartHintEditText_text)
             val textSize = ta.getDimensionPixelSize(R.styleable.SmartHintEditText_textSize, -1)
+            inputLayout.endIconMode = ta.getInt(R.styleable.SmartHintEditText_endIconMode, TextInputLayout.END_ICON_NONE)
             ta.recycle()
             mET.inputType = inputType
             if (textSize != -1) {

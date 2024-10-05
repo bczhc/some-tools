@@ -37,13 +37,19 @@
             android:layout_alignParentEnd="true"
             android:text="@string/regex"/>
     </RelativeLayout>
-    <pers.zhc.tools.views.SmartHintEditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/filename_et"
-        style="@style/Widget.M3Application.TextInputLayout.FilledBox"
+        style="?textInputOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl2"
-        app:hint="@string/filename_hint"/>
+        android:hint="@string/filename_hint"
+        app:endIconMode="clear_text">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
