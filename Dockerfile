@@ -11,7 +11,7 @@ WORKDIR /
 
 RUN apt update && \
     export DEBIAN_FRONTEND=noninteractive && \
-    apt install openjdk-21-jdk groovy git wget unzip make curl gcc ruby xz-utils -y && \
+    apt install openjdk-17-jdk groovy git wget unzip make curl gcc ruby xz-utils -y && \
     # Rust bindgen will not find `stddef.h`. Installing `clang` package solves this.
     # See https://github.com/rust-lang/rust-bindgen/issues/242
     apt install -y clang && \
