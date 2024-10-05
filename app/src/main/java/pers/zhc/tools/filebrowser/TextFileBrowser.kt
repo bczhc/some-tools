@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
+import com.google.android.material.R.attr.colorOnSurface
 import com.google.android.material.color.MaterialColors
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
@@ -29,7 +30,7 @@ class TextFileBrowser : BaseActivity() {
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
                 )
-                setTextColor(MaterialColors.getColor(this@TextFileBrowser, R.attr.colorOnSurface, ""))
+                setTextColor(MaterialColors.getColor(this@TextFileBrowser, colorOnSurface, ""))
             })
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
