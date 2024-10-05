@@ -8,10 +8,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
-import android.text.*
+import android.text.InputType
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.style.BackgroundColorSpan
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
@@ -179,16 +184,7 @@ class DiaryTakingActivity : DiaryBaseActivity() {
     }
 
     private fun createNewRecord() {
-        val statement = diaryDatabase.database.compileStatement(
-            """
-    INSERT INTO diary("date", content)
-    VALUES (?, ?)
-    """.trimIndent()
-        )
-        statement.bind(1, dateInt)
-        statement.bindText(2, "")
-        statement.step()
-        statement.release()
+        diaryDatabase.database.execBind("""INSERT INTO diary("date", content) VALUES (?, ?)""", arrayOf(dateInt, ""))
     }
 
     private fun showCharactersCount() {
@@ -196,18 +192,11 @@ class DiaryTakingActivity : DiaryBaseActivity() {
     }
 
     private fun prepareContent() {
-        val statement = diaryDatabase.database.compileStatement(
-            """SELECT content
-FROM diary
-WHERE "date" IS ?"""
-        )
-        statement.bind(1, dateInt)
-        val cursor = statement.cursor
-        if (cursor.step()) {
-            val content = cursor.getText(0)
-            editText.setText(content)
-        }
-        statement.release()
+        val content = diaryDatabase.database.queryOne(
+            """SELECT content FROM diary WHERE "date" = ?""",
+            arrayOf(dateInt)
+        ) { it.getText(0) }
+        content?.let { editText.setText(it) }
         showCharactersCount()
     }
 

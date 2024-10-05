@@ -55,7 +55,7 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
         val writeOrCreateDiary = registerForActivityResult(DiaryTakingActivity.ActivityContract()) { result ->
             val dateInt = result.dateInt
             if (result.isNewRecord) {
-                // add a new diary item
+                // add a new diary item (to the end)
                 diaryItemDataList.add(DiaryListItem(diary = Diary(dateInt, diaryDatabase.queryDiaryContent(dateInt))))
                 recyclerViewAdapter.notifyItemInserted(diaryItemDataList.size - 1)
             } else {
