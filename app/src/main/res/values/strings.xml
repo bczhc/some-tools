@@ -114,6 +114,7 @@
     <string name="file_already_exists_dialog_message">当时目录下文件已存在，继续将覆盖</string>
     <string name="file_title">文件</string>
     <string name="file_path_please_use_open_as_hint">（请使用“打开为……”打开）</string>
+    <string name="multiple_selection">多选</string>
     <!-- end -->
 
     <!-- old -->

@@ -19,7 +19,6 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.widget.addTextChangedListener
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryTakingActivityBinding
-import pers.zhc.tools.diary.DiaryContentPreviewActivity.Companion.createDiaryRecordStatDialog
 import pers.zhc.tools.utils.*
 import java.text.SimpleDateFormat
 import java.util.*

@@ -33,4 +33,8 @@
         android:id="@+id/random"
         android:title="@string/diary_menu_random"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/multi_select"
+        android:title="@string/multiple_selection"
+        app:showAsAction="never"/>
 </menu>

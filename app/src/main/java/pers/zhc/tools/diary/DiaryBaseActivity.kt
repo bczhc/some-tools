@@ -1,10 +1,12 @@
 package pers.zhc.tools.diary
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.jni.JNI.Struct
@@ -12,6 +14,7 @@ import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.BaseActivity
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.DiaryEnterPasswordDialogBinding
+import pers.zhc.tools.databinding.DiaryRecordStatDialogBinding
 import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.utils.*
 import pers.zhc.tools.utils.rc.Ref
@@ -145,6 +148,24 @@ open class DiaryBaseActivity : BaseActivity() {
                     }
             }
             dialog.show()
+        }
+
+        fun createDiaryRecordStatDialog(context: Context, database: DiaryDatabase, dateInt: Int): Dialog {
+            return createDiaryRecordStatDialog(context, database.getCharsCount(dateInt))
+        }
+
+        fun createDiaryRecordStatDialog(context: Context, count: Int): Dialog {
+            return Dialog(context).apply {
+                setTitle(R.string.diary_statistics_dialog_title)
+                val bindings = DiaryRecordStatDialogBinding.inflate(LayoutInflater.from(context)).apply {
+                    statContentTv.text = context.getString(
+                        R.string.diary_record_statistics_dialog_content,
+                        count
+                    )
+                }
+                setContentView(bindings.root)
+                DialogUtils.setDialogAttr(this, width = MATCH_PARENT)
+            }
         }
     }
 }

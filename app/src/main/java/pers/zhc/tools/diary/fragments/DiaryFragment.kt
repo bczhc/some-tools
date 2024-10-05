@@ -5,29 +5,30 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.intellij.lang.annotations.Language
-import pers.zhc.jni.sqlite.SQLite3
 import pers.zhc.tools.R
 import pers.zhc.tools.databinding.*
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.filepicker.FilePickerActivityContract
+import pers.zhc.tools.jni.JNI
+import pers.zhc.tools.jni.JNI.CharStat
 import pers.zhc.tools.utils.*
 import pers.zhc.util.Assertion
 import java.io.File
@@ -41,7 +42,7 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: ListAdapter
     private lateinit var constraintLayout: ConstraintLayout
-    private val diaryItemDataList = ArrayList<Diary>()
+    private val diaryItemDataList = ArrayList<DiaryListItem>()
     private val advancedSearchDialog by lazy {
         createAdvancedSearchDialog()
     }
@@ -55,13 +56,13 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
             val dateInt = result.dateInt
             if (result.isNewRecord) {
                 // add a new diary item
-                diaryItemDataList.add(Diary(dateInt, diaryDatabase.queryDiaryContent(dateInt)))
+                diaryItemDataList.add(DiaryListItem(diary = Diary(dateInt, diaryDatabase.queryDiaryContent(dateInt))))
                 recyclerViewAdapter.notifyItemInserted(diaryItemDataList.size - 1)
             } else {
                 // update list item
                 val content = diaryDatabase.queryDiaryContent(dateInt)
-                val position = diaryItemDataList.indexOfFirst { it.dateInt == dateInt }
-                diaryItemDataList[position].content = content
+                val position = diaryItemDataList.indexOfFirst { it.diary.dateInt == dateInt }
+                diaryItemDataList[position].diary.content = content
                 recyclerViewAdapter.notifyItemChanged(position)
             }
         }
@@ -87,12 +88,15 @@ class DiaryFragment : DiaryBaseFragment(), Toolbar.OnMenuItemClickListener {
         val openDiaryPreview = registerForActivityResult(DiaryContentPreviewActivity.ActivityContract()) { date ->
             // in DiaryContentPreviewActivity, use "edit" menu can edit the diary, so
             // here must do a list item updating
-            val position = diaryItemDataList.indexOfFirst { it.dateInt == date.dateInt }
+            val position = diaryItemDataList.indexOfFirst { it.diary.dateInt == date.dateInt }
             androidAssert(position != -1)
-            diaryItemDataList[position].content = diaryDatabase.queryDiaryContent(date.dateInt)
+            diaryItemDataList[position].diary.content = diaryDatabase.queryDiaryContent(date.dateInt)
             recyclerViewAdapter.notifyItemChanged(position)
         }
     }
+
+    private var actionMode: ActionMode? = null
+    private var inActionMode = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val bindings = DiaryMainDiaryFragmentBinding.inflate(inflater, container, false)
@@ -156,9 +160,15 @@ WHERE instr(lower("date"), lower(?)) > 0
             recyclerView.adapter = recyclerViewAdapter
 
             recyclerViewAdapter.setOnItemClickListener { position, _ ->
-                openDiaryPreview(
-                    diaryItemDataList[position].dateInt
-                )
+                val thisItem = diaryItemDataList[position]
+                if (inActionMode) {
+                    thisItem.selected = !thisItem.selected
+                    recyclerViewAdapter.notifyItemChanged(position)
+                } else {
+                    openDiaryPreview(
+                        thisItem.diary.dateInt
+                    )
+                }
             }
             recyclerViewAdapter.setOnItemLongClickListener { position, view ->
                 val popupMenu = PopupMenuUtil.create(
@@ -182,7 +192,7 @@ WHERE instr(lower("date"), lower(?)) > 0
 
     private fun popupMenuChangeDate(position: Int) {
         val diaryItemData = diaryItemDataList[position]
-        val oldDateInt = diaryItemData.dateInt
+        val oldDateInt = diaryItemData.diary.dateInt
         val dateET = EditText(requireContext())
         val dialog: AlertDialog = DialogUtil.createConfirmationAlertDialog(
             requireContext(),
@@ -198,7 +208,7 @@ WHERE instr(lower("date"), lower(?)) > 0
                 d.dismiss()
 
                 // update view
-                diaryItemData.dateInt = newDateInt
+                diaryItemData.diary.dateInt = newDateInt
                 recyclerViewAdapter.notifyItemChanged(position)
             },
             null,
@@ -214,7 +224,7 @@ WHERE instr(lower("date"), lower(?)) > 0
     private fun popupMenuDelete(position: Int) {
         val diaryDatabase = diaryDatabase.database
 
-        val dateInt = diaryItemDataList[position].dateInt
+        val dateInt = diaryItemDataList[position].diary.dateInt
         DialogUtils.createConfirmationAlertDialog(requireContext(), { dialog, _ ->
             diaryDatabase.execBind("""DELETE FROM diary WHERE "date" IS ?""", arrayOf(dateInt))
             dialog.dismiss()
@@ -227,11 +237,11 @@ WHERE instr(lower("date"), lower(?)) > 0
                 setAction(R.string.undo) {
                     diaryDatabase.execBind(
                         "INSERT INTO diary(\"date\", content) VALUES (?, ?)",
-                        arrayOf(removed.dateInt, removed.content)
+                        arrayOf(removed.diary.dateInt, removed.diary.content)
                     )
                     androidAssert(
                         diaryDatabase.hasRecord(
-                            """SELECT "date" FROM diary WHERE "date" IS ?""", arrayOf(removed.dateInt)
+                            """SELECT "date" FROM diary WHERE "date" IS ?""", arrayOf(removed.diary.dateInt)
                         )
                     )
                     diaryItemDataList.add(position, removed)
@@ -265,7 +275,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         diaryItemDataList.let {
             it.clear()
             val rows = diaryDatabase.queryDiaries(sql, binds)
-            it.addAll(rows.asSequence())
+            it.addAll(rows.asSequence().map { x -> DiaryListItem(diary = x) })
             rows.release()
         }
     }
@@ -312,8 +322,78 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             R.id.password -> {
                 changePasswordDialog()
             }
+
+            R.id.multi_select -> {
+                startMultipleSelection()
+            }
         }
         return true
+    }
+
+    private fun startMultipleSelection() {
+        if (inActionMode) {
+            inActionMode = false
+            finishActionMode()
+            return
+        }
+
+        inActionMode = true
+        androidAssert(actionMode == null)
+        val parent = requireActivity() as AppCompatActivity
+        actionMode = parent.startSupportActionMode(object : ActionMode.Callback {
+            override fun onCreateActionMode(mode: ActionMode?, menu: Menu): Boolean {
+                parent.menuInflater.inflate(R.menu.diary_multi_selection_action_mode, menu)
+                (menu.findItem(R.id.select_all).actionView as MaterialCheckBox).setOnCheckedChangeListener { _, isChecked ->
+                    diaryItemDataList.forEach {
+                        it.selected = isChecked
+                    }
+                    recyclerViewAdapter.notifyDataSetChanged()
+                }
+                return true
+            }
+
+            override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                return true
+            }
+
+            override fun onActionItemClicked(mode: ActionMode?, item: MenuItem): Boolean {
+                when (item.itemId) {
+                    R.id.stat -> {
+                        showSelectedStat()
+                    }
+
+                    else -> {
+                        return false
+                    }
+                }
+                return true
+            }
+
+            override fun onDestroyActionMode(mode: ActionMode?) {
+                inActionMode = false
+                finishActionMode()
+            }
+        })
+    }
+
+    private fun showSelectedStat() {
+        val total = diaryItemDataList.filter { it.selected }.sumOf {
+            CharStat.graphemeCount(it.diary.content)
+        }
+        DiaryBaseActivity.createDiaryRecordStatDialog(requireContext(), total).show()
+    }
+
+    private fun finishActionMode() {
+        actionMode!!.finish()
+        actionMode = null
+        clearSelectionState()
+        recyclerViewAdapter.notifyDataSetChanged()
+    }
+
+    private fun clearSelectionState() {
+        diaryItemDataList.forEach {
+            it.selected = false
+        }
     }
 
     private fun changePasswordDialog() {
@@ -418,7 +498,7 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
                             val date = cursor.getInt(0)
                             val content = cursor.getText(1)
                             if (regex.containsMatchIn(content)) {
-                                diaryItemDataList.add(Diary(date, content))
+                                diaryItemDataList.add(DiaryListItem(diary = Diary(date, content)))
                             }
                         }
                     }
@@ -570,9 +650,14 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
         return "$date $weekString"
     }
 
+    private data class DiaryListItem(
+        val diary: Diary,
+        var selected: Boolean = false
+    )
+
     private class ListAdapter(
         private val context: Context,
-        private val data: List<Diary>,
+        private val data: List<DiaryListItem>,
         private val makeTitle: (date: IntDate) -> String,
     ) :
         AdapterWithClickListener<ListAdapter.MyViewHolder?>() {
@@ -586,9 +671,16 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val bindings = holder.bindings
-            val itemData = data[position]
-            bindings.dateTv.text = makeTitle(IntDate(itemData.dateInt))
-            bindings.contentTv.text = itemData.content.limitText(100)
+            val item = data[position]
+            bindings.dateTv.text = makeTitle(IntDate(item.diary.dateInt))
+            bindings.contentTv.text = item.diary.content.limitText(100)
+            bindings.root.setBackgroundResource(
+                if (item.selected) {
+                    R.drawable.clickable_view_selected
+                } else {
+                    R.drawable.selectable_bg
+                }
+            )
         }
 
         override fun getItemCount(): Int {

@@ -1,6 +1,5 @@
 package pers.zhc.tools.diary
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -10,8 +9,6 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -139,19 +136,6 @@ class DiaryContentPreviewActivity : DiaryBaseActivity() {
          * intent serializable extra, optional
          */
         const val EXTRA_HIGHLIGHT_REGEX = "highlightRegex"
-
-        fun createDiaryRecordStatDialog(context: Context, database: DiaryDatabase, dateInt: Int): Dialog {
-            return Dialog(context).apply {
-                setTitle(R.string.diary_statistics_dialog_title)
-                setContentView(View.inflate(context, R.layout.diary_record_stat_dialog, null).apply {
-                    this.findViewById<TextView>(R.id.stat_content_tv).text = context.getString(
-                        R.string.diary_record_statistics_dialog_content,
-                        database.getCharsCount(dateInt)
-                    )
-                })
-                DialogUtils.setDialogAttr(this, width = MATCH_PARENT)
-            }
-        }
     }
 
     class ActivityContract : ActivityResultContract<ActivityContract.Input, IntDate>() {
