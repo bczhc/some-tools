@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.jetbrains.annotations.NotNull;
 import pers.zhc.tools.R;
 import pers.zhc.tools.databinding.FilePickerRlActivityBinding;
+import pers.zhc.tools.jni.JNI;
 import pers.zhc.tools.utils.Common;
 import pers.zhc.tools.utils.DialogUtil;
 import pers.zhc.tools.utils.ToastUtils;
@@ -25,6 +26,7 @@ import pers.zhc.tools.views.SmartHintEditText;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -140,7 +142,15 @@ public class FilePickerRL extends RelativeLayout {
         okBtn.setOnClickListener(v -> {
             EditText filenameET = this.filenameET;
             Objects.requireNonNull(filenameET);
-            if (filenameET.getVisibility() != GONE && filenameET.getText().toString().isEmpty()) {
+            String filenameEtText = null;
+            if (filenameET.getVisibility() != GONE) {
+                filenameEtText = filenameET.getText().toString();
+            }
+            if (filenameEtText != null && filenameEtText.isEmpty()) {
+                return;
+            }
+            if (filenameEtText != null && filenameEtText.getBytes(StandardCharsets.UTF_8).length > 200) {
+                ToastUtils.show(ctx, R.string.file_picker_filename_too_long);
                 return;
             }
             if (type == TYPE_PICK_FOLDER && filenameET.getVisibility() != GONE
