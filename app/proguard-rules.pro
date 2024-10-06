@@ -22,3 +22,5 @@
 -dontobfuscate
 
 -keep class pers.zhc.** {*;}
+
+-dontwarn org.slf4j.impl.StaticLoggerBinder
