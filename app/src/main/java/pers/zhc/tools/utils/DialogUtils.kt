@@ -3,6 +3,7 @@ package pers.zhc.tools.utils
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.EditText
@@ -10,6 +11,8 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import pers.zhc.tools.R
+import pers.zhc.tools.databinding.EnterPasswordDialogBinding
+import pers.zhc.tools.diary.DiaryDatabase
 
 /**
  * @author bczhc
@@ -164,4 +167,49 @@ fun determinateProgressDialog(
             }
         }
     )
+}
+
+fun passwordPromptDialog(
+    context: Context,
+    onValidate: (password: String, result: (Boolean) -> Unit) -> Unit,
+    title: String = context.getString(R.string.enter_password_dialog_title),
+    onCancel: () -> Unit = {},
+    onSuccess: (password: String) -> Unit
+): AlertDialog {
+    val dialogBindings = EnterPasswordDialogBinding.inflate(LayoutInflater.from(context))
+    val dialog = MaterialAlertDialogBuilder(context)
+        .setNegativeAction { d, _ ->
+            d.cancel()
+        }
+        .setOnCancelListener {
+            onCancel()
+        }
+        .setPositiveAction()
+        .setView(dialogBindings.root)
+        .setTitle(title)
+        .create().apply {
+            setCancelable(false)
+            setCanceledOnTouchOutside(false)
+        }
+    dialog.setOnShowListener {
+        (it as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+            .setOnClickListener {
+                val password =
+                    dialogBindings.passwordEt.text.toString().ifEmpty { DiaryDatabase.DEFAULT_PASSPHRASE }
+                dialogBindings.progressBar.visibility = View.VISIBLE
+                val validateResult = {correct: Boolean->
+                    runOnUiThread {
+                        if (correct) {
+                            onSuccess(password)
+                            dialog.dismiss()
+                        } else {
+                            ToastUtils.show(context, R.string.wrong_password_toast)
+                            dialogBindings.progressBar.visibility = View.INVISIBLE
+                        }
+                    }
+                }
+                onValidate(password, validateResult)
+            }
+    }
+    return dialog
 }

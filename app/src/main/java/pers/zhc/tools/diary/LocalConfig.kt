@@ -7,6 +7,7 @@ import java.io.File
 
 data class LocalConfig(
     var password: String? = "",
+    var uiPassword: String? = "",
 ) {
     companion object {
         private val FILE_PATH by lazy {

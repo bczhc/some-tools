@@ -27,7 +27,6 @@ import pers.zhc.tools.R
 import pers.zhc.tools.databinding.*
 import pers.zhc.tools.diary.*
 import pers.zhc.tools.filepicker.FilePickerActivityContract
-import pers.zhc.tools.jni.JNI
 import pers.zhc.tools.jni.JNI.CharStat
 import pers.zhc.tools.utils.*
 import pers.zhc.util.Assertion
@@ -325,6 +324,21 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
 
             R.id.multi_select -> {
                 startMultipleSelection()
+            }
+
+            R.id.ui_password -> {
+                val context = requireContext()
+                val bindings = VisiblePasswordDialogBinding.inflate(LayoutInflater.from(context))
+                DialogUtils.createConfirmationAlertDialog(context,
+                    title = getString(R.string.diary_ui_password_menu),
+                    view = bindings.root,
+                    positiveAction = { _, _ ->
+                        val uiPassword = bindings.et.text.toString()
+                        val config = LocalConfig.read()
+                        config.uiPassword = uiPassword
+                        LocalConfig.write(config)
+                    }
+                ).show()
             }
         }
         return true

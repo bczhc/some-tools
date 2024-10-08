@@ -91,10 +91,6 @@ class DiaryMainActivity : DiaryBaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.password -> {
-                ToastUtils.showTodo(this)
-            }
-
             else -> {
                 // let it consumed by the fragments in this activity
                 return false

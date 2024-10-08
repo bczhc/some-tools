@@ -37,4 +37,8 @@
         android:id="@+id/multi_select"
         android:title="@string/multiple_selection"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/ui_password"
+        android:title="@string/diary_ui_password_menu"
+        app:showAsAction="never"/>
 </menu>

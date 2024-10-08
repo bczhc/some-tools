@@ -917,5 +917,7 @@
 
     <!-- FilePicker -->
     <string name="file_picker_filename_too_long">文件名太长！</string>
+    <string name="diary_ui_password_menu">界面密码</string>
+    <string name="diary_enter_ui_password_dialog_title">输入界面密码</string>
     <!-- end -->
 </resources>
