@@ -47,22 +47,9 @@ open class DiaryBaseActivity : BaseActivity() {
                 LocalConfig.write(config)
             })
         } else {
-            val allDone = {
-                diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
-                diaryDatabase = diaryDatabaseRef!!.get()
-                onDatabaseValidated()
-            }
-
-            val uiPassword = LocalConfig.read().uiPassword ?: ""
-            if (uiPassword.isNotEmpty()) {
-                passwordPromptDialog(this, onValidate = { p, r ->
-                    r(p == uiPassword)
-                }, getString(R.string.diary_enter_ui_password_dialog_title), onCancel = { finish() }) {
-                    allDone()
-                }.show()
-            } else {
-                allDone()
-            }
+            diaryDatabaseRef = DiaryDatabase.getDatabaseRef()
+            diaryDatabase = diaryDatabaseRef!!.get()
+            onDatabaseValidated()
         }
     }
 
