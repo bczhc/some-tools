@@ -13,6 +13,7 @@ import pers.zhc.tools.diary.fragments.AttachmentFragment
 import pers.zhc.tools.diary.fragments.DiaryFragment
 import pers.zhc.tools.diary.fragments.FileLibraryFragment
 import pers.zhc.tools.utils.ToastUtils
+import pers.zhc.tools.utils.passwordPromptDialog
 
 /**
  * @author bczhc
@@ -21,9 +22,6 @@ class DiaryMainActivity : DiaryBaseActivity() {
     private var drawerToggle: ActionBarDrawerToggle? = null
     private var drawerArrowDrawable: DrawerArrowDrawable? = null
     private lateinit var bindings: DiaryMainActivityBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     private fun load() {
         bindings = DiaryMainActivityBinding.inflate(layoutInflater)
@@ -33,7 +31,16 @@ class DiaryMainActivity : DiaryBaseActivity() {
     }
 
     override fun onDatabaseValidated() {
-        load()
+        val uiPassword = LocalConfig.read().uiPassword ?: ""
+        if (uiPassword.isNotEmpty()) {
+            passwordPromptDialog(this, onValidate = { p, r ->
+                r(p == uiPassword)
+            }, getString(R.string.diary_enter_ui_password_dialog_title), onCancel = { finish() }) {
+                load()
+            }.show()
+        } else {
+            load()
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
