@@ -621,6 +621,8 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
             androidAssert(DiaryDatabase.getDatabaseRefCount() == 0)
 
             LocalConfig.updatePassword(it)
+            BackupManager.backup(DiaryDatabase.internalDatabasePath)
+            BackupManager.backup(file)
             file.copyTo(DiaryDatabase.internalDatabasePath, true)
 
             // substitute old references
@@ -641,9 +643,13 @@ WHERE "date" IS ?""", arrayOf(newDate, oldDateString)
     }
 
     private fun exportDiary(dest: File) {
-        val databaseFile = Common.getInternalDatabaseDir(context, "diary.db")
+        val databaseFile = DiaryDatabase.internalDatabasePath
         Thread {
             try {
+                BackupManager.backup(databaseFile)
+                if (dest.exists()) {
+                    BackupManager.backup(dest)
+                }
                 FileUtil.copy(databaseFile, dest)
                 ToastUtils.show(context, R.string.exporting_succeeded)
             } catch (e: Exception) {

@@ -28,6 +28,7 @@ class DiaryMainActivity : DiaryBaseActivity() {
         setContentView(bindings.root)
         invalidateOptionsMenu()
         initDrawerLayout()
+        BackupManager.checkBakDirs()
     }
 
     override fun onDatabaseValidated() {
